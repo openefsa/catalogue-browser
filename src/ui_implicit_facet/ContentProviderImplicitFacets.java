@@ -74,7 +74,8 @@ public class ContentProviderImplicitFacets implements ITreeContentProvider {
 		Catalogue currentCat = manager.getCurrentCatalogue();
 		
 		// if the current catalogue does not have facets
-		if ( currentCat.getFacetCategories() == null )
+		if ( currentCat == null || 
+				currentCat.getFacetCategories() == null )
 			return null;
 		
 		// get all the categories of facets (the dcfattributes)

@@ -90,7 +90,8 @@ public class Dcf {
 		// get the catalogues which are currently 
 		// present into the user database
 		// at their last release status!
-		ArrayList < Catalogue > myCatalogues = catDao.getLastReleaseCatalogues ();
+		ArrayList < Catalogue > myCatalogues = 
+				catDao.getLastReleaseCatalogues ();
 
 		// for each DCF catalogue
 		for ( Catalogue cat : catalogues ) {

@@ -33,7 +33,7 @@ public class ReservedCatalogueDAO {
 		
 		Connection con;
 		
-		String query = "insert into APP.RESERVED_CATALOGUE (CAT_CODE, CAT_VERSION, RESERVE_USERNAME, RESERVE_LEVEL) values (?,?,?,?)";
+		String query = "insert into APP.RESERVED_CATALOGUE (CAT_ID, RESERVE_USERNAME, RESERVE_LEVEL) values (?,?,?)";
 		
 		try {
 			
@@ -42,10 +42,9 @@ public class ReservedCatalogueDAO {
 			
 			stmt.clearParameters();
 			
-			stmt.setString( 1, catalogue.getCode() );
-			stmt.setString( 2, catalogue.getVersion() );
-			stmt.setString( 3, username );
-			stmt.setString( 4, level.name() );
+			stmt.setInt( 1, catalogue.getId() );
+			stmt.setString( 2, username );
+			stmt.setString( 3, level.name() );
 
 			stmt.executeUpdate();
 			
@@ -69,7 +68,7 @@ public class ReservedCatalogueDAO {
 		
 		Connection con;
 
-		String query = "delete from APP.RESERVED_CATALOGUE where CAT_CODE = ?";
+		String query = "delete from APP.RESERVED_CATALOGUE where CAT_ID = ?";
 
 		try {
 
@@ -78,7 +77,7 @@ public class ReservedCatalogueDAO {
 
 			stmt.clearParameters();
 
-			stmt.setString( 1, catalogue.getCode() );
+			stmt.setInt( 1, catalogue.getId() );
 			
 			stmt.executeUpdate();
 			
@@ -106,7 +105,7 @@ public class ReservedCatalogueDAO {
 		Connection con;
 
 		// check if the catalogue is already reserved (i.e. if it is in the table)
-		String query = "select * from APP.RESERVED_CATALOGUE where CAT_CODE = ? and CAT_VERSION = ?";
+		String query = "select * from APP.RESERVED_CATALOGUE where CAT_ID = ?";
 		
 		try {
 
@@ -115,8 +114,7 @@ public class ReservedCatalogueDAO {
 
 			stmt.clearParameters();
 
-			stmt.setString( 1, catalogue.getCode() );
-			stmt.setString( 2, catalogue.getVersion() );
+			stmt.setInt( 1, catalogue.getId() );
 			
 			ResultSet rs = stmt.executeQuery();
 			
@@ -149,7 +147,7 @@ public class ReservedCatalogueDAO {
 		Connection con;
 
 		// check if the catalogue is already reserved (i.e. if it is in the table)
-		String query = "select * from APP.RESERVED_CATALOGUE where CAT_CODE = ? and CAT_VERSION = ? and RESERVE_USERNAME = ?";
+		String query = "select * from APP.RESERVED_CATALOGUE where CAT_ID = ? and RESERVE_USERNAME = ?";
 		
 		try {
 
@@ -158,9 +156,8 @@ public class ReservedCatalogueDAO {
 
 			stmt.clearParameters();
 
-			stmt.setString( 1, catalogue.getCode() );
-			stmt.setString( 2, catalogue.getVersion() );
-			stmt.setString( 3, user.getUsername() );
+			stmt.setInt( 1, catalogue.getId() );
+			stmt.setString( 2, user.getUsername() );
 			
 			ResultSet rs = stmt.executeQuery();
 			

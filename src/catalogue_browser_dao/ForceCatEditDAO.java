@@ -26,8 +26,8 @@ public class ForceCatEditDAO {
 	 */
 	public synchronized boolean forceEditing ( Catalogue catalogue, String username, ReserveLevel editLevel ) {
 		
-		String query = "insert into APP.FORCED_CATALOGUE (CAT_CODE, CAT_VERSION, "
-				+ "FORCED_USERNAME, FORCED_EDIT, FORCED_LEVEL ) values (?,?,?,?,?)";
+		String query = "insert into APP.FORCED_CATALOGUE (CAT_ID, "
+				+ "FORCED_USERNAME, FORCED_EDIT, FORCED_LEVEL ) values (?,?,?,?)";
 		
 		try {
 			
@@ -35,11 +35,10 @@ public class ForceCatEditDAO {
 			
 			PreparedStatement stmt = con.prepareStatement( query );
 			
-			stmt.setString( 1, catalogue.getCode() );
-			stmt.setString( 2, catalogue.getVersion() );
-			stmt.setString( 3, username );
-			stmt.setBoolean( 4, true );
-			stmt.setString( 5, editLevel.toString() );
+			stmt.setInt( 1, catalogue.getId() );
+			stmt.setString( 2, username );
+			stmt.setBoolean( 3, true );
+			stmt.setString( 4, editLevel.toString() );
 			
 			stmt.executeUpdate();
 			
@@ -66,7 +65,7 @@ public class ForceCatEditDAO {
 		
 		ReserveLevel reserveLevel = ReserveLevel.NONE;
 		
-		String query = "select * from APP.FORCED_CATALOGUE where CAT_CODE = ? and CAT_VERSION = ? and FORCED_USERNAME = ?";
+		String query = "select * from APP.FORCED_CATALOGUE where CAT_ID = ? and FORCED_USERNAME = ?";
 
 		try {
 
@@ -74,9 +73,8 @@ public class ForceCatEditDAO {
 
 			PreparedStatement stmt = con.prepareStatement( query );
 
-			stmt.setString( 1, catalogue.getCode() );
-			stmt.setString( 2, catalogue.getVersion() );
-			stmt.setString( 3, username );
+			stmt.setInt( 1, catalogue.getId() );
+			stmt.setString( 2, username );
 
 			ResultSet rs = stmt.executeQuery();
 
@@ -103,7 +101,7 @@ public class ForceCatEditDAO {
 	 */
 	public synchronized boolean removeForceEditing ( Catalogue catalogue, String username ) {
 
-		String query = "delete from APP.FORCED_CATALOGUE where CAT_CODE = ? and CAT_VERSION = ? and FORCED_USERNAME = ?";
+		String query = "delete from APP.FORCED_CATALOGUE where CAT_ID = ? and FORCED_USERNAME = ?";
 
 		try {
 
@@ -112,9 +110,8 @@ public class ForceCatEditDAO {
 
 			stmt.clearParameters();
 
-			stmt.setString( 1, catalogue.getCode() );
-			stmt.setString( 2, catalogue.getVersion() );
-			stmt.setString( 3, username );
+			stmt.setInt( 1, catalogue.getId() );
+			stmt.setString( 2, username );
 			
 			stmt.executeUpdate();
 			

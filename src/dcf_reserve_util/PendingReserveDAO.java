@@ -26,7 +26,7 @@ public class PendingReserveDAO implements CatalogueEntityDAO<PendingReserve> {
 		
 		int id = -1;
 		String query = "insert into APP.PENDING_RESERVE (RESERVE_LOG_CODE, "
-				+ "RESERVE_LEVEL, CAT_CODE, CAT_VERSION, RESERVE_USERNAME) values (?,?,?,?,?)";
+				+ "RESERVE_LEVEL, CAT_ID, RESERVE_USERNAME) values (?,?,?,?)";
 		
 		try {
 			
@@ -38,9 +38,8 @@ public class PendingReserveDAO implements CatalogueEntityDAO<PendingReserve> {
 			// set the parameters
 			stmt.setString( 1, object.getLogCode() );
 			stmt.setString( 2, object.getReserveLevel().toString() );
-			stmt.setString( 3, object.getCatalogue().getCode() );
-			stmt.setString( 4, object.getCatalogue().getVersion() );
-			stmt.setString( 5, object.getUsername() );
+			stmt.setInt( 3, object.getCatalogue().getId() );
+			stmt.setString( 4, object.getUsername() );
 			
 			// insert the pending reserve object
 			stmt.executeUpdate();
@@ -65,8 +64,7 @@ public class PendingReserveDAO implements CatalogueEntityDAO<PendingReserve> {
 	@Override
 	public boolean remove( PendingReserve object ) {
 
-		String query = "delete from APP.PENDING_RESERVE "
-				+ "where CAT_CODE = ? and CAT_VERSION = ?";
+		String query = "delete from APP.PENDING_RESERVE where CAT_ID = ?";
 		
 		try {
 			
@@ -74,8 +72,7 @@ public class PendingReserveDAO implements CatalogueEntityDAO<PendingReserve> {
 			
 			PreparedStatement stmt = con.prepareStatement( query );
 			
-			stmt.setString( 1, object.getCatalogue().getCode() );
-			stmt.setString( 2, object.getCatalogue().getVersion() );
+			stmt.setInt( 1, object.getCatalogue().getId() );
 			
 			// remove
 			stmt.executeUpdate();
@@ -110,13 +107,12 @@ public class PendingReserveDAO implements CatalogueEntityDAO<PendingReserve> {
 		int id = rs.getInt( "RESERVE_ID" );
 		String logCode = rs.getString( "RESERVE_LOG_CODE" );
 		ReserveLevel level = ReserveLevel.valueOf( rs.getString( "RESERVE_LEVEL" ) );
-		String catCode = rs.getString( "CAT_CODE" );
-		String catVer = rs.getString( "CAT_VERSION" );
+		int catId = rs.getInt( "CAT_ID" );
 		String username = rs.getString( "RESERVE_USERNAME" );
 		
 		// get the catalogue related to the code and version
 		CatalogueDAO catDao = new CatalogueDAO();
-		Catalogue catalogue = catDao.getCatalogue( catCode, catVer );
+		Catalogue catalogue = catDao.getById( catId );
 		
 		PendingReserve pr = new PendingReserve( logCode, level, catalogue, username );
 		pr.setId( id );

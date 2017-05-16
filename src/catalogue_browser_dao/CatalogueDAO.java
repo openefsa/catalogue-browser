@@ -172,7 +172,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 					+ "CAT_IS_LOCAL = ?,"
 					+ "CAT_DB_PATH = ?,"
 					+ "CAT_DB_BACKUP_PATH = ?"
-					+ " where CAT_CODE = ? and CAT_VERSION = ?" );
+					+ " where CAT_ID = ?" );
 
 			// set the query parameters
 			stmt.setString ( 1,  catalogue.getVersion() );
@@ -205,8 +205,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 			stmt.setString( 18, catalogue.getDbFullPath() );
 			stmt.setString( 19, catalogue.getBackupDbPath() );  
 
-			stmt.setString ( 20, catalogue.getCode() );
-			stmt.setString ( 21, catalogue.getVersion() );
+			stmt.setInt ( 20, catalogue.getId() );
 			
 			// execute the query
 			stmt.executeUpdate();
@@ -242,10 +241,9 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 			Connection con = DatabaseManager.getMainDBConnection();
 			
 			// select the catalogue by code
-			PreparedStatement stmt = con.prepareStatement( "delete from APP.CATALOGUE where CAT_CODE = ? and CAT_VERSION = ?" );
+			PreparedStatement stmt = con.prepareStatement( "delete from APP.CATALOGUE where CAT_ID = ?" );
 
-			stmt.setString( 1, catalogue.getCode() );
-			stmt.setString( 2, catalogue.getVersion() );
+			stmt.setInt( 1, catalogue.getId() );
 
 			// execute the query and close the connections
 			stmt.executeUpdate();
@@ -278,7 +276,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 		CatalogueBuilder builder = new CatalogueBuilder();
 
 		// set the catalogue meta data and create the catalogue object
-		//builder.setId( rs.getInt( "CAT_ID" ) );
+		builder.setId( rs.getInt( "CAT_ID" ) );
 		builder.setVersion( rs.getString( "CAT_VERSION" ) );
 		builder.setCode( rs.getString( "CAT_CODE" ) );
 		builder.setName( rs.getString( "CAT_NAME" ) );
@@ -412,8 +410,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 		
 		// we check the catalogue code and then we check the version if the catalogue is not local
 		// note that if the catalogue is local the version check is automatically eliminated
-		String query = "select * from APP.CATALOGUE where CAT_CODE = ? and ("
-				+ " ( CAT_IS_LOCAL = ? or CAT_VERSION = ? ) )";
+		String query = "select * from APP.CATALOGUE where CAT_ID = ?";
 		
 		try {
 			
@@ -423,9 +420,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 			
 			stmt.clearParameters();
 			
-			stmt.setString( 1, catalogue.getCode() );
-			stmt.setBoolean( 2, true );
-			stmt.setString( 3, catalogue.getVersion() );
+			stmt.setInt( 1, catalogue.getId() );
 			
 			ResultSet rs = stmt.executeQuery();
 			
@@ -516,7 +511,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 			PreparedStatement stmt = con.prepareStatement( 
 					"select * from APP.CATALOGUE C "
 					+ "left join APP.RESERVED_CATALOGUE RC "
-					+ "on C.CAT_CODE = RC.CAT_CODE and C.CAT_VERSION = RC.CAT_VERSION "
+					+ "on C.CAT_ID = RC.CAT_ID "
 					+ "where C.CAT_CODE = ?");
 
 			stmt.setString( 1, code );
@@ -570,6 +565,15 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 		// output array
 		ArrayList < Catalogue > catalogues = new ArrayList<>();
 
+		String query = "select * "
+				+ "from APP.CATALOGUE C "
+				+ "left join APP.RESERVED_CATALOGUE RC "
+				+ "on C.CAT_ID = RC.CAT_ID inner join ( "
+				+ "select MAX(CAT_VALID_FROM) as MAX_VF, CAT_CODE "
+				+ "from APP.CATALOGUE "
+				+ "group by CAT_CODE) TEMP "
+				+ "on C.CAT_CODE = TEMP.CAT_CODE and C.CAT_VALID_FROM = TEMP.MAX_VF";
+		
 		try {
 			// open the connection
 			Connection con = DatabaseManager.getMainDBConnection();
@@ -578,18 +582,9 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 			// QUERY:
 			// Get first for each catalogue the max version of it. Then get all the information related to the
 			// last release of the catalogue using a self join on cat code and max_version
-			PreparedStatement stmt = con.prepareStatement( 
-					"select * "+
-							"from "+
-							"( select MAX ( CAT_VERSION ) as CAT_LAST_VERSION, CAT_CODE as CAT_LAST_CODE " +
-							"from APP.CATALOGUE " +
-							"group by CAT_CODE ) t1 " +
-							"inner join APP.CATALOGUE t2 " +
-							"on t1.CAT_LAST_CODE = t2.CAT_CODE " +
-							"and t1.CAT_LAST_VERSION = CAT_VERSION " + 
-							"left join APP.RESERVED_CATALOGUE RC on t1.CAT_LAST_CODE = " +
-							"RC.CAT_CODE and t1.CAT_LAST_VERSION = RC.CAT_VERSION " );
+			PreparedStatement stmt = con.prepareStatement( query );
 
+			
 			// here we have a table which contains only the rows related to the
 			// last version of the catalogue!
 
@@ -627,7 +622,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 
 			// select the catalogue by code
 			PreparedStatement stmt = con.prepareStatement( "select * from APP.CATALOGUE c "
-					+ "left join APP.RESERVED_CATALOGUE rc on c.CAT_CODE = rc.CAT_CODE and c.CAT_VERSION = rc.CAT_VERSION" );
+					+ "left join APP.RESERVED_CATALOGUE rc on c.CAT_ID = rc.CAT_ID" );
 
 			// get the query results
 			ResultSet rs = stmt.executeQuery();
@@ -669,8 +664,8 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 	public Catalogue getCatalogue ( String catalogueCode, String catalogueVersion ) {
 
 		String query = "select * from APP.CATALOGUE t1 "
-				+ "left join APP.RESERVED_CATALOGUE RC on t1.CAT_CODE = "
-				+ "RC.CAT_CODE and t1.CAT_VERSION = RC.CAT_VERSION "
+				+ "left join APP.RESERVED_CATALOGUE RC on t1.CAT_ID = "
+				+ "RC.CAT_ID "
 				+ "where t1.CAT_CODE = ? and t1.CAT_VERSION = ?";
 		
 		try {
@@ -716,8 +711,43 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 
 	@Override
 	public Catalogue getById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		String query = "select * from APP.CATALOGUE t1 "
+				+ "left join APP.RESERVED_CATALOGUE RC on t1.CAT_ID = "
+				+ "RC.CAT_ID "
+				+ "where t1.CAT_ID = ?";
+		
+		try {
+
+			// open the connection
+			Connection con = DatabaseManager.getMainDBConnection();
+
+			// select the catalogue by code
+			PreparedStatement stmt = con.prepareStatement( query );
+
+			// set the catalogue code and version parameters for the statement
+			stmt.setInt( 1, id );
+
+			// get the results
+			ResultSet rs = stmt.executeQuery();
+
+			// return null if no results found
+			if ( !rs.next() )
+				return null;
+
+			// get the catalogue data and add them to the output array list
+			Catalogue cat = getByResultSet ( rs );
+			
+			rs.close();
+			stmt.close();
+			con.close();
+			
+			return cat;
+		}
+		catch ( SQLException e ) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	@Override

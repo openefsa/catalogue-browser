@@ -5,7 +5,7 @@
 create table APP.CATALOGUE(
 
 	-- the id of the catalogue, internally defined
-	--CAT_ID integer not null primary key generated always as identity ( start with 1, increment by 1 ),
+	CAT_ID integer not null primary key generated always as identity ( start with 1, increment by 1 ),
 	
 	-- the catalogue version must be unique! We can store different version of the same catalogue
 	-- but not the same version multiple times
@@ -38,10 +38,12 @@ create table APP.CATALOGUE(
 	-- the db before starting editing it
 	-- only applicable for internal versions
 	-- of catalogues
-	CAT_DB_BACKUP_PATH varchar(1000),
-	
-	primary key ( CAT_CODE, CAT_VERSION )
+	CAT_DB_BACKUP_PATH varchar(1000)
 );
+
+-- add the unique contraint to the code field
+alter table APP.CATALOGUE add constraint cat_code_version_unique unique ( CAT_CODE, CAT_VERSION );
+
 
 -- table of corex flags, we assume that these are always the same for all the catalogues
 create table APP.DETAIL_LEVEL(
@@ -76,42 +78,34 @@ insert into APP.DETAIL_LEVEL (DETAIL_LEVEL_CODE, DETAIL_LEVEL_LABEL, DETAIL_LEVE
 -- of the users
 create table APP.RESERVED_CATALOGUE (
 
-	CAT_CODE varchar(50) not null,
-	CAT_VERSION varchar(50) not null,
+	CAT_ID integer not null primary key,
 	RESERVE_USERNAME varchar(100) not null,
-	RESERVE_LEVEL varchar(50) not null,
-	
-	-- CAT_CODE and VERSION as primary key, 
-	-- we cannot reserve the same catalogue
-	-- twice!
-	primary key ( CAT_CODE, CAT_VERSION )
+	RESERVE_LEVEL varchar(50) not null
 );
+
+-- set the foreign keys for RESERVED_CATALOGUE table
+alter table APP.RESERVED_CATALOGUE add foreign key ( CAT_ID ) references APP.CATALOGUE ( CAT_ID );
+
 
 -- table to track the catalogues
 -- which their editing was forced
 create table APP.FORCED_CATALOGUE (
 
-	CAT_CODE varchar(50) not null,
-	CAT_VERSION varchar(50) not null,
+	CAT_ID integer primary key,
 	FORCED_USERNAME varchar(100) not null,
 	FORCED_EDIT boolean not null,
-	FORCED_LEVEL varchar(50) not null,
-	
-	-- CAT_CODE and VERSION as primary key
-	-- we cannot forced the editing of the 
-	-- same catalogue in two different ways
-	primary key ( CAT_CODE, CAT_VERSION )
+	FORCED_LEVEL varchar(50) not null
 );
 
 -- set the foreign keys for FORCED_CATALOGUE table
-alter table APP.FORCED_CATALOGUE add foreign key ( CAT_CODE, CAT_VERSION ) references APP.CATALOGUE ( CAT_CODE, CAT_VERSION );
+alter table APP.FORCED_CATALOGUE add foreign key ( CAT_ID ) references APP.CATALOGUE ( CAT_ID );
 
 
 -- table to save the preferred dimensions
 -- of the dialogs (as describe window..)
 create table APP.WINDOW_PREF (
 
-	WINDOW_CODE varchar(50) primary key,  -- code to identify the window
+	WINDOW_CODE varchar(50) not null primary key,  -- code to identify the window
 	WINDOW_X integer not null,  -- x position
 	WINDOW_Y integer not null,  -- y position
 	WINDOW_W integer not null,  -- width
@@ -139,8 +133,7 @@ create table APP.PENDING_RESERVE (
 	RESERVE_ID integer not null primary key generated always as identity (start with 1, increment by 1),
 	RESERVE_LOG_CODE varchar(500) not null, -- code of the log related to the pending reserve action
 	RESERVE_LEVEL varchar(50) not null,     -- the reserve level (none, minor, major)
-	CAT_CODE varchar(50) not null,          -- code of the catalogue we are reserving
-	CAT_VERSION varchar(50) not null,       -- version of the catalogue we are reserving
+	CAT_ID integer not null,
 	RESERVE_USERNAME varchar(50) not null   -- the name of the user which made the reserve
 );
 
@@ -148,4 +141,4 @@ create table APP.PENDING_RESERVE (
 alter table APP.PENDING_RESERVE add constraint log_code_unique unique ( RESERVE_LOG_CODE );
 
 -- set the foreign keys for PENDING_RESERVE table
-alter table APP.PENDING_RESERVE add foreign key ( CAT_CODE, CAT_VERSION ) references APP.CATALOGUE ( CAT_CODE, CAT_VERSION );
+alter table APP.PENDING_RESERVE add foreign key ( CAT_ID ) references APP.CATALOGUE ( CAT_ID );
