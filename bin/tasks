@@ -1,0 +1,19 @@
+
+
+Tasks to be implemented
+
+Done:
+
+* ^C ^V to move items on the same hierarchy, possible multiple selection
+* Expand node
+* default full search
+
+
+Not done:
+
+* Multiple selection of the facets for the descriptor and implicit facets
+* La finestra di destra che non si rinfresca correttamente e il testo all'interno non fa il word wrap
+lower priority
+* formati export diversi per utenti tipo con facet esplicitati
+
+ 
