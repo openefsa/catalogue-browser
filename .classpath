@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="SQL"/>
+	<classpathentry kind="src" path="images"/>
+	<classpathentry kind="src" path="resources"/>
+	<classpathentry kind="src" path="icons"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="lib" path="lib/derby.jar" sourcepath="lib/derby.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/Users/thomm/Documents/Tirocinio%20EFSA/Workspace/db-derby-10.12.1.1-bin/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/xmlbeans-2.6.0.jar" sourcepath="lib/xmlbeans-2.6.0.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="https://poi.apache.org/apidocs/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/jxl.jar"/>
+	<classpathentry kind="lib" path="lib/fillo-1.15.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.jface_3.7.0.I20110522-1430.jar"/>
+	<classpathentry kind="lib" path="lib/swt.jar"/>
+	<classpathentry kind="lib" path="lib/eclipse-equinox-common-3.5.0.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.core.commands.jar"/>
+	<classpathentry kind="lib" path="lib/poi-3.16-beta1.jar"/>
+	<classpathentry kind="lib" path="lib/poi-ooxml-3.16-beta1.jar"/>
+	<classpathentry kind="lib" path="lib/poi-ooxml-schemas-3.16-beta1.jar"/>
+	<classpathentry kind="lib" path="lib/org.apache.xerces_2.9.0.v201101211617.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/XmlCatalogueToExcel"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

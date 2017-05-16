@@ -1,0 +1,450 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<message>
+  <catalogue>
+    <catalogueDesc>
+      <code>ACTION</code>
+      <name>ACTION</name>
+      <label>ACTION</label>
+      <acceptNonStandardCodes>true</acceptNonStandardCodes>
+      <generateMissingCodes>false</generateMissingCodes>
+    </catalogueDesc>
+    <catalogueVersion>
+      <version>2.3.5</version>
+      <lastUpdate>2017-05-02T15:41:05</lastUpdate>
+      <status>DRAFT MAJOR UNRESERVED</status>
+    </catalogueVersion>
+    <catalogueGroups>
+      <catalogueGroup>SSD2</catalogueGroup>
+    </catalogueGroups>
+    <catalogueTerms>
+      <term>
+        <termDesc>
+          <termCode>I</termCode>
+          <termExtendedName>Follow-up investigation</termExtendedName>
+          <termScopeNote>Follow-up investigations should be initiated when there is suspicion of an irregularity. This may consist of a series of investigative steps including, for example, a visit to the farm of origin or verification of registers.</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>2.2</version>
+          <lastUpdate>2015-07-17T14:53:43</lastUpdate>
+          <validFrom>2015-07-17T14:53:43</validFrom>
+          <status>PRELIMINARY</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ACTION</hierarchyCode>
+            <parentCode>root</parentCode>
+            <order>1</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>F</termCode>
+          <termExtendedName>Follow-up (suspect) sampling</termExtendedName>
+          <termScopeNote>Sampling animals or products from the same lot or the same operator in order to confirm the suspicion of illegal treatment after a positive result.</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>2.2</version>
+          <lastUpdate>2015-07-17T14:53:43</lastUpdate>
+          <validFrom>2015-07-17T14:53:43</validFrom>
+          <status>PRELIMINARY</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ACTION</hierarchyCode>
+            <parentCode>root</parentCode>
+            <order>2</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>D</termCode>
+          <termExtendedName>Denial of community aid</termExtendedName>
+          <termScopeNote>The cross compliance principle foresees that if some EU regulations applying to the farm are not respected, financial support can be reduced.</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>2.2</version>
+          <lastUpdate>2015-07-17T14:53:43</lastUpdate>
+          <validFrom>2015-07-17T14:53:43</validFrom>
+          <status>PRELIMINARY</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ACTION</hierarchyCode>
+            <parentCode>root</parentCode>
+            <order>4</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>E</termCode>
+          <termExtendedName>Destruction of animals and/or products.</termExtendedName>
+          <termScopeNote>This measure should be applied when animals or products are contaminated due to illegal treatment or when the contamination may cause a health risk to consumers.</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>2.2</version>
+          <lastUpdate>2015-07-17T14:53:43</lastUpdate>
+          <validFrom>2015-07-17T14:53:43</validFrom>
+          <status>PRELIMINARY</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ACTION</hierarchyCode>
+            <parentCode>root</parentCode>
+            <order>5</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>B</termCode>
+          <termExtendedName>Intensified checks before release</termExtendedName>
+          <termScopeNote>This measure should be applied in order to be sure that animals or products are not contaminated.</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>2.2</version>
+          <lastUpdate>2015-07-17T14:53:43</lastUpdate>
+          <validFrom>2015-07-17T14:53:43</validFrom>
+          <status>PRELIMINARY</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ACTION</hierarchyCode>
+            <parentCode>root</parentCode>
+            <order>6</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>V</termCode>
+          <termExtendedName>Movement restriction</termExtendedName>
+          <termScopeNote>In order to prevent the destruction of evidence or to ensure that regulation is respected, movements of animals or products can be restricted to only taking place under the supervision of the competent authority.</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>2.2</version>
+          <lastUpdate>2015-07-17T14:53:43</lastUpdate>
+          <validFrom>2015-07-17T14:53:43</validFrom>
+          <status>PRELIMINARY</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ACTION</hierarchyCode>
+            <parentCode>root</parentCode>
+            <order>9</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>O</termCode>
+          <termExtendedName>Other</termExtendedName>
+        </termDesc>
+        <termVersion>
+          <version>2.1</version>
+          <lastUpdate>2014-10-30T00:00:00</lastUpdate>
+          <validFrom>2014-10-30T00:00:00</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ACTION</hierarchyCode>
+            <parentCode>root</parentCode>
+            <order>13</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>N</termCode>
+          <termExtendedName>No action</termExtendedName>
+        </termDesc>
+        <termVersion>
+          <version>2.1</version>
+          <lastUpdate>2014-10-30T00:00:00</lastUpdate>
+          <validFrom>2014-10-30T00:00:00</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ACTION</hierarchyCode>
+            <parentCode>root</parentCode>
+            <order>12</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>A</termCode>
+          <termExtendedName>Administrative consequences</termExtendedName>
+          <termScopeNote>Administrative consequences may be imposed on operators when there is evidence of an irregularity. These may consist of extra fees, suspension of an agreement or other.</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>2.2</version>
+          <lastUpdate>2015-07-17T14:53:43</lastUpdate>
+          <validFrom>2014-10-30T00:00:00</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ACTION</hierarchyCode>
+            <parentCode>root</parentCode>
+            <order>3</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>M</termCode>
+          <termExtendedName>Lot not released on the market</termExtendedName>
+          <termScopeNote>This measure can be applied while waiting for clarification of the origin or test results before releasing the lot on the market.</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>2.2</version>
+          <lastUpdate>2015-07-17T14:53:43</lastUpdate>
+          <validFrom>2014-10-30T00:00:00</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ACTION</hierarchyCode>
+            <parentCode>root</parentCode>
+            <order>7</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>S</termCode>
+          <termExtendedName>Lot recalled from the market</termExtendedName>
+          <termScopeNote>When there is a risk for human health, the products should be destroyed when it cannot be demonstrated that the suspect products are safe.</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>2.2</version>
+          <lastUpdate>2015-07-17T14:53:43</lastUpdate>
+          <validFrom>2014-10-30T00:00:00</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ACTION</hierarchyCode>
+            <parentCode>root</parentCode>
+            <order>8</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R</termCode>
+          <termExtendedName>Rapid Alert Notification</termExtendedName>
+          <termScopeNote>This measure should be activated when other member states are implicated either by the origin or the consequences of the problem.</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>2.2</version>
+          <lastUpdate>2015-07-17T14:53:43</lastUpdate>
+          <validFrom>2014-10-30T00:00:00</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ACTION</hierarchyCode>
+            <parentCode>root</parentCode>
+            <order>10</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>W</termCode>
+          <termExtendedName>Warnings</termExtendedName>
+          <termScopeNote>This measure can be applied when there is a suspicion but no evidence of illegal treatment or when the contamination is accidental.</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>2.2</version>
+          <lastUpdate>2015-07-17T14:53:43</lastUpdate>
+          <validFrom>2014-10-30T00:00:00</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ACTION</hierarchyCode>
+            <parentCode>root</parentCode>
+            <order>11</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>C</termCode>
+          <termExtendedName>Follow-up action due to a residue of a pesticide detected in a EU sample, which is not approved for use in the EU territory</termExtendedName>
+          <termScopeNote>Follow-up action due to a residue of a pesticide detected in a EU sample, which is not approved for use in the EU territory</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>2.3</version>
+          <lastUpdate>2017-03-20T17:06:17</lastUpdate>
+          <validFrom>2017-03-20T17:06:17</validFrom>
+          <status>PRELIMINARY</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ACTION</hierarchyCode>
+            <parentCode>root</parentCode>
+            <order>14</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>G</termCode>
+          <termExtendedName>Follow-up action due to the residue of a pesticide detected in a domestic product, which is not authorized in the country</termExtendedName>
+          <termScopeNote>Follow-up action due to the residue of a pesticide detected in a domestic product, which is not authorized in the country</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>2.3</version>
+          <lastUpdate>2017-03-20T17:06:17</lastUpdate>
+          <validFrom>2017-03-20T17:06:17</validFrom>
+          <status>PRELIMINARY</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ACTION</hierarchyCode>
+            <parentCode>root</parentCode>
+            <order>15</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>P</termCode>
+          <termExtendedName>Follow-up action due to a pesticide residue detected in an organic sample, violating the provisions laid down in the organic farming legislation</termExtendedName>
+          <termScopeNote>Follow-up action due to a pesticide residue detected in an organic sample, violating the provisions laid down in the organic farming legislation</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>2.3</version>
+          <lastUpdate>2017-03-20T17:06:17</lastUpdate>
+          <validFrom>2017-03-20T17:06:17</validFrom>
+          <status>PRELIMINARY</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ACTION</hierarchyCode>
+            <parentCode>root</parentCode>
+            <order>16</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+    </catalogueTerms>
+  </catalogue>
+
+  <releaseNotes catalogueCode="ACTION">
+    <description>Default unreserve for action</description>
+    <versionDate>2017-05-02T15:41:05.026</versionDate>
+    <versionHistory>
+      <version internalVersion="2.3.5">
+        <internalVersionNote>Default unreserve for action</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-02T15:41:04.617">
+          <operationInfo>The catalogue ACTION has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMajor" operationDate="2017-05-02T15:41:04.643">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="2.3.4">
+        <internalVersionNote>unreserve di action</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-04-28T09:41:59.993">
+          <operationInfo>The catalogue ACTION has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMajor" operationDate="2017-04-28T09:42:00.021">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-04-28T13:13:32.253">
+          <operationInfo>The catalogue ACTION has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-04-28T13:13:32.282">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-02T15:35:01.634">
+          <operationInfo>The catalogue has not been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-02T15:35:01.768">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-02T15:38:55.708">
+          <operationInfo>The catalogue has not been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-02T15:38:55.732">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="2.3.3">
+        <internalVersionNote>gggggggggggggggggggggggggggggg</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-04-28T09:39:40.411">
+          <operationInfo>The catalogue ACTION has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMajor" operationDate="2017-04-28T09:39:40.442">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-04-28T09:39:54.980">
+          <operationInfo>The catalogue ACTION has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-04-28T09:39:55.009">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-04-28T09:40:26.974">
+          <operationInfo>The catalogue has not been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-04-28T09:40:27.003">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="2.3.2">
+        <internalVersionNote>jmjjjjjjjjjjjjjjjjjjjj</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-04-28T09:37:52.259">
+          <operationInfo>The catalogue ACTION has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMajor" operationDate="2017-04-28T09:37:52.286">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-04-28T09:37:59.590">
+          <operationInfo>The catalogue ACTION has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-04-28T09:37:59.616">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="2.3.1">
+        <internalVersionNote>jjjjjjjjjjjjjjjjjjjjjjj</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-04-28T09:37:14.530">
+          <operationInfo>The catalogue ACTION has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMajor" operationDate="2017-04-28T09:37:14.559">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-04-28T09:37:31.872">
+          <operationInfo>The catalogue ACTION has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-04-28T09:37:31.901">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+    </versionHistory>
+  </releaseNotes>
+</message>

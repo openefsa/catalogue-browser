@@ -1,0 +1,1536 @@
+package catalogue_object;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.StringTokenizer;
+
+import catalogue_browser_dao.AttributeDAO;
+import catalogue_browser_dao.CatalogueDAO;
+import catalogue_browser_dao.ForceCatEditDAO;
+import catalogue_browser_dao.HierarchyDAO;
+import catalogue_browser_dao.ParentTermDAO;
+import catalogue_browser_dao.ReservedCatalogueDAO;
+import catalogue_browser_dao.TermAttributeDAO;
+import catalogue_browser_dao.TermDAO;
+import data_transformation.BooleanConverter;
+import data_transformation.DateTrimmer;
+import dcf_manager.Dcf;
+import dcf_user.User;
+import dcf_webservice.ReserveLevel;
+import detail_level.DetailLevelDAO;
+import detail_level.DetailLevelGraphics;
+import global_manager.GlobalManager;
+import messages.Messages;
+import term_code_generator.CodeGenerator;
+import term_type.TermType;
+import term_type.TermTypeDAO;
+import utilities.GlobalUtil;
+
+/**
+ * Catalogue object, it contains the catalogue metadata, the catalogue
+ * terms, hierarchies and attributes, term attributes and applicabilities.
+ * @author avonva
+ *
+ */
+public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mappable, Cloneable {
+	
+	// date format of the catalogues
+	public static final String ISO_8601_24H_FULL_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+	public static final String NOT_APPLICABLE_VERSION = "Not applicable";
+	public static final String LOCAL_CATALOGUE_STATUS = "Local catalogue";
+	
+	// catalogue meta data
+	private String termCodeMask;
+	private int termCodeLength;
+	private String termMinCode;
+	private boolean acceptNonStandardCodes;
+	private boolean generateMissingCodes;
+	private String catalogueGroups;
+
+	// external reference which locates the catalogue real data (not meta data)
+	// this field is initialized when the catalogue meta data are inserted in the CATALOGUE table
+	private String dbDir;       // db directory
+	private String dbFullPath;  // db full path with filename
+	private String backupDbPath; // path where it is located the backup of the catalogue db
+	
+	private boolean local;    // if the catalogue is a new local catalogue or not
+	private ReserveLevel reserveLevel;  // the reserve level of the catalogue
+	private String reserveUsername;     // the user who reserved the catalogue
+
+	private boolean reserving; // if we are reserving/unreserving the catalogue (on going operation)
+	
+	// list of terms which are contained in the catalogue
+	private HashMap< Integer, Term > terms;
+	
+	// cache for term ids to speed up finding
+	// terms ids using term code without
+	// iterating the entire collection of terms
+	private HashMap< String, Integer > termsIds;
+	
+	// list of the hierarchies contained in the 
+	// catalogue (both base and attribute hierarchies)
+	private ArrayList< Hierarchy > hierarchies;
+	
+	// list of the attributes contained in the
+	// catalogue (only definitions, not values)
+	private ArrayList< Attribute > attributes;
+	
+	// list of possible implicit facets (i.e. categories) for the terms
+	// could be empty if the catalogue does not have
+	// any implicit facet
+	private ArrayList< Attribute > facetCategories;
+	
+	// detail levels of the catalogue
+	public ArrayList< DetailLevelGraphics > detailLevels;
+	
+	// term types of the catalogue (could be empty)
+	public ArrayList< TermType > termTypes;
+	
+	// default values for detail level and term type
+	private DetailLevelGraphics defaultDetailLevel;
+	private TermType defaultTermType;
+	
+	/**
+	 * Constructor to create a catalogue object with all its variables
+	 * @param code the catalogue code (unique)
+	 * @param name the catalogue name (unique)
+	 * @param label the catalogue label (text which is displayed)
+	 * @param scopeNote
+	 * @param termCodeMask
+	 * @param termCodeLength
+	 * @param acceptNonStandardCodes
+	 * @param generateMissingCodes
+	 * @param version
+	 * @param validTo
+	 * @param status
+	 */
+	public Catalogue( int id, String code, String name, String label, String scopenotes, String termCodeMask, String
+			termCodeLength, String termMinCode, boolean acceptNonStandardCodes, boolean generateMissingCodes, String version,
+			Timestamp lastUpdate, Timestamp validFrom, Timestamp validTo, String status, String catalogueGroups, boolean deprecated, 
+			String dbFullPath, String backupDbPath, boolean local, String reserveUsername, ReserveLevel reserveLevel ) {
+
+		// the id is not important for the catalogue
+		super( id, code, name, label, scopenotes, version, lastUpdate, validFrom, validTo, status, deprecated );
+	
+		this.termCodeMask = termCodeMask;
+
+		// convert the term code length into integer if possible
+		try {
+			this.termCodeLength = Integer.parseInt( termCodeLength );
+		} catch (NumberFormatException e) {
+			this.termCodeLength = 0;
+		}
+
+		this.termMinCode = termMinCode;
+
+		this.acceptNonStandardCodes = acceptNonStandardCodes;
+		this.generateMissingCodes = generateMissingCodes;
+
+		this.catalogueGroups = catalogueGroups;
+
+		this.dbFullPath = dbFullPath;
+		this.backupDbPath = backupDbPath;
+		this.local = local;
+		
+		this.reserveUsername = reserveUsername;
+		this.reserveLevel = reserveLevel;
+		
+		// initialize memory for data
+		terms = new HashMap<>();
+		hierarchies = new ArrayList<>();
+		attributes = new ArrayList<>();
+		facetCategories = new ArrayList<>();
+		detailLevels = new ArrayList<>();
+		termTypes = new ArrayList<>();
+	}
+	
+	
+	/**
+	 * Load all the data related to the catalogue
+	 * that is, hierarchies, terms, attributes,
+	 * term attributes, applicabilities, detail
+	 * levels and term types
+	 */
+	public void loadData() {
+		refreshHierarchies();
+		refreshTerms();
+		refreshAttributes();
+		refreshApplicabities();
+		refreshTermAttributes();
+		refreshDetailLevels();
+		refreshTermTypes();
+	}
+	
+	/**
+	 * Clear all the data of the catalogue
+	 * that is, clear hierarchies, terms, attributes
+	 * implicit facets, detail levels and term types
+	 */
+	public void clearData() {
+		hierarchies.clear();
+		attributes.clear();
+		facetCategories.clear();
+		terms.clear();
+		detailLevels.clear();
+		termTypes.clear();
+	}
+
+
+	/**
+	 * Clone the catalogue and return it
+	 */
+	public Catalogue clone () {
+
+		// create the catalogue object and return it
+		Catalogue catalogue = new Catalogue ( getId(), getCode(), getName(), getLabel(), getScopenotes(), termCodeMask, 
+				String.valueOf( termCodeLength ), termMinCode,
+				acceptNonStandardCodes, generateMissingCodes, getVersion(), getLastUpdate(), getValidFrom(), 
+				getValidTo(), getStatus(), catalogueGroups, isDeprecated(), dbFullPath, backupDbPath, local, 
+				reserveUsername, reserveLevel );
+		
+		return catalogue;
+	}
+
+	/**
+	 * Open the current catalogue and load its data into ram
+	 * Note that the user interface observes the changes in
+	 * the current catalogue of the global manager, therefore
+	 * when a current catalogue is set, the UI is automatically
+	 * refreshed.
+	 */
+	public void open() {
+		
+		System.out.println ( "Opening " + this + " at " + dbFullPath );
+		
+		// load the catalogue data into RAM
+		loadData();
+		
+		GlobalManager manager = GlobalManager.getInstance();
+		
+		// close the opened catalogue if there is one
+		if ( manager.getCurrentCatalogue() != null )
+			manager.getCurrentCatalogue().close();
+
+		manager.setCurrentCatalogue( this );
+
+		// refresh logging state
+		GlobalUtil.refreshLogging();
+	}
+	
+	/**
+	 * Get the catalogue derby connection
+	 * @return
+	 */
+	public String getShutdownDBURL() {
+		return "jdbc:derby:" + dbFullPath + ";user=dbuser;password=dbuserpwd;shutdown=true";
+	}
+	
+	/**
+	 * Close the catalogue
+	 */
+	public void close() {
+		
+		System.out.println ( "Closing " + this + " at " + dbFullPath );
+		
+		// shutdown the connection, by default this operation throws an exception
+		// but the command is correct! We close the connection since we close the db
+		try {
+			DriverManager.getConnection( getShutdownDBURL() );
+		} catch (SQLException e) {
+			System.out.println ( "System shutted down with code : " + e.getErrorCode() + " and state " + e.getSQLState() );
+			System.out.println ( "Correct shutdown has code 45000 and state 08006" );
+		}
+		
+		// clear data in ram
+		clearData();
+		
+		// remove current catalogue
+		GlobalManager manager = GlobalManager.getInstance();
+
+		// if the current catalogue is the one we are
+		// closing => set the current catalogue as null
+		if ( manager.getCurrentCatalogue().sameAs( this ) )
+			manager.setCurrentCatalogue( null );
+	}
+	
+	/**
+	 * Refresh the hierarchies contents
+	 */
+	public void refreshHierarchies() {
+
+		HierarchyDAO hierDao = new HierarchyDAO( this );
+		
+		// initialize the hierarchies
+		hierarchies = hierDao.getAll();
+	}
+	
+	/**
+	 * Get an hierarchy by its id. If not found => null
+	 * @param id
+	 * @return
+	 */
+	public Hierarchy getHierarchyById ( int id ) {
+		
+		for ( Hierarchy h : hierarchies ) {
+			
+			if ( h.getId() == id )
+				return h;
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Get an hierarchy by its code. If not found => null
+	 * @param code
+	 * @return
+	 */
+	public Hierarchy getHierarchyByCode ( String code ) {
+		
+		for ( Hierarchy h : hierarchies ) {
+			
+			if ( h.getCode().equals( code ) )
+				return h;
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Create the master hierarchy starting from the 
+	 * catalogue, since the master
+	 * is actually the catalogue!
+	 * @return
+	 */
+	public Hierarchy createMasterHierarchy() {
+		
+		HierarchyBuilder builder = new HierarchyBuilder();
+		builder.setCatalogue( this );
+		builder.setCode( getCode() );
+		builder.setName( getName() );
+		builder.setLabel( getLabel() );
+		builder.setScopenotes( getScopenotes() );
+		builder.setApplicability( "both" );
+		builder.setMaster( true );
+		builder.setStatus( getStatus() );
+		builder.setGroups( getCatalogueGroups() );
+		builder.setLastUpdate( getLastUpdate() );
+		builder.setValidFrom( getValidFrom() );
+		builder.setValidTo( getValidTo() );
+		builder.setOrder( 0 );
+		builder.setVersion( getVersion() );
+		builder.setDeprecated( isDeprecated() );
+		
+		return builder.build();
+	}
+	
+	/**
+	 * Searches for the master hierarchy inside the hierarchies
+	 * 
+	 * @return
+	 */
+	public Hierarchy getMasterHierarchy() {
+
+		// get the master hierarchy from the hierarchies list
+		for ( Hierarchy hierarchy : hierarchies ) {
+			
+			// if we found the master stop and return the hierarchy
+			if ( hierarchy.isMaster() )
+				return hierarchy;
+		}
+		
+		// return null if no hierarchy was found
+		return null;
+	}
+
+	/**
+	 * Check if there are hierarchies or not
+	 * @return
+	 */
+	public boolean hasHierarchies() {
+		return !hierarchies.isEmpty();
+	}
+	
+	/**
+	 * Check if we have attribute hierarchies or not (if they are present we can
+	 * describe terms, otherwise no)
+	 * @return
+	 */
+	public boolean hasAttributeHierarchies() {
+		
+		for ( Hierarchy hierarchy : hierarchies ) {
+			if ( hierarchy.isFacet() )
+				return true;
+		}
+		
+		return false;
+	}
+
+	/**
+	 * Refresh the attributes contents
+	 */
+	public void refreshAttributes() {
+
+		AttributeDAO attrDao = new AttributeDAO( this );
+		attributes = attrDao.getAll();
+
+		// refresh also the cache of implicit facets
+		facetCategories = attrDao.fetchAttributes( "catalogue", false );
+	}
+	
+	/**
+	 * Get an attribute by its id
+	 * @param id
+	 * @return
+	 */
+	public Attribute getAttributeById( int id ) {
+		
+		Attribute attr = null;
+		
+		for ( Attribute a : attributes ) {
+			if ( a.getId() == id )
+				attr = a;
+		}
+		
+		return attr;
+	}
+
+	/**
+	 * Add a new term into the hashmap of terms
+	 * @param id
+	 * @param term
+	 */
+	public void addTerm( Term term ) {
+		terms.put( term.getId(), term );
+	}
+	
+	/**
+	 * Check if some terms are present in the catalogue
+	 * @return
+	 */
+	public boolean hasTerms () {
+		return !terms.isEmpty();
+	}
+	
+
+	/**
+	 * Refresh the terms contents
+	 */
+	public void refreshTerms() {
+		
+		TermDAO termDao = new TermDAO( this );
+		
+		// initialize the terms
+		terms = termDao.fetchTerms();
+		
+		termsIds = new HashMap<>();
+		
+		// update cache of ids
+		for ( Term term : terms.values() ) {
+			termsIds.put( term.getCode(), term.getId() );
+		}
+	}
+	
+
+
+	/**
+	 * Refresh the parent child relationships of the catalogue terms
+	 * Need to be called after {@linkplain Catalogue#refreshHierarchies} and
+	 * {@linkplain Catalogue#refreshTerms}
+	 */
+	public void refreshApplicabities() {
+		
+		ParentTermDAO parentDao = new ParentTermDAO( this );
+		
+		for ( Applicability appl : parentDao.getAll() ) {
+			Term term = appl.getChild();
+			term.addApplicability( appl );
+		}
+	}
+	
+	/**
+	 * Refresh the term attributes and their values.
+	 * Need to be called after {@linkplain Catalogue#refreshTerms} and
+	 * {@linkplain Catalogue#refreshAttributes}
+	 */
+	public void refreshTermAttributes() {
+		
+		// reset all the attributes of each term
+		for ( Term term : terms.values() ) {
+			term.clearAttributes();
+		}
+		
+		// load the attributes values for the terms
+		TermAttributeDAO taDao = new TermAttributeDAO( this );
+
+		// set the term attributes to the terms
+		for ( TermAttribute ta : taDao.getAll() ) {
+			Term term = ta.getTerm();
+			term.addAttribute( ta );
+		}
+	}
+	
+	/**
+	 * Refresh the detail levels of the catalogue
+	 */
+	public void refreshDetailLevels() {
+		
+		DetailLevelDAO detailDao = new DetailLevelDAO();
+		
+		detailLevels = detailDao.getAll();
+		
+		defaultDetailLevel = new DetailLevelGraphics( "", 
+				Messages.getString( "DetailLevel.DefaultValue" ), null );
+		
+		// add void detail level
+		detailLevels.add( defaultDetailLevel );
+	}
+	
+	/**
+	 * Get the default detail level of the catalogue
+	 * @return
+	 */
+	public DetailLevelGraphics getDefaultDetailLevel() {
+		return defaultDetailLevel;
+	}
+	
+	/**
+	 * Refresh the term types of the catalogue
+	 * if there are some.
+	 */
+	public void refreshTermTypes() {
+		
+		TermTypeDAO ttDao = new TermTypeDAO( this );
+		
+		termTypes = ttDao.getAll();
+		
+		defaultTermType = new TermType( -1, "", 
+				Messages.getString( "TermType.DefaultValue" ) );
+		
+		// add void term type
+		termTypes.add( defaultTermType );
+	}
+	
+	/**
+	 * Get a term type by its id
+	 * @param id
+	 * @return
+	 */
+	public TermType getTermTypeById( int id ) {
+		
+		TermType tt = null;
+		
+		for ( TermType type : termTypes ) {
+			if ( type.getId() == id )
+				tt = type;
+		}
+		
+		return tt;
+	}
+	
+	/**
+	 * Get the default term type of the catalogue
+	 * @return
+	 */
+	public TermType getDefaultTermType() {
+		return defaultTermType;
+	}
+	
+	
+	/**
+	 * Check if the catalogue supports term types
+	 * @return
+	 */
+	public boolean hasTermTypes () {
+		return !termTypes.isEmpty();
+	}
+
+	/**
+	 * Get all the hierarchies of the catalogue
+	 * @return
+	 */
+	public ArrayList<Hierarchy> getHierarchies() {
+		return hierarchies;
+	}
+	
+	/**
+	 * Get all the catalogue terms
+	 * @return
+	 */
+	public Collection<Term> getTerms() {
+		return terms.values();
+	}
+	
+	/**
+	 * Get all the catalogue attributes
+	 * @return
+	 */
+	public ArrayList<Attribute> getAttributes() {
+		return attributes;
+	}
+	
+	/**
+	 * Get all the implicit facets of the catalogue
+	 * @return
+	 */
+	public ArrayList<Attribute> getFacetCategories() {
+		return facetCategories;
+	}
+	
+	
+	/**
+	 * Check if the catalogue has usable implicit facets categories or not
+	 * @return
+	 */
+	public boolean hasImplicitFacetCategories () {
+		return facetCategories != null && !facetCategories.isEmpty();
+	}
+	
+	
+	/**
+	 * Get the detail levels of the catalogue
+	 * @return
+	 */
+	public ArrayList<DetailLevelGraphics> getDetailLevels() {
+		return detailLevels;
+	}
+	
+	/**
+	 * Get the term types of the catalogue. Could be empty.
+	 * @return
+	 */
+	public ArrayList<TermType> getTermTypes() {
+		return termTypes;
+	}
+	
+	/**
+	 * Check if the catalogue has data or not
+	 */
+	public boolean isEmpty() {
+
+		// if there are not hierarchies and terms 
+		// then we have no data
+		// so the catalogue is a new one
+		return !hasHierarchies() && !hasTerms();
+	}
+	
+	
+	/**
+	 * Add a new term using the term code mask as code generator
+	 * @param parent
+	 * @param hierarchy
+	 * @return
+	 */
+	public Term addNewTerm ( Term parent, Hierarchy hierarchy ) {
+		
+		// get the a new code for the term using the catalogue term code mask
+		String code = CodeGenerator.getTermCode( termCodeMask );
+		
+		return addNewTerm ( code, parent, hierarchy );
+	}
+	
+	/**
+	 * Add a new term into the catalogue database as 
+	 * child of the term "parent" in the selected hierarchy. The term is a complete
+	 * term since we save the term, all its attributes and its applicability.
+	 * @param code the code of the new term
+	 * @param parent the parent of the new term
+	 * @param hierarchy the hierarchy in which the term is added to the parent
+	 * @return the new term
+	 */
+	public Term addNewTerm ( String code, Term parent, Hierarchy hierarchy ) {
+		
+		TermDAO termDao = new TermDAO( this );
+		
+		// get a new default term
+		Term child = Term.getDefaultTerm( code );
+		
+		// insert the new term into the database and get the new term
+		// with the id set
+		int id = termDao.insert( child );
+		child.setId( id );
+		
+		// initialize term attribute dao
+		TermAttributeDAO taDao = new TermAttributeDAO( this );
+		
+		// insert the term attributes of the term
+		taDao.updateByA1( child );
+
+		ParentTermDAO parentDao = new ParentTermDAO( this );
+		
+		// get the first available order integer under the parent term
+		// in the selected hierarchy
+		int order = parentDao.getNextAvailableOrder( parent, hierarchy );
+		
+		// create the term applicability for the term in the selected hierarchy
+		// we set the new term as child of the selected term
+		// we set it to reportable as default
+		Applicability appl = new Applicability( child, parent, 
+				hierarchy, order, true );
+		
+		// add permanently the new applicability to the child
+		child.addApplicability( appl, true );
+		
+		// update the involved terms in RAM
+		termDao.update( child );
+		termDao.update( parent );
+		
+		// add the term to the hashmap
+		terms.put( id, child );
+		
+		// update also the ids cache
+		termsIds.put( code, id );
+		
+		return child;
+	}
+	
+	/**
+	 * Get a term by its id
+	 * @param id the term id
+	 */
+	public Term getTermById( Integer id ) {
+		
+		Term term = terms.get( id );
+		
+		if ( term == null ) {
+			System.err.println ( "Term with id " + id + " not found in catalogue " + this );
+		}
+		
+		// get the term with the key
+		// if not found => null
+		return term;
+	}
+	
+	/**
+	 * Get a term by its code
+	 * @param code
+	 * @return
+	 */
+	public Term getTermByCode ( String code ) {
+
+		// get the term id from the cache
+		int id = termsIds.get( code );
+		
+		// get the term by its id
+		return getTermById( id );
+	}
+
+	/**
+	 * Check if the catalogue has the detail 
+	 * level attribute or not
+	 * @return
+	 */
+	public boolean hasDetailLevelAttribute () {
+		
+		for ( Attribute attr : attributes ) {
+			if ( attr.isDetailLevel() )
+				return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Check if the catalogue has the 
+	 * term type attribute or not
+	 * @return
+	 */
+	public boolean hasTermTypeAttribute () {
+		
+		for ( Attribute attr : attributes ) {
+			if ( attr.isTermType() )
+				return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Force the editing of the catalogue even if
+	 * it was not reserved
+	 */
+	public void forceEdit ( String username ) {
+		
+		ForceCatEditDAO forceDao = new ForceCatEditDAO();
+		forceDao.forceEditing( this, username );
+	}
+	
+	/**
+	 * Remove the forced editing from this catalogue
+	 * related to the user we want
+	 */
+	public void removeForceEdit ( String username ) {
+		
+		ForceCatEditDAO forceDao = new ForceCatEditDAO();
+		forceDao.removeForceEditing( this, username );
+	}
+	
+	/**
+	 * Check if the catalogue has forced
+	 * editing or not by the user
+	 * @param username
+	 * @return
+	 */
+	public boolean isForceEdit( String username ) {
+		
+		ForceCatEditDAO forceDao = new ForceCatEditDAO();
+		return forceDao.isForcingEditing( this, username );
+	}
+
+	/**
+	 * Reserve the catalogue for the current user.
+	 * Note that if you want to unreserve the catalogue you
+	 * must use {@link Catalogue#unreserve() }
+	 * @param reserveLevel the reserve level needed. Both
+	 * {@link ReserveLevel.MINOR} or 
+	 * {@link ReserveLevel.MAJOR} are accepted.
+	 */
+	public void reserve( ReserveLevel reserveLevel ) {
+		
+		if ( reserveLevel.isNone() ) {
+			System.err.println ( "You are reserving a catalogue with ReserveLevel.NONE "
+					+ "as reserve level, use unreserve instead" );
+			return;
+		}
+		
+		User user = User.getInstance();
+
+		// get a new internal version of the catalogue
+		Catalogue newCatalogue = newInternalVersion();
+		
+		System.out.println ( "Creating new internal version " + newCatalogue );
+		
+		// otherwise reserve the catalogue for the current user
+		newCatalogue.reserveUsername = user.getUsername();
+		newCatalogue.reserveLevel = reserveLevel;
+		
+		ReservedCatalogueDAO reserveDao = new ReservedCatalogueDAO( newCatalogue );
+		
+		// reserve the new catalogue in the DB
+		reserveDao.reserveCatalogue( newCatalogue.getReserveUsername(), 
+				newCatalogue.getReserveLevel() );
+
+		
+		Catalogue currentCat = GlobalManager.getInstance().getCurrentCatalogue();
+		
+		// close this catalogue and open the new one if
+		// the current catalogue is the same of the new one
+		// that is, the previous version of the catalogue is opened
+		// (we refresh things, otherwise do nothing)
+		if ( currentCat != null && currentCat.equals( newCatalogue ) )
+			newCatalogue.open();
+		
+		// if we successfully reserved the catalogue
+		// we can remove the force edit if it was enabled
+		removeForceEdit( user.getUsername() );
+	}
+	
+	/**
+	 * Unreserve the catalogue
+	 */
+	public void unreserve () {
+
+		this.reserveLevel = ReserveLevel.NONE;
+		reserveUsername = null;
+		
+		ReservedCatalogueDAO reserveDao = new ReservedCatalogueDAO( this );
+		
+		// unreserve the catalogue
+		reserveDao.unreserveCatalogue();
+		
+		CatalogueDAO catDao = new CatalogueDAO();
+		// update the catalogue meta data
+		catDao.update( this );
+	}
+	
+	/**
+	 * Publish a minor release of the catalogue
+	 * @return the new version of the catalogue
+	 */
+	public Catalogue publishMinor () {
+		
+		// version checker to modify the catalogue version
+		// in a permament way
+		VersionChecker versionChecker = new VersionChecker( this );
+		
+		return versionChecker.publishMinor();
+	}
+	
+	/**
+	 * Publish a minor release of the catalogue
+	 * @return the new version of the catalogue
+	 */
+	public Catalogue publishMajor () {
+		
+		// version checker to modify the catalogue version
+		// in a permament way
+		VersionChecker versionChecker = new VersionChecker( this );
+		
+		return versionChecker.publishMajor();
+	}
+	
+	/**
+	 * Publish a new internal version of the catalogue
+	 * @return the new version of the catalogue
+	 */
+	public Catalogue newInternalVersion () {
+		
+		// version checker to modify the catalogue version
+		// in a permament way
+		VersionChecker versionChecker = new VersionChecker( this );
+		
+		return versionChecker.newInternalVersion();
+	}
+	
+	/**
+	 * Set the current catalogue version as invalid,
+	 * since it has changes made through forced editing
+	 * and the reserve operation does not succeeded 
+	 */
+	public synchronized void stultify() {
+		
+		getRawVersion().markAsOldVersion();
+		
+		CatalogueDAO catDao = new CatalogueDAO();
+		catDao.update( this );
+	}
+	
+	/**
+	 * Check if the catalogue is being (un)reserved or not by the DCF
+	 * @return
+	 */
+	public boolean isReserving() {
+		return reserving;
+	}
+	
+	/**
+	 * Set if the dcf is (un)reserving the catalogue
+	 * @param reserving
+	 */
+	public void setReserving(boolean reserving) {
+		this.reserving = reserving;
+	}
+	
+	/**
+	 * Check if the catalogue can be reserved by the current user.
+	 * To check unreservability, please use {@link isUnreservable}
+	 * @return
+	 */
+	public boolean isReservable () {
+		
+		String username = User.getInstance().getUsername();
+		
+		// true if no user had reserved the catalogue
+		// and the catalogue is the last available
+		// version of the catalogue and the catalogue
+		// is not local and it is not deprecated
+		if ( reserveUsername == null && !hasUpdate() 
+				&& !local && !isDeprecated() && !isForceEdit( username ) )
+			return true;
+		
+		return false;
+	}
+	
+	/**
+	 * Check if the catalogue can be unreserved by the current user.
+	 * To check reservability, please use {@link isReservable}
+	 * @return
+	 */
+	public boolean isUnreservable () {
+		
+		// false if no user had reserved the catalogue
+		// we cannot unreserve it
+		if ( reserveUsername == null )
+			return false;
+
+		User user = User.getInstance();
+		
+		// if another user resereved the catalogue we cannot
+		// unreserve it
+		if ( !user.getUsername().equals( reserveUsername ) 
+				|| !isLastRelease() || isForceEdit( user.getUsername() ) )
+			return false;
+		
+		return true;
+	}
+
+	/**
+	 * Get the catalogue term code mask if there is one
+	 * @return
+	 */
+	public String getTermCodeMask() {
+		return termCodeMask;
+	}
+
+	/**
+	 * Get the catalogue term code length
+	 * @return
+	 */
+	public int getTermCodeLength() {
+		return termCodeLength;
+	}
+
+	/**
+	 * Get the code which is the starting point for
+	 * creating new codes
+	 * @return
+	 */
+	public String getTermMinCode() {
+		return termMinCode;
+	}
+
+	/**
+	 * Check if the catalogue accepts non standard codes
+	 * for the terms
+	 * @return
+	 */
+	public boolean isAcceptNonStandardCodes() {
+		return acceptNonStandardCodes;
+	}
+
+	/**
+	 * Check if the catalogue can generate
+	 * missing codes or not
+	 * @return
+	 */
+	public boolean isGenerateMissingCodes() {
+		return generateMissingCodes;
+	}
+
+	/**
+	 * Get the catalogue groups (single string $ separated)
+	 * @return
+	 */
+	public String getCatalogueGroups() {
+		return catalogueGroups;
+	}
+
+	/**
+	 * Get the directory which contains the database 
+	 * of the catalogue
+	 * @return
+	 */
+	public String getDBDir() {
+		return dbDir;
+	}
+	
+	/**
+	 * Get the backup path
+	 * @return
+	 */
+	public String getBackupDbPath() {
+		return backupDbPath;
+	}
+	
+	/**
+	 * Set the backup db path (the db which will be
+	 * used as backup of this catalogue if needed)
+	 * @param backupDbPath
+	 */
+	public void setBackupDbPath(String backupDbPath) {
+		this.backupDbPath = backupDbPath;
+	}
+	
+	/**
+	 * Get the full path of the db ( directory + dbname ) and set it
+	 * as the path of the catalogue (we build it!)
+	 * @return
+	 */
+	public String buildDBFullPath( String dbDir ) {
+
+		dbFullPath = getDbFullPath ( dbDir, getCode(), getVersion(), local );
+		return dbFullPath;
+	}
+	
+	/**
+	 * Set the full db path directly
+	 * @param dbFullPath
+	 */
+	public void setDbFullPath(String dbFullPath) {
+		this.dbFullPath = dbFullPath;
+	}
+	
+	
+	/**
+	 * Is the database local? True if the database was created
+	 * through the command "new local catalogue", false otherwise
+	 * @return
+	 */
+	public boolean isLocal() {
+		return local;
+	}
+	
+	/**
+	 * Check if the catalogue is reserved or not
+	 * @return
+	 */
+	public boolean isReserved() {
+		
+		ReservedCatalogueDAO reserveDao = new ReservedCatalogueDAO( this );
+		
+		return reserveDao.isReserved();
+	}
+	
+	/**
+	 * Check if the catalogue is reserved or not
+	 * by the user with username passed in input
+	 * @return
+	 */
+	public boolean isReservedBy( User user ) {
+		
+		ReservedCatalogueDAO reserveDao = new ReservedCatalogueDAO( this );
+		
+		return reserveDao.isReservedBy( user );
+	}
+	
+	/**
+	 * Check if the catalogue is currently reserved 
+	 * by an user
+	 * @return the reserve level
+	 */
+	public ReserveLevel getReserveLevel() {
+		return reserveLevel;
+	}
+	
+	/**
+	 * Get the username of the user who reserved 
+	 * the catalogue (if there is one)
+	 * @return
+	 */
+	public String getReserveUsername() {
+		return reserveUsername;
+	}
+
+	/**
+	 * Get the db full path using the catalogues main directory, 
+	 * the catalogue code/version and if the catalogue is local or not
+	 * For non local catalogues the folder will be   code + "_VERSION_" + version
+	 * for local catalogues instead we use only the code (the version is not applicable)
+	 * @param dbDir, the folder in which we will create the catalogue folder and then the database
+	 * @param code
+	 * @param version
+	 * @param local
+	 * @return
+	 */
+	public static String getDbFullPath ( String dbDir, String code, String version, boolean local ) {
+
+		// if local catalogue => we return only the db code as name
+		if ( local )
+			return dbDir + System.getProperty( "file.separator" ) + code;
+
+		// if instead we have an official catalogue, set also the version
+
+		// name of the catalogue db
+		String dbName = code + "_VERSION_" + version;
+
+		// create the full path and assign it
+		return dbDir + System.getProperty( "file.separator" ) + dbName;
+	}
+	
+	
+	/**
+	 * Get the path of the Db of the catalogue
+	 * null if it was not set (you have to use buildDBFullPath first!)
+	 * see also {@link #buildDBFullPath( String dbDir ) buildDBFullPath}
+	 * @return
+	 */
+	public String getDbFullPath() {
+		return dbFullPath;
+	}
+
+	/**
+	 * Get the default hierarchy for this catalogue, default is the master
+	 * The master hierarchy can be hidden to users. For this reason it is necessary to define a
+	 * new default hierarchy in these cases. The default hierarchy is usually the master hierarchy, but this
+	 * can be overridden setting after the catalogue scopenote: $hideMasterWith=newDefaultHierarchyCode
+	 * If it is not found, we return the master hierarchy
+	 * @return the default hierarchy
+	 */
+	public Hierarchy getDefaultHierarchy () {
+
+		// set the initial value for the default hierarchy
+		Hierarchy defaultHierarchy = getMasterHierarchy();
+
+		// get an instance of the global manager
+		GlobalManager manager = GlobalManager.getInstance();
+		
+		// if we are in editing, the default hierarchy is the master hierarchy
+		if ( !manager.isReadOnly() )
+			return defaultHierarchy;
+
+		StringTokenizer st = new StringTokenizer( getScopenotes(), "$" );
+		while ( st.hasMoreTokens() ) {
+
+			String token = st.nextToken();
+
+			// remove spaces
+			token = token.trim();
+
+			if ( token.toLowerCase().contains( "[hideMasterWith".toLowerCase() ) ) {
+
+				String[] split = token.split( "=.*]" );
+
+				// go to the next iteration if wrong split
+				if ( split.length != 2 )
+					continue;
+
+				// return the default hierarchy
+				Hierarchy temp = getHierarchyByCode( split[1] );
+
+				if ( temp != null )
+					defaultHierarchy = temp;
+			}
+		}
+		return defaultHierarchy;
+	}
+
+
+	/**
+	 * Get a catalogue field value using the DB columns names
+	 * column name
+	 * @param key
+	 * @return
+	 */
+	public String getValueByKey( String key ) {
+
+		String value = "";
+
+		switch ( key ) {
+		case "CAT_CODE":
+			value = getCode(); break;
+		case "CAT_NAME":
+			value = getName(); break;
+		case "CAT_LABEL":
+			value = getLabel(); break;
+		case "CAT_SCOPENOTE":
+			value = getScopenotes(); break;
+		case "CAT_TERM_CODE_MASK":
+			value = termCodeMask; break;
+		case "CAT_TERM_CODE_LENGTH":
+			value = String.valueOf( termCodeLength ); break;
+		case "CAT_TERM_MIN_CODE":
+			value = termMinCode; break;
+		case "CAT_ACCEPT_NON_STANDARD_CODES":
+			value = String.valueOf( acceptNonStandardCodes ); break;
+		case "CAT_GENERATE_MISSING_CODES":
+			value = String.valueOf( generateMissingCodes ); break;
+		case "CAT_VERSION":
+			value = getVersion(); break;
+		case "CAT_GROUPS":
+			value = catalogueGroups; break;
+		case "CAT_LAST_UPDATE":
+			if ( getLastUpdate() != null )
+				value = DateTrimmer.dateToString( getLastUpdate() ); 
+			break;
+		case "CAT_VALID_FROM":
+			if ( getValidFrom() != null )
+				value = DateTrimmer.dateToString( getValidFrom() ); 
+			break;
+		case "CAT_VALID_TO":
+			if ( getValidTo() != null )
+				value = DateTrimmer.dateToString( getValidTo() ); 
+			break;
+		case "CAT_STATUS":
+			value = getStatus(); break;
+		case "CAT_DEPRECATED":
+			value = BooleanConverter.toNumericBoolean( String.valueOf( isDeprecated() ) ); break;
+		default:
+			break;
+		}
+
+		return value;
+	}
+	
+	/**
+	 * Create a default catalogue object (for new catalogues)
+	 * @param catalogueCode
+	 * @return
+	 */
+	public static Catalogue getDefaultCatalogue( String catalogueCode ) {
+
+		CatalogueBuilder builder = new CatalogueBuilder();
+		builder.setCode( catalogueCode );
+		builder.setName( catalogueCode );
+		builder.setLabel( catalogueCode );
+		builder.setVersion( NOT_APPLICABLE_VERSION );
+		builder.setStatus( LOCAL_CATALOGUE_STATUS );
+		builder.setLocal( true );
+
+		return builder.build();
+	}
+	
+	/**
+	 * Get the last downloaded version of the catalogue
+	 * @return
+	 */
+	public Catalogue getLastVersion() {
+		
+		CatalogueDAO catDao = new CatalogueDAO();
+		
+		return catDao.getLastVersionByCode( getCode() );
+	}
+	
+	/**
+	 * Get the dummy cat users catalogue. We use this catalogue
+	 * to provide the right authorization accesses to users
+	 * @return
+	 */
+	public static Catalogue getCatUsersCatalogue() {
+		
+		String code = "CATUSERS";
+		
+		CatalogueBuilder builder = new CatalogueBuilder();
+		builder.setCode( code );
+		builder.setName( code );
+		builder.setLabel( code );
+		
+		return builder.build();
+	}
+	
+	/**
+	 * Check if the catalogue is the cat users catalogue
+	 * we hide this catalogue from read only users.
+	 * @return
+	 */
+	public boolean isCatUsersCatalogue() {
+		return getCode().equals ( "CATUSERS" );
+	}
+	
+	/**
+	 * Check if the catalogue is the MTX catalogue or not
+	 * If we have the MTX then several conditions will apply, such as the 
+	 * enabling of the business rules
+	 * @return
+	 */
+	public boolean isMTXCatalogue() {
+		return getCode().equals( "MTX" );
+	}
+	
+	/**
+	 *  Get the newest version of the catalogue 
+	 *  (if there is one, otherwise null)
+	 * @return
+	 */
+	public Catalogue getUpdate () {
+
+		if ( isLastRelease() )
+			return null;
+		
+		return getLastRelease();
+	}
+	
+	/**
+	 * Get the last release of the catalogue. If we
+	 * already have the last release then it will be
+	 * returned as it is.
+	 * @return
+	 */
+	public Catalogue getLastRelease() {
+		
+		CatalogueDAO catDao = new CatalogueDAO();
+		Catalogue lastLocalVersion = catDao.getLastVersionByCode( getCode() );
+		
+		Catalogue lastPublishedRelease = Dcf.getLastPublishedRelease( this );
+		
+		// if not found return the local version (for local catalogues)
+		if ( lastPublishedRelease == null )
+			return lastLocalVersion;
+		
+		// if the local version is greater than the published one 
+		// we have a local copy which is more updated (since we have
+		// reserved it maybe)
+		
+		boolean isUpdated = lastLocalVersion.getVersion().compareTo( 
+				lastPublishedRelease.getVersion() ) > 0;
+		
+		// if we have the local catalogue being the most updated
+		// we return it
+		if ( isUpdated )
+			return lastLocalVersion;
+		else  // otherwise return the published one
+			return lastPublishedRelease;
+	}
+	
+	/**
+	 * Check if this catalogue is the last release
+	 * or not.
+	 * @return
+	 */
+	public boolean isLastRelease() {
+		
+		// get the last update
+		Catalogue last = getLastRelease();
+
+		// if this catalogue is older than the last
+		// release => this is not the last release
+		if ( last != null && this.isOlder( last ) ) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Check if this catalogue is an older version
+	 * of the catalogue passed in input.
+	 * @param catalogue
+	 * @return true if this catalogue is older than the other,
+	 * false otherwise.
+	 */
+	public boolean isOlder ( Catalogue catalogue ) {
+		
+		// local catalogues don't have a version so
+		// we cannot say if one is older than another
+		if ( this.isLocal() || catalogue.isLocal() )
+			return false;
+		
+		// check if the catalogues have the same code
+		boolean sameCode = this.equals( catalogue );
+		
+		// check the version
+		Version catVersion = this.getRawVersion();
+		
+		boolean olderVersion = catVersion.compareTo( catalogue.getRawVersion() ) > 0;
+
+		return sameCode && olderVersion;
+	}
+
+	/**
+	 * Open the db connection with the currently open catalogue
+	 * @return
+	 * @throws SQLException
+	 */
+	public Connection getConnection () throws SQLException {
+		return DriverManager.getConnection( getDbUrl() );
+	}
+
+	/**
+	 * Get the catalogue db connection
+	 * @return
+	 */
+	public String getDbUrl() {
+		return "jdbc:derby:" + dbFullPath + ";user=dbuser;password=dbuserpwd";
+	}
+	
+
+	/**
+	 * Is a new version present in the dcf?
+	 * Return the new version if present, otherwise null
+	 * @return
+	 */
+	public boolean hasUpdate () {
+		return getUpdate() != null;
+	}
+	
+	/**
+	 * Check if the last release of the catalogue is already downloaded
+	 * @return
+	 */
+	public boolean isLastReleaseAlreadyDownloaded () {
+
+		// if the catalogue has not any update => we have the last 
+		// version and so we have already downloaded it
+		if ( !hasUpdate() )
+			return true;
+
+		// check if we already have that update in our local db 
+		// it can happen that a user opens a older version of the catalogue
+		// but already have downloaded the new version
+
+		boolean alreadyDownloaded = false;
+
+		// get the last release of the catalogue
+		Catalogue lastRelease = getUpdate();
+
+		CatalogueDAO catDao = new CatalogueDAO();
+		
+		// check if the last release is already downloaded
+		// if the last release is present into the local catalogues then return true
+		for ( Catalogue cat : catDao.getLocalCatalogues() ) {
+
+			if ( cat.getCode().equals( lastRelease.getCode() ) && 
+					cat.getVersion().equals( lastRelease.getVersion() ) ) {
+				alreadyDownloaded = true;
+				break;
+			}
+		};
+
+		return alreadyDownloaded;
+	}
+	
+	/**
+	 * Check if the master hierarchy should be hidden or not
+	 * @return
+	 */
+	public boolean isMasterHierarchyHidden () {
+		
+		User user = User.getInstance();
+		
+		// if we are in read only mode and the default hierarchy 
+		// is not the master hierarchy
+		// then we have to hide the master hierarchy
+		return user.canEdit( this ) && 
+				!getDefaultHierarchy().isMaster();
+	}
+	
+	/**
+	 * Override the to string method to print easily the catalogue
+	 */
+	@Override
+	public String toString() {
+		return "CATALOGUE: " + getCode() + ", version " + getVersion();
+	}
+
+
+	/**
+	 * Order the current catalogue with another one by label name
+	 * and by version
+	 * @param cat
+	 * @return
+	 */
+	@Override
+	public int compareTo( Catalogue cat ) {
+		
+		if ( getLabel().equals( cat.getLabel() ) ) {
+			
+			// compare the versions if equal label
+			
+			Version catVersion = this.getRawVersion();
+			
+			return catVersion.compareTo( cat.getRawVersion() );
+		}
+		
+		return getLabel().compareTo( cat.getLabel() );
+	}
+
+	/**
+	 * Check if this catalogue is the same as the one
+	 * passed in input (both in code and version)
+	 * @param catalogue
+	 * @return true if equal
+	 */
+	public boolean sameAs ( Catalogue catalogue ) {
+		
+		boolean sameCode = getCode().equals( catalogue.getCode() );
+		boolean sameVers = getVersion().equals( catalogue.getVersion() );
+		
+		return sameCode && sameVers;
+	}
+	
+	/**
+	 * Decide when a catalogue is the same as another one 
+	 * the catalogue code identifies the catalogue (without version)
+	 */
+	@Override
+	public boolean equals( Object cat ) {
+		boolean sameCode = getCode().equals( ( (Catalogue) cat ).getCode() );
+		return sameCode;
+	}
+}
+
+

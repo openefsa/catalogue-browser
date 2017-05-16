@@ -1,0 +1,45 @@
+----------------------------------------------------------------
+Tue May 16 08:03:55 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-015c-0fdb-1466-0000465fffd8 
+on database directory C:\Users\avonva\Desktop\CatalogueBrowser\efsa.cappe.FoodexBrowser\Database\CataloguesMetadata with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/efsa.cappe.FoodexBrowser/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_111-b14
+user.dir=C:\Users\avonva\Desktop\CatalogueBrowser\efsa.cappe.FoodexBrowser
+os.name=Windows 7
+os.arch=amd64
+os.version=6.1
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Tue May 16 08:04:01 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 20e1c02b-015c-0fdb-1466-0000465fffd8 
+on database directory C:\Users\avonva\Desktop\CatalogueBrowser\efsa.cappe.FoodexBrowser\Database\CAT_PARAM_DB\PARAM_VERSION_8.3 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/efsa.cappe.FoodexBrowser/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_111-b14
+user.dir=C:\Users\avonva\Desktop\CatalogueBrowser\efsa.cappe.FoodexBrowser
+os.name=Windows 7
+os.arch=amd64
+os.version=6.1
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Tue May 16 08:04:09 CEST 2017:
+Shutting down instance 20e1c02b-015c-0fdb-1466-0000465fffd8 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\efsa.cappe.FoodexBrowser\Database\CAT_PARAM_DB\PARAM_VERSION_8.3 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+----------------------------------------------------------------
+Tue May 16 08:04:09 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 1315819d-015c-0fdb-1466-0000465fffd8 
+on database directory C:\Users\avonva\Desktop\CatalogueBrowser\efsa.cappe.FoodexBrowser\Database\CAT_PARAM_DB\PARAM_VERSION_8.3 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/efsa.cappe.FoodexBrowser/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_111-b14
+user.dir=C:\Users\avonva\Desktop\CatalogueBrowser\efsa.cappe.FoodexBrowser
+os.name=Windows 7
+os.arch=amd64
+os.version=6.1
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Tue May 16 08:04:15 CEST 2017:
+Shutting down instance a816c00e-015c-0fdb-1466-0000465fffd8 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\efsa.cappe.FoodexBrowser\Database\CataloguesMetadata with class loader sun.misc.Launcher$AppClassLoader@73d16e93 

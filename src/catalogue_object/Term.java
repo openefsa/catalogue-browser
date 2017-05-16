@@ -1,0 +1,1844 @@
+package catalogue_object;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.widgets.Display;
+
+import catalogue_browser_dao.ParentTermDAO;
+import catalogue_browser_dao.TermDAO;
+import data_transformation.BooleanConverter;
+import data_transformation.DateTrimmer;
+import data_transformation.ValuesGrouper;
+import global_manager.GlobalManager;
+import messages.Messages;
+import term.TermSubtreeIterator;
+import ui_implicit_facet.ComparatorFacetDescriptor;
+import ui_implicit_facet.DescriptorTreeItem;
+import ui_implicit_facet.FacetDescriptor;
+import ui_implicit_facet.FacetType;
+
+/**
+ * The class represent Term in the our vision. One term can have 3 state:
+ * INITIAL: after the creation; Partial: when the element of the Table TERM(in
+ * DB) are loaded; COMPLETE : when is complete loaded
+ * 
+ * @author thomm
+ * 
+ */
+public class Term extends CatalogueObject implements Mappable {
+
+	// Term attributes caches
+	
+	// corex flag, how much is detailed the term?
+	private TermAttribute detailLevel;
+
+	// state flag, which is the term type?
+	private TermAttribute termType;
+	
+	// the implicit facets of the term
+	private ArrayList<FacetDescriptor> implicitFacets;
+
+	// list of attributes and their values related to the term
+	private ArrayList< TermAttribute >	termAttributes;
+
+	// the applicabilities of the term in its hierarchies
+	private ArrayList< Applicability > applicabilities;
+
+	/**
+	 * Constructor, initialize array lists
+	 */
+	public Term( Catalogue catalogue ) {
+		
+		super ( catalogue );
+		implicitFacets = new ArrayList<>();
+		termAttributes = new ArrayList<>();
+		applicabilities = new ArrayList<>();
+	}
+	
+	/**
+	 * Create a term, the name is the extended name and the label is the short name
+	 * @param id
+	 * @param code
+	 * @param name
+	 * @param label
+	 * @param scopenotes
+	 * @param status
+	 * @param version
+	 * @param lastUpdate
+	 * @param validFrom
+	 * @param validTo
+	 * @param deprecated
+	 */
+	public Term ( Catalogue catalogue, int id, String code, String name, String label, String scopenotes, String status,
+			String version, Timestamp lastUpdate, Timestamp validFrom, Timestamp validTo, boolean deprecated ) {
+		
+		super( catalogue, id, code, name, label, scopenotes, version,  
+				lastUpdate, validFrom, validTo, status, deprecated );
+		
+		implicitFacets = new ArrayList<>();
+		termAttributes = new ArrayList<>();
+		applicabilities = new ArrayList<>();
+	}
+	
+	/**
+	 * Get the full code of a term (base code plus all the term facets)
+	 * If includeImplicit = true, the code will contain also the implicit facets codes
+	 * If baseTerm = true, the code will contain also the base term code
+	 * @param t
+	 * @param includeImplicit
+	 * @return
+	 */
+	public String getFullCode ( boolean includeImplicit, boolean baseTerm ) {
+
+		// get all the facet categories
+		ArrayList< Attribute > facetCategories = catalogue.getFacetCategories();
+		
+		String result = "";
+		String descriptorCodes = "";
+		
+		// Now I decide whether to insert also implicit attributes or only the
+		// one defined in the node
+
+		Collections.sort( facetCategories, new Comparator< Object >() {
+
+			public int compare ( Object arg0 , Object arg1 ) {
+
+				int retval = 0;
+
+				if ( ( arg0 instanceof Attribute ) && ( arg1 instanceof Attribute ) ) {
+
+					Attribute ta0 = (Attribute) arg0;
+					Attribute ta1 = (Attribute) arg1;
+
+					retval = ta0.getCode().compareTo( ta1.getCode() );
+
+				}
+
+				return retval;
+			}
+
+		} );
+
+		// for each facet category we analyze the implicit facets and the explicit facets
+		for ( Attribute facetCategory : facetCategories ) {
+			
+			ArrayList< FacetDescriptor > descriptors = new ArrayList<>();
+			
+			// get the implicit facets descriptors from the term if needed
+			if ( includeImplicit ) {
+				
+				for ( DescriptorTreeItem item : this.getInheritedImplicitFacets( facetCategory ) ) {
+					
+					descriptors.add( item.getDescriptor() );
+				}
+				
+			} else {
+				
+				// get the descriptors of the term related to the facet category
+				descriptors = getDescriptorsByCategory( facetCategory, includeImplicit );
+			}
+
+			// In case it is needed I add the $ separator between facets
+
+			Collections.sort( descriptors, new ComparatorFacetDescriptor() );
+			
+			// add the descriptor full codes into the term full code
+			for ( FacetDescriptor descriptor : descriptors ) {
+				descriptorCodes = descriptorCodes + descriptor.getFullFacetCode() + "$";
+			}
+		}
+		
+		// Add the base term code if required
+		if ( baseTerm ) {
+			result = getCode();
+			
+			// add the hash if facet will be added
+			if ( descriptorCodes.length() > 0 )
+				result = result + "#";
+		}
+		
+		// I add the # separator if it is the case to be added (I have some
+		// facets)
+		if ( descriptorCodes.length() > 0 )
+			result = result + descriptorCodes.substring( 0, descriptorCodes.length() - 1 );
+		else
+			result = getCode();
+		return result;
+	}
+	
+	/**
+	 * Get the implicit facets code (without base term)
+	 * @return
+	 */
+	public String getImplicitFacetsCode () {
+
+		// get all the facet categories
+		ArrayList< Attribute > facetCategories = catalogue.getFacetCategories();
+
+		String descriptorCodes = "";
+
+		// for each facet category we analyze the implicit facets and the explicit facets
+		for ( Attribute facetCategory : facetCategories ) {
+
+			ArrayList< FacetDescriptor > descriptors = new ArrayList<>();
+
+			for ( DescriptorTreeItem item : this.getInheritedImplicitFacets( facetCategory ) ) {
+
+				descriptors.add( item.getDescriptor() );
+			}
+
+
+			// In case it is needed I add the $ separator between facets
+
+			Collections.sort( descriptors, new ComparatorFacetDescriptor() );
+
+			// add the descriptor full codes into the term full code
+			for ( int i = 0; i < descriptors.size(); i++ ) {
+				
+				descriptorCodes = descriptorCodes + descriptors.get(i).getFullFacetCode();
+				
+				if ( i < descriptors.size() - 1 )
+					descriptorCodes = descriptorCodes + "$";
+			}
+		}
+		
+		return descriptorCodes;
+	}
+	
+
+	/**
+	 * Get all the implicit facets related to a term for a specific facet category
+	 * @param term
+	 * @param facetCategory
+	 * @return
+	 */
+	private ArrayList< DescriptorTreeItem > getImplicitFacetsTree ( Attribute facetCategory ) {
+		
+		ArrayList< DescriptorTreeItem > inTree = new ArrayList<>();
+		
+		// start the recursive method
+		return getImplicitFacetsTree ( facetCategory, inTree, false );
+	}
+	
+	/**
+	 * Get all the implicit facets related to the term for a single facet category
+	 * recursive method which uses the tree structure!
+	 * @param facet, the facet category we considered in this step
+	 * @param term, the term we selected to see its implicit facets
+	 * @return
+	 */
+	private ArrayList< DescriptorTreeItem > getImplicitFacetsTree ( Attribute facetCategory,
+			ArrayList< DescriptorTreeItem > inTree, boolean processingParents ) {
+
+		// For each facet descriptor
+		for ( FacetDescriptor descriptor : this.getDescriptorsByCategory( facetCategory, true ) ) {
+			
+			// get the term related to the descriptor code
+			Term descriptorTerm = catalogue.getTermByCode( descriptor.getFacetCode() );
+
+			// we instantiate a node of the tree with the descriptor term
+			// if we are processing parents then we set the tree item as inherited = true
+			DescriptorTreeItem parent = new DescriptorTreeItem( descriptorTerm, descriptor, processingParents );
+			
+			// check the relationships with the descriptors which were already added in 
+			// previous call of this recursive method. In particular, we check if the
+			// node just created have some children in the tree. If so we set the
+			// relationship
+			Iterator<DescriptorTreeItem> iterator = inTree.iterator();
+			while ( iterator.hasNext() ) {
+				
+				// get the current node of the tree
+				DescriptorTreeItem child = iterator.next();
+
+				// has the descriptor contained in the tree as ancestor our new node?
+				if ( child.getTerm().hasAncestor( parent.getTerm(), catalogue.getMasterHierarchy() ) ) {
+					
+					// if so, then set the parent child relationship
+					child.setParent( parent );
+					parent.addChild( child );
+
+					// remove the child, which is not required since we display only the parent element
+					iterator.remove();
+				}
+			}
+			
+			// add the new node to the tree
+			inTree.add( parent );
+		}
+
+		// then get the parent of the term in order to add also its implicit facets
+		// to the child term
+		Term parentTerm = this.getParent( catalogue.getMasterHierarchy() );
+		
+		// if a parent is found => go on with the recursion
+		if ( parentTerm != null )
+			inTree = parentTerm.getImplicitFacetsTree( facetCategory, inTree, true );
+		
+		return inTree;
+	}
+	
+	/**
+	 * Given a tree of implicit facets, we retrieve all the leaf nodes.
+	 * We use a queue to make a visit of the tree level by level (not deeper first, we use breath first)
+	 * @param inTree
+	 * @return
+	 */
+	private ArrayList< DescriptorTreeItem > getImplicitFacetsLeaves (
+			ArrayList< DescriptorTreeItem > inTree ) {
+		
+		Queue< DescriptorTreeItem > descriptors = new LinkedList<>();
+		ArrayList< DescriptorTreeItem > leaves = new ArrayList<>();
+		
+		// prepare the queue of descriptors
+		descriptors.addAll( inTree );
+
+		// do until we have processed all nodes of the tree
+		while ( !descriptors.isEmpty() ) {
+			
+			// get the head of the queue and remove it from the queue
+			DescriptorTreeItem item = descriptors.poll();
+			
+			// if we found a leaf, add it to the leaf list and go to the next descriptor
+			if ( item.isLeaf() ) {
+				leaves.add( item );
+				continue; // go to the next descriptor
+			}
+			
+			
+			// if we did not find a leaf, get all the children and process them
+			// (we add them to the queue, they will be processed further on
+			for ( DescriptorTreeItem child : item.getChildren() ) {
+				
+				// add the child into the queue
+				descriptors.add( child );
+			}
+		}
+		
+		return leaves;
+	}
+	
+	/**
+	 * Get the inherited implicit facets related to a single facet category.
+	 * For example, if we want to have all the implicit facets related to the
+	 * Process facet, we pass as parameter the Attribute which identifies the 
+	 * process facet.
+	 * @param facetCategory the facet category we want to consider
+	 * @return {@code ArrayList<DescriptorTreeItem>}, the implicit facets tree
+	 * (we can have some parent-child relationships since we can specify more
+	 * facets using their children)
+	 */
+	public ArrayList< DescriptorTreeItem > getInheritedImplicitFacets( Attribute facetCategory ) {
+		return this.getImplicitFacetsLeaves( getImplicitFacetsTree( facetCategory ) );
+	}
+	
+	/**
+	 * Get the term short name
+	 * @return
+	 */
+	public String getShortName() {
+
+		if ( getLabel().equals( "" ) )
+			return getName();
+		
+		return getLabel();
+	}
+
+	/**
+	 * Get the detail level of the term if present, otherwise null
+	 * @return
+	 */
+	public TermAttribute getDetailLevel ( ) {
+		return detailLevel;
+	}
+
+	/**
+	 * Get the term type if present, otherwise null
+	 * @return
+	 */
+	public TermAttribute getTermType ( ) {
+		return termType;
+	}
+	
+	/**
+	 * Get the term order in a particular heirarchy
+	 * @param hierarchy
+	 */
+	public int getOrder ( Hierarchy hierarchy ) {
+		
+		Applicability appl = getApplicability( hierarchy );
+		
+		if ( appl != null )
+			return appl.getOrder();
+		
+		return -1;
+	}
+	
+	/**
+	 * Get the term implicit facets (not inherited, only the ones related to this term)
+	 * @return
+	 */
+	public ArrayList<FacetDescriptor> getImplicitFacets() {
+		return implicitFacets;
+	}
+	
+	/**
+	 * Get the attributes
+	 * @return
+	 */
+	public ArrayList<TermAttribute> getAttributes () {
+		return termAttributes;
+	}
+	
+	/**
+	 * Get a term attribute value by its attribute name
+	 * note that repeatable attributes are compacted with a $
+	 * @param name
+	 * @return
+	 */
+	public String getAttributeValueByName ( String name ) {
+
+		// values grouper to group several values $ separated
+		ValuesGrouper values = new ValuesGrouper();
+		
+		for ( TermAttribute ta : termAttributes ) {
+			if ( ta.getAttribute().getName().equals( name ) )
+				values.addValue( ta.getValue() );
+		}
+		
+		return values.getCompactValues();
+	}
+	
+	
+	
+	/**
+	 * Get all the term applicabilities
+	 * @return
+	 */
+	public ArrayList<Applicability> getApplicabilities () {
+		return applicabilities;
+	}
+	
+	/**
+	 * Get the term applicability related to the selected hierarchy
+	 * if no applicability is found => return null
+	 * @param hierarchy
+	 * @return
+	 */
+	public Applicability getApplicability ( Hierarchy hierarchy ) {
+
+		for ( Applicability appl : applicabilities ) {
+			
+			// if we have found the correct hierarchy return
+			if ( appl.hasHierarchy( hierarchy ) ) {
+				return appl;
+			}
+		}
+		
+		return null;
+	}
+	
+	
+	/**
+	 * Convert the order integer code to a hierarchy code
+	 * @param hierarchy
+	 * @return
+	 */
+	public String getSingleHierarchyCode ( Hierarchy hierarchy ) {
+		
+		// get the applicability of the term
+		Applicability appl = getApplicability(hierarchy);
+
+		if ( appl == null )
+			return null;
+
+		// start from the order integer of the term
+		String hierarchyCode = String.valueOf( appl.getOrder() );
+
+		// add zeros to format code
+		while ( hierarchyCode.length() < 4 ) {
+			hierarchyCode = "0" + hierarchyCode;
+		}
+
+		return hierarchyCode;
+	}
+	
+	/**
+	 * Create the hierarchy code for this term considering the
+	 * selected hierarchy. A hierarchy code is a Z0001.0001.0002.
+	 * @param hierarchy
+	 * @return
+	 */
+	public String getHierarchyCode ( Hierarchy hierarchy ) {
+
+		String hierarchyCode = this.getSingleHierarchyCode ( hierarchy );
+		
+		// if no code found return void
+		if ( hierarchyCode == null )
+			return "";
+		
+		// get the parent
+		Term parent = this.getParent( hierarchy );
+
+		// do until root
+		while ( parent != null ) {
+			
+			// get the single hierarchy code of the parent
+			String parentHierarchyCode = parent.getSingleHierarchyCode ( hierarchy );
+			
+			// if no code found exit cycle
+			if ( parentHierarchyCode == null )
+				break;
+			
+			// concatenate the parent hierarchy code with the rest
+			// in a dot separated way
+			hierarchyCode = parentHierarchyCode + "." + hierarchyCode;
+
+			// get the next parent
+			parent = parent.getParent( hierarchy );
+		}
+		
+		// add the Z at the beginning (to avoid excel issues)
+		hierarchyCode = "Z" + hierarchyCode;
+
+		return hierarchyCode;
+	}
+	
+	@Override
+	public String getValueByKey(String key) {
+		
+		String value = "";
+		
+		switch ( key ) {
+		case "TERM_CODE":
+			value = getCode(); break;
+		case "TERM_EXTENDED_NAME":
+			value = getName(); break;
+		case "TERM_SHORT_NAME":
+			value = getShortName(); break;
+		case "TERM_SCOPENOTE":
+			value = getScopenotes(); break;
+		case "TERM_VERSION":
+			value = getVersion(); break;
+		case "TERM_LAST_UPDATE":
+			if ( getLastUpdate() != null )
+				value = DateTrimmer.dateToString( getLastUpdate() ); 
+			break;
+		case "TERM_VALID_FROM":
+			if ( getValidFrom() != null )
+				value = DateTrimmer.dateToString( getValidFrom() ); 
+			break;
+		case "TERM_VALID_TO":
+			if ( getValidTo() != null )
+				value = DateTrimmer.dateToString( getValidTo() ); 
+			break;
+		case "TERM_STATUS":
+			value = getStatus(); break;
+		case "TERM_DEPRECATED":
+			value = BooleanConverter.toNumericBoolean( String.valueOf( isDeprecated() ) ); break;
+		default:
+			break;
+		}
+		
+		// if we have a parametrized attribute
+		if ( key.contains( "attribute_" ) ) {
+			
+			// get the attribute name (convention attribute_ + attribute name)
+			String attrName = key.split("_")[1];
+
+			// get the term attribute value related to the attribute name
+			// note that repeatable attributes are compacted $ separated
+			value = this.getAttributeValueByName( attrName );
+		}
+		
+		// if we have a parametrized hierarchy flag
+		if ( key.contains( "flag_" ) )
+			value = getHierarchyProperty( key, ParentField.FLAG );
+
+		// if we have a parametrized hierarchy parent code
+		if ( key.contains( "parent_" ) )
+			value = getHierarchyProperty( key, ParentField.PARENT_CODE );
+		
+		// if we have a parametrized hierarchy order
+		if ( key.contains( "order_" ) )
+			value = getHierarchyProperty( key, ParentField.ORDER );
+
+		// if we have a parametrized hierarchy reportable
+		if ( key.contains( "reportable_" ) )
+			value = getHierarchyProperty( key, ParentField.REPORTABLE );
+		
+		// if we have a parametrized hierarchy code
+		if ( key.contains( "hierarchyCode_" ) )
+			value = getHierarchyProperty( key, ParentField.HIERARCHY_CODE );
+
+		return value;
+	}
+	
+	
+	/**
+	 * Get the parent field related to the current hierarchy
+	 * retrieved from the key string.
+	 * @param key, key which contains the hierarchy code
+	 * @param field, field which is being analyzed
+	 * @return
+	 */
+	private String getHierarchyProperty ( String key, ParentField field ) {
+	
+		String value = "";
+		
+		// get the hierarchy code from the key
+		String hierarchyCode = key.split("_")[1];
+		
+		Hierarchy hierarchy;
+		
+		// if the code is the master code we get the master hierarchy,
+		// otherwise we get the hierarchy using its code
+		if ( hierarchyCode.equals( Hierarchy.MASTER_HIERARCHY_CODE ) )
+			hierarchy = catalogue.getMasterHierarchy();
+		else
+			hierarchy = catalogue.getHierarchyByCode( hierarchyCode );
+		
+		// get the term applicability related to the found hierarchy
+		Applicability appl = this.getApplicability( hierarchy );
+		
+		// return empty value if no applicability is retrieved
+		if ( appl == null )
+			return "";
+		
+		switch ( field ) {
+		
+		// if hierarchy flag
+		case FLAG:
+			
+			value = "1"; 
+			break;
+			
+		// if hierarchy parent code
+		case PARENT_CODE:
+			
+			// get the parent of the term
+			Nameable parent = appl.getParentTerm();
+
+			// if we have a parent which is a term => we get the term code as parent code
+			if ( parent instanceof Term )
+				value = ( (Term) parent ).getCode();
+
+			// if we have a hierarchy, we have to set as convention "root" as parent code
+			// since there is not actually a term parent
+			else if ( parent instanceof Hierarchy )
+				value = "root";
+			break;
+		
+		// if hierarchy order
+		case ORDER:
+			
+			// get the order from the applicability
+			int order = appl.getOrder();
+
+			// convert it to string
+			value = String.valueOf( order );
+			break;
+			
+		// if hierarchy reportable
+		case REPORTABLE:
+			
+			// get if the term is reportable in the applicability
+			boolean reportable = appl.isReportable();
+
+			// convert the true/false to 1/0 and then convert to string
+			value = BooleanConverter.toNumericBoolean( String.valueOf( reportable ) );
+			break;
+		case HIERARCHY_CODE:
+			value = getHierarchyCode ( hierarchy );
+			break;
+		}
+		
+		
+		// return the retrieved value
+		return value;
+	}
+
+	/**
+	 * Set the term short name (the displayed as name)
+	 * @param shortName
+	 */
+	public void setShortName(String shortName) {
+		setLabel( shortName );
+	}
+
+	/**
+	 * Set the detail level of the term (both attribute and value)
+	 * @param value
+	 */
+	public void setDetailLevel ( TermAttribute detailLevel ) {
+		this.detailLevel = detailLevel;
+		
+		if ( !termAttributes.contains( detailLevel ) ) {
+			termAttributes.add( detailLevel );
+		}
+	}
+	
+	/**
+	 * Set the detail level of the term (both attribute and value)
+	 * @param value
+	 */
+	public void setTermType ( TermAttribute termType ) {
+		
+		this.termType = termType;
+		
+		if ( !termAttributes.contains( termType ) ) {
+			termAttributes.add( termType );
+		}
+	}
+	
+	/**
+	 * Set the value of the detail level (not the attribute, only the value)
+	 * @param value
+	 */
+	public void setDetailLevelValue ( String value ) {
+		
+		if ( detailLevel == null )
+			return;
+		
+		this.detailLevel.setValue( value );
+	}
+	
+	/**
+	 * Set the value of the term type (not the attribute, only the value)
+	 * @param value
+	 */
+	public void setTermTypeValue ( String value ) {
+		
+		if ( termType == null )
+			return;
+		
+		this.termType.setValue(value);
+	}
+	
+	/**
+	 * Set the term order in a particular hierarchy
+	 * @param hierarchy
+	 */
+	public void setOrder ( Hierarchy hierarchy, int order ) {
+		
+		Applicability appl = getApplicability(hierarchy);
+		
+		if ( appl != null )
+			appl.setOrder( order );
+	}
+	
+	/**
+	 * Set the reportability of the term in one hierarchy
+	 * @param hierarchy
+	 * @param reportable
+	 */
+	public void setReportability ( Hierarchy hierarchy, boolean reportable ) {
+	
+		// check if the hierarchy is indeed into the applicabilities
+		boolean found = false;
+		
+		for ( Applicability appl : applicabilities ) {
+			
+			// search the chosen hierarchy
+			if ( appl.hasHierarchy( hierarchy ) ) {
+				
+				// update the reportability of the term in the selected hierarchy
+				appl.setReportable( reportable );
+				
+				found = true;
+				break;
+			}
+		}
+		
+		if ( !found ) {
+			System.err.println ( "The hierarchy " + hierarchy.getLabel() + 
+					" was not found in the applicabilities of the term " + this );
+		}
+	}
+	
+
+	/**
+	 * Get the truncated name of the term (up to the "last" character). 
+	 * If addDots = true, three dots are attached at the
+	 * end of the term name if it was indeed truncated
+	 * @param last
+	 * @return
+	 */
+	public String getTruncatedName( int last, boolean addDots ) {
+		
+		int min = Math.min( getName().length(), last );
+		
+		String truncatedName = getName().substring( 0, min );
+		
+		// if we want to add dots and the name was indeed truncated
+		if ( addDots && truncatedName.length() < getName().length() )
+			truncatedName = truncatedName + "...";
+		
+		return truncatedName;
+	}
+	
+	/**
+	 * Get the interpreted code of the term without implicit facets (only explicit are considered).
+	 * @return
+	 */
+	public String getInterpretedCode () {
+		return getInterpretedCode( false );
+	}
+	
+	/**
+	 * Get the interpreted code of the term with explicit facets. Implicit facets are added if the copy implicit
+	 * boolean is set to true (default false).
+	 * @return
+	 */
+	public String getInterpretedCode ( boolean copyImplicit ) {
+
+		// the first element of the interpreted code is the base term name
+		StringBuilder interpCode = new StringBuilder();
+		
+		interpCode.append( this.getName() );
+
+		// then we add all the implicit facets codes comma separated
+		// FACET_HIERARCHY = FacetName, ...
+		for ( FacetDescriptor fd : implicitFacets ) {
+			
+			// skip if we have an implicit facet and copy implicit is set to false
+			if ( !copyImplicit && fd.getFacetType() == FacetType.IMPLICIT )
+				continue;
+			
+			interpCode.append( ", " );
+			interpCode.append( fd.getFacetCategory().getHierarchy().getLabel().toUpperCase() );
+			interpCode.append( " = " );
+			interpCode.append( fd.getDescriptor().getName() );
+		}
+		
+		return interpCode.toString();
+	}
+	
+	/**
+	 * Get all the descriptors related to the facet category
+	 * The dcfattribute is simply the category but it does not own the value, which
+	 * is the term code (i.e. the code of the facet descriptor)
+	 * Here we retrieve all the descriptors related to the category
+	 * @param facetCategory
+	 * @return
+	 */
+	public ArrayList<FacetDescriptor> getDescriptorsByCategory ( Attribute facetCategory, boolean implicit ) {
+		
+		// output array
+		ArrayList<FacetDescriptor> facets = new ArrayList<>();
+		
+		// for each facet descriptor we search for the descriptors of a single category
+		for ( FacetDescriptor descriptor : implicitFacets ) {
+			
+			// if we do not want the implicit facets => skip implicit
+			if ( !implicit && descriptor.getFacetType() == FacetType.IMPLICIT )
+				continue;
+			
+			// check if correct facet category
+			if ( descriptor.getFacetCategory().getId() == facetCategory.getId() ) {
+				
+				// add the descriptor to the facet list
+				facets.add( descriptor );
+				
+				continue;  // found, go with the next one
+			}
+		}
+		
+		return facets;
+	}
+
+
+	/**
+	 * Add a generic term attribute to the term
+	 * @param ta
+	 */
+	public void addAttribute ( TermAttribute ta ) {
+		
+		// add to the attributes
+		termAttributes.add( ta );
+		
+		// if we have corex flag set accordingly
+		if ( ta.getAttribute().isDetailLevel() )
+			setDetailLevel( ta );
+		
+		// if we have state flag set accordingly
+		if ( ta.getAttribute().isTermType() )
+			setTermType( ta );
+		
+		// if we have an implicit facet add it to the implicit facets list
+		// as facet descriptor
+		if ( ta.getAttribute().isImplicitFacet() ) {
+
+			// create an implicit facet descriptor
+			FacetDescriptor fa = new FacetDescriptor( this, ta, FacetType.IMPLICIT );
+			implicitFacets.add( fa );
+		}
+	}
+	
+	/**
+	 * Remove an attribute from the term
+	 * @param ta
+	 */
+	public void removeAttribute ( TermAttribute ta ) {
+		
+		termAttributes.remove( ta );
+		
+		// if it was an implicit facet remove it also from the cache
+		if ( ta.getAttribute().isImplicitFacet() )
+			implicitFacets.remove( ta );
+		
+		if ( ta.getAttribute().isDetailLevel() )
+			detailLevel = null;
+		
+		if ( ta.getAttribute().isTermType() )
+			termType = null;
+	}
+	
+	/**
+	 * Add directly an implicit facet to the list of facets (and thus to the attributes)
+	 * @param fd
+	 */
+	public void addImplicitFacet ( FacetDescriptor fd ) {
+		
+		// return if the implicit facet was already added
+		if ( termAttributes.contains( fd ) )
+			return;
+		
+		termAttributes.add( fd.getTermAttribute() );
+		implicitFacets.add( fd );
+	}
+	
+	/**
+	 * Remove directly an implicit facet from the list of facets (and thus from the attributes)
+	 * @param fd
+	 */
+	public void removeImplicitFacet ( FacetDescriptor fd ) {
+		
+		// remove the term attribute
+		termAttributes.remove( fd.getTermAttribute() );
+		
+		// remove the descriptor
+		implicitFacets.remove( fd );
+	}
+	
+	/**
+	 * Remove all the attributes
+	 */
+	public void clearAttributes () {
+		
+		if ( termAttributes != null )
+			termAttributes.clear();
+		
+		if ( implicitFacets != null )
+			implicitFacets.clear();
+		
+		detailLevel = null;
+		termType = null;
+	}
+
+	
+	/**
+	 * Remove all the applicabilities
+	 */
+	public void clearApplicabilities () {
+		applicabilities.clear();
+	}
+	
+	/**
+	 * Get all the attributes that are not catalogue attributes
+	 * and that are not detail level, type of term and implicit facets
+	 * @return
+	 */
+	public ArrayList<TermAttribute> getGenericAttributes () {
+		
+		ArrayList<TermAttribute> nonCatAttrs = new ArrayList<>();
+		
+		for ( TermAttribute attr : termAttributes )
+			if ( !attr.getAttribute().isCatalogue() && !attr.getAttribute().isDetailLevel() 
+					&& !attr.getAttribute().isTermType() && !attr.getAttribute().isImplicitFacet()
+					&& !attr.getAttribute().isAllFacet() )
+				nonCatAttrs.add( attr );
+		
+		return nonCatAttrs;
+	}
+
+	
+	/**
+	 * Remove a term attribute from the term (we use only the attribute equals, since we are in the term class)
+	 * @param ta
+	 */
+	public void removeTermAttribute( TermAttribute ta ) {
+		
+		for ( int i = 0; i < termAttributes.size(); i++ ) {
+			
+			if ( ta.getAttribute().equals( termAttributes.get(i).getAttribute() ) ) {
+				
+				TermAttribute removed = termAttributes.remove( i );
+				
+				// if we have an implicit facet then we remove also from the implicit facet array
+				if ( removed.getAttribute().isImplicitFacet() )
+					implicitFacets.remove( removed );
+				
+				if ( removed.getAttribute().isDetailLevel() )
+					detailLevel = null;
+				
+				if ( removed.getAttribute().isTermType() )
+					termType = null;
+			}
+		}
+	}
+	
+	
+	/**
+	 * Add an applicability to the term
+	 * Return true if the element was correctly added, otherwise false
+	 * Set permanent to true if you want to add the applicability also in the catalogue database
+	 * @param appl
+	 * @param permanent, true = save the applicability into the catalogue database, default is false
+	 * @return true if the applicability was added successfully
+	 */
+	public boolean addApplicability ( Applicability appl, boolean permanent ) {
+		
+		// if the applicability is not already present add it
+		if ( !applicabilities.contains( appl ) ) {
+			
+			applicabilities.add( appl );
+			
+			ParentTermDAO parentDao = new ParentTermDAO( catalogue );
+			
+			// add the new applicability permanently if required
+			if ( permanent )
+				parentDao.insert( appl );
+			
+			return true;
+		}
+		
+		System.err.println ( "Applicability " + appl + " is already present" );
+		
+		return false;
+	}
+	
+	/**
+	 * Add an applicability to this term (only RAM object is touched, the db
+	 * is not updated)
+	 * @param appl
+	 */
+	public boolean addApplicability ( Applicability appl ) {
+		return addApplicability( appl, false );
+	}
+	
+	/**
+	 * Remove an applicability from the term
+	 * @param appl
+	 * @param permanent, should the db be updated?
+	 */
+	public void removeApplicability ( Applicability appl, boolean permanent ) {
+		
+		applicabilities.remove( appl );
+		
+		ParentTermDAO parentDao = new ParentTermDAO( catalogue );
+		
+		// remove permanently
+		if ( permanent )
+			parentDao.remove( appl );
+	}
+	
+	
+	
+	/**
+	 * Get the parent of the term
+	 * @param hierarchy
+	 * @return
+	 */
+	public Term getParent ( Hierarchy hierarchy ) {
+
+		for ( Applicability appl : applicabilities ) {
+			
+			// if we have found the correct hierarchy return
+			if ( appl.hasHierarchy( hierarchy ) ) {
+				
+				// return null if the parent is a hierarchy
+				if ( appl.getParentTerm() instanceof Hierarchy )
+					return null;
+				
+				// get the parent and
+				Term parent = (Term) appl.getParentTerm();
+				
+				// return it
+				return parent;
+			}
+		}
+		
+		// null if no parent was found
+		return null;
+	}
+	
+	/**
+	 * Check if the term has as parent another term or a hierarchy
+	 * Return true if the parent is a term, false if the parent is a hierarchy
+	 * @param hierarchy
+	 * @return
+	 */
+	public boolean hasParent( Hierarchy hierarchy ) {
+		return getParent( hierarchy ) != null;
+	}
+	
+	/**
+	 * Check if this term has as ancestor the 'ancestor' 
+	 * term on the selected hierarchy 
+	 * @param ancestor the ancestor of the term
+	 * @param hierarchy the hierarchy in which the ancestor should be present
+	 * @return
+	 */
+	public boolean hasAncestor ( Term ancestor, Hierarchy hierarchy ) {
+		
+		boolean found = false;
+		
+		// if we found that the target is the ancestor we found the relationship
+		// since we go up into the tree parent by parent
+		if ( this.equals( ancestor ) )
+			found = true;
+		
+		else {
+			
+			// if we have not found the relationship then we
+			// get the parent of the term in the selected hierarchy
+			// to go up into the tree
+			Term parent = this.getParent( hierarchy );
+
+			// if null parent return false
+			if ( parent == null )
+				found = false;
+			else {
+				// go on with the recursion
+				found = parent.hasAncestor( ancestor, hierarchy );
+			}
+		}
+
+		return found;
+	}
+	
+	/**
+	 * Get the children of this term in the selected hierarchy. You can filter deprecated or not reportable terms
+	 * enabling the booleans.
+	 * @param hierarchy
+	 * @param hideDeprecated
+	 * @param hideNotReportable
+	 * @return
+	 */
+	public ArrayList<Term> getChildren ( Hierarchy hierarchy, boolean hideDeprecated, boolean hideNotReportable ) {
+		
+		ParentTermDAO parentDao = new ParentTermDAO( catalogue );
+		
+		return parentDao.getChildren( this, hierarchy, hideDeprecated, hideNotReportable );
+	}
+	
+	/**
+	 * Get all the children of the term, without filters
+	 * @param hierarchy
+	 * @return
+	 */
+	public ArrayList<Term> getAllChildren ( Hierarchy hierarchy ) {
+		return this.getChildren( hierarchy, false, false );
+	}
+	
+	/**
+	 * Check if the term has children or not
+	 * @param hierarchy
+	 * @return
+	 */
+	public boolean hasChildren ( Hierarchy hierarchy, 
+			boolean hideDeprecated, boolean hideNotReportable ) {
+		return !getChildren ( hierarchy, hideDeprecated, hideNotReportable ).isEmpty();
+	}
+
+	
+	/**
+	 * Get the hierarchies that contains this term
+	 * @return
+	 */
+	public ArrayList< Hierarchy > getApplicableHierarchies () {
+
+		// output array
+		ArrayList< Hierarchy > hierarchies = new ArrayList<>();
+
+		// return if no applicability is found
+		if ( applicabilities == null )
+			return hierarchies;
+
+		// for each applicability add the hierarchy to the output array
+		for ( Iterator< Applicability > i = applicabilities.iterator() ; i.hasNext() ; )
+			hierarchies.add( i.next().getHierarchy() );
+		
+		return hierarchies;
+	}
+	
+	
+	/**
+	 * Check if the term is contained in the input hierarchy or not
+	 * @param hierarchy
+	 * @return
+	 */
+	public boolean belongsToHierarchy ( Hierarchy hierarchy ) {
+		return getApplicableHierarchies().contains( hierarchy );
+	}
+	
+	/**
+	 * Get the hierarchies where:
+	 * - the child is not present
+	 * - the parent is present and does not have the child in its children
+	 * @return
+	 */
+	public ArrayList< Hierarchy > getNewHierarchies ( Term child ) {
+
+		ArrayList<Hierarchy> hierarchies = new ArrayList<>();
+		
+		// get the hierarchies where this term does not have the input
+		// child in its children
+		for ( Hierarchy hierarchy : getApplicableHierarchies() ) {
+			
+			// continue to the next hierarchy if the selected child
+			// is indeed a parent of the term which is supposed to be the parent!
+			// this should be an error so we return
+			 if ( this.hasAncestor( child, hierarchy ) )
+				 continue;
+			
+			ArrayList<Term> children = this.getAllChildren( hierarchy );
+
+			// if the parent in this hierarchy does not already have
+			// the child in its children and if the child is not already
+			// present in the selected hierarchy
+			if ( !children.contains( child ) && 
+					!child.getApplicableHierarchies().contains( hierarchy ) )
+				hierarchies.add( hierarchy );
+		}
+
+		return hierarchies;
+	}
+
+	/**
+	 * Check if the term is reportable in the hierarchy
+	 * @param hierarchy
+	 * @return
+	 */
+	public boolean isReportable ( Hierarchy hierarchy ) {
+
+		boolean reportable = true;
+		
+		// for each applicability
+		for ( Applicability appl : applicabilities ) {
+
+			// the current applicability contains the hierarchy?
+			// if so check reportability
+			if ( appl.hasHierarchy( hierarchy ) ) {
+				reportable = appl.isReportable();
+				break;
+			}
+		}
+		
+		return reportable;
+	}
+	
+
+	/**
+	 * How the term name should be visualized according to its applicability?
+	 * @param hierarchy
+	 * @return
+	 */
+	public Font getApplicabilityFont ( Hierarchy hierarchy ) {
+		
+		// if we have a deprecated term or a non reportable term
+		if ( this.isDeprecated() || !this.isReportable( hierarchy ) ) {
+			
+			FontData fontData = Display.getCurrent().getSystemFont().getFontData()[0];
+
+			// make italic name
+			Font italic = new Font( Display.getCurrent(), new FontData( fontData.getName(), fontData.getHeight(), SWT.ITALIC ) );
+
+			return italic;
+		}
+		
+		// otherwise return default font
+		return Display.getCurrent().getSystemFont();
+	}
+
+	/**
+	 * Check if the term is deprecable or not. A term is deprecable 
+	 * if all its children (in all the applicable hierarchies) are deprecated
+	 * @return
+	 */
+	public boolean hasDeprecatedChildren() {
+
+		// for each applicable hierarchy of the term we check if all the sub tree is
+		// deprecated or not
+		for ( Hierarchy hierarchy : getApplicableHierarchies() ) {
+
+			// create a subtree iterator for all the terms contained in the subtree
+			// related to this parent term in the current hierarchy
+			TermSubtreeIterator iterator = new TermSubtreeIterator( this, hierarchy );
+			
+			Term currentChild;
+			
+			// do until we have processed all the children of the entire sub tree
+			while ( ( currentChild = iterator.next() ) != null ) {
+
+				// check if the child is deprecated or not. If the child is
+				// deprecated go on, otherwise the term cannot be deprecated
+				// since it has a child which is not deprecated
+				if ( !currentChild.isDeprecated() )
+					return false;
+			}
+		}
+		
+		// if we have processed all the children and we arrive here, this means that all
+		// the children of the sub tree are deprecated
+		return true;
+	}
+	
+	
+	
+	/**
+	 * Check if the term is deprecable or not. A term is deprecable 
+	 * if all its children (in all the applicable hierarchies) are deprecated
+	 * @return
+	 */
+	public boolean hasReportableChildren( Hierarchy hierarchy ) {
+
+		// create a subtree iterator for all the terms contained in the subtree
+		// related to this parent term in the current hierarchy
+		TermSubtreeIterator iterator = new TermSubtreeIterator( this, hierarchy );
+
+		Term currentChild;
+
+		// do until we have processed all the children of the entire sub tree
+		while ( ( currentChild = iterator.next() ) != null ) {
+
+			// check if the child is reportable or not
+			if ( currentChild.isReportable( hierarchy ) )
+				return true;
+		}
+
+		// if we have processed all the children and we arrive here, this means that all
+		// the children of the sub tree are not reportable
+		return false;
+	}
+	
+	/**
+	 * Check if we can remove the deprecation from a term or not. We can only if all the term parents
+	 * are not deprecated.
+	 * @return
+	 */
+	public boolean hasDeprecatedParents() {
+
+		// for each applicable hierarchy of the term we check if all its parents 
+		// are deprecated or not
+		for ( Hierarchy hierarchy : getApplicableHierarchies() ) {
+			
+			Term parent = this.getParent( hierarchy );
+			
+			while ( parent != null ) {
+				// check if the parent is deprecated or not. If it is deprecated we cannot
+				// remove the deprecation from the child since it is a wrong operation
+				if ( parent.isDeprecated() )
+					return true;
+				
+				// get the next parent and go on
+				parent = parent.getParent( hierarchy );
+			}
+		}
+		
+		// if we have processed all the parents and we arrive here, this means that all
+		// the parents are not deprecated!
+		return false;
+	}
+	
+
+	/**
+	 * Get the note text without the links
+	 * @param delim : the character from which the links start
+	 * @return
+	 */
+	public String getNotesWithoutLink( String delim, String notes ) {
+
+		String outputNotes = "";
+		// if no term is selected avoid calling getnotes on null object (it would thrown an error)
+
+		// Recognize where links start using the delim character
+		StringTokenizer st = new StringTokenizer( notes, delim );
+
+		// Get the first token (it is the note text)
+		if (st.hasMoreTokens()) {
+			outputNotes = st.nextToken(); 
+		}
+
+		return( outputNotes );
+	}
+
+
+	/**
+	 * Get the html links. This means that each link is formatted with the hypertext flag
+	 * all is returned as a single string to be able to print directly into the display
+	 * @param delim
+	 * @return
+	 */
+	public String getHtmlLinksFromNotes ( String delim, String notes ) {
+
+		// parse the links with the £ separator
+		ArrayList<String> links = getLinksFromNotes( delim, notes );
+		String htmlLinks = "";
+
+		if ( links == null || links.isEmpty() ) {
+			return ( "No available links. ");
+		}
+
+		// for each link in the list
+		for ( int i = 0; i < links.size(); i++ ) {
+
+			// get the current link string
+			String currentLink = links.get( i );
+
+			// set the default name of the link
+			int j = i + 1;
+			String linkName = "<a href=\"" + currentLink + "\">Link" + j + "</a>";
+
+
+			// try to inpute the web name
+			// get the part after the http (the //)
+			String[] split = currentLink.split( "//" );
+
+			// get the string between the // and the first /
+			// ( from https://www.google.com/ => google.com will be extracted )
+			if ( split.length > 1 ) {
+				StringTokenizer st = new StringTokenizer( split[1], "/" );
+
+				// if there is a / go on
+				if ( st.hasMoreTokens() ) {
+
+					// set the link name using the web name
+					linkName = "<a href=\"" + currentLink + "\">" + st.nextToken() + "</a>";
+
+					// remove the www. string
+					linkName = linkName.replaceAll( "www.", "" );
+				}
+			}
+
+			// add the link to the list of links
+			htmlLinks = htmlLinks + linkName;
+			// add a separator between links
+			if ( i < links.size() - 1 ) {
+				htmlLinks = htmlLinks + " - ";
+			}
+		}
+
+		return ( htmlLinks );
+	}
+
+	/**
+	 * Get the links related to the term notes, save the result into an array list of strings
+	 * @param delim separator between the links in the scopenotes
+	 * @return
+	 */
+	public ArrayList<String> getLinksFromNotes ( String delim, String notes ) {
+		
+		ArrayList<String> links = new ArrayList<>();  // it will store all the links which are present in the scopenotes
+		
+		int i = 0; // used to count the number of tokens
+
+		// Recognize links separated by the $ character
+		StringTokenizer st = new StringTokenizer( notes, delim );
+
+		// Analyze all the tokens
+		while (st.hasMoreTokens()) {
+
+			String token = st.nextToken();
+
+			if ( i != 0 ){ // Avoid the first token (it is the standard scopenote, not the links)
+				links.add( token );
+			}
+
+			i++; // count the number of tokens
+		}
+		return( links );
+	}
+	
+	
+	/**
+	 * Get a default new term ( created when we add a new term into the browser )
+	 * @return
+	 */
+	public static Term getDefaultTerm( String code ) {
+
+		// get an instance of the global manager
+		GlobalManager manager = GlobalManager.getInstance();
+		
+		// get the current catalogue
+		Catalogue currentCat = manager.getCurrentCatalogue();
+		
+		Term term = new Term( currentCat );
+
+		term.setCode( code );
+		
+		// default names and scopenotes
+		term.setName( Messages.getString("BrowserTreeMenu.NewTermDefaultName") + code );
+		term.setShortName( Messages.getString("BrowserTreeMenu.NewTermDefaultName") + code );
+		term.setScopenotes( "" );
+		
+		// default the term is not deprecated
+		term.setDeprecated( false );
+
+		// set valid from NOW
+		term.setValidFrom( new java.sql.Timestamp( System.currentTimeMillis() ) );
+
+		// if the catalogue supports detail levels add the default
+		if ( currentCat.hasDetailLevelAttribute() )
+			term.setDetailLevel( TermAttribute.getDefaultDetailLevel( term ) );
+
+		// if the catalogue supports term types add the default
+		if ( currentCat.hasTermTypeAttribute() )
+			term.setTermType( TermAttribute.getDefaultTermType( term ) );
+
+		return term;
+	}
+	
+	
+	/**
+	 * Get all the term siblings in the selected hierarchy
+	 * @return
+	 */
+	private ArrayList<Term> getSiblings ( Hierarchy hierarchy ) {
+		
+		ParentTermDAO parentDao = new ParentTermDAO( catalogue );
+		
+		// get all the children of the parent of this term in order to get the term siblings and the term itself
+		ArrayList<Term> siblings = parentDao.getChildren( this.getParent( hierarchy ), hierarchy, false, false );
+		
+		// remove the current term from the children
+		siblings.remove( this );
+		
+		return siblings;
+	}
+	
+	/**
+	 * Get all the siblings above me or below me
+	 * @param hierarchy
+	 * @param above
+	 * @return
+	 */
+	private ArrayList<Term> getSiblings ( Hierarchy hierarchy, boolean above ) {
+		
+		/// output list
+		ArrayList<Term> siblings = new ArrayList<>();
+		
+		// for each sibling
+		for ( Term sibling : getSiblings( hierarchy ) ) {
+			
+			// if ABOVE and the sibling has an order integer greater than mine, save it into the output list
+			if ( above ) {
+				if ( sibling.getOrder( hierarchy ) > this.getOrder( hierarchy ) )
+					siblings.add( sibling );
+				
+			}  // if NOT ABOVE and the sibling has an order integer less than mine, save it into the output list
+			else {
+				if ( sibling.getOrder( hierarchy ) < this.getOrder( hierarchy ) )
+					siblings.add( sibling );
+			}
+		}
+		
+		return siblings;
+	}
+	
+	/**
+	 * Move a term before another one in the hierarchy order (also among different tree levels)
+	 * @param target
+	 * @param hierarchy
+	 */
+	public void moveBefore ( Term target, Hierarchy hierarchy ) {
+		
+		moveNear( target, hierarchy, true );
+	}
+	
+	/**
+	 * Move a term after another one in the hierarchy order (also among different tree levels)
+	 * @param target
+	 * @param hierarchy
+	 */
+	public void moveAfter ( Term target, Hierarchy hierarchy ) {
+		
+		moveNear( target, hierarchy, false );
+	}
+	
+	
+	/**
+	 * Move the term above or below the target in the selected hierarchy
+	 * @param target
+	 * @param hierarchy
+	 * @param before
+	 */
+	private void moveNear( Term target, Hierarchy hierarchy, boolean before ) {
+
+		// cannot move parent under its children
+		if ( target.hasAncestor( this, hierarchy ) )
+			return;
+		
+		// if before we shift the below siblings by 1
+		// if after we shift the above siblings by -1
+		// this action is used to free a space between terms
+		int offset = before ? 1 : -1;
+
+		// remove the applicability of the term related to this hierarchy (we need to 
+		// change it, so we remove it and then we will re add it )
+		this.removeApplicability( this.getApplicability(hierarchy), true );
+
+		// save the target order
+		int targetOrder = target.getOrder( hierarchy );
+
+		// get the siblings of the target which have an order integer greater than
+		// the target order integer and shift them by 1
+		ArrayList<Term> termsToShift = target.getSiblings( hierarchy, before );
+
+		// shift also the target term
+		termsToShift.add( target );
+
+		ParentTermDAO parentDao = new ParentTermDAO( catalogue );
+		
+		// shift all the siblings of the target term by 1 in the selected hierarchy
+		parentDao.shiftTerms( termsToShift, hierarchy, offset );
+
+		TermDAO termDao = new TermDAO( catalogue );
+		
+		// update also sources in RAM memory
+		for ( Term sibling : termsToShift ) {
+
+			// set the new order
+			sibling.setOrder( hierarchy, sibling.getOrder( hierarchy ) + offset );
+
+			// update the term in ram
+			termDao.update( sibling );
+		}
+
+		// set the new order and the new parent for this term
+		Applicability appl = new Applicability( this, target.getParent(hierarchy), 
+				hierarchy, targetOrder, this.isReportable(hierarchy) );
+		
+		// add the applicability to the term (permanent)
+		this.addApplicability( appl, true );
+		
+		// update the term in RAM
+		termDao.update( this );
+
+	}
+	
+	/**
+	 * Get the nearest term above this in term of order
+	 * @param hierarchy
+	 * @return
+	 */
+	public Term getAboveSibling ( Hierarchy hierarchy ) {
+		return getNearestSibling( hierarchy, true );
+	}
+	
+	/**
+	 * Get the nearest term below this in term of order
+	 * @param hierarchy
+	 * @return
+	 */
+	public Term getBelowSibling ( Hierarchy hierarchy ) {
+		return getNearestSibling( hierarchy, false );
+	}
+	
+	
+	/**
+	 * Check if the term has an above term or not
+	 * @param hierarchy
+	 * @return
+	 */
+	public boolean hasAboveSibling ( Hierarchy hierarchy ) {
+		return getAboveSibling( hierarchy ) != null;
+	}
+	
+	/**
+	 * Check if the term has a below term or not
+	 * @param hierarchy
+	 * @return
+	 */
+	public boolean hasBelowSibling ( Hierarchy hierarchy ) {
+		return getBelowSibling( hierarchy ) != null;
+	}
+	
+	/**
+	 * Get the nearest above/below sibling
+	 * @param hierarchy
+	 * @param above, should be the above sibling or the below sibling?
+	 * @return
+	 */
+	private Term getNearestSibling ( Hierarchy hierarchy, boolean above ) {
+		
+		Term aboveSibling = null;
+		int currentOrder = above ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+		
+		// search in the siblings the nearest term with the maximum order less than the term order
+		// if above. search in the siblings the nearest term with the minimum order greater than the term order
+		// if below.
+		for ( Term sibling : getSiblings(hierarchy) ) {
+			
+			// get the sibling order in the selected hierarchy
+			int siblingOrder = sibling.getApplicability( hierarchy ).getOrder();
+			
+			if ( above ) {
+				
+				// if the order is less than this term order, save the sibling
+				if ( siblingOrder < this.getApplicability( hierarchy ).getOrder() ) {
+					
+					// if it is also greater than the maximum that we have found until now
+					if ( siblingOrder > currentOrder ) {
+						aboveSibling = sibling;
+						currentOrder = siblingOrder;
+					}
+				}
+			}
+			else {
+				
+				// if the order is greater than this term order, save the sibling
+				if ( siblingOrder > this.getApplicability( hierarchy ).getOrder() )
+					
+					// if it is also less then than the minimum that we have found until now
+					if ( siblingOrder < currentOrder ) {
+						aboveSibling = sibling;
+						currentOrder = siblingOrder;
+					}
+			}
+				
+		}
+		
+		// here we have the nearest sibling in term of ord code
+		
+		return aboveSibling;
+	}
+	
+
+	
+	/**
+	 * Swap the term order
+	 * @param term
+	 * @param hierarchy
+	 */
+	private void swapTermOrder ( Term term, Hierarchy hierarchy ) {
+
+		ParentTermDAO parentDao = new ParentTermDAO( catalogue );
+		
+		parentDao.swapTermOrder( this, term, hierarchy);
+		
+		// swap term in RAM
+		int order = this.getOrder( hierarchy );
+		this.setOrder( hierarchy, term.getOrder( hierarchy ) );
+		term.setOrder( hierarchy, order );
+		
+		TermDAO termDao = new TermDAO( catalogue );
+		
+		// update the involved terms in ram
+		termDao.updateTermInRAM( this );
+		termDao.updateTermInRAM ( term );
+	}
+	
+	/**
+	 * Move a term up in the hierarchy if possible
+	 * @param hierarchy
+	 */
+	public void moveUp( Hierarchy hierarchy ) {
+		
+		Term sibling = this.getAboveSibling( hierarchy );
+
+		// swap only if there is indeed a sibling
+		if ( sibling != null )
+			swapTermOrder( sibling, hierarchy );
+	}
+	
+	/**
+	 * Move a term down in the hierarchy if possible
+	 * @param hierarchy
+	 */
+	public void moveDown( Hierarchy hierarchy ) {
+		
+		Term sibling = this.getBelowSibling( hierarchy );
+
+		// swap only if there is indeed a sibling
+		if ( sibling != null )
+			swapTermOrder( sibling, hierarchy );
+	}
+	
+	
+	/**
+	 * Move this term one level up into the hierarchy (i.e. we move the term as child of 
+	 * the parent of the parent of the term)
+	 * @param hierarchy
+	 */
+	public void moveLevelUp ( Hierarchy hierarchy ) {
+		
+		// get the term parent
+		Nameable parent = this.getParent( hierarchy );
+		
+		// if we have not reached the max level (i.e. a hierarchy)
+		if ( !( parent instanceof Term ) )
+			return;
+		
+		// we get the further ancestor of the base term
+		Term ancestor = ( (Term) parent).getParent( hierarchy );
+		
+		ParentTermDAO parentDao = new ParentTermDAO( catalogue );
+		
+		// get the last available order for the new applicability
+		int order = parentDao.getNextAvailableOrder( ancestor, hierarchy );
+		
+		// get if the term is reportable or not
+		boolean reportable = this.isReportable( hierarchy );
+		
+		// remove permanently the old applicability (important to do this before adding the new
+		// applicability since an applicability is identified only by the term and the hierarchy,
+		// not by the parent! If we first add we would get an error saying that the applicability
+		// is already present)
+		this.removeApplicability( this.getApplicability( hierarchy ), true );
+
+		// add permanently the new applicability
+		this.addApplicability( new Applicability(this, ancestor, hierarchy, order, reportable ), true );
+		
+		TermDAO termDao = new TermDAO( catalogue );
+		
+		// update the involved terms
+		termDao.updateTermInRAM( this );
+		termDao.updateTermInRAM( (Term) parent );
+		
+		// if we have an ancestor which is not the hierarchy itself
+		if ( ancestor != null )
+			termDao.updateTermInRAM( ancestor );
+	}
+	
+	
+	/**
+	 * To print terms directly
+	 */
+	@Override
+	public String toString() {
+		return "TERM " + getId() + "; code=" + getCode() + ";name=" + getName();
+	}
+	
+	/**
+	 * This method must be defined for work on HashMaps.
+	 * @param t
+	 * @return
+	 */
+	public boolean equals(Term t){
+		if ( !this.getCode().isEmpty()&& !t.getCode().isEmpty() )
+			return this.getCode().equals( t.getCode() );
+		else
+			return this.getId() == t.getId();
+	}
+
+}

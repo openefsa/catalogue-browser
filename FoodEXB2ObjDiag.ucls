@@ -1,0 +1,1385 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.9" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+  <class id="1" language="java" name="ApplicabilityContentProvider" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/ApplicabilityContentProvider.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="610" y="-81"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="ProgressBarForm" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/ProgressBarForm.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1769" y="178"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="TermAttributeContentProvider" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/TermAttributeContentProvider.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="401" y="1667"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="NameProperty" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/NameProperty.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1930" y="2016"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="Print.HierarchyStatistics" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/Print.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="5663" y="3082"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="6" language="java" name="ITerm" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/ITerm.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="5706" y="1179"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="7" language="java" name="ConfigEditor" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/ConfigEditor.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="4861" y="2216"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="NamePropertyContentProvider" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/NamePropertyContentProvider.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1332" y="1872"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="9" language="java" name="TermAttributeApplicabilityContentProvider" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/TermAttributeApplicabilityContentProvider.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="417" y="1382"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="10" language="java" name="TermTreeDragSourceListener" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/TermTreeDragSourceListener.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="390" y="1819"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="11" language="java" name="PrintProviderAdapter" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/PrintProviderAdapter.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="6141" y="3381"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="12" language="java" name="Print" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/Print.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="5793" y="2820"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="13" language="java" name="PropertyLabelProvider" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/PropertyLabelProvider.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="616" y="243"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="14" language="java" name="SimpleProperty" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/SimpleProperty.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="5661" y="2395"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="15" language="java" name="TermSelectorFilter" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/TermSelectorFilter.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="3822" y="3312"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="16" language="java" name="PasswordForm" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/PasswordForm.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="272" y="126"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="17" language="java" name="Term" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/Term.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="3299" y="794"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="18" language="java" name="PrintChoiceForm" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/PrintChoiceForm.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="4860" y="2470"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="19" language="java" name="TermColumnLabelProvider" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/TermColumnLabelProvider.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="239" y="724"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="20" language="java" name="FoodexBrowser" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/FoodexBrowser.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="4878" y="4418"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="21" language="java" name="LoadGraphLibraries" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/LoadGraphLibraries.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="565" y="-198"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="22" language="java" name="ImportExcel" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/ImportExcel.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1313" y="-160"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="23" language="java" name="NamePropertyLabelProvider" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/NamePropertyLabelProvider.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1652" y="1899"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="24" language="java" name="TermElem" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/TermElem.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2953" y="-230"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="25" language="java" name="TermAttributeSorter" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/TermAttributeSorter.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="389" y="1535"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="26" language="java" name="Attribute" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/Attribute.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="5656" y="1961"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="27" language="java" name="TermSelector" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/TermSelector.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="4224" y="2432"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="28" language="java" name="TermAttributeEditingSupport" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/TermAttributeEditingSupport.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="837" y="1862"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="29" language="java" name="PrintProviderText" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/PrintProviderText.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="5694" y="3650"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="30" language="java" name="BrowserForm" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/BrowserForm.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="313" y="373"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="31" language="java" name="TermSelectorLabelProvider" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/TermSelectorLabelProvider.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="486" y="778"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="32" language="java" name="TermLabelProvider" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/TermLabelProvider.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="647" y="1116"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="33" language="java" name="Startup" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/Startup.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="272" y="-254"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="34" language="java" name="GlobalTerm" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/GlobalTerm.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="7448" y="2088"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="35" language="java" name="SimplePropertySorterer" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/SimplePropertySorterer.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1527" y="501"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="36" language="java" name="ImplicitFacetContentProvider" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/ImplicitFacetContentProvider.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="3200" y="-224"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="37" language="java" name="ExportExcel" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/ExportExcel.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1762" y="-223"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="38" language="java" name="PropertyContentProvider" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/PropertyContentProvider.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="610" y="61"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="39" language="java" name="NamePropertyElem" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/NamePropertyElem.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1691" y="2238"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="40" language="java" name="FolderZipper" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/FolderZipper.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="949" y="-276"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="41" language="java" name="TermAttributeApplicabilityLabelProvider" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/TermAttributeApplicabilityLabelProvider.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="770" y="760"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="42" language="java" name="AppendExcel" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/AppendExcel.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2183" y="-259"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="43" language="java" name="foodexDAO" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/foodexDAO.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="6785" y="793"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="44" language="java" name="TermAttribute" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/TermAttribute.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2747" y="1809"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <enumeration id="45" language="java" name="NameProperty.NameClass" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/NameProperty.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1494" y="2191"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </enumeration>  
+  <class id="46" language="java" name="TermAttributeApplicability" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/TermAttributeApplicability.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="3440" y="1694"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="47" language="java" name="FileSystemManager" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/FileSystemManager.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="565" y="-299"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="48" language="java" name="TermViewerSorter" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/TermViewerSorter.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="804" y="1551"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="49" language="java" name="ImplicitFacetSorter" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/ImplicitFacetSorter.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="593" y="411"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="50" language="java" name="SQLScriptExec" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/SQLScriptExec.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="930" y="296"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="51" language="java" name="HierarchyEditor" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/HierarchyEditor.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="4852" y="2720"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="52" language="java" name="ReleaseVersion" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/ReleaseVersion.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="6025" y="100"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="53" language="java" name="TermTreeDropTargetListener" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/TermTreeDropTargetListener.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="3476" y="-233"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="54" language="java" name="FacetFilter" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/FacetFilter.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="4346" y="3977"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="55" language="java" name="PrintProviderHTML" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/PrintProviderHTML.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="5699" y="3899"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <enumeration id="56" language="java" name="NameProperty.NameType" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/NameProperty.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1475" y="1627"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </enumeration>  
+  <class id="57" language="java" name="TermContentProvider" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/TermContentProvider.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="821" y="1390"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="58" language="java" name="AttributeForm" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/AttributeForm.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="5641" y="1636"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="59" language="java" name="TermSearchContentProvider" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/TermSearchContentProvider.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="821" y="1677"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="60" language="java" name="SelectTermForm" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/SelectTermForm.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="4325" y="3095"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="61" language="java" name="HierarchyFilter" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/HierarchyFilter.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="4346" y="3814"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="62" language="java" name="SimplePropertyEditingSupport" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/SimplePropertyEditingSupport.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="4912" y="3157"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="63" language="java" name="ImplicitFacetLabelProvider" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/ImplicitFacetLabelProvider.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1054" y="760"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="64" language="java" name="TermSelectorContentProvider" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/TermSelectorContentProvider.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="3818" y="2410"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="65" language="java" name="SelectSheet" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/SelectSheet.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1224" y="222"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="66" language="java" name="NamePropertyEditingSupport" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/NamePropertyEditingSupport.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="941" y="493"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="67" language="java" name="StringSegment" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/StringSegment.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="264" y="-86"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="68" language="java" name="TermCoderForm" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/TermCoderForm.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="3842" y="-206"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="69" language="java" name="Applicability" project="efsa.cappe.FoodexBrowser" 
+    file="/efsa.cappe.FoodexBrowser/src/Applicability.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="4169" y="1645"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <association id="70">    
+    <end type="SOURCE" refId="23" navigable="false">      
+      <attribute id="71" name="_nameType"/>      
+      <multiplicity id="72" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="56" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="73">    
+    <end type="SOURCE" refId="39" navigable="false">      
+      <attribute id="74" name="children"/>      
+      <multiplicity id="75" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="39" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="76">    
+    <end type="SOURCE" refId="63" navigable="false">      
+      <attribute id="77" name="_termLabelProvider"/>      
+      <multiplicity id="78" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="32" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="79">    
+    <end type="SOURCE" refId="18" navigable="false">      
+      <attribute id="80" name="_selectedHierarchies"/>      
+      <multiplicity id="81" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="82">    
+    <bendpoint x="5260" y="1020"/>    
+    <end type="SOURCE" refId="43" navigable="false">      
+      <attribute id="83" name="SelectedTerm"/>      
+      <multiplicity id="84" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="85">    
+    <bendpoint x="5326" y="1546"/>    
+    <end type="SOURCE" refId="17" navigable="false">      
+      <attribute id="86" name="_corexFlag"/>      
+      <multiplicity id="87" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="88">    
+    <end type="SOURCE" refId="60" navigable="false">      
+      <attribute id="89" name="_selectedHierarchy"/>      
+      <multiplicity id="90" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="91">    
+    <end type="SOURCE" refId="22" navigable="false">      
+      <attribute id="92" name="_progressBarForm"/>      
+      <multiplicity id="93" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="94">    
+    <end type="SOURCE" refId="24" navigable="false">      
+      <attribute id="95" name="parent"/>      
+      <multiplicity id="96" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="24" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="97">    
+    <end type="SOURCE" refId="55"/>    
+    <end type="TARGET" refId="11"/>  
+  </generalization>  
+  <realization id="98">    
+    <end type="SOURCE" refId="14"/>    
+    <end type="TARGET" refId="6"/>  
+  </realization>  
+  <association id="99">    
+    <end type="SOURCE" refId="46" navigable="false">      
+      <attribute id="100" name="termAttribute"/>      
+      <multiplicity id="101" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="44" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="102">    
+    <end type="SOURCE" refId="68" navigable="false">      
+      <attribute id="103" name="_tempTerm"/>      
+      <multiplicity id="104" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="105">    
+    <end type="SOURCE" refId="24" navigable="false">      
+      <attribute id="106" name="children"/>      
+      <multiplicity id="107" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="24" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="108">    
+    <end type="SOURCE" refId="24" navigable="false">      
+      <attribute id="109" name="term"/>      
+      <multiplicity id="110" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="111">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="112" name="_Type"/>      
+      <multiplicity id="113" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="56" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="114">    
+    <bendpoint x="6224" y="2703"/>    
+    <end type="SOURCE" refId="43" navigable="false">      
+      <attribute id="115" name="DefaultHierarchy"/>      
+      <multiplicity id="116" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="117">    
+    <bendpoint x="7161" y="2029"/>    
+    <end type="SOURCE" refId="43" navigable="false">      
+      <attribute id="118" name="AllFacets"/>      
+      <multiplicity id="119" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="34" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="120">    
+    <bendpoint x="5255" y="592"/>    
+    <end type="SOURCE" refId="43" navigable="false">      
+      <attribute id="121" name="Terms"/>      
+      <multiplicity id="122" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="123">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="124" name="_termAttribute"/>      
+      <multiplicity id="125" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="44" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="126">    
+    <bendpoint x="7069" y="1830"/>    
+    <end type="SOURCE" refId="43" navigable="false">      
+      <attribute id="127" name="AllTerms"/>      
+      <multiplicity id="128" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="34" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="129">    
+    <end type="SOURCE" refId="69" navigable="false">      
+      <attribute id="130" name="_parentTerm"/>      
+      <multiplicity id="131" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="132">    
+    <bendpoint x="6222" y="1912"/>    
+    <end type="SOURCE" refId="43" navigable="false">      
+      <attribute id="133" name="CorexFlags"/>      
+      <multiplicity id="134" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="false"/>  
+  </association>  
+  <association id="135">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="136" name="_configProperties"/>      
+      <multiplicity id="137" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="138">    
+    <end type="SOURCE" refId="62" navigable="false">      
+      <attribute id="139" name="_hierarchies"/>      
+      <multiplicity id="140" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="141">    
+    <bendpoint x="6131" y="1769"/>    
+    <end type="SOURCE" refId="43" navigable="false">      
+      <attribute id="142" name="Hierarchies"/>      
+      <multiplicity id="143" minimum="0" maximum="2147483647">        
+        <position height="16" width="21" x="5882" y="2325"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="144">    
+    <bendpoint x="6299" y="2084"/>    
+    <end type="SOURCE" refId="43" navigable="false">      
+      <attribute id="145" name="Config"/>      
+      <multiplicity id="146" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="false"/>  
+  </association>  
+  <association id="147">    
+    <bendpoint x="6109" y="1725"/>    
+    <end type="SOURCE" refId="43" navigable="false">      
+      <attribute id="148" name="SelectedSearchNames"/>      
+      <multiplicity id="149" minimum="0" maximum="2147483647">        
+        <position height="16" width="21" x="5773" y="2328"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="false"/>  
+  </association>  
+  <association id="150">    
+    <bendpoint x="4936" y="2071"/>    
+    <end type="SOURCE" refId="69" navigable="false">      
+      <attribute id="151" name="_hierarchy"/>      
+      <multiplicity id="152" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="153">    
+    <bendpoint x="4929" y="1950"/>    
+    <end type="SOURCE" refId="69" navigable="false">      
+      <attribute id="154" name="_applicability"/>      
+      <multiplicity id="155" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="156">    
+    <end type="SOURCE" refId="44" navigable="false">      
+      <attribute id="157" name="_attribute"/>      
+      <multiplicity id="158" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="26" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="159">    
+    <bendpoint x="6175" y="1838"/>    
+    <end type="SOURCE" refId="43" navigable="false">      
+      <attribute id="160" name="StateFlags"/>      
+      <multiplicity id="161" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="false"/>  
+  </association>  
+  <association id="162">    
+    <bendpoint x="6162" y="1791"/>    
+    <end type="SOURCE" refId="43" navigable="false">      
+      <attribute id="163" name="ApplicabilityFlags"/>      
+      <multiplicity id="164" minimum="0" maximum="2147483647">        
+        <position height="16" width="21" x="5764" y="2393"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="false"/>  
+  </association>  
+  <association id="165">    
+    <end type="SOURCE" refId="51" navigable="false">      
+      <attribute id="166" name="_hierarchiesToRemove"/>      
+      <multiplicity id="167" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="168">    
+    <end type="SOURCE" refId="43" navigable="false">      
+      <attribute id="169" name="Attributes"/>      
+      <multiplicity id="170" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="26" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="171">    
+    <end type="SOURCE" refId="43" navigable="false">      
+      <attribute id="172" name="AllTermsSelector">        
+        <position height="18" width="91" x="4234" y="2286"/>      
+      </attribute>      
+      <multiplicity id="173" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="27" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="174">    
+    <bendpoint x="6263" y="2001"/>    
+    <end type="SOURCE" refId="43" navigable="false">      
+      <attribute id="175" name="SelectedStateFlags"/>      
+      <multiplicity id="176" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="false"/>  
+  </association>  
+  <association id="177">    
+    <end type="SOURCE" refId="60" navigable="false">      
+      <attribute id="178" name="_filter"/>      
+      <multiplicity id="179" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="15" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="180">    
+    <end type="SOURCE" refId="43" navigable="false">      
+      <attribute id="181" name="SourceTerms"/>      
+      <multiplicity id="182" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="183">    
+    <end type="SOURCE" refId="27" navigable="false">      
+      <attribute id="184" name="_parent"/>      
+      <multiplicity id="185" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="27" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="186">    
+    <end type="SOURCE" refId="46" navigable="false">      
+      <attribute id="187" name="applicableTerm"/>      
+      <multiplicity id="188" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="189">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="190" name="_Class"/>      
+      <multiplicity id="191" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="45" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="192">    
+    <bendpoint x="6078" y="1644"/>    
+    <end type="SOURCE" refId="43" navigable="false">      
+      <attribute id="193" name="SearchNames"/>      
+      <multiplicity id="194" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="false"/>  
+  </association>  
+  <association id="195">    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="196" name="_printProvider"/>      
+      <multiplicity id="197" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="198">    
+    <end type="SOURCE" refId="34" navigable="false">      
+      <attribute id="199" name="_parent"/>      
+      <multiplicity id="200" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="201">    
+    <end type="SOURCE" refId="39" navigable="false">      
+      <attribute id="202" name="parent"/>      
+      <multiplicity id="203" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="39" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="204">    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="205" name="_selectedHierarchies"/>      
+      <multiplicity id="206" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="207">    
+    <end type="SOURCE" refId="20" navigable="false">      
+      <attribute id="208" name="termApplicableHierarchies"/>      
+      <multiplicity id="209" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="210">    
+    <bendpoint x="6099" y="1680"/>    
+    <end type="SOURCE" refId="43" navigable="false">      
+      <attribute id="211" name="SelectedApplicabilityFlags"/>      
+      <multiplicity id="212" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="false"/>  
+  </association>  
+  <association id="213">    
+    <end type="SOURCE" refId="17" navigable="false">      
+      <attribute id="214" name="_stateFlag"/>      
+      <multiplicity id="215" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="216">    
+    <end type="SOURCE" refId="51" navigable="false">      
+      <attribute id="217" name="_hierarchies"/>      
+      <multiplicity id="218" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="219">    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="5"/>  
+  </nesting>  
+  <association id="220">    
+    <bendpoint x="6344" y="2304"/>    
+    <end type="SOURCE" refId="43" navigable="false">      
+      <attribute id="221" name="SelectedHierarchy"/>      
+      <multiplicity id="222" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="223">    
+    <end type="SOURCE" refId="17" navigable="false">      
+      <attribute id="224" name="_applicabilities"/>      
+      <multiplicity id="225" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="69" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="226">    
+    <end type="SOURCE" refId="26" navigable="false">      
+      <attribute id="227" name="_facet"/>      
+      <multiplicity id="228" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="229">    
+    <end type="SOURCE" refId="20" navigable="false">      
+      <attribute id="230" name="hierarchyFilter"/>      
+      <multiplicity id="231" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="61" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="232">    
+    <end type="SOURCE" refId="17" navigable="false">      
+      <attribute id="233" name="_termAttributeApplicability"/>      
+      <multiplicity id="234" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="46" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="235">    
+    <end type="SOURCE" refId="17" navigable="false">      
+      <attribute id="236" name="_termAttributes"/>      
+      <multiplicity id="237" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="44" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="238">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="45"/>  
+  </nesting>  
+  <association id="239">    
+    <end type="SOURCE" refId="37" navigable="false">      
+      <attribute id="240" name="_progressBarForm"/>      
+      <multiplicity id="241" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="242">    
+    <end type="SOURCE" refId="23" navigable="false">      
+      <attribute id="243" name="_nameClass"/>      
+      <multiplicity id="244" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="45" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="245">    
+    <end type="SOURCE" refId="19" navigable="false">      
+      <attribute id="246" name="internalTermLabelProvider"/>      
+      <multiplicity id="247" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="32" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="248">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="249" name="_nameClass"/>      
+      <multiplicity id="250" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="45" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="251">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="252" name="_refTerm"/>      
+      <multiplicity id="253" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="254">    
+    <bendpoint x="7499" y="1988"/>    
+    <end type="SOURCE" refId="43" navigable="false">      
+      <attribute id="255" name="Root"/>      
+      <multiplicity id="256" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="34" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="257">    
+    <bendpoint x="5177" y="2094"/>    
+    <end type="SOURCE" refId="60" navigable="false">      
+      <attribute id="258" name="_rootTerm">        
+        <position height="18" width="56" x="5592" y="1253"/>      
+      </attribute>      
+      <multiplicity id="259" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="false"/>  
+  </association>  
+  <association id="260">    
+    <bendpoint x="6644" y="2578"/>    
+    <end type="SOURCE" refId="43" navigable="false">      
+      <attribute id="261" name="CopyHierarchy"/>      
+      <multiplicity id="262" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="263">    
+    <end type="SOURCE" refId="62" navigable="false">      
+      <attribute id="264" name="_facets"/>      
+      <multiplicity id="265" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="266">    
+    <end type="SOURCE" refId="44" navigable="false">      
+      <attribute id="267" name="_term"/>      
+      <multiplicity id="268" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="269">    
+    <end type="SOURCE" refId="17"/>    
+    <end type="TARGET" refId="6"/>  
+  </realization>  
+  <association id="270">    
+    <bendpoint x="4973" y="2009"/>    
+    <end type="SOURCE" refId="60" navigable="false">      
+      <attribute id="271" name="_selectedTerm">        
+        <position height="18" width="78" x="5498" y="1300"/>      
+      </attribute>      
+      <multiplicity id="272" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="false"/>  
+  </association>  
+  <association id="273">    
+    <end type="SOURCE" refId="39" navigable="false">      
+      <attribute id="274" name="nameProperty"/>      
+      <multiplicity id="275" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="276">    
+    <end type="SOURCE" refId="60" navigable="false">      
+      <attribute id="277" name="_restrictions"/>      
+      <multiplicity id="278" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="27" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="279">    
+    <end type="SOURCE" refId="17" navigable="false">      
+      <attribute id="280" name="_names"/>      
+      <multiplicity id="281" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="282">    
+    <end type="SOURCE" refId="43" navigable="false">      
+      <attribute id="283" name="AllHierarchies"/>      
+      <multiplicity id="284" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="34" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="285">    
+    <end type="SOURCE" refId="31" navigable="false">      
+      <attribute id="286" name="internalTermLabelProvider"/>      
+      <multiplicity id="287" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="32" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="288">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="56"/>  
+  </nesting>  
+  <association id="289">    
+    <end type="SOURCE" refId="58" navigable="false">      
+      <attribute id="290" name="_attributes">        
+        <position height="18" width="61" x="5004" y="1641"/>      
+      </attribute>      
+      <multiplicity id="291" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="26" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="292">    
+    <end type="SOURCE" refId="58" navigable="false">      
+      <attribute id="293" name="_attributesToRemove">        
+        <position height="18" width="109" x="4895" y="1652"/>      
+      </attribute>      
+      <multiplicity id="294" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="26" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="295">    
+    <end type="SOURCE" refId="43" navigable="false">      
+      <attribute id="296" name="ApplicationVersion"/>      
+      <multiplicity id="297" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="52" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="298">    
+    <end type="SOURCE" refId="53" navigable="false">      
+      <attribute id="299" name="target"/>      
+      <multiplicity id="300" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="301">    
+    <bendpoint x="5247" y="406"/>    
+    <end type="SOURCE" refId="43" navigable="false">      
+      <attribute id="302" name="CopyTerms"/>      
+      <multiplicity id="303" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="304">    
+    <end type="SOURCE" refId="27" navigable="false">      
+      <attribute id="305" name="_term">        
+        <position height="18" width="35" x="5575" y="1275"/>      
+      </attribute>      
+      <multiplicity id="306" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="307">    
+    <end type="SOURCE" refId="26"/>    
+    <end type="TARGET" refId="14"/>  
+  </generalization>  
+  <association id="308">    
+    <end type="SOURCE" refId="42" navigable="false">      
+      <attribute id="309" name="_progressBarForm"/>      
+      <multiplicity id="310" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="311">    
+    <end type="SOURCE" refId="64" navigable="false">      
+      <attribute id="312" name="_rootSelectors">        
+        <position height="18" width="81" x="4082" y="2292"/>      
+      </attribute>      
+      <multiplicity id="313" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="27" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="314">    
+    <bendpoint x="3021" y="1641"/>    
+    <end type="SOURCE" refId="44" navigable="false">      
+      <attribute id="315" name="_defaultTerm"/>      
+      <multiplicity id="316" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="317">    
+    <end type="SOURCE" refId="36" navigable="false">      
+      <attribute id="318" name="_rootTerm"/>      
+      <multiplicity id="319" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="320">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="321" name="_nameType"/>      
+      <multiplicity id="322" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="56" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="323">    
+    <end type="SOURCE" refId="41" navigable="false">      
+      <attribute id="324" name="_termLabelProvider"/>      
+      <multiplicity id="325" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="32" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="326">    
+    <end type="SOURCE" refId="20" navigable="false">      
+      <attribute id="327" name="facetFilter"/>      
+      <multiplicity id="328" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="54" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="329">    
+    <end type="SOURCE" refId="34"/>    
+    <end type="TARGET" refId="6"/>  
+  </realization>  
+  <generalization id="330">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="11"/>  
+  </generalization>  
+  <classifier-display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="false" private="false" static="true"/>    
+    <operations public="true" package="false" protected="false" private="false" static="false"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

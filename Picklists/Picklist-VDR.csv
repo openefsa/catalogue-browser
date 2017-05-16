@@ -1,0 +1,2620 @@
+Level;Pick list elements;pick list code
+1;Bovine animals - Meat (as-part-nature);A0BXF#F01.A0F1V$F02.A0BYZ
+1;Bovine animals - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0F1V$F02.A0EMD
+1;Bovine animals - Fat (as-part-nature);A0BXF#F01.A0F1V$F02.A069J
+1;Bovine animals - Blood (as-part-nature);A0BXF#F01.A0F1V$F02.A06AL
+1;Bovine animals - Kidney (as-part-nature);A0BXF#F01.A0F1V$F02.A069N
+1;Bovine animals - Kidney fat (as-part-nature);A0BXF#F01.A0F1V$F02.A0F1B
+1;Bovine animals - Liver (as-part-nature);A0BXF#F01.A0F1V$F02.A069M
+1;Bovine animals - Skin & fat (as-part-nature);A0BXF#F01.A0F1V$F02.A06AK
+1;Bovine animals - Thyroid (as-part-nature);A0C60#F01.A0F1V$F02.A0CES
+1;Bovine animals - Urine (as-part-nature);A0C60#F01.A0F1V$F02.A0CET
+1;Bovine animals - Faeces (as-part-nature);A0C60#F01.A0F1V$F02.A0CEV
+1;Bovine animals - Blood serum (as-part-nature);A0C60#F01.A0F1V$F02.A0CEY
+1;Bovine animals - Plasma (as-part-nature);A0C60#F01.A0F1V$F02.A0CEX
+1;Bovine animals - Bile (as-part-nature);A0C60#F01.A0F1V$F02.A0EKY
+1;Bovine animals - Eye (as-part-nature);A0C60#F01.A0F1V$F02.A067P
+1;Bovine animals - Feather (as-part-nature);A0C60#F01.A0F1V$F02.A0ESE
+1;Bovine animals - Hair (as-part-nature);A0C60#F01.A0F1V$F02.A0ESP
+1;Bovine animals - Injection site (as-part-nature);A0C60#F01.A0F1V$F02.A0ESN
+1;Bovine animals - Lung (as-part-nature);A0C60#F01.A0F1V$F02.A069P
+1;Bovine animals - Pollen (as-part-nature);A0C60#F01.A0F1V$F02.A0ESK
+1;Bovine animals - Retina (as-part-nature);A0C60#F01.A0F1V$F02.A0ESJ
+1;Bovine animals - Sand (as-part-nature);A0C60#F01.A0F1V$F02.A0ESH
+1;Bovine animals - Tissues juice (as-part-nature);A0C60#F01.A0F1V$F02.A0ESG
+1;Bovine animals - Wool (as-part-nature);A0C60#F01.A0F1V$F02.A0ESF
+1;Bovine animals - Drinking water;A0F7L#F01.A0F1V$F02.A06CA
+1;Bovine animals - Water for aquaculture;A0F7M#F01.A0F1V$F02.A06CA
+1;Bovine animals - Feed;A0BB9#F01.A0F1V$F02.A0F0Y
+2;Cattle - Meat (as-part-nature);A0BXF#F01.A057E$F02.A0BYZ
+2;Cattle - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A057E$F02.A0EMD
+2;Cattle - Fat (as-part-nature);A0BXF#F01.A057E$F02.A069J
+2;Cattle - Blood (as-part-nature);A0BXF#F01.A057E$F02.A06AL
+2;Cattle - Kidney (as-part-nature);A0BXF#F01.A057E$F02.A069N
+2;Cattle - Kidney fat (as-part-nature);A0BXF#F01.A057E$F02.A0F1B
+2;Cattle - Liver (as-part-nature);A0BXF#F01.A057E$F02.A069M
+2;Cattle - Skin & fat (as-part-nature);A0BXF#F01.A057E$F02.A06AK
+2;Cattle - Thyroid (as-part-nature);A0C60#F01.A057E$F02.A0CES
+2;Cattle - Urine (as-part-nature);A0C60#F01.A057E$F02.A0CET
+2;Cattle - Faeces (as-part-nature);A0C60#F01.A057E$F02.A0CEV
+2;Cattle - Blood serum (as-part-nature);A0C60#F01.A057E$F02.A0CEY
+2;Cattle - Plasma (as-part-nature);A0C60#F01.A057E$F02.A0CEX
+2;Cattle - Bile (as-part-nature);A0C60#F01.A057E$F02.A0EKY
+2;Cattle - Eye (as-part-nature);A0C60#F01.A057E$F02.A067P
+2;Cattle - Feather (as-part-nature);A0C60#F01.A057E$F02.A0ESE
+2;Cattle - Hair (as-part-nature);A0C60#F01.A057E$F02.A0ESP
+2;Cattle - Injection site (as-part-nature);A0C60#F01.A057E$F02.A0ESN
+2;Cattle - Lung (as-part-nature);A0C60#F01.A057E$F02.A069P
+2;Cattle - Pollen (as-part-nature);A0C60#F01.A057E$F02.A0ESK
+2;Cattle - Retina (as-part-nature);A0C60#F01.A057E$F02.A0ESJ
+2;Cattle - Sand (as-part-nature);A0C60#F01.A057E$F02.A0ESH
+2;Cattle - Tissues juice (as-part-nature);A0C60#F01.A057E$F02.A0ESG
+2;Cattle - Wool (as-part-nature);A0C60#F01.A057E$F02.A0ESF
+2;Cattle - Drinking water;A0F7L#F01.A057E$F02.A06CA
+2;Cattle - Water for aquaculture;A0F7M#F01.A057E$F02.A06CA
+2;Cattle - Feed;A0BB9#F01.A057E$F02.A0F0Y
+3;Calves (under 1 year) - Meat (as-part-nature);A0BXF#F01.A0C9E$F02.A0BYZ
+3;Calves (under 1 year) - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0C9E$F02.A0EMD
+3;Calves (under 1 year) - Fat (as-part-nature);A0BXF#F01.A0C9E$F02.A069J
+3;Calves (under 1 year) - Blood (as-part-nature);A0BXF#F01.A0C9E$F02.A06AL
+3;Calves (under 1 year) - Kidney (as-part-nature);A0BXF#F01.A0C9E$F02.A069N
+3;Calves (under 1 year) - Kidney fat (as-part-nature);A0BXF#F01.A0C9E$F02.A0F1B
+3;Calves (under 1 year) - Liver (as-part-nature);A0BXF#F01.A0C9E$F02.A069M
+3;Calves (under 1 year) - Skin & fat (as-part-nature);A0BXF#F01.A0C9E$F02.A06AK
+3;Calves (under 1 year) - Thyroid (as-part-nature);A0C60#F01.A0C9E$F02.A0CES
+3;Calves (under 1 year) - Urine (as-part-nature);A0C60#F01.A0C9E$F02.A0CET
+3;Calves (under 1 year) - Faeces (as-part-nature);A0C60#F01.A0C9E$F02.A0CEV
+3;Calves (under 1 year) - Blood serum (as-part-nature);A0C60#F01.A0C9E$F02.A0CEY
+3;Calves (under 1 year) - Plasma (as-part-nature);A0C60#F01.A0C9E$F02.A0CEX
+3;Calves (under 1 year) - Bile (as-part-nature);A0C60#F01.A0C9E$F02.A0EKY
+3;Calves (under 1 year) - Eye (as-part-nature);A0C60#F01.A0C9E$F02.A067P
+3;Calves (under 1 year) - Feather (as-part-nature);A0C60#F01.A0C9E$F02.A0ESE
+3;Calves (under 1 year) - Hair (as-part-nature);A0C60#F01.A0C9E$F02.A0ESP
+3;Calves (under 1 year) - Injection site (as-part-nature);A0C60#F01.A0C9E$F02.A0ESN
+3;Calves (under 1 year) - Lung (as-part-nature);A0C60#F01.A0C9E$F02.A069P
+3;Calves (under 1 year) - Pollen (as-part-nature);A0C60#F01.A0C9E$F02.A0ESK
+3;Calves (under 1 year) - Retina (as-part-nature);A0C60#F01.A0C9E$F02.A0ESJ
+3;Calves (under 1 year) - Sand (as-part-nature);A0C60#F01.A0C9E$F02.A0ESH
+3;Calves (under 1 year) - Tissues juice (as-part-nature);A0C60#F01.A0C9E$F02.A0ESG
+3;Calves (under 1 year) - Wool (as-part-nature);A0C60#F01.A0C9E$F02.A0ESF
+3;Calves (under 1 year) - Drinking water;A0F7L#F01.A0C9E$F02.A06CA
+3;Calves (under 1 year) - Water for aquaculture;A0F7M#F01.A0C9E$F02.A06CA
+3;Calves (under 1 year) - Feed;A0BB9#F01.A0C9E$F02.A0F0Y
+4;Dairy calves (under 1 year) - Meat (as-part-nature);A0BXF#F01.A0C9J$F02.A0BYZ
+4;Dairy calves (under 1 year) - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0C9J$F02.A0EMD
+4;Dairy calves (under 1 year) - Fat (as-part-nature);A0BXF#F01.A0C9J$F02.A069J
+4;Dairy calves (under 1 year) - Blood (as-part-nature);A0BXF#F01.A0C9J$F02.A06AL
+4;Dairy calves (under 1 year) - Kidney (as-part-nature);A0BXF#F01.A0C9J$F02.A069N
+4;Dairy calves (under 1 year) - Kidney fat (as-part-nature);A0BXF#F01.A0C9J$F02.A0F1B
+4;Dairy calves (under 1 year) - Liver (as-part-nature);A0BXF#F01.A0C9J$F02.A069M
+4;Dairy calves (under 1 year) - Skin & fat (as-part-nature);A0BXF#F01.A0C9J$F02.A06AK
+4;Dairy calves (under 1 year) - Thyroid (as-part-nature);A0C60#F01.A0C9J$F02.A0CES
+4;Dairy calves (under 1 year) - Urine (as-part-nature);A0C60#F01.A0C9J$F02.A0CET
+4;Dairy calves (under 1 year) - Faeces (as-part-nature);A0C60#F01.A0C9J$F02.A0CEV
+4;Dairy calves (under 1 year) - Blood serum (as-part-nature);A0C60#F01.A0C9J$F02.A0CEY
+4;Dairy calves (under 1 year) - Plasma (as-part-nature);A0C60#F01.A0C9J$F02.A0CEX
+4;Dairy calves (under 1 year) - Bile (as-part-nature);A0C60#F01.A0C9J$F02.A0EKY
+4;Dairy calves (under 1 year) - Eye (as-part-nature);A0C60#F01.A0C9J$F02.A067P
+4;Dairy calves (under 1 year) - Feather (as-part-nature);A0C60#F01.A0C9J$F02.A0ESE
+4;Dairy calves (under 1 year) - Hair (as-part-nature);A0C60#F01.A0C9J$F02.A0ESP
+4;Dairy calves (under 1 year) - Injection site (as-part-nature);A0C60#F01.A0C9J$F02.A0ESN
+4;Dairy calves (under 1 year) - Lung (as-part-nature);A0C60#F01.A0C9J$F02.A069P
+4;Dairy calves (under 1 year) - Pollen (as-part-nature);A0C60#F01.A0C9J$F02.A0ESK
+4;Dairy calves (under 1 year) - Retina (as-part-nature);A0C60#F01.A0C9J$F02.A0ESJ
+4;Dairy calves (under 1 year) - Sand (as-part-nature);A0C60#F01.A0C9J$F02.A0ESH
+4;Dairy calves (under 1 year) - Tissues juice (as-part-nature);A0C60#F01.A0C9J$F02.A0ESG
+4;Dairy calves (under 1 year) - Wool (as-part-nature);A0C60#F01.A0C9J$F02.A0ESF
+4;Dairy calves (under 1 year) - Drinking water;A0F7L#F01.A0C9J$F02.A06CA
+4;Dairy calves (under 1 year) - Water for aquaculture;A0F7M#F01.A0C9J$F02.A06CA
+4;Dairy calves (under 1 year) - Feed;A0BB9#F01.A0C9J$F02.A0F0Y
+4;Veal calves (under 1 year) - Meat (as-part-nature);A0BXF#F01.A0C9M$F02.A0BYZ
+4;Veal calves (under 1 year) - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0C9M$F02.A0EMD
+4;Veal calves (under 1 year) - Fat (as-part-nature);A0BXF#F01.A0C9M$F02.A069J
+4;Veal calves (under 1 year) - Blood (as-part-nature);A0BXF#F01.A0C9M$F02.A06AL
+4;Veal calves (under 1 year) - Kidney (as-part-nature);A0BXF#F01.A0C9M$F02.A069N
+4;Veal calves (under 1 year) - Kidney fat (as-part-nature);A0BXF#F01.A0C9M$F02.A0F1B
+4;Veal calves (under 1 year) - Liver (as-part-nature);A0BXF#F01.A0C9M$F02.A069M
+4;Veal calves (under 1 year) - Skin & fat (as-part-nature);A0BXF#F01.A0C9M$F02.A06AK
+4;Veal calves (under 1 year) - Thyroid (as-part-nature);A0C60#F01.A0C9M$F02.A0CES
+4;Veal calves (under 1 year) - Urine (as-part-nature);A0C60#F01.A0C9M$F02.A0CET
+4;Veal calves (under 1 year) - Faeces (as-part-nature);A0C60#F01.A0C9M$F02.A0CEV
+4;Veal calves (under 1 year) - Blood serum (as-part-nature);A0C60#F01.A0C9M$F02.A0CEY
+4;Veal calves (under 1 year) - Plasma (as-part-nature);A0C60#F01.A0C9M$F02.A0CEX
+4;Veal calves (under 1 year) - Bile (as-part-nature);A0C60#F01.A0C9M$F02.A0EKY
+4;Veal calves (under 1 year) - Eye (as-part-nature);A0C60#F01.A0C9M$F02.A067P
+4;Veal calves (under 1 year) - Feather (as-part-nature);A0C60#F01.A0C9M$F02.A0ESE
+4;Veal calves (under 1 year) - Hair (as-part-nature);A0C60#F01.A0C9M$F02.A0ESP
+4;Veal calves (under 1 year) - Injection site (as-part-nature);A0C60#F01.A0C9M$F02.A0ESN
+4;Veal calves (under 1 year) - Lung (as-part-nature);A0C60#F01.A0C9M$F02.A069P
+4;Veal calves (under 1 year) - Pollen (as-part-nature);A0C60#F01.A0C9M$F02.A0ESK
+4;Veal calves (under 1 year) - Retina (as-part-nature);A0C60#F01.A0C9M$F02.A0ESJ
+4;Veal calves (under 1 year) - Sand (as-part-nature);A0C60#F01.A0C9M$F02.A0ESH
+4;Veal calves (under 1 year) - Tissues juice (as-part-nature);A0C60#F01.A0C9M$F02.A0ESG
+4;Veal calves (under 1 year) - Wool (as-part-nature);A0C60#F01.A0C9M$F02.A0ESF
+4;Veal calves (under 1 year) - Drinking water;A0F7L#F01.A0C9M$F02.A06CA
+4;Veal calves (under 1 year) - Water for aquaculture;A0F7M#F01.A0C9M$F02.A06CA
+4;Veal calves (under 1 year) - Feed;A0BB9#F01.A0C9M$F02.A0F0Y
+3;Young cattle (1-2 years) - Meat (as-part-nature);A0BXF#F01.A0C9F$F02.A0BYZ
+3;Young cattle (1-2 years) - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0C9F$F02.A0EMD
+3;Young cattle (1-2 years) - Fat (as-part-nature);A0BXF#F01.A0C9F$F02.A069J
+3;Young cattle (1-2 years) - Blood (as-part-nature);A0BXF#F01.A0C9F$F02.A06AL
+3;Young cattle (1-2 years) - Kidney (as-part-nature);A0BXF#F01.A0C9F$F02.A069N
+3;Young cattle (1-2 years) - Kidney fat (as-part-nature);A0BXF#F01.A0C9F$F02.A0F1B
+3;Young cattle (1-2 years) - Liver (as-part-nature);A0BXF#F01.A0C9F$F02.A069M
+3;Young cattle (1-2 years) - Skin & fat (as-part-nature);A0BXF#F01.A0C9F$F02.A06AK
+3;Young cattle (1-2 years) - Thyroid (as-part-nature);A0C60#F01.A0C9F$F02.A0CES
+3;Young cattle (1-2 years) - Urine (as-part-nature);A0C60#F01.A0C9F$F02.A0CET
+3;Young cattle (1-2 years) - Faeces (as-part-nature);A0C60#F01.A0C9F$F02.A0CEV
+3;Young cattle (1-2 years) - Blood serum (as-part-nature);A0C60#F01.A0C9F$F02.A0CEY
+3;Young cattle (1-2 years) - Plasma (as-part-nature);A0C60#F01.A0C9F$F02.A0CEX
+3;Young cattle (1-2 years) - Bile (as-part-nature);A0C60#F01.A0C9F$F02.A0EKY
+3;Young cattle (1-2 years) - Eye (as-part-nature);A0C60#F01.A0C9F$F02.A067P
+3;Young cattle (1-2 years) - Feather (as-part-nature);A0C60#F01.A0C9F$F02.A0ESE
+3;Young cattle (1-2 years) - Hair (as-part-nature);A0C60#F01.A0C9F$F02.A0ESP
+3;Young cattle (1-2 years) - Injection site (as-part-nature);A0C60#F01.A0C9F$F02.A0ESN
+3;Young cattle (1-2 years) - Lung (as-part-nature);A0C60#F01.A0C9F$F02.A069P
+3;Young cattle (1-2 years) - Pollen (as-part-nature);A0C60#F01.A0C9F$F02.A0ESK
+3;Young cattle (1-2 years) - Retina (as-part-nature);A0C60#F01.A0C9F$F02.A0ESJ
+3;Young cattle (1-2 years) - Sand (as-part-nature);A0C60#F01.A0C9F$F02.A0ESH
+3;Young cattle (1-2 years) - Tissues juice (as-part-nature);A0C60#F01.A0C9F$F02.A0ESG
+3;Young cattle (1-2 years) - Wool (as-part-nature);A0C60#F01.A0C9F$F02.A0ESF
+3;Young cattle (1-2 years) - Drinking water;A0F7L#F01.A0C9F$F02.A06CA
+3;Young cattle (1-2 years) - Water for aquaculture;A0F7M#F01.A0C9F$F02.A06CA
+3;Young cattle (1-2 years) - Feed;A0BB9#F01.A0C9F$F02.A0F0Y
+4;Rosé veal calves (at or above 1 year) - Meat (as-part-nature);A0BXF#F01.A0CHK$F02.A0BYZ
+4;Rosé veal calves (at or above 1 year) - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CHK$F02.A0EMD
+4;Rosé veal calves (at or above 1 year) - Fat (as-part-nature);A0BXF#F01.A0CHK$F02.A069J
+4;Rosé veal calves (at or above 1 year) - Blood (as-part-nature);A0BXF#F01.A0CHK$F02.A06AL
+4;Rosé veal calves (at or above 1 year) - Kidney (as-part-nature);A0BXF#F01.A0CHK$F02.A069N
+4;Rosé veal calves (at or above 1 year) - Kidney fat (as-part-nature);A0BXF#F01.A0CHK$F02.A0F1B
+4;Rosé veal calves (at or above 1 year) - Liver (as-part-nature);A0BXF#F01.A0CHK$F02.A069M
+4;Rosé veal calves (at or above 1 year) - Skin & fat (as-part-nature);A0BXF#F01.A0CHK$F02.A06AK
+4;Rosé veal calves (at or above 1 year) - Thyroid (as-part-nature);A0C60#F01.A0CHK$F02.A0CES
+4;Rosé veal calves (at or above 1 year) - Urine (as-part-nature);A0C60#F01.A0CHK$F02.A0CET
+4;Rosé veal calves (at or above 1 year) - Faeces (as-part-nature);A0C60#F01.A0CHK$F02.A0CEV
+4;Rosé veal calves (at or above 1 year) - Blood serum (as-part-nature);A0C60#F01.A0CHK$F02.A0CEY
+4;Rosé veal calves (at or above 1 year) - Plasma (as-part-nature);A0C60#F01.A0CHK$F02.A0CEX
+4;Rosé veal calves (at or above 1 year) - Bile (as-part-nature);A0C60#F01.A0CHK$F02.A0EKY
+4;Rosé veal calves (at or above 1 year) - Eye (as-part-nature);A0C60#F01.A0CHK$F02.A067P
+4;Rosé veal calves (at or above 1 year) - Feather (as-part-nature);A0C60#F01.A0CHK$F02.A0ESE
+4;Rosé veal calves (at or above 1 year) - Hair (as-part-nature);A0C60#F01.A0CHK$F02.A0ESP
+4;Rosé veal calves (at or above 1 year) - Injection site (as-part-nature);A0C60#F01.A0CHK$F02.A0ESN
+4;Rosé veal calves (at or above 1 year) - Lung (as-part-nature);A0C60#F01.A0CHK$F02.A069P
+4;Rosé veal calves (at or above 1 year) - Pollen (as-part-nature);A0C60#F01.A0CHK$F02.A0ESK
+4;Rosé veal calves (at or above 1 year) - Retina (as-part-nature);A0C60#F01.A0CHK$F02.A0ESJ
+4;Rosé veal calves (at or above 1 year) - Sand (as-part-nature);A0C60#F01.A0CHK$F02.A0ESH
+4;Rosé veal calves (at or above 1 year) - Tissues juice (as-part-nature);A0C60#F01.A0CHK$F02.A0ESG
+4;Rosé veal calves (at or above 1 year) - Wool (as-part-nature);A0C60#F01.A0CHK$F02.A0ESF
+4;Rosé veal calves (at or above 1 year) - Drinking water;A0F7L#F01.A0CHK$F02.A06CA
+4;Rosé veal calves (at or above 1 year) - Water for aquaculture;A0F7M#F01.A0CHK$F02.A06CA
+4;Rosé veal calves (at or above 1 year) - Feed;A0BB9#F01.A0CHK$F02.A0F0Y
+4;Young bulls (1-2 years) - Meat (as-part-nature);A0BXF#F01.A0C9H$F02.A0BYZ$F32.A0C9A
+4;Young bulls (1-2 years) - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0C9H$F02.A0EMD$F32.A0C9A
+4;Young bulls (1-2 years) - Fat (as-part-nature);A0BXF#F01.A0C9H$F02.A069J$F32.A0C9A
+4;Young bulls (1-2 years) - Blood (as-part-nature);A0BXF#F01.A0C9H$F02.A06AL$F32.A0C9A
+4;Young bulls (1-2 years) - Kidney (as-part-nature);A0BXF#F01.A0C9H$F02.A069N$F32.A0C9A
+4;Young bulls (1-2 years) - Kidney fat (as-part-nature);A0BXF#F01.A0C9H$F02.A0F1B$F32.A0C9A
+4;Young bulls (1-2 years) - Liver (as-part-nature);A0BXF#F01.A0C9H$F02.A069M$F32.A0C9A
+4;Young bulls (1-2 years) - Skin & fat (as-part-nature);A0BXF#F01.A0C9H$F02.A06AK$F32.A0C9A
+4;Young bulls (1-2 years) - Thyroid (as-part-nature);A0C60#F01.A0C9H$F02.A0CES$F32.A0C9A
+4;Young bulls (1-2 years) - Urine (as-part-nature);A0C60#F01.A0C9H$F02.A0CET$F32.A0C9A
+4;Young bulls (1-2 years) - Faeces (as-part-nature);A0C60#F01.A0C9H$F02.A0CEV$F32.A0C9A
+4;Young bulls (1-2 years) - Blood serum (as-part-nature);A0C60#F01.A0C9H$F02.A0CEY$F32.A0C9A
+4;Young bulls (1-2 years) - Plasma (as-part-nature);A0C60#F01.A0C9H$F02.A0CEX$F32.A0C9A
+4;Young bulls (1-2 years) - Bile (as-part-nature);A0C60#F01.A0C9H$F02.A0EKY$F32.A0C9A
+4;Young bulls (1-2 years) - Eye (as-part-nature);A0C60#F01.A0C9H$F02.A067P$F32.A0C9A
+4;Young bulls (1-2 years) - Feather (as-part-nature);A0C60#F01.A0C9H$F02.A0ESE$F32.A0C9A
+4;Young bulls (1-2 years) - Hair (as-part-nature);A0C60#F01.A0C9H$F02.A0ESP$F32.A0C9A
+4;Young bulls (1-2 years) - Injection site (as-part-nature);A0C60#F01.A0C9H$F02.A0ESN$F32.A0C9A
+4;Young bulls (1-2 years) - Lung (as-part-nature);A0C60#F01.A0C9H$F02.A069P$F32.A0C9A
+4;Young bulls (1-2 years) - Pollen (as-part-nature);A0C60#F01.A0C9H$F02.A0ESK$F32.A0C9A
+4;Young bulls (1-2 years) - Retina (as-part-nature);A0C60#F01.A0C9H$F02.A0ESJ$F32.A0C9A
+4;Young bulls (1-2 years) - Sand (as-part-nature);A0C60#F01.A0C9H$F02.A0ESH$F32.A0C9A
+4;Young bulls (1-2 years) - Tissues juice (as-part-nature);A0C60#F01.A0C9H$F02.A0ESG$F32.A0C9A
+4;Young bulls (1-2 years) - Wool (as-part-nature);A0C60#F01.A0C9H$F02.A0ESF$F32.A0C9A
+4;Young bulls (1-2 years) - Drinking water;A0F7L#F01.A0C9H$F02.A06CA$F32.A0C9A
+4;Young bulls (1-2 years) - Water for aquaculture;A0F7M#F01.A0C9H$F02.A06CA$F32.A0C9A
+4;Young bulls (1-2 years) - Feed;A0BB9#F01.A0C9H$F02.A0F0Y$F32.A0C9A
+5;Young bulls (1-2 years) for meat production - Meat (as-part-nature);A0BXF#F01.A0C9S$F02.A0BYZ$F32.A0C9A
+5;Young bulls (1-2 years) for meat production - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0C9S$F02.A0EMD$F32.A0C9A
+5;Young bulls (1-2 years) for meat production - Fat (as-part-nature);A0BXF#F01.A0C9S$F02.A069J$F32.A0C9A
+5;Young bulls (1-2 years) for meat production - Blood (as-part-nature);A0BXF#F01.A0C9S$F02.A06AL$F32.A0C9A
+5;Young bulls (1-2 years) for meat production - Kidney (as-part-nature);A0BXF#F01.A0C9S$F02.A069N$F32.A0C9A
+5;Young bulls (1-2 years) for meat production - Kidney fat (as-part-nature);A0BXF#F01.A0C9S$F02.A0F1B$F32.A0C9A
+5;Young bulls (1-2 years) for meat production - Liver (as-part-nature);A0BXF#F01.A0C9S$F02.A069M$F32.A0C9A
+5;Young bulls (1-2 years) for meat production - Skin & fat (as-part-nature);A0BXF#F01.A0C9S$F02.A06AK$F32.A0C9A
+5;Young bulls (1-2 years) for meat production - Thyroid (as-part-nature);A0C60#F01.A0C9S$F02.A0CES$F32.A0C9A
+5;Young bulls (1-2 years) for meat production - Urine (as-part-nature);A0C60#F01.A0C9S$F02.A0CET$F32.A0C9A
+5;Young bulls (1-2 years) for meat production - Faeces (as-part-nature);A0C60#F01.A0C9S$F02.A0CEV$F32.A0C9A
+5;Young bulls (1-2 years) for meat production - Blood serum (as-part-nature);A0C60#F01.A0C9S$F02.A0CEY$F32.A0C9A
+5;Young bulls (1-2 years) for meat production - Plasma (as-part-nature);A0C60#F01.A0C9S$F02.A0CEX$F32.A0C9A
+5;Young bulls (1-2 years) for meat production - Bile (as-part-nature);A0C60#F01.A0C9S$F02.A0EKY$F32.A0C9A
+5;Young bulls (1-2 years) for meat production - Eye (as-part-nature);A0C60#F01.A0C9S$F02.A067P$F32.A0C9A
+5;Young bulls (1-2 years) for meat production - Feather (as-part-nature);A0C60#F01.A0C9S$F02.A0ESE$F32.A0C9A
+5;Young bulls (1-2 years) for meat production - Hair (as-part-nature);A0C60#F01.A0C9S$F02.A0ESP$F32.A0C9A
+5;Young bulls (1-2 years) for meat production - Injection site (as-part-nature);A0C60#F01.A0C9S$F02.A0ESN$F32.A0C9A
+5;Young bulls (1-2 years) for meat production - Lung (as-part-nature);A0C60#F01.A0C9S$F02.A069P$F32.A0C9A
+5;Young bulls (1-2 years) for meat production - Pollen (as-part-nature);A0C60#F01.A0C9S$F02.A0ESK$F32.A0C9A
+5;Young bulls (1-2 years) for meat production - Retina (as-part-nature);A0C60#F01.A0C9S$F02.A0ESJ$F32.A0C9A
+5;Young bulls (1-2 years) for meat production - Sand (as-part-nature);A0C60#F01.A0C9S$F02.A0ESH$F32.A0C9A
+5;Young bulls (1-2 years) for meat production - Tissues juice (as-part-nature);A0C60#F01.A0C9S$F02.A0ESG$F32.A0C9A
+5;Young bulls (1-2 years) for meat production - Wool (as-part-nature);A0C60#F01.A0C9S$F02.A0ESF$F32.A0C9A
+5;Young bulls (1-2 years) for meat production - Drinking water;A0F7L#F01.A0C9S$F02.A06CA$F32.A0C9A
+5;Young bulls (1-2 years) for meat production - Water for aquaculture;A0F7M#F01.A0C9S$F02.A06CA$F32.A0C9A
+5;Young bulls (1-2 years) for meat production - Feed;A0BB9#F01.A0C9S$F02.A0F0Y$F32.A0C9A
+5;Young bulls (1-2 years) for dairy - Meat (as-part-nature);A0BXF#F01.A0C9N$F02.A0BYZ$F32.A0C9A
+5;Young bulls (1-2 years) for dairy - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0C9N$F02.A0EMD$F32.A0C9A
+5;Young bulls (1-2 years) for dairy - Fat (as-part-nature);A0BXF#F01.A0C9N$F02.A069J$F32.A0C9A
+5;Young bulls (1-2 years) for dairy - Blood (as-part-nature);A0BXF#F01.A0C9N$F02.A06AL$F32.A0C9A
+5;Young bulls (1-2 years) for dairy - Kidney (as-part-nature);A0BXF#F01.A0C9N$F02.A069N$F32.A0C9A
+5;Young bulls (1-2 years) for dairy - Kidney fat (as-part-nature);A0BXF#F01.A0C9N$F02.A0F1B$F32.A0C9A
+5;Young bulls (1-2 years) for dairy - Liver (as-part-nature);A0BXF#F01.A0C9N$F02.A069M$F32.A0C9A
+5;Young bulls (1-2 years) for dairy - Skin & fat (as-part-nature);A0BXF#F01.A0C9N$F02.A06AK$F32.A0C9A
+5;Young bulls (1-2 years) for dairy - Thyroid (as-part-nature);A0C60#F01.A0C9N$F02.A0CES$F32.A0C9A
+5;Young bulls (1-2 years) for dairy - Urine (as-part-nature);A0C60#F01.A0C9N$F02.A0CET$F32.A0C9A
+5;Young bulls (1-2 years) for dairy - Faeces (as-part-nature);A0C60#F01.A0C9N$F02.A0CEV$F32.A0C9A
+5;Young bulls (1-2 years) for dairy - Blood serum (as-part-nature);A0C60#F01.A0C9N$F02.A0CEY$F32.A0C9A
+5;Young bulls (1-2 years) for dairy - Plasma (as-part-nature);A0C60#F01.A0C9N$F02.A0CEX$F32.A0C9A
+5;Young bulls (1-2 years) for dairy - Bile (as-part-nature);A0C60#F01.A0C9N$F02.A0EKY$F32.A0C9A
+5;Young bulls (1-2 years) for dairy - Eye (as-part-nature);A0C60#F01.A0C9N$F02.A067P$F32.A0C9A
+5;Young bulls (1-2 years) for dairy - Feather (as-part-nature);A0C60#F01.A0C9N$F02.A0ESE$F32.A0C9A
+5;Young bulls (1-2 years) for dairy - Hair (as-part-nature);A0C60#F01.A0C9N$F02.A0ESP$F32.A0C9A
+5;Young bulls (1-2 years) for dairy - Injection site (as-part-nature);A0C60#F01.A0C9N$F02.A0ESN$F32.A0C9A
+5;Young bulls (1-2 years) for dairy - Lung (as-part-nature);A0C60#F01.A0C9N$F02.A069P$F32.A0C9A
+5;Young bulls (1-2 years) for dairy - Pollen (as-part-nature);A0C60#F01.A0C9N$F02.A0ESK$F32.A0C9A
+5;Young bulls (1-2 years) for dairy - Retina (as-part-nature);A0C60#F01.A0C9N$F02.A0ESJ$F32.A0C9A
+5;Young bulls (1-2 years) for dairy - Sand (as-part-nature);A0C60#F01.A0C9N$F02.A0ESH$F32.A0C9A
+5;Young bulls (1-2 years) for dairy - Tissues juice (as-part-nature);A0C60#F01.A0C9N$F02.A0ESG$F32.A0C9A
+5;Young bulls (1-2 years) for dairy - Wool (as-part-nature);A0C60#F01.A0C9N$F02.A0ESF$F32.A0C9A
+5;Young bulls (1-2 years) for dairy - Drinking water;A0F7L#F01.A0C9N$F02.A06CA$F32.A0C9A
+5;Young bulls (1-2 years) for dairy - Water for aquaculture;A0F7M#F01.A0C9N$F02.A06CA$F32.A0C9A
+5;Young bulls (1-2 years) for dairy - Feed;A0BB9#F01.A0C9N$F02.A0F0Y$F32.A0C9A
+4;Heifers - Meat (as-part-nature);A0BXF#F01.A0C9P$F02.A0BYZ$F32.A0C8V
+4;Heifers - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0C9P$F02.A0EMD$F32.A0C8V
+4;Heifers - Fat (as-part-nature);A0BXF#F01.A0C9P$F02.A069J$F32.A0C8V
+4;Heifers - Blood (as-part-nature);A0BXF#F01.A0C9P$F02.A06AL$F32.A0C8V
+4;Heifers - Kidney (as-part-nature);A0BXF#F01.A0C9P$F02.A069N$F32.A0C8V
+4;Heifers - Kidney fat (as-part-nature);A0BXF#F01.A0C9P$F02.A0F1B$F32.A0C8V
+4;Heifers - Liver (as-part-nature);A0BXF#F01.A0C9P$F02.A069M$F32.A0C8V
+4;Heifers - Skin & fat (as-part-nature);A0BXF#F01.A0C9P$F02.A06AK$F32.A0C8V
+4;Heifers - Thyroid (as-part-nature);A0C60#F01.A0C9P$F02.A0CES$F32.A0C8V
+4;Heifers - Urine (as-part-nature);A0C60#F01.A0C9P$F02.A0CET$F32.A0C8V
+4;Heifers - Faeces (as-part-nature);A0C60#F01.A0C9P$F02.A0CEV$F32.A0C8V
+4;Heifers - Blood serum (as-part-nature);A0C60#F01.A0C9P$F02.A0CEY$F32.A0C8V
+4;Heifers - Plasma (as-part-nature);A0C60#F01.A0C9P$F02.A0CEX$F32.A0C8V
+4;Heifers - Bile (as-part-nature);A0C60#F01.A0C9P$F02.A0EKY$F32.A0C8V
+4;Heifers - Eye (as-part-nature);A0C60#F01.A0C9P$F02.A067P$F32.A0C8V
+4;Heifers - Feather (as-part-nature);A0C60#F01.A0C9P$F02.A0ESE$F32.A0C8V
+4;Heifers - Hair (as-part-nature);A0C60#F01.A0C9P$F02.A0ESP$F32.A0C8V
+4;Heifers - Injection site (as-part-nature);A0C60#F01.A0C9P$F02.A0ESN$F32.A0C8V
+4;Heifers - Lung (as-part-nature);A0C60#F01.A0C9P$F02.A069P$F32.A0C8V
+4;Heifers - Pollen (as-part-nature);A0C60#F01.A0C9P$F02.A0ESK$F32.A0C8V
+4;Heifers - Retina (as-part-nature);A0C60#F01.A0C9P$F02.A0ESJ$F32.A0C8V
+4;Heifers - Sand (as-part-nature);A0C60#F01.A0C9P$F02.A0ESH$F32.A0C8V
+4;Heifers - Tissues juice (as-part-nature);A0C60#F01.A0C9P$F02.A0ESG$F32.A0C8V
+4;Heifers - Wool (as-part-nature);A0C60#F01.A0C9P$F02.A0ESF$F32.A0C8V
+4;Heifers - Drinking water;A0F7L#F01.A0C9P$F02.A06CA$F32.A0C8V
+4;Heifers - Water for aquaculture;A0F7M#F01.A0C9P$F02.A06CA$F32.A0C8V
+4;Heifers - Feed;A0BB9#F01.A0C9P$F02.A0F0Y$F32.A0C8V
+5;Heifers for meat production - Meat (as-part-nature);A0BXF#F01.A0C9T$F02.A0BYZ$F32.A0C8V
+5;Heifers for meat production - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0C9T$F02.A0EMD$F32.A0C8V
+5;Heifers for meat production - Fat (as-part-nature);A0BXF#F01.A0C9T$F02.A069J$F32.A0C8V
+5;Heifers for meat production - Blood (as-part-nature);A0BXF#F01.A0C9T$F02.A06AL$F32.A0C8V
+5;Heifers for meat production - Kidney (as-part-nature);A0BXF#F01.A0C9T$F02.A069N$F32.A0C8V
+5;Heifers for meat production - Kidney fat (as-part-nature);A0BXF#F01.A0C9T$F02.A0F1B$F32.A0C8V
+5;Heifers for meat production - Liver (as-part-nature);A0BXF#F01.A0C9T$F02.A069M$F32.A0C8V
+5;Heifers for meat production - Skin & fat (as-part-nature);A0BXF#F01.A0C9T$F02.A06AK$F32.A0C8V
+5;Heifers for meat production - Thyroid (as-part-nature);A0C60#F01.A0C9T$F02.A0CES$F32.A0C8V
+5;Heifers for meat production - Urine (as-part-nature);A0C60#F01.A0C9T$F02.A0CET$F32.A0C8V
+5;Heifers for meat production - Faeces (as-part-nature);A0C60#F01.A0C9T$F02.A0CEV$F32.A0C8V
+5;Heifers for meat production - Blood serum (as-part-nature);A0C60#F01.A0C9T$F02.A0CEY$F32.A0C8V
+5;Heifers for meat production - Plasma (as-part-nature);A0C60#F01.A0C9T$F02.A0CEX$F32.A0C8V
+5;Heifers for meat production - Bile (as-part-nature);A0C60#F01.A0C9T$F02.A0EKY$F32.A0C8V
+5;Heifers for meat production - Eye (as-part-nature);A0C60#F01.A0C9T$F02.A067P$F32.A0C8V
+5;Heifers for meat production - Feather (as-part-nature);A0C60#F01.A0C9T$F02.A0ESE$F32.A0C8V
+5;Heifers for meat production - Hair (as-part-nature);A0C60#F01.A0C9T$F02.A0ESP$F32.A0C8V
+5;Heifers for meat production - Injection site (as-part-nature);A0C60#F01.A0C9T$F02.A0ESN$F32.A0C8V
+5;Heifers for meat production - Lung (as-part-nature);A0C60#F01.A0C9T$F02.A069P$F32.A0C8V
+5;Heifers for meat production - Pollen (as-part-nature);A0C60#F01.A0C9T$F02.A0ESK$F32.A0C8V
+5;Heifers for meat production - Retina (as-part-nature);A0C60#F01.A0C9T$F02.A0ESJ$F32.A0C8V
+5;Heifers for meat production - Sand (as-part-nature);A0C60#F01.A0C9T$F02.A0ESH$F32.A0C8V
+5;Heifers for meat production - Tissues juice (as-part-nature);A0C60#F01.A0C9T$F02.A0ESG$F32.A0C8V
+5;Heifers for meat production - Wool (as-part-nature);A0C60#F01.A0C9T$F02.A0ESF$F32.A0C8V
+5;Heifers for meat production - Drinking water;A0F7L#F01.A0C9T$F02.A06CA$F32.A0C8V
+5;Heifers for meat production - Water for aquaculture;A0F7M#F01.A0C9T$F02.A06CA$F32.A0C8V
+5;Heifers for meat production - Feed;A0BB9#F01.A0C9T$F02.A0F0Y$F32.A0C8V
+5;Heifers for dairy - Meat (as-part-nature);A0BXF#F01.A0C9V$F02.A0BYZ$F32.A0C8V
+5;Heifers for dairy - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0C9V$F02.A0EMD$F32.A0C8V
+5;Heifers for dairy - Fat (as-part-nature);A0BXF#F01.A0C9V$F02.A069J$F32.A0C8V
+5;Heifers for dairy - Blood (as-part-nature);A0BXF#F01.A0C9V$F02.A06AL$F32.A0C8V
+5;Heifers for dairy - Kidney (as-part-nature);A0BXF#F01.A0C9V$F02.A069N$F32.A0C8V
+5;Heifers for dairy - Kidney fat (as-part-nature);A0BXF#F01.A0C9V$F02.A0F1B$F32.A0C8V
+5;Heifers for dairy - Liver (as-part-nature);A0BXF#F01.A0C9V$F02.A069M$F32.A0C8V
+5;Heifers for dairy - Skin & fat (as-part-nature);A0BXF#F01.A0C9V$F02.A06AK$F32.A0C8V
+5;Heifers for dairy - Thyroid (as-part-nature);A0C60#F01.A0C9V$F02.A0CES$F32.A0C8V
+5;Heifers for dairy - Urine (as-part-nature);A0C60#F01.A0C9V$F02.A0CET$F32.A0C8V
+5;Heifers for dairy - Faeces (as-part-nature);A0C60#F01.A0C9V$F02.A0CEV$F32.A0C8V
+5;Heifers for dairy - Blood serum (as-part-nature);A0C60#F01.A0C9V$F02.A0CEY$F32.A0C8V
+5;Heifers for dairy - Plasma (as-part-nature);A0C60#F01.A0C9V$F02.A0CEX$F32.A0C8V
+5;Heifers for dairy - Bile (as-part-nature);A0C60#F01.A0C9V$F02.A0EKY$F32.A0C8V
+5;Heifers for dairy - Eye (as-part-nature);A0C60#F01.A0C9V$F02.A067P$F32.A0C8V
+5;Heifers for dairy - Feather (as-part-nature);A0C60#F01.A0C9V$F02.A0ESE$F32.A0C8V
+5;Heifers for dairy - Hair (as-part-nature);A0C60#F01.A0C9V$F02.A0ESP$F32.A0C8V
+5;Heifers for dairy - Injection site (as-part-nature);A0C60#F01.A0C9V$F02.A0ESN$F32.A0C8V
+5;Heifers for dairy - Lung (as-part-nature);A0C60#F01.A0C9V$F02.A069P$F32.A0C8V
+5;Heifers for dairy - Pollen (as-part-nature);A0C60#F01.A0C9V$F02.A0ESK$F32.A0C8V
+5;Heifers for dairy - Retina (as-part-nature);A0C60#F01.A0C9V$F02.A0ESJ$F32.A0C8V
+5;Heifers for dairy - Sand (as-part-nature);A0C60#F01.A0C9V$F02.A0ESH$F32.A0C8V
+5;Heifers for dairy - Tissues juice (as-part-nature);A0C60#F01.A0C9V$F02.A0ESG$F32.A0C8V
+5;Heifers for dairy - Wool (as-part-nature);A0C60#F01.A0C9V$F02.A0ESF$F32.A0C8V
+5;Heifers for dairy - Drinking water;A0F7L#F01.A0C9V$F02.A06CA$F32.A0C8V
+5;Heifers for dairy - Water for aquaculture;A0F7M#F01.A0C9V$F02.A06CA$F32.A0C8V
+5;Heifers for dairy - Feed;A0BB9#F01.A0C9V$F02.A0F0Y$F32.A0C8V
+3;Adult cattle - Meat (as-part-nature);A0BXF#F01.A0C9G$F02.A0BYZ
+3;Adult cattle - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0C9G$F02.A0EMD
+3;Adult cattle - Fat (as-part-nature);A0BXF#F01.A0C9G$F02.A069J
+3;Adult cattle - Blood (as-part-nature);A0BXF#F01.A0C9G$F02.A06AL
+3;Adult cattle - Kidney (as-part-nature);A0BXF#F01.A0C9G$F02.A069N
+3;Adult cattle - Kidney fat (as-part-nature);A0BXF#F01.A0C9G$F02.A0F1B
+3;Adult cattle - Liver (as-part-nature);A0BXF#F01.A0C9G$F02.A069M
+3;Adult cattle - Skin & fat (as-part-nature);A0BXF#F01.A0C9G$F02.A06AK
+3;Adult cattle - Thyroid (as-part-nature);A0C60#F01.A0C9G$F02.A0CES
+3;Adult cattle - Urine (as-part-nature);A0C60#F01.A0C9G$F02.A0CET
+3;Adult cattle - Faeces (as-part-nature);A0C60#F01.A0C9G$F02.A0CEV
+3;Adult cattle - Blood serum (as-part-nature);A0C60#F01.A0C9G$F02.A0CEY
+3;Adult cattle - Plasma (as-part-nature);A0C60#F01.A0C9G$F02.A0CEX
+3;Adult cattle - Bile (as-part-nature);A0C60#F01.A0C9G$F02.A0EKY
+3;Adult cattle - Eye (as-part-nature);A0C60#F01.A0C9G$F02.A067P
+3;Adult cattle - Feather (as-part-nature);A0C60#F01.A0C9G$F02.A0ESE
+3;Adult cattle - Hair (as-part-nature);A0C60#F01.A0C9G$F02.A0ESP
+3;Adult cattle - Injection site (as-part-nature);A0C60#F01.A0C9G$F02.A0ESN
+3;Adult cattle - Lung (as-part-nature);A0C60#F01.A0C9G$F02.A069P
+3;Adult cattle - Pollen (as-part-nature);A0C60#F01.A0C9G$F02.A0ESK
+3;Adult cattle - Retina (as-part-nature);A0C60#F01.A0C9G$F02.A0ESJ
+3;Adult cattle - Sand (as-part-nature);A0C60#F01.A0C9G$F02.A0ESH
+3;Adult cattle - Tissues juice (as-part-nature);A0C60#F01.A0C9G$F02.A0ESG
+3;Adult cattle - Wool (as-part-nature);A0C60#F01.A0C9G$F02.A0ESF
+3;Adult cattle - Drinking water;A0F7L#F01.A0C9G$F02.A06CA
+3;Adult cattle - Water for aquaculture;A0F7M#F01.A0C9G$F02.A06CA
+3;Adult cattle - Feed;A0BB9#F01.A0C9G$F02.A0F0Y
+4;Breeding bulls - Meat (as-part-nature);A0BXF#F01.A0C9K$F02.A0BYZ$F32.A0C9A
+4;Breeding bulls - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0C9K$F02.A0EMD$F32.A0C9A
+4;Breeding bulls - Fat (as-part-nature);A0BXF#F01.A0C9K$F02.A069J$F32.A0C9A
+4;Breeding bulls - Blood (as-part-nature);A0BXF#F01.A0C9K$F02.A06AL$F32.A0C9A
+4;Breeding bulls - Kidney (as-part-nature);A0BXF#F01.A0C9K$F02.A069N$F32.A0C9A
+4;Breeding bulls - Kidney fat (as-part-nature);A0BXF#F01.A0C9K$F02.A0F1B$F32.A0C9A
+4;Breeding bulls - Liver (as-part-nature);A0BXF#F01.A0C9K$F02.A069M$F32.A0C9A
+4;Breeding bulls - Skin & fat (as-part-nature);A0BXF#F01.A0C9K$F02.A06AK$F32.A0C9A
+4;Breeding bulls - Thyroid (as-part-nature);A0C60#F01.A0C9K$F02.A0CES$F32.A0C9A
+4;Breeding bulls - Urine (as-part-nature);A0C60#F01.A0C9K$F02.A0CET$F32.A0C9A
+4;Breeding bulls - Faeces (as-part-nature);A0C60#F01.A0C9K$F02.A0CEV$F32.A0C9A
+4;Breeding bulls - Blood serum (as-part-nature);A0C60#F01.A0C9K$F02.A0CEY$F32.A0C9A
+4;Breeding bulls - Plasma (as-part-nature);A0C60#F01.A0C9K$F02.A0CEX$F32.A0C9A
+4;Breeding bulls - Bile (as-part-nature);A0C60#F01.A0C9K$F02.A0EKY$F32.A0C9A
+4;Breeding bulls - Eye (as-part-nature);A0C60#F01.A0C9K$F02.A067P$F32.A0C9A
+4;Breeding bulls - Feather (as-part-nature);A0C60#F01.A0C9K$F02.A0ESE$F32.A0C9A
+4;Breeding bulls - Hair (as-part-nature);A0C60#F01.A0C9K$F02.A0ESP$F32.A0C9A
+4;Breeding bulls - Injection site (as-part-nature);A0C60#F01.A0C9K$F02.A0ESN$F32.A0C9A
+4;Breeding bulls - Lung (as-part-nature);A0C60#F01.A0C9K$F02.A069P$F32.A0C9A
+4;Breeding bulls - Pollen (as-part-nature);A0C60#F01.A0C9K$F02.A0ESK$F32.A0C9A
+4;Breeding bulls - Retina (as-part-nature);A0C60#F01.A0C9K$F02.A0ESJ$F32.A0C9A
+4;Breeding bulls - Sand (as-part-nature);A0C60#F01.A0C9K$F02.A0ESH$F32.A0C9A
+4;Breeding bulls - Tissues juice (as-part-nature);A0C60#F01.A0C9K$F02.A0ESG$F32.A0C9A
+4;Breeding bulls - Wool (as-part-nature);A0C60#F01.A0C9K$F02.A0ESF$F32.A0C9A
+4;Breeding bulls - Drinking water;A0F7L#F01.A0C9K$F02.A06CA$F32.A0C9A
+4;Breeding bulls - Water for aquaculture;A0F7M#F01.A0C9K$F02.A06CA$F32.A0C9A
+4;Breeding bulls - Feed;A0BB9#F01.A0C9K$F02.A0F0Y$F32.A0C9A
+4;Dairy cows - Meat (as-part-nature);A0BXF#F01.A0C9L$F02.A0BYZ$F32.A0C8V
+4;Dairy cows - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0C9L$F02.A0EMD$F32.A0C8V
+4;Dairy cows - Fat (as-part-nature);A0BXF#F01.A0C9L$F02.A069J$F32.A0C8V
+4;Dairy cows - Blood (as-part-nature);A0BXF#F01.A0C9L$F02.A06AL$F32.A0C8V
+4;Dairy cows - Kidney (as-part-nature);A0BXF#F01.A0C9L$F02.A069N$F32.A0C8V
+4;Dairy cows - Kidney fat (as-part-nature);A0BXF#F01.A0C9L$F02.A0F1B$F32.A0C8V
+4;Dairy cows - Liver (as-part-nature);A0BXF#F01.A0C9L$F02.A069M$F32.A0C8V
+4;Dairy cows - Skin & fat (as-part-nature);A0BXF#F01.A0C9L$F02.A06AK$F32.A0C8V
+4;Dairy cows - Thyroid (as-part-nature);A0C60#F01.A0C9L$F02.A0CES$F32.A0C8V
+4;Dairy cows - Urine (as-part-nature);A0C60#F01.A0C9L$F02.A0CET$F32.A0C8V
+4;Dairy cows - Faeces (as-part-nature);A0C60#F01.A0C9L$F02.A0CEV$F32.A0C8V
+4;Dairy cows - Blood serum (as-part-nature);A0C60#F01.A0C9L$F02.A0CEY$F32.A0C8V
+4;Dairy cows - Plasma (as-part-nature);A0C60#F01.A0C9L$F02.A0CEX$F32.A0C8V
+4;Dairy cows - Bile (as-part-nature);A0C60#F01.A0C9L$F02.A0EKY$F32.A0C8V
+4;Dairy cows - Eye (as-part-nature);A0C60#F01.A0C9L$F02.A067P$F32.A0C8V
+4;Dairy cows - Feather (as-part-nature);A0C60#F01.A0C9L$F02.A0ESE$F32.A0C8V
+4;Dairy cows - Hair (as-part-nature);A0C60#F01.A0C9L$F02.A0ESP$F32.A0C8V
+4;Dairy cows - Injection site (as-part-nature);A0C60#F01.A0C9L$F02.A0ESN$F32.A0C8V
+4;Dairy cows - Lung (as-part-nature);A0C60#F01.A0C9L$F02.A069P$F32.A0C8V
+4;Dairy cows - Pollen (as-part-nature);A0C60#F01.A0C9L$F02.A0ESK$F32.A0C8V
+4;Dairy cows - Retina (as-part-nature);A0C60#F01.A0C9L$F02.A0ESJ$F32.A0C8V
+4;Dairy cows - Sand (as-part-nature);A0C60#F01.A0C9L$F02.A0ESH$F32.A0C8V
+4;Dairy cows - Tissues juice (as-part-nature);A0C60#F01.A0C9L$F02.A0ESG$F32.A0C8V
+4;Dairy cows - Wool (as-part-nature);A0C60#F01.A0C9L$F02.A0ESF$F32.A0C8V
+4;Dairy cows - Drinking water;A0F7L#F01.A0C9L$F02.A06CA$F32.A0C8V
+4;Dairy cows - Water for aquaculture;A0F7M#F01.A0C9L$F02.A06CA$F32.A0C8V
+4;Dairy cows - Feed;A0BB9#F01.A0C9L$F02.A0F0Y$F32.A0C8V
+4;Meat production cattle - Meat (as-part-nature);A0BXF#F01.A0C9Q$F02.A0BYZ
+4;Meat production cattle - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0C9Q$F02.A0EMD
+4;Meat production cattle - Fat (as-part-nature);A0BXF#F01.A0C9Q$F02.A069J
+4;Meat production cattle - Blood (as-part-nature);A0BXF#F01.A0C9Q$F02.A06AL
+4;Meat production cattle - Kidney (as-part-nature);A0BXF#F01.A0C9Q$F02.A069N
+4;Meat production cattle - Kidney fat (as-part-nature);A0BXF#F01.A0C9Q$F02.A0F1B
+4;Meat production cattle - Liver (as-part-nature);A0BXF#F01.A0C9Q$F02.A069M
+4;Meat production cattle - Skin & fat (as-part-nature);A0BXF#F01.A0C9Q$F02.A06AK
+4;Meat production cattle - Thyroid (as-part-nature);A0C60#F01.A0C9Q$F02.A0CES
+4;Meat production cattle - Urine (as-part-nature);A0C60#F01.A0C9Q$F02.A0CET
+4;Meat production cattle - Faeces (as-part-nature);A0C60#F01.A0C9Q$F02.A0CEV
+4;Meat production cattle - Blood serum (as-part-nature);A0C60#F01.A0C9Q$F02.A0CEY
+4;Meat production cattle - Plasma (as-part-nature);A0C60#F01.A0C9Q$F02.A0CEX
+4;Meat production cattle - Bile (as-part-nature);A0C60#F01.A0C9Q$F02.A0EKY
+4;Meat production cattle - Eye (as-part-nature);A0C60#F01.A0C9Q$F02.A067P
+4;Meat production cattle - Feather (as-part-nature);A0C60#F01.A0C9Q$F02.A0ESE
+4;Meat production cattle - Hair (as-part-nature);A0C60#F01.A0C9Q$F02.A0ESP
+4;Meat production cattle - Injection site (as-part-nature);A0C60#F01.A0C9Q$F02.A0ESN
+4;Meat production cattle - Lung (as-part-nature);A0C60#F01.A0C9Q$F02.A069P
+4;Meat production cattle - Pollen (as-part-nature);A0C60#F01.A0C9Q$F02.A0ESK
+4;Meat production cattle - Retina (as-part-nature);A0C60#F01.A0C9Q$F02.A0ESJ
+4;Meat production cattle - Sand (as-part-nature);A0C60#F01.A0C9Q$F02.A0ESH
+4;Meat production cattle - Tissues juice (as-part-nature);A0C60#F01.A0C9Q$F02.A0ESG
+4;Meat production cattle - Wool (as-part-nature);A0C60#F01.A0C9Q$F02.A0ESF
+4;Meat production cattle - Drinking water;A0F7L#F01.A0C9Q$F02.A06CA
+4;Meat production cattle - Water for aquaculture;A0F7M#F01.A0C9Q$F02.A06CA
+4;Meat production cattle - Feed;A0BB9#F01.A0C9Q$F02.A0F0Y
+4;Steers - Meat (as-part-nature);A0BXF#F01.A0C9R$F02.A0BYZ$F32.A0C9D
+4;Steers - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0C9R$F02.A0EMD$F32.A0C9D
+4;Steers - Fat (as-part-nature);A0BXF#F01.A0C9R$F02.A069J$F32.A0C9D
+4;Steers - Blood (as-part-nature);A0BXF#F01.A0C9R$F02.A06AL$F32.A0C9D
+4;Steers - Kidney (as-part-nature);A0BXF#F01.A0C9R$F02.A069N$F32.A0C9D
+4;Steers - Kidney fat (as-part-nature);A0BXF#F01.A0C9R$F02.A0F1B$F32.A0C9D
+4;Steers - Liver (as-part-nature);A0BXF#F01.A0C9R$F02.A069M$F32.A0C9D
+4;Steers - Skin & fat (as-part-nature);A0BXF#F01.A0C9R$F02.A06AK$F32.A0C9D
+4;Steers - Thyroid (as-part-nature);A0C60#F01.A0C9R$F02.A0CES$F32.A0C9D
+4;Steers - Urine (as-part-nature);A0C60#F01.A0C9R$F02.A0CET$F32.A0C9D
+4;Steers - Faeces (as-part-nature);A0C60#F01.A0C9R$F02.A0CEV$F32.A0C9D
+4;Steers - Blood serum (as-part-nature);A0C60#F01.A0C9R$F02.A0CEY$F32.A0C9D
+4;Steers - Plasma (as-part-nature);A0C60#F01.A0C9R$F02.A0CEX$F32.A0C9D
+4;Steers - Bile (as-part-nature);A0C60#F01.A0C9R$F02.A0EKY$F32.A0C9D
+4;Steers - Eye (as-part-nature);A0C60#F01.A0C9R$F02.A067P$F32.A0C9D
+4;Steers - Feather (as-part-nature);A0C60#F01.A0C9R$F02.A0ESE$F32.A0C9D
+4;Steers - Hair (as-part-nature);A0C60#F01.A0C9R$F02.A0ESP$F32.A0C9D
+4;Steers - Injection site (as-part-nature);A0C60#F01.A0C9R$F02.A0ESN$F32.A0C9D
+4;Steers - Lung (as-part-nature);A0C60#F01.A0C9R$F02.A069P$F32.A0C9D
+4;Steers - Pollen (as-part-nature);A0C60#F01.A0C9R$F02.A0ESK$F32.A0C9D
+4;Steers - Retina (as-part-nature);A0C60#F01.A0C9R$F02.A0ESJ$F32.A0C9D
+4;Steers - Sand (as-part-nature);A0C60#F01.A0C9R$F02.A0ESH$F32.A0C9D
+4;Steers - Tissues juice (as-part-nature);A0C60#F01.A0C9R$F02.A0ESG$F32.A0C9D
+4;Steers - Wool (as-part-nature);A0C60#F01.A0C9R$F02.A0ESF$F32.A0C9D
+4;Steers - Drinking water;A0F7L#F01.A0C9R$F02.A06CA$F32.A0C9D
+4;Steers - Water for aquaculture;A0F7M#F01.A0C9R$F02.A06CA$F32.A0C9D
+4;Steers - Feed;A0BB9#F01.A0C9R$F02.A0F0Y$F32.A0C9D
+2;Buffalo - Meat (as-part-nature);A0BXF#F01.A057C$F02.A0BYZ
+2;Buffalo - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A057C$F02.A0EMD
+2;Buffalo - Fat (as-part-nature);A0BXF#F01.A057C$F02.A069J
+2;Buffalo - Blood (as-part-nature);A0BXF#F01.A057C$F02.A06AL
+2;Buffalo - Kidney (as-part-nature);A0BXF#F01.A057C$F02.A069N
+2;Buffalo - Kidney fat (as-part-nature);A0BXF#F01.A057C$F02.A0F1B
+2;Buffalo - Liver (as-part-nature);A0BXF#F01.A057C$F02.A069M
+2;Buffalo - Skin & fat (as-part-nature);A0BXF#F01.A057C$F02.A06AK
+2;Buffalo - Thyroid (as-part-nature);A0C60#F01.A057C$F02.A0CES
+2;Buffalo - Urine (as-part-nature);A0C60#F01.A057C$F02.A0CET
+2;Buffalo - Faeces (as-part-nature);A0C60#F01.A057C$F02.A0CEV
+2;Buffalo - Blood serum (as-part-nature);A0C60#F01.A057C$F02.A0CEY
+2;Buffalo - Plasma (as-part-nature);A0C60#F01.A057C$F02.A0CEX
+2;Buffalo - Bile (as-part-nature);A0C60#F01.A057C$F02.A0EKY
+2;Buffalo - Eye (as-part-nature);A0C60#F01.A057C$F02.A067P
+2;Buffalo - Feather (as-part-nature);A0C60#F01.A057C$F02.A0ESE
+2;Buffalo - Hair (as-part-nature);A0C60#F01.A057C$F02.A0ESP
+2;Buffalo - Injection site (as-part-nature);A0C60#F01.A057C$F02.A0ESN
+2;Buffalo - Lung (as-part-nature);A0C60#F01.A057C$F02.A069P
+2;Buffalo - Pollen (as-part-nature);A0C60#F01.A057C$F02.A0ESK
+2;Buffalo - Retina (as-part-nature);A0C60#F01.A057C$F02.A0ESJ
+2;Buffalo - Sand (as-part-nature);A0C60#F01.A057C$F02.A0ESH
+2;Buffalo - Tissues juice (as-part-nature);A0C60#F01.A057C$F02.A0ESG
+2;Buffalo - Wool (as-part-nature);A0C60#F01.A057C$F02.A0ESF
+2;Buffalo - Drinking water;A0F7L#F01.A057C$F02.A06CA
+2;Buffalo - Water for aquaculture;A0F7M#F01.A057C$F02.A06CA
+2;Buffalo - Feed;A0BB9#F01.A057C$F02.A0F0Y
+1;Porcine animals - Meat (as-part-nature);A0BXF#F01.A0F1X$F02.A0BYZ
+1;Porcine animals - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0F1X$F02.A0EMD
+1;Porcine animals - Fat (as-part-nature);A0BXF#F01.A0F1X$F02.A069J
+1;Porcine animals - Blood (as-part-nature);A0BXF#F01.A0F1X$F02.A06AL
+1;Porcine animals - Kidney (as-part-nature);A0BXF#F01.A0F1X$F02.A069N
+1;Porcine animals - Kidney fat (as-part-nature);A0BXF#F01.A0F1X$F02.A0F1B
+1;Porcine animals - Liver (as-part-nature);A0BXF#F01.A0F1X$F02.A069M
+1;Porcine animals - Skin & fat (as-part-nature);A0BXF#F01.A0F1X$F02.A06AK
+1;Porcine animals - Thyroid (as-part-nature);A0C60#F01.A0F1X$F02.A0CES
+1;Porcine animals - Urine (as-part-nature);A0C60#F01.A0F1X$F02.A0CET
+1;Porcine animals - Faeces (as-part-nature);A0C60#F01.A0F1X$F02.A0CEV
+1;Porcine animals - Blood serum (as-part-nature);A0C60#F01.A0F1X$F02.A0CEY
+1;Porcine animals - Plasma (as-part-nature);A0C60#F01.A0F1X$F02.A0CEX
+1;Porcine animals - Bile (as-part-nature);A0C60#F01.A0F1X$F02.A0EKY
+1;Porcine animals - Eye (as-part-nature);A0C60#F01.A0F1X$F02.A067P
+1;Porcine animals - Feather (as-part-nature);A0C60#F01.A0F1X$F02.A0ESE
+1;Porcine animals - Hair (as-part-nature);A0C60#F01.A0F1X$F02.A0ESP
+1;Porcine animals - Injection site (as-part-nature);A0C60#F01.A0F1X$F02.A0ESN
+1;Porcine animals - Lung (as-part-nature);A0C60#F01.A0F1X$F02.A069P
+1;Porcine animals - Pollen (as-part-nature);A0C60#F01.A0F1X$F02.A0ESK
+1;Porcine animals - Retina (as-part-nature);A0C60#F01.A0F1X$F02.A0ESJ
+1;Porcine animals - Sand (as-part-nature);A0C60#F01.A0F1X$F02.A0ESH
+1;Porcine animals - Tissues juice (as-part-nature);A0C60#F01.A0F1X$F02.A0ESG
+1;Porcine animals - Wool (as-part-nature);A0C60#F01.A0F1X$F02.A0ESF
+1;Porcine animals - Drinking water;A0F7L#F01.A0F1X$F02.A06CA
+1;Porcine animals - Water for aquaculture;A0F7M#F01.A0F1X$F02.A06CA
+1;Porcine animals - Feed;A0BB9#F01.A0F1X$F02.A0F0Y
+2;Pig - Meat (as-part-nature);A0BXF#F01.A057F$F02.A0BYZ
+2;Pig - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A057F$F02.A0EMD
+2;Pig - Fat (as-part-nature);A0BXF#F01.A057F$F02.A069J
+2;Pig - Blood (as-part-nature);A0BXF#F01.A057F$F02.A06AL
+2;Pig - Kidney (as-part-nature);A0BXF#F01.A057F$F02.A069N
+2;Pig - Kidney fat (as-part-nature);A0BXF#F01.A057F$F02.A0F1B
+2;Pig - Liver (as-part-nature);A0BXF#F01.A057F$F02.A069M
+2;Pig - Skin & fat (as-part-nature);A0BXF#F01.A057F$F02.A06AK
+2;Pig - Thyroid (as-part-nature);A0C60#F01.A057F$F02.A0CES
+2;Pig - Urine (as-part-nature);A0C60#F01.A057F$F02.A0CET
+2;Pig - Faeces (as-part-nature);A0C60#F01.A057F$F02.A0CEV
+2;Pig - Blood serum (as-part-nature);A0C60#F01.A057F$F02.A0CEY
+2;Pig - Plasma (as-part-nature);A0C60#F01.A057F$F02.A0CEX
+2;Pig - Bile (as-part-nature);A0C60#F01.A057F$F02.A0EKY
+2;Pig - Eye (as-part-nature);A0C60#F01.A057F$F02.A067P
+2;Pig - Feather (as-part-nature);A0C60#F01.A057F$F02.A0ESE
+2;Pig - Hair (as-part-nature);A0C60#F01.A057F$F02.A0ESP
+2;Pig - Injection site (as-part-nature);A0C60#F01.A057F$F02.A0ESN
+2;Pig - Lung (as-part-nature);A0C60#F01.A057F$F02.A069P
+2;Pig - Pollen (as-part-nature);A0C60#F01.A057F$F02.A0ESK
+2;Pig - Retina (as-part-nature);A0C60#F01.A057F$F02.A0ESJ
+2;Pig - Sand (as-part-nature);A0C60#F01.A057F$F02.A0ESH
+2;Pig - Tissues juice (as-part-nature);A0C60#F01.A057F$F02.A0ESG
+2;Pig - Wool (as-part-nature);A0C60#F01.A057F$F02.A0ESF
+2;Pig - Drinking water;A0F7L#F01.A057F$F02.A06CA
+2;Pig - Water for aquaculture;A0F7M#F01.A057F$F02.A06CA
+2;Pig - Feed;A0BB9#F01.A057F$F02.A0F0Y
+3;Breeding pigs - Meat (as-part-nature);A0BXF#F01.A0C9X$F02.A0BYZ
+3;Breeding pigs - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0C9X$F02.A0EMD
+3;Breeding pigs - Fat (as-part-nature);A0BXF#F01.A0C9X$F02.A069J
+3;Breeding pigs - Blood (as-part-nature);A0BXF#F01.A0C9X$F02.A06AL
+3;Breeding pigs - Kidney (as-part-nature);A0BXF#F01.A0C9X$F02.A069N
+3;Breeding pigs - Kidney fat (as-part-nature);A0BXF#F01.A0C9X$F02.A0F1B
+3;Breeding pigs - Liver (as-part-nature);A0BXF#F01.A0C9X$F02.A069M
+3;Breeding pigs - Skin & fat (as-part-nature);A0BXF#F01.A0C9X$F02.A06AK
+3;Breeding pigs - Thyroid (as-part-nature);A0C60#F01.A0C9X$F02.A0CES
+3;Breeding pigs - Urine (as-part-nature);A0C60#F01.A0C9X$F02.A0CET
+3;Breeding pigs - Faeces (as-part-nature);A0C60#F01.A0C9X$F02.A0CEV
+3;Breeding pigs - Blood serum (as-part-nature);A0C60#F01.A0C9X$F02.A0CEY
+3;Breeding pigs - Plasma (as-part-nature);A0C60#F01.A0C9X$F02.A0CEX
+3;Breeding pigs - Bile (as-part-nature);A0C60#F01.A0C9X$F02.A0EKY
+3;Breeding pigs - Eye (as-part-nature);A0C60#F01.A0C9X$F02.A067P
+3;Breeding pigs - Feather (as-part-nature);A0C60#F01.A0C9X$F02.A0ESE
+3;Breeding pigs - Hair (as-part-nature);A0C60#F01.A0C9X$F02.A0ESP
+3;Breeding pigs - Injection site (as-part-nature);A0C60#F01.A0C9X$F02.A0ESN
+3;Breeding pigs - Lung (as-part-nature);A0C60#F01.A0C9X$F02.A069P
+3;Breeding pigs - Pollen (as-part-nature);A0C60#F01.A0C9X$F02.A0ESK
+3;Breeding pigs - Retina (as-part-nature);A0C60#F01.A0C9X$F02.A0ESJ
+3;Breeding pigs - Sand (as-part-nature);A0C60#F01.A0C9X$F02.A0ESH
+3;Breeding pigs - Tissues juice (as-part-nature);A0C60#F01.A0C9X$F02.A0ESG
+3;Breeding pigs - Wool (as-part-nature);A0C60#F01.A0C9X$F02.A0ESF
+3;Breeding pigs - Drinking water;A0F7L#F01.A0C9X$F02.A06CA
+3;Breeding pigs - Water for aquaculture;A0F7M#F01.A0C9X$F02.A06CA
+3;Breeding pigs - Feed;A0BB9#F01.A0C9X$F02.A0F0Y
+4;Breeding piglets - Meat (as-part-nature);A0BXF#F01.A0CAA$F02.A0BYZ
+4;Breeding piglets - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CAA$F02.A0EMD
+4;Breeding piglets - Fat (as-part-nature);A0BXF#F01.A0CAA$F02.A069J
+4;Breeding piglets - Blood (as-part-nature);A0BXF#F01.A0CAA$F02.A06AL
+4;Breeding piglets - Kidney (as-part-nature);A0BXF#F01.A0CAA$F02.A069N
+4;Breeding piglets - Kidney fat (as-part-nature);A0BXF#F01.A0CAA$F02.A0F1B
+4;Breeding piglets - Liver (as-part-nature);A0BXF#F01.A0CAA$F02.A069M
+4;Breeding piglets - Skin & fat (as-part-nature);A0BXF#F01.A0CAA$F02.A06AK
+4;Breeding piglets - Thyroid (as-part-nature);A0C60#F01.A0CAA$F02.A0CES
+4;Breeding piglets - Urine (as-part-nature);A0C60#F01.A0CAA$F02.A0CET
+4;Breeding piglets - Faeces (as-part-nature);A0C60#F01.A0CAA$F02.A0CEV
+4;Breeding piglets - Blood serum (as-part-nature);A0C60#F01.A0CAA$F02.A0CEY
+4;Breeding piglets - Plasma (as-part-nature);A0C60#F01.A0CAA$F02.A0CEX
+4;Breeding piglets - Bile (as-part-nature);A0C60#F01.A0CAA$F02.A0EKY
+4;Breeding piglets - Eye (as-part-nature);A0C60#F01.A0CAA$F02.A067P
+4;Breeding piglets - Feather (as-part-nature);A0C60#F01.A0CAA$F02.A0ESE
+4;Breeding piglets - Hair (as-part-nature);A0C60#F01.A0CAA$F02.A0ESP
+4;Breeding piglets - Injection site (as-part-nature);A0C60#F01.A0CAA$F02.A0ESN
+4;Breeding piglets - Lung (as-part-nature);A0C60#F01.A0CAA$F02.A069P
+4;Breeding piglets - Pollen (as-part-nature);A0C60#F01.A0CAA$F02.A0ESK
+4;Breeding piglets - Retina (as-part-nature);A0C60#F01.A0CAA$F02.A0ESJ
+4;Breeding piglets - Sand (as-part-nature);A0C60#F01.A0CAA$F02.A0ESH
+4;Breeding piglets - Tissues juice (as-part-nature);A0C60#F01.A0CAA$F02.A0ESG
+4;Breeding piglets - Wool (as-part-nature);A0C60#F01.A0CAA$F02.A0ESF
+4;Breeding piglets - Drinking water;A0F7L#F01.A0CAA$F02.A06CA
+4;Breeding piglets - Water for aquaculture;A0F7M#F01.A0CAA$F02.A06CA
+4;Breeding piglets - Feed;A0BB9#F01.A0CAA$F02.A0F0Y
+4;Breeding gilts - Meat (as-part-nature);A0BXF#F01.A0CAB$F02.A0BYZ
+4;Breeding gilts - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CAB$F02.A0EMD
+4;Breeding gilts - Fat (as-part-nature);A0BXF#F01.A0CAB$F02.A069J
+4;Breeding gilts - Blood (as-part-nature);A0BXF#F01.A0CAB$F02.A06AL
+4;Breeding gilts - Kidney (as-part-nature);A0BXF#F01.A0CAB$F02.A069N
+4;Breeding gilts - Kidney fat (as-part-nature);A0BXF#F01.A0CAB$F02.A0F1B
+4;Breeding gilts - Liver (as-part-nature);A0BXF#F01.A0CAB$F02.A069M
+4;Breeding gilts - Skin & fat (as-part-nature);A0BXF#F01.A0CAB$F02.A06AK
+4;Breeding gilts - Thyroid (as-part-nature);A0C60#F01.A0CAB$F02.A0CES
+4;Breeding gilts - Urine (as-part-nature);A0C60#F01.A0CAB$F02.A0CET
+4;Breeding gilts - Faeces (as-part-nature);A0C60#F01.A0CAB$F02.A0CEV
+4;Breeding gilts - Blood serum (as-part-nature);A0C60#F01.A0CAB$F02.A0CEY
+4;Breeding gilts - Plasma (as-part-nature);A0C60#F01.A0CAB$F02.A0CEX
+4;Breeding gilts - Bile (as-part-nature);A0C60#F01.A0CAB$F02.A0EKY
+4;Breeding gilts - Eye (as-part-nature);A0C60#F01.A0CAB$F02.A067P
+4;Breeding gilts - Feather (as-part-nature);A0C60#F01.A0CAB$F02.A0ESE
+4;Breeding gilts - Hair (as-part-nature);A0C60#F01.A0CAB$F02.A0ESP
+4;Breeding gilts - Injection site (as-part-nature);A0C60#F01.A0CAB$F02.A0ESN
+4;Breeding gilts - Lung (as-part-nature);A0C60#F01.A0CAB$F02.A069P
+4;Breeding gilts - Pollen (as-part-nature);A0C60#F01.A0CAB$F02.A0ESK
+4;Breeding gilts - Retina (as-part-nature);A0C60#F01.A0CAB$F02.A0ESJ
+4;Breeding gilts - Sand (as-part-nature);A0C60#F01.A0CAB$F02.A0ESH
+4;Breeding gilts - Tissues juice (as-part-nature);A0C60#F01.A0CAB$F02.A0ESG
+4;Breeding gilts - Wool (as-part-nature);A0C60#F01.A0CAB$F02.A0ESF
+4;Breeding gilts - Drinking water;A0F7L#F01.A0CAB$F02.A06CA
+4;Breeding gilts - Water for aquaculture;A0F7M#F01.A0CAB$F02.A06CA
+4;Breeding gilts - Feed;A0BB9#F01.A0CAB$F02.A0F0Y
+4;Breeding Sows - Meat (as-part-nature);A0BXF#F01.A0CAD$F02.A0BYZ$F32.A0C8V
+4;Breeding Sows - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CAD$F02.A0EMD$F32.A0C8V
+4;Breeding Sows - Fat (as-part-nature);A0BXF#F01.A0CAD$F02.A069J$F32.A0C8V
+4;Breeding Sows - Blood (as-part-nature);A0BXF#F01.A0CAD$F02.A06AL$F32.A0C8V
+4;Breeding Sows - Kidney (as-part-nature);A0BXF#F01.A0CAD$F02.A069N$F32.A0C8V
+4;Breeding Sows - Kidney fat (as-part-nature);A0BXF#F01.A0CAD$F02.A0F1B$F32.A0C8V
+4;Breeding Sows - Liver (as-part-nature);A0BXF#F01.A0CAD$F02.A069M$F32.A0C8V
+4;Breeding Sows - Skin & fat (as-part-nature);A0BXF#F01.A0CAD$F02.A06AK$F32.A0C8V
+4;Breeding Sows - Thyroid (as-part-nature);A0C60#F01.A0CAD$F02.A0CES$F32.A0C8V
+4;Breeding Sows - Urine (as-part-nature);A0C60#F01.A0CAD$F02.A0CET$F32.A0C8V
+4;Breeding Sows - Faeces (as-part-nature);A0C60#F01.A0CAD$F02.A0CEV$F32.A0C8V
+4;Breeding Sows - Blood serum (as-part-nature);A0C60#F01.A0CAD$F02.A0CEY$F32.A0C8V
+4;Breeding Sows - Plasma (as-part-nature);A0C60#F01.A0CAD$F02.A0CEX$F32.A0C8V
+4;Breeding Sows - Bile (as-part-nature);A0C60#F01.A0CAD$F02.A0EKY$F32.A0C8V
+4;Breeding Sows - Eye (as-part-nature);A0C60#F01.A0CAD$F02.A067P$F32.A0C8V
+4;Breeding Sows - Feather (as-part-nature);A0C60#F01.A0CAD$F02.A0ESE$F32.A0C8V
+4;Breeding Sows - Hair (as-part-nature);A0C60#F01.A0CAD$F02.A0ESP$F32.A0C8V
+4;Breeding Sows - Injection site (as-part-nature);A0C60#F01.A0CAD$F02.A0ESN$F32.A0C8V
+4;Breeding Sows - Lung (as-part-nature);A0C60#F01.A0CAD$F02.A069P$F32.A0C8V
+4;Breeding Sows - Pollen (as-part-nature);A0C60#F01.A0CAD$F02.A0ESK$F32.A0C8V
+4;Breeding Sows - Retina (as-part-nature);A0C60#F01.A0CAD$F02.A0ESJ$F32.A0C8V
+4;Breeding Sows - Sand (as-part-nature);A0C60#F01.A0CAD$F02.A0ESH$F32.A0C8V
+4;Breeding Sows - Tissues juice (as-part-nature);A0C60#F01.A0CAD$F02.A0ESG$F32.A0C8V
+4;Breeding Sows - Wool (as-part-nature);A0C60#F01.A0CAD$F02.A0ESF$F32.A0C8V
+4;Breeding Sows - Drinking water;A0F7L#F01.A0CAD$F02.A06CA$F32.A0C8V
+4;Breeding Sows - Water for aquaculture;A0F7M#F01.A0CAD$F02.A06CA$F32.A0C8V
+4;Breeding Sows - Feed;A0BB9#F01.A0CAD$F02.A0F0Y$F32.A0C8V
+4;Breeding boars - Meat (as-part-nature);A0BXF#F01.A0CAC$F02.A0BYZ$F32.A0C9A
+4;Breeding boars - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CAC$F02.A0EMD$F32.A0C9A
+4;Breeding boars - Fat (as-part-nature);A0BXF#F01.A0CAC$F02.A069J$F32.A0C9A
+4;Breeding boars - Blood (as-part-nature);A0BXF#F01.A0CAC$F02.A06AL$F32.A0C9A
+4;Breeding boars - Kidney (as-part-nature);A0BXF#F01.A0CAC$F02.A069N$F32.A0C9A
+4;Breeding boars - Kidney fat (as-part-nature);A0BXF#F01.A0CAC$F02.A0F1B$F32.A0C9A
+4;Breeding boars - Liver (as-part-nature);A0BXF#F01.A0CAC$F02.A069M$F32.A0C9A
+4;Breeding boars - Skin & fat (as-part-nature);A0BXF#F01.A0CAC$F02.A06AK$F32.A0C9A
+4;Breeding boars - Thyroid (as-part-nature);A0C60#F01.A0CAC$F02.A0CES$F32.A0C9A
+4;Breeding boars - Urine (as-part-nature);A0C60#F01.A0CAC$F02.A0CET$F32.A0C9A
+4;Breeding boars - Faeces (as-part-nature);A0C60#F01.A0CAC$F02.A0CEV$F32.A0C9A
+4;Breeding boars - Blood serum (as-part-nature);A0C60#F01.A0CAC$F02.A0CEY$F32.A0C9A
+4;Breeding boars - Plasma (as-part-nature);A0C60#F01.A0CAC$F02.A0CEX$F32.A0C9A
+4;Breeding boars - Bile (as-part-nature);A0C60#F01.A0CAC$F02.A0EKY$F32.A0C9A
+4;Breeding boars - Eye (as-part-nature);A0C60#F01.A0CAC$F02.A067P$F32.A0C9A
+4;Breeding boars - Feather (as-part-nature);A0C60#F01.A0CAC$F02.A0ESE$F32.A0C9A
+4;Breeding boars - Hair (as-part-nature);A0C60#F01.A0CAC$F02.A0ESP$F32.A0C9A
+4;Breeding boars - Injection site (as-part-nature);A0C60#F01.A0CAC$F02.A0ESN$F32.A0C9A
+4;Breeding boars - Lung (as-part-nature);A0C60#F01.A0CAC$F02.A069P$F32.A0C9A
+4;Breeding boars - Pollen (as-part-nature);A0C60#F01.A0CAC$F02.A0ESK$F32.A0C9A
+4;Breeding boars - Retina (as-part-nature);A0C60#F01.A0CAC$F02.A0ESJ$F32.A0C9A
+4;Breeding boars - Sand (as-part-nature);A0C60#F01.A0CAC$F02.A0ESH$F32.A0C9A
+4;Breeding boars - Tissues juice (as-part-nature);A0C60#F01.A0CAC$F02.A0ESG$F32.A0C9A
+4;Breeding boars - Wool (as-part-nature);A0C60#F01.A0CAC$F02.A0ESF$F32.A0C9A
+4;Breeding boars - Drinking water;A0F7L#F01.A0CAC$F02.A06CA$F32.A0C9A
+4;Breeding boars - Water for aquaculture;A0F7M#F01.A0CAC$F02.A06CA$F32.A0C9A
+4;Breeding boars - Feed;A0BB9#F01.A0CAC$F02.A0F0Y$F32.A0C9A
+3;Fattening pigs - Meat (as-part-nature);A0BXF#F01.A0C9Y$F02.A0BYZ
+3;Fattening pigs - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0C9Y$F02.A0EMD
+3;Fattening pigs - Fat (as-part-nature);A0BXF#F01.A0C9Y$F02.A069J
+3;Fattening pigs - Blood (as-part-nature);A0BXF#F01.A0C9Y$F02.A06AL
+3;Fattening pigs - Kidney (as-part-nature);A0BXF#F01.A0C9Y$F02.A069N
+3;Fattening pigs - Kidney fat (as-part-nature);A0BXF#F01.A0C9Y$F02.A0F1B
+3;Fattening pigs - Liver (as-part-nature);A0BXF#F01.A0C9Y$F02.A069M
+3;Fattening pigs - Skin & fat (as-part-nature);A0BXF#F01.A0C9Y$F02.A06AK
+3;Fattening pigs - Thyroid (as-part-nature);A0C60#F01.A0C9Y$F02.A0CES
+3;Fattening pigs - Urine (as-part-nature);A0C60#F01.A0C9Y$F02.A0CET
+3;Fattening pigs - Faeces (as-part-nature);A0C60#F01.A0C9Y$F02.A0CEV
+3;Fattening pigs - Blood serum (as-part-nature);A0C60#F01.A0C9Y$F02.A0CEY
+3;Fattening pigs - Plasma (as-part-nature);A0C60#F01.A0C9Y$F02.A0CEX
+3;Fattening pigs - Bile (as-part-nature);A0C60#F01.A0C9Y$F02.A0EKY
+3;Fattening pigs - Eye (as-part-nature);A0C60#F01.A0C9Y$F02.A067P
+3;Fattening pigs - Feather (as-part-nature);A0C60#F01.A0C9Y$F02.A0ESE
+3;Fattening pigs - Hair (as-part-nature);A0C60#F01.A0C9Y$F02.A0ESP
+3;Fattening pigs - Injection site (as-part-nature);A0C60#F01.A0C9Y$F02.A0ESN
+3;Fattening pigs - Lung (as-part-nature);A0C60#F01.A0C9Y$F02.A069P
+3;Fattening pigs - Pollen (as-part-nature);A0C60#F01.A0C9Y$F02.A0ESK
+3;Fattening pigs - Retina (as-part-nature);A0C60#F01.A0C9Y$F02.A0ESJ
+3;Fattening pigs - Sand (as-part-nature);A0C60#F01.A0C9Y$F02.A0ESH
+3;Fattening pigs - Tissues juice (as-part-nature);A0C60#F01.A0C9Y$F02.A0ESG
+3;Fattening pigs - Wool (as-part-nature);A0C60#F01.A0C9Y$F02.A0ESF
+3;Fattening pigs - Drinking water;A0F7L#F01.A0C9Y$F02.A06CA
+3;Fattening pigs - Water for aquaculture;A0F7M#F01.A0C9Y$F02.A06CA
+3;Fattening pigs - Feed;A0BB9#F01.A0C9Y$F02.A0F0Y
+4;Fattening piglets - Meat (as-part-nature);A0BXF#F01.A0CAE$F02.A0BYZ
+4;Fattening piglets - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CAE$F02.A0EMD
+4;Fattening piglets - Fat (as-part-nature);A0BXF#F01.A0CAE$F02.A069J
+4;Fattening piglets - Blood (as-part-nature);A0BXF#F01.A0CAE$F02.A06AL
+4;Fattening piglets - Kidney (as-part-nature);A0BXF#F01.A0CAE$F02.A069N
+4;Fattening piglets - Kidney fat (as-part-nature);A0BXF#F01.A0CAE$F02.A0F1B
+4;Fattening piglets - Liver (as-part-nature);A0BXF#F01.A0CAE$F02.A069M
+4;Fattening piglets - Skin & fat (as-part-nature);A0BXF#F01.A0CAE$F02.A06AK
+4;Fattening piglets - Thyroid (as-part-nature);A0C60#F01.A0CAE$F02.A0CES
+4;Fattening piglets - Urine (as-part-nature);A0C60#F01.A0CAE$F02.A0CET
+4;Fattening piglets - Faeces (as-part-nature);A0C60#F01.A0CAE$F02.A0CEV
+4;Fattening piglets - Blood serum (as-part-nature);A0C60#F01.A0CAE$F02.A0CEY
+4;Fattening piglets - Plasma (as-part-nature);A0C60#F01.A0CAE$F02.A0CEX
+4;Fattening piglets - Bile (as-part-nature);A0C60#F01.A0CAE$F02.A0EKY
+4;Fattening piglets - Eye (as-part-nature);A0C60#F01.A0CAE$F02.A067P
+4;Fattening piglets - Feather (as-part-nature);A0C60#F01.A0CAE$F02.A0ESE
+4;Fattening piglets - Hair (as-part-nature);A0C60#F01.A0CAE$F02.A0ESP
+4;Fattening piglets - Injection site (as-part-nature);A0C60#F01.A0CAE$F02.A0ESN
+4;Fattening piglets - Lung (as-part-nature);A0C60#F01.A0CAE$F02.A069P
+4;Fattening piglets - Pollen (as-part-nature);A0C60#F01.A0CAE$F02.A0ESK
+4;Fattening piglets - Retina (as-part-nature);A0C60#F01.A0CAE$F02.A0ESJ
+4;Fattening piglets - Sand (as-part-nature);A0C60#F01.A0CAE$F02.A0ESH
+4;Fattening piglets - Tissues juice (as-part-nature);A0C60#F01.A0CAE$F02.A0ESG
+4;Fattening piglets - Wool (as-part-nature);A0C60#F01.A0CAE$F02.A0ESF
+4;Fattening piglets - Drinking water;A0F7L#F01.A0CAE$F02.A06CA
+4;Fattening piglets - Water for aquaculture;A0F7M#F01.A0CAE$F02.A06CA
+4;Fattening piglets - Feed;A0BB9#F01.A0CAE$F02.A0F0Y
+4;Fattening weaners to growers - Meat (as-part-nature);A0BXF#F01.A0CAF$F02.A0BYZ
+4;Fattening weaners to growers - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CAF$F02.A0EMD
+4;Fattening weaners to growers - Fat (as-part-nature);A0BXF#F01.A0CAF$F02.A069J
+4;Fattening weaners to growers - Blood (as-part-nature);A0BXF#F01.A0CAF$F02.A06AL
+4;Fattening weaners to growers - Kidney (as-part-nature);A0BXF#F01.A0CAF$F02.A069N
+4;Fattening weaners to growers - Kidney fat (as-part-nature);A0BXF#F01.A0CAF$F02.A0F1B
+4;Fattening weaners to growers - Liver (as-part-nature);A0BXF#F01.A0CAF$F02.A069M
+4;Fattening weaners to growers - Skin & fat (as-part-nature);A0BXF#F01.A0CAF$F02.A06AK
+4;Fattening weaners to growers - Thyroid (as-part-nature);A0C60#F01.A0CAF$F02.A0CES
+4;Fattening weaners to growers - Urine (as-part-nature);A0C60#F01.A0CAF$F02.A0CET
+4;Fattening weaners to growers - Faeces (as-part-nature);A0C60#F01.A0CAF$F02.A0CEV
+4;Fattening weaners to growers - Blood serum (as-part-nature);A0C60#F01.A0CAF$F02.A0CEY
+4;Fattening weaners to growers - Plasma (as-part-nature);A0C60#F01.A0CAF$F02.A0CEX
+4;Fattening weaners to growers - Bile (as-part-nature);A0C60#F01.A0CAF$F02.A0EKY
+4;Fattening weaners to growers - Eye (as-part-nature);A0C60#F01.A0CAF$F02.A067P
+4;Fattening weaners to growers - Feather (as-part-nature);A0C60#F01.A0CAF$F02.A0ESE
+4;Fattening weaners to growers - Hair (as-part-nature);A0C60#F01.A0CAF$F02.A0ESP
+4;Fattening weaners to growers - Injection site (as-part-nature);A0C60#F01.A0CAF$F02.A0ESN
+4;Fattening weaners to growers - Lung (as-part-nature);A0C60#F01.A0CAF$F02.A069P
+4;Fattening weaners to growers - Pollen (as-part-nature);A0C60#F01.A0CAF$F02.A0ESK
+4;Fattening weaners to growers - Retina (as-part-nature);A0C60#F01.A0CAF$F02.A0ESJ
+4;Fattening weaners to growers - Sand (as-part-nature);A0C60#F01.A0CAF$F02.A0ESH
+4;Fattening weaners to growers - Tissues juice (as-part-nature);A0C60#F01.A0CAF$F02.A0ESG
+4;Fattening weaners to growers - Wool (as-part-nature);A0C60#F01.A0CAF$F02.A0ESF
+4;Fattening weaners to growers - Drinking water;A0F7L#F01.A0CAF$F02.A06CA
+4;Fattening weaners to growers - Water for aquaculture;A0F7M#F01.A0CAF$F02.A06CA
+4;Fattening weaners to growers - Feed;A0BB9#F01.A0CAF$F02.A0F0Y
+1;Caprinae (ovine+caprine) - Meat (as-part-nature);A0BXF#F01.A0F1Y$F02.A0BYZ
+1;Caprinae (ovine+caprine) - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0F1Y$F02.A0EMD
+1;Caprinae (ovine+caprine) - Fat (as-part-nature);A0BXF#F01.A0F1Y$F02.A069J
+1;Caprinae (ovine+caprine) - Blood (as-part-nature);A0BXF#F01.A0F1Y$F02.A06AL
+1;Caprinae (ovine+caprine) - Kidney (as-part-nature);A0BXF#F01.A0F1Y$F02.A069N
+1;Caprinae (ovine+caprine) - Kidney fat (as-part-nature);A0BXF#F01.A0F1Y$F02.A0F1B
+1;Caprinae (ovine+caprine) - Liver (as-part-nature);A0BXF#F01.A0F1Y$F02.A069M
+1;Caprinae (ovine+caprine) - Skin & fat (as-part-nature);A0BXF#F01.A0F1Y$F02.A06AK
+1;Caprinae (ovine+caprine) - Thyroid (as-part-nature);A0C60#F01.A0F1Y$F02.A0CES
+1;Caprinae (ovine+caprine) - Urine (as-part-nature);A0C60#F01.A0F1Y$F02.A0CET
+1;Caprinae (ovine+caprine) - Faeces (as-part-nature);A0C60#F01.A0F1Y$F02.A0CEV
+1;Caprinae (ovine+caprine) - Blood serum (as-part-nature);A0C60#F01.A0F1Y$F02.A0CEY
+1;Caprinae (ovine+caprine) - Plasma (as-part-nature);A0C60#F01.A0F1Y$F02.A0CEX
+1;Caprinae (ovine+caprine) - Bile (as-part-nature);A0C60#F01.A0F1Y$F02.A0EKY
+1;Caprinae (ovine+caprine) - Eye (as-part-nature);A0C60#F01.A0F1Y$F02.A067P
+1;Caprinae (ovine+caprine) - Feather (as-part-nature);A0C60#F01.A0F1Y$F02.A0ESE
+1;Caprinae (ovine+caprine) - Hair (as-part-nature);A0C60#F01.A0F1Y$F02.A0ESP
+1;Caprinae (ovine+caprine) - Injection site (as-part-nature);A0C60#F01.A0F1Y$F02.A0ESN
+1;Caprinae (ovine+caprine) - Lung (as-part-nature);A0C60#F01.A0F1Y$F02.A069P
+1;Caprinae (ovine+caprine) - Pollen (as-part-nature);A0C60#F01.A0F1Y$F02.A0ESK
+1;Caprinae (ovine+caprine) - Retina (as-part-nature);A0C60#F01.A0F1Y$F02.A0ESJ
+1;Caprinae (ovine+caprine) - Sand (as-part-nature);A0C60#F01.A0F1Y$F02.A0ESH
+1;Caprinae (ovine+caprine) - Tissues juice (as-part-nature);A0C60#F01.A0F1Y$F02.A0ESG
+1;Caprinae (ovine+caprine) - Wool (as-part-nature);A0C60#F01.A0F1Y$F02.A0ESF
+1;Caprinae (ovine+caprine) - Drinking water;A0F7L#F01.A0F1Y$F02.A06CA
+1;Caprinae (ovine+caprine) - Water for aquaculture;A0F7M#F01.A0F1Y$F02.A06CA
+1;Caprinae (ovine+caprine) - Feed;A0BB9#F01.A0F1Y$F02.A0F0Y
+2;Ovine animals (sheep) - Meat (as-part-nature);A0BXF#F01.A057G$F02.A0BYZ
+2;Ovine animals (sheep) - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A057G$F02.A0EMD
+2;Ovine animals (sheep) - Fat (as-part-nature);A0BXF#F01.A057G$F02.A069J
+2;Ovine animals (sheep) - Blood (as-part-nature);A0BXF#F01.A057G$F02.A06AL
+2;Ovine animals (sheep) - Kidney (as-part-nature);A0BXF#F01.A057G$F02.A069N
+2;Ovine animals (sheep) - Kidney fat (as-part-nature);A0BXF#F01.A057G$F02.A0F1B
+2;Ovine animals (sheep) - Liver (as-part-nature);A0BXF#F01.A057G$F02.A069M
+2;Ovine animals (sheep) - Skin & fat (as-part-nature);A0BXF#F01.A057G$F02.A06AK
+2;Ovine animals (sheep) - Thyroid (as-part-nature);A0C60#F01.A057G$F02.A0CES
+2;Ovine animals (sheep) - Urine (as-part-nature);A0C60#F01.A057G$F02.A0CET
+2;Ovine animals (sheep) - Faeces (as-part-nature);A0C60#F01.A057G$F02.A0CEV
+2;Ovine animals (sheep) - Blood serum (as-part-nature);A0C60#F01.A057G$F02.A0CEY
+2;Ovine animals (sheep) - Plasma (as-part-nature);A0C60#F01.A057G$F02.A0CEX
+2;Ovine animals (sheep) - Bile (as-part-nature);A0C60#F01.A057G$F02.A0EKY
+2;Ovine animals (sheep) - Eye (as-part-nature);A0C60#F01.A057G$F02.A067P
+2;Ovine animals (sheep) - Feather (as-part-nature);A0C60#F01.A057G$F02.A0ESE
+2;Ovine animals (sheep) - Hair (as-part-nature);A0C60#F01.A057G$F02.A0ESP
+2;Ovine animals (sheep) - Injection site (as-part-nature);A0C60#F01.A057G$F02.A0ESN
+2;Ovine animals (sheep) - Lung (as-part-nature);A0C60#F01.A057G$F02.A069P
+2;Ovine animals (sheep) - Pollen (as-part-nature);A0C60#F01.A057G$F02.A0ESK
+2;Ovine animals (sheep) - Retina (as-part-nature);A0C60#F01.A057G$F02.A0ESJ
+2;Ovine animals (sheep) - Sand (as-part-nature);A0C60#F01.A057G$F02.A0ESH
+2;Ovine animals (sheep) - Tissues juice (as-part-nature);A0C60#F01.A057G$F02.A0ESG
+2;Ovine animals (sheep) - Wool (as-part-nature);A0C60#F01.A057G$F02.A0ESF
+2;Ovine animals (sheep) - Drinking water;A0F7L#F01.A057G$F02.A06CA
+2;Ovine animals (sheep) - Water for aquaculture;A0F7M#F01.A057G$F02.A06CA
+2;Ovine animals (sheep) - Feed;A0BB9#F01.A057G$F02.A0F0Y
+3;Sheep under 1 year (lamb) - Meat (as-part-nature);A0BXF#F01.A0CDA$F02.A0BYZ
+3;Sheep under 1 year (lamb) - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CDA$F02.A0EMD
+3;Sheep under 1 year (lamb) - Fat (as-part-nature);A0BXF#F01.A0CDA$F02.A069J
+3;Sheep under 1 year (lamb) - Blood (as-part-nature);A0BXF#F01.A0CDA$F02.A06AL
+3;Sheep under 1 year (lamb) - Kidney (as-part-nature);A0BXF#F01.A0CDA$F02.A069N
+3;Sheep under 1 year (lamb) - Kidney fat (as-part-nature);A0BXF#F01.A0CDA$F02.A0F1B
+3;Sheep under 1 year (lamb) - Liver (as-part-nature);A0BXF#F01.A0CDA$F02.A069M
+3;Sheep under 1 year (lamb) - Skin & fat (as-part-nature);A0BXF#F01.A0CDA$F02.A06AK
+3;Sheep under 1 year (lamb) - Thyroid (as-part-nature);A0C60#F01.A0CDA$F02.A0CES
+3;Sheep under 1 year (lamb) - Urine (as-part-nature);A0C60#F01.A0CDA$F02.A0CET
+3;Sheep under 1 year (lamb) - Faeces (as-part-nature);A0C60#F01.A0CDA$F02.A0CEV
+3;Sheep under 1 year (lamb) - Blood serum (as-part-nature);A0C60#F01.A0CDA$F02.A0CEY
+3;Sheep under 1 year (lamb) - Plasma (as-part-nature);A0C60#F01.A0CDA$F02.A0CEX
+3;Sheep under 1 year (lamb) - Bile (as-part-nature);A0C60#F01.A0CDA$F02.A0EKY
+3;Sheep under 1 year (lamb) - Eye (as-part-nature);A0C60#F01.A0CDA$F02.A067P
+3;Sheep under 1 year (lamb) - Feather (as-part-nature);A0C60#F01.A0CDA$F02.A0ESE
+3;Sheep under 1 year (lamb) - Hair (as-part-nature);A0C60#F01.A0CDA$F02.A0ESP
+3;Sheep under 1 year (lamb) - Injection site (as-part-nature);A0C60#F01.A0CDA$F02.A0ESN
+3;Sheep under 1 year (lamb) - Lung (as-part-nature);A0C60#F01.A0CDA$F02.A069P
+3;Sheep under 1 year (lamb) - Pollen (as-part-nature);A0C60#F01.A0CDA$F02.A0ESK
+3;Sheep under 1 year (lamb) - Retina (as-part-nature);A0C60#F01.A0CDA$F02.A0ESJ
+3;Sheep under 1 year (lamb) - Sand (as-part-nature);A0C60#F01.A0CDA$F02.A0ESH
+3;Sheep under 1 year (lamb) - Tissues juice (as-part-nature);A0C60#F01.A0CDA$F02.A0ESG
+3;Sheep under 1 year (lamb) - Wool (as-part-nature);A0C60#F01.A0CDA$F02.A0ESF
+3;Sheep under 1 year (lamb) - Drinking water;A0F7L#F01.A0CDA$F02.A06CA
+3;Sheep under 1 year (lamb) - Water for aquaculture;A0F7M#F01.A0CDA$F02.A06CA
+3;Sheep under 1 year (lamb) - Feed;A0BB9#F01.A0CDA$F02.A0F0Y
+4;Lamb for meat production - Meat (as-part-nature);A0BXF#F01.A0CDB$F02.A0BYZ
+4;Lamb for meat production - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CDB$F02.A0EMD
+4;Lamb for meat production - Fat (as-part-nature);A0BXF#F01.A0CDB$F02.A069J
+4;Lamb for meat production - Blood (as-part-nature);A0BXF#F01.A0CDB$F02.A06AL
+4;Lamb for meat production - Kidney (as-part-nature);A0BXF#F01.A0CDB$F02.A069N
+4;Lamb for meat production - Kidney fat (as-part-nature);A0BXF#F01.A0CDB$F02.A0F1B
+4;Lamb for meat production - Liver (as-part-nature);A0BXF#F01.A0CDB$F02.A069M
+4;Lamb for meat production - Skin & fat (as-part-nature);A0BXF#F01.A0CDB$F02.A06AK
+4;Lamb for meat production - Thyroid (as-part-nature);A0C60#F01.A0CDB$F02.A0CES
+4;Lamb for meat production - Urine (as-part-nature);A0C60#F01.A0CDB$F02.A0CET
+4;Lamb for meat production - Faeces (as-part-nature);A0C60#F01.A0CDB$F02.A0CEV
+4;Lamb for meat production - Blood serum (as-part-nature);A0C60#F01.A0CDB$F02.A0CEY
+4;Lamb for meat production - Plasma (as-part-nature);A0C60#F01.A0CDB$F02.A0CEX
+4;Lamb for meat production - Bile (as-part-nature);A0C60#F01.A0CDB$F02.A0EKY
+4;Lamb for meat production - Eye (as-part-nature);A0C60#F01.A0CDB$F02.A067P
+4;Lamb for meat production - Feather (as-part-nature);A0C60#F01.A0CDB$F02.A0ESE
+4;Lamb for meat production - Hair (as-part-nature);A0C60#F01.A0CDB$F02.A0ESP
+4;Lamb for meat production - Injection site (as-part-nature);A0C60#F01.A0CDB$F02.A0ESN
+4;Lamb for meat production - Lung (as-part-nature);A0C60#F01.A0CDB$F02.A069P
+4;Lamb for meat production - Pollen (as-part-nature);A0C60#F01.A0CDB$F02.A0ESK
+4;Lamb for meat production - Retina (as-part-nature);A0C60#F01.A0CDB$F02.A0ESJ
+4;Lamb for meat production - Sand (as-part-nature);A0C60#F01.A0CDB$F02.A0ESH
+4;Lamb for meat production - Tissues juice (as-part-nature);A0C60#F01.A0CDB$F02.A0ESG
+4;Lamb for meat production - Wool (as-part-nature);A0C60#F01.A0CDB$F02.A0ESF
+4;Lamb for meat production - Drinking water;A0F7L#F01.A0CDB$F02.A06CA
+4;Lamb for meat production - Water for aquaculture;A0F7M#F01.A0CDB$F02.A06CA
+4;Lamb for meat production - Feed;A0BB9#F01.A0CDB$F02.A0F0Y
+4;Lamb for milk production - Meat (as-part-nature);A0BXF#F01.A0CDC$F02.A0BYZ$F32.A0C8V
+4;Lamb for milk production - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CDC$F02.A0EMD$F32.A0C8V
+4;Lamb for milk production - Fat (as-part-nature);A0BXF#F01.A0CDC$F02.A069J$F32.A0C8V
+4;Lamb for milk production - Blood (as-part-nature);A0BXF#F01.A0CDC$F02.A06AL$F32.A0C8V
+4;Lamb for milk production - Kidney (as-part-nature);A0BXF#F01.A0CDC$F02.A069N$F32.A0C8V
+4;Lamb for milk production - Kidney fat (as-part-nature);A0BXF#F01.A0CDC$F02.A0F1B$F32.A0C8V
+4;Lamb for milk production - Liver (as-part-nature);A0BXF#F01.A0CDC$F02.A069M$F32.A0C8V
+4;Lamb for milk production - Skin & fat (as-part-nature);A0BXF#F01.A0CDC$F02.A06AK$F32.A0C8V
+4;Lamb for milk production - Thyroid (as-part-nature);A0C60#F01.A0CDC$F02.A0CES$F32.A0C8V
+4;Lamb for milk production - Urine (as-part-nature);A0C60#F01.A0CDC$F02.A0CET$F32.A0C8V
+4;Lamb for milk production - Faeces (as-part-nature);A0C60#F01.A0CDC$F02.A0CEV$F32.A0C8V
+4;Lamb for milk production - Blood serum (as-part-nature);A0C60#F01.A0CDC$F02.A0CEY$F32.A0C8V
+4;Lamb for milk production - Plasma (as-part-nature);A0C60#F01.A0CDC$F02.A0CEX$F32.A0C8V
+4;Lamb for milk production - Bile (as-part-nature);A0C60#F01.A0CDC$F02.A0EKY$F32.A0C8V
+4;Lamb for milk production - Eye (as-part-nature);A0C60#F01.A0CDC$F02.A067P$F32.A0C8V
+4;Lamb for milk production - Feather (as-part-nature);A0C60#F01.A0CDC$F02.A0ESE$F32.A0C8V
+4;Lamb for milk production - Hair (as-part-nature);A0C60#F01.A0CDC$F02.A0ESP$F32.A0C8V
+4;Lamb for milk production - Injection site (as-part-nature);A0C60#F01.A0CDC$F02.A0ESN$F32.A0C8V
+4;Lamb for milk production - Lung (as-part-nature);A0C60#F01.A0CDC$F02.A069P$F32.A0C8V
+4;Lamb for milk production - Pollen (as-part-nature);A0C60#F01.A0CDC$F02.A0ESK$F32.A0C8V
+4;Lamb for milk production - Retina (as-part-nature);A0C60#F01.A0CDC$F02.A0ESJ$F32.A0C8V
+4;Lamb for milk production - Sand (as-part-nature);A0C60#F01.A0CDC$F02.A0ESH$F32.A0C8V
+4;Lamb for milk production - Tissues juice (as-part-nature);A0C60#F01.A0CDC$F02.A0ESG$F32.A0C8V
+4;Lamb for milk production - Wool (as-part-nature);A0C60#F01.A0CDC$F02.A0ESF$F32.A0C8V
+4;Lamb for milk production - Drinking water;A0F7L#F01.A0CDC$F02.A06CA$F32.A0C8V
+4;Lamb for milk production - Water for aquaculture;A0F7M#F01.A0CDC$F02.A06CA$F32.A0C8V
+4;Lamb for milk production - Feed;A0BB9#F01.A0CDC$F02.A0F0Y$F32.A0C8V
+3;Sheep over 1 year - Meat (as-part-nature);A0BXF#F01.A0CDD$F02.A0BYZ
+3;Sheep over 1 year - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CDD$F02.A0EMD
+3;Sheep over 1 year - Fat (as-part-nature);A0BXF#F01.A0CDD$F02.A069J
+3;Sheep over 1 year - Blood (as-part-nature);A0BXF#F01.A0CDD$F02.A06AL
+3;Sheep over 1 year - Kidney (as-part-nature);A0BXF#F01.A0CDD$F02.A069N
+3;Sheep over 1 year - Kidney fat (as-part-nature);A0BXF#F01.A0CDD$F02.A0F1B
+3;Sheep over 1 year - Liver (as-part-nature);A0BXF#F01.A0CDD$F02.A069M
+3;Sheep over 1 year - Skin & fat (as-part-nature);A0BXF#F01.A0CDD$F02.A06AK
+3;Sheep over 1 year - Thyroid (as-part-nature);A0C60#F01.A0CDD$F02.A0CES
+3;Sheep over 1 year - Urine (as-part-nature);A0C60#F01.A0CDD$F02.A0CET
+3;Sheep over 1 year - Faeces (as-part-nature);A0C60#F01.A0CDD$F02.A0CEV
+3;Sheep over 1 year - Blood serum (as-part-nature);A0C60#F01.A0CDD$F02.A0CEY
+3;Sheep over 1 year - Plasma (as-part-nature);A0C60#F01.A0CDD$F02.A0CEX
+3;Sheep over 1 year - Bile (as-part-nature);A0C60#F01.A0CDD$F02.A0EKY
+3;Sheep over 1 year - Eye (as-part-nature);A0C60#F01.A0CDD$F02.A067P
+3;Sheep over 1 year - Feather (as-part-nature);A0C60#F01.A0CDD$F02.A0ESE
+3;Sheep over 1 year - Hair (as-part-nature);A0C60#F01.A0CDD$F02.A0ESP
+3;Sheep over 1 year - Injection site (as-part-nature);A0C60#F01.A0CDD$F02.A0ESN
+3;Sheep over 1 year - Lung (as-part-nature);A0C60#F01.A0CDD$F02.A069P
+3;Sheep over 1 year - Pollen (as-part-nature);A0C60#F01.A0CDD$F02.A0ESK
+3;Sheep over 1 year - Retina (as-part-nature);A0C60#F01.A0CDD$F02.A0ESJ
+3;Sheep over 1 year - Sand (as-part-nature);A0C60#F01.A0CDD$F02.A0ESH
+3;Sheep over 1 year - Tissues juice (as-part-nature);A0C60#F01.A0CDD$F02.A0ESG
+3;Sheep over 1 year - Wool (as-part-nature);A0C60#F01.A0CDD$F02.A0ESF
+3;Sheep over 1 year - Drinking water;A0F7L#F01.A0CDD$F02.A06CA
+3;Sheep over 1 year - Water for aquaculture;A0F7M#F01.A0CDD$F02.A06CA
+3;Sheep over 1 year - Feed;A0BB9#F01.A0CDD$F02.A0F0Y
+4;Sheep for meat production - Meat (as-part-nature);A0BXF#F01.A0CDE$F02.A0BYZ
+4;Sheep for meat production - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CDE$F02.A0EMD
+4;Sheep for meat production - Fat (as-part-nature);A0BXF#F01.A0CDE$F02.A069J
+4;Sheep for meat production - Blood (as-part-nature);A0BXF#F01.A0CDE$F02.A06AL
+4;Sheep for meat production - Kidney (as-part-nature);A0BXF#F01.A0CDE$F02.A069N
+4;Sheep for meat production - Kidney fat (as-part-nature);A0BXF#F01.A0CDE$F02.A0F1B
+4;Sheep for meat production - Liver (as-part-nature);A0BXF#F01.A0CDE$F02.A069M
+4;Sheep for meat production - Skin & fat (as-part-nature);A0BXF#F01.A0CDE$F02.A06AK
+4;Sheep for meat production - Thyroid (as-part-nature);A0C60#F01.A0CDE$F02.A0CES
+4;Sheep for meat production - Urine (as-part-nature);A0C60#F01.A0CDE$F02.A0CET
+4;Sheep for meat production - Faeces (as-part-nature);A0C60#F01.A0CDE$F02.A0CEV
+4;Sheep for meat production - Blood serum (as-part-nature);A0C60#F01.A0CDE$F02.A0CEY
+4;Sheep for meat production - Plasma (as-part-nature);A0C60#F01.A0CDE$F02.A0CEX
+4;Sheep for meat production - Bile (as-part-nature);A0C60#F01.A0CDE$F02.A0EKY
+4;Sheep for meat production - Eye (as-part-nature);A0C60#F01.A0CDE$F02.A067P
+4;Sheep for meat production - Feather (as-part-nature);A0C60#F01.A0CDE$F02.A0ESE
+4;Sheep for meat production - Hair (as-part-nature);A0C60#F01.A0CDE$F02.A0ESP
+4;Sheep for meat production - Injection site (as-part-nature);A0C60#F01.A0CDE$F02.A0ESN
+4;Sheep for meat production - Lung (as-part-nature);A0C60#F01.A0CDE$F02.A069P
+4;Sheep for meat production - Pollen (as-part-nature);A0C60#F01.A0CDE$F02.A0ESK
+4;Sheep for meat production - Retina (as-part-nature);A0C60#F01.A0CDE$F02.A0ESJ
+4;Sheep for meat production - Sand (as-part-nature);A0C60#F01.A0CDE$F02.A0ESH
+4;Sheep for meat production - Tissues juice (as-part-nature);A0C60#F01.A0CDE$F02.A0ESG
+4;Sheep for meat production - Wool (as-part-nature);A0C60#F01.A0CDE$F02.A0ESF
+4;Sheep for meat production - Drinking water;A0F7L#F01.A0CDE$F02.A06CA
+4;Sheep for meat production - Water for aquaculture;A0F7M#F01.A0CDE$F02.A06CA
+4;Sheep for meat production - Feed;A0BB9#F01.A0CDE$F02.A0F0Y
+4;Sheep for milk production - Meat (as-part-nature);A0BXF#F01.A0CDF$F02.A0BYZ
+4;Sheep for milk production - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CDF$F02.A0EMD
+4;Sheep for milk production - Fat (as-part-nature);A0BXF#F01.A0CDF$F02.A069J
+4;Sheep for milk production - Blood (as-part-nature);A0BXF#F01.A0CDF$F02.A06AL
+4;Sheep for milk production - Kidney (as-part-nature);A0BXF#F01.A0CDF$F02.A069N
+4;Sheep for milk production - Kidney fat (as-part-nature);A0BXF#F01.A0CDF$F02.A0F1B
+4;Sheep for milk production - Liver (as-part-nature);A0BXF#F01.A0CDF$F02.A069M
+4;Sheep for milk production - Skin & fat (as-part-nature);A0BXF#F01.A0CDF$F02.A06AK
+4;Sheep for milk production - Thyroid (as-part-nature);A0C60#F01.A0CDF$F02.A0CES
+4;Sheep for milk production - Urine (as-part-nature);A0C60#F01.A0CDF$F02.A0CET
+4;Sheep for milk production - Faeces (as-part-nature);A0C60#F01.A0CDF$F02.A0CEV
+4;Sheep for milk production - Blood serum (as-part-nature);A0C60#F01.A0CDF$F02.A0CEY
+4;Sheep for milk production - Plasma (as-part-nature);A0C60#F01.A0CDF$F02.A0CEX
+4;Sheep for milk production - Bile (as-part-nature);A0C60#F01.A0CDF$F02.A0EKY
+4;Sheep for milk production - Eye (as-part-nature);A0C60#F01.A0CDF$F02.A067P
+4;Sheep for milk production - Feather (as-part-nature);A0C60#F01.A0CDF$F02.A0ESE
+4;Sheep for milk production - Hair (as-part-nature);A0C60#F01.A0CDF$F02.A0ESP
+4;Sheep for milk production - Injection site (as-part-nature);A0C60#F01.A0CDF$F02.A0ESN
+4;Sheep for milk production - Lung (as-part-nature);A0C60#F01.A0CDF$F02.A069P
+4;Sheep for milk production - Pollen (as-part-nature);A0C60#F01.A0CDF$F02.A0ESK
+4;Sheep for milk production - Retina (as-part-nature);A0C60#F01.A0CDF$F02.A0ESJ
+4;Sheep for milk production - Sand (as-part-nature);A0C60#F01.A0CDF$F02.A0ESH
+4;Sheep for milk production - Tissues juice (as-part-nature);A0C60#F01.A0CDF$F02.A0ESG
+4;Sheep for milk production - Wool (as-part-nature);A0C60#F01.A0CDF$F02.A0ESF
+4;Sheep for milk production - Drinking water;A0F7L#F01.A0CDF$F02.A06CA
+4;Sheep for milk production - Water for aquaculture;A0F7M#F01.A0CDF$F02.A06CA
+4;Sheep for milk production - Feed;A0BB9#F01.A0CDF$F02.A0F0Y
+2;Caprine animals (goat) - Meat (as-part-nature);A0BXF#F01.A057P$F02.A0BYZ
+2;Caprine animals (goat) - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A057P$F02.A0EMD
+2;Caprine animals (goat) - Fat (as-part-nature);A0BXF#F01.A057P$F02.A069J
+2;Caprine animals (goat) - Blood (as-part-nature);A0BXF#F01.A057P$F02.A06AL
+2;Caprine animals (goat) - Kidney (as-part-nature);A0BXF#F01.A057P$F02.A069N
+2;Caprine animals (goat) - Kidney fat (as-part-nature);A0BXF#F01.A057P$F02.A0F1B
+2;Caprine animals (goat) - Liver (as-part-nature);A0BXF#F01.A057P$F02.A069M
+2;Caprine animals (goat) - Skin & fat (as-part-nature);A0BXF#F01.A057P$F02.A06AK
+2;Caprine animals (goat) - Thyroid (as-part-nature);A0C60#F01.A057P$F02.A0CES
+2;Caprine animals (goat) - Urine (as-part-nature);A0C60#F01.A057P$F02.A0CET
+2;Caprine animals (goat) - Faeces (as-part-nature);A0C60#F01.A057P$F02.A0CEV
+2;Caprine animals (goat) - Blood serum (as-part-nature);A0C60#F01.A057P$F02.A0CEY
+2;Caprine animals (goat) - Plasma (as-part-nature);A0C60#F01.A057P$F02.A0CEX
+2;Caprine animals (goat) - Bile (as-part-nature);A0C60#F01.A057P$F02.A0EKY
+2;Caprine animals (goat) - Eye (as-part-nature);A0C60#F01.A057P$F02.A067P
+2;Caprine animals (goat) - Feather (as-part-nature);A0C60#F01.A057P$F02.A0ESE
+2;Caprine animals (goat) - Hair (as-part-nature);A0C60#F01.A057P$F02.A0ESP
+2;Caprine animals (goat) - Injection site (as-part-nature);A0C60#F01.A057P$F02.A0ESN
+2;Caprine animals (goat) - Lung (as-part-nature);A0C60#F01.A057P$F02.A069P
+2;Caprine animals (goat) - Pollen (as-part-nature);A0C60#F01.A057P$F02.A0ESK
+2;Caprine animals (goat) - Retina (as-part-nature);A0C60#F01.A057P$F02.A0ESJ
+2;Caprine animals (goat) - Sand (as-part-nature);A0C60#F01.A057P$F02.A0ESH
+2;Caprine animals (goat) - Tissues juice (as-part-nature);A0C60#F01.A057P$F02.A0ESG
+2;Caprine animals (goat) - Wool (as-part-nature);A0C60#F01.A057P$F02.A0ESF
+2;Caprine animals (goat) - Drinking water;A0F7L#F01.A057P$F02.A06CA
+2;Caprine animals (goat) - Water for aquaculture;A0F7M#F01.A057P$F02.A06CA
+2;Caprine animals (goat) - Feed;A0BB9#F01.A057P$F02.A0F0Y
+3;Goat under 1 year - Meat (as-part-nature);A0BXF#F01.A0CDG$F02.A0BYZ
+3;Goat under 1 year - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CDG$F02.A0EMD
+3;Goat under 1 year - Fat (as-part-nature);A0BXF#F01.A0CDG$F02.A069J
+3;Goat under 1 year - Blood (as-part-nature);A0BXF#F01.A0CDG$F02.A06AL
+3;Goat under 1 year - Kidney (as-part-nature);A0BXF#F01.A0CDG$F02.A069N
+3;Goat under 1 year - Kidney fat (as-part-nature);A0BXF#F01.A0CDG$F02.A0F1B
+3;Goat under 1 year - Liver (as-part-nature);A0BXF#F01.A0CDG$F02.A069M
+3;Goat under 1 year - Skin & fat (as-part-nature);A0BXF#F01.A0CDG$F02.A06AK
+3;Goat under 1 year - Thyroid (as-part-nature);A0C60#F01.A0CDG$F02.A0CES
+3;Goat under 1 year - Urine (as-part-nature);A0C60#F01.A0CDG$F02.A0CET
+3;Goat under 1 year - Faeces (as-part-nature);A0C60#F01.A0CDG$F02.A0CEV
+3;Goat under 1 year - Blood serum (as-part-nature);A0C60#F01.A0CDG$F02.A0CEY
+3;Goat under 1 year - Plasma (as-part-nature);A0C60#F01.A0CDG$F02.A0CEX
+3;Goat under 1 year - Bile (as-part-nature);A0C60#F01.A0CDG$F02.A0EKY
+3;Goat under 1 year - Eye (as-part-nature);A0C60#F01.A0CDG$F02.A067P
+3;Goat under 1 year - Feather (as-part-nature);A0C60#F01.A0CDG$F02.A0ESE
+3;Goat under 1 year - Hair (as-part-nature);A0C60#F01.A0CDG$F02.A0ESP
+3;Goat under 1 year - Injection site (as-part-nature);A0C60#F01.A0CDG$F02.A0ESN
+3;Goat under 1 year - Lung (as-part-nature);A0C60#F01.A0CDG$F02.A069P
+3;Goat under 1 year - Pollen (as-part-nature);A0C60#F01.A0CDG$F02.A0ESK
+3;Goat under 1 year - Retina (as-part-nature);A0C60#F01.A0CDG$F02.A0ESJ
+3;Goat under 1 year - Sand (as-part-nature);A0C60#F01.A0CDG$F02.A0ESH
+3;Goat under 1 year - Tissues juice (as-part-nature);A0C60#F01.A0CDG$F02.A0ESG
+3;Goat under 1 year - Wool (as-part-nature);A0C60#F01.A0CDG$F02.A0ESF
+3;Goat under 1 year - Drinking water;A0F7L#F01.A0CDG$F02.A06CA
+3;Goat under 1 year - Water for aquaculture;A0F7M#F01.A0CDG$F02.A06CA
+3;Goat under 1 year - Feed;A0BB9#F01.A0CDG$F02.A0F0Y
+4;Young goat for meat production - Meat (as-part-nature);A0BXF#F01.A0CDH$F02.A0BYZ
+4;Young goat for meat production - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CDH$F02.A0EMD
+4;Young goat for meat production - Fat (as-part-nature);A0BXF#F01.A0CDH$F02.A069J
+4;Young goat for meat production - Blood (as-part-nature);A0BXF#F01.A0CDH$F02.A06AL
+4;Young goat for meat production - Kidney (as-part-nature);A0BXF#F01.A0CDH$F02.A069N
+4;Young goat for meat production - Kidney fat (as-part-nature);A0BXF#F01.A0CDH$F02.A0F1B
+4;Young goat for meat production - Liver (as-part-nature);A0BXF#F01.A0CDH$F02.A069M
+4;Young goat for meat production - Skin & fat (as-part-nature);A0BXF#F01.A0CDH$F02.A06AK
+4;Young goat for meat production - Thyroid (as-part-nature);A0C60#F01.A0CDH$F02.A0CES
+4;Young goat for meat production - Urine (as-part-nature);A0C60#F01.A0CDH$F02.A0CET
+4;Young goat for meat production - Faeces (as-part-nature);A0C60#F01.A0CDH$F02.A0CEV
+4;Young goat for meat production - Blood serum (as-part-nature);A0C60#F01.A0CDH$F02.A0CEY
+4;Young goat for meat production - Plasma (as-part-nature);A0C60#F01.A0CDH$F02.A0CEX
+4;Young goat for meat production - Bile (as-part-nature);A0C60#F01.A0CDH$F02.A0EKY
+4;Young goat for meat production - Eye (as-part-nature);A0C60#F01.A0CDH$F02.A067P
+4;Young goat for meat production - Feather (as-part-nature);A0C60#F01.A0CDH$F02.A0ESE
+4;Young goat for meat production - Hair (as-part-nature);A0C60#F01.A0CDH$F02.A0ESP
+4;Young goat for meat production - Injection site (as-part-nature);A0C60#F01.A0CDH$F02.A0ESN
+4;Young goat for meat production - Lung (as-part-nature);A0C60#F01.A0CDH$F02.A069P
+4;Young goat for meat production - Pollen (as-part-nature);A0C60#F01.A0CDH$F02.A0ESK
+4;Young goat for meat production - Retina (as-part-nature);A0C60#F01.A0CDH$F02.A0ESJ
+4;Young goat for meat production - Sand (as-part-nature);A0C60#F01.A0CDH$F02.A0ESH
+4;Young goat for meat production - Tissues juice (as-part-nature);A0C60#F01.A0CDH$F02.A0ESG
+4;Young goat for meat production - Wool (as-part-nature);A0C60#F01.A0CDH$F02.A0ESF
+4;Young goat for meat production - Drinking water;A0F7L#F01.A0CDH$F02.A06CA
+4;Young goat for meat production - Water for aquaculture;A0F7M#F01.A0CDH$F02.A06CA
+4;Young goat for meat production - Feed;A0BB9#F01.A0CDH$F02.A0F0Y
+4;Young goat for milk production - Meat (as-part-nature);A0BXF#F01.A0CDJ$F02.A0BYZ$F32.A0C8V
+4;Young goat for milk production - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CDJ$F02.A0EMD$F32.A0C8V
+4;Young goat for milk production - Fat (as-part-nature);A0BXF#F01.A0CDJ$F02.A069J$F32.A0C8V
+4;Young goat for milk production - Blood (as-part-nature);A0BXF#F01.A0CDJ$F02.A06AL$F32.A0C8V
+4;Young goat for milk production - Kidney (as-part-nature);A0BXF#F01.A0CDJ$F02.A069N$F32.A0C8V
+4;Young goat for milk production - Kidney fat (as-part-nature);A0BXF#F01.A0CDJ$F02.A0F1B$F32.A0C8V
+4;Young goat for milk production - Liver (as-part-nature);A0BXF#F01.A0CDJ$F02.A069M$F32.A0C8V
+4;Young goat for milk production - Skin & fat (as-part-nature);A0BXF#F01.A0CDJ$F02.A06AK$F32.A0C8V
+4;Young goat for milk production - Thyroid (as-part-nature);A0C60#F01.A0CDJ$F02.A0CES$F32.A0C8V
+4;Young goat for milk production - Urine (as-part-nature);A0C60#F01.A0CDJ$F02.A0CET$F32.A0C8V
+4;Young goat for milk production - Faeces (as-part-nature);A0C60#F01.A0CDJ$F02.A0CEV$F32.A0C8V
+4;Young goat for milk production - Blood serum (as-part-nature);A0C60#F01.A0CDJ$F02.A0CEY$F32.A0C8V
+4;Young goat for milk production - Plasma (as-part-nature);A0C60#F01.A0CDJ$F02.A0CEX$F32.A0C8V
+4;Young goat for milk production - Bile (as-part-nature);A0C60#F01.A0CDJ$F02.A0EKY$F32.A0C8V
+4;Young goat for milk production - Eye (as-part-nature);A0C60#F01.A0CDJ$F02.A067P$F32.A0C8V
+4;Young goat for milk production - Feather (as-part-nature);A0C60#F01.A0CDJ$F02.A0ESE$F32.A0C8V
+4;Young goat for milk production - Hair (as-part-nature);A0C60#F01.A0CDJ$F02.A0ESP$F32.A0C8V
+4;Young goat for milk production - Injection site (as-part-nature);A0C60#F01.A0CDJ$F02.A0ESN$F32.A0C8V
+4;Young goat for milk production - Lung (as-part-nature);A0C60#F01.A0CDJ$F02.A069P$F32.A0C8V
+4;Young goat for milk production - Pollen (as-part-nature);A0C60#F01.A0CDJ$F02.A0ESK$F32.A0C8V
+4;Young goat for milk production - Retina (as-part-nature);A0C60#F01.A0CDJ$F02.A0ESJ$F32.A0C8V
+4;Young goat for milk production - Sand (as-part-nature);A0C60#F01.A0CDJ$F02.A0ESH$F32.A0C8V
+4;Young goat for milk production - Tissues juice (as-part-nature);A0C60#F01.A0CDJ$F02.A0ESG$F32.A0C8V
+4;Young goat for milk production - Wool (as-part-nature);A0C60#F01.A0CDJ$F02.A0ESF$F32.A0C8V
+4;Young goat for milk production - Drinking water;A0F7L#F01.A0CDJ$F02.A06CA$F32.A0C8V
+4;Young goat for milk production - Water for aquaculture;A0F7M#F01.A0CDJ$F02.A06CA$F32.A0C8V
+4;Young goat for milk production - Feed;A0BB9#F01.A0CDJ$F02.A0F0Y$F32.A0C8V
+3;Goat over 1 year - Meat (as-part-nature);A0BXF#F01.A0CDK$F02.A0BYZ
+3;Goat over 1 year - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CDK$F02.A0EMD
+3;Goat over 1 year - Fat (as-part-nature);A0BXF#F01.A0CDK$F02.A069J
+3;Goat over 1 year - Blood (as-part-nature);A0BXF#F01.A0CDK$F02.A06AL
+3;Goat over 1 year - Kidney (as-part-nature);A0BXF#F01.A0CDK$F02.A069N
+3;Goat over 1 year - Kidney fat (as-part-nature);A0BXF#F01.A0CDK$F02.A0F1B
+3;Goat over 1 year - Liver (as-part-nature);A0BXF#F01.A0CDK$F02.A069M
+3;Goat over 1 year - Skin & fat (as-part-nature);A0BXF#F01.A0CDK$F02.A06AK
+3;Goat over 1 year - Thyroid (as-part-nature);A0C60#F01.A0CDK$F02.A0CES
+3;Goat over 1 year - Urine (as-part-nature);A0C60#F01.A0CDK$F02.A0CET
+3;Goat over 1 year - Faeces (as-part-nature);A0C60#F01.A0CDK$F02.A0CEV
+3;Goat over 1 year - Blood serum (as-part-nature);A0C60#F01.A0CDK$F02.A0CEY
+3;Goat over 1 year - Plasma (as-part-nature);A0C60#F01.A0CDK$F02.A0CEX
+3;Goat over 1 year - Bile (as-part-nature);A0C60#F01.A0CDK$F02.A0EKY
+3;Goat over 1 year - Eye (as-part-nature);A0C60#F01.A0CDK$F02.A067P
+3;Goat over 1 year - Feather (as-part-nature);A0C60#F01.A0CDK$F02.A0ESE
+3;Goat over 1 year - Hair (as-part-nature);A0C60#F01.A0CDK$F02.A0ESP
+3;Goat over 1 year - Injection site (as-part-nature);A0C60#F01.A0CDK$F02.A0ESN
+3;Goat over 1 year - Lung (as-part-nature);A0C60#F01.A0CDK$F02.A069P
+3;Goat over 1 year - Pollen (as-part-nature);A0C60#F01.A0CDK$F02.A0ESK
+3;Goat over 1 year - Retina (as-part-nature);A0C60#F01.A0CDK$F02.A0ESJ
+3;Goat over 1 year - Sand (as-part-nature);A0C60#F01.A0CDK$F02.A0ESH
+3;Goat over 1 year - Tissues juice (as-part-nature);A0C60#F01.A0CDK$F02.A0ESG
+3;Goat over 1 year - Wool (as-part-nature);A0C60#F01.A0CDK$F02.A0ESF
+3;Goat over 1 year - Drinking water;A0F7L#F01.A0CDK$F02.A06CA
+3;Goat over 1 year - Water for aquaculture;A0F7M#F01.A0CDK$F02.A06CA
+3;Goat over 1 year - Feed;A0BB9#F01.A0CDK$F02.A0F0Y
+4;Goat for meat production - Meat (as-part-nature);A0BXF#F01.A0CDL$F02.A0BYZ
+4;Goat for meat production - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CDL$F02.A0EMD
+4;Goat for meat production - Fat (as-part-nature);A0BXF#F01.A0CDL$F02.A069J
+4;Goat for meat production - Blood (as-part-nature);A0BXF#F01.A0CDL$F02.A06AL
+4;Goat for meat production - Kidney (as-part-nature);A0BXF#F01.A0CDL$F02.A069N
+4;Goat for meat production - Kidney fat (as-part-nature);A0BXF#F01.A0CDL$F02.A0F1B
+4;Goat for meat production - Liver (as-part-nature);A0BXF#F01.A0CDL$F02.A069M
+4;Goat for meat production - Skin & fat (as-part-nature);A0BXF#F01.A0CDL$F02.A06AK
+4;Goat for meat production - Thyroid (as-part-nature);A0C60#F01.A0CDL$F02.A0CES
+4;Goat for meat production - Urine (as-part-nature);A0C60#F01.A0CDL$F02.A0CET
+4;Goat for meat production - Faeces (as-part-nature);A0C60#F01.A0CDL$F02.A0CEV
+4;Goat for meat production - Blood serum (as-part-nature);A0C60#F01.A0CDL$F02.A0CEY
+4;Goat for meat production - Plasma (as-part-nature);A0C60#F01.A0CDL$F02.A0CEX
+4;Goat for meat production - Bile (as-part-nature);A0C60#F01.A0CDL$F02.A0EKY
+4;Goat for meat production - Eye (as-part-nature);A0C60#F01.A0CDL$F02.A067P
+4;Goat for meat production - Feather (as-part-nature);A0C60#F01.A0CDL$F02.A0ESE
+4;Goat for meat production - Hair (as-part-nature);A0C60#F01.A0CDL$F02.A0ESP
+4;Goat for meat production - Injection site (as-part-nature);A0C60#F01.A0CDL$F02.A0ESN
+4;Goat for meat production - Lung (as-part-nature);A0C60#F01.A0CDL$F02.A069P
+4;Goat for meat production - Pollen (as-part-nature);A0C60#F01.A0CDL$F02.A0ESK
+4;Goat for meat production - Retina (as-part-nature);A0C60#F01.A0CDL$F02.A0ESJ
+4;Goat for meat production - Sand (as-part-nature);A0C60#F01.A0CDL$F02.A0ESH
+4;Goat for meat production - Tissues juice (as-part-nature);A0C60#F01.A0CDL$F02.A0ESG
+4;Goat for meat production - Wool (as-part-nature);A0C60#F01.A0CDL$F02.A0ESF
+4;Goat for meat production - Drinking water;A0F7L#F01.A0CDL$F02.A06CA
+4;Goat for meat production - Water for aquaculture;A0F7M#F01.A0CDL$F02.A06CA
+4;Goat for meat production - Feed;A0BB9#F01.A0CDL$F02.A0F0Y
+4;Goat for milk production - Meat (as-part-nature);A0BXF#F01.A0CDM$F02.A0BYZ$F32.A0C8V
+4;Goat for milk production - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CDM$F02.A0EMD$F32.A0C8V
+4;Goat for milk production - Fat (as-part-nature);A0BXF#F01.A0CDM$F02.A069J$F32.A0C8V
+4;Goat for milk production - Blood (as-part-nature);A0BXF#F01.A0CDM$F02.A06AL$F32.A0C8V
+4;Goat for milk production - Kidney (as-part-nature);A0BXF#F01.A0CDM$F02.A069N$F32.A0C8V
+4;Goat for milk production - Kidney fat (as-part-nature);A0BXF#F01.A0CDM$F02.A0F1B$F32.A0C8V
+4;Goat for milk production - Liver (as-part-nature);A0BXF#F01.A0CDM$F02.A069M$F32.A0C8V
+4;Goat for milk production - Skin & fat (as-part-nature);A0BXF#F01.A0CDM$F02.A06AK$F32.A0C8V
+4;Goat for milk production - Thyroid (as-part-nature);A0C60#F01.A0CDM$F02.A0CES$F32.A0C8V
+4;Goat for milk production - Urine (as-part-nature);A0C60#F01.A0CDM$F02.A0CET$F32.A0C8V
+4;Goat for milk production - Faeces (as-part-nature);A0C60#F01.A0CDM$F02.A0CEV$F32.A0C8V
+4;Goat for milk production - Blood serum (as-part-nature);A0C60#F01.A0CDM$F02.A0CEY$F32.A0C8V
+4;Goat for milk production - Plasma (as-part-nature);A0C60#F01.A0CDM$F02.A0CEX$F32.A0C8V
+4;Goat for milk production - Bile (as-part-nature);A0C60#F01.A0CDM$F02.A0EKY$F32.A0C8V
+4;Goat for milk production - Eye (as-part-nature);A0C60#F01.A0CDM$F02.A067P$F32.A0C8V
+4;Goat for milk production - Feather (as-part-nature);A0C60#F01.A0CDM$F02.A0ESE$F32.A0C8V
+4;Goat for milk production - Hair (as-part-nature);A0C60#F01.A0CDM$F02.A0ESP$F32.A0C8V
+4;Goat for milk production - Injection site (as-part-nature);A0C60#F01.A0CDM$F02.A0ESN$F32.A0C8V
+4;Goat for milk production - Lung (as-part-nature);A0C60#F01.A0CDM$F02.A069P$F32.A0C8V
+4;Goat for milk production - Pollen (as-part-nature);A0C60#F01.A0CDM$F02.A0ESK$F32.A0C8V
+4;Goat for milk production - Retina (as-part-nature);A0C60#F01.A0CDM$F02.A0ESJ$F32.A0C8V
+4;Goat for milk production - Sand (as-part-nature);A0C60#F01.A0CDM$F02.A0ESH$F32.A0C8V
+4;Goat for milk production - Tissues juice (as-part-nature);A0C60#F01.A0CDM$F02.A0ESG$F32.A0C8V
+4;Goat for milk production - Wool (as-part-nature);A0C60#F01.A0CDM$F02.A0ESF$F32.A0C8V
+4;Goat for milk production - Drinking water;A0F7L#F01.A0CDM$F02.A06CA$F32.A0C8V
+4;Goat for milk production - Water for aquaculture;A0F7M#F01.A0CDM$F02.A06CA$F32.A0C8V
+4;Goat for milk production - Feed;A0BB9#F01.A0CDM$F02.A0F0Y$F32.A0C8V
+1;Equine animals - Meat (as-part-nature);A0BXF#F01.AOBA3$F02.A0BYZ
+1;Equine animals - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.AOBA3$F02.A0EMD
+1;Equine animals - Fat (as-part-nature);A0BXF#F01.AOBA3$F02.A069J
+1;Equine animals - Blood (as-part-nature);A0BXF#F01.AOBA3$F02.A06AL
+1;Equine animals - Kidney (as-part-nature);A0BXF#F01.AOBA3$F02.A069N
+1;Equine animals - Kidney fat (as-part-nature);A0BXF#F01.AOBA3$F02.A0F1B
+1;Equine animals - Liver (as-part-nature);A0BXF#F01.AOBA3$F02.A069M
+1;Equine animals - Skin & fat (as-part-nature);A0BXF#F01.AOBA3$F02.A06AK
+1;Equine animals - Thyroid (as-part-nature);A0C60#F01.AOBA3$F02.A0CES
+1;Equine animals - Urine (as-part-nature);A0C60#F01.AOBA3$F02.A0CET
+1;Equine animals - Faeces (as-part-nature);A0C60#F01.AOBA3$F02.A0CEV
+1;Equine animals - Blood serum (as-part-nature);A0C60#F01.AOBA3$F02.A0CEY
+1;Equine animals - Plasma (as-part-nature);A0C60#F01.AOBA3$F02.A0CEX
+1;Equine animals - Bile (as-part-nature);A0C60#F01.AOBA3$F02.A0EKY
+1;Equine animals - Eye (as-part-nature);A0C60#F01.AOBA3$F02.A067P
+1;Equine animals - Feather (as-part-nature);A0C60#F01.AOBA3$F02.A0ESE
+1;Equine animals - Hair (as-part-nature);A0C60#F01.AOBA3$F02.A0ESP
+1;Equine animals - Injection site (as-part-nature);A0C60#F01.AOBA3$F02.A0ESN
+1;Equine animals - Lung (as-part-nature);A0C60#F01.AOBA3$F02.A069P
+1;Equine animals - Pollen (as-part-nature);A0C60#F01.AOBA3$F02.A0ESK
+1;Equine animals - Retina (as-part-nature);A0C60#F01.AOBA3$F02.A0ESJ
+1;Equine animals - Sand (as-part-nature);A0C60#F01.AOBA3$F02.A0ESH
+1;Equine animals - Tissues juice (as-part-nature);A0C60#F01.AOBA3$F02.A0ESG
+1;Equine animals - Wool (as-part-nature);A0C60#F01.AOBA3$F02.A0ESF
+1;Equine animals - Drinking water;A0F7L#F01.AOBA3$F02.A06CA
+1;Equine animals - Water for aquaculture;A0F7M#F01.AOBA3$F02.A06CA
+1;Equine animals - Feed;A0BB9#F01.AOBA3$F02.A0F0Y
+2;Horse - Meat (as-part-nature);A0BXF#F01.A0B9Z$F02.A0BYZ
+2;Horse - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0B9Z$F02.A0EMD
+2;Horse - Fat (as-part-nature);A0BXF#F01.A0B9Z$F02.A069J
+2;Horse - Blood (as-part-nature);A0BXF#F01.A0B9Z$F02.A06AL
+2;Horse - Kidney (as-part-nature);A0BXF#F01.A0B9Z$F02.A069N
+2;Horse - Kidney fat (as-part-nature);A0BXF#F01.A0B9Z$F02.A0F1B
+2;Horse - Liver (as-part-nature);A0BXF#F01.A0B9Z$F02.A069M
+2;Horse - Skin & fat (as-part-nature);A0BXF#F01.A0B9Z$F02.A06AK
+2;Horse - Thyroid (as-part-nature);A0C60#F01.A0B9Z$F02.A0CES
+2;Horse - Urine (as-part-nature);A0C60#F01.A0B9Z$F02.A0CET
+2;Horse - Faeces (as-part-nature);A0C60#F01.A0B9Z$F02.A0CEV
+2;Horse - Blood serum (as-part-nature);A0C60#F01.A0B9Z$F02.A0CEY
+2;Horse - Plasma (as-part-nature);A0C60#F01.A0B9Z$F02.A0CEX
+2;Horse - Bile (as-part-nature);A0C60#F01.A0B9Z$F02.A0EKY
+2;Horse - Eye (as-part-nature);A0C60#F01.A0B9Z$F02.A067P
+2;Horse - Feather (as-part-nature);A0C60#F01.A0B9Z$F02.A0ESE
+2;Horse - Hair (as-part-nature);A0C60#F01.A0B9Z$F02.A0ESP
+2;Horse - Injection site (as-part-nature);A0C60#F01.A0B9Z$F02.A0ESN
+2;Horse - Lung (as-part-nature);A0C60#F01.A0B9Z$F02.A069P
+2;Horse - Pollen (as-part-nature);A0C60#F01.A0B9Z$F02.A0ESK
+2;Horse - Retina (as-part-nature);A0C60#F01.A0B9Z$F02.A0ESJ
+2;Horse - Sand (as-part-nature);A0C60#F01.A0B9Z$F02.A0ESH
+2;Horse - Tissues juice (as-part-nature);A0C60#F01.A0B9Z$F02.A0ESG
+2;Horse - Wool (as-part-nature);A0C60#F01.A0B9Z$F02.A0ESF
+2;Horse - Drinking water;A0F7L#F01.A0B9Z$F02.A06CA
+2;Horse - Water for aquaculture;A0F7M#F01.A0B9Z$F02.A06CA
+2;Horse - Feed;A0BB9#F01.A0B9Z$F02.A0F0Y
+2;Asses - Meat (as-part-nature);A0BXF#F01.A057Q$F02.A0BYZ
+2;Asses - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A057Q$F02.A0EMD
+2;Asses - Fat (as-part-nature);A0BXF#F01.A057Q$F02.A069J
+2;Asses - Blood (as-part-nature);A0BXF#F01.A057Q$F02.A06AL
+2;Asses - Kidney (as-part-nature);A0BXF#F01.A057Q$F02.A069N
+2;Asses - Kidney fat (as-part-nature);A0BXF#F01.A057Q$F02.A0F1B
+2;Asses - Liver (as-part-nature);A0BXF#F01.A057Q$F02.A069M
+2;Asses - Skin & fat (as-part-nature);A0BXF#F01.A057Q$F02.A06AK
+2;Asses - Thyroid (as-part-nature);A0C60#F01.A057Q$F02.A0CES
+2;Asses - Urine (as-part-nature);A0C60#F01.A057Q$F02.A0CET
+2;Asses - Faeces (as-part-nature);A0C60#F01.A057Q$F02.A0CEV
+2;Asses - Blood serum (as-part-nature);A0C60#F01.A057Q$F02.A0CEY
+2;Asses - Plasma (as-part-nature);A0C60#F01.A057Q$F02.A0CEX
+2;Asses - Bile (as-part-nature);A0C60#F01.A057Q$F02.A0EKY
+2;Asses - Eye (as-part-nature);A0C60#F01.A057Q$F02.A067P
+2;Asses - Feather (as-part-nature);A0C60#F01.A057Q$F02.A0ESE
+2;Asses - Hair (as-part-nature);A0C60#F01.A057Q$F02.A0ESP
+2;Asses - Injection site (as-part-nature);A0C60#F01.A057Q$F02.A0ESN
+2;Asses - Lung (as-part-nature);A0C60#F01.A057Q$F02.A069P
+2;Asses - Pollen (as-part-nature);A0C60#F01.A057Q$F02.A0ESK
+2;Asses - Retina (as-part-nature);A0C60#F01.A057Q$F02.A0ESJ
+2;Asses - Sand (as-part-nature);A0C60#F01.A057Q$F02.A0ESH
+2;Asses - Tissues juice (as-part-nature);A0C60#F01.A057Q$F02.A0ESG
+2;Asses - Wool (as-part-nature);A0C60#F01.A057Q$F02.A0ESF
+2;Asses - Drinking water;A0F7L#F01.A057Q$F02.A06CA
+2;Asses - Water for aquaculture;A0F7M#F01.A057Q$F02.A06CA
+2;Asses - Feed;A0BB9#F01.A057Q$F02.A0F0Y
+2;Mule - Meat (as-part-nature);A0BXF#F01.A057S$F02.A0BYZ
+2;Mule - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A057S$F02.A0EMD
+2;Mule - Fat (as-part-nature);A0BXF#F01.A057S$F02.A069J
+2;Mule - Blood (as-part-nature);A0BXF#F01.A057S$F02.A06AL
+2;Mule - Kidney (as-part-nature);A0BXF#F01.A057S$F02.A069N
+2;Mule - Kidney fat (as-part-nature);A0BXF#F01.A057S$F02.A0F1B
+2;Mule - Liver (as-part-nature);A0BXF#F01.A057S$F02.A069M
+2;Mule - Skin & fat (as-part-nature);A0BXF#F01.A057S$F02.A06AK
+2;Mule - Thyroid (as-part-nature);A0C60#F01.A057S$F02.A0CES
+2;Mule - Urine (as-part-nature);A0C60#F01.A057S$F02.A0CET
+2;Mule - Faeces (as-part-nature);A0C60#F01.A057S$F02.A0CEV
+2;Mule - Blood serum (as-part-nature);A0C60#F01.A057S$F02.A0CEY
+2;Mule - Plasma (as-part-nature);A0C60#F01.A057S$F02.A0CEX
+2;Mule - Bile (as-part-nature);A0C60#F01.A057S$F02.A0EKY
+2;Mule - Eye (as-part-nature);A0C60#F01.A057S$F02.A067P
+2;Mule - Feather (as-part-nature);A0C60#F01.A057S$F02.A0ESE
+2;Mule - Hair (as-part-nature);A0C60#F01.A057S$F02.A0ESP
+2;Mule - Injection site (as-part-nature);A0C60#F01.A057S$F02.A0ESN
+2;Mule - Lung (as-part-nature);A0C60#F01.A057S$F02.A069P
+2;Mule - Pollen (as-part-nature);A0C60#F01.A057S$F02.A0ESK
+2;Mule - Retina (as-part-nature);A0C60#F01.A057S$F02.A0ESJ
+2;Mule - Sand (as-part-nature);A0C60#F01.A057S$F02.A0ESH
+2;Mule - Tissues juice (as-part-nature);A0C60#F01.A057S$F02.A0ESG
+2;Mule - Wool (as-part-nature);A0C60#F01.A057S$F02.A0ESF
+2;Mule - Drinking water;A0F7L#F01.A057S$F02.A06CA
+2;Mule - Water for aquaculture;A0F7M#F01.A057S$F02.A06CA
+2;Mule - Feed;A0BB9#F01.A057S$F02.A0F0Y
+1;Rabbit - Meat (as-part-nature);A0BXF#F01.A057T$F02.A0BYZ
+1;Rabbit - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A057T$F02.A0EMD
+1;Rabbit - Fat (as-part-nature);A0BXF#F01.A057T$F02.A069J
+1;Rabbit - Blood (as-part-nature);A0BXF#F01.A057T$F02.A06AL
+1;Rabbit - Kidney (as-part-nature);A0BXF#F01.A057T$F02.A069N
+1;Rabbit - Kidney fat (as-part-nature);A0BXF#F01.A057T$F02.A0F1B
+1;Rabbit - Liver (as-part-nature);A0BXF#F01.A057T$F02.A069M
+1;Rabbit - Skin & fat (as-part-nature);A0BXF#F01.A057T$F02.A06AK
+1;Rabbit - Thyroid (as-part-nature);A0C60#F01.A057T$F02.A0CES
+1;Rabbit - Urine (as-part-nature);A0C60#F01.A057T$F02.A0CET
+1;Rabbit - Faeces (as-part-nature);A0C60#F01.A057T$F02.A0CEV
+1;Rabbit - Blood serum (as-part-nature);A0C60#F01.A057T$F02.A0CEY
+1;Rabbit - Plasma (as-part-nature);A0C60#F01.A057T$F02.A0CEX
+1;Rabbit - Bile (as-part-nature);A0C60#F01.A057T$F02.A0EKY
+1;Rabbit - Eye (as-part-nature);A0C60#F01.A057T$F02.A067P
+1;Rabbit - Feather (as-part-nature);A0C60#F01.A057T$F02.A0ESE
+1;Rabbit - Hair (as-part-nature);A0C60#F01.A057T$F02.A0ESP
+1;Rabbit - Injection site (as-part-nature);A0C60#F01.A057T$F02.A0ESN
+1;Rabbit - Lung (as-part-nature);A0C60#F01.A057T$F02.A069P
+1;Rabbit - Pollen (as-part-nature);A0C60#F01.A057T$F02.A0ESK
+1;Rabbit - Retina (as-part-nature);A0C60#F01.A057T$F02.A0ESJ
+1;Rabbit - Sand (as-part-nature);A0C60#F01.A057T$F02.A0ESH
+1;Rabbit - Tissues juice (as-part-nature);A0C60#F01.A057T$F02.A0ESG
+1;Rabbit - Wool (as-part-nature);A0C60#F01.A057T$F02.A0ESF
+1;Rabbit - Drinking water;A0F7L#F01.A057T$F02.A06CA
+1;Rabbit - Water for aquaculture;A0F7M#F01.A057T$F02.A06CA
+1;Rabbit - Feed;A0BB9#F01.A057T$F02.A0F0Y
+1;Poultry - Meat (as-part-nature);A0BXF#F01.A057Y$F02.A0BYZ
+1;Poultry - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A057Y$F02.A0EMD
+1;Poultry - Fat (as-part-nature);A0BXF#F01.A057Y$F02.A069J
+1;Poultry - Blood (as-part-nature);A0BXF#F01.A057Y$F02.A06AL
+1;Poultry - Kidney (as-part-nature);A0BXF#F01.A057Y$F02.A069N
+1;Poultry - Kidney fat (as-part-nature);A0BXF#F01.A057Y$F02.A0F1B
+1;Poultry - Liver (as-part-nature);A0BXF#F01.A057Y$F02.A069M
+1;Poultry - Skin & fat (as-part-nature);A0BXF#F01.A057Y$F02.A06AK
+1;Poultry - Thyroid (as-part-nature);A0C60#F01.A057Y$F02.A0CES
+1;Poultry - Urine (as-part-nature);A0C60#F01.A057Y$F02.A0CET
+1;Poultry - Faeces (as-part-nature);A0C60#F01.A057Y$F02.A0CEV
+1;Poultry - Blood serum (as-part-nature);A0C60#F01.A057Y$F02.A0CEY
+1;Poultry - Plasma (as-part-nature);A0C60#F01.A057Y$F02.A0CEX
+1;Poultry - Bile (as-part-nature);A0C60#F01.A057Y$F02.A0EKY
+1;Poultry - Eye (as-part-nature);A0C60#F01.A057Y$F02.A067P
+1;Poultry - Feather (as-part-nature);A0C60#F01.A057Y$F02.A0ESE
+1;Poultry - Hair (as-part-nature);A0C60#F01.A057Y$F02.A0ESP
+1;Poultry - Injection site (as-part-nature);A0C60#F01.A057Y$F02.A0ESN
+1;Poultry - Lung (as-part-nature);A0C60#F01.A057Y$F02.A069P
+1;Poultry - Pollen (as-part-nature);A0C60#F01.A057Y$F02.A0ESK
+1;Poultry - Retina (as-part-nature);A0C60#F01.A057Y$F02.A0ESJ
+1;Poultry - Sand (as-part-nature);A0C60#F01.A057Y$F02.A0ESH
+1;Poultry - Tissues juice (as-part-nature);A0C60#F01.A057Y$F02.A0ESG
+1;Poultry - Wool (as-part-nature);A0C60#F01.A057Y$F02.A0ESF
+1;Poultry - Drinking water;A0F7L#F01.A057Y$F02.A06CA
+1;Poultry - Water for aquaculture;A0F7M#F01.A057Y$F02.A06CA
+1;Poultry - Feed;A0BB9#F01.A057Y$F02.A0F0Y
+2;Gallus gallus - Meat (as-part-nature);A0BXF#F01.A057Z$F02.A0BYZ
+2;Gallus gallus - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A057Z$F02.A0EMD
+2;Gallus gallus - Fat (as-part-nature);A0BXF#F01.A057Z$F02.A069J
+2;Gallus gallus - Blood (as-part-nature);A0BXF#F01.A057Z$F02.A06AL
+2;Gallus gallus - Kidney (as-part-nature);A0BXF#F01.A057Z$F02.A069N
+2;Gallus gallus - Kidney fat (as-part-nature);A0BXF#F01.A057Z$F02.A0F1B
+2;Gallus gallus - Liver (as-part-nature);A0BXF#F01.A057Z$F02.A069M
+2;Gallus gallus - Skin & fat (as-part-nature);A0BXF#F01.A057Z$F02.A06AK
+2;Gallus gallus - Thyroid (as-part-nature);A0C60#F01.A057Z$F02.A0CES
+2;Gallus gallus - Urine (as-part-nature);A0C60#F01.A057Z$F02.A0CET
+2;Gallus gallus - Faeces (as-part-nature);A0C60#F01.A057Z$F02.A0CEV
+2;Gallus gallus - Blood serum (as-part-nature);A0C60#F01.A057Z$F02.A0CEY
+2;Gallus gallus - Plasma (as-part-nature);A0C60#F01.A057Z$F02.A0CEX
+2;Gallus gallus - Bile (as-part-nature);A0C60#F01.A057Z$F02.A0EKY
+2;Gallus gallus - Eye (as-part-nature);A0C60#F01.A057Z$F02.A067P
+2;Gallus gallus - Feather (as-part-nature);A0C60#F01.A057Z$F02.A0ESE
+2;Gallus gallus - Hair (as-part-nature);A0C60#F01.A057Z$F02.A0ESP
+2;Gallus gallus - Injection site (as-part-nature);A0C60#F01.A057Z$F02.A0ESN
+2;Gallus gallus - Lung (as-part-nature);A0C60#F01.A057Z$F02.A069P
+2;Gallus gallus - Pollen (as-part-nature);A0C60#F01.A057Z$F02.A0ESK
+2;Gallus gallus - Retina (as-part-nature);A0C60#F01.A057Z$F02.A0ESJ
+2;Gallus gallus - Sand (as-part-nature);A0C60#F01.A057Z$F02.A0ESH
+2;Gallus gallus - Tissues juice (as-part-nature);A0C60#F01.A057Z$F02.A0ESG
+2;Gallus gallus - Wool (as-part-nature);A0C60#F01.A057Z$F02.A0ESF
+2;Gallus gallus - Drinking water;A0F7L#F01.A057Z$F02.A06CA
+2;Gallus gallus - Water for aquaculture;A0F7M#F01.A057Z$F02.A06CA
+2;Gallus gallus - Feed;A0BB9#F01.A057Z$F02.A0F0Y
+3;Gallus gallus breeding flock - Meat (as-part-nature);A0BXF#F01.A0C77$F02.A0BYZ
+3;Gallus gallus breeding flock - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0C77$F02.A0EMD
+3;Gallus gallus breeding flock - Fat (as-part-nature);A0BXF#F01.A0C77$F02.A069J
+3;Gallus gallus breeding flock - Blood (as-part-nature);A0BXF#F01.A0C77$F02.A06AL
+3;Gallus gallus breeding flock - Kidney (as-part-nature);A0BXF#F01.A0C77$F02.A069N
+3;Gallus gallus breeding flock - Kidney fat (as-part-nature);A0BXF#F01.A0C77$F02.A0F1B
+3;Gallus gallus breeding flock - Liver (as-part-nature);A0BXF#F01.A0C77$F02.A069M
+3;Gallus gallus breeding flock - Skin & fat (as-part-nature);A0BXF#F01.A0C77$F02.A06AK
+3;Gallus gallus breeding flock - Thyroid (as-part-nature);A0C60#F01.A0C77$F02.A0CES
+3;Gallus gallus breeding flock - Urine (as-part-nature);A0C60#F01.A0C77$F02.A0CET
+3;Gallus gallus breeding flock - Faeces (as-part-nature);A0C60#F01.A0C77$F02.A0CEV
+3;Gallus gallus breeding flock - Blood serum (as-part-nature);A0C60#F01.A0C77$F02.A0CEY
+3;Gallus gallus breeding flock - Plasma (as-part-nature);A0C60#F01.A0C77$F02.A0CEX
+3;Gallus gallus breeding flock - Bile (as-part-nature);A0C60#F01.A0C77$F02.A0EKY
+3;Gallus gallus breeding flock - Eye (as-part-nature);A0C60#F01.A0C77$F02.A067P
+3;Gallus gallus breeding flock - Feather (as-part-nature);A0C60#F01.A0C77$F02.A0ESE
+3;Gallus gallus breeding flock - Hair (as-part-nature);A0C60#F01.A0C77$F02.A0ESP
+3;Gallus gallus breeding flock - Injection site (as-part-nature);A0C60#F01.A0C77$F02.A0ESN
+3;Gallus gallus breeding flock - Lung (as-part-nature);A0C60#F01.A0C77$F02.A069P
+3;Gallus gallus breeding flock - Pollen (as-part-nature);A0C60#F01.A0C77$F02.A0ESK
+3;Gallus gallus breeding flock - Retina (as-part-nature);A0C60#F01.A0C77$F02.A0ESJ
+3;Gallus gallus breeding flock - Sand (as-part-nature);A0C60#F01.A0C77$F02.A0ESH
+3;Gallus gallus breeding flock - Tissues juice (as-part-nature);A0C60#F01.A0C77$F02.A0ESG
+3;Gallus gallus breeding flock - Wool (as-part-nature);A0C60#F01.A0C77$F02.A0ESF
+3;Gallus gallus breeding flock - Drinking water;A0F7L#F01.A0C77$F02.A06CA
+3;Gallus gallus breeding flock - Water for aquaculture;A0F7M#F01.A0C77$F02.A06CA
+3;Gallus gallus breeding flock - Feed;A0BB9#F01.A0C77$F02.A0F0Y
+3;Gallus gallus broiler - Meat (as-part-nature);A0BXF#F01.A0C78$F02.A0BYZ
+3;Gallus gallus broiler - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0C78$F02.A0EMD
+3;Gallus gallus broiler - Fat (as-part-nature);A0BXF#F01.A0C78$F02.A069J
+3;Gallus gallus broiler - Blood (as-part-nature);A0BXF#F01.A0C78$F02.A06AL
+3;Gallus gallus broiler - Kidney (as-part-nature);A0BXF#F01.A0C78$F02.A069N
+3;Gallus gallus broiler - Kidney fat (as-part-nature);A0BXF#F01.A0C78$F02.A0F1B
+3;Gallus gallus broiler - Liver (as-part-nature);A0BXF#F01.A0C78$F02.A069M
+3;Gallus gallus broiler - Skin & fat (as-part-nature);A0BXF#F01.A0C78$F02.A06AK
+3;Gallus gallus broiler - Thyroid (as-part-nature);A0C60#F01.A0C78$F02.A0CES
+3;Gallus gallus broiler - Urine (as-part-nature);A0C60#F01.A0C78$F02.A0CET
+3;Gallus gallus broiler - Faeces (as-part-nature);A0C60#F01.A0C78$F02.A0CEV
+3;Gallus gallus broiler - Blood serum (as-part-nature);A0C60#F01.A0C78$F02.A0CEY
+3;Gallus gallus broiler - Plasma (as-part-nature);A0C60#F01.A0C78$F02.A0CEX
+3;Gallus gallus broiler - Bile (as-part-nature);A0C60#F01.A0C78$F02.A0EKY
+3;Gallus gallus broiler - Eye (as-part-nature);A0C60#F01.A0C78$F02.A067P
+3;Gallus gallus broiler - Feather (as-part-nature);A0C60#F01.A0C78$F02.A0ESE
+3;Gallus gallus broiler - Hair (as-part-nature);A0C60#F01.A0C78$F02.A0ESP
+3;Gallus gallus broiler - Injection site (as-part-nature);A0C60#F01.A0C78$F02.A0ESN
+3;Gallus gallus broiler - Lung (as-part-nature);A0C60#F01.A0C78$F02.A069P
+3;Gallus gallus broiler - Pollen (as-part-nature);A0C60#F01.A0C78$F02.A0ESK
+3;Gallus gallus broiler - Retina (as-part-nature);A0C60#F01.A0C78$F02.A0ESJ
+3;Gallus gallus broiler - Sand (as-part-nature);A0C60#F01.A0C78$F02.A0ESH
+3;Gallus gallus broiler - Tissues juice (as-part-nature);A0C60#F01.A0C78$F02.A0ESG
+3;Gallus gallus broiler - Wool (as-part-nature);A0C60#F01.A0C78$F02.A0ESF
+3;Gallus gallus broiler - Drinking water;A0F7L#F01.A0C78$F02.A06CA
+3;Gallus gallus broiler - Water for aquaculture;A0F7M#F01.A0C78$F02.A06CA
+3;Gallus gallus broiler - Feed;A0BB9#F01.A0C78$F02.A0F0Y
+3;Gallus gallus capon - Meat (as-part-nature);A0BXF#F01.A0C79$F02.A0BYZ$F32.A0C9D
+3;Gallus gallus capon - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0C79$F02.A0EMD$F32.A0C9D
+3;Gallus gallus capon - Fat (as-part-nature);A0BXF#F01.A0C79$F02.A069J$F32.A0C9D
+3;Gallus gallus capon - Blood (as-part-nature);A0BXF#F01.A0C79$F02.A06AL$F32.A0C9D
+3;Gallus gallus capon - Kidney (as-part-nature);A0BXF#F01.A0C79$F02.A069N$F32.A0C9D
+3;Gallus gallus capon - Kidney fat (as-part-nature);A0BXF#F01.A0C79$F02.A0F1B$F32.A0C9D
+3;Gallus gallus capon - Liver (as-part-nature);A0BXF#F01.A0C79$F02.A069M$F32.A0C9D
+3;Gallus gallus capon - Skin & fat (as-part-nature);A0BXF#F01.A0C79$F02.A06AK$F32.A0C9D
+3;Gallus gallus capon - Thyroid (as-part-nature);A0C60#F01.A0C79$F02.A0CES$F32.A0C9D
+3;Gallus gallus capon - Urine (as-part-nature);A0C60#F01.A0C79$F02.A0CET$F32.A0C9D
+3;Gallus gallus capon - Faeces (as-part-nature);A0C60#F01.A0C79$F02.A0CEV$F32.A0C9D
+3;Gallus gallus capon - Blood serum (as-part-nature);A0C60#F01.A0C79$F02.A0CEY$F32.A0C9D
+3;Gallus gallus capon - Plasma (as-part-nature);A0C60#F01.A0C79$F02.A0CEX$F32.A0C9D
+3;Gallus gallus capon - Bile (as-part-nature);A0C60#F01.A0C79$F02.A0EKY$F32.A0C9D
+3;Gallus gallus capon - Eye (as-part-nature);A0C60#F01.A0C79$F02.A067P$F32.A0C9D
+3;Gallus gallus capon - Feather (as-part-nature);A0C60#F01.A0C79$F02.A0ESE$F32.A0C9D
+3;Gallus gallus capon - Hair (as-part-nature);A0C60#F01.A0C79$F02.A0ESP$F32.A0C9D
+3;Gallus gallus capon - Injection site (as-part-nature);A0C60#F01.A0C79$F02.A0ESN$F32.A0C9D
+3;Gallus gallus capon - Lung (as-part-nature);A0C60#F01.A0C79$F02.A069P$F32.A0C9D
+3;Gallus gallus capon - Pollen (as-part-nature);A0C60#F01.A0C79$F02.A0ESK$F32.A0C9D
+3;Gallus gallus capon - Retina (as-part-nature);A0C60#F01.A0C79$F02.A0ESJ$F32.A0C9D
+3;Gallus gallus capon - Sand (as-part-nature);A0C60#F01.A0C79$F02.A0ESH$F32.A0C9D
+3;Gallus gallus capon - Tissues juice (as-part-nature);A0C60#F01.A0C79$F02.A0ESG$F32.A0C9D
+3;Gallus gallus capon - Wool (as-part-nature);A0C60#F01.A0C79$F02.A0ESF$F32.A0C9D
+3;Gallus gallus capon - Drinking water;A0F7L#F01.A0C79$F02.A06CA$F32.A0C9D
+3;Gallus gallus capon - Water for aquaculture;A0F7M#F01.A0C79$F02.A06CA$F32.A0C9D
+3;Gallus gallus capon - Feed;A0BB9#F01.A0C79$F02.A0F0Y$F32.A0C9D
+3;Gallus gallus laying hens - Meat (as-part-nature);A0BXF#F01.A0C7A$F02.A0BYZ$F32.A0C8V
+3;Gallus gallus laying hens - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0C7A$F02.A0EMD$F32.A0C8V
+3;Gallus gallus laying hens - Fat (as-part-nature);A0BXF#F01.A0C7A$F02.A069J$F32.A0C8V
+3;Gallus gallus laying hens - Blood (as-part-nature);A0BXF#F01.A0C7A$F02.A06AL$F32.A0C8V
+3;Gallus gallus laying hens - Kidney (as-part-nature);A0BXF#F01.A0C7A$F02.A069N$F32.A0C8V
+3;Gallus gallus laying hens - Kidney fat (as-part-nature);A0BXF#F01.A0C7A$F02.A0F1B$F32.A0C8V
+3;Gallus gallus laying hens - Liver (as-part-nature);A0BXF#F01.A0C7A$F02.A069M$F32.A0C8V
+3;Gallus gallus laying hens - Skin & fat (as-part-nature);A0BXF#F01.A0C7A$F02.A06AK$F32.A0C8V
+3;Gallus gallus laying hens - Thyroid (as-part-nature);A0C60#F01.A0C7A$F02.A0CES$F32.A0C8V
+3;Gallus gallus laying hens - Urine (as-part-nature);A0C60#F01.A0C7A$F02.A0CET$F32.A0C8V
+3;Gallus gallus laying hens - Faeces (as-part-nature);A0C60#F01.A0C7A$F02.A0CEV$F32.A0C8V
+3;Gallus gallus laying hens - Blood serum (as-part-nature);A0C60#F01.A0C7A$F02.A0CEY$F32.A0C8V
+3;Gallus gallus laying hens - Plasma (as-part-nature);A0C60#F01.A0C7A$F02.A0CEX$F32.A0C8V
+3;Gallus gallus laying hens - Bile (as-part-nature);A0C60#F01.A0C7A$F02.A0EKY$F32.A0C8V
+3;Gallus gallus laying hens - Eye (as-part-nature);A0C60#F01.A0C7A$F02.A067P$F32.A0C8V
+3;Gallus gallus laying hens - Feather (as-part-nature);A0C60#F01.A0C7A$F02.A0ESE$F32.A0C8V
+3;Gallus gallus laying hens - Hair (as-part-nature);A0C60#F01.A0C7A$F02.A0ESP$F32.A0C8V
+3;Gallus gallus laying hens - Injection site (as-part-nature);A0C60#F01.A0C7A$F02.A0ESN$F32.A0C8V
+3;Gallus gallus laying hens - Lung (as-part-nature);A0C60#F01.A0C7A$F02.A069P$F32.A0C8V
+3;Gallus gallus laying hens - Pollen (as-part-nature);A0C60#F01.A0C7A$F02.A0ESK$F32.A0C8V
+3;Gallus gallus laying hens - Retina (as-part-nature);A0C60#F01.A0C7A$F02.A0ESJ$F32.A0C8V
+3;Gallus gallus laying hens - Sand (as-part-nature);A0C60#F01.A0C7A$F02.A0ESH$F32.A0C8V
+3;Gallus gallus laying hens - Tissues juice (as-part-nature);A0C60#F01.A0C7A$F02.A0ESG$F32.A0C8V
+3;Gallus gallus laying hens - Wool (as-part-nature);A0C60#F01.A0C7A$F02.A0ESF$F32.A0C8V
+3;Gallus gallus laying hens - Drinking water;A0F7L#F01.A0C7A$F02.A06CA$F32.A0C8V
+3;Gallus gallus laying hens - Water for aquaculture;A0F7M#F01.A0C7A$F02.A06CA$F32.A0C8V
+3;Gallus gallus laying hens - Feed;A0BB9#F01.A0C7A$F02.A0F0Y$F32.A0C8V
+3;Spent hens - Meat (as-part-nature);A0BXF#F01.A0C7A$F02.A0BYZ$F31.A0CSD$F32.A0C8V
+3;Spent hens - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0C7A$F02.A0EMD$F31.A0CSD$F32.A0C8V
+3;Spent hens - Fat (as-part-nature);A0BXF#F01.A0C7A$F02.A069J$F31.A0CSD$F32.A0C8V
+3;Spent hens - Blood (as-part-nature);A0BXF#F01.A0C7A$F02.A06AL$F31.A0CSD$F32.A0C8V
+3;Spent hens - Kidney (as-part-nature);A0BXF#F01.A0C7A$F02.A069N$F31.A0CSD$F32.A0C8V
+3;Spent hens - Kidney fat (as-part-nature);A0BXF#F01.A0C7A$F02.A0F1B$F31.A0CSD$F32.A0C8V
+3;Spent hens - Liver (as-part-nature);A0BXF#F01.A0C7A$F02.A069M$F31.A0CSD$F32.A0C8V
+3;Spent hens - Skin & fat (as-part-nature);A0BXF#F01.A0C7A$F02.A06AK$F31.A0CSD$F32.A0C8V
+3;Spent hens - Thyroid (as-part-nature);A0C60#F01.A0C7A$F02.A0CES$F31.A0CSD$F32.A0C8V
+3;Spent hens - Urine (as-part-nature);A0C60#F01.A0C7A$F02.A0CET$F31.A0CSD$F32.A0C8V
+3;Spent hens - Faeces (as-part-nature);A0C60#F01.A0C7A$F02.A0CEV$F31.A0CSD$F32.A0C8V
+3;Spent hens - Blood serum (as-part-nature);A0C60#F01.A0C7A$F02.A0CEY$F31.A0CSD$F32.A0C8V
+3;Spent hens - Plasma (as-part-nature);A0C60#F01.A0C7A$F02.A0CEX$F31.A0CSD$F32.A0C8V
+3;Spent hens - Bile (as-part-nature);A0C60#F01.A0C7A$F02.A0EKY$F31.A0CSD$F32.A0C8V
+3;Spent hens - Eye (as-part-nature);A0C60#F01.A0C7A$F02.A067P$F31.A0CSD$F32.A0C8V
+3;Spent hens - Feather (as-part-nature);A0C60#F01.A0C7A$F02.A0ESE$F31.A0CSD$F32.A0C8V
+3;Spent hens - Hair (as-part-nature);A0C60#F01.A0C7A$F02.A0ESP$F31.A0CSD$F32.A0C8V
+3;Spent hens - Injection site (as-part-nature);A0C60#F01.A0C7A$F02.A0ESN$F31.A0CSD$F32.A0C8V
+3;Spent hens - Lung (as-part-nature);A0C60#F01.A0C7A$F02.A069P$F31.A0CSD$F32.A0C8V
+3;Spent hens - Pollen (as-part-nature);A0C60#F01.A0C7A$F02.A0ESK$F31.A0CSD$F32.A0C8V
+3;Spent hens - Retina (as-part-nature);A0C60#F01.A0C7A$F02.A0ESJ$F31.A0CSD$F32.A0C8V
+3;Spent hens - Sand (as-part-nature);A0C60#F01.A0C7A$F02.A0ESH$F31.A0CSD$F32.A0C8V
+3;Spent hens - Tissues juice (as-part-nature);A0C60#F01.A0C7A$F02.A0ESG$F31.A0CSD$F32.A0C8V
+3;Spent hens - Wool (as-part-nature);A0C60#F01.A0C7A$F02.A0ESF$F31.A0CSD$F32.A0C8V
+3;Spent hens - Drinking water;A0F7L#F01.A0C7A$F02.A06CA$F31.A0CSD$F32.A0C8V
+3;Spent hens - Water for aquaculture;A0F7M#F01.A0C7A$F02.A06CA$F31.A0CSD$F32.A0C8V
+3;Spent hens - Feed;A0BB9#F01.A0C7A$F02.A0F0Y$F31.A0CSD$F32.A0C8V
+2;Turkeys - Meat (as-part-nature);A0BXF#F01.A058A$F02.A0BYZ
+2;Turkeys - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A058A$F02.A0EMD
+2;Turkeys - Fat (as-part-nature);A0BXF#F01.A058A$F02.A069J
+2;Turkeys - Blood (as-part-nature);A0BXF#F01.A058A$F02.A06AL
+2;Turkeys - Kidney (as-part-nature);A0BXF#F01.A058A$F02.A069N
+2;Turkeys - Kidney fat (as-part-nature);A0BXF#F01.A058A$F02.A0F1B
+2;Turkeys - Liver (as-part-nature);A0BXF#F01.A058A$F02.A069M
+2;Turkeys - Skin & fat (as-part-nature);A0BXF#F01.A058A$F02.A06AK
+2;Turkeys - Thyroid (as-part-nature);A0C60#F01.A058A$F02.A0CES
+2;Turkeys - Urine (as-part-nature);A0C60#F01.A058A$F02.A0CET
+2;Turkeys - Faeces (as-part-nature);A0C60#F01.A058A$F02.A0CEV
+2;Turkeys - Blood serum (as-part-nature);A0C60#F01.A058A$F02.A0CEY
+2;Turkeys - Plasma (as-part-nature);A0C60#F01.A058A$F02.A0CEX
+2;Turkeys - Bile (as-part-nature);A0C60#F01.A058A$F02.A0EKY
+2;Turkeys - Eye (as-part-nature);A0C60#F01.A058A$F02.A067P
+2;Turkeys - Feather (as-part-nature);A0C60#F01.A058A$F02.A0ESE
+2;Turkeys - Hair (as-part-nature);A0C60#F01.A058A$F02.A0ESP
+2;Turkeys - Injection site (as-part-nature);A0C60#F01.A058A$F02.A0ESN
+2;Turkeys - Lung (as-part-nature);A0C60#F01.A058A$F02.A069P
+2;Turkeys - Pollen (as-part-nature);A0C60#F01.A058A$F02.A0ESK
+2;Turkeys - Retina (as-part-nature);A0C60#F01.A058A$F02.A0ESJ
+2;Turkeys - Sand (as-part-nature);A0C60#F01.A058A$F02.A0ESH
+2;Turkeys - Tissues juice (as-part-nature);A0C60#F01.A058A$F02.A0ESG
+2;Turkeys - Wool (as-part-nature);A0C60#F01.A058A$F02.A0ESF
+2;Turkeys - Drinking water;A0F7L#F01.A058A$F02.A06CA
+2;Turkeys - Water for aquaculture;A0F7M#F01.A058A$F02.A06CA
+2;Turkeys - Feed;A0BB9#F01.A058A$F02.A0F0Y
+3;Turkey breeding flock - Meat (as-part-nature);A0BXF#F01.A0CAL$F02.A0BYZ
+3;Turkey breeding flock - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CAL$F02.A0EMD
+3;Turkey breeding flock - Fat (as-part-nature);A0BXF#F01.A0CAL$F02.A069J
+3;Turkey breeding flock - Blood (as-part-nature);A0BXF#F01.A0CAL$F02.A06AL
+3;Turkey breeding flock - Kidney (as-part-nature);A0BXF#F01.A0CAL$F02.A069N
+3;Turkey breeding flock - Kidney fat (as-part-nature);A0BXF#F01.A0CAL$F02.A0F1B
+3;Turkey breeding flock - Liver (as-part-nature);A0BXF#F01.A0CAL$F02.A069M
+3;Turkey breeding flock - Skin & fat (as-part-nature);A0BXF#F01.A0CAL$F02.A06AK
+3;Turkey breeding flock - Thyroid (as-part-nature);A0C60#F01.A0CAL$F02.A0CES
+3;Turkey breeding flock - Urine (as-part-nature);A0C60#F01.A0CAL$F02.A0CET
+3;Turkey breeding flock - Faeces (as-part-nature);A0C60#F01.A0CAL$F02.A0CEV
+3;Turkey breeding flock - Blood serum (as-part-nature);A0C60#F01.A0CAL$F02.A0CEY
+3;Turkey breeding flock - Plasma (as-part-nature);A0C60#F01.A0CAL$F02.A0CEX
+3;Turkey breeding flock - Bile (as-part-nature);A0C60#F01.A0CAL$F02.A0EKY
+3;Turkey breeding flock - Eye (as-part-nature);A0C60#F01.A0CAL$F02.A067P
+3;Turkey breeding flock - Feather (as-part-nature);A0C60#F01.A0CAL$F02.A0ESE
+3;Turkey breeding flock - Hair (as-part-nature);A0C60#F01.A0CAL$F02.A0ESP
+3;Turkey breeding flock - Injection site (as-part-nature);A0C60#F01.A0CAL$F02.A0ESN
+3;Turkey breeding flock - Lung (as-part-nature);A0C60#F01.A0CAL$F02.A069P
+3;Turkey breeding flock - Pollen (as-part-nature);A0C60#F01.A0CAL$F02.A0ESK
+3;Turkey breeding flock - Retina (as-part-nature);A0C60#F01.A0CAL$F02.A0ESJ
+3;Turkey breeding flock - Sand (as-part-nature);A0C60#F01.A0CAL$F02.A0ESH
+3;Turkey breeding flock - Tissues juice (as-part-nature);A0C60#F01.A0CAL$F02.A0ESG
+3;Turkey breeding flock - Wool (as-part-nature);A0C60#F01.A0CAL$F02.A0ESF
+3;Turkey breeding flock - Drinking water;A0F7L#F01.A0CAL$F02.A06CA
+3;Turkey breeding flock - Water for aquaculture;A0F7M#F01.A0CAL$F02.A06CA
+3;Turkey breeding flock - Feed;A0BB9#F01.A0CAL$F02.A0F0Y
+3;Turkey fattening animal - Meat (as-part-nature);A0BXF#F01.A0CAQ$F02.A0BYZ
+3;Turkey fattening animal - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CAQ$F02.A0EMD
+3;Turkey fattening animal - Fat (as-part-nature);A0BXF#F01.A0CAQ$F02.A069J
+3;Turkey fattening animal - Blood (as-part-nature);A0BXF#F01.A0CAQ$F02.A06AL
+3;Turkey fattening animal - Kidney (as-part-nature);A0BXF#F01.A0CAQ$F02.A069N
+3;Turkey fattening animal - Kidney fat (as-part-nature);A0BXF#F01.A0CAQ$F02.A0F1B
+3;Turkey fattening animal - Liver (as-part-nature);A0BXF#F01.A0CAQ$F02.A069M
+3;Turkey fattening animal - Skin & fat (as-part-nature);A0BXF#F01.A0CAQ$F02.A06AK
+3;Turkey fattening animal - Thyroid (as-part-nature);A0C60#F01.A0CAQ$F02.A0CES
+3;Turkey fattening animal - Urine (as-part-nature);A0C60#F01.A0CAQ$F02.A0CET
+3;Turkey fattening animal - Faeces (as-part-nature);A0C60#F01.A0CAQ$F02.A0CEV
+3;Turkey fattening animal - Blood serum (as-part-nature);A0C60#F01.A0CAQ$F02.A0CEY
+3;Turkey fattening animal - Plasma (as-part-nature);A0C60#F01.A0CAQ$F02.A0CEX
+3;Turkey fattening animal - Bile (as-part-nature);A0C60#F01.A0CAQ$F02.A0EKY
+3;Turkey fattening animal - Eye (as-part-nature);A0C60#F01.A0CAQ$F02.A067P
+3;Turkey fattening animal - Feather (as-part-nature);A0C60#F01.A0CAQ$F02.A0ESE
+3;Turkey fattening animal - Hair (as-part-nature);A0C60#F01.A0CAQ$F02.A0ESP
+3;Turkey fattening animal - Injection site (as-part-nature);A0C60#F01.A0CAQ$F02.A0ESN
+3;Turkey fattening animal - Lung (as-part-nature);A0C60#F01.A0CAQ$F02.A069P
+3;Turkey fattening animal - Pollen (as-part-nature);A0C60#F01.A0CAQ$F02.A0ESK
+3;Turkey fattening animal - Retina (as-part-nature);A0C60#F01.A0CAQ$F02.A0ESJ
+3;Turkey fattening animal - Sand (as-part-nature);A0C60#F01.A0CAQ$F02.A0ESH
+3;Turkey fattening animal - Tissues juice (as-part-nature);A0C60#F01.A0CAQ$F02.A0ESG
+3;Turkey fattening animal - Wool (as-part-nature);A0C60#F01.A0CAQ$F02.A0ESF
+3;Turkey fattening animal - Drinking water;A0F7L#F01.A0CAQ$F02.A06CA
+3;Turkey fattening animal - Water for aquaculture;A0F7M#F01.A0CAQ$F02.A06CA
+3;Turkey fattening animal - Feed;A0BB9#F01.A0CAQ$F02.A0F0Y
+3;Turkey laying hens - Meat (as-part-nature);A0BXF#F01.A0CAR$F02.A0BYZ$F32.A0C8V
+3;Turkey laying hens - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CAR$F02.A0EMD$F32.A0C8V
+3;Turkey laying hens - Fat (as-part-nature);A0BXF#F01.A0CAR$F02.A069J$F32.A0C8V
+3;Turkey laying hens - Blood (as-part-nature);A0BXF#F01.A0CAR$F02.A06AL$F32.A0C8V
+3;Turkey laying hens - Kidney (as-part-nature);A0BXF#F01.A0CAR$F02.A069N$F32.A0C8V
+3;Turkey laying hens - Kidney fat (as-part-nature);A0BXF#F01.A0CAR$F02.A0F1B$F32.A0C8V
+3;Turkey laying hens - Liver (as-part-nature);A0BXF#F01.A0CAR$F02.A069M$F32.A0C8V
+3;Turkey laying hens - Skin & fat (as-part-nature);A0BXF#F01.A0CAR$F02.A06AK$F32.A0C8V
+3;Turkey laying hens - Thyroid (as-part-nature);A0C60#F01.A0CAR$F02.A0CES$F32.A0C8V
+3;Turkey laying hens - Urine (as-part-nature);A0C60#F01.A0CAR$F02.A0CET$F32.A0C8V
+3;Turkey laying hens - Faeces (as-part-nature);A0C60#F01.A0CAR$F02.A0CEV$F32.A0C8V
+3;Turkey laying hens - Blood serum (as-part-nature);A0C60#F01.A0CAR$F02.A0CEY$F32.A0C8V
+3;Turkey laying hens - Plasma (as-part-nature);A0C60#F01.A0CAR$F02.A0CEX$F32.A0C8V
+3;Turkey laying hens - Bile (as-part-nature);A0C60#F01.A0CAR$F02.A0EKY$F32.A0C8V
+3;Turkey laying hens - Eye (as-part-nature);A0C60#F01.A0CAR$F02.A067P$F32.A0C8V
+3;Turkey laying hens - Feather (as-part-nature);A0C60#F01.A0CAR$F02.A0ESE$F32.A0C8V
+3;Turkey laying hens - Hair (as-part-nature);A0C60#F01.A0CAR$F02.A0ESP$F32.A0C8V
+3;Turkey laying hens - Injection site (as-part-nature);A0C60#F01.A0CAR$F02.A0ESN$F32.A0C8V
+3;Turkey laying hens - Lung (as-part-nature);A0C60#F01.A0CAR$F02.A069P$F32.A0C8V
+3;Turkey laying hens - Pollen (as-part-nature);A0C60#F01.A0CAR$F02.A0ESK$F32.A0C8V
+3;Turkey laying hens - Retina (as-part-nature);A0C60#F01.A0CAR$F02.A0ESJ$F32.A0C8V
+3;Turkey laying hens - Sand (as-part-nature);A0C60#F01.A0CAR$F02.A0ESH$F32.A0C8V
+3;Turkey laying hens - Tissues juice (as-part-nature);A0C60#F01.A0CAR$F02.A0ESG$F32.A0C8V
+3;Turkey laying hens - Wool (as-part-nature);A0C60#F01.A0CAR$F02.A0ESF$F32.A0C8V
+3;Turkey laying hens - Drinking water;A0F7L#F01.A0CAR$F02.A06CA$F32.A0C8V
+3;Turkey laying hens - Water for aquaculture;A0F7M#F01.A0CAR$F02.A06CA$F32.A0C8V
+3;Turkey laying hens - Feed;A0BB9#F01.A0CAR$F02.A0F0Y$F32.A0C8V
+2;Guinea-fowl - Meat (as-part-nature);A0BXF#F01.A058E$F02.A0BYZ
+2;Guinea-fowl - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A058E$F02.A0EMD
+2;Guinea-fowl - Fat (as-part-nature);A0BXF#F01.A058E$F02.A069J
+2;Guinea-fowl - Blood (as-part-nature);A0BXF#F01.A058E$F02.A06AL
+2;Guinea-fowl - Kidney (as-part-nature);A0BXF#F01.A058E$F02.A069N
+2;Guinea-fowl - Kidney fat (as-part-nature);A0BXF#F01.A058E$F02.A0F1B
+2;Guinea-fowl - Liver (as-part-nature);A0BXF#F01.A058E$F02.A069M
+2;Guinea-fowl - Skin & fat (as-part-nature);A0BXF#F01.A058E$F02.A06AK
+2;Guinea-fowl - Thyroid (as-part-nature);A0C60#F01.A058E$F02.A0CES
+2;Guinea-fowl - Urine (as-part-nature);A0C60#F01.A058E$F02.A0CET
+2;Guinea-fowl - Faeces (as-part-nature);A0C60#F01.A058E$F02.A0CEV
+2;Guinea-fowl - Blood serum (as-part-nature);A0C60#F01.A058E$F02.A0CEY
+2;Guinea-fowl - Plasma (as-part-nature);A0C60#F01.A058E$F02.A0CEX
+2;Guinea-fowl - Bile (as-part-nature);A0C60#F01.A058E$F02.A0EKY
+2;Guinea-fowl - Eye (as-part-nature);A0C60#F01.A058E$F02.A067P
+2;Guinea-fowl - Feather (as-part-nature);A0C60#F01.A058E$F02.A0ESE
+2;Guinea-fowl - Hair (as-part-nature);A0C60#F01.A058E$F02.A0ESP
+2;Guinea-fowl - Injection site (as-part-nature);A0C60#F01.A058E$F02.A0ESN
+2;Guinea-fowl - Lung (as-part-nature);A0C60#F01.A058E$F02.A069P
+2;Guinea-fowl - Pollen (as-part-nature);A0C60#F01.A058E$F02.A0ESK
+2;Guinea-fowl - Retina (as-part-nature);A0C60#F01.A058E$F02.A0ESJ
+2;Guinea-fowl - Sand (as-part-nature);A0C60#F01.A058E$F02.A0ESH
+2;Guinea-fowl - Tissues juice (as-part-nature);A0C60#F01.A058E$F02.A0ESG
+2;Guinea-fowl - Wool (as-part-nature);A0C60#F01.A058E$F02.A0ESF
+2;Guinea-fowl - Drinking water;A0F7L#F01.A058E$F02.A06CA
+2;Guinea-fowl - Water for aquaculture;A0F7M#F01.A058E$F02.A06CA
+2;Guinea-fowl - Feed;A0BB9#F01.A058E$F02.A0F0Y
+3;Guinea-fowl breeding flock - Meat (as-part-nature);A0BXF#F01.A0CBQ$F02.A0BYZ
+3;Guinea-fowl breeding flock - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CBQ$F02.A0EMD
+3;Guinea-fowl breeding flock - Fat (as-part-nature);A0BXF#F01.A0CBQ$F02.A069J
+3;Guinea-fowl breeding flock - Blood (as-part-nature);A0BXF#F01.A0CBQ$F02.A06AL
+3;Guinea-fowl breeding flock - Kidney (as-part-nature);A0BXF#F01.A0CBQ$F02.A069N
+3;Guinea-fowl breeding flock - Kidney fat (as-part-nature);A0BXF#F01.A0CBQ$F02.A0F1B
+3;Guinea-fowl breeding flock - Liver (as-part-nature);A0BXF#F01.A0CBQ$F02.A069M
+3;Guinea-fowl breeding flock - Skin & fat (as-part-nature);A0BXF#F01.A0CBQ$F02.A06AK
+3;Guinea-fowl breeding flock - Thyroid (as-part-nature);A0C60#F01.A0CBQ$F02.A0CES
+3;Guinea-fowl breeding flock - Urine (as-part-nature);A0C60#F01.A0CBQ$F02.A0CET
+3;Guinea-fowl breeding flock - Faeces (as-part-nature);A0C60#F01.A0CBQ$F02.A0CEV
+3;Guinea-fowl breeding flock - Blood serum (as-part-nature);A0C60#F01.A0CBQ$F02.A0CEY
+3;Guinea-fowl breeding flock - Plasma (as-part-nature);A0C60#F01.A0CBQ$F02.A0CEX
+3;Guinea-fowl breeding flock - Bile (as-part-nature);A0C60#F01.A0CBQ$F02.A0EKY
+3;Guinea-fowl breeding flock - Eye (as-part-nature);A0C60#F01.A0CBQ$F02.A067P
+3;Guinea-fowl breeding flock - Feather (as-part-nature);A0C60#F01.A0CBQ$F02.A0ESE
+3;Guinea-fowl breeding flock - Hair (as-part-nature);A0C60#F01.A0CBQ$F02.A0ESP
+3;Guinea-fowl breeding flock - Injection site (as-part-nature);A0C60#F01.A0CBQ$F02.A0ESN
+3;Guinea-fowl breeding flock - Lung (as-part-nature);A0C60#F01.A0CBQ$F02.A069P
+3;Guinea-fowl breeding flock - Pollen (as-part-nature);A0C60#F01.A0CBQ$F02.A0ESK
+3;Guinea-fowl breeding flock - Retina (as-part-nature);A0C60#F01.A0CBQ$F02.A0ESJ
+3;Guinea-fowl breeding flock - Sand (as-part-nature);A0C60#F01.A0CBQ$F02.A0ESH
+3;Guinea-fowl breeding flock - Tissues juice (as-part-nature);A0C60#F01.A0CBQ$F02.A0ESG
+3;Guinea-fowl breeding flock - Wool (as-part-nature);A0C60#F01.A0CBQ$F02.A0ESF
+3;Guinea-fowl breeding flock - Drinking water;A0F7L#F01.A0CBQ$F02.A06CA
+3;Guinea-fowl breeding flock - Water for aquaculture;A0F7M#F01.A0CBQ$F02.A06CA
+3;Guinea-fowl breeding flock - Feed;A0BB9#F01.A0CBQ$F02.A0F0Y
+3;Guinea-fowl fattening animal - Meat (as-part-nature);A0BXF#F01.A0CBV$F02.A0BYZ
+3;Guinea-fowl fattening animal - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CBV$F02.A0EMD
+3;Guinea-fowl fattening animal - Fat (as-part-nature);A0BXF#F01.A0CBV$F02.A069J
+3;Guinea-fowl fattening animal - Blood (as-part-nature);A0BXF#F01.A0CBV$F02.A06AL
+3;Guinea-fowl fattening animal - Kidney (as-part-nature);A0BXF#F01.A0CBV$F02.A069N
+3;Guinea-fowl fattening animal - Kidney fat (as-part-nature);A0BXF#F01.A0CBV$F02.A0F1B
+3;Guinea-fowl fattening animal - Liver (as-part-nature);A0BXF#F01.A0CBV$F02.A069M
+3;Guinea-fowl fattening animal - Skin & fat (as-part-nature);A0BXF#F01.A0CBV$F02.A06AK
+3;Guinea-fowl fattening animal - Thyroid (as-part-nature);A0C60#F01.A0CBV$F02.A0CES
+3;Guinea-fowl fattening animal - Urine (as-part-nature);A0C60#F01.A0CBV$F02.A0CET
+3;Guinea-fowl fattening animal - Faeces (as-part-nature);A0C60#F01.A0CBV$F02.A0CEV
+3;Guinea-fowl fattening animal - Blood serum (as-part-nature);A0C60#F01.A0CBV$F02.A0CEY
+3;Guinea-fowl fattening animal - Plasma (as-part-nature);A0C60#F01.A0CBV$F02.A0CEX
+3;Guinea-fowl fattening animal - Bile (as-part-nature);A0C60#F01.A0CBV$F02.A0EKY
+3;Guinea-fowl fattening animal - Eye (as-part-nature);A0C60#F01.A0CBV$F02.A067P
+3;Guinea-fowl fattening animal - Feather (as-part-nature);A0C60#F01.A0CBV$F02.A0ESE
+3;Guinea-fowl fattening animal - Hair (as-part-nature);A0C60#F01.A0CBV$F02.A0ESP
+3;Guinea-fowl fattening animal - Injection site (as-part-nature);A0C60#F01.A0CBV$F02.A0ESN
+3;Guinea-fowl fattening animal - Lung (as-part-nature);A0C60#F01.A0CBV$F02.A069P
+3;Guinea-fowl fattening animal - Pollen (as-part-nature);A0C60#F01.A0CBV$F02.A0ESK
+3;Guinea-fowl fattening animal - Retina (as-part-nature);A0C60#F01.A0CBV$F02.A0ESJ
+3;Guinea-fowl fattening animal - Sand (as-part-nature);A0C60#F01.A0CBV$F02.A0ESH
+3;Guinea-fowl fattening animal - Tissues juice (as-part-nature);A0C60#F01.A0CBV$F02.A0ESG
+3;Guinea-fowl fattening animal - Wool (as-part-nature);A0C60#F01.A0CBV$F02.A0ESF
+3;Guinea-fowl fattening animal - Drinking water;A0F7L#F01.A0CBV$F02.A06CA
+3;Guinea-fowl fattening animal - Water for aquaculture;A0F7M#F01.A0CBV$F02.A06CA
+3;Guinea-fowl fattening animal - Feed;A0BB9#F01.A0CBV$F02.A0F0Y
+3;Guinea-fowl laying hens - Meat (as-part-nature);A0BXF#F01.A0CBX$F02.A0BYZ$F32.A0C8V
+3;Guinea-fowl laying hens - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CBX$F02.A0EMD$F32.A0C8V
+3;Guinea-fowl laying hens - Fat (as-part-nature);A0BXF#F01.A0CBX$F02.A069J$F32.A0C8V
+3;Guinea-fowl laying hens - Blood (as-part-nature);A0BXF#F01.A0CBX$F02.A06AL$F32.A0C8V
+3;Guinea-fowl laying hens - Kidney (as-part-nature);A0BXF#F01.A0CBX$F02.A069N$F32.A0C8V
+3;Guinea-fowl laying hens - Kidney fat (as-part-nature);A0BXF#F01.A0CBX$F02.A0F1B$F32.A0C8V
+3;Guinea-fowl laying hens - Liver (as-part-nature);A0BXF#F01.A0CBX$F02.A069M$F32.A0C8V
+3;Guinea-fowl laying hens - Skin & fat (as-part-nature);A0BXF#F01.A0CBX$F02.A06AK$F32.A0C8V
+3;Guinea-fowl laying hens - Thyroid (as-part-nature);A0C60#F01.A0CBX$F02.A0CES$F32.A0C8V
+3;Guinea-fowl laying hens - Urine (as-part-nature);A0C60#F01.A0CBX$F02.A0CET$F32.A0C8V
+3;Guinea-fowl laying hens - Faeces (as-part-nature);A0C60#F01.A0CBX$F02.A0CEV$F32.A0C8V
+3;Guinea-fowl laying hens - Blood serum (as-part-nature);A0C60#F01.A0CBX$F02.A0CEY$F32.A0C8V
+3;Guinea-fowl laying hens - Plasma (as-part-nature);A0C60#F01.A0CBX$F02.A0CEX$F32.A0C8V
+3;Guinea-fowl laying hens - Bile (as-part-nature);A0C60#F01.A0CBX$F02.A0EKY$F32.A0C8V
+3;Guinea-fowl laying hens - Eye (as-part-nature);A0C60#F01.A0CBX$F02.A067P$F32.A0C8V
+3;Guinea-fowl laying hens - Feather (as-part-nature);A0C60#F01.A0CBX$F02.A0ESE$F32.A0C8V
+3;Guinea-fowl laying hens - Hair (as-part-nature);A0C60#F01.A0CBX$F02.A0ESP$F32.A0C8V
+3;Guinea-fowl laying hens - Injection site (as-part-nature);A0C60#F01.A0CBX$F02.A0ESN$F32.A0C8V
+3;Guinea-fowl laying hens - Lung (as-part-nature);A0C60#F01.A0CBX$F02.A069P$F32.A0C8V
+3;Guinea-fowl laying hens - Pollen (as-part-nature);A0C60#F01.A0CBX$F02.A0ESK$F32.A0C8V
+3;Guinea-fowl laying hens - Retina (as-part-nature);A0C60#F01.A0CBX$F02.A0ESJ$F32.A0C8V
+3;Guinea-fowl laying hens - Sand (as-part-nature);A0C60#F01.A0CBX$F02.A0ESH$F32.A0C8V
+3;Guinea-fowl laying hens - Tissues juice (as-part-nature);A0C60#F01.A0CBX$F02.A0ESG$F32.A0C8V
+3;Guinea-fowl laying hens - Wool (as-part-nature);A0C60#F01.A0CBX$F02.A0ESF$F32.A0C8V
+3;Guinea-fowl laying hens - Drinking water;A0F7L#F01.A0CBX$F02.A06CA$F32.A0C8V
+3;Guinea-fowl laying hens - Water for aquaculture;A0F7M#F01.A0CBX$F02.A06CA$F32.A0C8V
+3;Guinea-fowl laying hens - Feed;A0BB9#F01.A0CBX$F02.A0F0Y$F32.A0C8V
+2;Quail - Meat (as-part-nature);A0BXF#F01.A058J$F02.A0BYZ
+2;Quail - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A058J$F02.A0EMD
+2;Quail - Fat (as-part-nature);A0BXF#F01.A058J$F02.A069J
+2;Quail - Blood (as-part-nature);A0BXF#F01.A058J$F02.A06AL
+2;Quail - Kidney (as-part-nature);A0BXF#F01.A058J$F02.A069N
+2;Quail - Kidney fat (as-part-nature);A0BXF#F01.A058J$F02.A0F1B
+2;Quail - Liver (as-part-nature);A0BXF#F01.A058J$F02.A069M
+2;Quail - Skin & fat (as-part-nature);A0BXF#F01.A058J$F02.A06AK
+2;Quail - Thyroid (as-part-nature);A0C60#F01.A058J$F02.A0CES
+2;Quail - Urine (as-part-nature);A0C60#F01.A058J$F02.A0CET
+2;Quail - Faeces (as-part-nature);A0C60#F01.A058J$F02.A0CEV
+2;Quail - Blood serum (as-part-nature);A0C60#F01.A058J$F02.A0CEY
+2;Quail - Plasma (as-part-nature);A0C60#F01.A058J$F02.A0CEX
+2;Quail - Bile (as-part-nature);A0C60#F01.A058J$F02.A0EKY
+2;Quail - Eye (as-part-nature);A0C60#F01.A058J$F02.A067P
+2;Quail - Feather (as-part-nature);A0C60#F01.A058J$F02.A0ESE
+2;Quail - Hair (as-part-nature);A0C60#F01.A058J$F02.A0ESP
+2;Quail - Injection site (as-part-nature);A0C60#F01.A058J$F02.A0ESN
+2;Quail - Lung (as-part-nature);A0C60#F01.A058J$F02.A069P
+2;Quail - Pollen (as-part-nature);A0C60#F01.A058J$F02.A0ESK
+2;Quail - Retina (as-part-nature);A0C60#F01.A058J$F02.A0ESJ
+2;Quail - Sand (as-part-nature);A0C60#F01.A058J$F02.A0ESH
+2;Quail - Tissues juice (as-part-nature);A0C60#F01.A058J$F02.A0ESG
+2;Quail - Wool (as-part-nature);A0C60#F01.A058J$F02.A0ESF
+2;Quail - Drinking water;A0F7L#F01.A058J$F02.A06CA
+2;Quail - Water for aquaculture;A0F7M#F01.A058J$F02.A06CA
+2;Quail - Feed;A0BB9#F01.A058J$F02.A0F0Y
+3;Quail breeding flock - Meat (as-part-nature);A0BXF#F01.A0CCS$F02.A0BYZ
+3;Quail breeding flock - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CCS$F02.A0EMD
+3;Quail breeding flock - Fat (as-part-nature);A0BXF#F01.A0CCS$F02.A069J
+3;Quail breeding flock - Blood (as-part-nature);A0BXF#F01.A0CCS$F02.A06AL
+3;Quail breeding flock - Kidney (as-part-nature);A0BXF#F01.A0CCS$F02.A069N
+3;Quail breeding flock - Kidney fat (as-part-nature);A0BXF#F01.A0CCS$F02.A0F1B
+3;Quail breeding flock - Liver (as-part-nature);A0BXF#F01.A0CCS$F02.A069M
+3;Quail breeding flock - Skin & fat (as-part-nature);A0BXF#F01.A0CCS$F02.A06AK
+3;Quail breeding flock - Thyroid (as-part-nature);A0C60#F01.A0CCS$F02.A0CES
+3;Quail breeding flock - Urine (as-part-nature);A0C60#F01.A0CCS$F02.A0CET
+3;Quail breeding flock - Faeces (as-part-nature);A0C60#F01.A0CCS$F02.A0CEV
+3;Quail breeding flock - Blood serum (as-part-nature);A0C60#F01.A0CCS$F02.A0CEY
+3;Quail breeding flock - Plasma (as-part-nature);A0C60#F01.A0CCS$F02.A0CEX
+3;Quail breeding flock - Bile (as-part-nature);A0C60#F01.A0CCS$F02.A0EKY
+3;Quail breeding flock - Eye (as-part-nature);A0C60#F01.A0CCS$F02.A067P
+3;Quail breeding flock - Feather (as-part-nature);A0C60#F01.A0CCS$F02.A0ESE
+3;Quail breeding flock - Hair (as-part-nature);A0C60#F01.A0CCS$F02.A0ESP
+3;Quail breeding flock - Injection site (as-part-nature);A0C60#F01.A0CCS$F02.A0ESN
+3;Quail breeding flock - Lung (as-part-nature);A0C60#F01.A0CCS$F02.A069P
+3;Quail breeding flock - Pollen (as-part-nature);A0C60#F01.A0CCS$F02.A0ESK
+3;Quail breeding flock - Retina (as-part-nature);A0C60#F01.A0CCS$F02.A0ESJ
+3;Quail breeding flock - Sand (as-part-nature);A0C60#F01.A0CCS$F02.A0ESH
+3;Quail breeding flock - Tissues juice (as-part-nature);A0C60#F01.A0CCS$F02.A0ESG
+3;Quail breeding flock - Wool (as-part-nature);A0C60#F01.A0CCS$F02.A0ESF
+3;Quail breeding flock - Drinking water;A0F7L#F01.A0CCS$F02.A06CA
+3;Quail breeding flock - Water for aquaculture;A0F7M#F01.A0CCS$F02.A06CA
+3;Quail breeding flock - Feed;A0BB9#F01.A0CCS$F02.A0F0Y
+3;Quail fattening animal - Meat (as-part-nature);A0BXF#F01.A0CCY$F02.A0BYZ
+3;Quail fattening animal - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CCY$F02.A0EMD
+3;Quail fattening animal - Fat (as-part-nature);A0BXF#F01.A0CCY$F02.A069J
+3;Quail fattening animal - Blood (as-part-nature);A0BXF#F01.A0CCY$F02.A06AL
+3;Quail fattening animal - Kidney (as-part-nature);A0BXF#F01.A0CCY$F02.A069N
+3;Quail fattening animal - Kidney fat (as-part-nature);A0BXF#F01.A0CCY$F02.A0F1B
+3;Quail fattening animal - Liver (as-part-nature);A0BXF#F01.A0CCY$F02.A069M
+3;Quail fattening animal - Skin & fat (as-part-nature);A0BXF#F01.A0CCY$F02.A06AK
+3;Quail fattening animal - Thyroid (as-part-nature);A0C60#F01.A0CCY$F02.A0CES
+3;Quail fattening animal - Urine (as-part-nature);A0C60#F01.A0CCY$F02.A0CET
+3;Quail fattening animal - Faeces (as-part-nature);A0C60#F01.A0CCY$F02.A0CEV
+3;Quail fattening animal - Blood serum (as-part-nature);A0C60#F01.A0CCY$F02.A0CEY
+3;Quail fattening animal - Plasma (as-part-nature);A0C60#F01.A0CCY$F02.A0CEX
+3;Quail fattening animal - Bile (as-part-nature);A0C60#F01.A0CCY$F02.A0EKY
+3;Quail fattening animal - Eye (as-part-nature);A0C60#F01.A0CCY$F02.A067P
+3;Quail fattening animal - Feather (as-part-nature);A0C60#F01.A0CCY$F02.A0ESE
+3;Quail fattening animal - Hair (as-part-nature);A0C60#F01.A0CCY$F02.A0ESP
+3;Quail fattening animal - Injection site (as-part-nature);A0C60#F01.A0CCY$F02.A0ESN
+3;Quail fattening animal - Lung (as-part-nature);A0C60#F01.A0CCY$F02.A069P
+3;Quail fattening animal - Pollen (as-part-nature);A0C60#F01.A0CCY$F02.A0ESK
+3;Quail fattening animal - Retina (as-part-nature);A0C60#F01.A0CCY$F02.A0ESJ
+3;Quail fattening animal - Sand (as-part-nature);A0C60#F01.A0CCY$F02.A0ESH
+3;Quail fattening animal - Tissues juice (as-part-nature);A0C60#F01.A0CCY$F02.A0ESG
+3;Quail fattening animal - Wool (as-part-nature);A0C60#F01.A0CCY$F02.A0ESF
+3;Quail fattening animal - Drinking water;A0F7L#F01.A0CCY$F02.A06CA
+3;Quail fattening animal - Water for aquaculture;A0F7M#F01.A0CCY$F02.A06CA
+3;Quail fattening animal - Feed;A0BB9#F01.A0CCY$F02.A0F0Y
+3;Quail laying hens - Meat (as-part-nature);A0BXF#F01.A0CCZ$F02.A0BYZ$F32.A0C8V
+3;Quail laying hens - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CCZ$F02.A0EMD$F32.A0C8V
+3;Quail laying hens - Fat (as-part-nature);A0BXF#F01.A0CCZ$F02.A069J$F32.A0C8V
+3;Quail laying hens - Blood (as-part-nature);A0BXF#F01.A0CCZ$F02.A06AL$F32.A0C8V
+3;Quail laying hens - Kidney (as-part-nature);A0BXF#F01.A0CCZ$F02.A069N$F32.A0C8V
+3;Quail laying hens - Kidney fat (as-part-nature);A0BXF#F01.A0CCZ$F02.A0F1B$F32.A0C8V
+3;Quail laying hens - Liver (as-part-nature);A0BXF#F01.A0CCZ$F02.A069M$F32.A0C8V
+3;Quail laying hens - Skin & fat (as-part-nature);A0BXF#F01.A0CCZ$F02.A06AK$F32.A0C8V
+3;Quail laying hens - Thyroid (as-part-nature);A0C60#F01.A0CCZ$F02.A0CES$F32.A0C8V
+3;Quail laying hens - Urine (as-part-nature);A0C60#F01.A0CCZ$F02.A0CET$F32.A0C8V
+3;Quail laying hens - Faeces (as-part-nature);A0C60#F01.A0CCZ$F02.A0CEV$F32.A0C8V
+3;Quail laying hens - Blood serum (as-part-nature);A0C60#F01.A0CCZ$F02.A0CEY$F32.A0C8V
+3;Quail laying hens - Plasma (as-part-nature);A0C60#F01.A0CCZ$F02.A0CEX$F32.A0C8V
+3;Quail laying hens - Bile (as-part-nature);A0C60#F01.A0CCZ$F02.A0EKY$F32.A0C8V
+3;Quail laying hens - Eye (as-part-nature);A0C60#F01.A0CCZ$F02.A067P$F32.A0C8V
+3;Quail laying hens - Feather (as-part-nature);A0C60#F01.A0CCZ$F02.A0ESE$F32.A0C8V
+3;Quail laying hens - Hair (as-part-nature);A0C60#F01.A0CCZ$F02.A0ESP$F32.A0C8V
+3;Quail laying hens - Injection site (as-part-nature);A0C60#F01.A0CCZ$F02.A0ESN$F32.A0C8V
+3;Quail laying hens - Lung (as-part-nature);A0C60#F01.A0CCZ$F02.A069P$F32.A0C8V
+3;Quail laying hens - Pollen (as-part-nature);A0C60#F01.A0CCZ$F02.A0ESK$F32.A0C8V
+3;Quail laying hens - Retina (as-part-nature);A0C60#F01.A0CCZ$F02.A0ESJ$F32.A0C8V
+3;Quail laying hens - Sand (as-part-nature);A0C60#F01.A0CCZ$F02.A0ESH$F32.A0C8V
+3;Quail laying hens - Tissues juice (as-part-nature);A0C60#F01.A0CCZ$F02.A0ESG$F32.A0C8V
+3;Quail laying hens - Wool (as-part-nature);A0C60#F01.A0CCZ$F02.A0ESF$F32.A0C8V
+3;Quail laying hens - Drinking water;A0F7L#F01.A0CCZ$F02.A06CA$F32.A0C8V
+3;Quail laying hens - Water for aquaculture;A0F7M#F01.A0CCZ$F02.A06CA$F32.A0C8V
+3;Quail laying hens - Feed;A0BB9#F01.A0CCZ$F02.A0F0Y$F32.A0C8V
+2;Duck - Meat (as-part-nature);A0BXF#F01.A058B$F02.A0BYZ
+2;Duck - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A058B$F02.A0EMD
+2;Duck - Fat (as-part-nature);A0BXF#F01.A058B$F02.A069J
+2;Duck - Blood (as-part-nature);A0BXF#F01.A058B$F02.A06AL
+2;Duck - Kidney (as-part-nature);A0BXF#F01.A058B$F02.A069N
+2;Duck - Kidney fat (as-part-nature);A0BXF#F01.A058B$F02.A0F1B
+2;Duck - Liver (as-part-nature);A0BXF#F01.A058B$F02.A069M
+2;Duck - Skin & fat (as-part-nature);A0BXF#F01.A058B$F02.A06AK
+2;Duck - Thyroid (as-part-nature);A0C60#F01.A058B$F02.A0CES
+2;Duck - Urine (as-part-nature);A0C60#F01.A058B$F02.A0CET
+2;Duck - Faeces (as-part-nature);A0C60#F01.A058B$F02.A0CEV
+2;Duck - Blood serum (as-part-nature);A0C60#F01.A058B$F02.A0CEY
+2;Duck - Plasma (as-part-nature);A0C60#F01.A058B$F02.A0CEX
+2;Duck - Bile (as-part-nature);A0C60#F01.A058B$F02.A0EKY
+2;Duck - Eye (as-part-nature);A0C60#F01.A058B$F02.A067P
+2;Duck - Feather (as-part-nature);A0C60#F01.A058B$F02.A0ESE
+2;Duck - Hair (as-part-nature);A0C60#F01.A058B$F02.A0ESP
+2;Duck - Injection site (as-part-nature);A0C60#F01.A058B$F02.A0ESN
+2;Duck - Lung (as-part-nature);A0C60#F01.A058B$F02.A069P
+2;Duck - Pollen (as-part-nature);A0C60#F01.A058B$F02.A0ESK
+2;Duck - Retina (as-part-nature);A0C60#F01.A058B$F02.A0ESJ
+2;Duck - Sand (as-part-nature);A0C60#F01.A058B$F02.A0ESH
+2;Duck - Tissues juice (as-part-nature);A0C60#F01.A058B$F02.A0ESG
+2;Duck - Wool (as-part-nature);A0C60#F01.A058B$F02.A0ESF
+2;Duck - Drinking water;A0F7L#F01.A058B$F02.A06CA
+2;Duck - Water for aquaculture;A0F7M#F01.A058B$F02.A06CA
+2;Duck - Feed;A0BB9#F01.A058B$F02.A0F0Y
+3;Duck breeding flock - Meat (as-part-nature);A0BXF#F01.A0CAS$F02.A0BYZ
+3;Duck breeding flock - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CAS$F02.A0EMD
+3;Duck breeding flock - Fat (as-part-nature);A0BXF#F01.A0CAS$F02.A069J
+3;Duck breeding flock - Blood (as-part-nature);A0BXF#F01.A0CAS$F02.A06AL
+3;Duck breeding flock - Kidney (as-part-nature);A0BXF#F01.A0CAS$F02.A069N
+3;Duck breeding flock - Kidney fat (as-part-nature);A0BXF#F01.A0CAS$F02.A0F1B
+3;Duck breeding flock - Liver (as-part-nature);A0BXF#F01.A0CAS$F02.A069M
+3;Duck breeding flock - Skin & fat (as-part-nature);A0BXF#F01.A0CAS$F02.A06AK
+3;Duck breeding flock - Thyroid (as-part-nature);A0C60#F01.A0CAS$F02.A0CES
+3;Duck breeding flock - Urine (as-part-nature);A0C60#F01.A0CAS$F02.A0CET
+3;Duck breeding flock - Faeces (as-part-nature);A0C60#F01.A0CAS$F02.A0CEV
+3;Duck breeding flock - Blood serum (as-part-nature);A0C60#F01.A0CAS$F02.A0CEY
+3;Duck breeding flock - Plasma (as-part-nature);A0C60#F01.A0CAS$F02.A0CEX
+3;Duck breeding flock - Bile (as-part-nature);A0C60#F01.A0CAS$F02.A0EKY
+3;Duck breeding flock - Eye (as-part-nature);A0C60#F01.A0CAS$F02.A067P
+3;Duck breeding flock - Feather (as-part-nature);A0C60#F01.A0CAS$F02.A0ESE
+3;Duck breeding flock - Hair (as-part-nature);A0C60#F01.A0CAS$F02.A0ESP
+3;Duck breeding flock - Injection site (as-part-nature);A0C60#F01.A0CAS$F02.A0ESN
+3;Duck breeding flock - Lung (as-part-nature);A0C60#F01.A0CAS$F02.A069P
+3;Duck breeding flock - Pollen (as-part-nature);A0C60#F01.A0CAS$F02.A0ESK
+3;Duck breeding flock - Retina (as-part-nature);A0C60#F01.A0CAS$F02.A0ESJ
+3;Duck breeding flock - Sand (as-part-nature);A0C60#F01.A0CAS$F02.A0ESH
+3;Duck breeding flock - Tissues juice (as-part-nature);A0C60#F01.A0CAS$F02.A0ESG
+3;Duck breeding flock - Wool (as-part-nature);A0C60#F01.A0CAS$F02.A0ESF
+3;Duck breeding flock - Drinking water;A0F7L#F01.A0CAS$F02.A06CA
+3;Duck breeding flock - Water for aquaculture;A0F7M#F01.A0CAS$F02.A06CA
+3;Duck breeding flock - Feed;A0BB9#F01.A0CAS$F02.A0F0Y
+3;Duck fattening animal - Meat (as-part-nature);A0BXF#F01.A0CAY$F02.A0BYZ
+3;Duck fattening animal - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CAY$F02.A0EMD
+3;Duck fattening animal - Fat (as-part-nature);A0BXF#F01.A0CAY$F02.A069J
+3;Duck fattening animal - Blood (as-part-nature);A0BXF#F01.A0CAY$F02.A06AL
+3;Duck fattening animal - Kidney (as-part-nature);A0BXF#F01.A0CAY$F02.A069N
+3;Duck fattening animal - Kidney fat (as-part-nature);A0BXF#F01.A0CAY$F02.A0F1B
+3;Duck fattening animal - Liver (as-part-nature);A0BXF#F01.A0CAY$F02.A069M
+3;Duck fattening animal - Skin & fat (as-part-nature);A0BXF#F01.A0CAY$F02.A06AK
+3;Duck fattening animal - Thyroid (as-part-nature);A0C60#F01.A0CAY$F02.A0CES
+3;Duck fattening animal - Urine (as-part-nature);A0C60#F01.A0CAY$F02.A0CET
+3;Duck fattening animal - Faeces (as-part-nature);A0C60#F01.A0CAY$F02.A0CEV
+3;Duck fattening animal - Blood serum (as-part-nature);A0C60#F01.A0CAY$F02.A0CEY
+3;Duck fattening animal - Plasma (as-part-nature);A0C60#F01.A0CAY$F02.A0CEX
+3;Duck fattening animal - Bile (as-part-nature);A0C60#F01.A0CAY$F02.A0EKY
+3;Duck fattening animal - Eye (as-part-nature);A0C60#F01.A0CAY$F02.A067P
+3;Duck fattening animal - Feather (as-part-nature);A0C60#F01.A0CAY$F02.A0ESE
+3;Duck fattening animal - Hair (as-part-nature);A0C60#F01.A0CAY$F02.A0ESP
+3;Duck fattening animal - Injection site (as-part-nature);A0C60#F01.A0CAY$F02.A0ESN
+3;Duck fattening animal - Lung (as-part-nature);A0C60#F01.A0CAY$F02.A069P
+3;Duck fattening animal - Pollen (as-part-nature);A0C60#F01.A0CAY$F02.A0ESK
+3;Duck fattening animal - Retina (as-part-nature);A0C60#F01.A0CAY$F02.A0ESJ
+3;Duck fattening animal - Sand (as-part-nature);A0C60#F01.A0CAY$F02.A0ESH
+3;Duck fattening animal - Tissues juice (as-part-nature);A0C60#F01.A0CAY$F02.A0ESG
+3;Duck fattening animal - Wool (as-part-nature);A0C60#F01.A0CAY$F02.A0ESF
+3;Duck fattening animal - Drinking water;A0F7L#F01.A0CAY$F02.A06CA
+3;Duck fattening animal - Water for aquaculture;A0F7M#F01.A0CAY$F02.A06CA
+3;Duck fattening animal - Feed;A0BB9#F01.A0CAY$F02.A0F0Y
+3;Duck foie gras animal - Meat (as-part-nature);A0BXF#F01.A0CAZ$F02.A0BYZ
+3;Duck foie gras animal - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CAZ$F02.A0EMD
+3;Duck foie gras animal - Fat (as-part-nature);A0BXF#F01.A0CAZ$F02.A069J
+3;Duck foie gras animal - Blood (as-part-nature);A0BXF#F01.A0CAZ$F02.A06AL
+3;Duck foie gras animal - Kidney (as-part-nature);A0BXF#F01.A0CAZ$F02.A069N
+3;Duck foie gras animal - Kidney fat (as-part-nature);A0BXF#F01.A0CAZ$F02.A0F1B
+3;Duck foie gras animal - Liver (as-part-nature);A0BXF#F01.A0CAZ$F02.A069M
+3;Duck foie gras animal - Skin & fat (as-part-nature);A0BXF#F01.A0CAZ$F02.A06AK
+3;Duck foie gras animal - Thyroid (as-part-nature);A0C60#F01.A0CAZ$F02.A0CES
+3;Duck foie gras animal - Urine (as-part-nature);A0C60#F01.A0CAZ$F02.A0CET
+3;Duck foie gras animal - Faeces (as-part-nature);A0C60#F01.A0CAZ$F02.A0CEV
+3;Duck foie gras animal - Blood serum (as-part-nature);A0C60#F01.A0CAZ$F02.A0CEY
+3;Duck foie gras animal - Plasma (as-part-nature);A0C60#F01.A0CAZ$F02.A0CEX
+3;Duck foie gras animal - Bile (as-part-nature);A0C60#F01.A0CAZ$F02.A0EKY
+3;Duck foie gras animal - Eye (as-part-nature);A0C60#F01.A0CAZ$F02.A067P
+3;Duck foie gras animal - Feather (as-part-nature);A0C60#F01.A0CAZ$F02.A0ESE
+3;Duck foie gras animal - Hair (as-part-nature);A0C60#F01.A0CAZ$F02.A0ESP
+3;Duck foie gras animal - Injection site (as-part-nature);A0C60#F01.A0CAZ$F02.A0ESN
+3;Duck foie gras animal - Lung (as-part-nature);A0C60#F01.A0CAZ$F02.A069P
+3;Duck foie gras animal - Pollen (as-part-nature);A0C60#F01.A0CAZ$F02.A0ESK
+3;Duck foie gras animal - Retina (as-part-nature);A0C60#F01.A0CAZ$F02.A0ESJ
+3;Duck foie gras animal - Sand (as-part-nature);A0C60#F01.A0CAZ$F02.A0ESH
+3;Duck foie gras animal - Tissues juice (as-part-nature);A0C60#F01.A0CAZ$F02.A0ESG
+3;Duck foie gras animal - Wool (as-part-nature);A0C60#F01.A0CAZ$F02.A0ESF
+3;Duck foie gras animal - Drinking water;A0F7L#F01.A0CAZ$F02.A06CA
+3;Duck foie gras animal - Water for aquaculture;A0F7M#F01.A0CAZ$F02.A06CA
+3;Duck foie gras animal - Feed;A0BB9#F01.A0CAZ$F02.A0F0Y
+3;Duck laying hens - Meat (as-part-nature);A0BXF#F01.A0CBA$F02.A0BYZ$F32.A0C8V
+3;Duck laying hens - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CBA$F02.A0EMD$F32.A0C8V
+3;Duck laying hens - Fat (as-part-nature);A0BXF#F01.A0CBA$F02.A069J$F32.A0C8V
+3;Duck laying hens - Blood (as-part-nature);A0BXF#F01.A0CBA$F02.A06AL$F32.A0C8V
+3;Duck laying hens - Kidney (as-part-nature);A0BXF#F01.A0CBA$F02.A069N$F32.A0C8V
+3;Duck laying hens - Kidney fat (as-part-nature);A0BXF#F01.A0CBA$F02.A0F1B$F32.A0C8V
+3;Duck laying hens - Liver (as-part-nature);A0BXF#F01.A0CBA$F02.A069M$F32.A0C8V
+3;Duck laying hens - Skin & fat (as-part-nature);A0BXF#F01.A0CBA$F02.A06AK$F32.A0C8V
+3;Duck laying hens - Thyroid (as-part-nature);A0C60#F01.A0CBA$F02.A0CES$F32.A0C8V
+3;Duck laying hens - Urine (as-part-nature);A0C60#F01.A0CBA$F02.A0CET$F32.A0C8V
+3;Duck laying hens - Faeces (as-part-nature);A0C60#F01.A0CBA$F02.A0CEV$F32.A0C8V
+3;Duck laying hens - Blood serum (as-part-nature);A0C60#F01.A0CBA$F02.A0CEY$F32.A0C8V
+3;Duck laying hens - Plasma (as-part-nature);A0C60#F01.A0CBA$F02.A0CEX$F32.A0C8V
+3;Duck laying hens - Bile (as-part-nature);A0C60#F01.A0CBA$F02.A0EKY$F32.A0C8V
+3;Duck laying hens - Eye (as-part-nature);A0C60#F01.A0CBA$F02.A067P$F32.A0C8V
+3;Duck laying hens - Feather (as-part-nature);A0C60#F01.A0CBA$F02.A0ESE$F32.A0C8V
+3;Duck laying hens - Hair (as-part-nature);A0C60#F01.A0CBA$F02.A0ESP$F32.A0C8V
+3;Duck laying hens - Injection site (as-part-nature);A0C60#F01.A0CBA$F02.A0ESN$F32.A0C8V
+3;Duck laying hens - Lung (as-part-nature);A0C60#F01.A0CBA$F02.A069P$F32.A0C8V
+3;Duck laying hens - Pollen (as-part-nature);A0C60#F01.A0CBA$F02.A0ESK$F32.A0C8V
+3;Duck laying hens - Retina (as-part-nature);A0C60#F01.A0CBA$F02.A0ESJ$F32.A0C8V
+3;Duck laying hens - Sand (as-part-nature);A0C60#F01.A0CBA$F02.A0ESH$F32.A0C8V
+3;Duck laying hens - Tissues juice (as-part-nature);A0C60#F01.A0CBA$F02.A0ESG$F32.A0C8V
+3;Duck laying hens - Wool (as-part-nature);A0C60#F01.A0CBA$F02.A0ESF$F32.A0C8V
+3;Duck laying hens - Drinking water;A0F7L#F01.A0CBA$F02.A06CA$F32.A0C8V
+3;Duck laying hens - Water for aquaculture;A0F7M#F01.A0CBA$F02.A06CA$F32.A0C8V
+3;Duck laying hens - Feed;A0BB9#F01.A0CBA$F02.A0F0Y$F32.A0C8V
+2;Goose - Meat (as-part-nature);A0BXF#F01.A058C$F02.A0BYZ
+2;Goose - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A058C$F02.A0EMD
+2;Goose - Fat (as-part-nature);A0BXF#F01.A058C$F02.A069J
+2;Goose - Blood (as-part-nature);A0BXF#F01.A058C$F02.A06AL
+2;Goose - Kidney (as-part-nature);A0BXF#F01.A058C$F02.A069N
+2;Goose - Kidney fat (as-part-nature);A0BXF#F01.A058C$F02.A0F1B
+2;Goose - Liver (as-part-nature);A0BXF#F01.A058C$F02.A069M
+2;Goose - Skin & fat (as-part-nature);A0BXF#F01.A058C$F02.A06AK
+2;Goose - Thyroid (as-part-nature);A0C60#F01.A058C$F02.A0CES
+2;Goose - Urine (as-part-nature);A0C60#F01.A058C$F02.A0CET
+2;Goose - Faeces (as-part-nature);A0C60#F01.A058C$F02.A0CEV
+2;Goose - Blood serum (as-part-nature);A0C60#F01.A058C$F02.A0CEY
+2;Goose - Plasma (as-part-nature);A0C60#F01.A058C$F02.A0CEX
+2;Goose - Bile (as-part-nature);A0C60#F01.A058C$F02.A0EKY
+2;Goose - Eye (as-part-nature);A0C60#F01.A058C$F02.A067P
+2;Goose - Feather (as-part-nature);A0C60#F01.A058C$F02.A0ESE
+2;Goose - Hair (as-part-nature);A0C60#F01.A058C$F02.A0ESP
+2;Goose - Injection site (as-part-nature);A0C60#F01.A058C$F02.A0ESN
+2;Goose - Lung (as-part-nature);A0C60#F01.A058C$F02.A069P
+2;Goose - Pollen (as-part-nature);A0C60#F01.A058C$F02.A0ESK
+2;Goose - Retina (as-part-nature);A0C60#F01.A058C$F02.A0ESJ
+2;Goose - Sand (as-part-nature);A0C60#F01.A058C$F02.A0ESH
+2;Goose - Tissues juice (as-part-nature);A0C60#F01.A058C$F02.A0ESG
+2;Goose - Wool (as-part-nature);A0C60#F01.A058C$F02.A0ESF
+2;Goose - Drinking water;A0F7L#F01.A058C$F02.A06CA
+2;Goose - Water for aquaculture;A0F7M#F01.A058C$F02.A06CA
+2;Goose - Feed;A0BB9#F01.A058C$F02.A0F0Y
+3;Goose breeding flock - Meat (as-part-nature);A0BXF#F01.A0CBB$F02.A0BYZ
+3;Goose breeding flock - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CBB$F02.A0EMD
+3;Goose breeding flock - Fat (as-part-nature);A0BXF#F01.A0CBB$F02.A069J
+3;Goose breeding flock - Blood (as-part-nature);A0BXF#F01.A0CBB$F02.A06AL
+3;Goose breeding flock - Kidney (as-part-nature);A0BXF#F01.A0CBB$F02.A069N
+3;Goose breeding flock - Kidney fat (as-part-nature);A0BXF#F01.A0CBB$F02.A0F1B
+3;Goose breeding flock - Liver (as-part-nature);A0BXF#F01.A0CBB$F02.A069M
+3;Goose breeding flock - Skin & fat (as-part-nature);A0BXF#F01.A0CBB$F02.A06AK
+3;Goose breeding flock - Thyroid (as-part-nature);A0C60#F01.A0CBB$F02.A0CES
+3;Goose breeding flock - Urine (as-part-nature);A0C60#F01.A0CBB$F02.A0CET
+3;Goose breeding flock - Faeces (as-part-nature);A0C60#F01.A0CBB$F02.A0CEV
+3;Goose breeding flock - Blood serum (as-part-nature);A0C60#F01.A0CBB$F02.A0CEY
+3;Goose breeding flock - Plasma (as-part-nature);A0C60#F01.A0CBB$F02.A0CEX
+3;Goose breeding flock - Bile (as-part-nature);A0C60#F01.A0CBB$F02.A0EKY
+3;Goose breeding flock - Eye (as-part-nature);A0C60#F01.A0CBB$F02.A067P
+3;Goose breeding flock - Feather (as-part-nature);A0C60#F01.A0CBB$F02.A0ESE
+3;Goose breeding flock - Hair (as-part-nature);A0C60#F01.A0CBB$F02.A0ESP
+3;Goose breeding flock - Injection site (as-part-nature);A0C60#F01.A0CBB$F02.A0ESN
+3;Goose breeding flock - Lung (as-part-nature);A0C60#F01.A0CBB$F02.A069P
+3;Goose breeding flock - Pollen (as-part-nature);A0C60#F01.A0CBB$F02.A0ESK
+3;Goose breeding flock - Retina (as-part-nature);A0C60#F01.A0CBB$F02.A0ESJ
+3;Goose breeding flock - Sand (as-part-nature);A0C60#F01.A0CBB$F02.A0ESH
+3;Goose breeding flock - Tissues juice (as-part-nature);A0C60#F01.A0CBB$F02.A0ESG
+3;Goose breeding flock - Wool (as-part-nature);A0C60#F01.A0CBB$F02.A0ESF
+3;Goose breeding flock - Drinking water;A0F7L#F01.A0CBB$F02.A06CA
+3;Goose breeding flock - Water for aquaculture;A0F7M#F01.A0CBB$F02.A06CA
+3;Goose breeding flock - Feed;A0BB9#F01.A0CBB$F02.A0F0Y
+3;Goose fattening animal - Meat (as-part-nature);A0BXF#F01.A0CBF$F02.A0BYZ
+3;Goose fattening animal - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CBF$F02.A0EMD
+3;Goose fattening animal - Fat (as-part-nature);A0BXF#F01.A0CBF$F02.A069J
+3;Goose fattening animal - Blood (as-part-nature);A0BXF#F01.A0CBF$F02.A06AL
+3;Goose fattening animal - Kidney (as-part-nature);A0BXF#F01.A0CBF$F02.A069N
+3;Goose fattening animal - Kidney fat (as-part-nature);A0BXF#F01.A0CBF$F02.A0F1B
+3;Goose fattening animal - Liver (as-part-nature);A0BXF#F01.A0CBF$F02.A069M
+3;Goose fattening animal - Skin & fat (as-part-nature);A0BXF#F01.A0CBF$F02.A06AK
+3;Goose fattening animal - Thyroid (as-part-nature);A0C60#F01.A0CBF$F02.A0CES
+3;Goose fattening animal - Urine (as-part-nature);A0C60#F01.A0CBF$F02.A0CET
+3;Goose fattening animal - Faeces (as-part-nature);A0C60#F01.A0CBF$F02.A0CEV
+3;Goose fattening animal - Blood serum (as-part-nature);A0C60#F01.A0CBF$F02.A0CEY
+3;Goose fattening animal - Plasma (as-part-nature);A0C60#F01.A0CBF$F02.A0CEX
+3;Goose fattening animal - Bile (as-part-nature);A0C60#F01.A0CBF$F02.A0EKY
+3;Goose fattening animal - Eye (as-part-nature);A0C60#F01.A0CBF$F02.A067P
+3;Goose fattening animal - Feather (as-part-nature);A0C60#F01.A0CBF$F02.A0ESE
+3;Goose fattening animal - Hair (as-part-nature);A0C60#F01.A0CBF$F02.A0ESP
+3;Goose fattening animal - Injection site (as-part-nature);A0C60#F01.A0CBF$F02.A0ESN
+3;Goose fattening animal - Lung (as-part-nature);A0C60#F01.A0CBF$F02.A069P
+3;Goose fattening animal - Pollen (as-part-nature);A0C60#F01.A0CBF$F02.A0ESK
+3;Goose fattening animal - Retina (as-part-nature);A0C60#F01.A0CBF$F02.A0ESJ
+3;Goose fattening animal - Sand (as-part-nature);A0C60#F01.A0CBF$F02.A0ESH
+3;Goose fattening animal - Tissues juice (as-part-nature);A0C60#F01.A0CBF$F02.A0ESG
+3;Goose fattening animal - Wool (as-part-nature);A0C60#F01.A0CBF$F02.A0ESF
+3;Goose fattening animal - Drinking water;A0F7L#F01.A0CBF$F02.A06CA
+3;Goose fattening animal - Water for aquaculture;A0F7M#F01.A0CBF$F02.A06CA
+3;Goose fattening animal - Feed;A0BB9#F01.A0CBF$F02.A0F0Y
+3;Goose foie gras animal - Meat (as-part-nature);A0BXF#F01.A0CBG$F02.A0BYZ
+3;Goose foie gras animal - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CBG$F02.A0EMD
+3;Goose foie gras animal - Fat (as-part-nature);A0BXF#F01.A0CBG$F02.A069J
+3;Goose foie gras animal - Blood (as-part-nature);A0BXF#F01.A0CBG$F02.A06AL
+3;Goose foie gras animal - Kidney (as-part-nature);A0BXF#F01.A0CBG$F02.A069N
+3;Goose foie gras animal - Kidney fat (as-part-nature);A0BXF#F01.A0CBG$F02.A0F1B
+3;Goose foie gras animal - Liver (as-part-nature);A0BXF#F01.A0CBG$F02.A069M
+3;Goose foie gras animal - Skin & fat (as-part-nature);A0BXF#F01.A0CBG$F02.A06AK
+3;Goose foie gras animal - Thyroid (as-part-nature);A0C60#F01.A0CBG$F02.A0CES
+3;Goose foie gras animal - Urine (as-part-nature);A0C60#F01.A0CBG$F02.A0CET
+3;Goose foie gras animal - Faeces (as-part-nature);A0C60#F01.A0CBG$F02.A0CEV
+3;Goose foie gras animal - Blood serum (as-part-nature);A0C60#F01.A0CBG$F02.A0CEY
+3;Goose foie gras animal - Plasma (as-part-nature);A0C60#F01.A0CBG$F02.A0CEX
+3;Goose foie gras animal - Bile (as-part-nature);A0C60#F01.A0CBG$F02.A0EKY
+3;Goose foie gras animal - Eye (as-part-nature);A0C60#F01.A0CBG$F02.A067P
+3;Goose foie gras animal - Feather (as-part-nature);A0C60#F01.A0CBG$F02.A0ESE
+3;Goose foie gras animal - Hair (as-part-nature);A0C60#F01.A0CBG$F02.A0ESP
+3;Goose foie gras animal - Injection site (as-part-nature);A0C60#F01.A0CBG$F02.A0ESN
+3;Goose foie gras animal - Lung (as-part-nature);A0C60#F01.A0CBG$F02.A069P
+3;Goose foie gras animal - Pollen (as-part-nature);A0C60#F01.A0CBG$F02.A0ESK
+3;Goose foie gras animal - Retina (as-part-nature);A0C60#F01.A0CBG$F02.A0ESJ
+3;Goose foie gras animal - Sand (as-part-nature);A0C60#F01.A0CBG$F02.A0ESH
+3;Goose foie gras animal - Tissues juice (as-part-nature);A0C60#F01.A0CBG$F02.A0ESG
+3;Goose foie gras animal - Wool (as-part-nature);A0C60#F01.A0CBG$F02.A0ESF
+3;Goose foie gras animal - Drinking water;A0F7L#F01.A0CBG$F02.A06CA
+3;Goose foie gras animal - Water for aquaculture;A0F7M#F01.A0CBG$F02.A06CA
+3;Goose foie gras animal - Feed;A0BB9#F01.A0CBG$F02.A0F0Y
+3;Goose laying hens - Meat (as-part-nature);A0BXF#F01.A0CBH$F02.A0BYZ$F32.A0C8V
+3;Goose laying hens - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CBH$F02.A0EMD$F32.A0C8V
+3;Goose laying hens - Fat (as-part-nature);A0BXF#F01.A0CBH$F02.A069J$F32.A0C8V
+3;Goose laying hens - Blood (as-part-nature);A0BXF#F01.A0CBH$F02.A06AL$F32.A0C8V
+3;Goose laying hens - Kidney (as-part-nature);A0BXF#F01.A0CBH$F02.A069N$F32.A0C8V
+3;Goose laying hens - Kidney fat (as-part-nature);A0BXF#F01.A0CBH$F02.A0F1B$F32.A0C8V
+3;Goose laying hens - Liver (as-part-nature);A0BXF#F01.A0CBH$F02.A069M$F32.A0C8V
+3;Goose laying hens - Skin & fat (as-part-nature);A0BXF#F01.A0CBH$F02.A06AK$F32.A0C8V
+3;Goose laying hens - Thyroid (as-part-nature);A0C60#F01.A0CBH$F02.A0CES$F32.A0C8V
+3;Goose laying hens - Urine (as-part-nature);A0C60#F01.A0CBH$F02.A0CET$F32.A0C8V
+3;Goose laying hens - Faeces (as-part-nature);A0C60#F01.A0CBH$F02.A0CEV$F32.A0C8V
+3;Goose laying hens - Blood serum (as-part-nature);A0C60#F01.A0CBH$F02.A0CEY$F32.A0C8V
+3;Goose laying hens - Plasma (as-part-nature);A0C60#F01.A0CBH$F02.A0CEX$F32.A0C8V
+3;Goose laying hens - Bile (as-part-nature);A0C60#F01.A0CBH$F02.A0EKY$F32.A0C8V
+3;Goose laying hens - Eye (as-part-nature);A0C60#F01.A0CBH$F02.A067P$F32.A0C8V
+3;Goose laying hens - Feather (as-part-nature);A0C60#F01.A0CBH$F02.A0ESE$F32.A0C8V
+3;Goose laying hens - Hair (as-part-nature);A0C60#F01.A0CBH$F02.A0ESP$F32.A0C8V
+3;Goose laying hens - Injection site (as-part-nature);A0C60#F01.A0CBH$F02.A0ESN$F32.A0C8V
+3;Goose laying hens - Lung (as-part-nature);A0C60#F01.A0CBH$F02.A069P$F32.A0C8V
+3;Goose laying hens - Pollen (as-part-nature);A0C60#F01.A0CBH$F02.A0ESK$F32.A0C8V
+3;Goose laying hens - Retina (as-part-nature);A0C60#F01.A0CBH$F02.A0ESJ$F32.A0C8V
+3;Goose laying hens - Sand (as-part-nature);A0C60#F01.A0CBH$F02.A0ESH$F32.A0C8V
+3;Goose laying hens - Tissues juice (as-part-nature);A0C60#F01.A0CBH$F02.A0ESG$F32.A0C8V
+3;Goose laying hens - Wool (as-part-nature);A0C60#F01.A0CBH$F02.A0ESF$F32.A0C8V
+3;Goose laying hens - Drinking water;A0F7L#F01.A0CBH$F02.A06CA$F32.A0C8V
+3;Goose laying hens - Water for aquaculture;A0F7M#F01.A0CBH$F02.A06CA$F32.A0C8V
+3;Goose laying hens - Feed;A0BB9#F01.A0CBH$F02.A0F0Y$F32.A0C8V
+2;Pigeon - Meat (as-part-nature);A0BXF#F01.A058H$F02.A0BYZ
+2;Pigeon - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A058H$F02.A0EMD
+2;Pigeon - Fat (as-part-nature);A0BXF#F01.A058H$F02.A069J
+2;Pigeon - Blood (as-part-nature);A0BXF#F01.A058H$F02.A06AL
+2;Pigeon - Kidney (as-part-nature);A0BXF#F01.A058H$F02.A069N
+2;Pigeon - Kidney fat (as-part-nature);A0BXF#F01.A058H$F02.A0F1B
+2;Pigeon - Liver (as-part-nature);A0BXF#F01.A058H$F02.A069M
+2;Pigeon - Skin & fat (as-part-nature);A0BXF#F01.A058H$F02.A06AK
+2;Pigeon - Thyroid (as-part-nature);A0C60#F01.A058H$F02.A0CES
+2;Pigeon - Urine (as-part-nature);A0C60#F01.A058H$F02.A0CET
+2;Pigeon - Faeces (as-part-nature);A0C60#F01.A058H$F02.A0CEV
+2;Pigeon - Blood serum (as-part-nature);A0C60#F01.A058H$F02.A0CEY
+2;Pigeon - Plasma (as-part-nature);A0C60#F01.A058H$F02.A0CEX
+2;Pigeon - Bile (as-part-nature);A0C60#F01.A058H$F02.A0EKY
+2;Pigeon - Eye (as-part-nature);A0C60#F01.A058H$F02.A067P
+2;Pigeon - Feather (as-part-nature);A0C60#F01.A058H$F02.A0ESE
+2;Pigeon - Hair (as-part-nature);A0C60#F01.A058H$F02.A0ESP
+2;Pigeon - Injection site (as-part-nature);A0C60#F01.A058H$F02.A0ESN
+2;Pigeon - Lung (as-part-nature);A0C60#F01.A058H$F02.A069P
+2;Pigeon - Pollen (as-part-nature);A0C60#F01.A058H$F02.A0ESK
+2;Pigeon - Retina (as-part-nature);A0C60#F01.A058H$F02.A0ESJ
+2;Pigeon - Sand (as-part-nature);A0C60#F01.A058H$F02.A0ESH
+2;Pigeon - Tissues juice (as-part-nature);A0C60#F01.A058H$F02.A0ESG
+2;Pigeon - Wool (as-part-nature);A0C60#F01.A058H$F02.A0ESF
+2;Pigeon - Drinking water;A0F7L#F01.A058H$F02.A06CA
+2;Pigeon - Water for aquaculture;A0F7M#F01.A058H$F02.A06CA
+2;Pigeon - Feed;A0BB9#F01.A058H$F02.A0F0Y
+3;Pigeon breeding flock - Meat (as-part-nature);A0BXF#F01.A0CCL$F02.A0BYZ
+3;Pigeon breeding flock - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CCL$F02.A0EMD
+3;Pigeon breeding flock - Fat (as-part-nature);A0BXF#F01.A0CCL$F02.A069J
+3;Pigeon breeding flock - Blood (as-part-nature);A0BXF#F01.A0CCL$F02.A06AL
+3;Pigeon breeding flock - Kidney (as-part-nature);A0BXF#F01.A0CCL$F02.A069N
+3;Pigeon breeding flock - Kidney fat (as-part-nature);A0BXF#F01.A0CCL$F02.A0F1B
+3;Pigeon breeding flock - Liver (as-part-nature);A0BXF#F01.A0CCL$F02.A069M
+3;Pigeon breeding flock - Skin & fat (as-part-nature);A0BXF#F01.A0CCL$F02.A06AK
+3;Pigeon breeding flock - Thyroid (as-part-nature);A0C60#F01.A0CCL$F02.A0CES
+3;Pigeon breeding flock - Urine (as-part-nature);A0C60#F01.A0CCL$F02.A0CET
+3;Pigeon breeding flock - Faeces (as-part-nature);A0C60#F01.A0CCL$F02.A0CEV
+3;Pigeon breeding flock - Blood serum (as-part-nature);A0C60#F01.A0CCL$F02.A0CEY
+3;Pigeon breeding flock - Plasma (as-part-nature);A0C60#F01.A0CCL$F02.A0CEX
+3;Pigeon breeding flock - Bile (as-part-nature);A0C60#F01.A0CCL$F02.A0EKY
+3;Pigeon breeding flock - Eye (as-part-nature);A0C60#F01.A0CCL$F02.A067P
+3;Pigeon breeding flock - Feather (as-part-nature);A0C60#F01.A0CCL$F02.A0ESE
+3;Pigeon breeding flock - Hair (as-part-nature);A0C60#F01.A0CCL$F02.A0ESP
+3;Pigeon breeding flock - Injection site (as-part-nature);A0C60#F01.A0CCL$F02.A0ESN
+3;Pigeon breeding flock - Lung (as-part-nature);A0C60#F01.A0CCL$F02.A069P
+3;Pigeon breeding flock - Pollen (as-part-nature);A0C60#F01.A0CCL$F02.A0ESK
+3;Pigeon breeding flock - Retina (as-part-nature);A0C60#F01.A0CCL$F02.A0ESJ
+3;Pigeon breeding flock - Sand (as-part-nature);A0C60#F01.A0CCL$F02.A0ESH
+3;Pigeon breeding flock - Tissues juice (as-part-nature);A0C60#F01.A0CCL$F02.A0ESG
+3;Pigeon breeding flock - Wool (as-part-nature);A0C60#F01.A0CCL$F02.A0ESF
+3;Pigeon breeding flock - Drinking water;A0F7L#F01.A0CCL$F02.A06CA
+3;Pigeon breeding flock - Water for aquaculture;A0F7M#F01.A0CCL$F02.A06CA
+3;Pigeon breeding flock - Feed;A0BB9#F01.A0CCL$F02.A0F0Y
+3;Pigeon fattening animal - Meat (as-part-nature);A0BXF#F01.A0CCQ$F02.A0BYZ
+3;Pigeon fattening animal - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CCQ$F02.A0EMD
+3;Pigeon fattening animal - Fat (as-part-nature);A0BXF#F01.A0CCQ$F02.A069J
+3;Pigeon fattening animal - Blood (as-part-nature);A0BXF#F01.A0CCQ$F02.A06AL
+3;Pigeon fattening animal - Kidney (as-part-nature);A0BXF#F01.A0CCQ$F02.A069N
+3;Pigeon fattening animal - Kidney fat (as-part-nature);A0BXF#F01.A0CCQ$F02.A0F1B
+3;Pigeon fattening animal - Liver (as-part-nature);A0BXF#F01.A0CCQ$F02.A069M
+3;Pigeon fattening animal - Skin & fat (as-part-nature);A0BXF#F01.A0CCQ$F02.A06AK
+3;Pigeon fattening animal - Thyroid (as-part-nature);A0C60#F01.A0CCQ$F02.A0CES
+3;Pigeon fattening animal - Urine (as-part-nature);A0C60#F01.A0CCQ$F02.A0CET
+3;Pigeon fattening animal - Faeces (as-part-nature);A0C60#F01.A0CCQ$F02.A0CEV
+3;Pigeon fattening animal - Blood serum (as-part-nature);A0C60#F01.A0CCQ$F02.A0CEY
+3;Pigeon fattening animal - Plasma (as-part-nature);A0C60#F01.A0CCQ$F02.A0CEX
+3;Pigeon fattening animal - Bile (as-part-nature);A0C60#F01.A0CCQ$F02.A0EKY
+3;Pigeon fattening animal - Eye (as-part-nature);A0C60#F01.A0CCQ$F02.A067P
+3;Pigeon fattening animal - Feather (as-part-nature);A0C60#F01.A0CCQ$F02.A0ESE
+3;Pigeon fattening animal - Hair (as-part-nature);A0C60#F01.A0CCQ$F02.A0ESP
+3;Pigeon fattening animal - Injection site (as-part-nature);A0C60#F01.A0CCQ$F02.A0ESN
+3;Pigeon fattening animal - Lung (as-part-nature);A0C60#F01.A0CCQ$F02.A069P
+3;Pigeon fattening animal - Pollen (as-part-nature);A0C60#F01.A0CCQ$F02.A0ESK
+3;Pigeon fattening animal - Retina (as-part-nature);A0C60#F01.A0CCQ$F02.A0ESJ
+3;Pigeon fattening animal - Sand (as-part-nature);A0C60#F01.A0CCQ$F02.A0ESH
+3;Pigeon fattening animal - Tissues juice (as-part-nature);A0C60#F01.A0CCQ$F02.A0ESG
+3;Pigeon fattening animal - Wool (as-part-nature);A0C60#F01.A0CCQ$F02.A0ESF
+3;Pigeon fattening animal - Drinking water;A0F7L#F01.A0CCQ$F02.A06CA
+3;Pigeon fattening animal - Water for aquaculture;A0F7M#F01.A0CCQ$F02.A06CA
+3;Pigeon fattening animal - Feed;A0BB9#F01.A0CCQ$F02.A0F0Y
+3;Pigeon laying hens - Meat (as-part-nature);A0BXF#F01.A0CCR$F02.A0BYZ$F32.A0C8V
+3;Pigeon laying hens - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CCR$F02.A0EMD$F32.A0C8V
+3;Pigeon laying hens - Fat (as-part-nature);A0BXF#F01.A0CCR$F02.A069J$F32.A0C8V
+3;Pigeon laying hens - Blood (as-part-nature);A0BXF#F01.A0CCR$F02.A06AL$F32.A0C8V
+3;Pigeon laying hens - Kidney (as-part-nature);A0BXF#F01.A0CCR$F02.A069N$F32.A0C8V
+3;Pigeon laying hens - Kidney fat (as-part-nature);A0BXF#F01.A0CCR$F02.A0F1B$F32.A0C8V
+3;Pigeon laying hens - Liver (as-part-nature);A0BXF#F01.A0CCR$F02.A069M$F32.A0C8V
+3;Pigeon laying hens - Skin & fat (as-part-nature);A0BXF#F01.A0CCR$F02.A06AK$F32.A0C8V
+3;Pigeon laying hens - Thyroid (as-part-nature);A0C60#F01.A0CCR$F02.A0CES$F32.A0C8V
+3;Pigeon laying hens - Urine (as-part-nature);A0C60#F01.A0CCR$F02.A0CET$F32.A0C8V
+3;Pigeon laying hens - Faeces (as-part-nature);A0C60#F01.A0CCR$F02.A0CEV$F32.A0C8V
+3;Pigeon laying hens - Blood serum (as-part-nature);A0C60#F01.A0CCR$F02.A0CEY$F32.A0C8V
+3;Pigeon laying hens - Plasma (as-part-nature);A0C60#F01.A0CCR$F02.A0CEX$F32.A0C8V
+3;Pigeon laying hens - Bile (as-part-nature);A0C60#F01.A0CCR$F02.A0EKY$F32.A0C8V
+3;Pigeon laying hens - Eye (as-part-nature);A0C60#F01.A0CCR$F02.A067P$F32.A0C8V
+3;Pigeon laying hens - Feather (as-part-nature);A0C60#F01.A0CCR$F02.A0ESE$F32.A0C8V
+3;Pigeon laying hens - Hair (as-part-nature);A0C60#F01.A0CCR$F02.A0ESP$F32.A0C8V
+3;Pigeon laying hens - Injection site (as-part-nature);A0C60#F01.A0CCR$F02.A0ESN$F32.A0C8V
+3;Pigeon laying hens - Lung (as-part-nature);A0C60#F01.A0CCR$F02.A069P$F32.A0C8V
+3;Pigeon laying hens - Pollen (as-part-nature);A0C60#F01.A0CCR$F02.A0ESK$F32.A0C8V
+3;Pigeon laying hens - Retina (as-part-nature);A0C60#F01.A0CCR$F02.A0ESJ$F32.A0C8V
+3;Pigeon laying hens - Sand (as-part-nature);A0C60#F01.A0CCR$F02.A0ESH$F32.A0C8V
+3;Pigeon laying hens - Tissues juice (as-part-nature);A0C60#F01.A0CCR$F02.A0ESG$F32.A0C8V
+3;Pigeon laying hens - Wool (as-part-nature);A0C60#F01.A0CCR$F02.A0ESF$F32.A0C8V
+3;Pigeon laying hens - Drinking water;A0F7L#F01.A0CCR$F02.A06CA$F32.A0C8V
+3;Pigeon laying hens - Water for aquaculture;A0F7M#F01.A0CCR$F02.A06CA$F32.A0C8V
+3;Pigeon laying hens - Feed;A0BB9#F01.A0CCR$F02.A0F0Y$F32.A0C8V
+2;Wild boar - Meat (as-part-nature);A0BXF#F01.A056Y$F02.A0BYZ$F21.A07RV
+2;Wild boar - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A056Y$F02.A0EMD$F21.A07RV
+2;Wild boar - Fat (as-part-nature);A0BXF#F01.A056Y$F02.A069J$F21.A07RV
+2;Wild boar - Blood (as-part-nature);A0BXF#F01.A056Y$F02.A06AL$F21.A07RV
+2;Wild boar - Kidney (as-part-nature);A0BXF#F01.A056Y$F02.A069N$F21.A07RV
+2;Wild boar - Kidney fat (as-part-nature);A0BXF#F01.A056Y$F02.A0F1B$F21.A07RV
+2;Wild boar - Liver (as-part-nature);A0BXF#F01.A056Y$F02.A069M$F21.A07RV
+2;Wild boar - Skin & fat (as-part-nature);A0BXF#F01.A056Y$F02.A06AK$F21.A07RV
+2;Wild boar - Thyroid (as-part-nature);A0C60#F01.A056Y$F02.A0CES$F21.A07RV
+2;Wild boar - Urine (as-part-nature);A0C60#F01.A056Y$F02.A0CET$F21.A07RV
+2;Wild boar - Faeces (as-part-nature);A0C60#F01.A056Y$F02.A0CEV$F21.A07RV
+2;Wild boar - Blood serum (as-part-nature);A0C60#F01.A056Y$F02.A0CEY$F21.A07RV
+2;Wild boar - Plasma (as-part-nature);A0C60#F01.A056Y$F02.A0CEX$F21.A07RV
+2;Wild boar - Bile (as-part-nature);A0C60#F01.A056Y$F02.A0EKY$F21.A07RV
+2;Wild boar - Eye (as-part-nature);A0C60#F01.A056Y$F02.A067P$F21.A07RV
+2;Wild boar - Feather (as-part-nature);A0C60#F01.A056Y$F02.A0ESE$F21.A07RV
+2;Wild boar - Hair (as-part-nature);A0C60#F01.A056Y$F02.A0ESP$F21.A07RV
+2;Wild boar - Injection site (as-part-nature);A0C60#F01.A056Y$F02.A0ESN$F21.A07RV
+2;Wild boar - Lung (as-part-nature);A0C60#F01.A056Y$F02.A069P$F21.A07RV
+2;Wild boar - Pollen (as-part-nature);A0C60#F01.A056Y$F02.A0ESK$F21.A07RV
+2;Wild boar - Retina (as-part-nature);A0C60#F01.A056Y$F02.A0ESJ$F21.A07RV
+2;Wild boar - Sand (as-part-nature);A0C60#F01.A056Y$F02.A0ESH$F21.A07RV
+2;Wild boar - Tissues juice (as-part-nature);A0C60#F01.A056Y$F02.A0ESG$F21.A07RV
+2;Wild boar - Wool (as-part-nature);A0C60#F01.A056Y$F02.A0ESF$F21.A07RV
+2;Wild boar - Drinking water;A0F7L#F01.A056Y$F02.A06CA$F21.A07RV
+2;Wild boar - Water for aquaculture;A0F7M#F01.A056Y$F02.A06CA$F21.A07RV
+2;Wild boar - Feed;A0BB9#F01.A056Y$F02.A0F0Y$F21.A07RV
+2;Deer - Meat (as-part-nature);A0BXF#F01.A056M$F02.A0BYZ$F21.A07RV
+2;Deer - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A056M$F02.A0EMD$F21.A07RV
+2;Deer - Fat (as-part-nature);A0BXF#F01.A056M$F02.A069J$F21.A07RV
+2;Deer - Blood (as-part-nature);A0BXF#F01.A056M$F02.A06AL$F21.A07RV
+2;Deer - Kidney (as-part-nature);A0BXF#F01.A056M$F02.A069N$F21.A07RV
+2;Deer - Kidney fat (as-part-nature);A0BXF#F01.A056M$F02.A0F1B$F21.A07RV
+2;Deer - Liver (as-part-nature);A0BXF#F01.A056M$F02.A069M$F21.A07RV
+2;Deer - Skin & fat (as-part-nature);A0BXF#F01.A056M$F02.A06AK$F21.A07RV
+2;Deer - Thyroid (as-part-nature);A0C60#F01.A056M$F02.A0CES$F21.A07RV
+2;Deer - Urine (as-part-nature);A0C60#F01.A056M$F02.A0CET$F21.A07RV
+2;Deer - Faeces (as-part-nature);A0C60#F01.A056M$F02.A0CEV$F21.A07RV
+2;Deer - Blood serum (as-part-nature);A0C60#F01.A056M$F02.A0CEY$F21.A07RV
+2;Deer - Plasma (as-part-nature);A0C60#F01.A056M$F02.A0CEX$F21.A07RV
+2;Deer - Bile (as-part-nature);A0C60#F01.A056M$F02.A0EKY$F21.A07RV
+2;Deer - Eye (as-part-nature);A0C60#F01.A056M$F02.A067P$F21.A07RV
+2;Deer - Feather (as-part-nature);A0C60#F01.A056M$F02.A0ESE$F21.A07RV
+2;Deer - Hair (as-part-nature);A0C60#F01.A056M$F02.A0ESP$F21.A07RV
+2;Deer - Injection site (as-part-nature);A0C60#F01.A056M$F02.A0ESN$F21.A07RV
+2;Deer - Lung (as-part-nature);A0C60#F01.A056M$F02.A069P$F21.A07RV
+2;Deer - Pollen (as-part-nature);A0C60#F01.A056M$F02.A0ESK$F21.A07RV
+2;Deer - Retina (as-part-nature);A0C60#F01.A056M$F02.A0ESJ$F21.A07RV
+2;Deer - Sand (as-part-nature);A0C60#F01.A056M$F02.A0ESH$F21.A07RV
+2;Deer - Tissues juice (as-part-nature);A0C60#F01.A056M$F02.A0ESG$F21.A07RV
+2;Deer - Wool (as-part-nature);A0C60#F01.A056M$F02.A0ESF$F21.A07RV
+2;Deer - Drinking water;A0F7L#F01.A056M$F02.A06CA$F21.A07RV
+2;Deer - Water for aquaculture;A0F7M#F01.A056M$F02.A06CA$F21.A07RV
+2;Deer - Feed;A0BB9#F01.A056M$F02.A0F0Y$F21.A07RV
+2;Ostrich - Meat (as-part-nature);A0BXF#F01.A058D$F02.A0BYZ$F21.A07RV
+2;Ostrich - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A058D$F02.A0EMD$F21.A07RV
+2;Ostrich - Fat (as-part-nature);A0BXF#F01.A058D$F02.A069J$F21.A07RV
+2;Ostrich - Blood (as-part-nature);A0BXF#F01.A058D$F02.A06AL$F21.A07RV
+2;Ostrich - Kidney (as-part-nature);A0BXF#F01.A058D$F02.A069N$F21.A07RV
+2;Ostrich - Kidney fat (as-part-nature);A0BXF#F01.A058D$F02.A0F1B$F21.A07RV
+2;Ostrich - Liver (as-part-nature);A0BXF#F01.A058D$F02.A069M$F21.A07RV
+2;Ostrich - Skin & fat (as-part-nature);A0BXF#F01.A058D$F02.A06AK$F21.A07RV
+2;Ostrich - Thyroid (as-part-nature);A0C60#F01.A058D$F02.A0CES$F21.A07RV
+2;Ostrich - Urine (as-part-nature);A0C60#F01.A058D$F02.A0CET$F21.A07RV
+2;Ostrich - Faeces (as-part-nature);A0C60#F01.A058D$F02.A0CEV$F21.A07RV
+2;Ostrich - Blood serum (as-part-nature);A0C60#F01.A058D$F02.A0CEY$F21.A07RV
+2;Ostrich - Plasma (as-part-nature);A0C60#F01.A058D$F02.A0CEX$F21.A07RV
+2;Ostrich - Bile (as-part-nature);A0C60#F01.A058D$F02.A0EKY$F21.A07RV
+2;Ostrich - Eye (as-part-nature);A0C60#F01.A058D$F02.A067P$F21.A07RV
+2;Ostrich - Feather (as-part-nature);A0C60#F01.A058D$F02.A0ESE$F21.A07RV
+2;Ostrich - Hair (as-part-nature);A0C60#F01.A058D$F02.A0ESP$F21.A07RV
+2;Ostrich - Injection site (as-part-nature);A0C60#F01.A058D$F02.A0ESN$F21.A07RV
+2;Ostrich - Lung (as-part-nature);A0C60#F01.A058D$F02.A069P$F21.A07RV
+2;Ostrich - Pollen (as-part-nature);A0C60#F01.A058D$F02.A0ESK$F21.A07RV
+2;Ostrich - Retina (as-part-nature);A0C60#F01.A058D$F02.A0ESJ$F21.A07RV
+2;Ostrich - Sand (as-part-nature);A0C60#F01.A058D$F02.A0ESH$F21.A07RV
+2;Ostrich - Tissues juice (as-part-nature);A0C60#F01.A058D$F02.A0ESG$F21.A07RV
+2;Ostrich - Wool (as-part-nature);A0C60#F01.A058D$F02.A0ESF$F21.A07RV
+2;Ostrich - Drinking water;A0F7L#F01.A058D$F02.A06CA$F21.A07RV
+2;Ostrich - Water for aquaculture;A0F7M#F01.A058D$F02.A06CA$F21.A07RV
+2;Ostrich - Feed;A0BB9#F01.A058D$F02.A0F0Y$F21.A07RV
+3;Ostrich breeding flock - Meat (as-part-nature);A0BXF#F01.A0CBJ$F02.A0BYZ
+3;Ostrich breeding flock - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CBJ$F02.A0EMD
+3;Ostrich breeding flock - Fat (as-part-nature);A0BXF#F01.A0CBJ$F02.A069J
+3;Ostrich breeding flock - Blood (as-part-nature);A0BXF#F01.A0CBJ$F02.A06AL
+3;Ostrich breeding flock - Kidney (as-part-nature);A0BXF#F01.A0CBJ$F02.A069N
+3;Ostrich breeding flock - Kidney fat (as-part-nature);A0BXF#F01.A0CBJ$F02.A0F1B
+3;Ostrich breeding flock - Liver (as-part-nature);A0BXF#F01.A0CBJ$F02.A069M
+3;Ostrich breeding flock - Skin & fat (as-part-nature);A0BXF#F01.A0CBJ$F02.A06AK
+3;Ostrich breeding flock - Thyroid (as-part-nature);A0C60#F01.A0CBJ$F02.A0CES
+3;Ostrich breeding flock - Urine (as-part-nature);A0C60#F01.A0CBJ$F02.A0CET
+3;Ostrich breeding flock - Faeces (as-part-nature);A0C60#F01.A0CBJ$F02.A0CEV
+3;Ostrich breeding flock - Blood serum (as-part-nature);A0C60#F01.A0CBJ$F02.A0CEY
+3;Ostrich breeding flock - Plasma (as-part-nature);A0C60#F01.A0CBJ$F02.A0CEX
+3;Ostrich breeding flock - Bile (as-part-nature);A0C60#F01.A0CBJ$F02.A0EKY
+3;Ostrich breeding flock - Eye (as-part-nature);A0C60#F01.A0CBJ$F02.A067P
+3;Ostrich breeding flock - Feather (as-part-nature);A0C60#F01.A0CBJ$F02.A0ESE
+3;Ostrich breeding flock - Hair (as-part-nature);A0C60#F01.A0CBJ$F02.A0ESP
+3;Ostrich breeding flock - Injection site (as-part-nature);A0C60#F01.A0CBJ$F02.A0ESN
+3;Ostrich breeding flock - Lung (as-part-nature);A0C60#F01.A0CBJ$F02.A069P
+3;Ostrich breeding flock - Pollen (as-part-nature);A0C60#F01.A0CBJ$F02.A0ESK
+3;Ostrich breeding flock - Retina (as-part-nature);A0C60#F01.A0CBJ$F02.A0ESJ
+3;Ostrich breeding flock - Sand (as-part-nature);A0C60#F01.A0CBJ$F02.A0ESH
+3;Ostrich breeding flock - Tissues juice (as-part-nature);A0C60#F01.A0CBJ$F02.A0ESG
+3;Ostrich breeding flock - Wool (as-part-nature);A0C60#F01.A0CBJ$F02.A0ESF
+3;Ostrich breeding flock - Drinking water;A0F7L#F01.A0CBJ$F02.A06CA
+3;Ostrich breeding flock - Water for aquaculture;A0F7M#F01.A0CBJ$F02.A06CA
+3;Ostrich breeding flock - Feed;A0BB9#F01.A0CBJ$F02.A0F0Y
+3;Ostrich fattening animal - Meat (as-part-nature);A0BXF#F01.A0CBN$F02.A0BYZ
+3;Ostrich fattening animal - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CBN$F02.A0EMD
+3;Ostrich fattening animal - Fat (as-part-nature);A0BXF#F01.A0CBN$F02.A069J
+3;Ostrich fattening animal - Blood (as-part-nature);A0BXF#F01.A0CBN$F02.A06AL
+3;Ostrich fattening animal - Kidney (as-part-nature);A0BXF#F01.A0CBN$F02.A069N
+3;Ostrich fattening animal - Kidney fat (as-part-nature);A0BXF#F01.A0CBN$F02.A0F1B
+3;Ostrich fattening animal - Liver (as-part-nature);A0BXF#F01.A0CBN$F02.A069M
+3;Ostrich fattening animal - Skin & fat (as-part-nature);A0BXF#F01.A0CBN$F02.A06AK
+3;Ostrich fattening animal - Thyroid (as-part-nature);A0C60#F01.A0CBN$F02.A0CES
+3;Ostrich fattening animal - Urine (as-part-nature);A0C60#F01.A0CBN$F02.A0CET
+3;Ostrich fattening animal - Faeces (as-part-nature);A0C60#F01.A0CBN$F02.A0CEV
+3;Ostrich fattening animal - Blood serum (as-part-nature);A0C60#F01.A0CBN$F02.A0CEY
+3;Ostrich fattening animal - Plasma (as-part-nature);A0C60#F01.A0CBN$F02.A0CEX
+3;Ostrich fattening animal - Bile (as-part-nature);A0C60#F01.A0CBN$F02.A0EKY
+3;Ostrich fattening animal - Eye (as-part-nature);A0C60#F01.A0CBN$F02.A067P
+3;Ostrich fattening animal - Feather (as-part-nature);A0C60#F01.A0CBN$F02.A0ESE
+3;Ostrich fattening animal - Hair (as-part-nature);A0C60#F01.A0CBN$F02.A0ESP
+3;Ostrich fattening animal - Injection site (as-part-nature);A0C60#F01.A0CBN$F02.A0ESN
+3;Ostrich fattening animal - Lung (as-part-nature);A0C60#F01.A0CBN$F02.A069P
+3;Ostrich fattening animal - Pollen (as-part-nature);A0C60#F01.A0CBN$F02.A0ESK
+3;Ostrich fattening animal - Retina (as-part-nature);A0C60#F01.A0CBN$F02.A0ESJ
+3;Ostrich fattening animal - Sand (as-part-nature);A0C60#F01.A0CBN$F02.A0ESH
+3;Ostrich fattening animal - Tissues juice (as-part-nature);A0C60#F01.A0CBN$F02.A0ESG
+3;Ostrich fattening animal - Wool (as-part-nature);A0C60#F01.A0CBN$F02.A0ESF
+3;Ostrich fattening animal - Drinking water;A0F7L#F01.A0CBN$F02.A06CA
+3;Ostrich fattening animal - Water for aquaculture;A0F7M#F01.A0CBN$F02.A06CA
+3;Ostrich fattening animal - Feed;A0BB9#F01.A0CBN$F02.A0F0Y
+3;Ostrich laying hens - Meat (as-part-nature);A0BXF#F01.A0CBP$F02.A0BYZ$F32.A0C8V
+3;Ostrich laying hens - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0CBP$F02.A0EMD$F32.A0C8V
+3;Ostrich laying hens - Fat (as-part-nature);A0BXF#F01.A0CBP$F02.A069J$F32.A0C8V
+3;Ostrich laying hens - Blood (as-part-nature);A0BXF#F01.A0CBP$F02.A06AL$F32.A0C8V
+3;Ostrich laying hens - Kidney (as-part-nature);A0BXF#F01.A0CBP$F02.A069N$F32.A0C8V
+3;Ostrich laying hens - Kidney fat (as-part-nature);A0BXF#F01.A0CBP$F02.A0F1B$F32.A0C8V
+3;Ostrich laying hens - Liver (as-part-nature);A0BXF#F01.A0CBP$F02.A069M$F32.A0C8V
+3;Ostrich laying hens - Skin & fat (as-part-nature);A0BXF#F01.A0CBP$F02.A06AK$F32.A0C8V
+3;Ostrich laying hens - Thyroid (as-part-nature);A0C60#F01.A0CBP$F02.A0CES$F32.A0C8V
+3;Ostrich laying hens - Urine (as-part-nature);A0C60#F01.A0CBP$F02.A0CET$F32.A0C8V
+3;Ostrich laying hens - Faeces (as-part-nature);A0C60#F01.A0CBP$F02.A0CEV$F32.A0C8V
+3;Ostrich laying hens - Blood serum (as-part-nature);A0C60#F01.A0CBP$F02.A0CEY$F32.A0C8V
+3;Ostrich laying hens - Plasma (as-part-nature);A0C60#F01.A0CBP$F02.A0CEX$F32.A0C8V
+3;Ostrich laying hens - Bile (as-part-nature);A0C60#F01.A0CBP$F02.A0EKY$F32.A0C8V
+3;Ostrich laying hens - Eye (as-part-nature);A0C60#F01.A0CBP$F02.A067P$F32.A0C8V
+3;Ostrich laying hens - Feather (as-part-nature);A0C60#F01.A0CBP$F02.A0ESE$F32.A0C8V
+3;Ostrich laying hens - Hair (as-part-nature);A0C60#F01.A0CBP$F02.A0ESP$F32.A0C8V
+3;Ostrich laying hens - Injection site (as-part-nature);A0C60#F01.A0CBP$F02.A0ESN$F32.A0C8V
+3;Ostrich laying hens - Lung (as-part-nature);A0C60#F01.A0CBP$F02.A069P$F32.A0C8V
+3;Ostrich laying hens - Pollen (as-part-nature);A0C60#F01.A0CBP$F02.A0ESK$F32.A0C8V
+3;Ostrich laying hens - Retina (as-part-nature);A0C60#F01.A0CBP$F02.A0ESJ$F32.A0C8V
+3;Ostrich laying hens - Sand (as-part-nature);A0C60#F01.A0CBP$F02.A0ESH$F32.A0C8V
+3;Ostrich laying hens - Tissues juice (as-part-nature);A0C60#F01.A0CBP$F02.A0ESG$F32.A0C8V
+3;Ostrich laying hens - Wool (as-part-nature);A0C60#F01.A0CBP$F02.A0ESF$F32.A0C8V
+3;Ostrich laying hens - Drinking water;A0F7L#F01.A0CBP$F02.A06CA$F32.A0C8V
+3;Ostrich laying hens - Water for aquaculture;A0F7M#F01.A0CBP$F02.A06CA$F32.A0C8V
+3;Ostrich laying hens - Feed;A0BB9#F01.A0CBP$F02.A0F0Y$F32.A0C8V
+2;Wild boar - Meat (as-part-nature);A0BXF#F01.A056Y$F02.A0BYZ$F21.A07RY
+2;Wild boar - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A056Y$F02.A0EMD$F21.A07RY
+2;Wild boar - Fat (as-part-nature);A0BXF#F01.A056Y$F02.A069J$F21.A07RY
+2;Wild boar - Blood (as-part-nature);A0BXF#F01.A056Y$F02.A06AL$F21.A07RY
+2;Wild boar - Kidney (as-part-nature);A0BXF#F01.A056Y$F02.A069N$F21.A07RY
+2;Wild boar - Kidney fat (as-part-nature);A0BXF#F01.A056Y$F02.A0F1B$F21.A07RY
+2;Wild boar - Liver (as-part-nature);A0BXF#F01.A056Y$F02.A069M$F21.A07RY
+2;Wild boar - Skin & fat (as-part-nature);A0BXF#F01.A056Y$F02.A06AK$F21.A07RY
+2;Wild boar - Thyroid (as-part-nature);A0C60#F01.A056Y$F02.A0CES$F21.A07RY
+2;Wild boar - Urine (as-part-nature);A0C60#F01.A056Y$F02.A0CET$F21.A07RY
+2;Wild boar - Faeces (as-part-nature);A0C60#F01.A056Y$F02.A0CEV$F21.A07RY
+2;Wild boar - Blood serum (as-part-nature);A0C60#F01.A056Y$F02.A0CEY$F21.A07RY
+2;Wild boar - Plasma (as-part-nature);A0C60#F01.A056Y$F02.A0CEX$F21.A07RY
+2;Wild boar - Bile (as-part-nature);A0C60#F01.A056Y$F02.A0EKY$F21.A07RY
+2;Wild boar - Eye (as-part-nature);A0C60#F01.A056Y$F02.A067P$F21.A07RY
+2;Wild boar - Feather (as-part-nature);A0C60#F01.A056Y$F02.A0ESE$F21.A07RY
+2;Wild boar - Hair (as-part-nature);A0C60#F01.A056Y$F02.A0ESP$F21.A07RY
+2;Wild boar - Injection site (as-part-nature);A0C60#F01.A056Y$F02.A0ESN$F21.A07RY
+2;Wild boar - Lung (as-part-nature);A0C60#F01.A056Y$F02.A069P$F21.A07RY
+2;Wild boar - Pollen (as-part-nature);A0C60#F01.A056Y$F02.A0ESK$F21.A07RY
+2;Wild boar - Retina (as-part-nature);A0C60#F01.A056Y$F02.A0ESJ$F21.A07RY
+2;Wild boar - Sand (as-part-nature);A0C60#F01.A056Y$F02.A0ESH$F21.A07RY
+2;Wild boar - Tissues juice (as-part-nature);A0C60#F01.A056Y$F02.A0ESG$F21.A07RY
+2;Wild boar - Wool (as-part-nature);A0C60#F01.A056Y$F02.A0ESF$F21.A07RY
+2;Wild boar - Drinking water;A0F7L#F01.A056Y$F02.A06CA$F21.A07RY
+2;Wild boar - Water for aquaculture;A0F7M#F01.A056Y$F02.A06CA$F21.A07RY
+2;Wild boar - Feed;A0BB9#F01.A056Y$F02.A0F0Y$F21.A07RY
+2;Deer - Meat (as-part-nature);A0BXF#F01.A056M$F02.A0BYZ$F21.A07RY
+2;Deer - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A056M$F02.A0EMD$F21.A07RY
+2;Deer - Fat (as-part-nature);A0BXF#F01.A056M$F02.A069J$F21.A07RY
+2;Deer - Blood (as-part-nature);A0BXF#F01.A056M$F02.A06AL$F21.A07RY
+2;Deer - Kidney (as-part-nature);A0BXF#F01.A056M$F02.A069N$F21.A07RY
+2;Deer - Kidney fat (as-part-nature);A0BXF#F01.A056M$F02.A0F1B$F21.A07RY
+2;Deer - Liver (as-part-nature);A0BXF#F01.A056M$F02.A069M$F21.A07RY
+2;Deer - Skin & fat (as-part-nature);A0BXF#F01.A056M$F02.A06AK$F21.A07RY
+2;Deer - Thyroid (as-part-nature);A0C60#F01.A056M$F02.A0CES$F21.A07RY
+2;Deer - Urine (as-part-nature);A0C60#F01.A056M$F02.A0CET$F21.A07RY
+2;Deer - Faeces (as-part-nature);A0C60#F01.A056M$F02.A0CEV$F21.A07RY
+2;Deer - Blood serum (as-part-nature);A0C60#F01.A056M$F02.A0CEY$F21.A07RY
+2;Deer - Plasma (as-part-nature);A0C60#F01.A056M$F02.A0CEX$F21.A07RY
+2;Deer - Bile (as-part-nature);A0C60#F01.A056M$F02.A0EKY$F21.A07RY
+2;Deer - Eye (as-part-nature);A0C60#F01.A056M$F02.A067P$F21.A07RY
+2;Deer - Feather (as-part-nature);A0C60#F01.A056M$F02.A0ESE$F21.A07RY
+2;Deer - Hair (as-part-nature);A0C60#F01.A056M$F02.A0ESP$F21.A07RY
+2;Deer - Injection site (as-part-nature);A0C60#F01.A056M$F02.A0ESN$F21.A07RY
+2;Deer - Lung (as-part-nature);A0C60#F01.A056M$F02.A069P$F21.A07RY
+2;Deer - Pollen (as-part-nature);A0C60#F01.A056M$F02.A0ESK$F21.A07RY
+2;Deer - Retina (as-part-nature);A0C60#F01.A056M$F02.A0ESJ$F21.A07RY
+2;Deer - Sand (as-part-nature);A0C60#F01.A056M$F02.A0ESH$F21.A07RY
+2;Deer - Tissues juice (as-part-nature);A0C60#F01.A056M$F02.A0ESG$F21.A07RY
+2;Deer - Wool (as-part-nature);A0C60#F01.A056M$F02.A0ESF$F21.A07RY
+2;Deer - Drinking water;A0F7L#F01.A056M$F02.A06CA$F21.A07RY
+2;Deer - Water for aquaculture;A0F7M#F01.A056M$F02.A06CA$F21.A07RY
+2;Deer - Feed;A0BB9#F01.A056M$F02.A0F0Y$F21.A07RY
+2;Hare - Meat (as-part-nature);A0BXF#F01.A056X$F02.A0BYZ$F21.A07RY
+2;Hare - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A056X$F02.A0EMD$F21.A07RY
+2;Hare - Fat (as-part-nature);A0BXF#F01.A056X$F02.A069J$F21.A07RY
+2;Hare - Blood (as-part-nature);A0BXF#F01.A056X$F02.A06AL$F21.A07RY
+2;Hare - Kidney (as-part-nature);A0BXF#F01.A056X$F02.A069N$F21.A07RY
+2;Hare - Kidney fat (as-part-nature);A0BXF#F01.A056X$F02.A0F1B$F21.A07RY
+2;Hare - Liver (as-part-nature);A0BXF#F01.A056X$F02.A069M$F21.A07RY
+2;Hare - Skin & fat (as-part-nature);A0BXF#F01.A056X$F02.A06AK$F21.A07RY
+2;Hare - Thyroid (as-part-nature);A0C60#F01.A056X$F02.A0CES$F21.A07RY
+2;Hare - Urine (as-part-nature);A0C60#F01.A056X$F02.A0CET$F21.A07RY
+2;Hare - Faeces (as-part-nature);A0C60#F01.A056X$F02.A0CEV$F21.A07RY
+2;Hare - Blood serum (as-part-nature);A0C60#F01.A056X$F02.A0CEY$F21.A07RY
+2;Hare - Plasma (as-part-nature);A0C60#F01.A056X$F02.A0CEX$F21.A07RY
+2;Hare - Bile (as-part-nature);A0C60#F01.A056X$F02.A0EKY$F21.A07RY
+2;Hare - Eye (as-part-nature);A0C60#F01.A056X$F02.A067P$F21.A07RY
+2;Hare - Feather (as-part-nature);A0C60#F01.A056X$F02.A0ESE$F21.A07RY
+2;Hare - Hair (as-part-nature);A0C60#F01.A056X$F02.A0ESP$F21.A07RY
+2;Hare - Injection site (as-part-nature);A0C60#F01.A056X$F02.A0ESN$F21.A07RY
+2;Hare - Lung (as-part-nature);A0C60#F01.A056X$F02.A069P$F21.A07RY
+2;Hare - Pollen (as-part-nature);A0C60#F01.A056X$F02.A0ESK$F21.A07RY
+2;Hare - Retina (as-part-nature);A0C60#F01.A056X$F02.A0ESJ$F21.A07RY
+2;Hare - Sand (as-part-nature);A0C60#F01.A056X$F02.A0ESH$F21.A07RY
+2;Hare - Tissues juice (as-part-nature);A0C60#F01.A056X$F02.A0ESG$F21.A07RY
+2;Hare - Wool (as-part-nature);A0C60#F01.A056X$F02.A0ESF$F21.A07RY
+2;Hare - Drinking water;A0F7L#F01.A056X$F02.A06CA$F21.A07RY
+2;Hare - Water for aquaculture;A0F7M#F01.A056X$F02.A06CA$F21.A07RY
+2;Hare - Feed;A0BB9#F01.A056X$F02.A0F0Y$F21.A07RY
+2;Finfish - Meat (as-part-nature);A0BXF#F01.A0BXL$F02.A0BYZ
+2;Finfish - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0BXL$F02.A0EMD
+2;Finfish - Fat (as-part-nature);A0BXF#F01.A0BXL$F02.A069J
+2;Finfish - Blood (as-part-nature);A0BXF#F01.A0BXL$F02.A06AL
+2;Finfish - Kidney (as-part-nature);A0BXF#F01.A0BXL$F02.A069N
+2;Finfish - Kidney fat (as-part-nature);A0BXF#F01.A0BXL$F02.A0F1B
+2;Finfish - Liver (as-part-nature);A0BXF#F01.A0BXL$F02.A069M
+2;Finfish - Skin & fat (as-part-nature);A0BXF#F01.A0BXL$F02.A06AK
+2;Finfish - Thyroid (as-part-nature);A0C60#F01.A0BXL$F02.A0CES
+2;Finfish - Urine (as-part-nature);A0C60#F01.A0BXL$F02.A0CET
+2;Finfish - Faeces (as-part-nature);A0C60#F01.A0BXL$F02.A0CEV
+2;Finfish - Blood serum (as-part-nature);A0C60#F01.A0BXL$F02.A0CEY
+2;Finfish - Plasma (as-part-nature);A0C60#F01.A0BXL$F02.A0CEX
+2;Finfish - Bile (as-part-nature);A0C60#F01.A0BXL$F02.A0EKY
+2;Finfish - Eye (as-part-nature);A0C60#F01.A0BXL$F02.A067P
+2;Finfish - Feather (as-part-nature);A0C60#F01.A0BXL$F02.A0ESE
+2;Finfish - Hair (as-part-nature);A0C60#F01.A0BXL$F02.A0ESP
+2;Finfish - Injection site (as-part-nature);A0C60#F01.A0BXL$F02.A0ESN
+2;Finfish - Lung (as-part-nature);A0C60#F01.A0BXL$F02.A069P
+2;Finfish - Pollen (as-part-nature);A0C60#F01.A0BXL$F02.A0ESK
+2;Finfish - Retina (as-part-nature);A0C60#F01.A0BXL$F02.A0ESJ
+2;Finfish - Sand (as-part-nature);A0C60#F01.A0BXL$F02.A0ESH
+2;Finfish - Tissues juice (as-part-nature);A0C60#F01.A0BXL$F02.A0ESG
+2;Finfish - Wool (as-part-nature);A0C60#F01.A0BXL$F02.A0ESF
+2;Finfish - Drinking water;A0F7L#F01.A0BXL$F02.A06CA
+2;Finfish - Water for aquaculture;A0F7M#F01.A0BXL$F02.A06CA
+2;Finfish - Feed;A0BB9#F01.A0BXL$F02.A0F0Y
+3;Salmonidae - Meat (as-part-nature);A0BXF#F01.A0F2J$F02.A0BYZ
+3;Salmonidae - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0F2J$F02.A0EMD
+3;Salmonidae - Fat (as-part-nature);A0BXF#F01.A0F2J$F02.A069J
+3;Salmonidae - Blood (as-part-nature);A0BXF#F01.A0F2J$F02.A06AL
+3;Salmonidae - Kidney (as-part-nature);A0BXF#F01.A0F2J$F02.A069N
+3;Salmonidae - Kidney fat (as-part-nature);A0BXF#F01.A0F2J$F02.A0F1B
+3;Salmonidae - Liver (as-part-nature);A0BXF#F01.A0F2J$F02.A069M
+3;Salmonidae - Skin & fat (as-part-nature);A0BXF#F01.A0F2J$F02.A06AK
+3;Salmonidae - Thyroid (as-part-nature);A0C60#F01.A0F2J$F02.A0CES
+3;Salmonidae - Urine (as-part-nature);A0C60#F01.A0F2J$F02.A0CET
+3;Salmonidae - Faeces (as-part-nature);A0C60#F01.A0F2J$F02.A0CEV
+3;Salmonidae - Blood serum (as-part-nature);A0C60#F01.A0F2J$F02.A0CEY
+3;Salmonidae - Plasma (as-part-nature);A0C60#F01.A0F2J$F02.A0CEX
+3;Salmonidae - Bile (as-part-nature);A0C60#F01.A0F2J$F02.A0EKY
+3;Salmonidae - Eye (as-part-nature);A0C60#F01.A0F2J$F02.A067P
+3;Salmonidae - Feather (as-part-nature);A0C60#F01.A0F2J$F02.A0ESE
+3;Salmonidae - Hair (as-part-nature);A0C60#F01.A0F2J$F02.A0ESP
+3;Salmonidae - Injection site (as-part-nature);A0C60#F01.A0F2J$F02.A0ESN
+3;Salmonidae - Lung (as-part-nature);A0C60#F01.A0F2J$F02.A069P
+3;Salmonidae - Pollen (as-part-nature);A0C60#F01.A0F2J$F02.A0ESK
+3;Salmonidae - Retina (as-part-nature);A0C60#F01.A0F2J$F02.A0ESJ
+3;Salmonidae - Sand (as-part-nature);A0C60#F01.A0F2J$F02.A0ESH
+3;Salmonidae - Tissues juice (as-part-nature);A0C60#F01.A0F2J$F02.A0ESG
+3;Salmonidae - Wool (as-part-nature);A0C60#F01.A0F2J$F02.A0ESF
+3;Salmonidae - Drinking water;A0F7L#F01.A0F2J$F02.A06CA
+3;Salmonidae - Water for aquaculture;A0F7M#F01.A0F2J$F02.A06CA
+3;Salmonidae - Feed;A0BB9#F01.A0F2J$F02.A0F0Y
+4;Salmon - Meat (as-part-nature);A0BXF#F01.A086Y$F02.A0BYZ
+4;Salmon - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A086Y$F02.A0EMD
+4;Salmon - Fat (as-part-nature);A0BXF#F01.A086Y$F02.A069J
+4;Salmon - Blood (as-part-nature);A0BXF#F01.A086Y$F02.A06AL
+4;Salmon - Kidney (as-part-nature);A0BXF#F01.A086Y$F02.A069N
+4;Salmon - Kidney fat (as-part-nature);A0BXF#F01.A086Y$F02.A0F1B
+4;Salmon - Liver (as-part-nature);A0BXF#F01.A086Y$F02.A069M
+4;Salmon - Skin & fat (as-part-nature);A0BXF#F01.A086Y$F02.A06AK
+4;Salmon - Thyroid (as-part-nature);A0C60#F01.A086Y$F02.A0CES
+4;Salmon - Urine (as-part-nature);A0C60#F01.A086Y$F02.A0CET
+4;Salmon - Faeces (as-part-nature);A0C60#F01.A086Y$F02.A0CEV
+4;Salmon - Blood serum (as-part-nature);A0C60#F01.A086Y$F02.A0CEY
+4;Salmon - Plasma (as-part-nature);A0C60#F01.A086Y$F02.A0CEX
+4;Salmon - Bile (as-part-nature);A0C60#F01.A086Y$F02.A0EKY
+4;Salmon - Eye (as-part-nature);A0C60#F01.A086Y$F02.A067P
+4;Salmon - Feather (as-part-nature);A0C60#F01.A086Y$F02.A0ESE
+4;Salmon - Hair (as-part-nature);A0C60#F01.A086Y$F02.A0ESP
+4;Salmon - Injection site (as-part-nature);A0C60#F01.A086Y$F02.A0ESN
+4;Salmon - Lung (as-part-nature);A0C60#F01.A086Y$F02.A069P
+4;Salmon - Pollen (as-part-nature);A0C60#F01.A086Y$F02.A0ESK
+4;Salmon - Retina (as-part-nature);A0C60#F01.A086Y$F02.A0ESJ
+4;Salmon - Sand (as-part-nature);A0C60#F01.A086Y$F02.A0ESH
+4;Salmon - Tissues juice (as-part-nature);A0C60#F01.A086Y$F02.A0ESG
+4;Salmon - Wool (as-part-nature);A0C60#F01.A086Y$F02.A0ESF
+4;Salmon - Drinking water;A0F7L#F01.A086Y$F02.A06CA
+4;Salmon - Water for aquaculture;A0F7M#F01.A086Y$F02.A06CA
+4;Salmon - Feed;A0BB9#F01.A086Y$F02.A0F0Y
+4;Trout - Meat (as-part-nature);A0BXF#F01.A04XX$F02.A0BYZ
+4;Trout - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A04XX$F02.A0EMD
+4;Trout - Fat (as-part-nature);A0BXF#F01.A04XX$F02.A069J
+4;Trout - Blood (as-part-nature);A0BXF#F01.A04XX$F02.A06AL
+4;Trout - Kidney (as-part-nature);A0BXF#F01.A04XX$F02.A069N
+4;Trout - Kidney fat (as-part-nature);A0BXF#F01.A04XX$F02.A0F1B
+4;Trout - Liver (as-part-nature);A0BXF#F01.A04XX$F02.A069M
+4;Trout - Skin & fat (as-part-nature);A0BXF#F01.A04XX$F02.A06AK
+4;Trout - Thyroid (as-part-nature);A0C60#F01.A04XX$F02.A0CES
+4;Trout - Urine (as-part-nature);A0C60#F01.A04XX$F02.A0CET
+4;Trout - Faeces (as-part-nature);A0C60#F01.A04XX$F02.A0CEV
+4;Trout - Blood serum (as-part-nature);A0C60#F01.A04XX$F02.A0CEY
+4;Trout - Plasma (as-part-nature);A0C60#F01.A04XX$F02.A0CEX
+4;Trout - Bile (as-part-nature);A0C60#F01.A04XX$F02.A0EKY
+4;Trout - Eye (as-part-nature);A0C60#F01.A04XX$F02.A067P
+4;Trout - Feather (as-part-nature);A0C60#F01.A04XX$F02.A0ESE
+4;Trout - Hair (as-part-nature);A0C60#F01.A04XX$F02.A0ESP
+4;Trout - Injection site (as-part-nature);A0C60#F01.A04XX$F02.A0ESN
+4;Trout - Lung (as-part-nature);A0C60#F01.A04XX$F02.A069P
+4;Trout - Pollen (as-part-nature);A0C60#F01.A04XX$F02.A0ESK
+4;Trout - Retina (as-part-nature);A0C60#F01.A04XX$F02.A0ESJ
+4;Trout - Sand (as-part-nature);A0C60#F01.A04XX$F02.A0ESH
+4;Trout - Tissues juice (as-part-nature);A0C60#F01.A04XX$F02.A0ESG
+4;Trout - Wool (as-part-nature);A0C60#F01.A04XX$F02.A0ESF
+4;Trout - Drinking water;A0F7L#F01.A04XX$F02.A06CA
+4;Trout - Water for aquaculture;A0F7M#F01.A04XX$F02.A06CA
+4;Trout - Feed;A0BB9#F01.A04XX$F02.A0F0Y
+3;molluscs - Meat (as-part-nature);A0BXF#F01.A0BXM$F02.A0BYZ
+3;molluscs - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0BXM$F02.A0EMD
+3;molluscs - Fat (as-part-nature);A0BXF#F01.A0BXM$F02.A069J
+3;molluscs - Blood (as-part-nature);A0BXF#F01.A0BXM$F02.A06AL
+3;molluscs - Kidney (as-part-nature);A0BXF#F01.A0BXM$F02.A069N
+3;molluscs - Kidney fat (as-part-nature);A0BXF#F01.A0BXM$F02.A0F1B
+3;molluscs - Liver (as-part-nature);A0BXF#F01.A0BXM$F02.A069M
+3;molluscs - Skin & fat (as-part-nature);A0BXF#F01.A0BXM$F02.A06AK
+3;molluscs - Thyroid (as-part-nature);A0C60#F01.A0BXM$F02.A0CES
+3;molluscs - Urine (as-part-nature);A0C60#F01.A0BXM$F02.A0CET
+3;molluscs - Faeces (as-part-nature);A0C60#F01.A0BXM$F02.A0CEV
+3;molluscs - Blood serum (as-part-nature);A0C60#F01.A0BXM$F02.A0CEY
+3;molluscs - Plasma (as-part-nature);A0C60#F01.A0BXM$F02.A0CEX
+3;molluscs - Bile (as-part-nature);A0C60#F01.A0BXM$F02.A0EKY
+3;molluscs - Eye (as-part-nature);A0C60#F01.A0BXM$F02.A067P
+3;molluscs - Feather (as-part-nature);A0C60#F01.A0BXM$F02.A0ESE
+3;molluscs - Hair (as-part-nature);A0C60#F01.A0BXM$F02.A0ESP
+3;molluscs - Injection site (as-part-nature);A0C60#F01.A0BXM$F02.A0ESN
+3;molluscs - Lung (as-part-nature);A0C60#F01.A0BXM$F02.A069P
+3;molluscs - Pollen (as-part-nature);A0C60#F01.A0BXM$F02.A0ESK
+3;molluscs - Retina (as-part-nature);A0C60#F01.A0BXM$F02.A0ESJ
+3;molluscs - Sand (as-part-nature);A0C60#F01.A0BXM$F02.A0ESH
+3;molluscs - Tissues juice (as-part-nature);A0C60#F01.A0BXM$F02.A0ESG
+3;molluscs - Wool (as-part-nature);A0C60#F01.A0BXM$F02.A0ESF
+3;molluscs - Drinking water;A0F7L#F01.A0BXM$F02.A06CA
+3;molluscs - Water for aquaculture;A0F7M#F01.A0BXM$F02.A06CA
+3;molluscs - Feed;A0BB9#F01.A0BXM$F02.A0F0Y
+3;crustaceans - Meat (as-part-nature);A0BXF#F01.A0BXN$F02.A0BYZ
+3;crustaceans - Muscle & skin (Fish) (as-part-nature);A0BXF#F01.A0BXN$F02.A0EMD
+3;crustaceans - Fat (as-part-nature);A0BXF#F01.A0BXN$F02.A069J
+3;crustaceans - Blood (as-part-nature);A0BXF#F01.A0BXN$F02.A06AL
+3;crustaceans - Kidney (as-part-nature);A0BXF#F01.A0BXN$F02.A069N
+3;crustaceans - Kidney fat (as-part-nature);A0BXF#F01.A0BXN$F02.A0F1B
+3;crustaceans - Liver (as-part-nature);A0BXF#F01.A0BXN$F02.A069M
+3;crustaceans - Skin & fat (as-part-nature);A0BXF#F01.A0BXN$F02.A06AK
+3;crustaceans - Thyroid (as-part-nature);A0C60#F01.A0BXN$F02.A0CES
+3;crustaceans - Urine (as-part-nature);A0C60#F01.A0BXN$F02.A0CET
+3;crustaceans - Faeces (as-part-nature);A0C60#F01.A0BXN$F02.A0CEV
+3;crustaceans - Blood serum (as-part-nature);A0C60#F01.A0BXN$F02.A0CEY
+3;crustaceans - Plasma (as-part-nature);A0C60#F01.A0BXN$F02.A0CEX
+3;crustaceans - Bile (as-part-nature);A0C60#F01.A0BXN$F02.A0EKY
+3;crustaceans - Eye (as-part-nature);A0C60#F01.A0BXN$F02.A067P
+3;crustaceans - Feather (as-part-nature);A0C60#F01.A0BXN$F02.A0ESE
+3;crustaceans - Hair (as-part-nature);A0C60#F01.A0BXN$F02.A0ESP
+3;crustaceans - Injection site (as-part-nature);A0C60#F01.A0BXN$F02.A0ESN
+3;crustaceans - Lung (as-part-nature);A0C60#F01.A0BXN$F02.A069P
+3;crustaceans - Pollen (as-part-nature);A0C60#F01.A0BXN$F02.A0ESK
+3;crustaceans - Retina (as-part-nature);A0C60#F01.A0BXN$F02.A0ESJ
+3;crustaceans - Sand (as-part-nature);A0C60#F01.A0BXN$F02.A0ESH
+3;crustaceans - Tissues juice (as-part-nature);A0C60#F01.A0BXN$F02.A0ESG
+3;crustaceans - Wool (as-part-nature);A0C60#F01.A0BXN$F02.A0ESF
+3;crustaceans - Drinking water;A0F7L#F01.A0BXN$F02.A06CA
+3;crustaceans - Water for aquaculture;A0F7M#F01.A0BXN$F02.A06CA
+3;crustaceans - Feed;A0BB9#F01.A0BXN$F02.A0F0Y

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>Default Properties</comment>
+<entry key="Application.Name">EFSA Catalogues Browser</entry>
+<entry key="Application.Dir">D:\FoodexBrowserHome</entry>
+</properties>

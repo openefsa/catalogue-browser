@@ -1,0 +1,19 @@
+Message ID;Trigger Event Description;Text;SemaphoreWarningLevel;TextWarningLevel
+1;if a hierarchy is selected as base term (describe function);Warning: the base term is a hierarchy!;LOW;LOW
+2;if a non-hierarchy is selected as base term (describe function);The base term was successfully added!;NONE;NONE
+3;if a forbidden process is chosen (the derivative should be used);Don't apply the process to the raw commodity: use the existing derivative;HIGH;HIGH
+4;if a derivative is described with a process facet with an ordCode value less than the implicit ordCode;Process applied in the wrong order!;HIGH;HIGH
+5;if an ambiguous term is selected (terms reported in the BR_Exceptions); You have selected an ambiguous term, please choose a better defined element!;LOW;LOW
+6;if more than one process with the same ordCode is chosen (mutually exclusive property violated);You cannot use these processes together!;HIGH;HIGH
+7;if a base term which does not belong to reporting or exposure hierarchy is selected;You cannot use a non reportable term!;LOW;LOW
+8;if a non exposure hierarchy-term (blue pyramid) is selected as base term (describe);You have selected a non-exposure hierarchy term!;LOW;LOW
+9;if an aspecific term is selected (describe);You have selected an aspecific term. Are you sure that you cannot be more precise?;NONE;LOW
+10;if the generic facet Processed (or children) is selected;You have selected a generic process facet. Are you sure that you cannot be more precise?;LOW;LOW
+11;if an ingredient is selected for raw commodity or derivative;Is it a minor ingredient? Please check!;LOW;LOW
+12;if a single Source Commodity is selected for raw commodity;Only multiple source commodities allowed, for mixed raw commodities!;HIGH;HIGH
+13;if a source is selected for mixed derivative (having more than one F27.);Source facet not allowed in mixed derivatives;HIGH;HIGH
+14;if a source is selected for derivative with only one F27.;Make sure that Source is used for better specifying the raw source -otherwise forbidden;LOW;LOW
+15;if a base term not valid in the exposure hierarchy is chosen;Not valid for human exposure calculation;NONE;HIGH
+16;if a source is selected for composite (c or s);Source is not applicable for composite food;HIGH;HIGH
+17;if a source commodity is selected for composite (c or s);Source commodity is not applicable for composite food;HIGH;HIGH
+18;if two processes (implicit or explicit) with decimal ordcode and same integer part are applied (at least one explicit);You are trying to generate an already existing derivative!;HIGH;HIGH
