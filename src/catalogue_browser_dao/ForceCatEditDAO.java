@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import catalogue_object.Catalogue;
+import dcf_webservice.ReserveLevel;
 
 /**
  * DAO to communicate with the FORCED_CATALOGUE table of the main database.
@@ -23,9 +24,10 @@ public class ForceCatEditDAO {
 	 * @param username the name of the user which forced the editing of the catlaogue
 	 * @return true if everything went welln during the insertion
 	 */
-	public synchronized boolean forceEditing ( Catalogue catalogue, String username ) {
+	public synchronized boolean forceEditing ( Catalogue catalogue, String username, ReserveLevel editLevel ) {
 		
-		String query = "insert into APP.FORCED_CATALOGUE (CAT_CODE, CAT_VERSION, FORCED_USERNAME, FORCED_EDIT) values (?,?,?,?)";
+		String query = "insert into APP.FORCED_CATALOGUE (CAT_CODE, CAT_VERSION, "
+				+ "FORCED_USERNAME, FORCED_EDIT, FORCED_LEVEL ) values (?,?,?,?,?)";
 		
 		try {
 			
@@ -37,6 +39,7 @@ public class ForceCatEditDAO {
 			stmt.setString( 2, catalogue.getVersion() );
 			stmt.setString( 3, username );
 			stmt.setBoolean( 4, true );
+			stmt.setString( 5, editLevel.toString() );
 			
 			stmt.executeUpdate();
 			
@@ -54,12 +57,14 @@ public class ForceCatEditDAO {
 
 	/**
 	 * Check if the user is forcing the edit of the current catalogue
+	 * @param catalogue the catalogue we want to check
 	 * @param username the name of the user we want to check
-	 * @return true if he/she is forcing the editing of the catalogue
+	 * @return the editing level the user has forced (if there is one). If no
+	 * record is found ReserveLevel.NONE is returned by default
 	 */
-	public synchronized boolean isForcingEditing ( Catalogue catalogue, String username ) {
+	public synchronized ReserveLevel getEditingLevel ( Catalogue catalogue, String username ) {
 		
-		boolean forcing = false;
+		ReserveLevel reserveLevel = ReserveLevel.NONE;
 		
 		String query = "select * from APP.FORCED_CATALOGUE where CAT_CODE = ? and CAT_VERSION = ? and FORCED_USERNAME = ?";
 
@@ -78,7 +83,8 @@ public class ForceCatEditDAO {
 			// if the record is present, the user is
 			// forcing the editing
 			if ( rs.next() )
-				forcing = true;
+				reserveLevel = ReserveLevel.valueOf( 
+						rs.getString( "FORCED_LEVEL" ) );
 			
 			rs.close();
 			stmt.close();
@@ -88,7 +94,7 @@ public class ForceCatEditDAO {
 			e.printStackTrace();
 		}
 
-		return forcing;
+		return reserveLevel;
 	}
 
 	/**

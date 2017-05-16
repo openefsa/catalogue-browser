@@ -31,7 +31,7 @@ public class Reserve extends SOAPAction {
 	// web service link of the ping service
 	//private static final String RESERVE_URL = "https://dcf-cms.efsa.europa.eu/catalogues";
 	private static final String RESERVE_URL = "https://dcf-01.efsa.test/dc-catalog-public-ws/catalogues/?wsdl";
-
+	
 	// the catalogue we want to reserve/unreserve
 	private Catalogue catalogue;
 	
@@ -62,6 +62,38 @@ public class Reserve extends SOAPAction {
 	}
 	
 	/**
+	 * Get the current operation related
+	 * to the reserve level set in input.
+	 * @return
+	 */
+	private String getCurrentOperation() {
+		
+		String currentOp = "INVALID: No reserve level was set";
+		
+		if ( reserveLevel == null ) {
+			System.err.println( currentOp );
+			return currentOp;
+		}
+
+		// log
+		switch( reserveLevel ) {
+		case NONE:
+			currentOp = "Unreserve";
+			break;
+		case MINOR:
+			currentOp = "Reserve minor";
+			break;
+		case MAJOR:
+			currentOp = "Reserve major";
+			break;
+		default:
+			break;
+		}
+		
+		return currentOp;
+	}
+	
+	/**
 	 * Reserve a catalogue with a major or minor reserve operation or unreserve it. 
 	 * An additional description on why we reserve the catalogue is mandatory.
 	 * Set reserve level to None to unreserve the catalogue.
@@ -78,20 +110,8 @@ public class Reserve extends SOAPAction {
 		this.catalogue = catalogue;
 		this.reserveLevel = reserveLevel;
 		this.reserveDescription = reserveDescription;
-		
-		// log
-		switch( reserveLevel ) {
-		case NONE:
-			System.out.println ( "Unreserving catalogue " + catalogue );
-			break;
-		case MINOR:
-		case MAJOR:
-			System.out.println ( "Reserving catalogue " + catalogue + " at level " + reserveLevel );
-			break;
-		default:
-			break;
-		}
 
+		System.out.println ( getCurrentOperation() + ": " + catalogue );
 		
 		// default response
 		DcfResponse response = DcfResponse.ERROR;
@@ -202,6 +222,13 @@ public class Reserve extends SOAPAction {
 		if ( logCodeListener != null )
 			logCodeListener.logCodeFound( logCode );
 		
+		// TODO remove
+		if ( true ) {
+			DcfResponse response = DcfResponse.BUSY;
+			response.setPendingReserve( pr );
+			return response;
+		}
+		
 		// get the log from the dcf through the pending
 		// reserve action
 		Document log = getLog( logCode, attempts, 
@@ -241,11 +268,11 @@ public class Reserve extends SOAPAction {
 
 		// return ok if correct operation
 		if ( parser.isOperationCorrect() ) {
-			System.out.println ( "(Un)reserve successfully completed" );
+			System.out.println ( getCurrentOperation() + ": successfully completed" );
 			return DcfResponse.OK;
 		}
 		else {
-			System.out.println ( "(Un)reserve failed - the dcf rejected the operation" );
+			System.out.println ( getCurrentOperation() + ": failed - the dcf rejected the operation" );
 			return DcfResponse.NO;
 		}
 	}

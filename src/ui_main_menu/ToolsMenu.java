@@ -851,21 +851,29 @@ public class ToolsMenu implements MainMenuItem {
 					unreserveMI.setText( Messages.getString("Reserve.WaitingResponse") );
 					unreserveMI.setEnabled( false );
 				}
+
 				
-				if ( resetMI != null )
-					resetMI.setEnabled( false );
-				
-				if ( importMI != null )
-					importMI.setEnabled( false );
-				
-				if ( hierarchyEditMI != null )
-					hierarchyEditMI.setEnabled ( false );
-				
-				if ( attributeEditMI != null )
-					attributeEditMI.setEnabled( false );
-				
-				if ( appendMI != null )
-					appendMI.setEnabled( false );
+				// if we are reserving but we have forced the
+				// editing, we leave these buttons enabled
+				if ( !mainMenu.getCatalogue().isForceEdit( 
+						User.getInstance().getUsername() ) ) {
+
+					if ( resetMI != null )
+						resetMI.setEnabled( false );
+
+					if ( importMI != null )
+						importMI.setEnabled( false );
+
+					if ( hierarchyEditMI != null )
+						hierarchyEditMI.setEnabled ( false );
+
+					if ( attributeEditMI != null )
+						attributeEditMI.setEnabled( false );
+
+					if ( appendMI != null )
+						appendMI.setEnabled( false );
+
+				}
 			}
 			else {
 				

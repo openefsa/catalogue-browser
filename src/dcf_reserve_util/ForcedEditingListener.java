@@ -21,4 +21,13 @@ public interface ForcedEditingListener {
 	 * @param level
 	 */
 	public void editingForced ( Catalogue catalogue, String username, ReserveLevel level );
+	
+	/**
+	 * Called when the editing is removed
+	 * @param catalogue
+	 * @param username
+	 * @param level the new reserveLevel of the catalogue, if the catalogue was not
+	 * reserved then this will be NONE, otherwise we get the reserve level required
+	 */
+	public void editingRemoved ( Catalogue catalogue, String username, ReserveLevel level );
 }

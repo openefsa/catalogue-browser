@@ -153,6 +153,23 @@ public class LoginMenu implements MainMenuItem {
 									}
 								});
 							}
+
+							@Override
+							public void editingRemoved(Catalogue catalogue, 
+									String username, final ReserveLevel level ) {
+								
+								System.out.println( "OK ");
+								
+								shell.getDisplay().syncExec( new Runnable() {
+									
+									@Override
+									public void run() {
+										System.out.println( "OK " + level );
+										// update the UI based on the forced reserve level
+										mainMenu.update( level );
+									}
+								});
+							}
 						});
 						
 						// called if a new version is downloaded

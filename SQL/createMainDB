@@ -95,12 +95,17 @@ create table APP.FORCED_CATALOGUE (
 	CAT_VERSION varchar(50) not null,
 	FORCED_USERNAME varchar(100) not null,
 	FORCED_EDIT boolean not null,
+	FORCED_LEVEL varchar(50) not null,
 	
 	-- CAT_CODE and VERSION as primary key
 	-- we cannot forced the editing of the 
 	-- same catalogue in two different ways
 	primary key ( CAT_CODE, CAT_VERSION )
 );
+
+-- set the foreign keys for FORCED_CATALOGUE table
+alter table APP.FORCED_CATALOGUE add foreign key ( CAT_CODE, CAT_VERSION ) references APP.CATALOGUE ( CAT_CODE, CAT_VERSION );
+
 
 -- table to save the preferred dimensions
 -- of the dialogs (as describe window..)

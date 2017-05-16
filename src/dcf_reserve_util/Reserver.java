@@ -76,7 +76,7 @@ public class Reserver extends ReserveSkeleton {
 	@Override
 	public boolean canReserve( Catalogue catalogue, 
 			ReserveLevel reserveLevel ) {
-		
+
 		// instantiate the reserve soap action
 		Reserve reserve = new Reserve();
 		
@@ -104,10 +104,6 @@ public class Reserver extends ReserveSkeleton {
 	@Override
 	public void reserveFinished(Catalogue catalogue, ReserveLevel reserveLevel) {
 
-		// call the finish listener if it was set
-		if ( finishListener != null )
-			finishListener.reserveFinished( catalogue, response );
-
 		// at the end of the process
 		// if busy dcf, start the retry process
 		// always in background on the current request
@@ -117,10 +113,17 @@ public class Reserver extends ReserveSkeleton {
 		// note that this action needs to be the last one
 		// since it blocks the thread until we find a log
 		if ( response == DcfResponse.BUSY ) {
-
+			
 			// get the pending reserve from the busy response
 			PendingReserve pr = response.getPendingReserve();
-
+			
+			// force editing the catalogue if 
+			if ( !catalogue.isForceEdit( pr.getUsername() ) 
+					&& reserveLevel.greaterThan( ReserveLevel.NONE ) ) {
+				
+				catalogue.forceEdit( pr.getUsername(), reserveLevel );
+			}
+			
 			// start the retry process and set the
 			// finish listener to update again the
 			// caller when the log is found
@@ -135,6 +138,10 @@ public class Reserver extends ReserveSkeleton {
 			// be called the response cannot be BUSY because
 			// we iterate until we find the log
 		}
+		
+		// call the finish listener if it was set
+		if ( finishListener != null )
+			finishListener.reserveFinished( catalogue, response );
 	}
 
 	@Override
@@ -142,9 +149,6 @@ public class Reserver extends ReserveSkeleton {
 		
 		if ( newVersionListener != null )
 			newVersionListener.handleEvent( new Event() );
-		
-		if ( progressBar != null )
-			progressBar.close();
 	}
 
 	@Override

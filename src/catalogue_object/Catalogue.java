@@ -259,6 +259,24 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	}
 	
 	/**
+	 * Refresh the UI with this catalogue. Note that
+	 * you need to call {@link #open()} first
+	 */
+	public void refreshCatalogueUI () {
+
+		GlobalManager manager = GlobalManager.getInstance();
+		
+		// if the opened catalogue is not this one => return
+		if ( !manager.getCurrentCatalogue().sameAs( this ) ) {
+			System.err.println( "Cannot refresh catalogue UI: catalogue not opened " + this );
+			return;
+		}
+		
+		// notify the observers
+		manager.setCurrentCatalogue( this );
+	}
+	
+	/**
 	 * Refresh the hierarchies contents
 	 */
 	public void refreshHierarchies() {
@@ -753,21 +771,49 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	/**
 	 * Force the editing of the catalogue even if
 	 * it was not reserved
+	 * @param username who is forcing the editing
+	 * @param level the editing level we want (MINOR or MAJOR)
 	 */
-	public void forceEdit ( String username ) {
+	public synchronized void forceEdit ( String username, ReserveLevel level ) {
+
+		if ( level.isNone() ) {
+			System.err.println( "Cannot force editing at level NONE" );
+			return;
+		}
 		
+		System.out.println( "Editing forced by " 
+				+ username + " for " + this );
+
 		ForceCatEditDAO forceDao = new ForceCatEditDAO();
-		forceDao.forceEditing( this, username );
+		forceDao.forceEditing( this, username, level );
 	}
 	
 	/**
 	 * Remove the forced editing from this catalogue
 	 * related to the user we want
 	 */
-	public void removeForceEdit ( String username ) {
-		
+	public synchronized void removeForceEdit ( String username ) {
+
+		System.out.println( "Forced editing removed by " 
+				+ username + " for " + this );
+
 		ForceCatEditDAO forceDao = new ForceCatEditDAO();
 		forceDao.removeForceEditing( this, username );
+	}
+	
+	/**
+	 * Get the forced editing level of this catalogue regarding
+	 * the User identified by {@code username}.
+	 * @param username
+	 * @return the forced editing level, if NONE, no editing was forced
+	 */
+	public synchronized ReserveLevel getForcedEditLevel ( String username ) {
+		
+		ForceCatEditDAO forceDao = new ForceCatEditDAO();
+		
+		// we are forcing the editing if we have a forced editing
+		// level greater than NONE
+		return forceDao.getEditingLevel( this, username );
 	}
 	
 	/**
@@ -777,20 +823,22 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * @return
 	 */
 	public boolean isForceEdit( String username ) {
-		
-		ForceCatEditDAO forceDao = new ForceCatEditDAO();
-		return forceDao.isForcingEditing( this, username );
+
+		// we are forcing the editing 
+		// if we have a forced editing
+		// level greater than NONE
+		return getForcedEditLevel( username ).greaterThan( ReserveLevel.NONE );
 	}
 
 	/**
 	 * Reserve the catalogue for the current user.
 	 * Note that if you want to unreserve the catalogue you
-	 * must use {@link Catalogue#unreserve() }
+	 * must use {@link #unreserve() }
 	 * @param reserveLevel the reserve level needed. Both
 	 * {@link ReserveLevel.MINOR} or 
 	 * {@link ReserveLevel.MAJOR} are accepted.
 	 */
-	public void reserve( ReserveLevel reserveLevel ) {
+	public synchronized void reserve( ReserveLevel reserveLevel ) {
 		
 		if ( reserveLevel.isNone() ) {
 			System.err.println ( "You are reserving a catalogue with ReserveLevel.NONE "
@@ -833,7 +881,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	/**
 	 * Unreserve the catalogue
 	 */
-	public void unreserve () {
+	public synchronized void unreserve () {
 
 		this.reserveLevel = ReserveLevel.NONE;
 		reserveUsername = null;

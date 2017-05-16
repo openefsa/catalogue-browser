@@ -27,6 +27,7 @@ import catalogue_object.Catalogue;
 import catalogue_object.Hierarchy;
 import catalogue_object.Nameable;
 import catalogue_object.Term;
+import dcf_user.User;
 import dcf_webservice.ReserveLevel;
 import global_manager.GlobalManager;
 import messages.Messages;
@@ -325,7 +326,7 @@ public class TermsTreePanel extends Observable implements Observer {
 	 * Create a right click contextual menu for a tree which contains terms
 	 */
 	public Menu createTreeMenu () {
-		
+
 		// get an instance of the global manager
 		GlobalManager manager = GlobalManager.getInstance();
 		
@@ -339,7 +340,7 @@ public class TermsTreePanel extends Observable implements Observer {
 
 		// Add edit buttons if we are in editing mode
 		// and if we are not (un)reserving a catalogue
-		if ( !manager.isReadOnly() && !catalogue.isReserving() ) {
+		if ( !manager.isReadOnly() ) {
 
 			new MenuItem( termMenu, SWT.SEPARATOR );
 
@@ -405,8 +406,22 @@ public class TermsTreePanel extends Observable implements Observer {
 				GlobalManager manager = GlobalManager.getInstance();
 				
 				// if editing mode update edit mode buttons
-				if ( !manager.isReadOnly() && !catalogue.isReserving() ) {
-					updateEditModeMI( catalogue.getReserveLevel() );
+				if ( !manager.isReadOnly() ) {
+					
+					ReserveLevel level;
+					
+					// if the editing of the catalogue is forced
+					// we use the forced editing level to refresh
+					// the UI, otherwise we get the standard
+					// reserve level we have on the catalogue
+					String username = User.getInstance().getUsername();
+					
+					if ( catalogue.isForceEdit( username ) )
+						level = catalogue.getForcedEditLevel( username );
+					else
+						level = catalogue.getReserveLevel();
+					
+					updateEditModeMI( level );
 				}
 				
 				// update read only buttons

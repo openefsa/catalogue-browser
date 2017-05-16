@@ -51,7 +51,7 @@ public class ReserveLogDownloader {
 		
 		// try to get the log
 		Reserve reserve = new Reserve();
-
+int count = 0;
 		// do until we found the log
 		while ( log == null ) {
 			
@@ -62,7 +62,8 @@ public class ReserveLogDownloader {
 
 			// if no log was found => wait retry time
 			// and then restart
-			if ( log == null ) {
+			// TODO remove true
+			if ( log == null || count++ == 0 ) {
 
 				System.err.println ( "The Log " + logCode + " is missing. Waiting " 
 						+ ( retryTime / 1000 )

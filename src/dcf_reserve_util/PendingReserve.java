@@ -169,8 +169,8 @@ public class PendingReserve {
 	 */
 	public DcfResponse retry( BusyDcfListener listener, ForcedEditingListener forcedListener ) {
 		
-		long retryTime = 300000; // 5 minutes
-		
+		//long retryTime = 300000; // 5 minutes
+		long retryTime = 20000; // 20 seconds
 		return retry ( retryTime, listener, forcedListener );
 	}
 	
@@ -201,12 +201,12 @@ public class PendingReserve {
 				if ( !catalogue.isForceEdit( username ) 
 						&& reserveLevel.greaterThan( ReserveLevel.NONE ) ) {
 					
-					catalogue.forceEdit( username );
+					catalogue.forceEdit( username, reserveLevel );
 					
 					// forced catalogue editing => call listener
 					if ( forcedListener != null )
 						forcedListener.editingForced( catalogue, 
-								logCode, reserveLevel );
+								username, reserveLevel );
 				}
 
 				// dcf is busy => call listener
@@ -221,10 +221,6 @@ public class PendingReserve {
 		// we are stuck here
 		DcfResponse response = downloader.download();
 		
-		// reserve finished => we remove the force editing, since
-		// we know if the reserve went ok or not
-		catalogue.removeForceEdit( username );
-		
 		// if the reserve did not go ok => stultify the current catalogue
 		if ( response != DcfResponse.OK && 
 				catalogue.isForceEdit( username ) ) {
@@ -232,6 +228,15 @@ public class PendingReserve {
 			// mark the catalogue as invalid
 			catalogue.stultify();
 		}
+		
+		// reserve finished => we remove the force editing, since
+		// we know if the reserve went ok or not
+		catalogue.removeForceEdit( username );
+		
+		// forced catalogue editing => call listener
+		if ( forcedListener != null )
+			forcedListener.editingRemoved( catalogue, username, 
+					catalogue.getReserveLevel() );
 		
 		// here we have the log downloaded
 		// therefore we do not need anymore

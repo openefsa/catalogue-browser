@@ -114,36 +114,44 @@ public abstract class ReserveSkeleton extends Thread {
 
 				@Override
 				public void handleEvent(Event arg0) {
-
-					// get the new catalogue version
-					CatalogueDAO catDao = new CatalogueDAO();
-					Catalogue newCatalogue = catDao.getCatalogue( 
-							catalogue.getCode(), reserveLog.getVersion() );
 					
-					// set that we are reserving the new catalogue
-					newCatalogue.setReserving( true );
-					
-					// update the catalogue of the class with
-					// the new version
-					catalogue = newCatalogue;
-					
-					// notify that we have downloaded a new version of the catalogue
-					newVersionDownloaded( newCatalogue );
-
-					// notify that the reserve is started (after having
-					// downloaded the new version)
-					reserveStarted( newCatalogue, reserveLevel, reserveLog );
-
-					// reserve the new version of the catalogue if possible
-					if ( canReserve ( newCatalogue, reserveLevel ) )
-						reserveCatalogue();
+					// we use another thread, otherwise the UI freezes
+					new Thread( new Runnable() {
 						
-					// reset the catalogue status
-					catalogue.setReserving( false );
-					newCatalogue.setReserving( false );
-					
-					// notify that the reserve is finished
-					reserveFinished ( newCatalogue, reserveLevel );
+						@Override
+						public void run() {
+
+							// get the new catalogue version
+							CatalogueDAO catDao = new CatalogueDAO();
+							Catalogue newCatalogue = catDao.getCatalogue( 
+									catalogue.getCode(), reserveLog.getVersion() );
+							
+							// set that we are reserving the new catalogue
+							newCatalogue.setReserving( true );
+							
+							// update the catalogue of the class with
+							// the new version
+							catalogue = newCatalogue;
+							
+							// notify that we have downloaded a new version of the catalogue
+							newVersionDownloaded( newCatalogue );
+
+							// notify that the reserve is started (after having
+							// downloaded the new version)
+							reserveStarted( newCatalogue, reserveLevel, reserveLog );
+							
+							// reserve the new version of the catalogue if possible
+							if ( canReserve ( newCatalogue, reserveLevel ) )
+								reserveCatalogue();
+								
+							// reset the catalogue status
+							catalogue.setReserving( false );
+							newCatalogue.setReserving( false );
+							
+							// notify that the reserve is finished
+							reserveFinished ( newCatalogue, reserveLevel );
+						}
+					}).start();
 				}
 			} );
 			

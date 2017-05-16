@@ -122,15 +122,30 @@ public class User {
 	 * @return
 	 */
 	public boolean canEdit ( Catalogue catalogue ) {
-
+		
+		// is the catalogue reserved? (i.e. is it reserved
+		// by this user and the dcf is not reserving)
+		boolean isReserved = catalogue.isReservedBy( this ) 
+				&& !catalogue.isReserving();
+		
+		// is the user a cm of this catalogue?
+		boolean isCM = isCatManagerOf( catalogue );
+		
+		// is editing forced to be enabled?
+		boolean editingForced = catalogue.isForceEdit( username );
+		
+		//System.out.println( "checks " + isReserved + " " + isCM + " " + editingForced );
+		
 		// we can edit the catalogue only if we are a catalogue
 		// manager of that catalogue and if we have reserved the
 		// catalogue with our username or we have the forced editing
 		// we cannot edit a catalogue if the catalogue is being
 		// reserved but the operation is not finished
-		return isCatManagerOf( catalogue ) 
-				&& ( catalogue.isReservedBy( this ) || catalogue.isForceEdit( username ) )
-				&& !catalogue.isReserving();
+		boolean editable = isCM && ( isReserved || editingForced );
+
+		//System.out.println( "is Editable " + editable );
+
+		return editable;
 	}
 	
 	/**
