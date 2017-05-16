@@ -13,6 +13,7 @@ import catalogue_object.Catalogue;
 import dcf_manager.Dcf;
 import dcf_reserve_util.ForcedEditingListener;
 import dcf_reserve_util.ReserveFinishedListener;
+import dcf_reserve_util.RetryReserveBuilder;
 import dcf_user.User;
 import dcf_webservice.DcfResponse;
 import dcf_webservice.ReserveLevel;
@@ -106,27 +107,12 @@ public class LoginMenu implements MainMenuItem {
 								}
 							}
 						} );
+
 						
-						// Start all the pending reserve actions
-						dcf.retryReserve( new ReserveFinishedListener() {
-							
-							@Override
-							public void reserveFinished( final Catalogue catalogue, 
-									final DcfResponse response ) {
-								
-								shell.getDisplay().syncExec( new Runnable() {
-									
-									@Override
-									public void run() {
-										
-										// Warn the user
-										mainMenu.warnDcfResponse( catalogue, response, null );
-									}
-								});
-							}
-						}, 
-							// when the reserve operations is started	
-							new Listener() {
+						RetryReserveBuilder builder = dcf.retryReserve();
+						
+						// called when the catalogue is being reserved
+						builder.setStartReserveListener( new Listener() {
 							
 							@Override
 							public void handleEvent(Event arg0) {
@@ -144,35 +130,76 @@ public class LoginMenu implements MainMenuItem {
 									}
 								});
 							}
-						},
-							new ForcedEditingListener() {
-								
-								@Override
-								public void editingForced(Catalogue catalogue, 
-										String username, ReserveLevel level ) {
-									
-									// update the UI based on the forced reserve level
-									mainMenu.update( level );
-									
-									// warn that the dcf is busy and the catalogue
-									// editing mode was forced
-									mainMenu.warnDcfResponse( catalogue, DcfResponse.BUSY, level );
-								}
-							},
+						});
+						
+						// called when the forced editing is enabled
+						builder.setForceEditListener( new ForcedEditingListener() {
 							
-							// if a new version is downloaded
-							new Listener() {
+							@Override
+							public void editingForced( final Catalogue catalogue, 
+									String username, final ReserveLevel level) {
 								
-								@Override
-								public void handleEvent(Event arg0) {
+								shell.getDisplay().syncExec( new Runnable() {
 									
-									// warn that the user cannot modify the current catalogue
-									// since he is using an old internal version
-									mainMenu.warnUser( Messages.getString( "Reserve.UsingOldVersionTitle" ), 
-												Messages.getString( "Reserve.UsingOldVersionMessage" ) );
-								}
-							});
+									@Override
+									public void run() {
+										
+										// update the UI based on the forced reserve level
+										mainMenu.update( level );
+										
+										// warn that the dcf is busy and the catalogue
+										// editing mode was forced
+										mainMenu.warnDcfResponse( catalogue, DcfResponse.BUSY, level );
+									}
+								});
+							}
+						});
+						
+						// called if a new version is downloaded
+						builder.setNewVersionListener( new Listener() {
+							
+							@Override
+							public void handleEvent(Event arg0) {
 
+								shell.getDisplay().syncExec( new Runnable() {
+									
+									@Override
+									public void run() {
+										
+										// warn that the user cannot modify the current catalogue
+										// since he is using an old internal version
+										mainMenu.warnUser( Messages.getString( "Reserve.UsingOldVersionTitle" ), 
+													Messages.getString( "Reserve.UsingOldVersionMessage" ) );
+									}
+								});
+							}
+						});
+						
+						// called when the log is found and the catalogue is reserved
+						builder.setFinishListener( new ReserveFinishedListener() {
+							
+							@Override
+							public void reserveFinished( final Catalogue catalogue, 
+									final DcfResponse response ) {
+
+								shell.getDisplay().syncExec( new Runnable() {
+
+									@Override
+									public void run() {
+
+										// Warn the user
+										mainMenu.warnDcfResponse( catalogue, response, null );
+										
+										// remove the lock, we have finished
+										ShellLocker.removeLock( shell );
+									}
+								});
+							}
+						});
+
+						// start the processes
+						builder.build();
+						
 						refresh();
 						
 					}

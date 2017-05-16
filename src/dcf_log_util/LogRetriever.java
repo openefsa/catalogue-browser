@@ -22,7 +22,7 @@ import ui_progress_bar.FormProgressBar;
  * @author avonva
  *
  */
-public class LogQuerist extends ReserveSkeleton {
+public class LogRetriever extends ReserveSkeleton {
 	
 	// the pending reserve we want to use
 	// to retrieve the log of the reserve operation
@@ -47,7 +47,7 @@ public class LogQuerist extends ReserveSkeleton {
 	 * Initialize a polling operation for the log
 	 * @param pendingReserve
 	 */
-	public LogQuerist( PendingReserve pendingReserve ) {
+	public LogRetriever( PendingReserve pendingReserve ) {
 		super( pendingReserve.getCatalogue(), pendingReserve.getReserveLevel() );
 		this.pendingReserve = pendingReserve;
 	}
@@ -87,7 +87,7 @@ public class LogQuerist extends ReserveSkeleton {
 	 * Set the listener which is called each time that the dcf is busy
 	 * @param busyDcfListener
 	 */
-	public void setBusyDcfListener(ForcedEditingListener forcedListener) {
+	public void setForceEditListener(ForcedEditingListener forcedListener) {
 		this.forcedListener = forcedListener;
 	}
 
@@ -102,10 +102,12 @@ public class LogQuerist extends ReserveSkeleton {
 	@Override
 	public boolean canReserve( Catalogue catalogue, ReserveLevel reserveLevel ) {
 
+		System.out.println ( "Retrying: " + pendingReserve );
+		
 		// retry getting the log of the pending reserve operation
 		this.logResponse = pendingReserve.retry( forcedListener );
 		
-		System.out.println ( "Log found for PendingReserve:" + 
+		System.out.println ( "Log found for:" + 
 				pendingReserve + 
 				" with response " + logResponse );
 
@@ -133,7 +135,7 @@ public class LogQuerist extends ReserveSkeleton {
 	}
 
 	@Override
-	public void reserveIsStarting(Catalogue catalogue, ReserveLevel reserveLevel) {
+	public void reservingCatalogue(Catalogue catalogue, ReserveLevel reserveLevel) {
 		
 		// call the start reserve listener if it was set
 		if ( startReserveListener != null )

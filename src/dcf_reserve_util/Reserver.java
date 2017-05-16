@@ -5,7 +5,7 @@ import org.eclipse.swt.widgets.Listener;
 
 import catalogue_object.Catalogue;
 import dcf_log_util.LogCodeFoundListener;
-import dcf_log_util.LogQuerist;
+import dcf_log_util.LogRetriever;
 import dcf_webservice.DcfResponse;
 import dcf_webservice.Reserve;
 import dcf_webservice.ReserveLevel;
@@ -15,7 +15,7 @@ import ui_progress_bar.FormProgressBar;
  * Reserver which is used to start a reserve operation from scratch,
  * that is, dcf webservice request + polling for retriving the reserve log.
  * Note that we should use this class only once per reserve request, in the
- * sense that if we need to check only the reserve log we should use the {@link LogQuerist}
+ * sense that if we need to check only the reserve log we should use the {@link LogRetriever}
  * class. In fact, that class does not send another reserve request, it
  * just checks the reserve log.
  * @author avonva
@@ -126,7 +126,7 @@ public class Reserver extends ReserveSkeleton {
 			// caller when the log is found
 			// note that here we also enable the force editing
 			// for the catalogue in the pr.retry() function
-			LogQuerist logQuerist = new LogQuerist( pr );
+			LogRetriever logQuerist = new LogRetriever( pr );
 			logQuerist.setFinishListener( finishListener );
 			logQuerist.setNewVersionListener( newVersionListener );
 			logQuerist.start();
@@ -139,12 +139,16 @@ public class Reserver extends ReserveSkeleton {
 
 	@Override
 	public void lastVersionDownloadStarted() {
+		
 		if ( newVersionListener != null )
 			newVersionListener.handleEvent( new Event() );
+		
+		if ( progressBar != null )
+			progressBar.close();
 	}
 
 	@Override
-	public void reserveIsStarting(Catalogue catalogue, ReserveLevel reserveLevel) {
+	public void reservingCatalogue(Catalogue catalogue, ReserveLevel reserveLevel) {
 		if ( startReserveListener != null )
 			startReserveListener.handleEvent( new Event() );
 	}

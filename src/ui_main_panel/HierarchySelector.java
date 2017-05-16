@@ -276,7 +276,8 @@ public class HierarchySelector extends Observable implements Observer {
 		
 		// select as default hierarchy the catalogue default hierarchy (the default default hierarchy is the master hierarchy)
 		// only if we are in the hierarchy page
-		if ( hierarchyBtn.getSelection() ) {
+		if ( hierarchyBtn.getSelection() 
+				&& catalogue.getDefaultHierarchy() != null ) {
 
 			hierarchyCombo.setSelection( new StructuredSelection 
 					( catalogue.getDefaultHierarchy() ) );
@@ -360,7 +361,7 @@ public class HierarchySelector extends Observable implements Observer {
 			this.catalogue = (Catalogue) arg1;
 			
 			// update the selectable hierarchies
-			if ( catalogue != null )
+			if ( catalogue != null && catalogue.getHierarchies() != null )
 				setInput( this.catalogue.getHierarchies() );
 		}
 	}

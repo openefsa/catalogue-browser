@@ -26,6 +26,6 @@
 	<classpathentry kind="lib" path="lib/poi-ooxml-3.16-beta1.jar"/>
 	<classpathentry kind="lib" path="lib/poi-ooxml-schemas-3.16-beta1.jar"/>
 	<classpathentry kind="lib" path="lib/org.apache.xerces_2.9.0.v201101211617.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/XmlCatalogueToExcel"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/CatalogueXmlToXlsx"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

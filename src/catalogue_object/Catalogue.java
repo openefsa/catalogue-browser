@@ -215,7 +215,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		// close the opened catalogue if there is one
 		if ( manager.getCurrentCatalogue() != null )
 			manager.getCurrentCatalogue().close();
-
+		
 		manager.setCurrentCatalogue( this );
 
 		// refresh logging state
@@ -1406,7 +1406,10 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * @throws SQLException
 	 */
 	public Connection getConnection () throws SQLException {
-		return DriverManager.getConnection( getDbUrl() );
+		
+		Connection con = DriverManager.getConnection( getDbUrl() );
+		
+		return con;
 	}
 
 	/**

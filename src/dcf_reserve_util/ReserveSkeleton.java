@@ -254,7 +254,7 @@ public abstract class ReserveSkeleton extends Thread {
 	 */
 	private void reserveCatalogue () {
 		
-		reserveIsStarting(catalogue, reserveLevel);
+		reservingCatalogue(catalogue, reserveLevel);
 		
 		// set the catalogue as (un)reserved at the selected level
 		if ( reserveLevel.greaterThan( ReserveLevel.NONE ) )
@@ -309,7 +309,7 @@ public abstract class ReserveSkeleton extends Thread {
 	 * @param catalogue
 	 * @param reserveLevel
 	 */
-	public abstract void reserveIsStarting ( Catalogue catalogue, 
+	public abstract void reservingCatalogue ( Catalogue catalogue, 
 			ReserveLevel reserveLevel );
 	
 	/**

@@ -56,7 +56,7 @@ public class AttachmentHandler {
 
 			return zipStream;
 		}
-		else {  // else the standard stream			
+		else {  // else the standard stream
 			return attachment.getRawContent();
 		}
 	}

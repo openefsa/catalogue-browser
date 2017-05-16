@@ -72,9 +72,8 @@ public class ReserveBuilder {
 	}
 	
 	/**
-	 * Register a listener in order to be notified when
-	 * the reserve operation is about to start (just before
-	 * starting the reserve operation)
+	 * Register to be notified just before reserving
+	 * the catalogue (only for successful operations)
 	 * @param listener
 	 */
 	public void setStartReserveListener ( Listener listener ) {

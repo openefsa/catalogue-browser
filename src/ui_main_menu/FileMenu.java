@@ -542,7 +542,7 @@ public class FileMenu implements MainMenuItem {
 				catalogue.open();
 			}
 		});
-
+		
 		if ( mainMenu.openListener != null ) {
 			// call the open listener
 			Event e = new Event();

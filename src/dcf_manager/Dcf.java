@@ -15,15 +15,13 @@ import org.w3c.dom.Document;
 
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_object.Catalogue;
-import dcf_log_util.LogCodeFoundListener;
-import dcf_log_util.LogQuerist;
+import dcf_log_util.LogRetriever;
 import dcf_reserve_util.ForcedEditingListener;
 import dcf_reserve_util.PendingReserve;
 import dcf_reserve_util.PendingReserveDAO;
 import dcf_reserve_util.ReserveBuilder;
 import dcf_reserve_util.ReserveFinishedListener;
-import dcf_reserve_util.ReserveStartedListener;
-import dcf_reserve_util.Reserver;
+import dcf_reserve_util.RetryReserveBuilder;
 import dcf_user.User;
 import dcf_user.UserAccessLevel;
 import dcf_webservice.ExportCatalogue;
@@ -377,17 +375,15 @@ public class Dcf {
 	}
 
 	/**
-	 * Retry all the pending reserve actions which are in the db queue.
-	 * Each pending reserve is retried in a separated thread and
-	 * call the {@code listener} when it is finished.
-	 * @param listener called from each thread of the pending reserve
-	 * when they finish.
+	 * Prepare all the pending reserve threads of this user.
+	 * @return a builder which refers to all the pending reserve
+	 * threads ( see {@link LogRetriever} ).
 	 */
-	public void retryReserve ( ReserveFinishedListener listener, 
-			Listener startReserveListener, ForcedEditingListener forcedListener, 
-			Listener newVersionListener ) {
+	public RetryReserveBuilder retryReserve () {
 
 		PendingReserveDAO prDao = new PendingReserveDAO();
+		
+		ArrayList<PendingReserve> userPrs = new ArrayList<>();
 		
 		// for each pending reserve action (i.e. reserve
 		// actions which did not finish until now, this
@@ -400,16 +396,9 @@ public class Dcf {
 			if ( !pr.madeBy( User.getInstance() ) )
 				continue;
 			
-			System.out.println ( "Retrying pending reserve: " + pr );
-			
-			// start the retry for retriving the reserve log
-			LogQuerist logQuerist = new LogQuerist( pr );
-			logQuerist.setFinishListener( listener );
-			logQuerist.setBusyDcfListener( forcedListener );
-			logQuerist.setStartReserveListener( startReserveListener );
-			logQuerist.setNewVersionListener( newVersionListener );
-			
-			logQuerist.start();
+			userPrs.add( pr );
 		}
+		
+		return new RetryReserveBuilder( userPrs );
 	}
 }
