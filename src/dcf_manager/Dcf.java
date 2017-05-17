@@ -16,11 +16,9 @@ import org.w3c.dom.Document;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_object.Catalogue;
 import dcf_log_util.LogRetriever;
-import dcf_reserve_util.ForcedEditingListener;
 import dcf_reserve_util.PendingReserve;
 import dcf_reserve_util.PendingReserveDAO;
 import dcf_reserve_util.ReserveBuilder;
-import dcf_reserve_util.ReserveFinishedListener;
 import dcf_reserve_util.RetryReserveBuilder;
 import dcf_user.User;
 import dcf_user.UserAccessLevel;
@@ -318,7 +316,7 @@ public class Dcf {
 	}
 
 	/**
-	 * Export the internal version of a catalogue into the selected
+	 * Export the last internal version of a catalogue into the selected
 	 * filename. If no internal version is retrieved no action is
 	 * performed.
 	 * @param catalogueCode the code which identifies the catalogue
@@ -335,7 +333,7 @@ public class Dcf {
 		ExportCatalogueFile export = new ExportCatalogueFile();
 
 		// get the catalogue xml as input stream
-		InputStream stream = export.exportCatInternalVersion( catalogueCode );
+		InputStream stream = export.exportLastInternalVersion( catalogueCode );
 		
 		// if not internal version ok, you can go on
 		if ( stream == null ) {
@@ -376,11 +374,24 @@ public class Dcf {
 	}
 
 	/**
+	 * Prepare a retry builder for a specific pending reserve
+	 * Note that here no check on who made the pending reserve
+	 * is done (contrarily to {@link #retryAllPendingReserve()})
+	 * @param pr the pending reserve we want to retry
+	 * @return a builder to create the retry process, set
+	 * all the listener before and then call {@link RetryReserveBuilder#build()}
+	 * to start the process
+	 */
+	public RetryReserveBuilder retryPendingReserve ( PendingReserve pr ) {
+		return new RetryReserveBuilder( pr );
+	}
+	
+	/**
 	 * Prepare all the pending reserve threads of this user.
 	 * @return a builder which refers to all the pending reserve
 	 * threads ( see {@link LogRetriever} ).
 	 */
-	public RetryReserveBuilder retryReserve () {
+	public RetryReserveBuilder retryAllPendingReserve () {
 
 		PendingReserveDAO prDao = new PendingReserveDAO();
 		

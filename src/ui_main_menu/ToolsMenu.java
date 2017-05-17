@@ -25,6 +25,7 @@ import catalogue_browser_dao.DatabaseManager;
 import catalogue_object.Catalogue;
 import dcf_log_util.LogCodeFoundListener;
 import dcf_manager.Dcf;
+import dcf_reserve_util.ForcedEditingListener;
 import dcf_reserve_util.ReserveBuilder;
 import dcf_reserve_util.ReserveFinishedListener;
 import dcf_reserve_util.ReserveResult;
@@ -1093,6 +1094,43 @@ public class ToolsMenu implements MainMenuItem {
 						ShellLocker.setLock( shell, 
 								Messages.getString( "MainPanel.CannotCloseTitle" ), 
 								Messages.getString( "MainPanel.CannotCloseMessage" ) );
+					}
+				});
+			}
+		});
+		
+		builder.setForcedEditListener( new ForcedEditingListener() {
+			
+			@Override
+			public void editingRemoved( final Catalogue catalogue, 
+					String username, final ReserveLevel level) {
+				
+				shell.getDisplay().syncExec( new Runnable() {
+					
+					@Override
+					public void run() {
+
+						// update the UI based on the forced reserve level
+						mainMenu.update( level );
+					}
+				});
+			}
+			
+			@Override
+			public void editingForced( final Catalogue catalogue, String username, 
+					final ReserveLevel level) {
+				
+				shell.getDisplay().syncExec( new Runnable() {
+					
+					@Override
+					public void run() {
+						
+						// update the UI based on the forced reserve level
+						mainMenu.update( level );
+						
+						// warn that the dcf is busy and the catalogue
+						// editing mode was forced
+						mainMenu.warnDcfResponse( catalogue, DcfResponse.BUSY, level );
 					}
 				});
 			}

@@ -90,6 +90,16 @@ public class ReserveBuilder {
 	}
 	
 	/**
+	 * Register a listener in order to be notified when
+	 * the editing is forced by the user without
+	 * having reserved the catalogue
+	 * @param listener
+	 */
+	public void setForcedEditListener ( ForcedEditingListener listener ) {
+		reserveThread.setForcedEditlistener( listener );
+	}
+	
+	/**
 	 * Set a progress bar which will be called if an
 	 * import process is performed
 	 * @param progressBar

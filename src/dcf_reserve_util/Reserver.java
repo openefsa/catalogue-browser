@@ -6,6 +6,7 @@ import org.eclipse.swt.widgets.Listener;
 import catalogue_object.Catalogue;
 import dcf_log_util.LogCodeFoundListener;
 import dcf_log_util.LogRetriever;
+import dcf_manager.Dcf;
 import dcf_webservice.DcfResponse;
 import dcf_webservice.Reserve;
 import dcf_webservice.ReserveLevel;
@@ -31,6 +32,7 @@ public class Reserver extends ReserveSkeleton {
 	private Listener newVersionListener;
 	private ReserveFinishedListener finishListener;
 	private LogCodeFoundListener logCodeListener;
+	private ForcedEditingListener forcedEditlistener;
 	
 	// called just before reserving the catalogue in the db
 	private Listener startReserveListener;
@@ -116,24 +118,19 @@ public class Reserver extends ReserveSkeleton {
 			
 			// get the pending reserve from the busy response
 			PendingReserve pr = response.getPendingReserve();
-			
-			// force editing the catalogue if 
-			if ( !catalogue.isForceEdit( pr.getUsername() ) 
-					&& reserveLevel.greaterThan( ReserveLevel.NONE ) ) {
-				
-				catalogue.forceEdit( pr.getUsername(), reserveLevel );
-			}
-			
+
 			// start the retry process and set the
 			// finish listener to update again the
 			// caller when the log is found
 			// note that here we also enable the force editing
 			// for the catalogue in the pr.retry() function
-			LogRetriever logQuerist = new LogRetriever( pr );
-			logQuerist.setFinishListener( finishListener );
-			logQuerist.setNewVersionListener( newVersionListener );
-			logQuerist.start();
-
+			Dcf dcf = new Dcf();
+			RetryReserveBuilder builder = dcf.retryPendingReserve( pr );
+			builder.setNewVersionListener( newVersionListener );
+			builder.setFinishListener( finishListener );
+			builder.setForceEditListener( forcedEditlistener );
+			builder.build();
+			
 			// note that when the new finish listener will
 			// be called the response cannot be BUSY because
 			// we iterate until we find the log
@@ -199,5 +196,14 @@ public class Reserver extends ReserveSkeleton {
 	 */
 	public void setStartReserveListener(Listener startReserveListener) {
 		this.startReserveListener = startReserveListener;
+	}
+	
+	/**
+	 * Set the listener called when the editing of the catalogue
+	 * is forced by the user without having reserved the catalogue
+	 * @param forcedEditlistener
+	 */
+	public void setForcedEditlistener(ForcedEditingListener forcedEditlistener) {
+		this.forcedEditlistener = forcedEditlistener;
 	}
 }

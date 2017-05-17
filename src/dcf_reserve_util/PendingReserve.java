@@ -169,8 +169,8 @@ public class PendingReserve {
 	 */
 	public DcfResponse retry( BusyDcfListener listener, ForcedEditingListener forcedListener ) {
 		
-		//long retryTime = 300000; // 5 minutes
-		long retryTime = 20000; // 20 seconds
+		long retryTime = 300000; // 5 minutes
+		//long retryTime = 20000; // 20 seconds
 		return retry ( retryTime, listener, forcedListener );
 	}
 	
@@ -228,7 +228,7 @@ public class PendingReserve {
 			// mark the catalogue as invalid
 			catalogue.stultify();
 		}
-		
+
 		// reserve finished => we remove the force editing, since
 		// we know if the reserve went ok or not
 		catalogue.removeForceEdit( username );

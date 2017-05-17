@@ -2,6 +2,7 @@ package dcf_reserve_util;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.eclipse.swt.widgets.Listener;
@@ -18,6 +19,15 @@ import dcf_log_util.LogRetriever;
 public class RetryReserveBuilder {
 
 	private Collection<LogRetriever> logRetrievers;
+	
+	/**
+	 * Initialize the builder with a single pending reserve
+	 * @param pendingReserve
+	 * @see #RetryReserveBuilder(Collection)
+	 */
+	public RetryReserveBuilder( PendingReserve pendingReserve ) {
+		this ( Arrays.asList(pendingReserve) );
+	}
 	
 	/**
 	 * Initialize the builder to start the process which will retrieve

@@ -941,7 +941,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * and the reserve operation does not succeeded 
 	 */
 	public synchronized void stultify() {
-		
+
 		getRawVersion().markAsOldVersion();
 		
 		CatalogueDAO catDao = new CatalogueDAO();

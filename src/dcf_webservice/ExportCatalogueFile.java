@@ -70,7 +70,7 @@ public class ExportCatalogueFile extends SOAPAction {
 	 * @param catalogueCode the code of the catalogue we want to consider
 	 * @return the input stream containing the xml catalogue data
 	 */
-	public InputStream exportCatInternalVersion ( String catalogueCode ) {
+	public InputStream exportLastInternalVersion ( String catalogueCode ) {
 		
 		Object lastVersion = exportXml ( catalogueCode, 
 				EXPORT_TYPE_INTERNAL_VERSION, XML_FILE_TYPE );

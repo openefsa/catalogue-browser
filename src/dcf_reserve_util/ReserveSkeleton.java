@@ -120,7 +120,7 @@ public abstract class ReserveSkeleton extends Thread {
 						
 						@Override
 						public void run() {
-
+							
 							// get the new catalogue version
 							CatalogueDAO catDao = new CatalogueDAO();
 							Catalogue newCatalogue = catDao.getCatalogue( 
@@ -226,7 +226,7 @@ public abstract class ReserveSkeleton extends Thread {
 				System.err.println ( "Cannot perform reserve on old version. Downloading the new version" );
 				System.err.println ( "Last internal " + finder.getVersion() + 
 						" local " + catalogue.getVersion() );
-				
+
 				// set the new version as data of the enum
 				ReserveResult log = ReserveResult.OLD_VERSION;
 				log.setVersion( finder.getVersion() );

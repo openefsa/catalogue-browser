@@ -52,6 +52,28 @@ public class LogRetriever extends ReserveSkeleton {
 		this.pendingReserve = pendingReserve;
 	}
 
+	@Override
+	public void run() {
+
+		// since we are retrying to get the log document
+		// related to the reserve operation we have already
+		// sent, the editing of the catalogue should be
+		// forced since we have already waited for 2 minutes
+		
+		Catalogue catalogue = pendingReserve.getCatalogue();
+		ReserveLevel level = pendingReserve.getReserveLevel();
+		String username = pendingReserve.getUsername();
+		
+		// force editing the catalogue
+		if ( !catalogue.isForceEdit( username ) 
+				&& level.greaterThan( ReserveLevel.NONE ) ) {
+			
+			catalogue.forceEdit( username, level );
+		}
+		
+		super.run();
+	}
+	
 	/**
 	 * Set the listener which will be called when the reserve action finishes.
 	 * @param finishListener

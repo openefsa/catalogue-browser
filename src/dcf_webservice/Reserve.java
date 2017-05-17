@@ -223,11 +223,11 @@ public class Reserve extends SOAPAction {
 			logCodeListener.logCodeFound( logCode );
 		
 		// TODO remove
-		if ( true ) {
+		/*if ( true ) {
 			DcfResponse response = DcfResponse.BUSY;
 			response.setPendingReserve( pr );
 			return response;
-		}
+		}*/
 		
 		// get the log from the dcf through the pending
 		// reserve action
