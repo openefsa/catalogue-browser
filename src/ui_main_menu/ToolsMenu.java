@@ -315,6 +315,15 @@ public class ToolsMenu implements MainMenuItem {
 			@Override
 			public void widgetSelected( SelectionEvent arg0 ) {
 
+				// ask for confirmation
+				int val = GlobalUtil.showDialog( shell, 
+						Messages.getString( "ResetChanges.ConfirmTitle" ), 
+						Messages.getString( "ResetChanges.ConfirmMessage" ), 
+						SWT.YES | SWT.NO );
+				
+				if ( val == SWT.NO )
+					return;
+				
 				// reset the catalogue data to the previous version
 				try {
 					DatabaseManager.restoreBackup( mainMenu.getCatalogue() );
@@ -322,7 +331,7 @@ public class ToolsMenu implements MainMenuItem {
 					
 					GlobalUtil.showErrorDialog( shell, 
 							Messages.getString( "ResetChanges.ErrorTitle" ), 
-							Messages.getString( "ResetChanges.MessageTitle" ) );
+							Messages.getString( "ResetChanges.ErrorMessage" ) );
 				}
 			}
 
@@ -885,7 +894,7 @@ public class ToolsMenu implements MainMenuItem {
 					unreserveMI.setText( Messages.getString( "BrowserMenu.Unreserve" ) );
 				}
 				
-				if ( resetMI != null ) {
+				if ( resetMI != null && user.canEdit( mainMenu.getCatalogue() ) ) {
 					
 					// enable resetMI only if the catalogue is an internal version
 					// and if the catalogue is reserved by the current user

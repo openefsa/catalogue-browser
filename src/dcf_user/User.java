@@ -133,17 +133,16 @@ public class User {
 		
 		// is editing forced to be enabled?
 		boolean editingForced = catalogue.isForceEdit( username );
-		
-		//System.out.println( "checks " + isReserved + " " + isCM + " " + editingForced );
+
+		boolean isLocal = catalogue.isLocal();
 		
 		// we can edit the catalogue only if we are a catalogue
 		// manager of that catalogue and if we have reserved the
 		// catalogue with our username or we have the forced editing
 		// we cannot edit a catalogue if the catalogue is being
 		// reserved but the operation is not finished
-		boolean editable = isCM && ( isReserved || editingForced );
-
-		//System.out.println( "is Editable " + editable );
+		// or we can edit the catalogue if it is a local catalogue
+		boolean editable = isLocal || ( isCM && ( isReserved || editingForced ) );
 
 		return editable;
 	}
