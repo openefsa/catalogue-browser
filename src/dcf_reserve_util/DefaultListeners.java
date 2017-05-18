@@ -115,22 +115,48 @@ public class DefaultListeners {
 						// Warn user of the performed actions
 						warnOfStatus ( ui, status );
 						
-						// open the catalogue if the operation was a reserve operation
-						// and if we have completed the process
-						if ( status == PendingReserveStatus.COMPLETED &&
-								pendingReserve.getReserveLevel()
-								.greaterThan( ReserveLevel.NONE ) ) {
+						switch ( status ) {
+						
+						case OLD_VERSION:
 							
-							Catalogue current = 
-									GlobalManager.getInstance().getCurrentCatalogue();
+							// lock the closure of the window since
+							// we are importing a new catalogue version
+							ShellLocker.setLock( ui.getShell(), 
+									Messages.getString( "Reserve.CannotCloseTitle" ), 
+									Messages.getString( "Reserve.CannotCloseMessage" ) );
+							break;
 							
-							// open the catalogue only if there is already another
-							// catalogue opened, and it is the same catalogue in terms
-							// of code (i.e. only the version is different)
-							// in this way we open the catalogue only if we are working
-							// with a previous version of it
-							if ( current.equals( pendingReserve.getCatalogue() ) )
-								pendingReserve.getCatalogue().open();
+							// remove shell lock if sending, here we can
+							// try how many times we want
+						case SENDING:
+							
+							ShellLocker.removeLock( ui.getShell() );
+							break;
+							
+						case COMPLETED:
+
+							// open the catalogue if the operation was a reserve operation
+							// and if we have completed the process
+							if ( pendingReserve.getReserveLevel()
+									.greaterThan( ReserveLevel.NONE ) ) {
+
+								Catalogue current = 
+										GlobalManager.getInstance().getCurrentCatalogue();
+
+								// open the catalogue only if there is already another
+								// catalogue opened, and it is the same catalogue in terms
+								// of code (i.e. only the version is different)
+								// in this way we open the catalogue only if we are working
+								// with a previous version of it
+								if ( current != null && 
+										current.equals( pendingReserve.getCatalogue() ) )
+									pendingReserve.getCatalogue().open();
+							}
+
+							break;
+							
+						default:
+							break;
 						}
 					}
 				});

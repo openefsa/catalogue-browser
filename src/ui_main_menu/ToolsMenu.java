@@ -960,7 +960,7 @@ public class ToolsMenu implements MainMenuItem {
 
 		// create a progress bar for the possible import process
 		final FormProgressBar progressBar = new FormProgressBar( shell, 
-				Messages.getString( "Reserve.NewInternalTitle" ) );
+				Messages.getString( "Reserve.NewInternalTitle" ), false, SWT.TITLE );
 
 		// move down the location of the progress bar
 		progressBar.setLocation( progressBar.getLocation().x, 

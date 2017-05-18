@@ -28,6 +28,7 @@ public class FormProgressBar {
 	private Label label;
 
 	private String title;
+	private int style;
 
 	private Integer done = 0;
 	private double doneFract = 0;  // used to manage fractional progresses
@@ -40,13 +41,14 @@ public class FormProgressBar {
 	 * @param title the title of the progress bar
 	 * @param cancelEnabled if the cancel button should be inserted or not
 	 */
-	public FormProgressBar( Shell shell , String title, boolean cancelEnabled ) {
+	public FormProgressBar( Shell shell , String title, boolean cancelEnabled, int style ) {
 
 		opened = false;
 
 		this.shell = shell;
 		this.title=title;
 		this.cancelEnabled = cancelEnabled;
+		this.style = style;
 		this.initializeGraphics( shell );
 	}
 
@@ -56,7 +58,7 @@ public class FormProgressBar {
 	 * @param title the title of the progress bar
 	 */
 	public FormProgressBar( Shell shell , String title ) {
-		this( shell, title, false );
+		this( shell, title, false, SWT.TITLE | SWT.APPLICATION_MODAL );
 	}
 	
 	/**
@@ -65,7 +67,7 @@ public class FormProgressBar {
 	 */
 	public void initializeGraphics ( Shell parentShell ) {
 
-		currentShell = new Shell( parentShell , SWT.TITLE | SWT.APPLICATION_MODAL );
+		currentShell = new Shell( parentShell, style );
 		currentShell.setText( title );
 		currentShell.setSize( 300, 130 );
 		currentShell.setLayout( new FillLayout() );

@@ -16,6 +16,7 @@ import dcf_webservice.ReserveLevel;
 import messages.Messages;
 import ui_main_panel.FormDCFLogin;
 import ui_main_panel.FormDCFLogin.CredentialListener;
+import ui_progress_bar.FormProgressBar;
 import ui_main_panel.UpdateableUI;
 
 public class LoginMenu implements MainMenuItem {
@@ -137,6 +138,10 @@ public class LoginMenu implements MainMenuItem {
 		
 		Dcf dcf = new Dcf();
 		
+		dcf.setProgressBar( new FormProgressBar( shell, 
+				Messages.getString( "Reserve.NewInternalTitle" ), 
+				false, SWT.TITLE ) );
+		
 		dcf.startPendingReserves( 
 				DefaultListeners.getReserveListener( 
 						new UpdateableUI() {
@@ -155,111 +160,5 @@ public class LoginMenu implements MainMenuItem {
 				return shell;
 			}
 		}));
-		/*
-		RetryReserveBuilder builder = dcf.retryAllPendingReserve();
-		
-		// called when the catalogue is being reserved
-		builder.setStartReserveListener( new Listener() {
-			
-			@Override
-			public void handleEvent(Event arg0) {
-				
-				shell.getDisplay().syncExec( new Runnable() {
-
-					@Override
-					public void run() {
-
-						// lock the closure of the window since
-						// we are creating a new db
-						ShellLocker.setLock( shell, 
-								Messages.getString( "MainPanel.CannotCloseTitle" ), 
-								Messages.getString( "MainPanel.CannotCloseMessage" ) );
-					}
-				});
-			}
-		});
-		
-		// called when the forced editing is enabled
-		builder.setForceEditListener( new ForcedEditingListener() {
-			
-			@Override
-			public void editingForced( final Catalogue catalogue, 
-					String username, final ReserveLevel level) {
-				
-				shell.getDisplay().syncExec( new Runnable() {
-					
-					@Override
-					public void run() {
-
-						// update the UI based on the forced reserve level
-						mainMenu.update( level );
-						
-						// warn that the dcf is busy and the catalogue
-						// editing mode was forced
-						mainMenu.warnDcfResponse( catalogue, DcfResponse.BUSY, level );
-					}
-				});
-			}
-
-			@Override
-			public void editingRemoved(Catalogue catalogue, 
-					String username, final ReserveLevel level ) {
-
-				shell.getDisplay().syncExec( new Runnable() {
-					
-					@Override
-					public void run() {
-						// update the UI based on the forced reserve level
-						mainMenu.update( level );
-					}
-				});
-			}
-		});
-		
-		// called if a new version is downloaded
-		builder.setNewVersionListener( new Listener() {
-			
-			@Override
-			public void handleEvent(Event arg0) {
-
-				shell.getDisplay().syncExec( new Runnable() {
-					
-					@Override
-					public void run() {
-						
-						// warn that the user cannot modify the current catalogue
-						// since he is using an old internal version
-						mainMenu.warnUser( Messages.getString( "Reserve.UsingOldVersionTitle" ), 
-									Messages.getString( "Reserve.UsingOldVersionMessage" ) );
-					}
-				});
-			}
-		});
-		
-		// called when the log is found and the catalogue is reserved
-		builder.setFinishListener( new ReserveFinishedListener() {
-			
-			@Override
-			public void reserveFinished( final Catalogue catalogue, 
-					final DcfResponse response ) {
-
-				shell.getDisplay().syncExec( new Runnable() {
-
-					@Override
-					public void run() {
-
-						System.out.println ( "Warning user from login menu" );
-						
-						// Warn the user
-						mainMenu.warnDcfResponse( catalogue, response, null );
-						
-						// remove the lock, we have finished
-						ShellLocker.removeLock( shell );
-					}
-				});
-			}
-		});
-		
-		return builder;*/
 	}
 }

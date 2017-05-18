@@ -34,13 +34,12 @@ public class NewCatalogueInternalVersion {
 	// catalogue is stored
 	private String filename;
 	
-	private ImportActions imprt;
+	private FormProgressBar progressBar;
 	
 	public NewCatalogueInternalVersion( String newCode, String newVersion, String filename ) {
 		this.newCode = newCode;
 		this.newVersion = newVersion;
 		this.filename = filename;
-		imprt = new ImportActions();
 	}
 	
 	/**
@@ -48,7 +47,7 @@ public class NewCatalogueInternalVersion {
 	 * @param progressBar
 	 */
 	public void setProgressBar( FormProgressBar progressBar ) {
-		imprt.setProgressBar( progressBar );
+		this.progressBar = progressBar;
 	}
 	
 	/**
@@ -62,6 +61,9 @@ public class NewCatalogueInternalVersion {
 		// reserve the NEW catalogue
 		ImportActions imprt = new ImportActions();
 
+		if ( progressBar != null )
+			imprt.setProgressBar( progressBar );
+		
 		// import the catalogue xml and remove the file at
 		// the end of the process
 		imprt.importXml( null, filename, true, new Listener() {

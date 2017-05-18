@@ -180,6 +180,9 @@ public class PendingReserve {
 	 */
 	private DcfResponse send() {
 		
+		// update the status
+		setStatus( PendingReserveStatus.SENDING );
+		
 		Document log = getLog();
 		
 		// if no log in high priority => the available time is finished
