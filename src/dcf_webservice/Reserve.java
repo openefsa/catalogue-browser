@@ -8,14 +8,10 @@ import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
-import org.w3c.dom.Document;
-
 import catalogue_object.Catalogue;
 import dcf_log_util.LogCodeFinder;
-import dcf_log_util.LogCodeFoundListener;
-import dcf_log_util.LogParser;
-import dcf_manager.Dcf;
 import dcf_reserve_util.PendingReserve;
+import dcf_reserve_util.ReserveValidator;
 import dcf_user.User;
 
 /**
@@ -41,9 +37,6 @@ public class Reserve extends SOAPAction {
 	// the description of why we are reserving/unreserving
 	private String reserveDescription;
 	
-	// Listener called when the reserve log code is found
-	private LogCodeFoundListener logCodeListener;
-	
 	/**
 	 * Constructor to initialize the url and namespace for the
 	 * reserve operation
@@ -51,48 +44,7 @@ public class Reserve extends SOAPAction {
 	public Reserve() {
 		super ( RESERVE_URL, RESERVE_NAMESPACE );
 	}
-	
-	/**
-	 * Set the listener which is called when the reserve
-	 * log code is found.
-	 * @param logCodeListener
-	 */
-	public void setLogCodeListener(LogCodeFoundListener logCodeListener) {
-		this.logCodeListener = logCodeListener;
-	}
-	
-	/**
-	 * Get the current operation related
-	 * to the reserve level set in input.
-	 * @return
-	 */
-	private String getCurrentOperation() {
-		
-		String currentOp = "INVALID: No reserve level was set";
-		
-		if ( reserveLevel == null ) {
-			System.err.println( currentOp );
-			return currentOp;
-		}
 
-		// log
-		switch( reserveLevel ) {
-		case NONE:
-			currentOp = "Unreserve";
-			break;
-		case MINOR:
-			currentOp = "Reserve minor";
-			break;
-		case MAJOR:
-			currentOp = "Reserve major";
-			break;
-		default:
-			break;
-		}
-		
-		return currentOp;
-	}
-	
 	/**
 	 * Reserve a catalogue with a major or minor reserve operation or unreserve it. 
 	 * An additional description on why we reserve the catalogue is mandatory.
@@ -100,35 +52,31 @@ public class Reserve extends SOAPAction {
 	 * @param catalogue the catalogue we want to (un)reserve
 	 * @param reserveLevel the reserve level we want to set (none, minor, major)
 	 * @param reserveDescription a description of why we are (un)reserving
-	 * @return the {@linkplain DcfResponse} enum, if all went ok then it returns OK, 
-	 * if the operation failed it returns NO, if the connection with the DCF failed 
-	 * or some errors occur it returns ERROR
+	 * @return the pending reserve which containes all the information related
+	 * to this reserve request
 	 */
-	public DcfResponse reserve( Catalogue catalogue, ReserveLevel reserveLevel, 
+	public PendingReserve reserve( Catalogue catalogue, ReserveLevel reserveLevel, 
 			String reserveDescription ) {
 		
 		this.catalogue = catalogue;
 		this.reserveLevel = reserveLevel;
 		this.reserveDescription = reserveDescription;
 
-		System.out.println ( getCurrentOperation() + ": " + catalogue );
-		
-		// default response
-		DcfResponse response = DcfResponse.ERROR;
-		
-		// make the reserve operation
-		// and get the dcf response
+		System.out.println ( reserveLevel.getReserveOperation() + ": " + catalogue );
+
+		PendingReserve pr = null;
+
 		try {
 			
-			// get the log response
-			response = (DcfResponse) makeRequest();
-
+			// start the reserve operation
+			pr = (PendingReserve) makeRequest();
+			
 		} catch (SOAPException e) {
+			
 			e.printStackTrace();
 		}
 		
-		// return the response
-		return response;
+		return pr;
 	}
 
 	/**
@@ -168,12 +116,10 @@ public class Reserve extends SOAPAction {
 	}
 
 	/**
-	 * Process the response of the dcf, we check if everything went
-	 * using the log which is returned in the response message. In particular,
-	 * the log code is given. We can export the log using another web service
-	 * and setting the log code as parameter.
-	 * @return {@linkplain DcfResponse} enum, which shows if the request was
-	 * successful or if there were errors.
+	 * Process the response of the dcf. We find the log code of the response
+	 * and pass to the {@link ReserveValidator} thread the task of downloading
+	 * the log document (using the log code) and retrieving the dcf response
+	 * contained in the log.
 	 */
 	@Override
 	public Object processResponse(SOAPMessage soapResponse) throws SOAPException {
@@ -190,138 +136,14 @@ public class Reserve extends SOAPAction {
 			return DcfResponse.ERROR;
 		}
 		
-		System.out.println ( "Found reserve log code " + logCode );
+		System.out.println ( "Reserve: found log code " + logCode );
 
-		// get the response and return it
-		return getLogResponse ( logCode );
-	}
-	
-	
-	/**
-	 * Get the response contained in the Log
-	 * identified by the logCode
-	 * @param logCode the code of the log to download and analyze
-	 * @return the {@linkplain DcfResponse} response of the log
-	 */
-	private DcfResponse getLogResponse ( String logCode ) {
-		
-		int attempts = 12;              // 12 times 10 seconds => 2 minutes
-		long interAttemptsTime = 10000; // 10 seconds
-		
-		// add a pending reserve in order to
-		// retry getting the reserve log in bg 
-		// ( also if the application
-		// is closed! ) if the dcf will be busy
+		// add a pending reserve object to the db
+		// to save the request
 		PendingReserve pr = PendingReserve.addPendingReserve( 
 				logCode, reserveLevel, catalogue, 
 				User.getInstance().getUsername() );
-		
-		// call the log code listener if it was set
-		// we call it here because we have saved the
-		// log code into the database
-		if ( logCodeListener != null )
-			logCodeListener.logCodeFound( logCode );
-		
-		// TODO remove
-		/*if ( true ) {
-			DcfResponse response = DcfResponse.BUSY;
-			response.setPendingReserve( pr );
-			return response;
-		}*/
-		
-		// get the log from the dcf through the pending
-		// reserve action
-		Document log = getLog( logCode, attempts, 
-				interAttemptsTime );
 
-		// get the response
-		DcfResponse response = getLogResponse( log );
-
-		// delete the pending reserve if the
-		// dcf is not busy (the retry is meaningless)
-		if ( response != DcfResponse.BUSY ) {
-			pr.delete();
-		}
-		else {
-			
-			// set the pending reserve to the enum
-			// if dcf is busy
-			response.setPendingReserve( pr );
-		}
-
-		return response;
-	}
-	
-	/**
-	 * Get the log response analyzing the log xml
-	 * @param log the log we want to analyze
-	 * @return the dcf response contained in the log
-	 */
-	public DcfResponse getLogResponse ( Document log ) {
-		
-		// no log is found => dcf is busy
-		if ( log == null )
-			return DcfResponse.BUSY;
-		
-		// analyze the log to get the result
-		LogParser parser = new LogParser ( log );
-
-		// return ok if correct operation
-		if ( parser.isOperationCorrect() ) {
-			System.out.println ( getCurrentOperation() + ": successfully completed" );
-			return DcfResponse.OK;
-		}
-		else {
-			System.out.println ( getCurrentOperation() + ": failed - the dcf rejected the operation" );
-			return DcfResponse.NO;
-		}
-	}
-	
-	/**
-	 * Get a log from the Dcf. Since it is possible that 
-	 * the log is not immediately created by the Dcf, we
-	 * try to get it several times (i.e. attempts parameter)
-	 * @param logCode the code of the log we want to retrieve
-	 * @param attempts the maximum number of attempts
-	 * @param interAttemptsTime the waiting time in milliseconds 
-	 * between one attempt and the other.
-	 * @param retryTime the waiting time in milliseconds which
-	 * is waited to retry the reserve after all attempts failed
-	 * @return the log in a {@linkplain Document} format
-	 * since the log is an xml file.
-	 */
-	public Document getLog( String logCode, int attempts, 
-			long interAttemptsTime ) {
-
-		// try different times to get the dcf log
-		// since it is not created immediately
-		Document log = null;
-
-		// try several times to get the log from the dcf
-		for ( int i = 0; i < attempts; i++ ) {
-
-			// ask for the log to the dcf
-			Dcf dcf = new Dcf();
-			log = dcf.exportLog( logCode );
-
-			// if log found break, otherwise retry
-			if ( log != null ) {
-				break;
-			}
-
-			System.err.println ( "Log not found, retrying attempt n° " 
-					+ (i+1) + "/" + attempts );
-
-			// wait if a next iteration is planned
-			if ( i < attempts - 1 ) {
-				try {
-					Thread.sleep( interAttemptsTime );
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
-		return log;
+		return pr;
 	}
 }

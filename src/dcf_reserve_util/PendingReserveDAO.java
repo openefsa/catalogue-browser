@@ -12,6 +12,7 @@ import catalogue_browser_dao.CatalogueDAO;
 import catalogue_browser_dao.CatalogueEntityDAO;
 import catalogue_browser_dao.DatabaseManager;
 import catalogue_object.Catalogue;
+import dcf_reserve_util.PendingReserve.PendingPriority;
 import dcf_webservice.ReserveLevel;
 
 /**
@@ -26,7 +27,7 @@ public class PendingReserveDAO implements CatalogueEntityDAO<PendingReserve> {
 		
 		int id = -1;
 		String query = "insert into APP.PENDING_RESERVE (RESERVE_LOG_CODE, "
-				+ "RESERVE_LEVEL, CAT_ID, RESERVE_USERNAME) values (?,?,?,?)";
+				+ "RESERVE_LEVEL, CAT_ID, RESERVE_USERNAME, RESERVE_PRIORITY ) values (?,?,?,?,?)";
 		
 		try {
 			
@@ -40,6 +41,7 @@ public class PendingReserveDAO implements CatalogueEntityDAO<PendingReserve> {
 			stmt.setString( 2, object.getReserveLevel().toString() );
 			stmt.setInt( 3, object.getCatalogue().getId() );
 			stmt.setString( 4, object.getUsername() );
+			stmt.setString( 5, object.getPriority().toString() );
 			
 			// insert the pending reserve object
 			stmt.executeUpdate();
@@ -64,7 +66,7 @@ public class PendingReserveDAO implements CatalogueEntityDAO<PendingReserve> {
 	@Override
 	public boolean remove( PendingReserve object ) {
 
-		String query = "delete from APP.PENDING_RESERVE where CAT_ID = ?";
+		String query = "delete from APP.PENDING_RESERVE where RESERVE_ID = ?";
 		
 		try {
 			
@@ -72,7 +74,7 @@ public class PendingReserveDAO implements CatalogueEntityDAO<PendingReserve> {
 			
 			PreparedStatement stmt = con.prepareStatement( query );
 			
-			stmt.setInt( 1, object.getCatalogue().getId() );
+			stmt.setInt( 1, object.getId() );
 			
 			// remove
 			stmt.executeUpdate();
@@ -90,8 +92,36 @@ public class PendingReserveDAO implements CatalogueEntityDAO<PendingReserve> {
 	}
 
 	@Override
-	public boolean update(PendingReserve object) {
-		// TODO Auto-generated method stub
+	public boolean update( PendingReserve pr ) {
+		
+		String query = "update APP.PENDING_RESERVE set RESERVE_LOG_CODE = ?, "
+				+ "RESERVE_LEVEL = ?, CAT_ID = ?, RESERVE_USERNAME = ?, RESERVE_PRIORITY = ? "
+				+ "where RESERVE_ID = ?";
+		
+		try {
+			
+			Connection con = DatabaseManager.getMainDBConnection();
+			PreparedStatement stmt = con.prepareStatement( query );
+			
+			// set the parameters
+			stmt.setString( 1, pr.getLogCode() );
+			stmt.setString( 2, pr.getReserveLevel().toString() );
+			stmt.setInt( 3, pr.getCatalogue().getId() );
+			stmt.setString( 4, pr.getUsername() );
+			stmt.setString( 5, pr.getPriority().toString() );
+			stmt.setInt( 6, pr.getId() );
+			
+			stmt.executeUpdate();
+			
+			stmt.close();
+			con.close();
+			
+			return true;
+			
+		} catch ( SQLException e ) {
+			e.printStackTrace();
+		}
+		
 		return false;
 	}
 
@@ -100,7 +130,7 @@ public class PendingReserveDAO implements CatalogueEntityDAO<PendingReserve> {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 	@Override
 	public PendingReserve getByResultSet(ResultSet rs) throws SQLException {
 		
@@ -109,12 +139,13 @@ public class PendingReserveDAO implements CatalogueEntityDAO<PendingReserve> {
 		ReserveLevel level = ReserveLevel.valueOf( rs.getString( "RESERVE_LEVEL" ) );
 		int catId = rs.getInt( "CAT_ID" );
 		String username = rs.getString( "RESERVE_USERNAME" );
+		PendingPriority priority = PendingPriority.valueOf( rs.getString( "RESERVE_PRIORITY" ) );
 		
 		// get the catalogue related to the code and version
 		CatalogueDAO catDao = new CatalogueDAO();
 		Catalogue catalogue = catDao.getById( catId );
 		
-		PendingReserve pr = new PendingReserve( logCode, level, catalogue, username );
+		PendingReserve pr = new PendingReserve( logCode, level, catalogue, username, priority );
 		pr.setId( id );
 		
 		return pr;
@@ -149,5 +180,44 @@ public class PendingReserveDAO implements CatalogueEntityDAO<PendingReserve> {
 		}
 		
 		return out;
+	}
+	
+	/**
+	 * Get a pending reserve by the related catalogue. We can have
+	 * only one catalogue related to the pending reserves, thus we
+	 * can use this method as a bijective function
+	 * @param catalogue
+	 * @return
+	 */
+	public PendingReserve getByCatalogue ( Catalogue catalogue ) {
+		
+		PendingReserve pr = null;
+		
+		String query = "select * from APP.PENDING_RESERVE where CAT_ID = ?";
+		
+		try {
+			
+			Connection con = DatabaseManager.getMainDBConnection();
+			
+			PreparedStatement stmt = con.prepareStatement( query );
+			
+			stmt.setInt( 1, catalogue.getId() );
+			
+			ResultSet rs = stmt.executeQuery();
+			
+			// get all the pending reserve obj
+			if ( rs.next() )
+				pr = getByResultSet(rs);
+			
+			rs.close();
+			stmt.close();
+			con.close();
+			
+		} catch ( SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return pr;
+		
 	}
 }

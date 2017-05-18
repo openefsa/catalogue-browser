@@ -128,7 +128,7 @@ public class FormUserPreferences implements RestoreableWindow {
 			protected Object getValue(Object arg0) {
 				
 				// get the information from the user properties file
-				String value = ( (CataloguePreference) arg0 ).getValue();
+				String value = ( (Preference) arg0 ).getValue();
 				
 				if ( value == null )
 					value = Messages.getString("FormUserPreferences.NotFound"); //$NON-NLS-1$
@@ -156,7 +156,7 @@ public class FormUserPreferences implements RestoreableWindow {
 		viewerColumnCode.setLabelProvider( new ColumnLabelProvider() {
 			@Override
 			public String getText ( Object element ) {
-				String p = ( (CataloguePreference) element ).getKey();
+				String p = ( (Preference) element ).getKey();
 				return p;
 			}
 		} );
@@ -176,7 +176,7 @@ public class FormUserPreferences implements RestoreableWindow {
 		viewerColumnName.setLabelProvider( new ColumnLabelProvider() {
 			@Override
 			public String getText ( Object element ) {
-				String p = ( (CataloguePreference) element ).getValue();
+				String p = ( (Preference) element ).getValue();
 				return p;
 			}
 		} );
@@ -239,7 +239,7 @@ public class FormUserPreferences implements RestoreableWindow {
 			@Override
 			protected Object getValue(Object arg0) {
 
-				CataloguePreference pref = (CataloguePreference) arg0;
+				Preference pref = (Preference) arg0;
 				
 				// get the information from the user properties file
 				Object value = pref.getValue();
@@ -270,7 +270,7 @@ public class FormUserPreferences implements RestoreableWindow {
 			@Override
 			protected CellEditor getCellEditor(Object arg0) {
 				
-				CataloguePreference pref = (CataloguePreference) arg0;
+				Preference pref = (Preference) arg0;
 				
 				if ( pref.getType() == PreferenceType.BOOLEAN ) {
 					return new ComboBoxCellEditor( table.getTable(), new String[] { "true", "false" } );
@@ -283,7 +283,7 @@ public class FormUserPreferences implements RestoreableWindow {
 			protected boolean canEdit(Object arg0) {
 				
 				// do not edit favourite picklist
-				CataloguePreference pref = (CataloguePreference) arg0;
+				Preference pref = (Preference) arg0;
 				if ( pref.getKey().equals( CataloguePreference.currentPicklistKey ) )
 					return false;
 				

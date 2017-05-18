@@ -9,18 +9,14 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
-import catalogue_object.Catalogue;
 import dcf_manager.Dcf;
-import dcf_reserve_util.ForcedEditingListener;
-import dcf_reserve_util.ReserveFinishedListener;
-import dcf_reserve_util.RetryReserveBuilder;
+import dcf_reserve_util.DefaultListeners;
 import dcf_user.User;
-import dcf_webservice.DcfResponse;
 import dcf_webservice.ReserveLevel;
 import messages.Messages;
 import ui_main_panel.FormDCFLogin;
 import ui_main_panel.FormDCFLogin.CredentialListener;
-import ui_main_panel.ShellLocker;
+import ui_main_panel.UpdateableUI;
 
 public class LoginMenu implements MainMenuItem {
 
@@ -102,10 +98,10 @@ public class LoginMenu implements MainMenuItem {
 								refresh();
 								
 								// once we have finished checking the user
-								// level we start with the retry requests
+								// level we start with the pending reserves
 								// we do this here to avoid concurrence
 								// editing of the database
-								createRetryRequest().build();
+								startPendingReserves();
 								
 								// call the login listener to update the
 								// graphics of the main panel
@@ -134,13 +130,32 @@ public class LoginMenu implements MainMenuItem {
 	public void refresh() {};
 	
 	/**
-	 * Create the retry request for the pending reserves
+	 * Start all the pending reserves in the database
 	 * @return
 	 */
-	public RetryReserveBuilder createRetryRequest() {
+	public void startPendingReserves() {
 		
 		Dcf dcf = new Dcf();
 		
+		dcf.startPendingReserves( 
+				DefaultListeners.getReserveListener( 
+						new UpdateableUI() {
+			
+			@Override
+			public void updateUI(Object data) {
+				
+				if ( data instanceof ReserveLevel )
+					// update the UI since the reserve level
+					// is potentially changed
+					mainMenu.update( data );
+			}
+			
+			@Override
+			public Shell getShell() {
+				return shell;
+			}
+		}));
+		/*
 		RetryReserveBuilder builder = dcf.retryAllPendingReserve();
 		
 		// called when the catalogue is being reserved
@@ -233,6 +248,8 @@ public class LoginMenu implements MainMenuItem {
 					@Override
 					public void run() {
 
+						System.out.println ( "Warning user from login menu" );
+						
 						// Warn the user
 						mainMenu.warnDcfResponse( catalogue, response, null );
 						
@@ -243,6 +260,6 @@ public class LoginMenu implements MainMenuItem {
 			}
 		});
 		
-		return builder;
+		return builder;*/
 	}
 }

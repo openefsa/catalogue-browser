@@ -15,11 +15,11 @@ import org.w3c.dom.Document;
 
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_object.Catalogue;
-import dcf_log_util.LogRetriever;
+import dcf_reserve_util.BackgroundReserve;
 import dcf_reserve_util.PendingReserve;
 import dcf_reserve_util.PendingReserveDAO;
-import dcf_reserve_util.ReserveBuilder;
-import dcf_reserve_util.RetryReserveBuilder;
+import dcf_reserve_util.ReserveListener;
+import dcf_reserve_util.ReserveValidator;
 import dcf_user.User;
 import dcf_user.UserAccessLevel;
 import dcf_webservice.ExportCatalogue;
@@ -356,47 +356,51 @@ public class Dcf {
 	}
 	
 	/**
-	 * Create a base reserve request and return it.
+	 * Start a reserve operation in background.
 	 * @param catalogue the catalogue we want to reserve
-	 * @param level the reserve level we want, set to {@link ReserveLevel.NONE}
-	 * to unreserve the catalogue
-	 * @param description the reserve description
-	 * @return a {@link ReserveBuilder} to create step by step the
-	 * reserve request.
+	 * @param level the reserve level we want
+	 * @param description
+	 * @param listener listener called when reserve events occur
+	 * see {@link ReserveListener} to check which are the events
 	 */
-	public ReserveBuilder createReserveRequest ( Catalogue catalogue, 
-			ReserveLevel level, String description ) {
+	public void reserve ( Catalogue catalogue, 
+			ReserveLevel level, String description, ReserveListener listener ) {
 		
-		// create a builder and return it
-		ReserveBuilder builder = new ReserveBuilder(catalogue, level, description);
+		BackgroundReserve reserve = new BackgroundReserve( catalogue, 
+				level, description );
 		
-		return builder;
-	}
-
-	/**
-	 * Prepare a retry builder for a specific pending reserve
-	 * Note that here no check on who made the pending reserve
-	 * is done (contrarily to {@link #retryAllPendingReserve()})
-	 * @param pr the pending reserve we want to retry
-	 * @return a builder to create the retry process, set
-	 * all the listener before and then call {@link RetryReserveBuilder#build()}
-	 * to start the process
-	 */
-	public RetryReserveBuilder retryPendingReserve ( PendingReserve pr ) {
-		return new RetryReserveBuilder( pr );
+		reserve.setListener( listener );
+		reserve.setProgressBar( progressBar );
+		reserve.start();
 	}
 	
 	/**
-	 * Prepare all the pending reserve threads of this user.
-	 * @return a builder which refers to all the pending reserve
-	 * threads ( see {@link LogRetriever} ).
+	 * Start a single pending reserve process
+	 * @param pr the pending reserve we want to start (i.e. we want
+	 * to check if the dcf finished the reserve operation related
+	 * to the pending reserve
+	 * @param listener called to listen reserve events
 	 */
-	public RetryReserveBuilder retryAllPendingReserve () {
+	public void startPendingReserve ( PendingReserve pr, ReserveListener listener ) {
+		
+		// start the validator for the current pending reserve
+		ReserveValidator validator = new ReserveValidator( pr, listener );
+		validator.setProgressBar( progressBar );
+		validator.start();
+	}
+	
+	/**
+	 * Start all the pending reserves in the database of this user
+	 * Be aware that this method should be called only if no pending
+	 * reserve is currently running, otherwise you will get a duplicated
+	 * process for the same pending reserve.
+	 * @param listener listener which listens to several
+	 * reserve events, used mainly to notify the user
+	 */
+	public void startPendingReserves ( ReserveListener listener ) {
 
 		PendingReserveDAO prDao = new PendingReserveDAO();
-		
-		ArrayList<PendingReserve> userPrs = new ArrayList<>();
-		
+
 		// for each pending reserve action (i.e. reserve
 		// actions which did not finish until now, this
 		// includes also the requests made in other
@@ -408,9 +412,7 @@ public class Dcf {
 			if ( !pr.madeBy( User.getInstance() ) )
 				continue;
 			
-			userPrs.add( pr );
+			startPendingReserve ( pr, listener );
 		}
-		
-		return new RetryReserveBuilder( userPrs );
 	}
 }

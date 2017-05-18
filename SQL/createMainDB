@@ -134,7 +134,8 @@ create table APP.PENDING_RESERVE (
 	RESERVE_LOG_CODE varchar(500) not null, -- code of the log related to the pending reserve action
 	RESERVE_LEVEL varchar(50) not null,     -- the reserve level (none, minor, major)
 	CAT_ID integer not null,
-	RESERVE_USERNAME varchar(50) not null   -- the name of the user which made the reserve
+	RESERVE_USERNAME varchar(50) not null,  -- the name of the user which made the reserve
+	RESERVE_PRIORITY varchar(50) not null   -- fast or slow, how fast we should complete the reserve
 );
 
 -- add the unique contraint to the log id field

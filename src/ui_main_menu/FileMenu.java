@@ -22,7 +22,6 @@ import dcf_manager.Dcf;
 import dcf_user.User;
 import import_catalogue.ImportActions;
 import messages.Messages;
-import ui_general_graphics.DialogSingleText;
 import ui_main_panel.DownloadCatalogueFrom;
 import ui_main_panel.FormCataloguesList;
 import ui_main_panel.FormLocalCatalogueName;
@@ -138,7 +137,8 @@ public class FileMenu implements MainMenuItem {
 				}
 				catch ( DuplicatedCatalogueException exception ) {
 					
-					mainMenu.handleError( Messages.getString( "BrowserMenu.NewLocalCatErrorTitle" ),
+					GlobalUtil.showErrorDialog( shell, 
+							Messages.getString( "BrowserMenu.NewLocalCatErrorTitle" ),
 							Messages.getString( "BrowserMenu.NewLocalCatErrorMessage" ) );
 					
 					GlobalUtil.setShellCursor( menu.getShell() , SWT.CURSOR_ARROW );
@@ -153,8 +153,10 @@ public class FileMenu implements MainMenuItem {
 				// reset the standard cursor
 				GlobalUtil.setShellCursor( menu.getShell() , SWT.CURSOR_ARROW );
 				
-				mainMenu.warnUser( Messages.getString("NewLocalCat.DoneTitle"),
-						Messages.getString("NewLocalCat.DoneMessage") );
+				GlobalUtil.showDialog(shell, 
+						Messages.getString("NewLocalCat.DoneTitle"),
+						Messages.getString("NewLocalCat.DoneMessage"), 
+						SWT.ICON_WARNING );
 			}
 		} );
 		
@@ -194,9 +196,10 @@ public class FileMenu implements MainMenuItem {
 						@Override
 						public void handleEvent(Event event) {
 							
-							// warn the user that the downlaod was successful
-							mainMenu.warnUser ( Messages.getString( "BrowserMenu.DownloadSuccessTitle" ),
-									Messages.getString( "BrowserMenu.DownloadSuccessMessage" ) );
+							GlobalUtil.showDialog(shell, 
+									Messages.getString( "BrowserMenu.DownloadSuccessTitle" ),
+									Messages.getString( "BrowserMenu.DownloadSuccessMessage" ),
+									SWT.ICON_WARNING );
 						}
 					} );
 					
@@ -214,8 +217,9 @@ public class FileMenu implements MainMenuItem {
 						message = Messages.getString("BrowserMenu.DownloadCmdErrorMessage2");
 
 					// call the error listener
-					mainMenu.handleError( Messages.getString("BrowserMenu.DownloadCmdErrorTitle"),
-							message );
+					GlobalUtil.showErrorDialog(shell, 
+							Messages.getString("BrowserMenu.DownloadCmdErrorTitle"),
+							message);
 				}
 			}
 
@@ -365,9 +369,10 @@ public class FileMenu implements MainMenuItem {
 						// finished (needed to refresh open and delete buttons)
 						mainMenu.refresh();
 						
-						// warn the user that the import was successful
-						mainMenu.warnUser ( Messages.getString("BrowserMenu.ImportSuccessTitle"),
-								Messages.getString( "BrowserMenu.ImportSuccessMessage" ) );
+						GlobalUtil.showDialog(shell, 
+								Messages.getString("BrowserMenu.ImportSuccessTitle"),
+								Messages.getString( "BrowserMenu.ImportSuccessMessage" ),
+								SWT.ICON_WARNING );
 					}
 				} );
 			}

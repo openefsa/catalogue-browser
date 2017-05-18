@@ -20,6 +20,8 @@ import catalogue_browser_dao.TermDAO;
 import data_transformation.BooleanConverter;
 import data_transformation.DateTrimmer;
 import dcf_manager.Dcf;
+import dcf_reserve_util.PendingReserve;
+import dcf_reserve_util.PendingReserveDAO;
 import dcf_user.User;
 import dcf_webservice.ReserveLevel;
 import detail_level.DetailLevelDAO;
@@ -61,8 +63,6 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	private boolean local;    // if the catalogue is a new local catalogue or not
 	private ReserveLevel reserveLevel;  // the reserve level of the catalogue
 	private String reserveUsername;     // the user who reserved the catalogue
-
-	private boolean reserving; // if we are reserving/unreserving the catalogue (on going operation)
 	
 	// list of terms which are contained in the catalogue
 	private HashMap< Integer, Term > terms;
@@ -837,13 +837,14 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * @param reserveLevel the reserve level needed. Both
 	 * {@link ReserveLevel.MINOR} or 
 	 * {@link ReserveLevel.MAJOR} are accepted.
+	 * @return the new internal version of the catalogue which was created
 	 */
-	public synchronized void reserve( ReserveLevel reserveLevel ) {
+	public synchronized Catalogue reserve( ReserveLevel reserveLevel ) {
 		
 		if ( reserveLevel.isNone() ) {
 			System.err.println ( "You are reserving a catalogue with ReserveLevel.NONE "
 					+ "as reserve level, use unreserve instead" );
-			return;
+			return null;
 		}
 		
 		User user = User.getInstance();
@@ -862,20 +863,8 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		// reserve the new catalogue in the DB
 		reserveDao.reserveCatalogue( newCatalogue.getReserveUsername(), 
 				newCatalogue.getReserveLevel() );
-
 		
-		Catalogue currentCat = GlobalManager.getInstance().getCurrentCatalogue();
-		
-		// close this catalogue and open the new one if
-		// the current catalogue is the same of the new one
-		// that is, the previous version of the catalogue is opened
-		// (we refresh things, otherwise do nothing)
-		if ( currentCat != null && currentCat.equals( newCatalogue ) )
-			newCatalogue.open();
-		
-		// if we successfully reserved the catalogue
-		// we can remove the force edit if it was enabled
-		removeForceEdit( user.getUsername() );
+		return newCatalogue;
 	}
 	
 	/**
@@ -949,19 +938,16 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	}
 	
 	/**
-	 * Check if the catalogue is being (un)reserved or not by the DCF
+	 * Check if a pending reserve/unreserve operation
+	 * is in process or not regarding this catalogue.
 	 * @return
 	 */
 	public boolean isReserving() {
-		return reserving;
-	}
-	
-	/**
-	 * Set if the dcf is (un)reserving the catalogue
-	 * @param reserving
-	 */
-	public void setReserving(boolean reserving) {
-		this.reserving = reserving;
+		
+		PendingReserveDAO prDao = new PendingReserveDAO();
+		PendingReserve pr = prDao.getByCatalogue ( this );
+		
+		return pr != null;
 	}
 	
 	/**
@@ -977,7 +963,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		// and the catalogue is the last available
 		// version of the catalogue and the catalogue
 		// is not local and it is not deprecated
-		if ( reserveUsername == null && !hasUpdate() 
+		if ( !isReserved() && !hasUpdate() 
 				&& !local && !isDeprecated() && !isForceEdit( username ) )
 			return true;
 		
@@ -990,21 +976,18 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * @return
 	 */
 	public boolean isUnreservable () {
-		
-		// false if no user had reserved the catalogue
-		// we cannot unreserve it
-		if ( reserveUsername == null )
-			return false;
 
 		User user = User.getInstance();
 		
-		// if another user resereved the catalogue we cannot
-		// unreserve it
-		if ( !user.getUsername().equals( reserveUsername ) 
-				|| !isLastRelease() || isForceEdit( user.getUsername() ) )
-			return false;
+		// if the user had reserved the catalogue
+		// if this is the last release
+		// and if no force editing is applied
+		if ( isReservedBy( user ) 
+				&& isLastRelease() 
+				&& !isForceEdit( user.getUsername() ) )
+			return true;
 		
-		return true;
+		return false;
 	}
 
 	/**
@@ -1389,19 +1372,11 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		if ( lastPublishedRelease == null )
 			return lastLocalVersion;
 		
-		// if the local version is greater than the published one 
-		// we have a local copy which is more updated (since we have
-		// reserved it maybe)
-		
-		boolean isUpdated = lastLocalVersion.getVersion().compareTo( 
-				lastPublishedRelease.getVersion() ) > 0;
-		
-		// if we have the local catalogue being the most updated
-		// we return it
-		if ( isUpdated )
-			return lastLocalVersion;
-		else  // otherwise return the published one
+		// if local < published
+		if ( lastLocalVersion.isOlder( lastPublishedRelease ) )
 			return lastPublishedRelease;
+		else
+			return lastLocalVersion;
 	}
 	
 	/**

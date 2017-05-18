@@ -23,15 +23,9 @@ import already_described_terms.PicklistTerm;
 import catalogue_browser_dao.AttributeDAO;
 import catalogue_browser_dao.DatabaseManager;
 import catalogue_object.Catalogue;
-import dcf_log_util.LogCodeFoundListener;
 import dcf_manager.Dcf;
-import dcf_reserve_util.ForcedEditingListener;
-import dcf_reserve_util.ReserveBuilder;
-import dcf_reserve_util.ReserveFinishedListener;
-import dcf_reserve_util.ReserveResult;
-import dcf_reserve_util.ReserveStartedListener;
+import dcf_reserve_util.DefaultListeners;
 import dcf_user.User;
-import dcf_webservice.DcfResponse;
 import dcf_webservice.ReserveLevel;
 import export_catalogue.ExportActions;
 import import_catalogue.ImportActions;
@@ -39,7 +33,7 @@ import messages.Messages;
 import ui_general_graphics.DialogSingleText;
 import ui_main_panel.AttributeEditor;
 import ui_main_panel.HierarchyEditor;
-import ui_main_panel.ShellLocker;
+import ui_main_panel.UpdateableUI;
 import ui_progress_bar.FormProgressBar;
 import user_preferences.CataloguePreferenceDAO;
 import user_preferences.FormSearchOptions;
@@ -441,8 +435,10 @@ public class ToolsMenu implements MainMenuItem {
 					public void handleEvent(Event arg0) {
 						
 						// warn the user that everything went ok
-						mainMenu.warnUser( Messages.getString( "Export.DoneTitle" ), 
-								Messages.getString( "Export.DoneMessage" ) );
+						GlobalUtil.showDialog( shell, 
+								Messages.getString( "Export.DoneTitle" ), 
+								Messages.getString( "Export.DoneMessage" ),
+								SWT.ICON_WARNING );
 					}
 				});
 			}
@@ -940,11 +936,7 @@ public class ToolsMenu implements MainMenuItem {
 		GlobalUtil.setShellCursor( shell, SWT.CURSOR_WAIT );
 		
 		// create a reserve request for the catalogue
-		ReserveBuilder builder = createReserveRequest( mainMenu.getCatalogue(), 
-				level, text );
-		
-		// send the request
-		builder.build();
+		reserve( mainMenu.getCatalogue(), level, text );
 		
 		// restore cursor
 		GlobalUtil.setShellCursor( shell, SWT.CURSOR_ARROW );
@@ -960,8 +952,8 @@ public class ToolsMenu implements MainMenuItem {
 	 * @param text
 	 * @return the {@link ReserveBuilder} with all the listeners set
 	 */
-	private ReserveBuilder createReserveRequest( Catalogue catalogue, 
-			final ReserveLevel level, String text ) {
+	private void reserve( Catalogue catalogue, 
+			final ReserveLevel level, String description ) {
 
 		// reserve the catalogue
 		Dcf dcf = new Dcf();
@@ -974,204 +966,27 @@ public class ToolsMenu implements MainMenuItem {
 		progressBar.setLocation( progressBar.getLocation().x, 
 				progressBar.getLocation().y + 170 );
 
-		// create the request builder
-		ReserveBuilder builder = dcf.createReserveRequest( mainMenu.getCatalogue(), level, text );
-
-		// set the progress bar for the request
-		builder.setProgressBar( progressBar );
+		dcf.setProgressBar( progressBar );
 		
-		// listener called when the reserve starts
-		builder.setStartListener( new ReserveStartedListener() {
-
-			@Override
-			public void reserveStarted( final ReserveResult reserveLog ) {
-				shell.getDisplay().syncExec( new Runnable() {
+		dcf.reserve( catalogue, 
+				level, 
+				description, 
+				DefaultListeners.getReserveListener( new UpdateableUI() {
 
 					@Override
-					public void run() {
+					public void updateUI(Object data) {
 
-						// lock the closure of the window since
-						// we are making important things
-						ShellLocker.setLock( shell, 
-								Messages.getString( "MainPanel.CannotCloseTitle" ), 
-								Messages.getString( "MainPanel.CannotCloseMessage" ) );
-
-						// Warn user of the performed actions
-						warnLog ( reserveLog );
+						if ( data instanceof ReserveLevel )
+							// update the UI since the reserve level
+							// is potentially changed
+							mainMenu.update( data );
 					}
-				});
-			}
-		});
-
-		// called when the reserve finishes
-		builder.setFinishlistener( new ReserveFinishedListener() {
-			
-			@Override
-			public void reserveFinished( final Catalogue catalogue, 
-					final DcfResponse response ) {
-
-				// notify the user when the reserve
-				// was successfully finished or if
-				// errors occurred
-				shell.getDisplay().syncExec( new Runnable() {
 
 					@Override
-					public void run() {
-						
-						// remove the lock from the shell
-						ShellLocker.removeLock( shell );
-
-						// if busy we force editing => we update UI
-						if ( response == DcfResponse.OK || 
-								( level.greaterThan( ReserveLevel.NONE ) 
-										&& response == DcfResponse.BUSY ) ) {
-							
-							// notify the observers that the reserve level has changed
-							mainMenu.update( level );
-						}
-						
-						// show dialog
-						mainMenu.warnDcfResponse( catalogue, response, level );
+					public Shell getShell() {
+						return shell;
 					}
-				});
-			}
-		});
-		
-		// called when the log code of the request is found
-		builder.setLogCodeListener( new LogCodeFoundListener() {
-			
-			@Override
-			public void logCodeFound(String logCode) {
-				
-				shell.getDisplay().syncExec( new Runnable() {
-					
-					@Override
-					public void run() {
-						// remove the lock from the shell
-						ShellLocker.removeLock( shell );
-					}
-				});
-			}
-		});
-		
-		// called if a new version of the catalogue was downloaded
-		builder.setNewVersionListener( new Listener() {
-			
-			@Override
-			public void handleEvent(Event arg0) {
-				
-				shell.getDisplay().syncExec( new Runnable() {
-					
-					@Override
-					public void run() {
-						
-						// Warn user that a new version of the catalogue
-						// is being downloaded
-						mainMenu.warnUser ( Messages.getString("Reserve.OldTitle"),
-								Messages.getString( "Reserve.OldMessage" ) );
-						
-						// change progress bar label
-						progressBar.setLabel( Messages.getString("Reserve.NewInternalTitle2") );
-					}
-				});
-			}
-		});
-		
-		// called when the catalogue is about to be reserved
-		// (just before calling the reserve request)
-		builder.setStartReserveListener( new Listener() {
-			
-			@Override
-			public void handleEvent(Event arg0) {
-				
-				shell.getDisplay().syncExec( new Runnable() {
-
-					@Override
-					public void run() {
-
-						// lock the closure of the window since
-						// we are creating a new db
-						ShellLocker.setLock( shell, 
-								Messages.getString( "MainPanel.CannotCloseTitle" ), 
-								Messages.getString( "MainPanel.CannotCloseMessage" ) );
-					}
-				});
-			}
-		});
-		
-		builder.setForcedEditListener( new ForcedEditingListener() {
-			
-			@Override
-			public void editingRemoved( final Catalogue catalogue, 
-					String username, final ReserveLevel level) {
-				
-				shell.getDisplay().syncExec( new Runnable() {
-					
-					@Override
-					public void run() {
-
-						// update the UI based on the forced reserve level
-						mainMenu.update( level );
-					}
-				});
-			}
-			
-			@Override
-			public void editingForced( final Catalogue catalogue, String username, 
-					final ReserveLevel level) {
-				
-				shell.getDisplay().syncExec( new Runnable() {
-					
-					@Override
-					public void run() {
-						
-						// update the UI based on the forced reserve level
-						mainMenu.update( level );
-						
-						// warn that the dcf is busy and the catalogue
-						// editing mode was forced
-						mainMenu.warnDcfResponse( catalogue, DcfResponse.BUSY, level );
-					}
-				});
-			}
-		});
-		
-		return builder;
-	}
-	
-	/**
-	 * Warn the user based on the reserve log status
-	 * the correct reserve and not reserving are not included
-	 * since are covered by the start listener of the reserve log
-	 * (Otherwise they would have been called two times)
-	 * @param reserveLog
-	 */
-	private void warnLog ( ReserveResult reserveLog ) {
-		
-		// Warn user of the performed actions
-
-		switch ( reserveLog ) {
-		case ERROR:
-			mainMenu.handleError ( Messages.getString("Reserve.GeneralErrorTitle"),
-					Messages.getString( "Reserve.GeneralErrorMessage" ) );
-			break;
-			
-		case MINOR_FORBIDDEN:
-			mainMenu.handleError ( Messages.getString("Reserve.MinorErrorTitle"),
-					Messages.getString( "Reserve.MinorErrorMessage" ) );
-			break;
-			
-		case OLD_VERSION:
-			break;
-			
-		case CORRECT_VERSION:
-		case NOT_RESERVING:
-
-			// say to the user that the reserve started
-			mainMenu.warnUser ( Messages.getString("Reserve.ReserveStartedTitle"),
-					Messages.getString( "Reserve.ReserveStartedMessage" ) );
-		default:
-			break;
-		}
+				} ) 
+			);
 	}
 }

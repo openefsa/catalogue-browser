@@ -9,11 +9,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 
 import catalogue_object.Catalogue;
-import dcf_webservice.DcfResponse;
-import dcf_webservice.ReserveLevel;
 import global_manager.GlobalManager;
-import messages.Messages;
-import utilities.GlobalUtil;
 
 /**
  * Main menu of the catalogue browser. The menu bar is subdivided in
@@ -119,81 +115,6 @@ public class MainMenu extends Observable implements Observer {
 	 */
 	public Catalogue getCatalogue() {
 		return catalogue;
-	}
-	
-	/**
-	 * Call the error listener. Return true if the listener was called
-	 * @param strings
-	 */
-	protected void handleError( String title, String message ) {
-		GlobalUtil.showErrorDialog( shell, title, message );
-	}
-	
-	/**
-	 * Notify the user of some actions
-	 * @param title
-	 * @param message
-	 */
-	protected void warnUser ( String title, String message ) {
-		GlobalUtil.showDialog( shell, title, message, SWT.ICON_INFORMATION );
-	}
-	
-	/**
-	 * Warn the user based on the dcf response
-	 * @param catalogue additional information to show, set to null otherwise
-	 * @param response
-	 * @param level the reserve level we wanted, set to null if not needed
-	 */
-	protected void warnDcfResponse ( Catalogue catalogue, DcfResponse response, ReserveLevel level ) {
-		
-		String preMessage = "";
-		
-		if ( catalogue != null )
-			preMessage = catalogue.getCode() + " - " 
-					+ catalogue.getVersion() + ": ";
-		
-		switch ( response ) {
-		
-		// if wrong reserve operation notify the user
-		case ERROR:
-			handleError( Messages.getString( "Reserve.ErrorTitle" ),
-					preMessage + Messages.getString( "Reserve.ErrorMessage" ) );
-			break;
-		
-		case BUSY:
-			
-			// warn user according to the reserve level
-			
-			if ( level != null && level.greaterThan( ReserveLevel.NONE ) ) {
-				warnUser( Messages.getString( "Reserve.BusyTitle" ),
-						preMessage + Messages.getString( "Reserve.BusyMessage" ) );
-			}
-			else {
-
-				if ( level != null ) {
-					warnUser( Messages.getString( "Unreserve.BusyTitle" ),
-							preMessage + Messages.getString( "Unreserve.BusyMessage" ) );
-				}
-			}
-			break;
-			
-		// if the catalogue is already reserved
-		case NO:
-			handleError( Messages.getString( "Reserve.NoTitle" ),
-					preMessage + Messages.getString( "Reserve.NoMessage" ) );
-			break;
-
-		// if everything went ok
-		case OK:
-			
-			// warn the user that the operation went fine
-			warnUser( Messages.getString( "Reserve.OkTitle" ),
-					preMessage + Messages.getString( "Reserve.OkMessage" ) );
-			
-			break;
-		default:
-			break;
-		}
 	}
 
 	@Override

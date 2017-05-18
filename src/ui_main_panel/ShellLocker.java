@@ -10,13 +10,13 @@ import org.eclipse.swt.widgets.Shell;
  * This class is used to block the
  * closure of the application if
  * some important operations are
- * processed.
+ * processed. Note that you cannot
+ * use the close listener of the shell
+ * if you use this class
  * @author avonva
  *
  */
 public class ShellLocker {
-	
-	private static Listener listener;
 	
 	/**
 	 * Set the lock on the shell.
@@ -26,7 +26,7 @@ public class ShellLocker {
 			final String title, final String message ) {
 		
 		// save the listener in order to be able to remove it after
-		listener = new Listener() {
+		Listener listener = new Listener() {
 			
 			@Override
 			public void handleEvent( Event event ) {
@@ -44,6 +44,8 @@ public class ShellLocker {
 
 		// add the listener
 		shell.addListener( SWT.Close, listener );
+		
+		System.out.println( "Shell lock set" );
 	}
 	
 	/**
@@ -51,9 +53,15 @@ public class ShellLocker {
 	 * @param shell
 	 */
 	public static void removeLock ( final Shell shell ) {
-		
-		// remove the old listener
-		if ( listener != null )
-			shell.removeListener( SWT.Close, listener );
+
+		// remove the old listeners
+		Listener[] listeners = shell.getListeners( SWT.Close );
+
+		for ( Listener l : listeners ) {
+			
+			shell.removeListener( SWT.Close, l );
+
+			System.out.println( "Shell lock removed" );
+		}
 	}
 }
