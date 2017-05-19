@@ -83,7 +83,6 @@ public class VersionChecker {
 		// clone the catalogue and set the new version
 		Catalogue newVersionCat = catalogue.clone();
 		newVersionCat.setVersion( newVersion );
-		newVersionCat.setStatus( "DRAFT INTERNAL" );
 
 		// set the backup db path with the old catalogue version db
 		newVersionCat.setBackupDbPath( catalogue.getDbFullPath() );

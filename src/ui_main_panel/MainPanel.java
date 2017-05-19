@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
 import catalogue_object.Catalogue;
@@ -28,7 +29,12 @@ import global_manager.GlobalManager;
 import messages.Messages;
 import session_manager.RestoreableWindow;
 import session_manager.WindowPreference;
+import ui_main_menu.FileMenu;
+import ui_main_menu.LoginMenu;
 import ui_main_menu.MainMenu;
+import ui_main_menu.MenuListener;
+import ui_main_menu.ToolsMenu;
+import ui_main_menu.ViewMenu;
 import ui_search_bar.HierarchyChangedListener;
 import ui_search_bar.HierarchyEvent;
 import ui_search_bar.SearchEvent;
@@ -379,103 +385,110 @@ public class MainPanel implements Observer, RestoreableWindow {
 		// create the main menu and set its listener for some buttons
 		menu = new MainMenu( shell );
 
-		// when the menu makes actions which need refreshing graphics
-		menu.addUpdateListener( new Listener() {
-
+		menu.setFileListener( new MenuListener() {
+			
 			@Override
-			public void handleEvent(Event event) {
-				tabPanel.setTerm( tree.getFirstSelectedTerm() );
-				refresh();
-			}
-		});
-
-
-		// if an import excel is performed we refresh the graphics
-		menu.addImportListener( new Listener() {
-
-			@Override
-			public void handleEvent(Event event) {
+			public void buttonPressed( MenuItem button, int code, Event event ) {
 				
-				// get the current catalogue
-				Catalogue catalogue = GlobalManager.getInstance()
-						.getCurrentCatalogue();
+				switch ( code ) {
+				case FileMenu.OPEN_CAT_MI:
+					
+					removeData();
+					
+					refresh();
+					
+					// get the selected catalogue
+					Catalogue catalogue = (Catalogue) event.data;
 
-				// enable user interface if the catalogue is not empty
-				if ( catalogue != null && !catalogue.isEmpty() ) {
-					enableUI( true );
-					loadData( catalogue );
+					// enable the user interface only if we have data in the current catalogue
+					if ( !catalogue.isEmpty() ) {
+						enableUI( true );
+						loadData( catalogue );
+					}
+					
+					break;
+					
+				case FileMenu.CLOSE_CAT_MI:
+					
+					removeData();
+					enableUI( false );
+					refresh();
+					
+					break;
+				
+				default:
+					break;
 				}
 			}
 		});
-
-		// when a catalogue is closed we refresh the graphics
-		menu.addCloseListener( new Listener() {
-
+		
+		menu.setViewListener( new MenuListener() {
+			
 			@Override
-			public void handleEvent( Event event ) {
-				
-				removeData();
-				enableUI( false );
-				
-				refresh();
-			}
-		});
+			public void buttonPressed(MenuItem button, int code, Event event) {
 
-		// when a catalogue is opened we refresh the graphics
-		menu.addOpenListener( new Listener() {
-
-			@Override
-			public void handleEvent(Event event) {
-
-				removeData();
-				
-				refresh();
-				
-				// get the selected catalogue
-				Catalogue catalogue = (Catalogue) event.data;
-
-				// enable the user interface only if we have data in the current catalogue
-				if ( !catalogue.isEmpty() ) {
-					enableUI( true );
-					loadData( catalogue );
+				switch ( code ) {
+				case ViewMenu.EXPAND_MI:
+					tree.expandSelectedTerms( TreeViewer.ALL_LEVELS );
+					break;
+				case ViewMenu.COLLAPSE_NODE_MI:
+					tree.collapseSelectedTerms( TreeViewer.ALL_LEVELS );
+					break;
+				case ViewMenu.COLLAPSE_TREE_MI:
+					tree.collapseAll();
+					break;
+				default:
+					break;
 				}
 			}
 		});
-
-		// Called when the button expand node is pressed
-		menu.addExpandNodeListener( new Listener() {
-
+		
+		menu.setToolsListener( new MenuListener() {
+			
 			@Override
-			public void handleEvent(Event event) {
-				tree.expandSelectedTerms( TreeViewer.ALL_LEVELS );
+			public void buttonPressed(MenuItem button, int code, Event event) {
+				
+				switch ( code ) {
+				
+				case ToolsMenu.IMPORT_CAT_MI:
+					
+					// get the current catalogue
+					Catalogue catalogue = GlobalManager.getInstance()
+							.getCurrentCatalogue();
+
+					// enable user interface if the catalogue is not empty
+					if ( catalogue != null && !catalogue.isEmpty() ) {
+						enableUI( true );
+						loadData( catalogue );
+					}
+					
+					break;
+					
+				case ToolsMenu.ATTR_EDITOR_MI:
+					
+					// refresh
+					tabPanel.setTerm( tree.getFirstSelectedTerm() );
+					refresh();
+					
+					break;
+					
+				default:
+					break;
+				}
 			}
 		});
-
-		// Called when the button collapse node is pressed
-		menu.addCollapseNodeListener( new Listener() {
-
+		
+		menu.setLoginListener( new MenuListener() {
+			
 			@Override
-			public void handleEvent(Event event) {
-				tree.collapseSelectedTerms( TreeViewer.ALL_LEVELS );
-			}
-		});
-
-		// Called when the button collapse tree is pressed
-		menu.addCollapseTreeListener( new Listener() {
-
-			@Override
-			public void handleEvent(Event event) {
-				tree.collapseAll();
-			}
-		});
-
-		// when the login is completed (we have enstablished the
-		// user acces level )
-		menu.addLoginListener( new Listener() {
-
-			@Override
-			public void handleEvent(Event arg0) {
-				refresh();
+			public void buttonPressed(MenuItem button, int code, Event event) {
+				switch ( code ) {
+				case LoginMenu.LOGIN_MI:
+					refresh();
+					break;
+				default:
+					break;
+				}
 			}
 		});
 

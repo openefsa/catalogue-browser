@@ -1,20 +1,18 @@
 package dcf_reserve_util;
 
-import dcf_manager.Dcf;
-
 /**
- * Return type for {@link Dcf#reserve(catalogue_object.Catalogue, dcf_webservice.ReserveLevel, String, ReserveFinishedListener)}
+ * Enumerator to save the status of a {@link PendingReserve}
+ * object.
  * @author avonva
  *
  */
 public enum PendingReserveStatus {
 	
-	STARTED,               // if the pending reserve is just started
-	SENDING,               // if we are sending the pending reserve
-	COMPLETED,             // if the pending reserve was completed
-	NOT_RESERVING,         // if we are not reserving (we are unreserving)
-	CORRECT_VERSION,       // if the catalogue we are working with is the up to date version
-	OLD_VERSION,           // if the catalogue we are working with is an older version
-	MINOR_FORBIDDEN,       // if we ask for a reserve minor but this action is forbidden
-	ERROR                  // general error
+	STARTED,                // if the pending reserve is just started
+	SENDING,                // if we are sending the pending reserve
+	RESERVING,          	// if we are reserving the catalogue in the application db
+	UNRESERVING,            // if we are unreserving the catalogue in the application db
+	IMPORTING_LAST_VERSION, // if we are importing the last internal version of the catalogue
+	COMPLETED,              // if the pending reserve was completed
+	ERROR                   // if error occurred
 }

@@ -64,8 +64,18 @@ public class CatalogueLabel implements Observer {
 				catalogue = null;
 			
 			// update the catalogue label
-			if ( catalogue != null )
-				label.setText( catalogue.getVersion() + " " + catalogue.getLabel() );
+			if ( catalogue != null ) {
+				
+				String text = "";
+				
+				// display only the name if the catalogue is local
+				if ( catalogue.isLocal() )
+					text = catalogue.getLabel();
+				else
+					text = catalogue.getVersion() + " " + catalogue.getLabel();
+				
+				label.setText( text );
+			}
 			else
 				setDefaultLabel();
 		}

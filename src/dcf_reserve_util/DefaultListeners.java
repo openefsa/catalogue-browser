@@ -97,8 +97,10 @@ public class DefaultListeners {
 						// is potentially changed
 						ui.updateUI( level );
 
+						String preMessage = createPremessage ( catalogue );
+						
 						// show dialog
-						warnOfResponse( ui, catalogue, response, level );
+						warnOfResponse( ui, response, level, preMessage );
 					}
 				});
 			}
@@ -111,13 +113,15 @@ public class DefaultListeners {
 					
 					@Override
 					public void run() {
-
+						
+						String preMessage = createPremessage ( pendingReserve.getCatalogue() );
+						
 						// Warn user of the performed actions
-						warnOfStatus ( ui, status );
+						warnOfStatus ( ui, status, preMessage );
 						
 						switch ( status ) {
 						
-						case OLD_VERSION:
+						case IMPORTING_LAST_VERSION:
 							
 							// lock the closure of the window since
 							// we are importing a new catalogue version
@@ -139,17 +143,19 @@ public class DefaultListeners {
 							// and if we have completed the process
 							if ( pendingReserve.getReserveLevel()
 									.greaterThan( ReserveLevel.NONE ) ) {
-
+								
+								Catalogue catalogue = pendingReserve.getCatalogue();
+								
 								Catalogue current = 
 										GlobalManager.getInstance().getCurrentCatalogue();
 
-								// open the catalogue only if there is already another
-								// catalogue opened, and it is the same catalogue in terms
-								// of code (i.e. only the version is different)
-								// in this way we open the catalogue only if we are working
-								// with a previous version of it
+								// open the new version of the catalogue if it was
+								// created by the pending reserve (only if a previous
+								// version of the catalogue is already opened in the
+								// browser)
 								if ( current != null && 
-										current.equals( pendingReserve.getCatalogue() ) )
+										current.equals( catalogue ) &&
+										current.isOlder( catalogue ) )
 									pendingReserve.getCatalogue().open();
 							}
 
@@ -181,8 +187,10 @@ public class DefaultListeners {
 						// update the UI based on the forced reserve level
 						ui.updateUI( level );
 						
+						String preMessage = createPremessage ( catalogue );
+						
 						// the dcf is busy => warn the user
-						warnOfResponse( ui, catalogue, DcfResponse.BUSY, level );
+						warnDcfBusy( ui, level, preMessage );
 					}
 				});
 			}
@@ -196,6 +204,54 @@ public class DefaultListeners {
 		return listener;
 	}
 	
+	/**
+	 * Warn that the dcf is busy
+	 * @param ui
+	 * @param catalogue
+	 * @param level
+	 */
+	private static void warnDcfBusy ( UpdateableUI ui, ReserveLevel level, String preMessage ) {
+
+		Shell shell = ui.getShell();
+		
+		// warn user according to the reserve level
+
+		if ( level != null && level.greaterThan( ReserveLevel.NONE ) ) {
+
+			GlobalUtil.showDialog( shell, 
+					Messages.getString( "Reserve.BusyTitle" ),
+					preMessage + Messages.getString( "Reserve.BusyMessage" ),
+					SWT.ICON_WARNING );
+		}
+		else {
+
+			if ( level != null ) {
+
+				GlobalUtil.showDialog( shell, 
+						Messages.getString( "Unreserve.BusyTitle" ),
+						preMessage + Messages.getString( "Unreserve.BusyMessage" ),
+						SWT.ICON_WARNING );
+			}
+		}
+	}
+	
+
+	/**
+	 * Create a default pre message for warning using
+	 * catalogue information
+	 * @param catalogue
+	 * @return
+	 */
+	private static String createPremessage ( Catalogue catalogue ) {
+		
+		String preMessage = null;
+		
+		if ( catalogue != null )
+			preMessage = catalogue.getCode() + " - " 
+					+ catalogue.getVersion() + ": ";
+		
+		return preMessage;
+	}
 	
 	/**
 	 * Warn the user based on the reserve log status
@@ -204,7 +260,7 @@ public class DefaultListeners {
 	 * (Otherwise they would have been called two times)
 	 * @param reserveLog
 	 */
-	private static void warnOfStatus ( UpdateableUI ui, PendingReserveStatus status ) {
+	private static void warnOfStatus ( UpdateableUI ui, PendingReserveStatus status, String preMessage ) {
 		
 		Shell shell = ui.getShell();
 		
@@ -214,22 +270,16 @@ public class DefaultListeners {
 		case ERROR:
 			GlobalUtil.showErrorDialog( shell, 
 					Messages.getString( "Reserve.GeneralErrorTitle" ),
-					Messages.getString( "Reserve.GeneralErrorMessage" ) );
+					preMessage + Messages.getString( "Reserve.GeneralErrorMessage" ) );
 			break;
 			
-		case MINOR_FORBIDDEN:
-			GlobalUtil.showErrorDialog( shell, 
-					Messages.getString( "Reserve.MinorErrorTitle" ),
-					Messages.getString( "Reserve.MinorErrorMessage" ) );
-			break;
-			
-		case OLD_VERSION:
+		case IMPORTING_LAST_VERSION:
 			
 			// Warn user that a new version of the catalogue
 			// is being downloaded
 			GlobalUtil.showDialog(shell, 
 					Messages.getString( "Reserve.OldTitle" ),
-					Messages.getString( "Reserve.OldMessage" ), 
+					preMessage + Messages.getString( "Reserve.OldMessage" ), 
 					SWT.ICON_WARNING );
 			break;
 		default:
@@ -243,17 +293,11 @@ public class DefaultListeners {
 	 * @param response
 	 * @param level the reserve level we wanted, set to null if not needed
 	 */
-	private static void warnOfResponse ( UpdateableUI ui, Catalogue catalogue, 
-			DcfResponse response, ReserveLevel level ) {
+	private static void warnOfResponse ( UpdateableUI ui, DcfResponse response, ReserveLevel level,
+			String preMessage ) {
 		
 		Shell shell = ui.getShell();
-		
-		String preMessage = "";
-		
-		if ( catalogue != null )
-			preMessage = catalogue.getCode() + " - " 
-					+ catalogue.getVersion() + ": ";
-		
+
 		switch ( response ) {
 		
 		// if wrong reserve operation notify the user
@@ -263,32 +307,15 @@ public class DefaultListeners {
 					Messages.getString( "Reserve.ErrorTitle" ),
 					preMessage + Messages.getString( "Reserve.ErrorMessage" ) );
 			break;
-		
-		case BUSY:
 			
-			// warn user according to the reserve level
-			
-			if ( level != null && level.greaterThan( ReserveLevel.NONE ) ) {
-				
-				GlobalUtil.showDialog( shell, 
-						Messages.getString( "Reserve.BusyTitle" ),
-						preMessage + Messages.getString( "Reserve.BusyMessage" ),
-						SWT.ICON_WARNING );
-			}
-			else {
-
-				if ( level != null ) {
-					
-					GlobalUtil.showDialog( shell, 
-							Messages.getString( "Unreserve.BusyTitle" ),
-							preMessage + Messages.getString( "Unreserve.BusyMessage" ),
-							SWT.ICON_WARNING );
-				}
-			}
+		case MINOR_FORBIDDEN:
+			GlobalUtil.showErrorDialog( shell, 
+					Messages.getString( "Reserve.MinorErrorTitle" ),
+					Messages.getString( "Reserve.MinorErrorMessage" ) );
 			break;
 			
 		// if the catalogue is already reserved
-		case NO:
+		case AP:
 			
 			GlobalUtil.showErrorDialog( shell, 
 					Messages.getString( "Reserve.NoTitle" ),

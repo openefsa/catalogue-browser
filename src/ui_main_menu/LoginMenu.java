@@ -21,6 +21,10 @@ import ui_main_panel.UpdateableUI;
 
 public class LoginMenu implements MainMenuItem {
 
+	public static final int LOGIN_MI = 0;
+	
+	private MenuListener listener;
+	
 	private MainMenu mainMenu;
 	private Shell shell;
 	private MenuItem loginItem;
@@ -34,6 +38,14 @@ public class LoginMenu implements MainMenuItem {
 		this.mainMenu = mainMenu;
 		this.shell = mainMenu.getShell();
 		loginItem = create( menu );
+	}
+	
+	/**
+	 * Set the listener to the login button
+	 * @param listener
+	 */
+	public void setListener(MenuListener listener) {
+		this.listener = listener;
 	}
 	
 	/**
@@ -104,11 +116,8 @@ public class LoginMenu implements MainMenuItem {
 								// editing of the database
 								startPendingReserves();
 								
-								// call the login listener to update the
-								// graphics of the main panel
-								if ( mainMenu.loginListener != null ) {
-									mainMenu.loginListener.handleEvent( new Event() );
-								}
+								if ( listener != null )
+									listener.buttonPressed( loginMI, LOGIN_MI, null );
 							}
 						} );
 						

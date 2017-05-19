@@ -11,11 +11,9 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import catalogue_object.Catalogue;
-import catalogue_object.Version;
+import catalogue_object.Status;
 import dcf_log_util.LogDownloader;
 import dcf_log_util.LogParser;
-import dcf_manager.Dcf;
-import dcf_manager.VersionFinder;
 import dcf_user.User;
 import dcf_webservice.DcfResponse;
 import dcf_webservice.ReserveLevel;
@@ -116,57 +114,9 @@ public class PendingReserve {
 		// we are starting the process
 		setStatus( PendingReserveStatus.STARTED );
 		
-		// check the status of the pending reserve
-		PendingReserveStatus status = updateStatus();
-		
-		switch ( status ) {
-		
-		// if errors, terminate the pending response
-		case MINOR_FORBIDDEN:
-		case ERROR:
-			terminate();
-			break;
-
-			// if correct or unreserve
-			// go on with the process
-		case NOT_RESERVING:
-		case CORRECT_VERSION:
-			
-			send();
-			break;
-
-			// if old version import the last one
-			// note that the new version was already
-			// downloaded to perform ReserveChecks
-			// therefore here we just import it
-		case OLD_VERSION:
-			
-			// download the last internal version
-			// and when the process is finished
-			// reserve the NEW catalogue
-			
-			importNewCatalogueVersion( progressBar, new Listener() {
-				
-				@Override
-				public void handleEvent(Event arg0) {
-					
-					// we use another thread, otherwise the UI freezes
-					new Thread( new Runnable() {
-						
-						@Override
-						public void run() {
-							
-							// send the pending reserve
-							send();
-						}
-					}).start();
-				}
-			});
-
-			break;
-		default:
-			break;
-		}
+		// send the pending reserve request
+		// to the dcf
+		send();
 	}
 	
 	/**
@@ -237,8 +187,9 @@ public class PendingReserve {
 			catalogue.removeForceEdit( username );
 		
 		// reserve the catalogue if the reserve succeeded
-		if ( response == DcfResponse.OK )
+		if ( response == DcfResponse.OK ) {
 			reserve();
+		}
 		
 		// we have completed the pending reserve
 		// process, therefore we can delete it
@@ -255,21 +206,107 @@ public class PendingReserve {
 	/**
 	 * Reserve the catalogue contained in the pending
 	 * reserve with the pending reserve level
-	 * Note that this operation closes the pending reserve
-	 * and delete it from the database
+	 * Note that if we are not working with the last
+	 * internal version, first the last internal version
+	 * will be imported.
 	 */
 	private void reserve() {
 		
 		// set the catalogue as (un)reserved at the selected level
 		if ( reserveLevel.greaterThan( ReserveLevel.NONE ) ) {
 			
-			// get the new internal version created by the reserve
-			// and set it to the pending operation
-			Catalogue newVersion = this.catalogue.reserve ( reserveLevel );
-			setNewVersion( newVersion );
+			// before reserving, check the version of the catalogue
+			// if it is the last one
+			importLastVersion ( new Listener() {
+				
+				@Override
+				public void handleEvent(Event arg0) {
+					
+					setStatus( PendingReserveStatus.RESERVING );
+					
+					// get the new internal version created by the reserve
+					// and set it to the pending operation
+					Catalogue newVersion = catalogue.reserve ( reserveLevel );
+					setNewVersion( newVersion );
+				}
+			});
 		}
-		else
-			this.catalogue.unreserve ();
+		else {
+			
+			setStatus( PendingReserveStatus.UNRESERVING );
+			catalogue.unreserve ();
+		}
+	}
+	
+	
+	/**
+	 * Import a the last internal version of the catalogue
+	 * if there is one. If no newer internal versions are
+	 * found, no action is performed and the {@code doneListener}
+	 * is called.
+	 * If a new internal version is found the import process
+	 * starts and the the status of the 
+	 * pending reserve is set to 
+	 * {@link PendingReserveStatus#OLD_VERSION}. In this case,
+	 * only when the import process is finished the 
+	 * {@code doneListener} is called.
+	 * 
+	 * Note that if a new internal version is found, the
+	 * {@link #catalogue} of the pending reserve will be
+	 * updated with the new internal version.
+	 * @param doneListener listener which specify the actions
+	 * needed when we finish the method.
+	 * @return true if we already had the last internal version, 
+	 * false otherwise
+	 */
+	private boolean importLastVersion ( final Listener doneListener ) {
+		
+		try {
+			
+			final NewCatalogueInternalVersion lastVersion = 
+					catalogue.getLastInternalVersion();
+			
+			// if no version is found => we have the last one
+			if ( lastVersion == null ) {
+				
+				// call the listener since we have finished
+				doneListener.handleEvent( new Event() );
+				return true;
+			}
+			
+			System.out.println ( this + ": This is not the last version "
+					+ "of the catalogue, importing " + lastVersion );
+
+			// and import the last internal version
+			// and when the process is finished
+			// reserve the new version of the catalogue
+			lastVersion.setProgressBar( progressBar );
+			
+			// import the new version
+			lastVersion.importNewCatalogueVersion( new Listener() {
+
+				@Override
+				public void handleEvent(Event arg0) {
+
+					// update the pending reserve catalogue
+					setNewVersion( lastVersion.getNewCatalogue() );
+
+					doneListener.handleEvent( arg0 );
+				}
+			} );
+			
+			// update the status of the pending reserve
+			setStatus( PendingReserveStatus.IMPORTING_LAST_VERSION );
+			
+			return false;
+			
+		} catch (IOException | TransformerException | 
+				ParserConfigurationException | SAXException e) {
+			e.printStackTrace();
+			
+			setStatus( PendingReserveStatus.ERROR );
+		}
+		return true;
 	}
 	
 	/**
@@ -283,6 +320,9 @@ public class PendingReserve {
 		
 		PendingReserveDAO prDao = new PendingReserveDAO();
 		prDao.remove( this );
+		
+		// update the catalogue status
+		catalogue.setReserving( false );
 
 		// set the status as completed
 		setStatus( PendingReserveStatus.COMPLETED );
@@ -330,24 +370,37 @@ public class PendingReserve {
 	 */
 	private DcfResponse extractLogResponse ( Document log ) {
 		
-		// no log is found => dcf is busy
-		if ( log == null )
-			return DcfResponse.BUSY;
+		DcfResponse response;
 		
 		// analyze the log to get the result
 		LogParser parser = new LogParser ( log );
-
+		
+		Status catStatus = parser.getCatalogueStatus();
+		boolean correct = parser.isOperationCorrect();
+		boolean minorForbidden = catStatus.isDraft() && catStatus.isMajor() 
+				&& reserveLevel.isMinor();
+		
+		// if we have sent a minor reserve but the
+		// catalogue status is major draft, then the
+		// action is forbidden
+		if ( !correct && minorForbidden ) {
+			response = DcfResponse.MINOR_FORBIDDEN;
+		}
 		// return ok if correct operation
-		if ( parser.isOperationCorrect() ) {
+		else if ( correct )
+			response = DcfResponse.OK;
+		else
+			response = DcfResponse.AP;
+		
+		
+		if ( response == DcfResponse.OK )
 			System.out.println ( reserveLevel.getReserveOperation() 
 					+ ": successfully completed" );
-			return DcfResponse.OK;
-		}
-		else {
+		else
 			System.out.println ( reserveLevel.getReserveOperation() 
 					+ ": failed - the dcf rejected the operation" );
-			return DcfResponse.NO;
-		}
+		
+		return response;
 	}
 	
 	/**
@@ -368,130 +421,6 @@ public class PendingReserve {
 	 */
 	public PendingReserveStatus getStatus() {
 		return status;
-	}
-	
-	/**
-	 * Perform checks on the pending reserve request. Here we
-	 * make some checks on the correctness of the reserve request.
-	 * @return the {@link PendingReserveStatus} which contains
-	 * the pending reserve status.
-	 */
-	private PendingReserveStatus updateStatus() {
-		
-		// compute the current status and update it
-		PendingReserveStatus status = getCurrentStatus();
-		
-		setStatus( status );
-		
-		return status;
-	}
-	
-	/**
-	 * Check the state of the pending reserve and return it
-	 * @return 
-	 */
-	private PendingReserveStatus getCurrentStatus() {
-		
-		// only if we are reserving (and not unreserving)
-		if ( reserveLevel.isNone() ) {
-			return PendingReserveStatus.NOT_RESERVING;
-		}
-
-		String format = ".xml";
-		String filename = "temp_" + catalogue.getCode();
-		String input = filename + format;
-		String output = filename + "_version" + format;
-		
-		try {
-			
-			Dcf dcf = new Dcf();
-			
-			// export the internal version in the file
-			boolean written = dcf.exportCatalogueInternalVersion( 
-					catalogue.getCode(), input );
-
-			// if no internal version is retrieved we have
-			// the last version of the catalogue
-			if ( !written )
-				return PendingReserveStatus.CORRECT_VERSION;
-			
-			VersionFinder finder = new VersionFinder( input, output );
-
-			// if we are minor reserving a major draft => error
-			// it is a forbidden action
-			if ( reserveLevel.isMinor() && finder.isStatusMajor() 
-					&& finder.isStatusDraft() ) {
-				
-				System.err.println ( "Cannot perform a reserve minor on major draft" );
-				
-				return PendingReserveStatus.MINOR_FORBIDDEN;
-			}
-
-			// compare the catalogues versions
-			Version intVersion = new Version ( finder.getVersion() );
-			Version localVersion = catalogue.getRawVersion();
-			
-			// if the downloaded version is newer than the one we
-			// are working with => we are using an old version
-			if ( intVersion.compareTo( localVersion ) < 0 ) {
-
-				System.err.println ( "Cannot perform reserve on old version. Downloading the new version" );
-				System.err.println ( "Last internal " + finder.getVersion() + 
-						" local " + catalogue.getVersion() );
-
-				// save the new version of the catalogue
-				newVersion = new NewCatalogueInternalVersion( catalogue.getCode(), 
-						finder.getVersion(), input );
-
-				return PendingReserveStatus.OLD_VERSION;
-			} 
-			else {
-				
-				System.out.println ( "The last internal version has a lower or equal version "
-						+ "than the catalogue we are working with." );
-				System.out.println ( "Last internal " + finder.getVersion() + 
-						" local " + catalogue.getVersion() );
-				
-				// if we have the updated version
-				return PendingReserveStatus.CORRECT_VERSION;
-			}
-
-		} catch ( IOException | 
-				TransformerException | 
-				ParserConfigurationException | 
-				SAXException e ) {
-			
-			e.printStackTrace();
-			
-			return PendingReserveStatus.ERROR;
-		}
-	}
-	
-	/**
-	 * Import the new catalogue version which was found with the
-	 * {@link #checkStatus()}
-	 * @param progressBar
-	 * @param doneListener
-	 */
-	public void importNewCatalogueVersion( FormProgressBar progressBar, final Listener doneListener ) {
-		
-		if ( newVersion == null ) {
-			System.err.println( "Cannot import a new version since it is not defined" );
-			return;
-		}
-		
-		newVersion.setProgressBar( progressBar );
-		newVersion.importNewCatalogueVersion( new Listener() {
-			
-			@Override
-			public void handleEvent(Event arg0) {
-
-				// update the pending reserve catalogue
-				setNewVersion( newVersion.getNewCatalogue() );
-				
-				doneListener.handleEvent( arg0 );
-			}
-		} );
 	}
 	
 	/**

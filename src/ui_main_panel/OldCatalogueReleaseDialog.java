@@ -46,9 +46,10 @@ public class OldCatalogueReleaseDialog {
 
 		
 		// set the text elements
-		String[] commands = new String[] { Messages.getString("OldCatalogueReleaseDialog.OkCmd"), Messages.getString("OldCatalogueReleaseDialog.CancelCmd") }; //$NON-NLS-1$ //$NON-NLS-2$
-		String title = Messages.getString("OldCatalogueReleaseDialog.Title"); //$NON-NLS-1$
-		String text = Messages.getString("OldCatalogueReleaseDialog.Message"); //$NON-NLS-1$
+		String[] commands = new String[] { Messages.getString("OldCatalogueReleaseDialog.OkCmd"), 
+				Messages.getString("OldCatalogueReleaseDialog.CancelCmd") };
+		String title = Messages.getString("OldCatalogueReleaseDialog.Title");
+		String text = Messages.getString("OldCatalogueReleaseDialog.Message");
 
 		
 		// create the dialog

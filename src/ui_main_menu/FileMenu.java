@@ -36,6 +36,17 @@ import utilities.GlobalUtil;
  */
 public class FileMenu implements MainMenuItem {
 
+	// codes to identify the menu items (used for listeners)
+	public static final int NEW_CAT_MI = 0;
+	public static final int OPEN_CAT_MI = 1;
+	public static final int IMPORT_CAT_MI = 2;
+	public static final int DOWNLOAD_CAT_MI = 3;
+	public static final int CLOSE_CAT_MI = 4;
+	public static final int DELETE_CAT_MI = 5;
+	public static final int EXIT_MI = 6;
+	
+	private MenuListener listener;
+	
 	private MainMenu mainMenu;
 	private Shell shell;
 	
@@ -46,6 +57,14 @@ public class FileMenu implements MainMenuItem {
 	private MenuItem closeMI;
 	private MenuItem deleteMI;
 	private MenuItem exitMI;
+	
+	/**
+	 * Set the listener to the file menu
+	 * @param listener
+	 */
+	public void setListener(MenuListener listener) {
+		this.listener = listener;
+	}
 	
 	/**
 	 * Initialize the main file menu passing the main
@@ -109,7 +128,7 @@ public class FileMenu implements MainMenuItem {
 	 */
 	private MenuItem addNewLocalCatMI ( final Menu menu ) {
 
-		MenuItem newFileItem = new MenuItem( menu , SWT.NONE );
+		final MenuItem newFileItem = new MenuItem( menu , SWT.NONE );
 		newFileItem.setText( Messages.getString("BrowserMenu.NewCatalogueCmd") );
 		
 		// if the new local catalogue button is pressed
@@ -156,7 +175,10 @@ public class FileMenu implements MainMenuItem {
 				GlobalUtil.showDialog(shell, 
 						Messages.getString("NewLocalCat.DoneTitle"),
 						Messages.getString("NewLocalCat.DoneMessage"), 
-						SWT.ICON_WARNING );
+						SWT.ICON_INFORMATION );
+				
+				if ( listener != null )
+					listener.buttonPressed( newFileItem, NEW_CAT_MI, null );
 			}
 		} );
 		
@@ -172,7 +194,7 @@ public class FileMenu implements MainMenuItem {
 	private MenuItem addDownloadCatalogueMI ( Menu menu ) {
 		
 		// Item to see and load the catalogues directly from the DCF
-		MenuItem loadCatalogueItem = new MenuItem( menu, SWT.NONE );
+		final MenuItem loadCatalogueItem = new MenuItem( menu, SWT.NONE );
 
 		// if button pressed
 		loadCatalogueItem.addSelectionListener( new SelectionListener() {
@@ -199,7 +221,7 @@ public class FileMenu implements MainMenuItem {
 							GlobalUtil.showDialog(shell, 
 									Messages.getString( "BrowserMenu.DownloadSuccessTitle" ),
 									Messages.getString( "BrowserMenu.DownloadSuccessMessage" ),
-									SWT.ICON_WARNING );
+									SWT.ICON_INFORMATION );
 						}
 					} );
 					
@@ -221,6 +243,10 @@ public class FileMenu implements MainMenuItem {
 							Messages.getString("BrowserMenu.DownloadCmdErrorTitle"),
 							message);
 				}
+				
+				if ( listener != null )
+					listener.buttonPressed( loadCatalogueItem, 
+							DOWNLOAD_CAT_MI, null );
 			}
 
 			@Override
@@ -240,7 +266,7 @@ public class FileMenu implements MainMenuItem {
 	 */
 	private MenuItem addOpenDBMI ( Menu menu ) {
 		
-		MenuItem openFileItem = new MenuItem( menu , SWT.NONE );
+		final MenuItem openFileItem = new MenuItem( menu , SWT.NONE );
 		openFileItem.setText( Messages.getString("BrowserMenu.OpenCatalogueCmd") );
 
 		openFileItem.addSelectionListener( new SelectionAdapter() {
@@ -295,7 +321,11 @@ public class FileMenu implements MainMenuItem {
 							// if there is a new version and we have not downloaded it yet
 							// we warn the user that a new version is available
 							if ( hasUpdate && !alreadyDownloaded ) {
-								openOldReleaseDialog( shell, selectedCat );
+								
+								OldCatalogueReleaseDialog dialog = 
+										new OldCatalogueReleaseDialog( shell, selectedCat );
+								
+								dialog.open();
 							}
 						}
 						else {  
@@ -311,6 +341,9 @@ public class FileMenu implements MainMenuItem {
 						// open the catalogue when the dialog is closed
 						openCatalogue ( selectedCat );
 						
+						if ( listener != null )
+							listener.buttonPressed( openFileItem, 
+									OPEN_CAT_MI, event );
 					}
 				});
 			}
@@ -326,7 +359,7 @@ public class FileMenu implements MainMenuItem {
 	 */
 	private MenuItem addImportCatalogueMI ( final Menu menu ) {
 		
-		MenuItem importCatMI = new MenuItem( menu, SWT.PUSH );
+		final MenuItem importCatMI = new MenuItem( menu, SWT.PUSH );
 		importCatMI.setText( Messages.getString( "BrowserMenu.ImportCatalogueCmd" ) );
 		
 		importCatMI.addSelectionListener( new SelectionListener() {
@@ -372,7 +405,11 @@ public class FileMenu implements MainMenuItem {
 						GlobalUtil.showDialog(shell, 
 								Messages.getString("BrowserMenu.ImportSuccessTitle"),
 								Messages.getString( "BrowserMenu.ImportSuccessMessage" ),
-								SWT.ICON_WARNING );
+								SWT.ICON_INFORMATION );
+						
+						if ( listener != null )
+							listener.buttonPressed( importCatMI, 
+									IMPORT_CAT_MI, event );
 					}
 				} );
 			}
@@ -393,15 +430,20 @@ public class FileMenu implements MainMenuItem {
 	 */
 	private MenuItem addCloseCatalogueMI ( Menu menu ) {
 		
-		MenuItem closeCatMI = new MenuItem( menu , SWT.NONE );
+		final MenuItem closeCatMI = new MenuItem( menu , SWT.NONE );
 		closeCatMI.setText( Messages.getString("BrowserMenu.CloseCatalogueCmd") );
 		
 		closeCatMI.addSelectionListener( new SelectionListener() {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				
 				// close the catalogue
 				closeCatalogue();
+				
+				if ( listener != null )
+					listener.buttonPressed( closeCatMI, 
+							CLOSE_CAT_MI, null );
 			}
 			
 			@Override
@@ -419,7 +461,7 @@ public class FileMenu implements MainMenuItem {
 	 */
 	private MenuItem addDeleteCatalogueMI ( Menu menu ) {
 		
-		MenuItem deleteCatMI = new MenuItem( menu , SWT.NONE );
+		final MenuItem deleteCatMI = new MenuItem( menu , SWT.NONE );
 		deleteCatMI.setText( Messages.getString("BrowserMenu.DeleteCatalogueCmd") );
 
 		deleteCatMI.addSelectionListener( new SelectionAdapter() {
@@ -471,6 +513,11 @@ public class FileMenu implements MainMenuItem {
 									Messages.getString( "Delete.ErrorMessage" ), 
 									SWT.ICON_WARNING );
 						}
+						
+						
+						if ( listener != null )
+							listener.buttonPressed( deleteCatMI, 
+									DELETE_CAT_MI, event );
 					}
 				});
 			}
@@ -486,43 +533,23 @@ public class FileMenu implements MainMenuItem {
 	 */
 	private MenuItem addExitMI ( Menu menu ) {
 		
-		MenuItem exitItem = new MenuItem( menu , SWT.NONE );
+		final MenuItem exitItem = new MenuItem( menu , SWT.NONE );
 		exitItem.setText( Messages.getString("BrowserMenu.ExitAppCmd") );
 		
 		exitItem.addSelectionListener( new SelectionAdapter() {
 
 			public void widgetSelected ( SelectionEvent e ) {
+				
 				mainMenu.getShell().close();
+				
+				if ( listener != null )
+					listener.buttonPressed( exitItem, 
+							EXIT_MI, null );
 			}
 
 		} );
 		
 		return exitItem;
-	}
-	
-	
-	/**
-	 * Open a dialog to ask the user if he wants to update 
-	 * the selected catalogue or to use the
-	 * old version anyway
-	 * @param shell
-	 * @param selectedCat
-	 */
-	private void openOldReleaseDialog ( final Shell shell, final Catalogue selectedCat ) {
-		
-		OldCatalogueReleaseDialog dialog = new OldCatalogueReleaseDialog( shell, selectedCat );
-		
-		// set the listener which is called if continue is pressed
-		// open the selected catalogue
-		dialog.setContinueListener( new Listener() {
-			
-			@Override
-			public void handleEvent(Event event) {
-				openCatalogue ( selectedCat );
-			}
-		});
-		
-		dialog.open();
 	}
 	
 	/**
@@ -547,13 +574,6 @@ public class FileMenu implements MainMenuItem {
 				catalogue.open();
 			}
 		});
-		
-		if ( mainMenu.openListener != null ) {
-			// call the open listener
-			Event e = new Event();
-			e.data = catalogue;
-			mainMenu.openListener.handleEvent( e );
-		}
 
 		// refresh menu items
 		mainMenu.refresh();
@@ -573,8 +593,6 @@ public class FileMenu implements MainMenuItem {
 		
 		// refresh UI
 		mainMenu.refresh();
-		
-		mainMenu.closeListener.handleEvent( new Event() );
 	}
 	
 	/**

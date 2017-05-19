@@ -42,6 +42,23 @@ import utilities.GlobalUtil;
 
 public class ToolsMenu implements MainMenuItem {
 
+	public static final int RESERVE_CAT_MI = 0;
+	public static final int UNRESERVE_CAT_MI = 1;
+	public static final int UPLOAD_DATA_MI = 2;
+	public static final int PUBLISH_CAT_MI = 3;
+	public static final int RESET_CAT_MI = 4;
+	public static final int IMPORT_CAT_MI = 5;
+	public static final int EXPORT_CAT_MI = 6;
+	public static final int IMPORT_PICKLIST_MI = 7;
+	public static final int FAV_PICKLIST_MI = 8;
+	public static final int COMPACT_DB_MI = 9;
+	public static final int HIER_EDITOR_MI = 10;
+	public static final int ATTR_EDITOR_MI = 11;
+	public static final int SEARCH_OPT_MI = 12;
+	public static final int USER_PREF_MI = 13;
+	
+	private MenuListener listener;
+	
 	private MainMenu mainMenu;
 	private Shell shell;
 	
@@ -53,8 +70,7 @@ public class ToolsMenu implements MainMenuItem {
 	private MenuItem publishMI;           // publish a draft catalogue
 	private MenuItem resetMI;             // reset the catalogues data to the previous version
 	private MenuItem importMI;
-	private MenuItem exportMI; 
-	private MenuItem appendMI; 
+	private MenuItem exportMI;
 	private MenuItem importPicklistMI;
 	private MenuItem favouritePicklistMI;
 	private MenuItem compactDBMI;
@@ -73,6 +89,16 @@ public class ToolsMenu implements MainMenuItem {
 		this.shell = mainMenu.getShell();
 		toolsItem = create ( menu );
 	}
+	
+	/**
+	 * Listener called when a button of the menu is
+	 * pressed
+	 * @param listener
+	 */
+	public void setListener(MenuListener listener) {
+		this.listener = listener;
+	}
+	
 	/**
 	 * Create the tools menu with all the sub menu items
 	 * @param menu
@@ -105,11 +131,6 @@ public class ToolsMenu implements MainMenuItem {
 
 		// export operations
 		exportMI = addExportMI ( toolsMenu );
-		
-		// append operations (only edit)
-		if ( mainMenu.getCatalogue() != null &&
-				user.canEdit( mainMenu.getCatalogue() ) )
-			appendMI = addAppendMI ( toolsMenu );
 
 		// add import picklist
 		importPicklistMI = addImportPicklistMI ( toolsMenu );
@@ -163,7 +184,7 @@ public class ToolsMenu implements MainMenuItem {
 	 */
 	private MenuItem addReserveMI ( Menu menu ) {
 		
-		MenuItem reserveMI = new MenuItem( menu , SWT.CASCADE );
+		final MenuItem reserveMI = new MenuItem( menu , SWT.CASCADE );
 
 		reserveMI.setText( Messages.getString("BrowserMenu.Reserve") );
 		
@@ -182,14 +203,24 @@ public class ToolsMenu implements MainMenuItem {
 		majorMI.addSelectionListener( new SelectionAdapter() {
 			@Override
 			public void widgetSelected ( SelectionEvent event ) {
+				
 				setReserveLevel( ReserveLevel.MAJOR );
+				
+				if ( listener != null )
+					listener.buttonPressed( reserveMI, 
+							RESERVE_CAT_MI, null );
 			}
 		} );
 		
 		minorMI.addSelectionListener( new SelectionAdapter() {
 			@Override
 			public void widgetSelected ( SelectionEvent event ) {
+				
 				setReserveLevel( ReserveLevel.MINOR );
+				
+				if ( listener != null )
+					listener.buttonPressed( reserveMI, 
+							RESERVE_CAT_MI, null );
 			}
 		} );
 
@@ -205,7 +236,7 @@ public class ToolsMenu implements MainMenuItem {
 	 */
 	private MenuItem addUnreserveMI ( Menu menu ) {
 
-		MenuItem unreserveMI = new MenuItem( menu , SWT.PUSH );
+		final MenuItem unreserveMI = new MenuItem( menu , SWT.PUSH );
 
 		unreserveMI.setText( Messages.getString("BrowserMenu.Unreserve") );
 		unreserveMI.addSelectionListener( new SelectionListener() {
@@ -215,6 +246,10 @@ public class ToolsMenu implements MainMenuItem {
 				
 				// unreserve the current catalogue
 				setReserveLevel ( ReserveLevel.NONE );
+				
+				if ( listener != null )
+					listener.buttonPressed( unreserveMI, 
+							UNRESERVE_CAT_MI, null );
 			}
 
 			@Override
@@ -239,7 +274,7 @@ public class ToolsMenu implements MainMenuItem {
 	 */
 	private MenuItem addUploadDataMI ( Menu menu ) {
 		
-		MenuItem uploadDataMI = new MenuItem( menu , SWT.PUSH );
+		final MenuItem uploadDataMI = new MenuItem( menu , SWT.PUSH );
 
 		uploadDataMI.setText( Messages.getString("BrowserMenu.UploadData") );
 		uploadDataMI.addSelectionListener( new SelectionListener() {
@@ -255,6 +290,10 @@ public class ToolsMenu implements MainMenuItem {
 				// to start the sas procedure to upload
 				// the catalogue changes
 				
+				
+				if ( listener != null )
+					listener.buttonPressed( uploadDataMI, 
+							UPLOAD_DATA_MI, null );
 			}
 
 			@Override
@@ -276,7 +315,7 @@ public class ToolsMenu implements MainMenuItem {
 	 */
 	private MenuItem addPublishMI ( Menu menu ) {
 		
-		MenuItem publishMI = new MenuItem( menu , SWT.PUSH );
+		final MenuItem publishMI = new MenuItem( menu , SWT.PUSH );
 
 		publishMI.setText( Messages.getString( "BrowserMenu.Publish" ) );
 		publishMI.addSelectionListener( new SelectionListener() {
@@ -285,6 +324,11 @@ public class ToolsMenu implements MainMenuItem {
 			public void widgetSelected(SelectionEvent arg0) {
 
 				// publish the catalogue (only for drafts)
+				
+				
+				if ( listener != null )
+					listener.buttonPressed( publishMI, 
+							PUBLISH_CAT_MI, null );
 			}
 
 			@Override
@@ -307,7 +351,7 @@ public class ToolsMenu implements MainMenuItem {
 	 */
 	private MenuItem addResetMI ( Menu menu ) {
 		
-		MenuItem resetMI = new MenuItem( menu , SWT.PUSH );
+		final MenuItem resetMI = new MenuItem( menu , SWT.PUSH );
 
 		resetMI.setText( Messages.getString( "BrowserMenu.Reset" ) );
 		resetMI.addSelectionListener( new SelectionListener() {
@@ -333,6 +377,10 @@ public class ToolsMenu implements MainMenuItem {
 							Messages.getString( "ResetChanges.ErrorTitle" ), 
 							Messages.getString( "ResetChanges.ErrorMessage" ) );
 				}
+				
+				if ( listener != null )
+					listener.buttonPressed( resetMI, 
+							RESET_CAT_MI, null );
 			}
 
 			@Override
@@ -352,7 +400,7 @@ public class ToolsMenu implements MainMenuItem {
 	 */
 	private MenuItem addImportMI ( Menu menu ) {
 		
-		MenuItem importItem = new MenuItem( menu , SWT.NONE );
+		final MenuItem importItem = new MenuItem( menu , SWT.NONE );
 		importItem.setText( Messages.getString("BrowserMenu.ImportCmd") );
 		
 		importItem.addSelectionListener( new SelectionAdapter() {
@@ -390,10 +438,10 @@ public class ToolsMenu implements MainMenuItem {
 						// we do not open it since it is already opened
 						mainMenu.getCatalogue().loadData();
 						
-						// call the import listener if it was set
-						if ( mainMenu.importListener != null ) {
-							mainMenu.importListener.handleEvent( new Event() );
-						}
+						
+						if ( listener != null )
+							listener.buttonPressed( importItem, 
+									IMPORT_CAT_MI, event );
 					}
 				});
 			}
@@ -413,7 +461,7 @@ public class ToolsMenu implements MainMenuItem {
 	 */
 	private MenuItem addExportMI ( Menu menu ) {
 		
-		MenuItem exportItem = new MenuItem( menu , SWT.NONE );
+		final MenuItem exportItem = new MenuItem( menu , SWT.NONE );
 		exportItem.setText( Messages.getString( "BrowserMenu.ExportCmd" ) );
 		
 		exportItem.addSelectionListener( new SelectionAdapter() {
@@ -424,7 +472,8 @@ public class ToolsMenu implements MainMenuItem {
 				+ mainMenu.getCatalogue().getVersion() + ".xlsx";
 				
 				final String filename = GlobalUtil.showExcelFileDialog( shell, 
-						Messages.getString( "Export.FileDialogTitle" ), defaultFilename );
+						Messages.getString( "Export.FileDialogTitle" ), 
+						defaultFilename );
 
 				// return if no filename retrieved
 				if ( filename == null || filename.isEmpty() )
@@ -434,7 +483,8 @@ public class ToolsMenu implements MainMenuItem {
 				ExportActions export = new ExportActions();
 				
 				// set the progress bar
-				export.setProgressBar( new FormProgressBar( shell, Messages.getString("Export.ProgressBarTitle") ) );
+				export.setProgressBar( new FormProgressBar( shell, 
+						Messages.getString("Export.ProgressBarTitle") ) );
 				
 				// export the opened catalogue
 				export.exportCatalogueToExcel( mainMenu.getCatalogue(), 
@@ -447,7 +497,11 @@ public class ToolsMenu implements MainMenuItem {
 						GlobalUtil.showDialog( shell, 
 								Messages.getString( "Export.DoneTitle" ), 
 								Messages.getString( "Export.DoneMessage" ),
-								SWT.ICON_WARNING );
+								SWT.ICON_INFORMATION );
+						
+						if ( listener != null )
+							listener.buttonPressed( exportItem, 
+									EXPORT_CAT_MI, null );
 					}
 				});
 			}
@@ -458,35 +512,7 @@ public class ToolsMenu implements MainMenuItem {
 		
 		return exportItem;
 	}
-	
-	
-	
 
-	/**
-	 * Add a menu item which allows to append an excel file
-	 * @param menu
-	 */
-	private MenuItem addAppendMI ( Menu menu ) {
-
-		MenuItem appendItem = new MenuItem( menu , SWT.NONE );
-		appendItem.setText( Messages.getString("BrowserMenu.AppendCmd") );
-
-		// only if not read mode
-		if ( appendItem != null )
-			appendItem.addSelectionListener( new SelectionAdapter() {
-				@Override
-				public void widgetSelected ( SelectionEvent event ) {
-
-					
-				}
-			} );
-
-		// enable if editing mode or if we are editing a local catalogue
-		appendItem.setEnabled( false );
-		
-		return appendItem;
-	}
-	
 	/**
 	 * Add a menu item which allows selecting the favourite picklist to use in the browser
 	 * @param menu
@@ -494,7 +520,7 @@ public class ToolsMenu implements MainMenuItem {
 	private MenuItem addImportPicklistMI ( Menu menu ) {
 		
 		// create a menu item for importing picklists
-		MenuItem picklistItem = new MenuItem( menu , SWT.CASCADE );
+		final MenuItem picklistItem = new MenuItem( menu , SWT.CASCADE );
 		picklistItem.setText( Messages.getString("BrowserMenu.ImportPicklistCmd") );
 		
 		// open a dialog to select a picklist file
@@ -544,7 +570,11 @@ public class ToolsMenu implements MainMenuItem {
 					pickDao.importPicklist( picklist );
 					
 					GlobalUtil.setShellCursor( shell, SWT.CURSOR_ARROW );
-				} 
+				}
+				
+				if ( listener != null )
+					listener.buttonPressed( picklistItem, 
+							IMPORT_PICKLIST_MI, null );
 			}
 			
 			@Override
@@ -562,7 +592,7 @@ public class ToolsMenu implements MainMenuItem {
 	 */
 	private MenuItem addFavouritePicklistMI ( Menu menu ) {
 		
-		MenuItem picklistItem = new MenuItem( menu , SWT.CASCADE );
+		final MenuItem picklistItem = new MenuItem( menu , SWT.CASCADE );
 		picklistItem.setText( Messages.getString("BrowserMenu.PicklistCmd") );
 
 		// Initialize the menu
@@ -623,6 +653,11 @@ public class ToolsMenu implements MainMenuItem {
 							
 							// set the favourite picklist
 							prefDao.setFavouritePicklist( selectedPicklist );
+							
+							
+							if ( listener != null )
+								listener.buttonPressed( picklistItem, 
+										FAV_PICKLIST_MI, null );
 						}
 						
 						@Override
@@ -644,7 +679,7 @@ public class ToolsMenu implements MainMenuItem {
 	 */
 	private MenuItem addCompactDBMI ( Menu menu ) {
 		
-		MenuItem compressDBItem = new MenuItem( menu , SWT.NONE );
+		final MenuItem compressDBItem = new MenuItem( menu , SWT.NONE );
 
 		compressDBItem.setText( Messages.getString("BrowserMenu.CompactDBCmd") );
 
@@ -654,6 +689,9 @@ public class ToolsMenu implements MainMenuItem {
 
 				DatabaseManager.compressDatabase();
 
+				if ( listener != null )
+					listener.buttonPressed( compressDBItem, 
+							COMPACT_DB_MI, null );
 			}
 		} );
 		
@@ -668,7 +706,7 @@ public class ToolsMenu implements MainMenuItem {
 	 */
 	private MenuItem addHierarchyEditorMI ( Menu menu ) {
 		
-		MenuItem hierarchyEditorItem = new MenuItem( menu , SWT.NONE );
+		final MenuItem hierarchyEditorItem = new MenuItem( menu , SWT.NONE );
 		hierarchyEditorItem.setText( Messages.getString("BrowserMenu.HierarchyEditorCmd") );
 
 		// Enable only if there is a catalogue open		
@@ -679,6 +717,10 @@ public class ToolsMenu implements MainMenuItem {
 				HierarchyEditor e = new HierarchyEditor( shell, 
 						mainMenu.getCatalogue().getHierarchies() );
 				e.Display();
+				
+				if ( listener != null )
+					listener.buttonPressed( hierarchyEditorItem, 
+							HIER_EDITOR_MI, null );
 			}
 		} );
 		
@@ -694,7 +736,7 @@ public class ToolsMenu implements MainMenuItem {
 	 */
 	private MenuItem addAttributeEditorMI ( Menu menu ) {
 		
-		MenuItem attributeEditorItem = new MenuItem( menu , SWT.NONE );
+		final MenuItem attributeEditorItem = new MenuItem( menu , SWT.NONE );
 		attributeEditorItem.setText( Messages.getString("BrowserMenu.AttributeEditorCmd") );
 		
 		attributeEditorItem.addSelectionListener( new SelectionAdapter() {
@@ -705,8 +747,11 @@ public class ToolsMenu implements MainMenuItem {
 				AttributeDAO attrDao = new AttributeDAO( mainMenu.getCatalogue() );
 				
 				AttributeEditor e = new AttributeEditor( shell , attrDao.getAll() );
-				e.addUpdateListener( mainMenu.updateListener );
 				e.Display();
+				
+				if ( listener != null )
+					listener.buttonPressed( attributeEditorItem, 
+							ATTR_EDITOR_MI, null );
 				
 			}
 		} );
@@ -725,7 +770,7 @@ public class ToolsMenu implements MainMenuItem {
 	private MenuItem addSearchOptionsMI ( Menu menu ) {
 		
 		// Search options form
-		MenuItem searchOptionsItem = new MenuItem( menu , SWT.PUSH );
+		final MenuItem searchOptionsItem = new MenuItem( menu , SWT.PUSH );
 		searchOptionsItem.setText( Messages.getString("BrowserMenu.GeneralSearchOptionsCmd") );
 
 		// if search options is clicked
@@ -740,6 +785,10 @@ public class ToolsMenu implements MainMenuItem {
 				
 				// display the form
 				sof.display();
+				
+				if ( listener != null )
+					listener.buttonPressed( searchOptionsItem, 
+							SEARCH_OPT_MI, null );
 
 			}
 		} );
@@ -755,7 +804,7 @@ public class ToolsMenu implements MainMenuItem {
 	 */
 	private MenuItem addUserPreferencesMI ( Menu menu ) {
 		
-		MenuItem userPrefItem = new MenuItem( menu , SWT.NONE );
+		final MenuItem userPrefItem = new MenuItem( menu , SWT.NONE );
 		
 		userPrefItem.setText( Messages.getString( "BrowserMenu.UserPrefCmd" ) );
 
@@ -765,6 +814,10 @@ public class ToolsMenu implements MainMenuItem {
 
 				FormUserPreferences e = new FormUserPreferences( shell );
 				e.Display();
+				
+				if ( listener != null )
+					listener.buttonPressed( userPrefItem, 
+							USER_PREF_MI, null );
 
 			}
 		} );
@@ -827,9 +880,6 @@ public class ToolsMenu implements MainMenuItem {
 			
 			if ( attributeEditMI != null )
 				attributeEditMI.setEnabled( true );
-			
-			if ( appendMI != null )
-				appendMI.setEnabled( canEdit && nonEmptyCat );
 		}
 
 		// update catalogue manager buttons
@@ -875,10 +925,6 @@ public class ToolsMenu implements MainMenuItem {
 
 					if ( attributeEditMI != null )
 						attributeEditMI.setEnabled( false );
-
-					if ( appendMI != null )
-						appendMI.setEnabled( false );
-
 				}
 			}
 			else {
@@ -964,6 +1010,9 @@ public class ToolsMenu implements MainMenuItem {
 	private void reserve( Catalogue catalogue, 
 			final ReserveLevel level, String description ) {
 
+		// set that we are reserving the catalogue
+		catalogue.setReserving( true );
+		
 		// reserve the catalogue
 		Dcf dcf = new Dcf();
 

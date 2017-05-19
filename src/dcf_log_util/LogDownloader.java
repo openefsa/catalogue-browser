@@ -108,6 +108,9 @@ public class LogDownloader {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+			
+			// go to the next attempt
+			attemptsCount++;
 		}
 		
 		return log;

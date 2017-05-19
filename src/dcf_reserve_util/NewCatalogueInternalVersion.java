@@ -9,8 +9,10 @@ import import_catalogue.ImportActions;
 import ui_progress_bar.FormProgressBar;
 
 /**
- * Class to manage new version of a catalogue during the reserve
- * process.
+ * Class to manage new version of a catalogue using only
+ * code and version information. We have also the information
+ * related to the xml filename in which all the catalogue
+ * information are contained.
  * @author avonva
  *
  */
@@ -89,5 +91,10 @@ public class NewCatalogueInternalVersion {
 	 */
 	public Catalogue getNewCatalogue() {
 		return newCatalogue;
+	}
+	
+	@Override
+	public String toString() {
+		return "NewCatVersion: code=" + newCode + ",version=" + newVersion + ",XmlFilename=" + filename;
 	}
 }

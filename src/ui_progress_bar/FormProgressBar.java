@@ -28,7 +28,6 @@ public class FormProgressBar {
 	private Label label;
 
 	private String title;
-	private int style;
 
 	private Integer done = 0;
 	private double doneFract = 0;  // used to manage fractional progresses
@@ -46,10 +45,9 @@ public class FormProgressBar {
 		opened = false;
 
 		this.shell = shell;
-		this.title=title;
+		this.title = title;
 		this.cancelEnabled = cancelEnabled;
-		this.style = style;
-		this.initializeGraphics( shell );
+		this.initializeGraphics( shell, style );
 	}
 
 	/**
@@ -65,7 +63,7 @@ public class FormProgressBar {
 	 * Creates all the graphics for the progress bar
 	 * @param parentShell
 	 */
-	public void initializeGraphics ( Shell parentShell ) {
+	public void initializeGraphics ( Shell parentShell, int style ) {
 
 		currentShell = new Shell( parentShell, style );
 		currentShell.setText( title );

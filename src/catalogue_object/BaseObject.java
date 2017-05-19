@@ -14,12 +14,11 @@ public class BaseObject implements Nameable {
 	private String name;
 	private String label;
 	private String scopenotes;
-	//private String version;
 	private Version version;
 	private Timestamp lastUpdate;
 	private Timestamp validFrom;
 	private Timestamp validTo;
-	private String status;
+	private Status status;
 	private boolean deprecated;
 	
 	public BaseObject () {
@@ -49,7 +48,7 @@ public class BaseObject implements Nameable {
 		this.lastUpdate = lastUpdate;
 		this.validFrom = validFrom;
 		this.validTo = validTo;
-		this.status = status;
+		this.status = new Status( status );
 		this.deprecated = deprecated;
 	}
 
@@ -84,7 +83,7 @@ public class BaseObject implements Nameable {
 		this.validTo = validTo;
 	}
 	public void setStatus(String status) {
-		this.status = status;
+		this.status = new Status( status );
 	}
 	public void setDeprecated(boolean deprecated) {
 		this.deprecated = deprecated;
@@ -120,11 +119,14 @@ public class BaseObject implements Nameable {
 	/**
 	 * Get the version in string format
 	 * the major, minor and internal are
-	 * dot separated
-	 * @return
+	 * dot separated.
+	 * @return the version of the base object
+	 * if present, null otherwise
 	 */
 	public String getVersion() {
-		return version.getVersion();
+		if ( version != null )
+			return version.getVersion();
+		else return null;
 	}
 	public Timestamp getLastUpdate() {
 		return lastUpdate;
@@ -135,10 +137,27 @@ public class BaseObject implements Nameable {
 	public Timestamp getValidTo() {
 		return validTo;
 	}
+	/**
+	 * Get the status in string format
+	 * @return the status if found, null
+	 * otherwise
+	 */
 	public String getStatus() {
+		
+		if ( status != null )
+			return status.getStatus();
+		
+		return null;
+	}
+	public Status getRawStatus() {
 		return status;
 	}
 	public boolean isDeprecated() {
+
+		if ( status != null )
+			return status.isDeprecated();
+		
+		// return cache if present
 		return deprecated;
 	}
 }

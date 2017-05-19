@@ -17,6 +17,12 @@ import messages.Messages;
  */
 public class ViewMenu implements MainMenuItem {
 
+	public static final int EXPAND_MI = 0;
+	public static final int COLLAPSE_NODE_MI = 1;
+	public static final int COLLAPSE_TREE_MI = 2;
+	
+	private MenuListener listener;
+	
 	private MainMenu mainMenu;
 	private Shell shell;
 
@@ -31,7 +37,14 @@ public class ViewMenu implements MainMenuItem {
 		create ( menu );
 	}
 
-
+	/**
+	 * Set the listener to the menu buttons
+	 * @param listener
+	 */
+	public void setListener(MenuListener listener) {
+		this.listener = listener;
+	}
+	
 	/**
 	 * Add the view menu
 	 * @param menu
@@ -61,15 +74,15 @@ public class ViewMenu implements MainMenuItem {
 	 */
 	private MenuItem addExpandMI ( Menu menu ) {
 
-		MenuItem expandItem = new MenuItem( menu , SWT.NONE );
+		final MenuItem expandItem = new MenuItem( menu , SWT.NONE );
 		expandItem.setText( Messages.getString("BrowserMenu.ExpandNodeCmd") );
 		expandItem.addSelectionListener( new SelectionAdapter() {
 			@Override
 			public void widgetSelected ( SelectionEvent e ) {
 
-				// call the expand listener if it was set
-				if ( mainMenu.expandNodeListener != null )
-					mainMenu.expandNodeListener.handleEvent( new Event() );
+				// call the button listener if it was set
+				if ( listener != null )
+					listener.buttonPressed( expandItem, EXPAND_MI, null );
 			}
 		} );
 
@@ -83,15 +96,16 @@ public class ViewMenu implements MainMenuItem {
 	 */
 	private MenuItem addCollapseSingleNodeMI ( Menu menu ) {
 
-		MenuItem collapseSingleItem = new MenuItem( menu , SWT.NONE );
+		final MenuItem collapseSingleItem = new MenuItem( menu , SWT.NONE );
 		collapseSingleItem.setText( Messages.getString("BrowserMenu.CollapseNodeCmd") );
 		collapseSingleItem.addSelectionListener( new SelectionAdapter() {
 			@Override
 			public void widgetSelected ( SelectionEvent e ) {
 
-				// call the listener if it was set
-				if ( mainMenu.collapseNodeListener != null )
-					mainMenu.collapseNodeListener.handleEvent( new Event() );
+				// call the button listener if it was set
+				if ( listener != null )
+					listener.buttonPressed( collapseSingleItem, 
+							COLLAPSE_NODE_MI, null );
 			}
 		} );
 
@@ -104,16 +118,17 @@ public class ViewMenu implements MainMenuItem {
 	 */
 	private MenuItem addCollapseAllMI ( Menu menu ) {
 
-		MenuItem collapseItem = new MenuItem( menu , SWT.NONE );
+		final MenuItem collapseItem = new MenuItem( menu , SWT.NONE );
 		collapseItem.setText( Messages.getString("BrowserMenu.CollapseTreeCmd") );
 
 		collapseItem.addSelectionListener( new SelectionAdapter() {
 			@Override
 			public void widgetSelected ( SelectionEvent e ) {
 
-				// call the listener if it was set
-				if ( mainMenu.collapseTreeListener != null )
-					mainMenu.collapseTreeListener.handleEvent( new Event() );
+				// call the button listener if it was set
+				if ( listener != null )
+					listener.buttonPressed( collapseItem, 
+							COLLAPSE_TREE_MI, null );
 			}
 		} );
 

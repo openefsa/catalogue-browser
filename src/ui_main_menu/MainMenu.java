@@ -4,7 +4,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 
@@ -33,17 +32,10 @@ public class MainMenu extends Observable implements Observer {
 	private AboutMenu about;       // about menu
 	private LoginMenu login;       // login button
 	
-	Listener openListener;         // listener called when the open button is pressed
-	Listener closeListener;        // listener called when the close button is pressed
-	Listener updateListener;       // listener called when graphics update needed
-	Listener importListener;       // listener called when an import action is finished
-	Listener exportListener;       // listener called when an export action is finished
-	Listener newCatListener;       // listener called when a new local catalogue is created
-	Listener expandNodeListener;   // listener called when expand node button is pressed
-	Listener collapseNodeListener; // listener called when collapse node button is pressed
-	Listener collapseTreeListener; // listener called when collapse tree button is pressed
-	Listener loginListener;        // called when the user access level is determined
-	Listener reserveListener;      // called when the user clicks reserve/unreserve
+	MenuListener fileListener;
+	MenuListener viewListener;
+	MenuListener toolsListener;
+	MenuListener loginListener;
 	
 	/**
 	 * Initialize the main menu
@@ -65,18 +57,22 @@ public class MainMenu extends Observable implements Observer {
 
 		// file menu with new, open, download cat, report, exit...
 		file = new FileMenu( this, mainMenu );
+		file.setListener( fileListener );
 
 		// edit menu with expand, collapse, copy, paste...
 		view = new ViewMenu ( this, mainMenu );
+		view.setListener( viewListener );
 
 		// tools menu with append, import, export, pick-lists, options
 		tools = new ToolsMenu ( this, mainMenu );
-
+		tools.setListener( toolsListener );
+		
 		// about menu with licenses
 		about = new AboutMenu ( this, mainMenu );
 		
 		// dcf login button
 		login = new LoginMenu ( this, mainMenu );
+		login.setListener( loginListener );
 		
 		return mainMenu;
 	}
@@ -143,94 +139,36 @@ public class MainMenu extends Observable implements Observer {
 		update( null );
 	}
 	
+	
 	/**
-	 * listener called when graphics update needed
-	 * @param updateListener
+	 * Listener to observe file menu items
+	 * @param fileListener
 	 */
-	public void addUpdateListener(Listener updateListener) {
-		this.updateListener = updateListener;
+	public void setFileListener(MenuListener fileListener) {
+		this.fileListener = fileListener;
 	}
 	
 	/**
-	 * Set the listener called when the open menu item is clicked
-	 * @param openListener
+	 * Listener to observe view menu items
+	 * @param viewListener
 	 */
-	public void addOpenListener(Listener openListener) {
-		this.openListener = openListener;
+	public void setViewListener(MenuListener viewListener) {
+		this.viewListener = viewListener;
 	}
 	
 	/**
-	 * Set the listener called when the close catalogue menu item is clicked
-	 * @param closeListener
+	 * Listener to observe tools menu item
+	 * @param toolsListener
 	 */
-	public void addCloseListener ( Listener closeListener ) {
-		this.closeListener = closeListener;
+	public void setToolsListener(MenuListener toolsListener) {
+		this.toolsListener = toolsListener;
 	}
 	
 	/**
-	 * Set the listener which is called when an import is finished
-	 * @param closeListener
-	 */
-	public void addImportListener ( Listener importListener ) {
-		this.importListener = importListener;
-	}
-	
-	/**
-	 * Set the listener which is called when an export action is finished
-	 * @param exportListener
-	 */
-	public void addExportListener ( Listener exportListener ) {
-		this.exportListener = exportListener;
-	}
-	
-	/**
-	 * Set the listener which is called when a new local catalogue is created
-	 * @param openListener
-	 */
-	public void addNewCatListener(Listener newCatListener) {
-		this.newCatListener = newCatListener;
-	}
-	
-	/**
-	 * Set the listener which is called when expand node button is pressed
-	 * in the event data is present the selected term
-	 * @param openListener
-	 */
-	public void addExpandNodeListener(Listener expandNodeListener) {
-		this.expandNodeListener = expandNodeListener;
-	}
-	
-	/**
-	 * Set the listener which is called when collapse node button is pressed
-	 * in the event data is present the selected term
-	 * @param openListener
-	 */
-	public void addCollapseNodeListener(Listener collapseNodeListener) {
-		this.collapseNodeListener = collapseNodeListener;
-	}
-	
-	/**
-	 * Set the listener which is called when collapse tree button is pressed
-	 * @param openListener
-	 */
-	public void addCollapseTreeListener(Listener collapseTreeListener) {
-		this.collapseTreeListener = collapseTreeListener;
-	}
-	
-	/**
-	 * Called when the login procedure is finished
+	 * Listener to observe the login menu item
 	 * @param loginListener
 	 */
-	public void addLoginListener ( Listener loginListener ) {
+	public void setLoginListener(MenuListener loginListener) {
 		this.loginListener = loginListener;
-	}
-	
-	/**
-	 * Add a listener which is called when the user presses
-	 * reserve/unreserve in the tool menu.
-	 * @param reserveListener
-	 */
-	public void addReserveListener ( Listener reserveListener ) {
-		this.reserveListener = reserveListener;
 	}
 }

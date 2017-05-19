@@ -1,5 +1,6 @@
 package catalogue_object;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -9,6 +10,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
+import org.xml.sax.SAXException;
+
 import catalogue_browser_dao.AttributeDAO;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_browser_dao.ForceCatEditDAO;
@@ -17,9 +23,12 @@ import catalogue_browser_dao.ParentTermDAO;
 import catalogue_browser_dao.ReservedCatalogueDAO;
 import catalogue_browser_dao.TermAttributeDAO;
 import catalogue_browser_dao.TermDAO;
+import catalogue_object.Status.StatusValues;
 import data_transformation.BooleanConverter;
 import data_transformation.DateTrimmer;
 import dcf_manager.Dcf;
+import dcf_manager.VersionFinder;
+import dcf_reserve_util.NewCatalogueInternalVersion;
 import dcf_reserve_util.PendingReserve;
 import dcf_reserve_util.PendingReserveDAO;
 import dcf_user.User;
@@ -63,6 +72,10 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	private boolean local;    // if the catalogue is a new local catalogue or not
 	private ReserveLevel reserveLevel;  // the reserve level of the catalogue
 	private String reserveUsername;     // the user who reserved the catalogue
+	
+	// boolean set to true if we start
+	// a reserve operation for this catalogue
+	private boolean reserving;
 	
 	// list of terms which are contained in the catalogue
 	private HashMap< Integer, Term > terms;
@@ -234,6 +247,12 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * Close the catalogue
 	 */
 	public void close() {
+		
+		try {
+			throw new Exception();
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
 		
 		System.out.println ( "Closing " + this + " at " + dbFullPath );
 		
@@ -831,6 +850,14 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	}
 
 	/**
+	 * update the status of the catalogue
+	 * @param value
+	 */
+	public void setStatus ( StatusValues value ) {
+		getRawStatus().markAs( value );
+	}
+	
+	/**
 	 * Reserve the catalogue for the current user.
 	 * Note that if you want to unreserve the catalogue you
 	 * must use {@link #unreserve() }
@@ -851,18 +878,26 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 
 		// get a new internal version of the catalogue
 		Catalogue newCatalogue = newInternalVersion();
-		
 		System.out.println ( "Creating new internal version " + newCatalogue );
 		
 		// otherwise reserve the catalogue for the current user
 		newCatalogue.reserveUsername = user.getUsername();
 		newCatalogue.reserveLevel = reserveLevel;
 		
+		// update the status of the catalogue
+		if ( reserveLevel.isMajor() )
+			newCatalogue.setStatus( StatusValues.DRAFT_MAJOR_RESERVED );
+		else if ( reserveLevel.isMinor() )
+			newCatalogue.setStatus( StatusValues.DRAFT_MINOR_RESERVED );
+		
 		ReservedCatalogueDAO reserveDao = new ReservedCatalogueDAO( newCatalogue );
 		
 		// reserve the new catalogue in the DB
 		reserveDao.reserveCatalogue( newCatalogue.getReserveUsername(), 
 				newCatalogue.getReserveLevel() );
+		
+		// the reserve operation is finished
+		setReserving( false );
 		
 		return newCatalogue;
 	}
@@ -872,6 +907,12 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 */
 	public synchronized void unreserve () {
 
+		// update the status of the catalogue
+		if ( reserveLevel.isMajor() )
+			this.setStatus( StatusValues.DRAFT_MAJOR_UNRESERVED );
+		else if ( reserveLevel.isMinor() )
+			this.setStatus( StatusValues.DRAFT_MINOR_UNRESERVED );
+		
 		this.reserveLevel = ReserveLevel.NONE;
 		reserveUsername = null;
 		
@@ -883,6 +924,9 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		CatalogueDAO catDao = new CatalogueDAO();
 		// update the catalogue meta data
 		catDao.update( this );
+		
+		// the unreserve operation is finished
+		setReserving( false );
 	}
 	
 	/**
@@ -895,7 +939,11 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		// in a permament way
 		VersionChecker versionChecker = new VersionChecker( this );
 		
-		return versionChecker.publishMinor();
+		Catalogue newCatalogue = versionChecker.publishMinor();
+		
+		newCatalogue.setStatus( StatusValues.PUBLISHED_MINOR );
+		
+		return newCatalogue;
 	}
 	
 	/**
@@ -908,7 +956,11 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		// in a permament way
 		VersionChecker versionChecker = new VersionChecker( this );
 		
-		return versionChecker.publishMajor();
+		Catalogue newCatalogue = versionChecker.publishMajor();
+		
+		newCatalogue.setStatus( StatusValues.PUBLISHED_MAJOR );
+		
+		return newCatalogue;
 	}
 	
 	/**
@@ -938,6 +990,15 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	}
 	
 	/**
+	 * Set if the catalogue is being reserved or 
+	 * unreserved
+	 * @param reserving
+	 */
+	public void setReserving(boolean reserving) {
+		this.reserving = reserving;
+	}
+	
+	/**
 	 * Check if a pending reserve/unreserve operation
 	 * is in process or not regarding this catalogue.
 	 * @return
@@ -947,7 +1008,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		PendingReserveDAO prDao = new PendingReserveDAO();
 		PendingReserve pr = prDao.getByCatalogue ( this );
 		
-		return pr != null;
+		return pr != null || reserving;
 	}
 	
 	/**
@@ -1380,7 +1441,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	}
 	
 	/**
-	 * Check if this catalogue is the last release
+	 * Check if this catalogue is the last PUBLISHED release
 	 * or not.
 	 * @return
 	 */
@@ -1396,6 +1457,56 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		}
 		
 		return true;
+	}
+	
+	/**
+	 * Check if the catalogue is the last
+	 * INTERNAL VERSION or not.
+	 * @return the new catalogue internal version if there is one,
+	 * null otherwise
+	 * @throws IOException 
+	 * @throws SAXException 
+	 * @throws ParserConfigurationException 
+	 * @throws TransformerException 
+	 */
+	public NewCatalogueInternalVersion getLastInternalVersion() throws IOException, 
+	TransformerException, ParserConfigurationException, SAXException {
+
+		String format = ".xml";
+		String filename = "temp_" + getCode();
+		String input = filename + format;
+		String output = filename + "_version" + format;
+
+		Dcf dcf = new Dcf();
+
+		// export the internal version in the file
+		boolean written = dcf.exportCatalogueInternalVersion( 
+				getCode(), input );
+
+		// if no internal version is retrieved we have
+		// the last version of the catalogue
+		if ( !written )
+			return null;
+
+		VersionFinder finder = new VersionFinder( input, output );
+
+		// compare the catalogues versions
+		Version intVersion = new Version ( finder.getVersion() );
+		Version localVersion = getRawVersion();
+
+		// if the downloaded version is newer than the one we
+		// are working with => we are using an old version
+		if ( intVersion.compareTo( localVersion ) < 0 ) {
+
+			// save the new version of the catalogue
+			NewCatalogueInternalVersion newVersion = 
+					new NewCatalogueInternalVersion( getCode(), 
+							finder.getVersion(), input );
+
+			return newVersion;
+		}
+
+		return null;
 	}
 	
 	/**
