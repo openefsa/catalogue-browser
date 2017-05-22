@@ -1,4 +1,4 @@
-package catalogue_management;
+package new_local_catalogue;
 
 public class DuplicatedCatalogueException extends Exception {
 

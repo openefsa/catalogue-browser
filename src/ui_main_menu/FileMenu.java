@@ -15,13 +15,13 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 import catalogue_browser_dao.CatalogueDAO;
-import catalogue_management.CatalogueCreationActions;
-import catalogue_management.DuplicatedCatalogueException;
 import catalogue_object.Catalogue;
 import dcf_manager.Dcf;
 import dcf_user.User;
 import import_catalogue.ImportActions;
 import messages.Messages;
+import new_local_catalogue.CatalogueCreationActions;
+import new_local_catalogue.DuplicatedCatalogueException;
 import ui_main_panel.DownloadCatalogueFrom;
 import ui_main_panel.FormCataloguesList;
 import ui_main_panel.FormLocalCatalogueName;

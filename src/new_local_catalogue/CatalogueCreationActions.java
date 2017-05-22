@@ -1,4 +1,4 @@
-package catalogue_management;
+package new_local_catalogue;
 
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_browser_dao.DatabaseManager;

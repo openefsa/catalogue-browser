@@ -12,7 +12,6 @@ public class Version {
 	private int minor;            // minor part of the version
 	private int internal;         // internal part of the version
 	private boolean addInternal;  // if the internal version should be included in the version or not
-	private boolean oldInternal;  // true if the internal version is not the last one
 	private boolean wrongFormat;  // if we had a wrong format in input
 
 	public Version( String version ) {
@@ -25,7 +24,6 @@ public class Version {
 		}
 		
 		this.addInternal = false;
-		this.oldInternal = false;
 		
 		// split the version pieces
 		String[] versionUnpacked = version.split( "\\." );
@@ -43,16 +41,18 @@ public class Version {
 		// get also the internal version if present
 		if ( versionUnpacked.length > 2 ) {
 			
-			this.internal = Integer.valueOf( versionUnpacked[2] );
-			
-			// save that the internal version should be included
-			addInternal = true;
-		}
-		
-		// if we have an additional field it means that
-		// we have a not updated version
-		if ( versionUnpacked.length > 3 ) {
-			oldInternal = true;
+			// try to get the internal version if present
+			// we need the try since it is possible that
+			// instead a number we have a flag
+			try {
+
+				this.internal = Integer.valueOf( versionUnpacked[2] );
+				// save that the internal version should be included
+				addInternal = true;
+
+			} catch ( NumberFormatException e ) {
+			}
+
 		}
 	}
 	
@@ -73,10 +73,6 @@ public class Version {
 		// add it
 		if ( addInternal )
 			newVersion = newVersion + "." + internal;
-		
-		// add an OLD to the not valid internal versions
-		if ( oldInternal )
-			newVersion = newVersion + ".OLD";
 		
 		return newVersion;
 	}
@@ -149,11 +145,12 @@ public class Version {
 	}
 	
 	/**
-	 * Set this internal version of the
-	 * catalogue as not up to date version.
+	 * If the version has a wrong format
+	 * or not
+	 * @return
 	 */
-	public void markAsOldVersion() {
-		oldInternal = true;
+	public boolean isWrongFormat() {
+		return wrongFormat;
 	}
 	
 	/**
@@ -180,7 +177,7 @@ public class Version {
 		// if wrong format return -1
 		if ( this.wrongFormat || other.wrongFormat )
 			return -1;
-		
+
 		int majorCheck = compareInteger( this.getMajor(), other.getMajor() );
 		int minorCheck = compareInteger( this.getMinor(), other.getMinor() );
 		int internalCheck = compareInteger( this.getInternal(), other.getInternal() );

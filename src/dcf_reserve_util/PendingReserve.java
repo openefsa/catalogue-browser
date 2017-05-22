@@ -133,13 +133,13 @@ public class PendingReserve {
 		// update the status
 		setStatus( PendingReserveStatus.SENDING );
 		
-		Document log = getLog();
+		//Document log = getLog();
+
+		// busy dcf simulated TODO da RRIMUOVERE!!!!!!###################################################
+		Document log = null;
 		
 		// if no log in high priority => the available time is finished
-		if ( log == null && priority == PendingPriority.HIGH ) {
-
-			// downgrade the pending reserve to LOW priority
-			priority = PendingPriority.LOW;
+		if ( log == null ) { //&& priority == PendingPriority.HIGH ) {
 			
 			// force editing of the catalogue since we have waited
 			// but no response was received from the dcf
@@ -148,13 +148,31 @@ public class PendingReserve {
 			if ( !catalogue.isForceEdit( username ) 
 					&& reserveLevel.greaterThan( ReserveLevel.NONE ) ) {
 				
-				catalogue.forceEdit( username, reserveLevel );
+				setStatus( PendingReserveStatus.FORCING_EDITING );
+				
+				Catalogue forcedCat = catalogue.forceEdit( 
+						username, reserveLevel );
+				
+				setNewVersion( forcedCat );
 			}
 			
 			// notify the user that the dcf was found busy
 			// and that the pending reserve was queued
-			if ( listener != null )
-				listener.queued( this );
+			// we call it after having forced the editing
+			// in order to refresh correctly the UI
+			setStatus( PendingReserveStatus.QUEUED );
+
+			System.out.println( "Downgrading to LOW priority " + this );
+			
+			// downgrade the pending reserve priority
+			downgradePriority();
+			
+			try {
+				Thread.sleep( 30000 );
+			} catch (InterruptedException e) {
+				// TODO RIMUOVI ###############################################################
+				e.printStackTrace();
+			}
 			
 			// restart the process with low priority
 			log = getLog();
@@ -171,18 +189,20 @@ public class PendingReserve {
 		// get the response contained in the log
 		this.response = extractLogResponse( log );
 		
-		// if the reserve did not succeed => stultify the current catalogue
-		if ( response != DcfResponse.OK && 
-				catalogue.isForceEdit( username ) ) {
-
-			// mark the catalogue as invalid, we have modified the
-			// catalogue but we did not have the rights to do it
-			catalogue.stultify();
+		boolean invalid = response != DcfResponse.OK && 
+				catalogue.isForceEdit( username );
+		
+		// if the reserve did not succeed  
+		// invalidate the current catalogue
+		if ( invalid ) {
+			invalidate();
 		}
 		
 		// Remove the forced editing from the catalogue
 		// if it was enabled
 		// since here we know the real dcf response
+		// remove before reserve! We need to restore the
+		// correct version of the catalogue
 		if ( catalogue.isForceEdit( username ) )
 			catalogue.removeForceEdit( username );
 		
@@ -217,7 +237,7 @@ public class PendingReserve {
 			
 			// before reserving, check the version of the catalogue
 			// if it is the last one
-			importLastVersion ( new Listener() {
+			boolean isLast = importLastVersion ( new Listener() {
 				
 				@Override
 				public void handleEvent(Event arg0) {
@@ -230,6 +250,12 @@ public class PendingReserve {
 					setNewVersion( newVersion );
 				}
 			});
+			
+			// if not last version and the catalogue was
+			// forced to editing => stultify the catalogue
+			if ( !isLast && catalogue.isForceEdit( username ) ) {
+				invalidate();
+			}
 		}
 		else {
 			
@@ -237,8 +263,7 @@ public class PendingReserve {
 			catalogue.unreserve ();
 		}
 	}
-	
-	
+
 	/**
 	 * Import a the last internal version of the catalogue
 	 * if there is one. If no newer internal versions are
@@ -310,6 +335,30 @@ public class PendingReserve {
 	}
 	
 	/**
+	 * Stultify the current catalogue. This happens
+	 * if we force the editing mode and then
+	 * we discover that we could not edit it.
+	 */
+	private void invalidate() {
+		
+		catalogue.invalidate();
+		setStatus( PendingReserveStatus.INVALIDATED );
+	}
+	
+	/**
+	 * Downgrade the priority of the pending reserve
+	 * and save this change into the database
+	 */
+	private synchronized void downgradePriority() {
+		
+		// downgrade the pending reserve to LOW priority
+		priority = PendingPriority.LOW;
+		
+		PendingReserveDAO prDao = new PendingReserveDAO();
+		prDao.update( this );
+	}
+	
+	/**
 	 * Delete the pending request from the database
 	 * Multiple threads can access the database with this
 	 * method, for this reason we use the synchronized keyword.
@@ -347,7 +396,7 @@ public class PendingReserve {
 			interAttemptsTime = 10000;  // 10 seconds
 			break;
 		case LOW:
-			interAttemptsTime = 300000;  // 5 minutes
+			interAttemptsTime = 30000;  // 5 minutes TODO
 			break;
 		default:
 			break;
@@ -484,12 +533,6 @@ public class PendingReserve {
 		// update the pending reserve also in the database
 		PendingReserveDAO prDao = new PendingReserveDAO();
 		prDao.update( this );
-		
-		// notify that we have downloaded a 
-		// new version of the catalogue
-		if ( listener != null )
-			listener.internalVersionChanged( 
-					this, newVersion );
 	}
 	
 	/**

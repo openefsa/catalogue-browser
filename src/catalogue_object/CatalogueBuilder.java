@@ -20,6 +20,7 @@ public class CatalogueBuilder extends BaseObjectBuilder {
 	ReserveLevel reserveLevel = ReserveLevel.NONE;
 	private String reserveUsername;
 	boolean local = false;                  // default value
+	int forcedCount = 0;
 
 	/**
 	 * Set the term code mask of the catalogue
@@ -89,6 +90,18 @@ public class CatalogueBuilder extends BaseObjectBuilder {
 		return this;
 	}
 	
+	/**
+	 * Set the forced count of the catalogue (number of times
+	 * we had forced the catalogue editing mode since dcf
+	 * was busy in a reserve operation)
+	 * @param forcedCount
+	 * @return
+	 */
+	public CatalogueBuilder setForcedCount ( int forcedCount ) {
+		this.forcedCount = forcedCount;
+		return this;
+	}
+	
 	public CatalogueBuilder setReserveLevel( ReserveLevel reserveLevel ) {
 		this.reserveLevel = reserveLevel;
 		return this;
@@ -146,7 +159,7 @@ public class CatalogueBuilder extends BaseObjectBuilder {
 		// create the catalogue object and return it
 		return new Catalogue ( id, code, name, label, scopenotes, termCodeMask, termCodeLength, termMinCode,
 				acceptNonStandardCodes, generateMissingCodes, version, lastUpdate, validFrom, 
-				validTo, status, catalogueGroups, deprecated, dbFullPath, backupDbPath, local, 
+				validTo, status, catalogueGroups, deprecated, dbFullPath, backupDbPath, local, forcedCount,
 				reserveUsername, reserveLevel );
 	}
 }

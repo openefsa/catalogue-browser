@@ -337,7 +337,7 @@ public class TermsTreePanel extends Observable implements Observer {
 		/* Menu which helps browsing the hierarchies among terms */
 
 		otherHierarchies = addChangeHierarchyMI ( termMenu );
-
+		
 		// Add edit buttons if we are in editing mode
 		// and if we are not (un)reserving a catalogue
 		if ( !manager.isReadOnly() ) {

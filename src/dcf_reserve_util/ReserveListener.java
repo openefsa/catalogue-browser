@@ -1,6 +1,5 @@
 package dcf_reserve_util;
 
-import catalogue_object.Catalogue;
 import dcf_webservice.DcfResponse;
 
 /**
@@ -45,26 +44,4 @@ public interface ReserveListener {
 	 */
 	public void statusChanged( PendingReserve pendingReserve, 
 			PendingReserveStatus status );
-	
-	/**
-	 * Called when the dcf is busy after having
-	 * tried a pending reserve with HIGH priority.
-	 * The pending reserve was queued and will be
-	 * completed in other times.
-	 * If this method is called, then the pending
-	 * reserve priority was set to LOW and the log retrieval
-	 * process was restarted with this new priority.
-	 * @param pendingReserve
-	 */
-	public void queued ( PendingReserve pendingReserve );
-	
-	/**
-	 * Called when a new version of the catalogue is downloaded
-	 * @param pendingReserve the pending reserve which caused the
-	 * download of the new catalogue version (the new catalogue version
-	 * is also contained in this object see {@link PendingReserve#getCatalogue()}
-	 * @param newVersion the new catalogue version which was downloaded
-	 */
-	public void internalVersionChanged ( PendingReserve pendingReserve, 
-			Catalogue newVersion );
 }

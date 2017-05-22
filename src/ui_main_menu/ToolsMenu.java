@@ -429,7 +429,7 @@ public class ToolsMenu implements MainMenuItem {
 				
 				// import the selected excel into the current catalogue
 				importAction.importXlsx( mainMenu.getCatalogue().getDbFullPath(), 
-						filename, true, new Listener() {
+						filename, false, new Listener() {
 
 					@Override
 					public void handleEvent(Event event) {
@@ -442,6 +442,11 @@ public class ToolsMenu implements MainMenuItem {
 						if ( listener != null )
 							listener.buttonPressed( importItem, 
 									IMPORT_CAT_MI, event );
+						
+						GlobalUtil.showDialog( shell, 
+								Messages.getString("Import.ImportSuccessTitle"), 
+								Messages.getString("Import.ImportSuccessMessage"), 
+								SWT.ICON_INFORMATION );
 					}
 				});
 			}
@@ -852,8 +857,7 @@ public class ToolsMenu implements MainMenuItem {
 
 		// check if the current user can edit the current catalogue or not
 		// we can edit if we are in editing mode or if we are modifying a local catalogue
-		boolean canEdit = user.canEdit( mainMenu.getCatalogue() ) || 
-				mainMenu.getCatalogue().isLocal();
+		boolean canEdit = user.canEdit( mainMenu.getCatalogue() );
 		
 		// check if the current catalogue is not empty (has data in it)
 		boolean nonEmptyCat = !mainMenu.getCatalogue().isEmpty();
@@ -950,6 +954,16 @@ public class ToolsMenu implements MainMenuItem {
 
 				if ( importMI != null )
 					importMI.setEnabled( canEdit );
+			}
+		} 
+		else {
+			if ( mainMenu.getCatalogue().isLocal() ) {
+				
+				if ( importMI != null )
+					importMI.setEnabled( true );
+				
+				if ( exportMI != null )
+					exportMI.setEnabled( true );
 			}
 		}
 	}

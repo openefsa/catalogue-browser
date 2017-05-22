@@ -361,6 +361,7 @@ public class MainPanel implements Observer, RestoreableWindow {
 		GlobalManager.getInstance().addObserver( catalogueLabel );
 		GlobalManager.getInstance().addObserver( menu );
 		GlobalManager.getInstance().addObserver( tabPanel );
+		GlobalManager.getInstance().addObserver( this );
 		
 		// tab panel listen term changes
 		tree.addObserver( tabPanel );
@@ -694,7 +695,14 @@ public class MainPanel implements Observer, RestoreableWindow {
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		
-		if ( arg1 instanceof ReserveLevel ) {
+		// refresh ui if the current catalogue changed
+		if ( arg0 instanceof GlobalManager ) {
+			if ( arg1 instanceof Catalogue ) {
+				refresh();
+			}
+		}
+		
+		else if ( arg1 instanceof ReserveLevel ) {
 			
 			// refresh UI if the current catalogue reserve level was changed
 			refresh();

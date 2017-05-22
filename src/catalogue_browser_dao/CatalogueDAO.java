@@ -31,7 +31,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 	 * @param catalogue
 	 */
 	public int insert ( Catalogue catalogue ) {
-
+		System.out.println( "VERSIONE dao " + catalogue.getVersion() );
 		int id = -1;
 
 		try {
@@ -59,7 +59,8 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 					+ "CAT_DEPRECATED,"
 					+ "CAT_IS_LOCAL,"
 					+ "CAT_DB_PATH,"
-					+ "CAT_DB_BACKUP_PATH ) values (? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
+					+ "CAT_DB_BACKUP_PATH,"
+					+ "CAT_FORCED_COUNT ) values (? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
 					Statement.RETURN_GENERATED_KEYS );
 
 			// set the query parameters
@@ -89,21 +90,13 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 
 			// set if the catalogue is local or not
 			stmt.setBoolean( 17, catalogue.isLocal() );  
-
-			// generate the db path for the catalogue using its code and as root the
-			// application dir of the browser
-
-			// if local catalogue => local cat dir, otherwise main cat dir
-			String folder = catalogue.isLocal() ? DatabaseManager.LOCAL_CAT_DB_FOLDER : DatabaseManager.OFFICIAL_CAT_DB_FOLDER;
-
-			String dbDirectory = DatabaseManager.generateDBDirectory( folder, catalogue );
-
-			String dbFullPath = catalogue.buildDBFullPath( dbDirectory );  // full path of the db from the directory
-
+			
 			// create the db path using the catalogue code and version
-			stmt.setString( 18, dbFullPath );
+			stmt.setString( 18, catalogue.createDbDir() );
 			
 			stmt.setString( 19, catalogue.getBackupDbPath() );
+			
+			stmt.setInt( 20, catalogue.getForcedCount() );
 
 			// execute the query
 			stmt.execute();
@@ -171,7 +164,8 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 					+ "CAT_DEPRECATED = ?,"
 					+ "CAT_IS_LOCAL = ?,"
 					+ "CAT_DB_PATH = ?,"
-					+ "CAT_DB_BACKUP_PATH = ?"
+					+ "CAT_DB_BACKUP_PATH = ?,"
+					+ "CAT_FORCED_COUNT = ? "
 					+ " where CAT_ID = ?" );
 
 			// set the query parameters
@@ -205,7 +199,9 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 			stmt.setString( 18, catalogue.getDbFullPath() );
 			stmt.setString( 19, catalogue.getBackupDbPath() );  
 
-			stmt.setInt ( 20, catalogue.getId() );
+			stmt.setInt( 20, catalogue.getForcedCount() );
+			
+			stmt.setInt ( 21, catalogue.getId() );
 			
 			// execute the query
 			stmt.executeUpdate();
@@ -311,6 +307,8 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 		builder.setBackupDbPath( rs.getString( "CAT_DB_BACKUP_PATH" ) );
 
 		builder.setLocal( rs.getBoolean( "CAT_IS_LOCAL" ) );
+		
+		builder.setForcedCount( rs.getInt( "CAT_FORCED_COUNT" ) );
 		
 		builder.setReserveUsername( rs.getString( "RESERVE_USERNAME" ) );
 		
@@ -533,7 +531,20 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 			catalogues.sort( new Comparator<Catalogue>() {
 				public int compare( Catalogue o1, Catalogue o2 ) {
 					
-					if ( o1.isOlder( o2 ) )
+					boolean inv1 = o1.getCatalogueVersion().isInvalid();
+					boolean inv2 = o2.getCatalogueVersion().isInvalid();
+					
+					boolean older = o1.isOlder( o2 );
+					
+					// if first invalid => second before
+					if ( inv1 && !inv2 )
+						return 1;
+					
+					// if second invalid => first before
+					if ( !inv1 && inv2 )
+						return -1;
+					
+					if ( older )
 						return 1;
 					else
 						return -1;

@@ -75,7 +75,7 @@ public class LogDownloader {
 		Document log = null;
 		
 		// number of tried attempts
-		int attemptsCount = 0;
+		int attemptsCount = 1;
 		
 		// if no log was found and we have low priority or 
 		// high priority with another allowed attempt go on

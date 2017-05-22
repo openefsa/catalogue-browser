@@ -153,11 +153,6 @@ public class BaseObject implements Nameable {
 		return status;
 	}
 	public boolean isDeprecated() {
-
-		if ( status != null )
-			return status.isDeprecated();
-		
-		// return cache if present
 		return deprecated;
 	}
 }

@@ -18,9 +18,9 @@ import catalogue_browser_dao.DatabaseManager;
  */
 public class VersionChecker {
 
-	private Catalogue catalogue;  // the base catalogue
-	private Version version;      // the version of the catalogue
-	private String oldVersion;    // the previous version of the catalogue
+	private Catalogue catalogue;           // the base catalogue
+	private CatalogueVersion version;      // the version of the catalogue
+	private CatalogueVersion oldVersion;   // the previous version of the catalogue
 	
 	/**
 	 * Initialize a version checker with the catalogue
@@ -30,10 +30,9 @@ public class VersionChecker {
 	 */
 	public VersionChecker( Catalogue catalogue ) {
 		this.catalogue = catalogue;
-		this.version = catalogue.getRawVersion();
-		this.oldVersion = catalogue.getVersion();
+		this.version = catalogue.getCatalogueVersion();
+		this.oldVersion = new CatalogueVersion( catalogue.getVersion() );
 	}
-	
 
 	/**
 	 * Publish the major version, the minor will be
@@ -63,6 +62,17 @@ public class VersionChecker {
 		version.incrementInternal();
 		return apply();
 	}
+	
+	/**
+	 * Set the current version as dummy
+	 * @return
+	 */
+	public Catalogue force() {
+		
+		version.force( catalogue.getForcedCount() );
+		
+		return apply();
+	}
 
 	/**
 	 * Apply the changes to the catalogue
@@ -82,10 +92,16 @@ public class VersionChecker {
 		
 		// clone the catalogue and set the new version
 		Catalogue newVersionCat = catalogue.clone();
-		newVersionCat.setVersion( newVersion );
-
+		newVersionCat.setCatalogueVersion( version );
+		
 		// set the backup db path with the old catalogue version db
-		newVersionCat.setBackupDbPath( catalogue.getDbFullPath() );
+		// if the old was dummy, we get as backup path its backup path
+		// since the database of the dummy catalogue could be not consistent
+		// for backups purposes
+		if ( oldVersion.isForced() )
+			newVersionCat.setBackupDbPath( catalogue.getBackupDbPath() );
+		else
+			newVersionCat.setBackupDbPath( catalogue.getDbFullPath() );
 		
 		// insert the new catalogue into the database
 		// note that the db full path is also updated
@@ -109,7 +125,6 @@ public class VersionChecker {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
 		
 		// return the new catalogue
 		return newVersionCat;

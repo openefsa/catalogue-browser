@@ -17,6 +17,7 @@ import org.xml.sax.SAXException;
 
 import catalogue_browser_dao.AttributeDAO;
 import catalogue_browser_dao.CatalogueDAO;
+import catalogue_browser_dao.DatabaseManager;
 import catalogue_browser_dao.ForceCatEditDAO;
 import catalogue_browser_dao.HierarchyDAO;
 import catalogue_browser_dao.ParentTermDAO;
@@ -54,6 +55,10 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	public static final String ISO_8601_24H_FULL_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
 	public static final String NOT_APPLICABLE_VERSION = "Not applicable";
 	public static final String LOCAL_CATALOGUE_STATUS = "Local catalogue";
+	
+	// the catalogue version is specialized, we need to
+	// manage it separately
+	CatalogueVersion version;
 	
 	// catalogue meta data
 	private String termCodeMask;
@@ -108,6 +113,8 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	private DetailLevelGraphics defaultDetailLevel;
 	private TermType defaultTermType;
 	
+	private int forcedCount;
+	
 	/**
 	 * Constructor to create a catalogue object with all its variables
 	 * @param code the catalogue code (unique)
@@ -125,11 +132,15 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	public Catalogue( int id, String code, String name, String label, String scopenotes, String termCodeMask, String
 			termCodeLength, String termMinCode, boolean acceptNonStandardCodes, boolean generateMissingCodes, String version,
 			Timestamp lastUpdate, Timestamp validFrom, Timestamp validTo, String status, String catalogueGroups, boolean deprecated, 
-			String dbFullPath, String backupDbPath, boolean local, String reserveUsername, ReserveLevel reserveLevel ) {
+			String dbFullPath, String backupDbPath, boolean local, int forcedCount, String reserveUsername, ReserveLevel reserveLevel ) {
 
 		// the id is not important for the catalogue
 		super( id, code, name, label, scopenotes, version, lastUpdate, validFrom, validTo, status, deprecated );
 	
+		// set the version of the catalogue with the
+		// extended Version
+		this.version = new CatalogueVersion( version );
+		
 		this.termCodeMask = termCodeMask;
 
 		// convert the term code length into integer if possible
@@ -149,6 +160,8 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		this.dbFullPath = dbFullPath;
 		this.backupDbPath = backupDbPath;
 		this.local = local;
+		
+		this.forcedCount = forcedCount;
 		
 		this.reserveUsername = reserveUsername;
 		this.reserveLevel = reserveLevel;
@@ -203,7 +216,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		Catalogue catalogue = new Catalogue ( getId(), getCode(), getName(), getLabel(), getScopenotes(), termCodeMask, 
 				String.valueOf( termCodeLength ), termMinCode,
 				acceptNonStandardCodes, generateMissingCodes, getVersion(), getLastUpdate(), getValidFrom(), 
-				getValidTo(), getStatus(), catalogueGroups, isDeprecated(), dbFullPath, backupDbPath, local, 
+				getValidTo(), getStatus(), catalogueGroups, isDeprecated(), dbFullPath, backupDbPath, local, 0,
 				reserveUsername, reserveLevel );
 		
 		return catalogue;
@@ -248,12 +261,6 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 */
 	public void close() {
 		
-		try {
-			throw new Exception();
-		} catch ( Exception e ) {
-			e.printStackTrace();
-		}
-		
 		System.out.println ( "Closing " + this + " at " + dbFullPath );
 		
 		// shutdown the connection, by default this operation throws an exception
@@ -275,6 +282,18 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		// closing => set the current catalogue as null
 		if ( manager.getCurrentCatalogue().sameAs( this ) )
 			manager.setCurrentCatalogue( null );
+	}
+	
+	/**
+	 * Check if the current catalogue is opened
+	 * or not
+	 * @return
+	 */
+	public boolean isOpened () {
+		GlobalManager manager = GlobalManager.getInstance();
+
+		// if same of current return true
+		return ( manager.getCurrentCatalogue().sameAs( this ) );
 	}
 	
 	/**
@@ -792,19 +811,35 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * it was not reserved
 	 * @param username who is forcing the editing
 	 * @param level the editing level we want (MINOR or MAJOR)
+	 * @return a copy of the catalogue on which we can edit
 	 */
-	public synchronized void forceEdit ( String username, ReserveLevel level ) {
+	public synchronized Catalogue forceEdit ( String username, ReserveLevel level ) {
 
 		if ( level.isNone() ) {
 			System.err.println( "Cannot force editing at level NONE" );
-			return;
+			return null;
 		}
+		
+		// update the forced count for this catalogue
+		forcedCount++;
+		
+		// update the forced count also in the db
+		CatalogueDAO catDao = new CatalogueDAO();
+		catDao.update( this );
+		
+		// version checker to modify the catalogue version
+		// in a permament way
+		VersionChecker versionChecker = new VersionChecker( this );
+		
+		Catalogue forcedCatalogue = versionChecker.force();
 		
 		System.out.println( "Editing forced by " 
 				+ username + " for " + this );
 
 		ForceCatEditDAO forceDao = new ForceCatEditDAO();
-		forceDao.forceEditing( this, username, level );
+		forceDao.forceEditing( forcedCatalogue, username, level );
+		
+		return forcedCatalogue;
 	}
 	
 	/**
@@ -816,6 +851,11 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		System.out.println( "Forced editing removed by " 
 				+ username + " for " + this );
 
+		// remove forced version
+		if ( version.isForced() ) {
+			version.removeForced();
+		}
+		
 		ForceCatEditDAO forceDao = new ForceCatEditDAO();
 		forceDao.removeForceEditing( this, username );
 	}
@@ -981,9 +1021,10 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * since it has changes made through forced editing
 	 * and the reserve operation does not succeeded 
 	 */
-	public synchronized void stultify() {
+	public synchronized void invalidate() {
 
-		getRawVersion().markAsOldVersion();
+		// add the old flag
+		version.invalidate();
 		
 		CatalogueDAO catDao = new CatalogueDAO();
 		catDao.update( this );
@@ -1128,6 +1169,26 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		this.backupDbPath = backupDbPath;
 	}
 	
+	
+	
+	/**
+	 * Build the full db path of the catalogue with default dir settings
+	 * create also the directory in which the db will be created
+	 * @param catalogue
+	 * @return
+	 */
+	public String createDbDir () {
+		
+		// if local catalogue => local cat dir, otherwise main cat dir
+		String folder = isLocal() ? DatabaseManager.LOCAL_CAT_DB_FOLDER : DatabaseManager.OFFICIAL_CAT_DB_FOLDER;
+
+		String dbDirectory = DatabaseManager.generateDBDirectory( folder, this );
+
+		String dbFullPath = buildDBFullPath( dbDirectory );  // full path of the db from the directory
+		
+		return dbFullPath;
+	}
+	
 	/**
 	 * Get the full path of the db ( directory + dbname ) and set it
 	 * as the path of the catalogue (we build it!)
@@ -1181,6 +1242,24 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	}
 	
 	/**
+	 * Set the number of times that we have forced the
+	 * editing of this catalogue
+	 * @param forcedCount
+	 */
+	public void setForcedCount(int forcedCount) {
+		this.forcedCount = forcedCount;
+	}
+	
+	/**
+	 * Get how many times we had forced the editing
+	 * of this catalogue.
+	 * @return
+	 */
+	public int getForcedCount() {
+		return forcedCount;
+	}
+	
+	/**
 	 * Check if the catalogue is currently reserved 
 	 * by an user
 	 * @return the reserve level
@@ -1198,6 +1277,49 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		return reserveUsername;
 	}
 
+	/**
+	 * Set the catalogue version
+	 * @param version
+	 */
+	public void setCatalogueVersion ( CatalogueVersion version ) {
+		this.version = version;
+	}
+	
+	/**
+	 * Get the catalogue version
+	 * @return
+	 */
+	public CatalogueVersion getCatalogueVersion() {
+		return version;
+	}
+	
+	/**
+	 * Get the catalogue version in string format
+	 */
+	@Override
+	public String getVersion() {
+		if ( version != null )
+			return version.getVersion();
+		else
+			return null;
+	}
+	
+	@Override
+	public void setVersion(String version) {
+		setCatalogueVersion ( new CatalogueVersion ( version ) );
+	}
+	
+	@Override
+	public void setRawVersion(Version version) {
+		System.err.println( "setRawVersion not supported by Catalogue, use setCatalogueVersion instead" );
+	}
+
+	@Override
+	public Version getRawVersion() {
+		System.err.println( "getRawVersion not supported by Catalogue, use getCatalogueVersion instead" );
+		return null;
+	}
+	
 	/**
 	 * Get the db full path using the catalogues main directory, 
 	 * the catalogue code/version and if the catalogue is local or not
@@ -1380,6 +1502,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		builder.setCode( code );
 		builder.setName( code );
 		builder.setLabel( code );
+		builder.setVersion( "" );
 		
 		return builder.build();
 	}
@@ -1491,12 +1614,11 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		VersionFinder finder = new VersionFinder( input, output );
 
 		// compare the catalogues versions
-		Version intVersion = new Version ( finder.getVersion() );
-		Version localVersion = getRawVersion();
+		CatalogueVersion intVersion = new CatalogueVersion ( finder.getVersion() );
 
 		// if the downloaded version is newer than the one we
 		// are working with => we are using an old version
-		if ( intVersion.compareTo( localVersion ) < 0 ) {
+		if ( intVersion.compareTo( version ) < 0 ) {
 
 			// save the new version of the catalogue
 			NewCatalogueInternalVersion newVersion = 
@@ -1526,10 +1648,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		// check if the catalogues have the same code
 		boolean sameCode = this.equals( catalogue );
 		
-		// check the version
-		Version catVersion = this.getRawVersion();
-		
-		boolean olderVersion = catVersion.compareTo( catalogue.getRawVersion() ) > 0;
+		boolean olderVersion = version.compareTo( catalogue.getCatalogueVersion() ) > 0;
 
 		return sameCode && olderVersion;
 	}
@@ -1636,10 +1755,8 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		if ( getLabel().equals( cat.getLabel() ) ) {
 			
 			// compare the versions if equal label
-			
-			Version catVersion = this.getRawVersion();
-			
-			return catVersion.compareTo( cat.getRawVersion() );
+
+			return version.compareTo( cat.getCatalogueVersion() );
 		}
 		
 		return getLabel().compareTo( cat.getLabel() );

@@ -1,0 +1,2176 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<message>
+  <catalogue>
+    <catalogueDesc>
+      <code>ANLYREFMD</code>
+      <name>ANLYREFMD</name>
+      <label>ANLYREFMD</label>
+      <scopeNote>List of validated methods' official references.</scopeNote>
+      <termCodeMask>R###A</termCodeMask>
+      <termCodeLength>5</termCodeLength>
+      <acceptNonStandardCodes>false</acceptNonStandardCodes>
+      <generateMissingCodes>false</generateMissingCodes>
+    </catalogueDesc>
+    <catalogueVersion>
+      <version>1.2.65</version>
+      <lastUpdate>2017-05-19T16:36:39</lastUpdate>
+      <status>DRAFT MINOR UNRESERVED</status>
+    </catalogueVersion>
+    <catalogueGroups>
+      <catalogueGroup>SSD2</catalogueGroup>
+    </catalogueGroups>
+    <catalogueTerms>
+      <term>
+        <termDesc>
+          <termCode>R053A</termCode>
+          <termExtendedName>International standard method</termExtendedName>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>root</parentCode>
+            <order>1</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R055A</termCode>
+          <termExtendedName>National or regional method</termExtendedName>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>root</parentCode>
+            <order>2</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R056A</termCode>
+          <termExtendedName>Alternative method validated against standard procedures</termExtendedName>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>root</parentCode>
+            <order>3</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R057A</termCode>
+          <termExtendedName>Published method</termExtendedName>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>root</parentCode>
+            <order>4</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R058A</termCode>
+          <termExtendedName>In house method</termExtendedName>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>root</parentCode>
+            <order>5</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R048A</termCode>
+          <termExtendedName>ISO method</termExtendedName>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R053A</parentCode>
+            <order>1</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R049A</termCode>
+          <termExtendedName>EURL method</termExtendedName>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R053A</parentCode>
+            <order>2</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R050A</termCode>
+          <termExtendedName>CLSI method</termExtendedName>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R053A</parentCode>
+            <order>3</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R051A</termCode>
+          <termExtendedName>EUCAST Method</termExtendedName>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R053A</parentCode>
+            <order>4</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R052A</termCode>
+          <termExtendedName>EU legislation</termExtendedName>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R053A</parentCode>
+            <order>5</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R063A</termCode>
+          <termExtendedName>NMKL No 71:1999</termExtendedName>
+          <termScopeNote>Salmonella. Detection in foods</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R055A</parentCode>
+            <order>1</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R064A</termCode>
+          <termExtendedName>NMKL No 164:2005</termExtendedName>
+          <termScopeNote>Escherichia coli  O157. Detection in food and feeding stuffs.</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R055A</parentCode>
+            <order>2</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R067A</termCode>
+          <termExtendedName>AFNOR methods</termExtendedName>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R053A</parentCode>
+            <order>6</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R001A</termCode>
+          <termExtendedName>EN ISO 6579:2002</termExtendedName>
+          <termScopeNote>Microbiology of food and animal feeding stuffs -- Horizontal method for the detection of Salmonella spp.</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R048A</parentCode>
+            <order>1</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R002A</termCode>
+          <termExtendedName>EN ISO 6579:2002/Amdt 1:2007</termExtendedName>
+          <termScopeNote>Annex D: Detection of Salmonella spp. in animal faeces and in environmental samples from the primary production stage</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R048A</parentCode>
+            <order>2</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R003A</termCode>
+          <termExtendedName>EN ISO/TS 6579-2:2012</termExtendedName>
+          <termScopeNote>Microbiology of food and animal feed -- Horizontal method for the detection, enumeration and serotyping of Salmonella -- Part 2: Enumeration by a miniaturized most probable number technique</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R048A</parentCode>
+            <order>3</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R004A</termCode>
+          <termExtendedName>EN ISO 6785:2001</termExtendedName>
+          <termScopeNote>Milk and milk products -- Detection of Salmonella spp.</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R048A</parentCode>
+            <order>4</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R005A</termCode>
+          <termExtendedName>EN ISO 19250</termExtendedName>
+          <termScopeNote>Water quality -- Detection of Salmonella spp.</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R048A</parentCode>
+            <order>5</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R006A</termCode>
+          <termExtendedName>PrEN ISO/TR 6579-3</termExtendedName>
+          <termScopeNote>Microbiology of food and animal feed – Horizontal method for the detection, enumeration and serotyping of Salmonella– Part 3 Guidelines for serotyping of Salmonella spp.</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R048A</parentCode>
+            <order>6</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R007A</termCode>
+          <termExtendedName>EN ISO 10272-1:2006</termExtendedName>
+          <termScopeNote>Microbiology of food and animal feeding stuffs -- Horizontal method for detection and enumeration of Campylobacter spp. -- Part 1: Detection method</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R048A</parentCode>
+            <order>7</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R008A</termCode>
+          <termExtendedName>ISO/TS 10272-2:2006</termExtendedName>
+          <termScopeNote>Microbiology of food and animal feeding stuffs -- Horizontal method for detection and enumeration of Campylobacter spp. -- Part 2: Colony-count technique</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R048A</parentCode>
+            <order>8</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R009A</termCode>
+          <termExtendedName>ISO/TS 10272-3:2010/Cor 1:2011</termExtendedName>
+          <termScopeNote>Microbiology of food and animal feeding stuffs -- Horizontal method for detection and enumeration of Campylobacter spp. -- Part 3: Semi-quantitative method</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R048A</parentCode>
+            <order>9</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R010A</termCode>
+          <termExtendedName>EN ISO 17995:2005</termExtendedName>
+          <termScopeNote>Water quality -- Detection and enumeration of thermotolerant Campylobacter species</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R048A</parentCode>
+            <order>10</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R011A</termCode>
+          <termExtendedName>ISO 16654:2001</termExtendedName>
+          <termScopeNote>Microbiology of food and animal feeding stuffs -- Horizontal method for the detection of Escherichia coli O157</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R048A</parentCode>
+            <order>11</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R012A</termCode>
+          <termExtendedName>ISO/TS 13136:2012</termExtendedName>
+          <termScopeNote>Microbiology of food and animal feed -- Real-time polymerase chain reaction (PCR)-based method for the detection of food-borne pathogens -- Horizontal method for the detection of Shiga toxin-producing Escherichia coli (STEC) and the determination of O157,</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R048A</parentCode>
+            <order>12</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R013A</termCode>
+          <termExtendedName>EN ISO 11290-1:1996/Amdt 1:2004</termExtendedName>
+          <termScopeNote>Microbiology of food and animal feeding stuffs -- Horizontal method for the detection and enumeration of Listeria monocytogenes -- Part 1: Detection method) and ISO 11290-1:1996/Amd 1:2004 (Modification of the isolation media and the haemolysis test, and</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R048A</parentCode>
+            <order>13</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R014A</termCode>
+          <termExtendedName>EN ISO 11290-2:1998/Amdt 1:2004</termExtendedName>
+          <termScopeNote>Microbiology of food and animal feeding stuffs -- ISO 11290-2:1998 (Horizontal method for the detection and enumeration of Listeria monocytogenes -- Part 2: Enumeration method) and ISO 11290-2:1998/Amd 1:2004 (Modification of the enumeration medium )</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R048A</parentCode>
+            <order>14</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R015A</termCode>
+          <termExtendedName>EN ISO 6888-1:1999/Amdt 1:2003</termExtendedName>
+          <termScopeNote>Microbiology of food and animal feeding stuffs -- Horizontal method for the enumeration of coagulase-positive staphylococci (Staphylococcus aureus and other species) -- Part 1: Technique using Baird-Parker agar medium</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R048A</parentCode>
+            <order>15</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R016A</termCode>
+          <termExtendedName>EN ISO 6888-2:1999/Amdt 1:2003</termExtendedName>
+          <termScopeNote>Microbiology of food and animal feeding stuffs -- Horizontal method for the enumeration of coagulase-positive staphylococci (Staphylococcus aureus and other species) -- Part 2: Technique using rabbit plasma fibrinogen agar medium</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R048A</parentCode>
+            <order>16</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R017A</termCode>
+          <termExtendedName>EN ISO 6888-3:2003</termExtendedName>
+          <termScopeNote>Microbiology of food and animal feeding stuffs -- Horizontal method for the enumeration of coagulase-positive staphylococci (Staphylococcus aureus and other species) -- Part 3: Detection and MPN technique for low numbers</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R048A</parentCode>
+            <order>17</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R018A</termCode>
+          <termExtendedName>EN ISO 10273:2003</termExtendedName>
+          <termScopeNote>Microbiology of food and animal feeding stuffs -- Horizontal method for the detection of presumptive pathogenic Yersinia enterocolitica</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R048A</parentCode>
+            <order>18</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R019A</termCode>
+          <termExtendedName>CEN ISO TS 22964:2006</termExtendedName>
+          <termScopeNote>Milk and milk products -- Detection of Enterobacter sakazakii</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R048A</parentCode>
+            <order>19</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R020A</termCode>
+          <termExtendedName>CEN ISO TS 21872-1: 2007</termExtendedName>
+          <termScopeNote>Microbiology of food and animal feeding stuffs -- Horizontal method for the detection of potentially enteropathogenic Vibrio spp. -- Part 1: Detection of Vibrio parahaemolyticus and Vibrio cholerae</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R048A</parentCode>
+            <order>20</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R021A</termCode>
+          <termExtendedName>CEN ISO TS 21872-2:2007</termExtendedName>
+          <termScopeNote>Microbiology of food and animal feeding stuffs -- Horizontal method for the detection of potentially enteropathogenic Vibrio spp. -- Part 2: Detection of species other than Vibrio parahaemolyticus and Vibrio cholerae</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R048A</parentCode>
+            <order>21</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R022A</termCode>
+          <termExtendedName>ISO 15553:2006</termExtendedName>
+          <termScopeNote>Water quality -- Isolation and identification of Cryptosporidium oocysts and Giardia cysts from water</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R048A</parentCode>
+            <order>22</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R023A</termCode>
+          <termExtendedName>CEN ISO TS 15216-1:2013</termExtendedName>
+          <termScopeNote>Microbiology of food and animal feed -- Horizontal method for determination of hepatitis A virus and norovirus in food using real-time RT-PCR -- Part 1: Method for quantification</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R048A</parentCode>
+            <order>23</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R024A</termCode>
+          <termExtendedName>CEN ISO TS 15216-2:2013</termExtendedName>
+          <termScopeNote>Microbiology of food and animal feed -- Horizontal method for determination of hepatitis A virus and norovirus in food using real-time RT-PCR -- Part 2: Method for qualitative detection</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R048A</parentCode>
+            <order>24</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R025A</termCode>
+          <termExtendedName>CEN ISO 20776-1:2006</termExtendedName>
+          <termScopeNote>Clinical laboratory testing and in vitro diagnostic test systems -- Susceptibility testing of infectious agents and evaluation of performance of antimicrobial susceptibility test devices -- Part 1: Reference method for testing the in vitro activity of ant</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R048A</parentCode>
+            <order>25</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R026A</termCode>
+          <termExtendedName>Regulation 2075/2005</termExtendedName>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R052A</parentCode>
+            <order>1</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R045A</termCode>
+          <termExtendedName>CLSI MO7/A9</termExtendedName>
+          <termScopeNote>Methods for Dilution Antimicrobial Susceptibility Tests for Bacteria That Grow Aerobically; Approved Standard - Ninth Edition.</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R050A</parentCode>
+            <order>1</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R046A</termCode>
+          <termExtendedName>CLSI MO2/A11</termExtendedName>
+          <termScopeNote>Performance Standards for Antimicrobial Disk Susceptibility Tests; Approved Standard - Eleventh Edition.</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R050A</parentCode>
+            <order>2</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R047A</termCode>
+          <termExtendedName>EUCAST method for disk diffusion</termExtendedName>
+          <termScopeNote>Antimicrobial susceptibility testing EUCAST disk diffusion method Version 3.0. April 2013</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R051A</parentCode>
+            <order>1</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R054A</termCode>
+          <termExtendedName>CEN ISO 20776-2:2007</termExtendedName>
+          <termScopeNote>Clinical laboratory testing and in vitro diagnostic test systems -- Susceptibility testing of infectious agents and evaluation of performance of antimicrobial susceptibility test devices -- Part 2: Evaluation of performance of antimicrobial susceptibility</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R048A</parentCode>
+            <order>26</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R062A</termCode>
+          <termExtendedName>ISO 7932:2004</termExtendedName>
+          <termScopeNote>Microbiology of food and animal feeding stuffs -- Horizontal method for the enumeration of presumptive Bacillus cereus -- Colony-count technique at 30 degrees C</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R048A</parentCode>
+            <order>27</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R065A</termCode>
+          <termExtendedName>AFNOR NF U47 101 November 2007</termExtendedName>
+          <termScopeNote>Animal health analysis methods - Isolation and identification of any salmonella serotypes or of specified salmonella serotypes among birds - Méthodes d'analyse en santé animale</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R067A</parentCode>
+            <order>1</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R066A</termCode>
+          <termExtendedName>AFNOR NF U47 100 July 2007</termExtendedName>
+          <termScopeNote>Animal health analysis methods - Isolation and identification of Salmonella or search for particular serovar's in the animal production sector - Méthodes d'analyse en santé animale</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R067A</parentCode>
+            <order>2</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R068A</termCode>
+          <termExtendedName>Automatic digestion method for pooled samples of up to 35 g</termExtendedName>
+          <termScopeNote>Automatic digestion method for pooled samples of up to 35 g</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R026A</parentCode>
+            <order>1</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R069A</termCode>
+          <termExtendedName>Magnetic stirrer method for pooled sample digestion;</termExtendedName>
+          <termScopeNote>Magnetic stirrer method for pooled sample digestion;</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R026A</parentCode>
+            <order>2</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R070A</termCode>
+          <termExtendedName>Mechanically assisted pooled sample digestion method / on filter isolation technique</termExtendedName>
+          <termScopeNote>Mechanically assisted pooled sample digestion method / on filter isolation technique</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R026A</parentCode>
+            <order>3</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R071A</termCode>
+          <termExtendedName>Trichinoscopic examination</termExtendedName>
+          <termScopeNote>Trichinoscopic examination</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R026A</parentCode>
+            <order>4</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R072A</termCode>
+          <termExtendedName>Mechanically assisted pooled sample digestion method / sedimentation technique</termExtendedName>
+          <termScopeNote>Mechanically assisted pooled sample digestion method / sedimentation technique</termScopeNote>
+        </termDesc>
+        <termVersion>
+          <version>1.0</version>
+          <lastUpdate>2015-06-18T15:07:08</lastUpdate>
+          <validFrom>2015-06-18T15:07:08</validFrom>
+          <status>APPROVED</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R026A</parentCode>
+            <order>5</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+      <term>
+        <termDesc>
+          <termCode>R073A</termCode>
+          <termExtendedName>EN method</termExtendedName>
+        </termDesc>
+        <termVersion>
+          <version>1.2</version>
+          <lastUpdate>2016-09-30T15:17:34</lastUpdate>
+          <validFrom>2016-09-30T14:40:21</validFrom>
+          <status>PRELIMINARY</status>
+        </termVersion>
+        <hierarchyAssignments>
+          <hierarchyAssignment>
+            <hierarchyCode>ANLYREFMD</hierarchyCode>
+            <parentCode>R053A</parentCode>
+            <order>7</order>
+            <reportable>true</reportable>
+          </hierarchyAssignment>
+        </hierarchyAssignments>
+      </term>
+    </catalogueTerms>
+  </catalogue>
+
+  <releaseNotes catalogueCode="ANLYREFMD">
+    <description>jjjjjjjjjjjjjjjj</description>
+    <versionDate>2017-05-19T16:36:39.291</versionDate>
+    <versionHistory>
+      <version internalVersion="1.2.65">
+        <internalVersionNote>jjjjjjjjjjjjjjjj</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-19T16:36:39.431">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-19T16:36:39.457">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.64">
+        <internalVersionNote>tttttttttttt</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-19T16:30:52.127">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-19T16:30:52.152">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-19T16:32:01.560">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-19T16:32:01.581">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.63">
+        <internalVersionNote>jnnnnnnnnnn</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-19T16:24:43.574">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-19T16:24:43.605">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-19T16:30:06.563">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-19T16:30:06.583">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.62">
+        <internalVersionNote>bbbbbbbbbbbbbb</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-19T16:19:50.199">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-19T16:19:50.224">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-19T16:23:56.740">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-19T16:23:56.763">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.61">
+        <internalVersionNote>hhhhhhhhhhhhhh</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-19T16:15:58.829">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-19T16:15:58.894">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-19T16:16:54.345">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-19T16:16:54.369">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.60">
+        <internalVersionNote>ffffffffffffffffff</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-19T16:01:16.111">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-19T16:01:16.134">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-19T16:03:05.788">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-19T16:03:05.813">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.59">
+        <internalVersionNote>hhhhhhhhhhhhhhh</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-19T14:37:54.310">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-19T14:37:54.334">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-19T15:58:26.719">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-19T15:58:26.757">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.58">
+        <internalVersionNote>Default unreserve for ANLYREFMD</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-19T13:51:11.560">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-19T13:51:11.584">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-19T14:37:05.256">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-19T14:37:05.284">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.57">
+        <internalVersionNote>kkkkkkkkkkkkkk</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-19T13:46:27.205">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-19T13:46:27.230">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-19T13:50:18.372">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-19T13:50:18.388">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.56">
+        <internalVersionNote>kkkkkkkkkkkkk</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-19T13:43:36.040">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-19T13:43:36.065">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-19T13:44:25.707">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-19T13:44:25.731">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.55">
+        <internalVersionNote>uuuuuuuuuuu</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-19T13:35:05.741">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-19T13:35:05.774">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-19T13:36:58.866">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-19T13:36:58.896">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.54">
+        <internalVersionNote>dddddddddddddddd</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-19T11:54:22.390">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-19T11:54:22.414">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-19T12:06:28.084">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-19T12:06:28.108">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.53">
+        <internalVersionNote>ggggggggggggggggg</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-19T11:44:40.324">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-19T11:44:40.431">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-19T11:53:28.563">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-19T11:53:28.586">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.52">
+        <internalVersionNote>tttttttttttttttttt</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-19T09:55:18.972">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-19T09:55:18.996">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-19T09:55:34.881">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-19T09:55:34.905">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.51">
+        <internalVersionNote>rrrrrrrrrrrrrrrrr</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-19T09:50:35.271">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-19T09:50:35.295">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-19T09:50:57.062">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-19T09:50:57.087">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.50">
+        <internalVersionNote>unreserving</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T16:30:53.942">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-18T16:30:53.961">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-19T09:44:56.675">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-19T09:44:56.711">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.49">
+        <internalVersionNote>unreserving</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T16:25:07.911">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-18T16:25:07.930">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T16:30:04.892">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-18T16:30:04.910">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.48">
+        <internalVersionNote>fffffffffffffffffff</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T16:19:28.516">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-18T16:19:28.535">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T16:24:12.184">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-18T16:24:12.209">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.47">
+        <internalVersionNote>Default unreserve for ANLYREFMD</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T16:08:42.576">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-18T16:08:42.597">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T16:19:01.007">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-18T16:19:01.026">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.46">
+        <internalVersionNote>ffffffffffffffff</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T15:49:07.728">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-18T15:49:07.748">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T15:49:23.477">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-18T15:49:23.490">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.45">
+        <internalVersionNote>ffffffffff</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T15:41:20.813">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-18T15:41:20.829">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T15:43:59.612">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-18T15:43:59.634">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.44">
+        <internalVersionNote>dsfddddddddddd</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T15:34:08.200">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-18T15:34:08.221">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T15:34:46.026">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-18T15:34:46.040">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.43">
+        <internalVersionNote>ddddddddddddddddddddd</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T15:29:40.918">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-18T15:29:40.937">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T15:32:22.058">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-18T15:32:22.076">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.42">
+        <internalVersionNote>uynreservd</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T15:23:58.115">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-18T15:23:58.135">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T15:26:03.534">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-18T15:26:03.549">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.41">
+        <internalVersionNote>ffffffffffffffffffffffff</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T15:13:52.228">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-18T15:13:52.248">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T15:18:37.358">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-18T15:18:37.378">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.40">
+        <internalVersionNote>jjjjjjjjjjjjjjjjjjj</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T15:12:58.027">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-18T15:12:58.047">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T15:13:24.778">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-18T15:13:24.797">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.39">
+        <internalVersionNote>unreserving</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T15:02:09.591">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-18T15:02:09.610">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T15:12:36.507">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-18T15:12:36.527">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.38">
+        <internalVersionNote>unreserving</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T14:47:06.725">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-18T14:47:06.743">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T15:01:39.818">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-18T15:01:39.849">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.37">
+        <internalVersionNote>dddddddddddddddddd</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T14:41:52.888">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-18T14:41:52.910">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T14:46:32.129">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-18T14:46:32.149">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.36">
+        <internalVersionNote>dddddddddddddd</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T14:38:21.123">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-18T14:38:21.147">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T14:40:14.747">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-18T14:40:14.766">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.35">
+        <internalVersionNote>jjjjjjjjjjjjjj</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T14:09:10.220">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-18T14:09:10.244">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T14:10:53.246">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-18T14:10:53.271">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.34">
+        <internalVersionNote>unreserving</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T13:47:36">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-18T13:47:36.079">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T13:49:04.922">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-18T13:49:04.948">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T14:07:36.638">
+          <operationInfo>The catalogue has not been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-18T14:07:36.664">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.33">
+        <internalVersionNote>rrrrrrrrrrrrrrrrrrrr</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T12:32:13.473">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-18T12:32:13.494">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T12:32:25.499">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-18T12:32:25.519">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.32">
+        <internalVersionNote>ujjjjjjjjjjjjjjjj</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T12:26:29.127">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-18T12:26:29.145">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T12:26:44.932">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-18T12:26:44.952">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.31">
+        <internalVersionNote>hhhhhhhhhhhhhh</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T12:21:57.238">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-18T12:21:57.258">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T12:24:07.349">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-18T12:24:07.374">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.30">
+        <internalVersionNote>hhhhhhhhhhh</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-17T12:07:48.082">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-17T12:07:48.109">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-18T12:09:36.457">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-18T12:09:36.491">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.29">
+        <internalVersionNote>sssssssssssssss</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-17T11:56:20.661">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-17T11:56:20.687">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-17T12:06:11.309">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-17T12:06:11.344">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.28">
+        <internalVersionNote>ssssssssssssssss</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-17T11:52:47.311">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-17T11:52:47.333">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-17T11:55:03.558">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-17T11:55:03.577">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.27">
+        <internalVersionNote>fffffffffffffffffffff</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-17T10:53:25.299">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-17T10:53:25.325">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-17T11:51:33.457">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-17T11:51:33.524">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.26">
+        <internalVersionNote>Default unreserve for ANLYREFMD</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-17T10:52:25.814">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-17T10:52:25.839">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-17T10:53:06.472">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-17T10:53:06.492">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.25">
+        <internalVersionNote>ddddddddddddd</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-17T10:49:35.562">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-17T10:49:35.585">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-17T10:51:19.605">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-17T10:51:19.629">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.24">
+        <internalVersionNote>Default unreserve for ANLYREFMD</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-17T10:48:43.441">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-17T10:48:43.462">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-17T10:49:28.635">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-17T10:49:28.658">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.23">
+        <internalVersionNote>unreservoa</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-17T08:42:43.632">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-17T08:42:43.655">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-17T10:47:06.929">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-17T10:47:07.012">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.22">
+        <internalVersionNote>Default unreserve for ANLYREFMD</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-17T08:41:14.734">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-17T08:41:14.761">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-17T08:41:38.012">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-17T08:41:38.032">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.21">
+        <internalVersionNote>Default unreserve for ANLYREFMD</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T14:26:28.373">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-16T14:26:28.399">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T14:33:53.943">
+          <operationInfo>The catalogue has not been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-16T14:33:53.966">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T14:37:30.323">
+          <operationInfo>The catalogue has not been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-16T14:37:30.350">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T14:45:54.482">
+          <operationInfo>The catalogue has not been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-16T14:45:54.501">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T15:06:49.314">
+          <operationInfo>The catalogue has not been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-16T15:06:49.381">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T15:16:36.071">
+          <operationInfo>The catalogue has not been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-16T15:16:36.096">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T16:29:27.728">
+          <operationInfo>The catalogue has not been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-16T16:29:27.757">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T16:31:17.519">
+          <operationInfo>The catalogue has not been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-16T16:31:17.544">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T16:32:59.633">
+          <operationInfo>The catalogue has not been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-16T16:32:59.656">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T16:38:31.373">
+          <operationInfo>The catalogue has not been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-16T16:38:31.396">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T16:42:34.980">
+          <operationInfo>The catalogue has not been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-16T16:42:35.001">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-17T08:09:06.112">
+          <operationInfo>The catalogue has not been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-17T08:09:06.144">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-17T08:28:12.981">
+          <operationInfo>The catalogue has not been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-17T08:28:13.004">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-17T08:33:36.132">
+          <operationInfo>The catalogue has not been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-17T08:33:36.149">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-17T08:38:59.638">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-17T08:38:59.656">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.20">
+        <internalVersionNote>yyyyyyyyyyyyy</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T14:18:35.467">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-16T14:18:35.485">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T14:25:23.436">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-16T14:25:23.455">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.19">
+        <internalVersionNote>jkjjjjjjjjjjjjjjjjjjjj</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T14:12:36.890">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-16T14:12:36.911">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T14:17:55.374">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-16T14:17:55.401">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.18">
+        <internalVersionNote>fffffffffff</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T14:10:12.372">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-16T14:10:12.397">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T14:12:03.176">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-16T14:12:03.199">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.17">
+        <internalVersionNote>dfdfdfdfdfdfdfdfdfdfdf</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T14:03:17.330">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-16T14:03:17.352">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T14:09:46.788">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-16T14:09:46.814">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.16">
+        <internalVersionNote>eeeeeeeeeeeeee</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T13:57:25.007">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-16T13:57:25.029">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T14:02:24.307">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-16T14:02:24.330">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.15">
+        <internalVersionNote>uiiiiiiiiii</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T13:52:14.790">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-16T13:52:14.814">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T13:53:50.314">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-16T13:53:50.338">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.14">
+        <internalVersionNote>ggggggggggggggg</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T13:49:24.599">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-16T13:49:24.618">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T13:50:57.433">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-16T13:50:57.456">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.13">
+        <internalVersionNote>655555555555</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T13:39:32.372">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-16T13:39:32.395">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T13:42:49.352">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-16T13:42:49.375">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T13:43:32.826">
+          <operationInfo>The catalogue has not been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-16T13:43:32.848">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.12">
+        <internalVersionNote>fffffffffffffff</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T13:34:00.894">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-16T13:34:00.918">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T13:36:34.725">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-16T13:36:34.748">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T13:38:00.801">
+          <operationInfo>The catalogue has not been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-16T13:38:00.821">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.11">
+        <internalVersionNote>rrrrrrrrrrrr</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T13:30:38.778">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-16T13:30:38.810">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T13:31:41.387">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-16T13:31:41.412">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.10">
+        <internalVersionNote>uuuuuuuuuuuuuu</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T12:29:05.436">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-16T12:29:05.456">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T12:29:14.910">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-16T12:29:14.929">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.9">
+        <internalVersionNote>hhhhhhhhhhhh</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T12:27:13.055">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-16T12:27:13.080">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T12:27:29.654">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-16T12:27:29.672">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.8">
+        <internalVersionNote>ttttttttttttt</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T12:25:09.851">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-16T12:25:09.873">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T12:26:16.288">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-16T12:26:16.307">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.7">
+        <internalVersionNote>vvvvvvvvvvvvvvvvv</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T12:06:30.672">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-16T12:06:30.696">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T12:07:35.920">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-16T12:07:35.937">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.6">
+        <internalVersionNote>yyyyyyyyyyyyy</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T12:03:03.576">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-16T12:03:03.600">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T12:03:34.278">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-16T12:03:34.299">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.5">
+        <internalVersionNote>tttttttttttttttt</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T11:05:38.926">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-16T11:05:38.951">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T11:12:48.528">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-16T11:12:48.570">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.4">
+        <internalVersionNote>gfgggggggggggg</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T10:59:52.545">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-16T10:59:52.569">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T11:00:58.877">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-16T11:00:58.904">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.3">
+        <internalVersionNote>fffffffffffffffff</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T10:52:09.278">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-16T10:52:09.303">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T10:59:14.509">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-16T10:59:14.536">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.2">
+        <internalVersionNote>ggggggggggggggg</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T10:50:39.205">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-16T10:50:39.302">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-16T10:51:23.940">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-16T10:51:23.964">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+      <version internalVersion="1.2.1">
+        <internalVersionNote>mmmmmmmmmmmmm</internalVersionNote>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-03T09:17:08.175">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="reserveMinor" operationDate="2017-05-03T09:17:08.202">
+          <operationInfo/>
+        </operationsDetail>
+        <operationsDetail operationName="Update Catalogue" operationDate="2017-05-03T09:17:30.095">
+          <operationInfo>The catalogue ANLYREFMD has been updated</operationInfo>
+        </operationsDetail>
+        <operationsDetail operationName="unreserve" operationDate="2017-05-03T09:17:30.124">
+          <operationInfo/>
+        </operationsDetail>
+      </version>
+    </versionHistory>
+  </releaseNotes>
+</message>
