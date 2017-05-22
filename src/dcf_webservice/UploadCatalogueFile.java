@@ -8,6 +8,16 @@ import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
+import dcf_log_util.LogCodeFinder;
+
+/**
+ * Model the upload catalogue file web service. Use the method
+ * {@link #getAttachment()} to define the xml attachment which needs
+ * to be uploaded to the dcf. Use {@link #processResponse(String)} to
+ * process the log code related to the upload catalogue file request.
+ * @author avonva
+ *
+ */
 public abstract class UploadCatalogueFile extends SOAPAction {
 
 	// namespace used in the ping xml message
@@ -60,10 +70,35 @@ public abstract class UploadCatalogueFile extends SOAPAction {
 		return soapMsg;
 	}
 	
+	@Override
+	public Object processResponse(SOAPMessage soapResponse) throws SOAPException {
+		
+		// search the log code in the soap message
+		LogCodeFinder finder = new LogCodeFinder( soapResponse );
+
+		// cache the log code (used in the retry function)
+		String logCode = finder.getLogCode();
+		
+		// if errors the log code is not returned
+		if ( logCode == null )
+			System.err.println ( "Cannot find the log code in the soap response" );
+		else
+			System.out.println ( "UploadCatalogueFile: found log code " + logCode );
+
+		return processResponse( logCode );
+	}
+	
 	/**
 	 * Get the content of the attachment that will be
 	 * attached to the upload catalogue file request
 	 * @return
 	 */
 	public abstract String getAttachment();
+	
+	/**
+	 * Process the log starting from its code
+	 * @param logCode
+	 * @return
+	 */
+	public abstract Object processResponse ( String logCode );
 }

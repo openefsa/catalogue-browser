@@ -1,5 +1,7 @@
 package dcf_webservice;
 
+import dcf_webservice.Publish.PublishLevel;
+
 /**
  * This class contains all the xml messages which need to be
  * attached to the uploadCatalogueFile message to make the
@@ -23,10 +25,23 @@ public class UploadMessages {
 				+ "<message xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
 				+ "xsi:noNamespaceSchemaLocation=\"file:///D:/cat_xsd/UploadCatalogue.xsd\">"
 				+ "<updateCatalogue catalogueCode=\"" + code + "\">"
-				+ "<" + level.getReserveOperation() + ">"
+				+ "<" + level.getOp() + ">"
 				+ "<reservationNote>" + description + "</reservationNote>"
-				+ "</" + level.getReserveOperation() + ">"
+				+ "</" + level.getOp() + ">"
 				+ "</updateCatalogue>"
+				+ "</message>";
+
+		return message;
+	}
+	
+	public static String getPublishMessage ( String code, PublishLevel level ) {
+
+		String message = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+				+ "<message xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+				+ "xsi:noNamespaceSchemaLocation=\"file:///D:/cat_xsd/UploadCatalogue.xsd\">"
+				+ "<" + level.getOp()
+				+ " catalogueCode=\"" + code + "\">"
+				+ "</" + level.getOp() + ">"
 				+ "</message>";
 
 		return message;

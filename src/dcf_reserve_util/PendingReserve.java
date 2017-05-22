@@ -443,10 +443,10 @@ public class PendingReserve {
 		
 		
 		if ( response == DcfResponse.OK )
-			System.out.println ( reserveLevel.getReserveOperation() 
+			System.out.println ( reserveLevel.getOp() 
 					+ ": successfully completed" );
 		else
-			System.out.println ( reserveLevel.getReserveOperation() 
+			System.out.println ( reserveLevel.getOp() 
 					+ ": failed - the dcf rejected the operation" );
 		
 		return response;

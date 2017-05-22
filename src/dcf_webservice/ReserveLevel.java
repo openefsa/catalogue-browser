@@ -33,7 +33,7 @@ public enum ReserveLevel {
 	 * in reserve web service.
 	 * @return
 	 */
-	public String getReserveOperation () {
+	public String getOp () {
 		
 		String opType = null;
 		
