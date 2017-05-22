@@ -16,15 +16,15 @@ import org.w3c.dom.Document;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_object.Catalogue;
 import dcf_reserve_util.BackgroundReserve;
-import dcf_reserve_util.PendingReserve;
-import dcf_reserve_util.PendingReserveDAO;
-import dcf_reserve_util.ReserveListener;
+import dcf_reserve_util.PendingActionDAO;
+import dcf_reserve_util.PendingActionListener;
 import dcf_reserve_util.ReserveValidator;
 import dcf_user.User;
 import dcf_user.UserAccessLevel;
 import dcf_webservice.ExportCatalogue;
 import dcf_webservice.ExportCatalogueFile;
 import dcf_webservice.GetCataloguesList;
+import dcf_webservice.PendingAction;
 import dcf_webservice.Ping;
 import dcf_webservice.ReserveLevel;
 import ui_progress_bar.FormProgressBar;
@@ -361,10 +361,10 @@ public class Dcf {
 	 * @param level the reserve level we want
 	 * @param description
 	 * @param listener listener called when reserve events occur
-	 * see {@link ReserveListener} to check which are the events
+	 * see {@link PendingActionListener} to check which are the events
 	 */
 	public void reserve ( Catalogue catalogue, 
-			ReserveLevel level, String description, ReserveListener listener ) {
+			ReserveLevel level, String description, PendingActionListener listener ) {
 		
 		BackgroundReserve reserve = new BackgroundReserve( catalogue, 
 				level, description );
@@ -381,10 +381,10 @@ public class Dcf {
 	 * to the pending reserve
 	 * @param listener called to listen reserve events
 	 */
-	public void startPendingReserve ( PendingReserve pr, ReserveListener listener ) {
+	public void startPendingReserve ( PendingAction pa, PendingActionListener listener ) {
 		
 		// start the validator for the current pending reserve
-		ReserveValidator validator = new ReserveValidator( pr, listener );
+		ReserveValidator validator = new ReserveValidator( pa, listener );
 		validator.setProgressBar( progressBar );
 		validator.start();
 	}
@@ -397,22 +397,22 @@ public class Dcf {
 	 * @param listener listener which listens to several
 	 * reserve events, used mainly to notify the user
 	 */
-	public void startPendingReserves ( ReserveListener listener ) {
+	public void startPendingReserves ( PendingActionListener listener ) {
 
-		PendingReserveDAO prDao = new PendingReserveDAO();
+		PendingActionDAO paDao = new PendingActionDAO();
 
 		// for each pending reserve action (i.e. reserve
 		// actions which did not finish until now, this
 		// includes also the requests made in other
 		// instances of the CatBrowser if it was closed)
-		for ( PendingReserve pr : prDao.getAll() ) {
+		for ( PendingAction pa : paDao.getAll() ) {
 			
 			// skip all the pending reserves which
 			// were not made by the current user
-			if ( !pr.madeBy( User.getInstance() ) )
+			if ( !pa.madeBy( User.getInstance() ) )
 				continue;
 			
-			startPendingReserve ( pr, listener );
+			startPendingReserve ( pa, listener );
 		}
 	}
 }

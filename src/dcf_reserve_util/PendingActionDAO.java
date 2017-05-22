@@ -12,7 +12,10 @@ import catalogue_browser_dao.CatalogueDAO;
 import catalogue_browser_dao.CatalogueEntityDAO;
 import catalogue_browser_dao.DatabaseManager;
 import catalogue_object.Catalogue;
-import dcf_reserve_util.PendingReserve.PendingPriority;
+import dcf_webservice.PendingAction;
+import dcf_webservice.PendingPublish;
+import dcf_webservice.Publish.PublishLevel;
+import dcf_webservice.PendingAction.Priority;
 import dcf_webservice.ReserveLevel;
 
 /**
@@ -20,14 +23,14 @@ import dcf_webservice.ReserveLevel;
  * @author avonva
  *
  */
-public class PendingReserveDAO implements CatalogueEntityDAO<PendingReserve> {
+public class PendingActionDAO implements CatalogueEntityDAO<PendingAction> {
 
 	@Override
-	public int insert(PendingReserve object) {
+	public int insert(PendingAction object) {
 		
 		int id = -1;
-		String query = "insert into APP.PENDING_RESERVE (RESERVE_LOG_CODE, "
-				+ "RESERVE_LEVEL, CAT_ID, RESERVE_USERNAME, RESERVE_PRIORITY ) values (?,?,?,?,?)";
+		String query = "insert into APP.PENDING_ACTION (ACTION_LOG_CODE, "
+				+ "ACTION_DATA, CAT_ID, ACTION_USERNAME, ACTION_PRIORITY, ACTION_TYPE ) values (?,?,?,?,?,?)";
 		
 		try {
 			
@@ -38,10 +41,11 @@ public class PendingReserveDAO implements CatalogueEntityDAO<PendingReserve> {
 			
 			// set the parameters
 			stmt.setString( 1, object.getLogCode() );
-			stmt.setString( 2, object.getReserveLevel().toString() );
+			stmt.setString( 2, object.getData() );
 			stmt.setInt( 3, object.getCatalogue().getId() );
 			stmt.setString( 4, object.getUsername() );
 			stmt.setString( 5, object.getPriority().toString() );
+			stmt.setString( 6, object.getType() );
 			
 			// insert the pending reserve object
 			stmt.executeUpdate();
@@ -64,9 +68,9 @@ public class PendingReserveDAO implements CatalogueEntityDAO<PendingReserve> {
 	}
 
 	@Override
-	public boolean remove( PendingReserve object ) {
+	public boolean remove( PendingAction object ) {
 
-		String query = "delete from APP.PENDING_RESERVE where RESERVE_ID = ?";
+		String query = "delete from APP.PENDING_ACTION where ACTION_ID = ?";
 		
 		try {
 			
@@ -92,11 +96,11 @@ public class PendingReserveDAO implements CatalogueEntityDAO<PendingReserve> {
 	}
 
 	@Override
-	public boolean update( PendingReserve pr ) {
+	public boolean update( PendingAction pr ) {
 		
-		String query = "update APP.PENDING_RESERVE set RESERVE_LOG_CODE = ?, "
-				+ "RESERVE_LEVEL = ?, CAT_ID = ?, RESERVE_USERNAME = ?, RESERVE_PRIORITY = ? "
-				+ "where RESERVE_ID = ?";
+		String query = "update APP.PENDING_ACTION set ACTION_LOG_CODE = ?, "
+				+ "ACTION_DATA = ?, CAT_ID = ?, ACTION_USERNAME = ?, ACTION_PRIORITY = ?, ACTION_TYPE = ? "
+				+ "where ACTION_ID = ?";
 		
 		try {
 			
@@ -105,11 +109,12 @@ public class PendingReserveDAO implements CatalogueEntityDAO<PendingReserve> {
 			
 			// set the parameters
 			stmt.setString( 1, pr.getLogCode() );
-			stmt.setString( 2, pr.getReserveLevel().toString() );
+			stmt.setString( 2, pr.getData() );
 			stmt.setInt( 3, pr.getCatalogue().getId() );
 			stmt.setString( 4, pr.getUsername() );
 			stmt.setString( 5, pr.getPriority().toString() );
-			stmt.setInt( 6, pr.getId() );
+			stmt.setString( 6, pr.getType() );
+			stmt.setInt( 7, pr.getId() );
 			
 			stmt.executeUpdate();
 			
@@ -126,37 +131,60 @@ public class PendingReserveDAO implements CatalogueEntityDAO<PendingReserve> {
 	}
 
 	@Override
-	public PendingReserve getById(int id) {
-		// TODO Auto-generated method stub
+	public PendingAction getById(int id) {
 		return null;
 	}
 	
 	@Override
-	public PendingReserve getByResultSet(ResultSet rs) throws SQLException {
+	public PendingAction getByResultSet(ResultSet rs) throws SQLException {
 		
-		int id = rs.getInt( "RESERVE_ID" );
-		String logCode = rs.getString( "RESERVE_LOG_CODE" );
-		ReserveLevel level = ReserveLevel.valueOf( rs.getString( "RESERVE_LEVEL" ) );
+		int id = rs.getInt( "ACTION_ID" );
+		String logCode = rs.getString( "ACTION_LOG_CODE" );
+
 		int catId = rs.getInt( "CAT_ID" );
-		String username = rs.getString( "RESERVE_USERNAME" );
-		PendingPriority priority = PendingPriority.valueOf( rs.getString( "RESERVE_PRIORITY" ) );
+		String username = rs.getString( "ACTION_USERNAME" );
+		Priority priority = Priority.valueOf( rs.getString( "ACTION_PRIORITY" ) );
+		
+		String type = rs.getString( "ACTION_TYPE" );
 		
 		// get the catalogue related to the code and version
 		CatalogueDAO catDao = new CatalogueDAO();
 		Catalogue catalogue = catDao.getById( catId );
 		
-		PendingReserve pr = new PendingReserve( logCode, level, catalogue, username, priority );
-		pr.setId( id );
+		PendingAction pa = null;
 		
-		return pr;
+		switch ( type ) {
+		case PendingReserve.TYPE:
+			
+			ReserveLevel rLevel = ReserveLevel.valueOf( rs.getString( "ACTION_DATA" ) );
+			
+			pa = new PendingReserve( logCode, rLevel, catalogue, username, priority );
+			break;
+			
+		case PendingPublish.TYPE:
+			
+			PublishLevel pLevel = PublishLevel.valueOf( rs.getString( "ACTION_DATA" ) );
+			
+			pa = new PendingPublish( catalogue, logCode, username, priority, pLevel );
+			break;
+			
+		default:
+			break;
+		}
+
+		// set the id
+		if ( pa != null )
+			pa.setId( id );
+		
+		return pa;
 	}
 
 	@Override
-	public Collection<PendingReserve> getAll() {
+	public Collection<PendingAction> getAll() {
 		
-		Collection<PendingReserve> out = new ArrayList<>();
+		Collection<PendingAction> out = new ArrayList<>();
 		
-		String query = "select * from APP.PENDING_RESERVE";
+		String query = "select * from APP.PENDING_ACTION";
 		
 		try {
 			
@@ -189,11 +217,11 @@ public class PendingReserveDAO implements CatalogueEntityDAO<PendingReserve> {
 	 * @param catalogue
 	 * @return
 	 */
-	public PendingReserve getByCatalogue ( Catalogue catalogue ) {
+	public Collection<PendingAction> getByCatalogue ( Catalogue catalogue ) {
 		
-		PendingReserve pr = null;
+		Collection<PendingAction> prs = new ArrayList<>();
 		
-		String query = "select * from APP.PENDING_RESERVE where CAT_ID = ?";
+		String query = "select * from APP.PENDING_ACTION where CAT_ID = ?";
 		
 		try {
 			
@@ -206,8 +234,8 @@ public class PendingReserveDAO implements CatalogueEntityDAO<PendingReserve> {
 			ResultSet rs = stmt.executeQuery();
 			
 			// get all the pending reserve obj
-			if ( rs.next() )
-				pr = getByResultSet(rs);
+			while ( rs.next() )
+				prs.add( getByResultSet(rs) );
 			
 			rs.close();
 			stmt.close();
@@ -217,7 +245,6 @@ public class PendingReserveDAO implements CatalogueEntityDAO<PendingReserve> {
 			e.printStackTrace();
 		}
 		
-		return pr;
-		
+		return prs;
 	}
 }

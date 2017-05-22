@@ -3,7 +3,7 @@ package dcf_log_util;
 import org.w3c.dom.Document;
 
 import dcf_manager.Dcf;
-import dcf_reserve_util.PendingReserve.PendingPriority;
+import dcf_webservice.PendingAction.Priority;
 
 /**
  * Class used to download a dcf Log document
@@ -19,7 +19,7 @@ public class LogDownloader {
 	private String logCode;            // the code of the log we want to download
 	private long interAttemptsTime;    // waiting time between attempts
 	private int maxAttempts;           // max number of attempts (only HIGH priority)
-	private PendingPriority priority;  // the priority of the download process
+	private Priority priority;         // the priority of the download process
 	
 	/**
 	 * Initialize the download of the reserve log
@@ -29,7 +29,7 @@ public class LogDownloader {
 	 * attempts.
 	 */
 	public LogDownloader( String logCode, long interAttemptsTime ) {
-		this( logCode, interAttemptsTime, -1, PendingPriority.LOW );
+		this( logCode, interAttemptsTime, -1, Priority.LOW );
 	}
 	
 	/**
@@ -43,7 +43,7 @@ public class LogDownloader {
 	 * @param maxAttempts max number of attempts
 	 */
 	public LogDownloader( String logCode, long interAttemptsTime, int maxAttempts ) {
-		this( logCode, interAttemptsTime, maxAttempts, PendingPriority.HIGH );
+		this( logCode, interAttemptsTime, maxAttempts, Priority.HIGH );
 	}
 	
 	/**
@@ -54,7 +54,7 @@ public class LogDownloader {
 	 * @param priority the download priority
 	 */
 	public LogDownloader( String logCode, long interAttemptsTime, 
-			int maxAttempts, PendingPriority priority ) {
+			int maxAttempts, Priority priority ) {
 		
 		this.logCode = logCode;
 		this.interAttemptsTime = interAttemptsTime;
@@ -79,7 +79,7 @@ public class LogDownloader {
 		
 		// if no log was found and we have low priority or 
 		// high priority with another allowed attempt go on
-		while ( log == null && ( priority == PendingPriority.LOW || 
+		while ( log == null && ( priority == Priority.LOW || 
 				attemptsCount < maxAttempts ) ) {
 
 			// ask for the log to the dcf
@@ -97,7 +97,7 @@ public class LogDownloader {
 			
 			// add maximum number of attempts if high priority
 			// otherwise add only the new line to the message
-			if ( priority == PendingPriority.HIGH )
+			if ( priority == Priority.HIGH )
 				System.err.println( "/" + maxAttempts );
 			else
 				System.err.println();

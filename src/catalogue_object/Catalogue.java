@@ -31,8 +31,9 @@ import dcf_manager.Dcf;
 import dcf_manager.VersionFinder;
 import dcf_reserve_util.NewCatalogueInternalVersion;
 import dcf_reserve_util.PendingReserve;
-import dcf_reserve_util.PendingReserveDAO;
+import dcf_reserve_util.PendingActionDAO;
 import dcf_user.User;
+import dcf_webservice.PendingAction;
 import dcf_webservice.ReserveLevel;
 import detail_level.DetailLevelDAO;
 import detail_level.DetailLevelGraphics;
@@ -1046,10 +1047,19 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 */
 	public boolean isReserving() {
 		
-		PendingReserveDAO prDao = new PendingReserveDAO();
-		PendingReserve pr = prDao.getByCatalogue ( this );
+		PendingActionDAO prDao = new PendingActionDAO();
+		Collection<PendingAction> pas = prDao.getByCatalogue ( this );
 		
-		return pr != null || reserving;
+		boolean isPr = false;
+		
+		// check if we have some pending reserve in the
+		// pending action database
+		for ( PendingAction pa : pas ) {
+			if ( pa.getType().equals( PendingReserve.TYPE ) )
+				isPr = true;
+		}
+		
+		return isPr || reserving;
 	}
 	
 	/**

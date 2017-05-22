@@ -1,5 +1,6 @@
 package dcf_reserve_util;
 
+import dcf_webservice.PendingAction;
 import ui_progress_bar.FormProgressBar;
 
 /**
@@ -13,30 +14,30 @@ import ui_progress_bar.FormProgressBar;
  */
 public class ReserveValidator extends Thread {
 
-	private PendingReserve pendingReserve;
+	private PendingAction pendingAction;
 	
 	private FormProgressBar progressBar;
-	private ReserveListener listener;
+	private PendingActionListener listener;
 	
 	/**
 	 * Initialize the reserve validator.
 	 * @param pendingReserve
 	 */
-	public ReserveValidator( PendingReserve pendingReserve, 
-			ReserveListener listener ) {
+	public ReserveValidator( PendingAction pendingAction, 
+			PendingActionListener listener ) {
 		
-		this.pendingReserve = pendingReserve;
+		this.pendingAction = pendingAction;
 		this.listener = listener;
 	}
 
 	@Override
 	public void run() {
 		
-		pendingReserve.setListener( listener );
-		pendingReserve.setProgressBar( progressBar );
+		pendingAction.setListener( listener );
+		pendingAction.setProgressBar( progressBar );
 		
 		// start the pending reserve process
-		pendingReserve.start();
+		pendingAction.start();
 	}
 	
 	/**

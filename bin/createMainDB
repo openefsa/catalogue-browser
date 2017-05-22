@@ -130,17 +130,18 @@ alter table APP.PREFERENCE add constraint preference_key_unique unique ( PREFERE
 
 -- This table stores all the pending requests for reserving or unreserving
 -- catalogues. All these requests are retried in background!
-create table APP.PENDING_RESERVE (
-	RESERVE_ID integer not null primary key generated always as identity (start with 1, increment by 1),
-	RESERVE_LOG_CODE varchar(500) not null, -- code of the log related to the pending reserve action
-	RESERVE_LEVEL varchar(50) not null,     -- the reserve level (none, minor, major)
+create table APP.PENDING_ACTION (
+	ACTION_ID integer not null primary key generated always as identity (start with 1, increment by 1),
+	ACTION_LOG_CODE varchar(500) not null, -- code of the log related to the pending reserve action
 	CAT_ID integer not null,
-	RESERVE_USERNAME varchar(50) not null,  -- the name of the user which made the reserve
-	RESERVE_PRIORITY varchar(50) not null   -- fast or slow, how fast we should complete the reserve
+	ACTION_USERNAME varchar(50) not null,  -- the name of the user which made the reserve
+	ACTION_PRIORITY varchar(50) not null,  -- fast or slow, how fast we should complete the reserve
+	ACTION_TYPE varchar(100) not null,     -- the action type
+	ACTION_DATA varchar(50) not null       -- data, as the reserve level (none, minor, major)
 );
 
 -- add the unique contraint to the log id field
-alter table APP.PENDING_RESERVE add constraint log_code_unique unique ( RESERVE_LOG_CODE );
+alter table APP.PENDING_ACTION add constraint log_code_unique unique ( ACTION_LOG_CODE );
 
 -- set the foreign keys for PENDING_RESERVE table
-alter table APP.PENDING_RESERVE add foreign key ( CAT_ID ) references APP.CATALOGUE ( CAT_ID );
+alter table APP.PENDING_ACTION add foreign key ( CAT_ID ) references APP.CATALOGUE ( CAT_ID );

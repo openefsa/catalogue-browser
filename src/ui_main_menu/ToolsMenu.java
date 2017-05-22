@@ -949,7 +949,7 @@ public class ToolsMenu implements MainMenuItem {
 					// enable resetMI only if the catalogue is an internal version
 					// and if the catalogue is reserved by the current user
 					resetMI.setEnabled( mainMenu.getCatalogue().isReservedBy( user ) && 
-							mainMenu.getCatalogue().getRawVersion().isInternalVersion() );
+							mainMenu.getCatalogue().getCatalogueVersion().isInternalVersion() );
 				}
 
 				if ( importMI != null )

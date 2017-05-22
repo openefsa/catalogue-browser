@@ -31,7 +31,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 	 * @param catalogue
 	 */
 	public int insert ( Catalogue catalogue ) {
-		System.out.println( "VERSIONE dao " + catalogue.getVersion() );
+		
 		int id = -1;
 
 		try {

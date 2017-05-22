@@ -21,7 +21,7 @@ public class BackgroundReserve extends Thread {
 	private ReserveLevel level;       // the reserve level we want for the catalogue
 	private String description;       // the description of the reserve request
 	
-	private ReserveListener listener; // listen to reserve events
+	private PendingActionListener listener; // listen to reserve events
 	
 	private FormProgressBar progressBar;
 	
@@ -43,7 +43,7 @@ public class BackgroundReserve extends Thread {
 	 * Set the listener for reserve events.
 	 * @param listener
 	 */
-	public void setListener(ReserveListener listener) {
+	public void setListener(PendingActionListener listener) {
 		this.listener = listener;
 	}
 	

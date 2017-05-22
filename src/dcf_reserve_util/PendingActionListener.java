@@ -1,17 +1,18 @@
 package dcf_reserve_util;
 
 import dcf_webservice.DcfResponse;
+import dcf_webservice.PendingAction;
 
 /**
- * Listener used for reserve operations with
- * pending reserves.
+ * Listener used for web service operations with
+ * pending actions.
  * @author avonva
  *
  */
-public interface ReserveListener {
+public interface PendingActionListener {
 	
 	/**
-	 * Called when the reserve request is prepared and
+	 * Called when the request is prepared and
 	 * it is ready to be sent.
 	 */
 	public void requestPrepared ();
@@ -24,7 +25,7 @@ public interface ReserveListener {
 	 * @param logCode the log code which was found in the dcf
 	 * soap response
 	 */
-	public void requestSent ( PendingReserve pendingReserve, 
+	public void requestSent ( PendingAction pendingAction, 
 			String logCode );
 	
 	/**
@@ -33,7 +34,7 @@ public interface ReserveListener {
 	 * @param response the dcf response regarding the reserve operation
 	 * contained in the pending reserve object
 	 */
-	public void responseReceived( PendingReserve pendingReserve, DcfResponse response );
+	public void responseReceived( PendingAction pendingAction, DcfResponse response );
 	
 	/**
 	 * Called when a pending reserve status changed. For example,
@@ -42,6 +43,6 @@ public interface ReserveListener {
 	 * @param pendingReserve the pending reserve which changed
 	 * its status
 	 */
-	public void statusChanged( PendingReserve pendingReserve, 
+	public void statusChanged( PendingAction pendingAction, 
 			PendingReserveStatus status );
 }
