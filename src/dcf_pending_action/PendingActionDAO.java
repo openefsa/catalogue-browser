@@ -1,4 +1,4 @@
-package dcf_reserve_util;
+package dcf_pending_action;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,10 +12,8 @@ import catalogue_browser_dao.CatalogueDAO;
 import catalogue_browser_dao.CatalogueEntityDAO;
 import catalogue_browser_dao.DatabaseManager;
 import catalogue_object.Catalogue;
-import dcf_webservice.PendingAction;
-import dcf_webservice.PendingPublish;
+import dcf_pending_action.PendingAction.Priority;
 import dcf_webservice.Publish.PublishLevel;
-import dcf_webservice.PendingAction.Priority;
 import dcf_webservice.ReserveLevel;
 
 /**

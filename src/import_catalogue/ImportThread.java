@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.eclipse.swt.widgets.Display;
 
+import catalogue_object.Catalogue;
 import excel_file_management.ExcelThread;
 import utilities.GlobalUtil;
 
@@ -17,13 +18,15 @@ public class ImportThread extends ExcelThread {
 
 	private String path;  // path where the db will be created
 	private boolean deleteFiles = false;
+	private Catalogue localCat;
+	private boolean local = false;
 	
 	/**
 	 * Initialize the import thread
 	 * @param path the path where the new database should be created
 	 * @param filename the name of the .xlsx file we want to import
 	 */
-	public ImportThread(String path, String filename ) {
+	public ImportThread( String path, String filename ) {
 		super( filename );
 		this.path = path;
 	}
@@ -34,6 +37,17 @@ public class ImportThread extends ExcelThread {
 	 */
 	public void deleteFilesAtEnd() {
 		deleteFiles = true;
+	}
+	
+	/**
+	 * Set to true if we want to import an
+	 * excel file for a local catalogue. Pass
+	 * also the local catalogue
+	 * @param local
+	 */
+	public void setLocal( Catalogue localCat, boolean local ) {
+		this.localCat = localCat;
+		this.local = local;
 	}
 
 	/**
@@ -48,7 +62,12 @@ public class ImportThread extends ExcelThread {
 			importCat.setProgressBar( getProgressForm() );
 
 			// start import, return false if wrong catalogue
-			final boolean check = importCat.importCatalogue( path, getFilename() );
+			final boolean check;
+
+			if ( !local ) 
+				check = importCat.importCatalogue( path, getFilename() );
+			else
+				check = importCat.importLocalCatalogue( localCat, path, getFilename() );
 
 			Display.getDefault().syncExec( new Runnable() {
 				

@@ -111,15 +111,17 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 			// only if the opened catalogue is the catalogue we are modifying then
 			// refresh the Terms hash map
 			//if ( currentCat != null && catalogue.equals( currentCat ) ) {
-				
+
+			if ( !terms.isEmpty() ) {
+
 				// update the terms ids with the ones given by the database
 				ResultSet rs = stmt.getGeneratedKeys();
 				//int count = 0;
-				
+
 				while ( rs.next() ) {
 
 					ids.add( rs.getInt(1) );
-					
+
 					//Term term = terms.get( count );
 					//term.setId( rs.getInt( 1 ) );
 
@@ -128,10 +130,11 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 
 					//count++;
 				}
-				
+
 				rs.close();
-			//}
-			
+				//}
+			}
+
 			stmt.close();
 			con.close();
 			

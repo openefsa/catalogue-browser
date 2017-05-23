@@ -1,4 +1,4 @@
-package dcf_reserve_util;
+package dcf_pending_action;
 
 /**
  * Enumerator to save the status of a {@link PendingReserve}

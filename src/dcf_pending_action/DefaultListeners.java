@@ -1,12 +1,10 @@
-package dcf_reserve_util;
+package dcf_pending_action;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
 import catalogue_object.Catalogue;
 import dcf_webservice.DcfResponse;
-import dcf_webservice.PendingAction;
-import dcf_webservice.PendingPublish;
 import dcf_webservice.ReserveLevel;
 import global_manager.GlobalManager;
 import messages.Messages;
@@ -55,7 +53,7 @@ public class DefaultListeners {
 			}
 
 			@Override
-			public void requestSent(PendingAction pendingAction, String logCode) {
+			public void requestSent( final PendingAction pendingAction, String logCode) {
 				
 				ui.getShell().getDisplay().asyncExec( new Runnable() {
 					@Override
@@ -64,6 +62,15 @@ public class DefaultListeners {
 						// remove shell lock if we start sending
 						// (we have the log code at this point)
 						ShellLocker.removeLock( ui.getShell() );
+
+						Catalogue catalogue = pendingAction.getCatalogue();
+						String preMessage = createPremessage( catalogue );
+						
+						// warn that the reserve operation was sent
+						GlobalUtil.showDialog( ui.getShell(), 
+								Messages.getString( "Publish.PublishStartedTitle" ),
+								preMessage + Messages.getString( "Publish.PublishStartedMessage" ),
+								SWT.ICON_INFORMATION );
 					}
 				});
 			}
@@ -121,8 +128,8 @@ public class DefaultListeners {
 				msg += Messages.getString( "Publish.MinorErrorMessage" );
 				break;
 			case OK:
-				title = Messages.getString( "Publish.ErrorTitle" );
-				msg += Messages.getString( "Publish.ErrorMessage" );
+				title = Messages.getString( "Publish.OkTitle" );
+				msg += Messages.getString( "Publish.OkMessage" );
 				break;
 			default:
 				break;
@@ -176,11 +183,7 @@ public class DefaultListeners {
 						
 						PendingReserve pr = (PendingReserve) pendingAction;
 						Catalogue catalogue = pr.getCatalogue();
-						String preMessage = "";
-						
-						if ( catalogue != null )
-							preMessage = catalogue.getCode() + " - " 
-									+ catalogue.getVersion() + ": ";
+						String preMessage = createPremessage( catalogue );
 						
 						// warn that the reserve operation was sent
 						GlobalUtil.showDialog( ui.getShell(), 
@@ -217,9 +220,7 @@ public class DefaultListeners {
 							PendingReserve pr = (PendingReserve) pendingAction;
 							
 							ReserveLevel level = pr.getReserveLevel();
-							
-							System.err.println( " level " + level );
-							System.err.println( " response " + response );
+
 							// open the catalogue if the operation was a reserve operation
 							// and if we have completed the process
 							if ( pr.getReserveLevel()

@@ -103,6 +103,11 @@ public class ExportCatalogue extends SOAPAction {
 		// get the response attachment
 		AttachmentPart attachment = getFirstAttachment( soapResponse );
 		
+		if ( attachment == null ) {
+			System.err.println( "ExportCatalogueFile: Attachment not found for " + catalogue );
+			return null;
+		}
+		
 		// write the attachment to the file
 		try {
 			

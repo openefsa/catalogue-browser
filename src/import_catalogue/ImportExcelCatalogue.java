@@ -45,6 +45,9 @@ public class ImportExcelCatalogue {
 	XLSXFormat rawData;
 
 
+	private boolean local = false;
+	private Catalogue localCat;
+	
 	/**
 	 * Set the progress bar for the import process
 	 * @param progressBar
@@ -85,15 +88,30 @@ public class ImportExcelCatalogue {
 	}
 
 	/**
-	 * This method import all the data and update the gui in the correct way.
-	 * 
+	 * Import a local catalogue
+	 * @param dbPath
 	 * @param fileName
-	 *            name and path to retrieve the import file.
+	 * @throws InvalidFormatException
+	 * @throws IOException
+	 * @throws ImportExcelException
+	 */
+	public boolean importLocalCatalogue ( Catalogue localCat, String dbPath, String fileName ) 
+			throws InvalidFormatException, IOException, ImportExcelException {
+		this.local = true;
+		this.localCat = localCat;
+		return importCatalogue ( dbPath, fileName );
+	}
+	
+	/**
+	 * This method import all the workbook data in the {@code dbPath}.
+	 * @param dbPath where the import data should be inserted
+	 * @param fileName name and path to retrieve the import file.
 	 * @throws InvalidFormatException
 	 * @throws IOException
 	 * @throws ImportExcelException 
 	 */
-	public boolean importCatalogue ( String dbPath, String fileName ) throws InvalidFormatException, IOException, ImportExcelException {
+	public boolean importCatalogue ( String dbPath, String fileName ) 
+			throws InvalidFormatException, IOException, ImportExcelException {
 
 		ResultDataSet catData;
 		ResultDataSet termData;
@@ -278,12 +296,26 @@ public class ImportExcelCatalogue {
 			// add the code to the cache for future uses (insert terms)
 			codes.add( code );
 			
+			boolean isMaster = code.equals( catalogue.getCode() );
+			
 			HierarchyBuilder builder = new HierarchyBuilder();
 			
 			builder.setCatalogue( catalogue );
-			builder.setCode( code );
-			builder.setName( rs.getString ( "name" ) );
-			builder.setLabel( rs.getString ( "label" ) );
+
+			// for local catalogues the master
+			// should have the same name of the
+			// local catalogue
+			if ( this.local && isMaster ) {
+				builder.setCode( localCat.getCode() );
+				builder.setName( localCat.getName() );
+				builder.setLabel( localCat.getLabel() );
+			}
+			else {
+				builder.setCode( code );
+				builder.setName( rs.getString ( "name" ) );
+				builder.setLabel( rs.getString ( "label" ) );
+			}
+
 			builder.setScopenotes( rs.getString ( "scopeNote" ) );
 			builder.setApplicability( rs.getString ( "hierarchyApplicability" ) );
 			
@@ -293,7 +325,7 @@ public class ImportExcelCatalogue {
 			// set the is_master field as true if the hierarchy code
 			// is the same as the catalogue code (convention)
 			// otherwise false
-			builder.setMaster( code.equals( catalogue.getCode() ) );
+			builder.setMaster( isMaster );
 
 			builder.setLastUpdate( rs.getTimestamp( "lastUpdate" ) );
 			builder.setValidFrom( rs.getTimestamp( "validFrom" ) );
@@ -866,7 +898,6 @@ public class ImportExcelCatalogue {
 		con.close();
 		
 		return hash;
-		
 	}
 	
 	/**
@@ -936,8 +967,13 @@ public class ImportExcelCatalogue {
 			if ( code.isEmpty() )
 				continue;
 			
+			int id;
+			
 			// get the hierarchy id using the hierarchy code
-			int id = hierIds.get( code );
+			if ( this.local )
+				id = hierIds.get( localCat.getCode() );
+			else
+				id = hierIds.get( code );
 			
 			// add the attribute to the array list (id and code)
 			hierarchies.add ( new Property( id, code ) );

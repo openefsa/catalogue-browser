@@ -8,6 +8,7 @@ import javax.xml.transform.TransformerException;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
+import catalogue_object.Catalogue;
 import folder_zipper.FolderZipper;
 import messages.Messages;
 import ui_progress_bar.FormProgressBar;
@@ -24,6 +25,8 @@ import xml_to_excel.XmlCatalogueToExcel;
 public class ImportActions {
 	
 	private FormProgressBar progressBar;
+	private boolean local = false;
+	private Catalogue localCat;
 	
 	/**
 	 * Add a progress bar to the import process
@@ -56,6 +59,17 @@ public class ImportActions {
 	}
 	
 	/**
+	 * Set to true to import data for
+	 * local catalogues. Pass also the
+	 * local catalogue object
+	 * @param local
+	 */
+	public void setLocal( Catalogue localCat, boolean local ) {
+		this.localCat = localCat;
+		this.local = local;
+	}
+	
+	/**
 	 * Import a catalogue starting from an xlsx format. 
 	 * The process starts the {@link ImportThread} thread
 	 * to read the xlsx file and insert the data into the
@@ -78,6 +92,8 @@ public class ImportActions {
 		// create a thread for the excel import
 		ImportThread importThread = new ImportThread( dbPath, filename );
 
+		importThread.setLocal( localCat, local );
+		
 		// set the progress bar if needed
 		if ( progressBar != null )
 			importThread.setProgressBar( progressBar );

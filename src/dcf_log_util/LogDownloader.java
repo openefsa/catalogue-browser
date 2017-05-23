@@ -3,7 +3,7 @@ package dcf_log_util;
 import org.w3c.dom.Document;
 
 import dcf_manager.Dcf;
-import dcf_webservice.PendingAction.Priority;
+import dcf_pending_action.PendingAction.Priority;
 
 /**
  * Class used to download a dcf Log document

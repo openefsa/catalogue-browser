@@ -441,10 +441,11 @@ public class TermsTreePanel extends Observable implements Observer {
 		if ( selectedHierarchy == null )
 			return;
 		
-		boolean isReserved = reserveLevel.greaterThan( ReserveLevel.NONE );
+		boolean canEdit = User.getInstance().canEdit( catalogue );
+		boolean canEditMajor = catalogue.isLocal() || ( canEdit && reserveLevel.isMajor() );
 		
 		// enable add only in master hierarchy
-		addTerm.setEnabled( isReserved && selectedHierarchy.isMaster() );
+		addTerm.setEnabled( canEdit && selectedHierarchy.isMaster() );
 		
 		if ( isSelectionEmpty() )
 			return;
@@ -455,7 +456,7 @@ public class TermsTreePanel extends Observable implements Observer {
 			
 			// allow only if the term has not deprecated parents
 			// allow only for major releases
-			deprecateTerm.setEnabled ( reserveLevel.isMajor() && 
+			deprecateTerm.setEnabled ( canEditMajor && 
 					!getFirstSelectedTerm().hasDeprecatedParents() );
 		}
 		else {
@@ -463,23 +464,30 @@ public class TermsTreePanel extends Observable implements Observer {
 			
 			// allow only if the term has all the subtree deprecated, allow only for
 			// major releases
-			deprecateTerm.setEnabled ( reserveLevel.isMajor() && 
+			deprecateTerm.setEnabled ( canEditMajor && 
 					getFirstSelectedTerm().hasDeprecatedChildren() );
 		}
 		
 		// check if the selected terms can be moved in the current hierarchy
-		termMoveUp.setEnabled( isReserved && termOrderChanger.canMoveUp( getSelectedTerms(), selectedHierarchy ) );
-		termMoveDown.setEnabled( isReserved && termOrderChanger.canMoveDown( getSelectedTerms(), selectedHierarchy ) );
-		termLevelUp.setEnabled( isReserved && termOrderChanger.canMoveLevelUp( getSelectedTerms(), selectedHierarchy ) );
+		termMoveUp.setEnabled( canEdit 
+				&& termOrderChanger.canMoveUp( getSelectedTerms(), selectedHierarchy ) );
 		
-		cutTerm.setEnabled( isReserved );
+		termMoveDown.setEnabled( canEdit 
+				&& termOrderChanger.canMoveDown( getSelectedTerms(), selectedHierarchy ) );
+		
+		termLevelUp.setEnabled( canEdit 
+				&& termOrderChanger.canMoveLevelUp( getSelectedTerms(), selectedHierarchy ) );
+		
+		cutTerm.setEnabled( canEdit );
 
-		copyNode.setEnabled( isReserved );
+		copyNode.setEnabled( canEdit );
 		
-		copyBranch.setEnabled( isReserved );
+		copyBranch.setEnabled( canEdit );
 		
 		// can paste only if we are cutting/copying and we are pasting under a single term
-		pasteTerm.setEnabled( isReserved && termClip.canPaste( getFirstSelectedTerm(), selectedHierarchy ) );
+		pasteTerm.setEnabled( canEdit 
+				&& termClip.canPaste( 
+						getFirstSelectedTerm(), selectedHierarchy ) );
 	}
 	
 	
@@ -715,8 +723,8 @@ public class TermsTreePanel extends Observable implements Observer {
 				
 				// if we do not have a term code mask we need to ask to the
 				// user the term code
-				if ( catalogue.getTermCodeMask() != null && 
-						!catalogue.getTermCodeMask().isEmpty() ) {
+				if ( catalogue.getTermCodeMask() == null || 
+						catalogue.getTermCodeMask().isEmpty() ) {
 
 					DialogSingleText dialog = new DialogSingleText( shell, 1 );
 					dialog.setTitle( Messages.getString( "NewTerm.Title" ) );

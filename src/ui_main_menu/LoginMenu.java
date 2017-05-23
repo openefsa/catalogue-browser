@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
 import dcf_manager.Dcf;
-import dcf_reserve_util.DefaultListeners;
+import dcf_pending_action.DefaultListeners;
 import dcf_user.User;
 import dcf_webservice.ReserveLevel;
 import messages.Messages;
@@ -151,7 +151,7 @@ public class LoginMenu implements MainMenuItem {
 				Messages.getString( "Reserve.NewInternalTitle" ), 
 				false, SWT.TITLE ) );
 		
-		dcf.startPendingReserves( 
+		dcf.startPendingActions( 
 				DefaultListeners.getReserveListener( 
 						new UpdateableUI() {
 			

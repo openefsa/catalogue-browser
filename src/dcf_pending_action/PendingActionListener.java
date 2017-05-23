@@ -1,7 +1,6 @@
-package dcf_reserve_util;
+package dcf_pending_action;
 
 import dcf_webservice.DcfResponse;
-import dcf_webservice.PendingAction;
 
 /**
  * Listener used for web service operations with

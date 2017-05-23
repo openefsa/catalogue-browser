@@ -126,7 +126,7 @@ public class User {
 		// is the catalogue reserved? (i.e. is it reserved
 		// by this user and the dcf is not reserving)
 		boolean isReserved = catalogue.isReservedBy( this )
-				&& !catalogue.isReserving();
+				&& !catalogue.isRequestingAction();
 		
 		// is the user a cm of this catalogue?
 		boolean isCM = isCatManagerOf( catalogue );

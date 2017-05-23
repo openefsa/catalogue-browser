@@ -1,6 +1,10 @@
 package dcf_webservice;
 
+import javax.xml.soap.SOAPException;
+
 import catalogue_object.Catalogue;
+import dcf_pending_action.PendingPublish;
+import dcf_user.User;
 
 public class Publish extends UploadCatalogueFile {
 
@@ -39,9 +43,26 @@ public class Publish extends UploadCatalogueFile {
 	 * @param catalogue
 	 * @param level
 	 */
-	public void publish ( Catalogue catalogue, PublishLevel level ) {
+	public PendingPublish publish ( Catalogue catalogue, PublishLevel level ) {
+		
 		this.catalogue = catalogue;
 		this.level = level;
+		
+		System.out.println ( level.getOp() + ": " + catalogue );
+
+		PendingPublish pp = null;
+
+		try {
+			
+			// start the reserve operation
+			pp = (PendingPublish) makeRequest();
+			
+		} catch (SOAPException e) {
+			
+			e.printStackTrace();
+		}
+		
+		return pp;
 	}
 
 	@Override
@@ -51,7 +72,12 @@ public class Publish extends UploadCatalogueFile {
 
 	@Override
 	public Object processResponse(String logCode) {
+		
 		// create a pending publish object
-		return null;
+		
+		PendingPublish pp = PendingPublish.addPendingPublish(
+				logCode, level, catalogue, User.getInstance().getUsername() );
+		
+		return pp;
 	}
 }

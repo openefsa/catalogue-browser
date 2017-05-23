@@ -24,9 +24,10 @@ import catalogue_browser_dao.AttributeDAO;
 import catalogue_browser_dao.DatabaseManager;
 import catalogue_object.Catalogue;
 import dcf_manager.Dcf;
-import dcf_reserve_util.DefaultListeners;
+import dcf_pending_action.DefaultListeners;
 import dcf_user.User;
 import dcf_webservice.ReserveLevel;
+import dcf_webservice.Publish.PublishLevel;
 import export_catalogue.ExportActions;
 import import_catalogue.ImportActions;
 import messages.Messages;
@@ -315,16 +316,29 @@ public class ToolsMenu implements MainMenuItem {
 	 */
 	private MenuItem addPublishMI ( Menu menu ) {
 		
-		final MenuItem publishMI = new MenuItem( menu , SWT.PUSH );
+		final MenuItem publishMI = new MenuItem( menu , SWT.CASCADE );
 
 		publishMI.setText( Messages.getString( "BrowserMenu.Publish" ) );
-		publishMI.addSelectionListener( new SelectionListener() {
+		
+		// create menu which hosts major and minor reserve
+		Menu publishOpMI = new Menu( shell , SWT.DROP_DOWN );
+		publishMI.setMenu( publishOpMI );
+
+		// major release
+		MenuItem majorMI = new MenuItem( publishOpMI , SWT.PUSH );
+		majorMI.setText( Messages.getString( "BrowserMenu.PublishMajorCmd" ) );
+
+		// minor release
+		MenuItem minorMI = new MenuItem( publishOpMI , SWT.PUSH );
+		minorMI.setText( Messages.getString( "BrowserMenu.PublishMinorCmd" ) );
+
+		// publish major
+		majorMI.addSelectionListener( new SelectionListener() {
 
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 
-				// publish the catalogue (only for drafts)
-				
+				publish ( mainMenu.getCatalogue(), PublishLevel.MAJOR );
 				
 				if ( listener != null )
 					listener.buttonPressed( publishMI, 
@@ -332,9 +346,24 @@ public class ToolsMenu implements MainMenuItem {
 			}
 
 			@Override
-			public void widgetDefaultSelected(SelectionEvent arg0) {
+			public void widgetDefaultSelected(SelectionEvent arg0) {}
+		});
+		
+		// publish minor
+		minorMI.addSelectionListener( new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
 				
+				publish ( mainMenu.getCatalogue(), PublishLevel.MINOR );
+				
+				if ( listener != null )
+					listener.buttonPressed( publishMI, 
+							PUBLISH_CAT_MI, null );
 			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {}
 		});
 		
 		publishMI.setEnabled( false );
@@ -426,6 +455,8 @@ public class ToolsMenu implements MainMenuItem {
 
 				ImportActions importAction = new ImportActions();
 				importAction.setProgressBar( new FormProgressBar( shell, "") );
+				importAction.setLocal( mainMenu.getCatalogue(), 
+						mainMenu.getCatalogue().isLocal() );
 				
 				// import the selected excel into the current catalogue
 				importAction.importXlsx( mainMenu.getCatalogue().getDbFullPath(), 
@@ -868,7 +899,7 @@ public class ToolsMenu implements MainMenuItem {
 		// export a local catalogue we create an excel which has as
 		// catalogue code a custom string, but with master hierarchy code
 		// the code defined before in the excel import... And give errors!
-		exportMI.setEnabled( nonEmptyCat && !mainMenu.getCatalogue().isLocal() );
+		exportMI.setEnabled( true );
 
 		importPicklistMI.setEnabled( hasFacets );
 		favouritePicklistMI.setEnabled( hasFacets && hasPicklists );
@@ -876,6 +907,10 @@ public class ToolsMenu implements MainMenuItem {
 		searchOptMI.setEnabled( nonEmptyCat );
 		userPrefMI.setEnabled( true );
 
+		// enable disable publish mi
+		if ( publishMI != null )
+			publishMI.setEnabled( mainMenu.getCatalogue().canBePublished() );
+		
 		// if editing modify also editing buttons
 		if ( user.canEdit( mainMenu.getCatalogue() ) ) {
 			
@@ -891,25 +926,35 @@ public class ToolsMenu implements MainMenuItem {
 		// reserve the current catalogue
 		if ( user.isCatManagerOf( mainMenu.getCatalogue() ) ) {
 
-			// can reserve if the catalogue is not already reserved
-			boolean reservable = mainMenu.getCatalogue().isReservable();
+			// enable reserve if the catalogue is not already reserved by me
+			boolean reservable = !mainMenu.getCatalogue().isReservedBy( User.getInstance() );
 			
 			// can unreserve if we had reserved the catalogue ( not another user )
 			boolean unReservable = mainMenu.getCatalogue().isUnreservable();
 
-			// if we are reserving a catalogue
-			// disable the action which potentially 
-			// can modify the catalogue
-			if ( mainMenu.getCatalogue().isReserving() ) {
+			// if we are requesting a web service
+			// disable the action which can send another
+			// web service request
+			if ( mainMenu.getCatalogue().isRequestingAction() ) {
 				
 				if ( reserveMI != null ) {
-					reserveMI.setText( Messages.getString("Reserve.WaitingResponse") );
+					reserveMI.setText( Messages.getString( "Reserve.WaitingResponse" ) );
 					reserveMI.setEnabled( false );
 				}
 				
 				if ( unreserveMI != null ) {
-					unreserveMI.setText( Messages.getString("Reserve.WaitingResponse") );
+					unreserveMI.setText( Messages.getString( "Reserve.WaitingResponse" ) );
 					unreserveMI.setEnabled( false );
+				}
+				
+				if ( publishMI != null ) {
+					publishMI.setText( Messages.getString( "Reserve.WaitingResponse" ) );
+					publishMI.setEnabled( false );
+				}
+				
+				if ( uploadDataMI != null ) {
+					uploadDataMI.setText( Messages.getString( "Reserve.WaitingResponse" ) );
+					uploadDataMI.setEnabled( false );
 				}
 
 				
@@ -935,13 +980,21 @@ public class ToolsMenu implements MainMenuItem {
 				
 				if ( reserveMI != null ) {
 					// can reserve only if not local and catalogue not reserved
+					reserveMI.setText( Messages.getString( "BrowserMenu.Reserve" ) );
 					reserveMI.setEnabled( reservable );
-					unreserveMI.setEnabled( unReservable );
 				}
 
 				if ( unreserveMI != null ) {
-					reserveMI.setText( Messages.getString( "BrowserMenu.Reserve") );
 					unreserveMI.setText( Messages.getString( "BrowserMenu.Unreserve" ) );
+					unreserveMI.setEnabled( unReservable );
+				}
+				
+				if ( uploadDataMI != null ) {
+					uploadDataMI.setText( Messages.getString( "BrowserMenu.UploadData" ) );
+				}
+
+				if ( publishMI != null ) {
+					publishMI.setText( Messages.getString( "BrowserMenu.Publish" ) );
 				}
 				
 				if ( resetMI != null && user.canEdit( mainMenu.getCatalogue() ) ) {
@@ -955,7 +1008,7 @@ public class ToolsMenu implements MainMenuItem {
 				if ( importMI != null )
 					importMI.setEnabled( canEdit );
 			}
-		} 
+		}
 		else {
 			if ( mainMenu.getCatalogue().isLocal() ) {
 				
@@ -986,6 +1039,20 @@ public class ToolsMenu implements MainMenuItem {
 	 * a level of NONE performs an unreserve operation.
 	 */
 	private void setReserveLevel( final ReserveLevel level ) {
+		
+		Catalogue catalogue = mainMenu.getCatalogue();
+		
+		Warnings wrn = new Warnings( shell );
+		
+		if ( level.greaterThan( ReserveLevel.NONE ) ) {
+			
+			// check if we have errors
+			boolean block = wrn.reserve( catalogue.getCatalogueStatus() );
+			
+			// if errors => return
+			if ( block )
+				return;
+		}
 		
 		String text = "";
 		
@@ -1025,7 +1092,7 @@ public class ToolsMenu implements MainMenuItem {
 			final ReserveLevel level, String description ) {
 
 		// set that we are reserving the catalogue
-		catalogue.setReserving( true );
+		catalogue.setRequestingAction( true );
 		
 		// reserve the catalogue
 		Dcf dcf = new Dcf();
@@ -1060,5 +1127,43 @@ public class ToolsMenu implements MainMenuItem {
 					}
 				} ) 
 			);
+	}
+	
+	/**
+	 * Publish a catalogue
+	 * @param catalogue the catalogue we want to publish
+	 * @param level the publish level
+	 */
+	private void publish ( Catalogue catalogue, PublishLevel level ) {
+
+		Warnings wrn = new Warnings( shell );
+		
+		// check if we have errors
+		boolean block = wrn.publish( catalogue.getCatalogueStatus() );
+
+		// if errors => return
+		if ( block )
+			return;
+
+		// set wait cursor
+		GlobalUtil.setShellCursor( shell, SWT.CURSOR_WAIT );
+		
+		// publish the catalogue (only for drafts)
+		Dcf dcf = new Dcf();
+		dcf.publish( catalogue,
+				level,
+				DefaultListeners.getPublishListener( new UpdateableUI() {
+
+					@Override
+					public void updateUI(Object data) {}
+
+					@Override
+					public Shell getShell() {
+						return shell;
+					}
+				} ) );
+		
+		// restore cursor
+		GlobalUtil.setShellCursor( shell, SWT.CURSOR_ARROW );
 	}
 }

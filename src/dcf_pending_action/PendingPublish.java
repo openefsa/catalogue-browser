@@ -1,10 +1,13 @@
-package dcf_webservice;
+package dcf_pending_action;
 
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.w3c.dom.Document;
 
 import catalogue_object.Catalogue;
 import catalogue_object.Status;
 import dcf_log_util.LogParser;
+import dcf_webservice.DcfResponse;
 import dcf_webservice.Publish.PublishLevel;
 
 /**
@@ -23,6 +26,33 @@ public class PendingPublish extends PendingAction {
 		
 		this.publishLevel = publishLevel;
 		setData( publishLevel.toString() );
+	}
+	
+
+	/**
+	 * Create a new pending publish object
+	 * @param logCode
+	 * @param level
+	 * @param catalogue
+	 * @param username
+	 * @return
+	 */
+	public static PendingPublish addPendingPublish ( String logCode, 
+			PublishLevel level, Catalogue catalogue, String username ) {
+		
+		// we create a new pending publish with FAST priority
+		PendingPublish pr = new PendingPublish( catalogue, logCode, 
+				username, Priority.HIGH, level );
+		
+		// create a pending publish object in order to
+		// retry the log retrieval (also if the application
+		// is closed!)
+		PendingActionDAO prDao = new PendingActionDAO();
+		int id = prDao.insert( pr );
+		
+		pr.setId( id );
+		
+		return pr;
 	}
 
 	@Override
@@ -77,6 +107,26 @@ public class PendingPublish extends PendingAction {
 
 	@Override
 	public void processResponse(DcfResponse response) {
+		
+		// only correct operations
+		if ( response != DcfResponse.OK )
+			return;
+		
+		// import the last version if there is one
+		// and publish the catalogue
+		importLastVersion( new Listener() {
+			
+			@Override
+			public void handleEvent(Event arg0) {
+				publish();
+			}
+		});
+	}
+	
+	/**
+	 * Publish the catalogue
+	 */
+	private void publish() {
 		
 		Catalogue newVersion = null;
 		

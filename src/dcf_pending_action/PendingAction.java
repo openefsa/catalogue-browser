@@ -1,13 +1,21 @@
-package dcf_webservice;
+package dcf_pending_action;
 
+import java.io.IOException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import catalogue_object.Catalogue;
 import dcf_log_util.LogDownloader;
-import dcf_reserve_util.PendingActionDAO;
-import dcf_reserve_util.PendingActionListener;
-import dcf_reserve_util.PendingReserveStatus;
 import dcf_user.User;
+import dcf_webservice.DcfResponse;
+import dcf_webservice.Publish;
+import dcf_webservice.ReserveLevel;
 import dcf_webservice.Publish.PublishLevel;
 import ui_progress_bar.FormProgressBar;
 
@@ -181,6 +189,78 @@ public abstract class PendingAction {
 		
 		PendingActionDAO prDao = new PendingActionDAO();
 		prDao.update( this );
+	}
+	
+	/**
+	 * Import a the last internal version of the catalogue
+	 * if there is one. If no newer internal versions are
+	 * found, no action is performed and the {@code doneListener}
+	 * is called.
+	 * If a new internal version is found the import process
+	 * starts and the the status of the 
+	 * pending reserve is set to 
+	 * {@link PendingReserveStatus#OLD_VERSION}. In this case,
+	 * only when the import process is finished the 
+	 * {@code doneListener} is called.
+	 * 
+	 * Note that if a new internal version is found, the
+	 * {@link #catalogue} of the pending reserve will be
+	 * updated with the new internal version.
+	 * @param doneListener listener which specify the actions
+	 * needed when we finish the method.
+	 * @return true if we already had the last internal version, 
+	 * false otherwise
+	 */
+	public boolean importLastVersion ( final Listener doneListener ) {
+		
+		try {
+			
+			Catalogue catalogue = getCatalogue();
+			
+			final NewCatalogueInternalVersion lastVersion = 
+					catalogue.getLastInternalVersion();
+			
+			// if no version is found => we have the last one
+			if ( lastVersion == null ) {
+				
+				// call the listener since we have finished
+				doneListener.handleEvent( new Event() );
+				return true;
+			}
+			
+			System.out.println ( this + ": This is not the last version "
+					+ "of the catalogue, importing " + lastVersion );
+
+			// and import the last internal version
+			// and when the process is finished
+			// reserve the new version of the catalogue
+			lastVersion.setProgressBar( getProgressBar() );
+			
+			// import the new version
+			lastVersion.importNewCatalogueVersion( new Listener() {
+
+				@Override
+				public void handleEvent(Event arg0) {
+
+					// update the pending reserve catalogue
+					setCatalogue( lastVersion.getNewCatalogue() );
+
+					doneListener.handleEvent( arg0 );
+				}
+			} );
+			
+			// update the status of the pending reserve
+			setStatus( PendingReserveStatus.IMPORTING_LAST_VERSION );
+			
+			return false;
+			
+		} catch (IOException | TransformerException | 
+				ParserConfigurationException | SAXException e) {
+			e.printStackTrace();
+			
+			setStatus( PendingReserveStatus.ERROR );
+		}
+		return true;
 	}
 	
 	/**

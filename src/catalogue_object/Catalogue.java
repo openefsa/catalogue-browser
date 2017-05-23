@@ -29,11 +29,10 @@ import data_transformation.BooleanConverter;
 import data_transformation.DateTrimmer;
 import dcf_manager.Dcf;
 import dcf_manager.VersionFinder;
-import dcf_reserve_util.NewCatalogueInternalVersion;
-import dcf_reserve_util.PendingReserve;
-import dcf_reserve_util.PendingActionDAO;
+import dcf_pending_action.NewCatalogueInternalVersion;
+import dcf_pending_action.PendingAction;
+import dcf_pending_action.PendingActionDAO;
 import dcf_user.User;
-import dcf_webservice.PendingAction;
 import dcf_webservice.ReserveLevel;
 import detail_level.DetailLevelDAO;
 import detail_level.DetailLevelGraphics;
@@ -80,8 +79,8 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	private String reserveUsername;     // the user who reserved the catalogue
 	
 	// boolean set to true if we start
-	// a reserve operation for this catalogue
-	private boolean reserving;
+	// a pending action on this catalogue
+	private boolean requestingAction;
 	
 	// list of terms which are contained in the catalogue
 	private HashMap< Integer, Term > terms;
@@ -938,7 +937,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 				newCatalogue.getReserveLevel() );
 		
 		// the reserve operation is finished
-		setReserving( false );
+		setRequestingAction( false );
 		
 		return newCatalogue;
 	}
@@ -967,7 +966,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		catDao.update( this );
 		
 		// the unreserve operation is finished
-		setReserving( false );
+		setRequestingAction( false );
 	}
 	
 	/**
@@ -1036,30 +1035,20 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * unreserved
 	 * @param reserving
 	 */
-	public void setReserving(boolean reserving) {
-		this.reserving = reserving;
+	public void setRequestingAction(boolean requestingAction) {
+		this.requestingAction = requestingAction;
 	}
 	
 	/**
-	 * Check if a pending reserve/unreserve operation
-	 * is in process or not regarding this catalogue.
+	 * Check if a pending action regarding this
+	 * catalogue is being operated
 	 * @return
 	 */
-	public boolean isReserving() {
+	public boolean isRequestingAction() {
 		
 		PendingActionDAO prDao = new PendingActionDAO();
 		Collection<PendingAction> pas = prDao.getByCatalogue ( this );
-		
-		boolean isPr = false;
-		
-		// check if we have some pending reserve in the
-		// pending action database
-		for ( PendingAction pa : pas ) {
-			if ( pa.getType().equals( PendingReserve.TYPE ) )
-				isPr = true;
-		}
-		
-		return isPr || reserving;
+		return !pas.isEmpty() || requestingAction;
 	}
 	
 	/**
@@ -1069,17 +1058,63 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 */
 	public boolean isReservable () {
 		
+		CatalogueStatus prob = getCatalogueStatus();
+
+		return prob == CatalogueStatus.NONE;
+	}
+	
+	/**
+	 * Enum used to get the specific problem which
+	 * is blocking a reserve action on this catalogue
+	 * @author avonva
+	 *
+	 */
+	public enum CatalogueStatus {
+		NONE,
+		PENDING_ACTION_ONGOING,
+		RESERVED_BY_CURRENT,
+		RESERVED_BY_OTHER,
+		NOT_LAST,
+		LOCAL,
+		DEPRECATED,
+		FORCED_EDIT
+	};
+	
+	/**
+	 * Get the status of the catalogue
+	 * @return
+	 */
+	public CatalogueStatus getCatalogueStatus() {
+
+		CatalogueStatus problem = CatalogueStatus.NONE;
+		
 		String username = User.getInstance().getUsername();
 		
-		// true if no user had reserved the catalogue
+		// if the catalogue is reserved by someone which is not me
+		// then we cannot reserve
+		boolean reservedByOther = !isReservedBy( User.getInstance() ) 
+				&& isReserved();
+		
+		// no problem if no user had reserved the catalogue
 		// and the catalogue is the last available
 		// version of the catalogue and the catalogue
 		// is not local and it is not deprecated
-		if ( !isReserved() && !hasUpdate() 
-				&& !local && !isDeprecated() && !isForceEdit( username ) )
-			return true;
+		if ( isRequestingAction() )
+			problem = CatalogueStatus.PENDING_ACTION_ONGOING;
+		else if ( reservedByOther )
+			problem = CatalogueStatus.RESERVED_BY_OTHER;
+		else if ( isReservedBy ( User.getInstance() ) )
+			problem = CatalogueStatus.RESERVED_BY_CURRENT;
+		else if ( hasUpdate() )
+			problem = CatalogueStatus.NOT_LAST;
+		else if ( local )
+			problem = CatalogueStatus.LOCAL;
+		else if ( isDeprecated() )
+			problem = CatalogueStatus.DEPRECATED;
+		else if ( isForceEdit( username ) )
+			problem = CatalogueStatus.FORCED_EDIT;
 		
-		return false;
+		return problem;
 	}
 	
 	/**
@@ -1101,7 +1136,20 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		
 		return false;
 	}
-
+	
+	/**
+	 * Check if the catalogue can be published
+	 * @return
+	 */
+	public boolean canBePublished () {
+		
+		// can be published if not reserved and
+		// if not in forced editing
+		boolean ok = !isReserved() && 
+				!isForceEdit( User.getInstance().getUsername() );
+		
+		return ok;
+	}
 	/**
 	 * Get the catalogue term code mask if there is one
 	 * @return

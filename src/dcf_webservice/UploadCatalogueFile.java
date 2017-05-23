@@ -24,7 +24,7 @@ public abstract class UploadCatalogueFile extends SOAPAction {
 	private static final String NAMESPACE = "http://ws.catalog.dc.efsa.europa.eu/";
 
 	// web service link of the ping service
-	//private static final String RESERVE_URL = "https://dcf-cms.efsa.europa.eu/catalogues";
+	//private static final String URL = "https://dcf-cms.efsa.europa.eu/catalogues";
 	private static final String URL = "https://dcf-01.efsa.test/dc-catalog-public-ws/catalogues/?wsdl";
 	
 	/**

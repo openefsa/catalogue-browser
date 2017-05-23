@@ -1,18 +1,17 @@
-package dcf_reserve_util;
+package dcf_pending_action;
 
-import dcf_webservice.PendingAction;
 import ui_progress_bar.FormProgressBar;
 
 /**
  * This thread starts in background a
- * pending reserve process to retrieve its log document
- * from the dcf and to assess if the reserve request
+ * pending action process to retrieve its log document
+ * from the dcf and to assess if the request
  * succeeded or not. All the events
- * are captured by the {@link #reserveListener}
+ * are captured by the {@link #listener}
  * @author avonva
  *
  */
-public class ReserveValidator extends Thread {
+public class PendingActionValidator extends Thread {
 
 	private PendingAction pendingAction;
 	
@@ -23,7 +22,7 @@ public class ReserveValidator extends Thread {
 	 * Initialize the reserve validator.
 	 * @param pendingReserve
 	 */
-	public ReserveValidator( PendingAction pendingAction, 
+	public PendingActionValidator( PendingAction pendingAction, 
 			PendingActionListener listener ) {
 		
 		this.pendingAction = pendingAction;

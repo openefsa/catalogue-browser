@@ -3,7 +3,7 @@ package dcf_webservice;
 import javax.xml.soap.SOAPException;
 
 import catalogue_object.Catalogue;
-import dcf_reserve_util.PendingReserve;
+import dcf_pending_action.PendingReserve;
 import dcf_user.User;
 
 /**

@@ -15,17 +15,18 @@ import org.w3c.dom.Document;
 
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_object.Catalogue;
-import dcf_reserve_util.BackgroundReserve;
-import dcf_reserve_util.PendingActionDAO;
-import dcf_reserve_util.PendingActionListener;
-import dcf_reserve_util.ReserveValidator;
+import dcf_pending_action.PendingAction;
+import dcf_pending_action.PendingActionDAO;
+import dcf_pending_action.PendingActionListener;
+import dcf_pending_action.PendingActionValidator;
 import dcf_user.User;
 import dcf_user.UserAccessLevel;
+import dcf_webservice.BackgroundAction;
 import dcf_webservice.ExportCatalogue;
 import dcf_webservice.ExportCatalogueFile;
 import dcf_webservice.GetCataloguesList;
-import dcf_webservice.PendingAction;
 import dcf_webservice.Ping;
+import dcf_webservice.Publish.PublishLevel;
 import dcf_webservice.ReserveLevel;
 import ui_progress_bar.FormProgressBar;
 
@@ -363,7 +364,7 @@ public class Dcf {
 	 * @param listener listener called when reserve events occur
 	 * see {@link PendingActionListener} to check which are the events
 	 */
-	public void reserve ( Catalogue catalogue, 
+	/*public void reserve ( Catalogue catalogue, 
 			ReserveLevel level, String description, PendingActionListener listener ) {
 		
 		BackgroundReserve reserve = new BackgroundReserve( catalogue, 
@@ -372,6 +373,42 @@ public class Dcf {
 		reserve.setListener( listener );
 		reserve.setProgressBar( progressBar );
 		reserve.start();
+	}*/
+	
+	/**
+	 * Start a reserve operation in background.
+	 * @param catalogue the catalogue we want to reserve
+	 * @param level the reserve level we want
+	 * @param description
+	 * @param listener listener called when reserve events occur
+	 * see {@link PendingActionListener} to check which are the events
+	 */
+	public void reserve ( Catalogue catalogue, 
+			ReserveLevel level, String description, PendingActionListener listener ) {
+		
+		BackgroundAction reserve = new BackgroundAction( catalogue, 
+				level, description );
+		
+		reserve.setListener( listener );
+		reserve.setProgressBar( progressBar );
+		reserve.start();
+	}
+	
+	/**
+	 * Start a publish operation in background.
+	 * @param catalogue the catalogue we want to publish
+	 * @param level the publish level we want
+	 * @param listener listener called when publish events occur
+	 * see {@link PendingActionListener} to check which are the events
+	 */
+	public void publish ( Catalogue catalogue, 
+			PublishLevel level, PendingActionListener listener ) {
+		
+		BackgroundAction publish = new BackgroundAction( catalogue, 
+				level );
+		
+		publish.setListener( listener );
+		publish.start();
 	}
 	
 	/**
@@ -381,10 +418,10 @@ public class Dcf {
 	 * to the pending reserve
 	 * @param listener called to listen reserve events
 	 */
-	public void startPendingReserve ( PendingAction pa, PendingActionListener listener ) {
-		
+	public void startPendingAction ( PendingAction pa, PendingActionListener listener ) {
+
 		// start the validator for the current pending reserve
-		ReserveValidator validator = new ReserveValidator( pa, listener );
+		PendingActionValidator validator = new PendingActionValidator( pa, listener );
 		validator.setProgressBar( progressBar );
 		validator.start();
 	}
@@ -397,7 +434,7 @@ public class Dcf {
 	 * @param listener listener which listens to several
 	 * reserve events, used mainly to notify the user
 	 */
-	public void startPendingReserves ( PendingActionListener listener ) {
+	public void startPendingActions ( PendingActionListener listener ) {
 
 		PendingActionDAO paDao = new PendingActionDAO();
 
@@ -412,7 +449,7 @@ public class Dcf {
 			if ( !pa.madeBy( User.getInstance() ) )
 				continue;
 			
-			startPendingReserve ( pa, listener );
+			startPendingAction ( pa, listener );
 		}
 	}
 }

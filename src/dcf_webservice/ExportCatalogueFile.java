@@ -31,7 +31,7 @@ public class ExportCatalogueFile extends SOAPAction {
 	private static final String EXPORT_FILE_NAMESPACE = "http://ws.catalog.dc.efsa.europa.eu/";
 
 	// web service link of the ping service
-	//private static final String RESERVE_URL = "https://dcf-cms.efsa.europa.eu/catalogues";
+	//private static final String EXPORT_FILE_URL = "https://dcf-cms.efsa.europa.eu/catalogues";
 	private static final String EXPORT_FILE_URL = "https://dcf-01.efsa.test/dc-catalog-public-ws/catalogues/?wsdl";
 	
 	// export types used in the request
