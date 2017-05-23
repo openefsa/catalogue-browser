@@ -427,14 +427,15 @@ public class Dcf {
 	}
 	
 	/**
-	 * Start all the pending reserves in the database of this user
+	 * Start all the pending actions of type {@code type} in the database of this user
 	 * Be aware that this method should be called only if no pending
 	 * reserve is currently running, otherwise you will get a duplicated
 	 * process for the same pending reserve.
 	 * @param listener listener which listens to several
+	 * @param type the type of pending actions we want to start
 	 * reserve events, used mainly to notify the user
 	 */
-	public void startPendingActions ( PendingActionListener listener ) {
+	public void startPendingActions ( String type, PendingActionListener listener ) {
 
 		PendingActionDAO paDao = new PendingActionDAO();
 
@@ -443,6 +444,9 @@ public class Dcf {
 		// includes also the requests made in other
 		// instances of the CatBrowser if it was closed)
 		for ( PendingAction pa : paDao.getAll() ) {
+			
+			if ( !pa.getType().equals( type ) )
+				continue;
 			
 			// skip all the pending reserves which
 			// were not made by the current user
