@@ -34,15 +34,17 @@ public class PendingReserve extends PendingAction {
 
 	/**
 	 * Initialize a pending request
-	 * @param logCode the reserve log code
-	 * @param reserveLevel the reserve level we want for the catalogue
 	 * @param catalogue the catalogue we want to reserve
+	 * @param logCode the reserve log code
 	 * @param username the name of the user who made the reserve
+	 * @param note the reservation note of the reserve request
+	 * @param reserveLevel the reserve level we want for the catalogue
+	 * @param priority the priority of the pending reserve
 	 */
-	public PendingReserve( String logCode, ReserveLevel reserveLevel, 
-			Catalogue catalogue, String username, Priority priority ) {
+	public PendingReserve( Catalogue catalogue, String logCode, String username, String note, 
+			ReserveLevel reserveLevel, Priority priority ) {
 		
-		super( catalogue, logCode, username, priority );
+		super( catalogue, logCode, username, note, priority );
 		
 		this.reserveLevel = reserveLevel;
 		
@@ -62,12 +64,12 @@ public class PendingReserve extends PendingAction {
 	 * @param username the username of the user who made the reserve
 	 * @return the new pending reserve
 	 */
-	public static PendingReserve addPendingReserve ( String logCode, 
-			ReserveLevel level, Catalogue catalogue, String username ) {
+	public static PendingReserve addPendingReserve ( Catalogue catalogue, String logCode, 
+			String username, String note, ReserveLevel level ) {
 		
 		// we create a new pending reserve with FAST priority
-		PendingReserve pr = new PendingReserve( logCode, level, 
-				catalogue, username, Priority.HIGH );
+		PendingReserve pr = new PendingReserve( catalogue, logCode, 
+				username, note, level, Priority.HIGH );
 		
 		// create a pending reserve object in order to
 		// retry the log retrieval (also if the application
@@ -144,7 +146,7 @@ public class PendingReserve extends PendingAction {
 			
 			// get the new internal version created by the reserve
 			// and set it to the pending operation
-			Catalogue newVersion = catalogue.reserve ( reserveLevel );
+			Catalogue newVersion = catalogue.reserve ( getNote(), reserveLevel );
 			setCatalogue( newVersion );
 		}
 		else {

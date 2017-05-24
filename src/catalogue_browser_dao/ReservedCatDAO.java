@@ -4,10 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Collection;
 
+import catalogue_object.Catalogue;
 import catalogue_object.ReservedCatalogue;
+import dcf_webservice.ReserveLevel;
 
 /**
  * DAO to communicate with the Reserved Catalogue table
@@ -22,7 +23,7 @@ public class ReservedCatDAO implements CatalogueEntityDAO<ReservedCatalogue> {
 	@Override
 	public int insert( ReservedCatalogue rc ) {
 		
-		int id = -1;
+		int id = rc.getCatalogueId();
 		
 		Connection con;
 		
@@ -32,8 +33,7 @@ public class ReservedCatDAO implements CatalogueEntityDAO<ReservedCatalogue> {
 		try {
 			
 			con = DatabaseManager.getMainDBConnection();
-			PreparedStatement stmt = con.prepareStatement( query, 
-					Statement.RETURN_GENERATED_KEYS );
+			PreparedStatement stmt = con.prepareStatement( query );
 			
 			stmt.clearParameters();
 			
@@ -43,12 +43,7 @@ public class ReservedCatDAO implements CatalogueEntityDAO<ReservedCatalogue> {
 			stmt.setString( 4, rc.getLevel().toString() );
 
 			stmt.executeUpdate();
-			
-			// get the id
-			ResultSet rs = stmt.getGeneratedKeys();
-			if ( rs.next() )
-				id = rs.getInt( 1 );
-			
+
 			stmt.close();
 			con.close();
 			
@@ -99,14 +94,49 @@ public class ReservedCatDAO implements CatalogueEntityDAO<ReservedCatalogue> {
 
 	@Override
 	public ReservedCatalogue getById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		ReservedCatalogue rc = null;
+		
+		String query = "select * from APP.RESERVED_CATALOGUE where CAT_ID = ?";
+		
+		try {
+			
+			Connection con = DatabaseManager.getMainDBConnection();
+			PreparedStatement stmt = con.prepareStatement( query );
+			stmt.setInt( 1, id );
+			
+			ResultSet rs = stmt.executeQuery();
+			
+			if ( rs.next() )
+				rc = getByResultSet( rs );
+			
+			rs.close();
+			stmt.close();
+			con.close();
+			
+		} catch ( SQLException e ) {
+			e.printStackTrace();
+		}
+		
+		return rc;
 	}
 
 	@Override
 	public ReservedCatalogue getByResultSet(ResultSet rs) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+
+		int id = rs.getInt( "CAT_ID" );
+		String username = rs.getString( "RESERVE_USERNAME" );
+		String note = rs.getString( "RESERVE_NOTE" );
+		ReserveLevel level = ReserveLevel.valueOf( 
+				rs.getString( "RESERVE_LEVEL" ) );
+		
+		CatalogueDAO catDao = new CatalogueDAO();
+		Catalogue catalogue = catDao.getById( id );
+		
+		ReservedCatalogue rc = new ReservedCatalogue( catalogue, 
+				username, note, level );
+		
+		return rc;
 	}
 
 	@Override

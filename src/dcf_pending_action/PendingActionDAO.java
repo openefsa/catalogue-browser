@@ -28,7 +28,8 @@ public class PendingActionDAO implements CatalogueEntityDAO<PendingAction> {
 		
 		int id = -1;
 		String query = "insert into APP.PENDING_ACTION (ACTION_LOG_CODE, "
-				+ "ACTION_DATA, CAT_ID, ACTION_USERNAME, ACTION_PRIORITY, ACTION_TYPE ) values (?,?,?,?,?,?)";
+				+ "ACTION_DATA, CAT_ID, ACTION_USERNAME, ACTION_NOTE, "
+				+ "ACTION_PRIORITY, ACTION_TYPE ) values (?,?,?,?,?,?,?)";
 		
 		try {
 			
@@ -42,8 +43,9 @@ public class PendingActionDAO implements CatalogueEntityDAO<PendingAction> {
 			stmt.setString( 2, object.getData() );
 			stmt.setInt( 3, object.getCatalogue().getId() );
 			stmt.setString( 4, object.getUsername() );
-			stmt.setString( 5, object.getPriority().toString() );
-			stmt.setString( 6, object.getType() );
+			stmt.setString( 5, object.getNote() );
+			stmt.setString( 6, object.getPriority().toString() );
+			stmt.setString( 7, object.getType() );
 			
 			// insert the pending reserve object
 			stmt.executeUpdate();
@@ -141,6 +143,7 @@ public class PendingActionDAO implements CatalogueEntityDAO<PendingAction> {
 
 		int catId = rs.getInt( "CAT_ID" );
 		String username = rs.getString( "ACTION_USERNAME" );
+		String note = rs.getString( "ACTION_NOTE" );
 		Priority priority = Priority.valueOf( rs.getString( "ACTION_PRIORITY" ) );
 		
 		String type = rs.getString( "ACTION_TYPE" );
@@ -156,7 +159,7 @@ public class PendingActionDAO implements CatalogueEntityDAO<PendingAction> {
 			
 			ReserveLevel rLevel = ReserveLevel.valueOf( rs.getString( "ACTION_DATA" ) );
 			
-			pa = new PendingReserve( logCode, rLevel, catalogue, username, priority );
+			pa = new PendingReserve( catalogue, logCode, username, note, rLevel, priority );
 			break;
 			
 		case PendingPublish.TYPE:

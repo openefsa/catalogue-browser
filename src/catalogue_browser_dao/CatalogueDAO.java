@@ -314,10 +314,6 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 		
 		builder.setForcedCount( rs.getInt( "CAT_FORCED_COUNT" ) );
 		
-		builder.setReserveUsername( rs.getString( "RESERVE_USERNAME" ) );
-		
-		builder.setReserveLevel( rs.getString( "RESERVE_LEVEL" ) );
-		
 		// return the catalogue
 		return builder.build();
 	}
@@ -511,10 +507,8 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 			// last release of the catalogue using a self join on cat code and max_version
 			// we get also the information related to the reserved catalogues using a LEFT join
 			PreparedStatement stmt = con.prepareStatement( 
-					"select * from APP.CATALOGUE C "
-					+ "left join APP.RESERVED_CATALOGUE RC "
-					+ "on C.CAT_ID = RC.CAT_ID "
-					+ "where C.CAT_CODE = ?");
+					"select * from APP.CATALOGUE "
+					+ "where CAT_CODE = ?");
 
 			stmt.setString( 1, code );
 
@@ -582,8 +576,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 
 		String query = "select * "
 				+ "from APP.CATALOGUE C "
-				+ "left join APP.RESERVED_CATALOGUE RC "
-				+ "on C.CAT_ID = RC.CAT_ID inner join ( "
+				+ "inner join ( "
 				+ "select MAX(CAT_VALID_FROM) as MAX_VF, CAT_CODE "
 				+ "from APP.CATALOGUE "
 				+ "group by CAT_CODE) TEMP "
@@ -627,6 +620,8 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 	 */
 	public ArrayList < Catalogue > getLocalCatalogues () {
 
+		String query = "select * from APP.CATALOGUE";
+		
 		try {
 
 			// output array
@@ -636,8 +631,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 			Connection con = DatabaseManager.getMainDBConnection();
 
 			// select the catalogue by code
-			PreparedStatement stmt = con.prepareStatement( "select * from APP.CATALOGUE c "
-					+ "left join APP.RESERVED_CATALOGUE rc on c.CAT_ID = rc.CAT_ID" );
+			PreparedStatement stmt = con.prepareStatement( query );
 
 			// get the query results
 			ResultSet rs = stmt.executeQuery();
@@ -679,8 +673,6 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 	public Catalogue getCatalogue ( String catalogueCode, String catalogueVersion ) {
 
 		String query = "select * from APP.CATALOGUE t1 "
-				+ "left join APP.RESERVED_CATALOGUE RC on t1.CAT_ID = "
-				+ "RC.CAT_ID "
 				+ "where t1.CAT_CODE = ? and t1.CAT_VERSION = ?";
 		
 		try {
@@ -728,8 +720,6 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 	public Catalogue getById(int id) {
 
 		String query = "select * from APP.CATALOGUE t1 "
-				+ "left join APP.RESERVED_CATALOGUE RC on t1.CAT_ID = "
-				+ "RC.CAT_ID "
 				+ "where t1.CAT_ID = ?";
 		
 		try {

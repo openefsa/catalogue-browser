@@ -21,7 +21,7 @@ import catalogue_browser_dao.DatabaseManager;
 import catalogue_browser_dao.ForceCatEditDAO;
 import catalogue_browser_dao.HierarchyDAO;
 import catalogue_browser_dao.ParentTermDAO;
-import catalogue_browser_dao.ReservedCatalogueDAO;
+import catalogue_browser_dao.ReservedCatDAO;
 import catalogue_browser_dao.TermAttributeDAO;
 import catalogue_browser_dao.TermDAO;
 import catalogue_object.Status.StatusValues;
@@ -75,8 +75,6 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	private String backupDbPath; // path where it is located the backup of the catalogue db
 	
 	private boolean local;    // if the catalogue is a new local catalogue or not
-	private ReserveLevel reserveLevel;  // the reserve level of the catalogue
-	private String reserveUsername;     // the user who reserved the catalogue
 	
 	// boolean set to true if we start
 	// a pending action on this catalogue
@@ -132,7 +130,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	public Catalogue( int id, String code, String name, String label, String scopenotes, String termCodeMask, String
 			termCodeLength, String termMinCode, boolean acceptNonStandardCodes, boolean generateMissingCodes, String version,
 			Timestamp lastUpdate, Timestamp validFrom, Timestamp validTo, String status, String catalogueGroups, boolean deprecated, 
-			String dbFullPath, String backupDbPath, boolean local, int forcedCount, String reserveUsername, ReserveLevel reserveLevel ) {
+			String dbFullPath, String backupDbPath, boolean local, int forcedCount ) {
 
 		// the id is not important for the catalogue
 		super( id, code, name, label, scopenotes, version, lastUpdate, validFrom, validTo, status, deprecated );
@@ -162,9 +160,6 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		this.local = local;
 		
 		this.forcedCount = forcedCount;
-		
-		this.reserveUsername = reserveUsername;
-		this.reserveLevel = reserveLevel;
 		
 		// initialize memory for data
 		terms = new HashMap<>();
@@ -213,11 +208,13 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	public Catalogue clone () {
 
 		// create the catalogue object and return it
-		Catalogue catalogue = new Catalogue ( getId(), getCode(), getName(), getLabel(), getScopenotes(), termCodeMask, 
+		Catalogue catalogue = new Catalogue ( getId(), getCode(), getName(), 
+				getLabel(), getScopenotes(), termCodeMask, 
 				String.valueOf( termCodeLength ), termMinCode,
-				acceptNonStandardCodes, generateMissingCodes, getVersion(), getLastUpdate(), getValidFrom(), 
-				getValidTo(), getStatus(), catalogueGroups, isDeprecated(), dbFullPath, backupDbPath, local, 0,
-				reserveUsername, reserveLevel );
+				acceptNonStandardCodes, generateMissingCodes, getVersion(), 
+				getLastUpdate(), getValidFrom(), 
+				getValidTo(), getStatus(), catalogueGroups, isDeprecated(), 
+				dbFullPath, backupDbPath, local, 0 );
 		
 		return catalogue;
 	}
@@ -896,6 +893,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	public void setStatus ( StatusValues value ) {
 		getRawStatus().markAs( value );
 	}
+
 	
 	/**
 	 * Reserve the catalogue for the current user.
@@ -906,7 +904,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * {@link ReserveLevel.MAJOR} are accepted.
 	 * @return the new internal version of the catalogue which was created
 	 */
-	public synchronized Catalogue reserve( ReserveLevel reserveLevel ) {
+	public synchronized Catalogue reserve( String note, ReserveLevel reserveLevel ) {
 		
 		if ( reserveLevel.isNone() ) {
 			System.err.println ( "You are reserving a catalogue with ReserveLevel.NONE "
@@ -920,21 +918,15 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		Catalogue newCatalogue = newInternalVersion();
 		System.out.println ( "Creating new internal version " + newCatalogue );
 		
-		// otherwise reserve the catalogue for the current user
-		newCatalogue.reserveUsername = user.getUsername();
-		newCatalogue.reserveLevel = reserveLevel;
+		ReservedCatDAO resDao = new ReservedCatDAO();
+		resDao.insert( new ReservedCatalogue(newCatalogue, 
+				user.getUsername(), note, reserveLevel) );
 		
 		// update the status of the catalogue
 		if ( reserveLevel.isMajor() )
 			newCatalogue.setStatus( StatusValues.DRAFT_MAJOR_RESERVED );
 		else if ( reserveLevel.isMinor() )
 			newCatalogue.setStatus( StatusValues.DRAFT_MINOR_RESERVED );
-		
-		ReservedCatalogueDAO reserveDao = new ReservedCatalogueDAO( newCatalogue );
-		
-		// reserve the new catalogue in the DB
-		reserveDao.reserveCatalogue( newCatalogue.getReserveUsername(), 
-				newCatalogue.getReserveLevel() );
 		
 		// the reserve operation is finished
 		setRequestingAction( false );
@@ -948,21 +940,22 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	public synchronized void unreserve () {
 
 		// update the status of the catalogue
-		if ( reserveLevel.isMajor() )
+		if ( getReserveLevel().isMajor() )
 			this.setStatus( StatusValues.DRAFT_MAJOR_UNRESERVED );
-		else if ( reserveLevel.isMinor() )
+		else if ( getReserveLevel().isMinor() )
 			this.setStatus( StatusValues.DRAFT_MINOR_UNRESERVED );
 		
-		this.reserveLevel = ReserveLevel.NONE;
-		reserveUsername = null;
+		// unreserve the catalogue in the database
+		ReservedCatDAO resDao = new ReservedCatDAO();
+		ReservedCatalogue rc = resDao.getById( getId() );
 		
-		ReservedCatalogueDAO reserveDao = new ReservedCatalogueDAO( this );
+		if ( rc != null )
+			resDao.remove( rc );
+		else
+			System.err.println( "Catalogue already unreserved " + this );
 		
-		// unreserve the catalogue
-		reserveDao.unreserveCatalogue();
-		
+		// update the catalogue status
 		CatalogueDAO catDao = new CatalogueDAO();
-		// update the catalogue meta data
 		catDao.update( this );
 		
 		// the unreserve operation is finished
@@ -1277,14 +1270,25 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	}
 	
 	/**
+	 * Get the reserved catalogue object if present.
+	 * @return
+	 */
+	private ReservedCatalogue getReservedCatalogue() {
+		
+		ReservedCatDAO resDao = new ReservedCatDAO();
+		
+		return resDao.getById( getId() );
+	}
+	
+	/**
 	 * Check if the catalogue is reserved or not
 	 * @return
 	 */
 	public boolean isReserved() {
 		
-		ReservedCatalogueDAO reserveDao = new ReservedCatalogueDAO( this );
-		
-		return reserveDao.isReserved();
+		// if the catalogue is present into the
+		// reserved catalogue table it is reserved
+		return getReservedCatalogue() != null;
 	}
 	
 	/**
@@ -1294,9 +1298,15 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 */
 	public boolean isReservedBy( User user ) {
 		
-		ReservedCatalogueDAO reserveDao = new ReservedCatalogueDAO( this );
+		ReservedCatalogue rc = getReservedCatalogue();
 		
-		return reserveDao.isReservedBy( user );
+		// if not present the catalogue is not reserved
+		if ( rc == null )
+			return false;
+		
+		// check that the user who reserved the catalogue
+		// is the one passed in input
+		return rc.getUsername().equals( user.getUsername() );
 	}
 	
 	/**
@@ -1317,13 +1327,23 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		return forcedCount;
 	}
 	
+	
 	/**
-	 * Check if the catalogue is currently reserved 
-	 * by an user
-	 * @return the reserve level
+	 * Get the reserve level of the catalogue
+	 * if present
+	 * @return
 	 */
-	public ReserveLevel getReserveLevel() {
-		return reserveLevel;
+	public ReserveLevel getReserveLevel () {
+		
+		ReserveLevel level = ReserveLevel.NONE;
+		
+		ReservedCatalogue rc = getReservedCatalogue();
+		
+		// if catalogue is reserved get the level
+		if ( rc != null )
+			level = rc.getLevel();
+		
+		return level;
 	}
 	
 	/**
@@ -1332,9 +1352,34 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * @return
 	 */
 	public String getReserveUsername() {
-		return reserveUsername;
+		
+		String username = null;
+
+		ReservedCatalogue rc = getReservedCatalogue();
+
+		// if catalogue is reserved get the level
+		if ( rc != null )
+			username = rc.getUsername();
+
+		return username;
 	}
 
+	/**
+	 * Get the reserve note if present
+	 * @return
+	 */
+	public String getReserveNote() {
+		
+		String note = null;
+		ReservedCatalogue rc = getReservedCatalogue();
+		
+		if ( rc != null )
+			note = rc.getNote();
+		
+		return note;
+	}
+	
+	
 	/**
 	 * Set the catalogue version
 	 * @param version

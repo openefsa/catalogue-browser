@@ -22,7 +22,7 @@ public class PendingPublish extends PendingAction {
 	
 	public PendingPublish( Catalogue catalogue, String logCode, String username, Priority priority, PublishLevel publishLevel ) {
 		
-		super(catalogue, logCode, username, priority);
+		super(catalogue, logCode, username, "", priority);
 		
 		this.publishLevel = publishLevel;
 		setData( publishLevel.toString() );

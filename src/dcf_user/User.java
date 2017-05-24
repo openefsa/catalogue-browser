@@ -229,6 +229,8 @@ public class User {
 		if ( !logged ) {
 			this.username = null;
 			this.password = null;
+		} else {
+			System.out.println( username + " successfully logged in to dcf");
 		}
 
 		return logged;

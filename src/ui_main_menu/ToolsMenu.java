@@ -1041,6 +1041,7 @@ public class ToolsMenu implements MainMenuItem {
 	private void setReserveLevel( final ReserveLevel level ) {
 		
 		Catalogue catalogue = mainMenu.getCatalogue();
+		String note = "";
 		
 		Warnings wrn = new Warnings( shell );
 		
@@ -1052,27 +1053,29 @@ public class ToolsMenu implements MainMenuItem {
 			// if errors => return
 			if ( block )
 				return;
+			
+			// ask the reserve description
+			DialogSingleText dialog = new DialogSingleText( shell, 10 );
+			dialog.setTitle( Messages.getString( "BrowserMenu.ReserveTitle" ) );
+			dialog.setMessage( Messages.getString( "BrowserMenu.ReserveMessage" ) );
+
+			note = dialog.open();
+
+			// return if cancel was pressed
+			// no description was given
+			if ( note == null )
+				return;
 		}
-		
-		String text = "";
-		
-		// ask the reserve description
-		DialogSingleText dialog = new DialogSingleText( shell, 10 );
-		dialog.setTitle( Messages.getString( "BrowserMenu.ReserveTitle" ) );
-		dialog.setMessage( Messages.getString( "BrowserMenu.ReserveMessage" ) );
-
-		text = dialog.open();
-
-		// return if cancel was pressed
-		// no description was given
-		if ( text == null )
-			return;
+		else {
+			// get the note which was written during
+			// the reserve note and use it for the unreserve
+			note = mainMenu.getCatalogue().getReserveNote();
+		}
 		
 		// set wait cursor
 		GlobalUtil.setShellCursor( shell, SWT.CURSOR_WAIT );
 		
-		// create a reserve request for the catalogue
-		reserve( mainMenu.getCatalogue(), level, text );
+		reserve( mainMenu.getCatalogue(), level, note );
 		
 		// restore cursor
 		GlobalUtil.setShellCursor( shell, SWT.CURSOR_ARROW );

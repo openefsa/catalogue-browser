@@ -78,11 +78,12 @@ public class Reserve extends UploadCatalogueFile {
 	@Override
 	public Object processResponse(String logCode) {
 
+		String username = User.getInstance().getUsername();
+		
 		// add a pending reserve object to the db
 		// to save the request
-		PendingReserve pr = PendingReserve.addPendingReserve( 
-				logCode, reserveLevel, catalogue, 
-				User.getInstance().getUsername() );
+		PendingReserve pr = PendingReserve.addPendingReserve( catalogue,
+				logCode, username, reserveDescription, reserveLevel );
 
 		return pr;
 	}

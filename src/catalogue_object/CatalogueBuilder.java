@@ -1,7 +1,5 @@
 package catalogue_object;
 
-import dcf_webservice.ReserveLevel;
-
 /**
  * Builder class for generating a catalogue step by step
  * @author avonva
@@ -17,9 +15,6 @@ public class CatalogueBuilder extends BaseObjectBuilder {
 	String catalogueGroups = null;
 	String dbFullPath = null;
 	String backupDbPath = null;
-	ReserveLevel reserveLevel = ReserveLevel.NONE;
-	private String reserveUsername;
-	private String reserveNote;
 	boolean local = false;                  // default value
 	int forcedCount = 0;
 
@@ -102,42 +97,6 @@ public class CatalogueBuilder extends BaseObjectBuilder {
 		this.forcedCount = forcedCount;
 		return this;
 	}
-	
-	public CatalogueBuilder setReserveLevel( ReserveLevel reserveLevel ) {
-		this.reserveLevel = reserveLevel;
-		return this;
-	}
-	
-	/**
-	 * Set the reserve level by its name
-	 * @param reserveLevel
-	 * @return
-	 */
-	public CatalogueBuilder setReserveLevel( String reserveLevel ) {
-		
-		// default
-		if ( reserveLevel == null )
-			reserveLevel = ReserveLevel.NONE.name();
-		
-		this.reserveLevel = ReserveLevel.valueOf( reserveLevel );
-		return this;
-	}
-	
-	/**
-	 * Set the user name of the user who reserved the catalogue
-	 * @param reserveUsername
-	 */
-	public void setReserveUsername(String reserveUsername) {
-		this.reserveUsername = reserveUsername;
-	}
-	
-	/**
-	 * Set the reserve note for reserve actions
-	 * @param reserveNote
-	 */
-	public void setReserveNote(String reserveNote) {
-		this.reserveNote = reserveNote;
-	}
 
 	/**
 	 * Set the external reference to the db which contains
@@ -168,7 +127,6 @@ public class CatalogueBuilder extends BaseObjectBuilder {
 		// create the catalogue object and return it
 		return new Catalogue ( id, code, name, label, scopenotes, termCodeMask, termCodeLength, termMinCode,
 				acceptNonStandardCodes, generateMissingCodes, version, lastUpdate, validFrom, 
-				validTo, status, catalogueGroups, deprecated, dbFullPath, backupDbPath, local, forcedCount,
-				reserveUsername, reserveLevel );
+				validTo, status, catalogueGroups, deprecated, dbFullPath, backupDbPath, local, forcedCount );
 	}
 }

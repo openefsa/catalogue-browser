@@ -137,6 +137,7 @@ create table APP.PENDING_ACTION (
 	ACTION_LOG_CODE varchar(500) not null, -- code of the log related to the pending reserve action
 	CAT_ID integer not null,
 	ACTION_USERNAME varchar(50) not null,  -- the name of the user which made the reserve
+	ACTION_NOTE varchar(1000) not null,    -- the action note if needed
 	ACTION_PRIORITY varchar(50) not null,  -- fast or slow, how fast we should complete the reserve
 	ACTION_TYPE varchar(100) not null,     -- the action type
 	ACTION_DATA varchar(50) not null       -- data, as the reserve level (none, minor, major)

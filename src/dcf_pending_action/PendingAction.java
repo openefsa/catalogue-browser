@@ -42,6 +42,9 @@ public abstract class PendingAction {
 	// the username of the user who made the reserve action
 	private String username;
 	
+	// pending action note
+	private String note;
+	
 	/**
 	 * Additional data used for the pending action
 	 * we can have {@link ReserveLevel} or {@link PublishLevel}
@@ -73,10 +76,11 @@ public abstract class PendingAction {
 	 * @param priority the action priority
 	 */
 	public PendingAction( Catalogue catalogue, String logCode, 
-			String username, Priority priority ) {
+			String username, String note, Priority priority ) {
 		this.catalogue = catalogue;
 		this.logCode = logCode;
 		this.username = username;
+		this.note = note;
 		this.priority = priority;
 		this.data = "";
 	}
@@ -403,6 +407,14 @@ public abstract class PendingAction {
 	 */
 	public String getUsername() {
 		return username;
+	}
+	
+	/**
+	 * Get the pending action note
+	 * @return
+	 */
+	public String getNote() {
+		return note;
 	}
 	
 	/**

@@ -44,8 +44,6 @@ public class Ping extends SOAPAction {
 	 */
 	public SOAPMessage createRequest( SOAPConnection soapConnection ) throws SOAPException {
 
-		System.out.println ( "Checking if DCF is up..." );
-		
 		/*
 		 * This it the xml message which will be sent
 		<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dcf="http://dcf-elect.efsa.europa.eu/">
