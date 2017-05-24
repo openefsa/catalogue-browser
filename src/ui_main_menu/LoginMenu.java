@@ -14,12 +14,11 @@ import dcf_pending_action.DefaultListeners;
 import dcf_pending_action.PendingPublish;
 import dcf_pending_action.PendingReserve;
 import dcf_user.User;
-import dcf_webservice.ReserveLevel;
 import messages.Messages;
 import ui_main_panel.FormDCFLogin;
 import ui_main_panel.FormDCFLogin.CredentialListener;
-import ui_progress_bar.FormProgressBar;
 import ui_main_panel.UpdateableUI;
+import ui_progress_bar.FormProgressBar;
 
 public class LoginMenu implements MainMenuItem {
 
@@ -29,7 +28,6 @@ public class LoginMenu implements MainMenuItem {
 	
 	private MainMenu mainMenu;
 	private Shell shell;
-	private MenuItem loginItem;
 	
 	/**
 	 * Login button in the main menu
@@ -39,7 +37,7 @@ public class LoginMenu implements MainMenuItem {
 	public LoginMenu( MainMenu mainMenu, Menu menu ) {
 		this.mainMenu = mainMenu;
 		this.shell = mainMenu.getShell();
-		loginItem = create( menu );
+		create( menu );
 	}
 	
 	/**
@@ -168,11 +166,7 @@ public class LoginMenu implements MainMenuItem {
 			
 			@Override
 			public void updateUI(Object data) {
-				
-				if ( data instanceof ReserveLevel )
-					// update the UI since the reserve level
-					// is potentially changed
-					mainMenu.update( data );
+				mainMenu.update( data );
 			}
 			
 			@Override

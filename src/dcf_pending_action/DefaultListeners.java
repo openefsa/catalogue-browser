@@ -270,11 +270,9 @@ public class DefaultListeners {
 							// the process of forcing the catalogue editing
 							// is finished => we remove the shell lock
 							ShellLocker.removeLock( ui.getShell() );
-
 							break;
 
 						case COMPLETED:
-							
 							// process completed, remove lock
 							ShellLocker.removeLock( ui.getShell() );
 							
@@ -293,7 +291,13 @@ public class DefaultListeners {
 							}
 							
 							break;
-							
+						
+						case INVALID_RESPONSE:
+						case INVALID_VERSION:
+							// update the label of the catalogue since
+							// we have invalidated the catalogue
+							ui.updateUI( pr.getCatalogue() );
+							break;
 						default:
 							break;
 						}

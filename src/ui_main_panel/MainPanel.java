@@ -115,12 +115,40 @@ public class MainPanel implements Observer, RestoreableWindow {
 	}
 	
 	/**
+	 * Refresh the catalogue label and the other components
+	 * @param catalogue
+	 */
+	public void refresh ( final Catalogue catalogue ) {
+		
+		// redraw menus in the ui thread ( we use async exec since
+		// this method is potentially called by threads not in the UI )
+		Display.getDefault().asyncExec( new Runnable() {
+
+			@Override
+			public void run() {
+
+				catalogueLabel.setText( catalogue );
+
+				refresh();
+				
+				Display.getDefault().update();
+
+				try {
+					Thread.sleep( 100 );
+				} catch ( InterruptedException e ) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
 	 * Method for Refreshing GUI. Refresh Search, tree and(in case of not
 	 * ReadOnly) corex flag and state flag; folder and shell redraw; shell
 	 * update and layout
 	 */
-	public void refresh ( ) {
-
+	public void refresh () {
+		System.out.println( "Refreshing ssss" );
 		// redraw menus in the ui thread ( we use async exec since
 		// this method is potentially called by threads not in the UI )
 		Display.getDefault().asyncExec( new Runnable() {
@@ -137,6 +165,8 @@ public class MainPanel implements Observer, RestoreableWindow {
 				
 				tabPanel.refresh();
 				tabPanel.redraw();
+				
+				catalogueLabel.refresh();
 				
 				searchPanel.refresh( true );
 				//tree.refresh( true );
@@ -692,12 +722,16 @@ public class MainPanel implements Observer, RestoreableWindow {
 	// warned if the reserve level of the current catalogue is changed
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		
+
 		// refresh ui if the current catalogue changed
 		if ( arg0 instanceof GlobalManager ) {
 			if ( arg1 instanceof Catalogue ) {
 				refresh();
 			}
+		}
+		
+		else if ( arg1 instanceof Catalogue ) {
+			refresh( (Catalogue) arg1 );
 		}
 		
 		// refresh UI if the current catalogue reserve level was changed

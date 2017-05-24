@@ -38,7 +38,7 @@ public abstract class UploadCatalogueFile extends SOAPAction {
 	}
 	
 	/**
-	 * Upload the file to the dcf and get the 
+	 * Upload the attached file to the dcf and get the 
 	 * processed response
 	 * @return
 	 */

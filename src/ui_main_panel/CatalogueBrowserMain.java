@@ -8,13 +8,13 @@ import org.eclipse.swt.widgets.Shell;
 
 import business_rules.WarningUtil;
 import catalogue_browser_dao.DatabaseManager;
-import messages.Messages;
 import utilities.GlobalUtil;
+import xml_reader.PropertiesReader;
 
 public class CatalogueBrowserMain {
 
-	public static final String ApplicationName = Messages.getString( "Browser.AppName" );
-	public static final String ProgramVersion = "1.0.0";
+	public static final String ApplicationName = PropertiesReader.getAppName();
+	public static final String ProgramVersion = PropertiesReader.getAppVersion();
 
 	/**
 	 * Main, catalogue browser entry point
@@ -72,7 +72,7 @@ public class CatalogueBrowserMain {
 		Shell shell = new Shell ( display );
 		
 		// set the application name in the shell
-		shell.setText( ApplicationName + " ver." + ProgramVersion );
+		shell.setText( ApplicationName + " " + ProgramVersion );
 		
 		// set the application image into the shell
 		shell.setImage( new Image( Display.getCurrent(), 

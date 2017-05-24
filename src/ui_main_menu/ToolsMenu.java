@@ -1114,11 +1114,7 @@ public class ToolsMenu implements MainMenuItem {
 
 					@Override
 					public void updateUI(Object data) {
-
-						if ( data instanceof ReserveLevel )
-							// update the UI since the reserve level
-							// is potentially changed
-							mainMenu.update( data );
+						mainMenu.update( data );
 					}
 
 					@Override

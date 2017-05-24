@@ -1161,7 +1161,7 @@ public class TermsTreePanel extends Observable implements Observer {
 		}
 		
 		// update current catalogue
-		if ( o instanceof GlobalManager && data instanceof Catalogue ) {
+		if ( data instanceof Catalogue ) {
 			
 			catalogue = (Catalogue) data;
 			

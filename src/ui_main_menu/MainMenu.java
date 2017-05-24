@@ -127,6 +127,11 @@ public class MainMenu extends Observable implements Observer {
 	 * @param data data to be passed to observers
 	 */
 	public void update ( Object data ) {
+		
+		// update catalogue if needed
+		if ( data instanceof Catalogue )
+			this.catalogue = (Catalogue) data;
+		
 		setChanged();
 		notifyObservers( data );
 	}

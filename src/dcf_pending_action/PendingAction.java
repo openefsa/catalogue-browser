@@ -141,7 +141,7 @@ public abstract class PendingAction {
 			downgradePriority();
 			
 			try {
-				Thread.sleep( 30000 );
+				Thread.sleep( 10000 );
 			} catch ( InterruptedException e ) {
 				e.printStackTrace();
 			}
@@ -294,7 +294,7 @@ public abstract class PendingAction {
 			interAttemptsTime = 10000;  // 10 seconds
 			break;
 		case LOW:
-			interAttemptsTime = 30000;  // 5 minutes TODO
+			interAttemptsTime = 5000;  // 5 minutes TODO
 			break;
 		default:
 			break;
