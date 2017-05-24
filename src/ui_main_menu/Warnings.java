@@ -46,6 +46,9 @@ public class Warnings {
 		case LOCAL:
 			msg = Messages.getString( "Reserve.Local" );
 			break;
+		case INVALID:
+			msg = Messages.getString( "Reserve.Invalid" );
+			break;
 		default:
 			showMessage = false;
 			break;
@@ -82,6 +85,9 @@ public class Warnings {
 			break;
 		case LOCAL:
 			msg = Messages.getString( "Publish.Local" );
+			break;
+		case INVALID:
+			msg = Messages.getString( "Publish.Invalid" );
 			break;
 		default:
 			showMessage = false;

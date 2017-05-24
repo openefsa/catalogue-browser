@@ -52,7 +52,6 @@ public class Version {
 
 			} catch ( NumberFormatException e ) {
 			}
-
 		}
 	}
 	

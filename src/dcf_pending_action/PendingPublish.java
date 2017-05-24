@@ -109,8 +109,10 @@ public class PendingPublish extends PendingAction {
 	public void processResponse(DcfResponse response) {
 		
 		// only correct operations
-		if ( response != DcfResponse.OK )
+		if ( response != DcfResponse.OK ) {
+			terminate();
 			return;
+		}
 		
 		// import the last version if there is one
 		// and publish the catalogue
@@ -119,6 +121,7 @@ public class PendingPublish extends PendingAction {
 			@Override
 			public void handleEvent(Event arg0) {
 				publish();
+				terminate();
 			}
 		});
 	}

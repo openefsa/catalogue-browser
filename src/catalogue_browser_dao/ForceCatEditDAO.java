@@ -129,9 +129,9 @@ public class ForceCatEditDAO {
 	 * Remove the forced editing from the db for the current catalogue
 	 * @return
 	 */
-	public synchronized boolean removeForceEditing ( Catalogue catalogue, String username ) {
+	public synchronized boolean removeForceEditing ( Catalogue catalogue ) {
 
-		String query = "delete from APP.FORCED_CATALOGUE where CAT_ID = ? and FORCED_USERNAME = ?";
+		String query = "delete from APP.FORCED_CATALOGUE where CAT_ID = ?";
 
 		try {
 
@@ -141,7 +141,6 @@ public class ForceCatEditDAO {
 			stmt.clearParameters();
 
 			stmt.setInt( 1, catalogue.getId() );
-			stmt.setString( 2, username );
 			
 			stmt.executeUpdate();
 			

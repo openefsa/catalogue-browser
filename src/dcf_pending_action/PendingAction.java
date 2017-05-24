@@ -25,6 +25,8 @@ import ui_progress_bar.FormProgressBar;
  * contains only the code of the log document related to the
  * web request. This log needs to be retrieved and only at this
  * point we can get the dcf response and close the pending action.
+ * When the pending action is finished, call {@link #terminate()} to
+ * close it.
  * @author avonva
  *
  */
@@ -110,7 +112,7 @@ public abstract class PendingAction {
 	 * asking for the log with HIGH priority
 	 * @return the log response
 	 */
-	private DcfResponse send() {
+	private void send() {
 		
 		// update the status
 		setStatus( PendingReserveStatus.SENDING );
@@ -162,27 +164,19 @@ public abstract class PendingAction {
 		// into the log document
 		this.response = extractLogResponse( log );
 		
-		// process the dcf response
-		processResponse ( response );
-		
-		// we have completed the pending reserve
-		// process, therefore we can delete it
-		terminate();
-		
-		// notify that the reserve operation is finished
+		// notify that a response was received
 		if ( listener != null )
 			listener.responseReceived ( this, response );
 		
-		// return the log response
-		return response;
+		// process the dcf response
+		processResponse ( response );
 	}
 	
 	/**
-	 * Delete the pending request from the database
-	 * Multiple threads can access the database with this
-	 * method, for this reason we use the synchronized keyword.
+	 * Terminate the pending action. Call this method
+	 * when all the actions are finished.
 	 */
-	private synchronized void terminate() {
+	public synchronized void terminate() {
 		
 		System.out.println( "Terminating " + this );
 		
@@ -246,6 +240,9 @@ public abstract class PendingAction {
 				return true;
 			}
 			
+			// update the status of the pending reserve
+			setStatus( PendingReserveStatus.IMPORTING_LAST_VERSION );
+			
 			System.out.println ( this + ": This is not the last version "
 					+ "of the catalogue, importing " + lastVersion );
 
@@ -266,9 +263,6 @@ public abstract class PendingAction {
 					doneListener.handleEvent( arg0 );
 				}
 			} );
-			
-			// update the status of the pending reserve
-			setStatus( PendingReserveStatus.IMPORTING_LAST_VERSION );
 			
 			return false;
 			

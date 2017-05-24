@@ -235,4 +235,9 @@ public class User {
 
 		return logged;
 	}
+	
+	@Override
+	public String toString() {
+		return "USER: " + username;
+	}
 }

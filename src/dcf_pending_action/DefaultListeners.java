@@ -205,7 +205,7 @@ public class DefaultListeners {
 			public void responseReceived( final PendingAction pendingAction, 
 					final DcfResponse response ) {
 
-				ui.getShell().getDisplay().syncExec( new Runnable() {
+				ui.getShell().getDisplay().asyncExec( new Runnable() {
 					
 					@Override
 					public void run() {
@@ -213,29 +213,10 @@ public class DefaultListeners {
 						// remove the lock from the shell
 						ShellLocker.removeLock( ui.getShell() );
 
-						Catalogue catalogue = pendingAction.getCatalogue();
-						
 						// if pending reserve
 						if ( pendingAction instanceof PendingReserve ) {
 							
 							PendingReserve pr = (PendingReserve) pendingAction;
-							
-							ReserveLevel level = pr.getReserveLevel();
-
-							// open the catalogue if the operation was a reserve operation
-							// and if we have completed the process
-							if ( pr.getReserveLevel()
-									.greaterThan( ReserveLevel.NONE ) 
-									&& response == DcfResponse.OK ) {
-								openNewVersion( catalogue );
-							}
-
-							// update UI if old version is already opened
-							if ( sameCodeOfCurrent( catalogue ) ) {
-								// update the UI since the reserve level
-								// is potentially changed
-								ui.updateUI( level );
-							}
 							
 							warnReserveResponse( pr, response, ui );
 						}
@@ -247,7 +228,7 @@ public class DefaultListeners {
 			public void statusChanged( final PendingAction pendingAction, 
 					final PendingReserveStatus status) {
 
-				ui.getShell().getDisplay().syncExec( new Runnable() {
+				ui.getShell().getDisplay().asyncExec( new Runnable() {
 					
 					@Override
 					public void run() {
@@ -255,6 +236,8 @@ public class DefaultListeners {
 						PendingReserve pr = (PendingReserve) pendingAction;
 						Catalogue catalogue = pr.getCatalogue();
 						ReserveLevel level = pr.getReserveLevel();
+
+						String preMessage = createPremessage ( catalogue );
 						
 						switch ( status ) {
 						
@@ -288,41 +271,32 @@ public class DefaultListeners {
 							// is finished => we remove the shell lock
 							ShellLocker.removeLock( ui.getShell() );
 
-							// the catalogue was forced to editing
-							// if reserve, therefore we open the catalogue
-							// if possible
-							if ( pr.getReserveLevel()
-									.greaterThan( ReserveLevel.NONE ) 
-									&& sameCodeOfCurrent( pr.getCatalogue() ) ) {
-								
-								openNewVersion( pr.getCatalogue() );
-
-								// update the UI based on the forced reserve level
-								ui.updateUI( level );
-							}
-
-							break;
-
-						case INVALIDATED:
-
-							// only if the catalogue is opened
-							if ( catalogue.isOpened() ) {
-								
-								// the forced editing was removed
-								// therefore we update the ui as if
-								// we have not reserved the catalogue
-								ui.updateUI( ReserveLevel.NONE );
-							}
 							break;
 
 						case COMPLETED:
+							
+							// process completed, remove lock
+							ShellLocker.removeLock( ui.getShell() );
+							
+							if ( pr.getResponse() == DcfResponse.OK ) {
+
+								String title = Messages.getString( "Reserve.OkTitle" );
+								String msg = preMessage;
+								if ( level.greaterThan( ReserveLevel.NONE ) )
+									msg += Messages.getString( "Reserve.OkMessage" );
+								else
+									msg += Messages.getString( "Unreserve.OkMessage" );
+
+								// show the dialog
+								GlobalUtil.showDialog( ui.getShell(), title, msg,
+										SWT.ICON_INFORMATION );
+							}
+							
 							break;
 							
 						default:
 							break;
 						}
-						
-						String preMessage = createPremessage ( catalogue );
 						
 						// Warn user of the performed actions
 						warnReserveStatus ( ui, status, preMessage, level );
@@ -421,11 +395,25 @@ public class DefaultListeners {
 			break;
 		
 			// warn user that we cannot use this version
-		case INVALIDATED:
+		case INVALID_VERSION:
+			
+			// update catalogue label
+			ui.updateUI( null );
 			
 			GlobalUtil.showDialog( shell, 
-					Messages.getString( "Reserve.InvalidatedTitle" ),
-					preMessage + Messages.getString( "Reserve.InvalidatedMessage" ),
+					Messages.getString( "Reserve.InvalidVersionTitle" ),
+					preMessage + Messages.getString( "Reserve.InvalidVersionMessage" ),
+					SWT.ICON_ERROR );
+			break;
+			
+		case INVALID_RESPONSE:
+			
+			// update catalogue label
+			ui.updateUI( null );
+			
+			GlobalUtil.showDialog( shell, 
+					Messages.getString( "Reserve.InvalidResponseTitle" ),
+					preMessage + Messages.getString( "Reserve.InvalidResponseMessage" ),
 					SWT.ICON_ERROR );
 			break;
 			
@@ -450,6 +438,10 @@ public class DefaultListeners {
 			}
 			
 			break;
+			
+		case COMPLETED:
+			break;
+			
 		default:
 			break;
 		}
@@ -464,10 +456,11 @@ public class DefaultListeners {
 	private static void warnReserveResponse ( PendingReserve pr, DcfResponse response, UpdateableUI ui ) {
 		
 		Catalogue catalogue = pr.getCatalogue();
-		ReserveLevel level = pr.getReserveLevel();
 		
 		String title = null;
 		String msg = createPremessage( catalogue );
+		
+		boolean show = true;
 		
 		Shell shell = ui.getShell();
 		
@@ -484,21 +477,14 @@ public class DefaultListeners {
 				title = Messages.getString( "Reserve.MinorErrorTitle" );
 				msg += Messages.getString( "Reserve.MinorErrorMessage" );
 				break;
-			case OK:
-				title = Messages.getString( "Reserve.ErrorTitle" );
-
-				if ( level.greaterThan( ReserveLevel.NONE ) )
-					msg += Messages.getString( "Reserve.OkMessage" );
-				else
-					msg += Messages.getString( "Unreserve.OkMessage" );
-
-				break;
 			default:
+				show = false;
 				break;
 		}
 
 		// show the dialog
-		GlobalUtil.showDialog( shell, title, msg,
-				SWT.ICON_INFORMATION );
+		if ( show )
+			GlobalUtil.showDialog( shell, title, msg,
+					SWT.ICON_INFORMATION );
 	}
 }

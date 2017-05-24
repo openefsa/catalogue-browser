@@ -1,8 +1,7 @@
 package dcf_webservice;
 
-import javax.xml.soap.SOAPException;
-
 import catalogue_object.Catalogue;
+import dcf_manager.Dcf.DcfType;
 import dcf_pending_action.PendingReserve;
 import dcf_user.User;
 
@@ -23,6 +22,15 @@ public class Reserve extends UploadCatalogueFile {
 	private String reserveDescription;
 
 	/**
+	 * Initialize the reserve with the DcfType we want
+	 * to work with
+	 * @param type
+	 */
+	public Reserve( DcfType type ) {
+		super( type );
+	}
+	
+	/**
 	 * Reserve a catalogue with a major or minor reserve operation or unreserve it. 
 	 * An additional description on why we reserve the catalogue is mandatory.
 	 * Set reserve level to None to unreserve the catalogue.
@@ -41,17 +49,7 @@ public class Reserve extends UploadCatalogueFile {
 
 		System.out.println ( reserveLevel.getOp() + ": " + catalogue );
 
-		PendingReserve pr = null;
-
-		try {
-			
-			// start the reserve operation
-			pr = (PendingReserve) makeRequest();
-			
-		} catch (SOAPException e) {
-			
-			e.printStackTrace();
-		}
+		PendingReserve pr = (PendingReserve) upload();
 		
 		return pr;
 	}

@@ -76,20 +76,9 @@ public class BackgroundAction extends Thread {
 	
 	@Override
 	public void run() {
-		
-		UploadCatalogueFile req = null;
-		
-		// initialize the required service
-		switch ( type ) {
-		case RESERVE:
-			req = new Reserve();
-			break;
-		case PUBLISH:
-			req = new Publish();
-			break;
-		default:
-			break;
-		}
+
+		Dcf dcf = new Dcf();
+		UploadCatalogueFile req = dcf.uploadCatFile( type );
 
 		// notify that we are ready to perform the action
 		if ( listener != null )
@@ -118,7 +107,6 @@ public class BackgroundAction extends Thread {
 			listener.requestSent( pa, pa.getLogCode() );
 		
 		// start the pending reserve we have just created
-		Dcf dcf = new Dcf();
 		dcf.setProgressBar(progressBar);
 		dcf.startPendingAction( pa, listener );
 	}

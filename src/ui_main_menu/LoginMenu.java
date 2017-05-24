@@ -110,21 +110,23 @@ public class LoginMenu implements MainMenuItem {
 							@Override
 							public void handleEvent(Event arg0) {
 								
-								refresh();
-								
-								// once we have finished checking the user
-								// level we start with the pending reserves
-								// we do this here to avoid concurrence
-								// editing of the database
-								startPendingReserves();
-								
-								if ( listener != null )
-									listener.buttonPressed( loginMI, LOGIN_MI, null );
+								shell.getDisplay().asyncExec( new Runnable() {
+									
+									@Override
+									public void run() {
+										
+										// once we have finished checking the user
+										// level we start with the pending reserves
+										// we do this here to avoid concurrence
+										// editing of the database
+										startPendingReserves();
+										
+										if ( listener != null )
+											listener.buttonPressed( loginMI, LOGIN_MI, null );
+									}
+								});
 							}
 						} );
-						
-						refresh();
-						
 					}
 				});
 				
@@ -186,7 +188,9 @@ public class LoginMenu implements MainMenuItem {
 						new UpdateableUI() {
 			
 			@Override
-			public void updateUI(Object data) {}
+			public void updateUI(Object data) {
+				mainMenu.update( data );
+			}
 			
 			@Override
 			public Shell getShell() {

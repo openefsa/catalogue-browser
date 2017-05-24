@@ -8,8 +8,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import javax.xml.soap.SOAPException;
-
 import org.eclipse.swt.widgets.Listener;
 import org.w3c.dom.Document;
 
@@ -22,13 +20,18 @@ import dcf_pending_action.PendingActionValidator;
 import dcf_user.User;
 import dcf_user.UserAccessLevel;
 import dcf_webservice.BackgroundAction;
+import dcf_webservice.BackgroundAction.Type;
 import dcf_webservice.ExportCatalogue;
 import dcf_webservice.ExportCatalogueFile;
 import dcf_webservice.GetCataloguesList;
 import dcf_webservice.Ping;
+import dcf_webservice.Publish;
 import dcf_webservice.Publish.PublishLevel;
+import dcf_webservice.Reserve;
 import dcf_webservice.ReserveLevel;
+import dcf_webservice.UploadCatalogueFile;
 import ui_progress_bar.FormProgressBar;
+import xml_reader.PropertiesReader;
 
 /**
  * Class to model the DCF. Here we can download
@@ -37,6 +40,17 @@ import ui_progress_bar.FormProgressBar;
  *
  */
 public class Dcf {
+	
+	/**
+	 * Enumerator to identify the dcf
+	 * as test or production type.
+	 * @author avonva
+	 *
+	 */
+	public enum DcfType {
+		PRODUCTION,
+		TEST
+	}
 	
 	// progress bar
 	private FormProgressBar progressBar;
@@ -52,6 +66,27 @@ public class Dcf {
 	 *  false otherwise
 	 */
 	private static boolean gettingUpdates = false;
+	
+	private DcfType type;
+	
+
+	/**
+	 * Initialize the dcf. The {@link #Dcf(DcfType)} is
+	 * defined in the configuration file.
+	 */
+	public Dcf() {
+		this.type = PropertiesReader.getDcfType();
+	}
+	
+	/**
+	 * Inizialize the Dcf.
+	 * @param type set to {@link DcfType#PRODUCTION}
+	 * to operate on production dcf, otherwise set
+	 * to {@link DcfType#TEST} to operate on dcf test
+	 */
+	public Dcf( DcfType type ) {
+		this.type = type;
+	}
 
 	/**
 	 * Get all the catalogues which can 
@@ -184,7 +219,7 @@ public class Dcf {
 		// get all the dcf catalogues and save them
 		try {
 			
-			catalogues = new GetCataloguesList().getCataloguesList();
+			catalogues = getCataloguesList();
 			
 			// sort catalogues by label and version
 			Collections.sort( catalogues );
@@ -220,17 +255,8 @@ public class Dcf {
 	 * @return true if the dcf is responding correctly
 	 */
 	public boolean ping() {
-		
-		boolean check;
-		
-		try {
-			check = (boolean) ( new Ping() ).makeRequest();
-		} catch (SOAPException e) {
-			e.printStackTrace();
-			check = false;
-		}
-		
-		return check;
+		Ping ping = new Ping( type );
+		return ping.ping();
 	}
 	
 	/**
@@ -274,16 +300,12 @@ public class Dcf {
 		
 		ArrayList<Catalogue> list = new ArrayList<>();
 		
-		// get the dcf catalogues
-		GetCataloguesList catList = new GetCataloguesList();
-		
 		try {
-			
-			list = catList.getCataloguesList();
+			list = new GetCataloguesList( type ).getCataloguesList();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return list;
 	}
 	
@@ -297,7 +319,7 @@ public class Dcf {
 	public boolean exportCatalogue( Catalogue catalogue, String filename ) {
 		
 		// export the catalogue and save its attachment into an xml file
-		ExportCatalogue export = new ExportCatalogue ( catalogue, filename );
+		ExportCatalogue export = new ExportCatalogue ( type, catalogue, filename );
 		return export.exportCatalogue();
 	}
 	
@@ -310,7 +332,7 @@ public class Dcf {
 	public Document exportLog ( String logCode ) {
 		
 		// ask for the log to the dcf
-		ExportCatalogueFile export = new ExportCatalogueFile();
+		ExportCatalogueFile export = new ExportCatalogueFile( type );
 
 		// get the log document
 		return export.exportLog( logCode );
@@ -331,7 +353,7 @@ public class Dcf {
 			String filename ) throws IOException {
 		
 		// ask for the log to the dcf
-		ExportCatalogueFile export = new ExportCatalogueFile();
+		ExportCatalogueFile export = new ExportCatalogueFile( type );
 
 		// get the catalogue xml as input stream
 		InputStream stream = export.exportLastInternalVersion( catalogueCode );
@@ -357,23 +379,28 @@ public class Dcf {
 	}
 	
 	/**
-	 * Start a reserve operation in background.
-	 * @param catalogue the catalogue we want to reserve
-	 * @param level the reserve level we want
-	 * @param description
-	 * @param listener listener called when reserve events occur
-	 * see {@link PendingActionListener} to check which are the events
+	 * Initialize an upload catalogue file action and return it
+	 * @param actionType
+	 * @return
 	 */
-	/*public void reserve ( Catalogue catalogue, 
-			ReserveLevel level, String description, PendingActionListener listener ) {
+	public UploadCatalogueFile uploadCatFile ( Type actionType ) {
 		
-		BackgroundReserve reserve = new BackgroundReserve( catalogue, 
-				level, description );
+		UploadCatalogueFile req = null;
 		
-		reserve.setListener( listener );
-		reserve.setProgressBar( progressBar );
-		reserve.start();
-	}*/
+		// initialize the required service
+		switch ( actionType ) {
+		case RESERVE:
+			req = new Reserve( type );
+			break;
+		case PUBLISH:
+			req = new Publish( type );
+			break;
+		default:
+			break;
+		}
+		
+		return req;
+	}
 	
 	/**
 	 * Start a reserve operation in background.
@@ -383,7 +410,7 @@ public class Dcf {
 	 * @param listener listener called when reserve events occur
 	 * see {@link PendingActionListener} to check which are the events
 	 */
-	public void reserve ( Catalogue catalogue, 
+	public void reserveBG ( Catalogue catalogue, 
 			ReserveLevel level, String description, PendingActionListener listener ) {
 		
 		catalogue.setRequestingAction( true );
@@ -403,7 +430,7 @@ public class Dcf {
 	 * @param listener listener called when publish events occur
 	 * see {@link PendingActionListener} to check which are the events
 	 */
-	public void publish ( Catalogue catalogue, 
+	public void publishBG ( Catalogue catalogue, 
 			PublishLevel level, PendingActionListener listener ) {
 		
 		catalogue.setRequestingAction( true );

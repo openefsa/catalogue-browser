@@ -2,6 +2,11 @@ package catalogue_object;
 
 import java.util.StringTokenizer;
 
+/**
+ * Object to model the version of the catalogue
+ * @author avonva
+ *
+ */
 public class CatalogueVersion extends Version {
 
 	// flag for invalid versions
@@ -20,28 +25,28 @@ public class CatalogueVersion extends Version {
 		this.forced = false;
 		
 		StringTokenizer st = new StringTokenizer( version, "\\." );
+
+		String previousToken = null;
 		
 		// parse the version structure
 		while ( st.hasMoreTokens() ) {
-			
+
 			String token = st.nextToken();
-			
-			if ( !st.hasMoreTokens() )
-				break;
-			
-			String nextToken = st.nextToken();
-			
-			if ( nextToken != null ) {
-				if ( nextToken.equals( FORCED_VERSION ) ) {
+
+			if ( previousToken != null ) {
+				
+				if ( token.equals( FORCED_VERSION ) ) {
 					forced = true;
-					forcedCount = Integer.valueOf( token );
+					forcedCount = Integer.valueOf( previousToken );
 				}
 				
-				if ( nextToken.equals( INVALID_VERSION ) ) {
+				if ( token.equals( INVALID_VERSION ) ) {
 					invalid = true;
-					forcedCount = Integer.valueOf( token );
+					forcedCount = Integer.valueOf( previousToken );
 				}
 			}
+			
+			previousToken = token;
 		}
 	}
 	
@@ -91,6 +96,7 @@ public class CatalogueVersion extends Version {
 	 */
 	public void invalidate() {
 		invalid = true;
+		forced = false;
 	}
 	
 	/**
@@ -110,7 +116,14 @@ public class CatalogueVersion extends Version {
 	 * after the forced flag
 	 */
 	public void force( int forcedCount ) {
+		
 		forced = true;
+		
+		// add the internal version number if
+		// not present
+		if ( !isInternalVersion() )
+			incrementInternal();
+		
 		this.forcedCount = forcedCount;
 	}
 	
@@ -123,10 +136,18 @@ public class CatalogueVersion extends Version {
 	}
 	
 	/**
-	 * Remove the forced status from the version
-	 * @return
+	 * Confirm a forced version as correct.
+	 * You can use this method only on forced
+	 * versions.
 	 */
-	public void removeForced() {
+	public void confirm() {
+		
+		if ( !forced ) {
+			System.err.println( "Cannot confirm non forced version" );
+			return;
+		}
+		
+		forcedCount = 0;
 		forced = false;
 	}
 	

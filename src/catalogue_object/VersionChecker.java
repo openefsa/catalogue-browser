@@ -43,7 +43,7 @@ public class VersionChecker {
 	 */
 	public Catalogue publishMajor() {
 		version.incrementMajor();
-		version.removeForced();
+		version.confirm();
 		return apply();
 	}
 	
@@ -54,7 +54,7 @@ public class VersionChecker {
 	 */
 	public Catalogue publishMinor() {
 		version.incrementMinor();
-		version.removeForced();
+		version.confirm();
 		return apply();
 	}
 	
@@ -64,7 +64,7 @@ public class VersionChecker {
 	 */
 	public Catalogue newInternalVersion() {
 		version.incrementInternal();
-		version.removeForced();
+		version.confirm();
 		return apply();
 	}
 	

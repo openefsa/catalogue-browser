@@ -11,6 +11,7 @@ import javax.xml.soap.SOAPMessage;
 
 import catalogue_object.Catalogue;
 import dcf_manager.AttachmentHandler;
+import dcf_manager.Dcf.DcfType;
 import utilities.GlobalUtil;
 
 /**
@@ -25,8 +26,8 @@ public class ExportCatalogue extends SOAPAction {
 	private static final String EXPORT_CATALOGUE_NAMESPACE = "http://ws.catalog.dc.efsa.europa.eu/";
 
 	// web service link of the export catalogue service
-	//private static final String EXPORT_CATALOGUE_URL = "https://dcf-cms.efsa.europa.eu/catalogues";
-	private static final String EXPORT_CATALOGUE_URL = "https://dcf-01.efsa.test/dc-catalog-public-ws/catalogues/?wsdl";
+	private static final String URL = "https://dcf-cms.efsa.europa.eu/catalogues";
+	private static final String TEST_URL = "https://dcf-01.efsa.test/dc-catalog-public-ws/catalogues/?wsdl";
 	
 	private Catalogue catalogue;
 	private String filename;
@@ -36,9 +37,9 @@ public class ExportCatalogue extends SOAPAction {
 	 * selected file
 	 * @param filename
 	 */
-	public ExportCatalogue( Catalogue catalogue, String filename ) {
+	public ExportCatalogue( DcfType type, Catalogue catalogue, String filename ) {
 		
-		super( EXPORT_CATALOGUE_URL, EXPORT_CATALOGUE_NAMESPACE );
+		super( type, EXPORT_CATALOGUE_NAMESPACE );
 		
 		this.catalogue = catalogue;
 		this.filename = filename;
@@ -50,7 +51,8 @@ public class ExportCatalogue extends SOAPAction {
 	 */
 	public boolean exportCatalogue() {
 		try {
-			makeRequest();
+			String url = getType() == DcfType.PRODUCTION ? URL : TEST_URL;
+			makeRequest( url );
 		} catch (SOAPException e) {
 			e.printStackTrace();
 		}

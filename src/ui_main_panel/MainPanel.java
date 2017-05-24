@@ -493,7 +493,6 @@ public class MainPanel implements Observer, RestoreableWindow {
 			}
 		});
 
-
 		// initialize the main menu with all the sub menus and menu items
 		shell.setMenuBar( menu.createMainMenu() );
 		
@@ -691,7 +690,6 @@ public class MainPanel implements Observer, RestoreableWindow {
 
 
 	// warned if the reserve level of the current catalogue is changed
-	// TODO sistema
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		
@@ -702,9 +700,9 @@ public class MainPanel implements Observer, RestoreableWindow {
 			}
 		}
 		
-		else if ( arg1 instanceof ReserveLevel ) {
-			
-			// refresh UI if the current catalogue reserve level was changed
+		// refresh UI if the current catalogue reserve level was changed
+		// or if refresh is required
+		else if ( arg1 instanceof ReserveLevel || arg0 instanceof MainMenu ) {
 			refresh();
 		}
 	}

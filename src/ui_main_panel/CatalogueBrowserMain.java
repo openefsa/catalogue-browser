@@ -1,9 +1,6 @@
 package ui_main_panel;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -18,30 +15,6 @@ public class CatalogueBrowserMain {
 
 	public static final String ApplicationName = Messages.getString( "Browser.AppName" );
 	public static final String ProgramVersion = "1.0.0";
-	
-	/**
-	 * Read the application properties from the xml file
-	 * @return
-	 */
-	private static Properties getApplicationProperties() {
-		
-		Properties properties = null;
-
-		try {
-			properties = new Properties();
-
-			// fileStream from default properties xml file
-			FileInputStream in = new FileInputStream( GlobalUtil.appPropertiesFile );
-			properties.loadFromXML( in );
-
-			in.close();
-		}
-		catch ( IOException e ) {
-			e.printStackTrace();
-		}
-		
-		return properties;
-	}
 
 	/**
 	 * Main, catalogue browser entry point

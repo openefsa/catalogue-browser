@@ -91,7 +91,7 @@ public class FileMenu implements MainMenuItem {
 		MenuItem fileItem = new MenuItem( menu , SWT.CASCADE );
 		fileItem.setText( Messages.getString("BrowserMenu.FileMenuName") );
 		fileItem.setMenu( fileMenu );
-
+		
 		newMI = addNewLocalCatMI ( fileMenu );  // new database, only edit
 
 		openMI = addOpenDBMI ( fileMenu );  // open a catalogue

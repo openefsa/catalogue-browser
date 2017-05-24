@@ -1107,7 +1107,7 @@ public class ToolsMenu implements MainMenuItem {
 
 		dcf.setProgressBar( progressBar );
 		
-		dcf.reserve( catalogue, 
+		dcf.reserveBG( catalogue, 
 				level, 
 				description, 
 				DefaultListeners.getReserveListener( new UpdateableUI() {
@@ -1150,12 +1150,14 @@ public class ToolsMenu implements MainMenuItem {
 		
 		// publish the catalogue (only for drafts)
 		Dcf dcf = new Dcf();
-		dcf.publish( catalogue,
+		dcf.publishBG( catalogue,
 				level,
 				DefaultListeners.getPublishListener( new UpdateableUI() {
 
 					@Override
-					public void updateUI(Object data) {}
+					public void updateUI(Object data) {
+						mainMenu.update( data );
+					}
 
 					@Override
 					public Shell getShell() {

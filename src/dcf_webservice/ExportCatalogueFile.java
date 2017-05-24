@@ -17,6 +17,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import dcf_manager.AttachmentHandler;
+import dcf_manager.Dcf.DcfType;
 
 /**
  * Export catalogue file web service. See GDE2 and DCF manuals to
@@ -31,8 +32,8 @@ public class ExportCatalogueFile extends SOAPAction {
 	private static final String EXPORT_FILE_NAMESPACE = "http://ws.catalog.dc.efsa.europa.eu/";
 
 	// web service link of the ping service
-	//private static final String EXPORT_FILE_URL = "https://dcf-cms.efsa.europa.eu/catalogues";
-	private static final String EXPORT_FILE_URL = "https://dcf-01.efsa.test/dc-catalog-public-ws/catalogues/?wsdl";
+	private static final String URL = "https://dcf-cms.efsa.europa.eu/catalogues";
+	private static final String TEST_URL = "https://dcf-01.efsa.test/dc-catalog-public-ws/catalogues/?wsdl";
 	
 	// export types used in the request
 	private static final String EXPORT_TYPE_LOG = "log";
@@ -47,8 +48,8 @@ public class ExportCatalogueFile extends SOAPAction {
 	/**
 	 * Initialize the export file action
 	 */
-	public ExportCatalogueFile() {
-		super( EXPORT_FILE_URL, EXPORT_FILE_NAMESPACE );
+	public ExportCatalogueFile( DcfType type ) {
+		super( type, EXPORT_FILE_NAMESPACE );
 	}
 	
 	/**
@@ -120,7 +121,10 @@ public class ExportCatalogueFile extends SOAPAction {
 	private Object export() {
 		
 		try {
-			return makeRequest();
+			
+			String url = getType() == DcfType.PRODUCTION ? URL : TEST_URL;
+			
+			return makeRequest( url );
 		} catch (SOAPException e) {
 			e.printStackTrace();
 		}

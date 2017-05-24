@@ -9,6 +9,8 @@ import javax.xml.soap.SOAPMessage;
 
 import org.w3c.dom.Node;
 
+import dcf_manager.Dcf.DcfType;
+
 /**
  * Class to manage a ping request to the DCF web service
  * @author avonva
@@ -25,16 +27,33 @@ public class Ping extends SOAPAction {
 	private static final String PING_NAMESPACE = "http://dcf-elect.efsa.europa.eu/";
 	
 	// web service link of the ping service
-	//private static final String PING_URL = "https://dcf-elect.efsa.europa.eu/elect2";
-	private static final String PING_URL = "https://dcf-01.efsa.test/dcf-dp-ws/elect2/?wsdl";
+	private static final String URL = "https://dcf-elect.efsa.europa.eu/elect2";
+	private static final String TEST_URL = "https://dcf-01.efsa.test/dcf-dp-ws/elect2/?wsdl";
 	
 	/**
 	 * Initialize the ping message
 	 */
-	public Ping() {
-		super ( PING_URL, PING_NAMESPACE );
+	public Ping( DcfType type ) {
+		super ( type, PING_NAMESPACE );
 	}
 	
+	/**
+	 * Make a ping
+	 * @return
+	 */
+	public boolean ping () {
+		boolean check;
+		
+		try {
+			String url = getType() == DcfType.PRODUCTION ? URL : TEST_URL;
+			check = (boolean) makeRequest( url );
+		} catch (SOAPException e) {
+			e.printStackTrace();
+			check = false;
+		}
+
+		return check;
+	}
 	
 	/**
 	 * Create a ping request message

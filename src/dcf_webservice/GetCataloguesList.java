@@ -25,14 +25,14 @@ import org.xml.sax.SAXException;
 
 import catalogue_object.Catalogue;
 import catalogue_object.CatalogueBuilder;
+import dcf_manager.Dcf.DcfType;
 import utilities.GlobalUtil;
 
 public class GetCataloguesList extends SOAPAction {
 
-
 	// web service link of the getCatalogueList service
-	//private static final String CATALOGUE_LIST_URL = "https://dcf-cms.efsa.europa.eu/catalogues";
-	private static final String CATALOGUE_LIST_URL = "https://dcf-01.efsa.test/dc-catalog-public-ws/catalogues/?wsdl";
+	private static final String URL = "https://dcf-cms.efsa.europa.eu/catalogues";
+	private static final String TEST_URL = "https://dcf-01.efsa.test/dc-catalog-public-ws/catalogues/?wsdl";
 	
 	// namespace used in getting the catalogue list xml message
 	private static final String CATALOGUE_LIST_NAMESPACE = "http://ws.catalog.dc.efsa.europa.eu/";
@@ -40,8 +40,8 @@ public class GetCataloguesList extends SOAPAction {
 	/**
 	 * Initialize the get catalogue list request
 	 */
-	public GetCataloguesList() {
-		super ( CATALOGUE_LIST_URL, CATALOGUE_LIST_NAMESPACE );
+	public GetCataloguesList( DcfType type ) {
+		super ( type, CATALOGUE_LIST_NAMESPACE );
 	}
 	
 	/**
@@ -54,8 +54,9 @@ public class GetCataloguesList extends SOAPAction {
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList < Catalogue > getCataloguesList () throws DOMException, Exception {
-		return (ArrayList<Catalogue>) makeRequest ();
+	public ArrayList < Catalogue > getCataloguesList () throws DOMException, Exception {	
+		String url = getType() == DcfType.PRODUCTION ? URL : TEST_URL;
+		return (ArrayList<Catalogue>) makeRequest ( url );
 	}
 
 	@Override

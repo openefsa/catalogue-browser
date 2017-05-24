@@ -23,6 +23,7 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.SOAPPart;
 
+import dcf_manager.Dcf.DcfType;
 import dcf_user.User;
 import utilities.GlobalUtil;
 
@@ -33,8 +34,8 @@ import utilities.GlobalUtil;
  */
 
 public abstract class SOAPAction {
-	
-	private String url;
+
+	private DcfType type;
 	private String namespace;
 
 	/**
@@ -42,9 +43,9 @@ public abstract class SOAPAction {
 	 * @param url
 	 * @param namespace
 	 */
-	public SOAPAction( String url, String namespace ) {
+	public SOAPAction( DcfType type, String namespace ) {
 
-		this.url = url;
+		this.type = type;
 		this.namespace = namespace;
 	}
 
@@ -54,14 +55,14 @@ public abstract class SOAPAction {
 	 * @return
 	 * @throws SOAPException
 	 */
-	public Object makeRequest() throws SOAPException {
+	public Object makeRequest( String url ) throws SOAPException {
 
-		// TODO to be removed => this is used to avoid certificates
 		final boolean isHttps = url.toLowerCase().startsWith( "https" );
 
 		HttpsURLConnection httpsConnection = null;
 
-		if (isHttps) {
+		// if https with test => skip certificates
+		if ( isHttps && type == DcfType.TEST ) {
 
 			try {
 
@@ -105,15 +106,15 @@ public abstract class SOAPAction {
 		// close the soap connection
 		soapConnection.close();
 
-		// close https connection // TODO to be removed => this is used to avoid certificates
-		if ( isHttps )
+		// close https connection
+		if ( isHttps && type == DcfType.TEST )
 			httpsConnection.disconnect();
 		
 		// parse the response and get the result
 		return processResponse ( response );
 	}
 
-	/** TODO to be removed => this is used to avoid certificates
+	/**
 	 * Dummy class implementing HostnameVerifier to trust all host names
 	 */
 	private static class TrustAllHosts implements HostnameVerifier {
@@ -122,7 +123,7 @@ public abstract class SOAPAction {
 		}
 	}
 
-	/** TODO to be removed => this is used to avoid certificates
+	/**
 	 * Dummy class implementing X509TrustManager to trust all certificates
 	 */
 	private static class TrustAllCertificates implements X509TrustManager {
@@ -220,6 +221,14 @@ public abstract class SOAPAction {
 		}
 
 		System.out.println();
+	}
+	
+	/**
+	 * Get the dcf type in use
+	 * @return
+	 */
+	public DcfType getType() {
+		return type;
 	}
 	
 	/**

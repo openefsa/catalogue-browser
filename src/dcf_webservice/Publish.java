@@ -1,14 +1,23 @@
 package dcf_webservice;
 
-import javax.xml.soap.SOAPException;
-
 import catalogue_object.Catalogue;
+import dcf_manager.Dcf.DcfType;
 import dcf_pending_action.PendingPublish;
 import dcf_user.User;
 
 public class Publish extends UploadCatalogueFile {
 
+	/**
+	 * Initialize a Publish request with the
+	 * dcf type we want to work with
+	 * @param type
+	 */
+	public Publish( DcfType type ) {
+		super( type );
+	}
+
 	public enum PublishLevel {
+		
 		MAJOR,
 		MINOR;
 		
@@ -50,18 +59,8 @@ public class Publish extends UploadCatalogueFile {
 		
 		System.out.println ( level.getOp() + ": " + catalogue );
 
-		PendingPublish pp = null;
+		PendingPublish pp = (PendingPublish) upload();
 
-		try {
-			
-			// start the reserve operation
-			pp = (PendingPublish) makeRequest();
-			
-		} catch (SOAPException e) {
-			
-			e.printStackTrace();
-		}
-		
 		return pp;
 	}
 

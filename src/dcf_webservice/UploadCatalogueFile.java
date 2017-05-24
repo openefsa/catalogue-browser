@@ -9,6 +9,8 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
 import dcf_log_util.LogCodeFinder;
+import dcf_manager.Dcf.DcfType;
+import dcf_pending_action.PendingReserve;
 
 /**
  * Model the upload catalogue file web service. Use the method
@@ -24,15 +26,39 @@ public abstract class UploadCatalogueFile extends SOAPAction {
 	private static final String NAMESPACE = "http://ws.catalog.dc.efsa.europa.eu/";
 
 	// web service link of the ping service
-	//private static final String URL = "https://dcf-cms.efsa.europa.eu/catalogues";
-	private static final String URL = "https://dcf-01.efsa.test/dc-catalog-public-ws/catalogues/?wsdl";
+	private static final String URL = "https://dcf-cms.efsa.europa.eu/catalogues";
+	private static final String TEST_URL = "https://dcf-01.efsa.test/dc-catalog-public-ws/catalogues/?wsdl";
 	
 	/**
 	 * Initialize the url and the namespace of the upload catalogue file
 	 * request.
 	 */
-	public UploadCatalogueFile() {
-		super ( URL, NAMESPACE );
+	public UploadCatalogueFile( DcfType type ) {
+		super ( type, NAMESPACE );
+	}
+	
+	/**
+	 * Upload the file to the dcf and get the 
+	 * processed response
+	 * @return
+	 */
+	public Object upload() {
+		
+		Object result = null;
+
+		try {
+			
+			String url = getType() == DcfType.PRODUCTION ? URL : TEST_URL;
+			
+			// start the reserve operation
+			result = (PendingReserve) makeRequest( url );
+
+		} catch (SOAPException e) {
+
+			e.printStackTrace();
+		}
+		
+		return result;
 	}
 	
 	/**

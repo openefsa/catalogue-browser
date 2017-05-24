@@ -18,6 +18,7 @@ import messages.Messages;
 public class CatalogueLabel implements Observer {
 
 	private Label label;
+	private Catalogue catalogue;
 	
 	/**
 	 * Initialize and display the label in the parent composite
@@ -40,14 +41,51 @@ public class CatalogueLabel implements Observer {
 
 		label.setFont ( italicBoldFold );
 		
-		setDefaultLabel();
+		refresh();
 	}
 	
 	/**
 	 * Set the default label
 	 */
-	private void setDefaultLabel () {
+	public void setDefaultLabel () {
 		label.setText( Messages.getString( "CatalogueLabel.EmptyLabel" ) );
+	}
+	
+	/**
+	 * Set the label text using the catalogue information
+	 * @param catalogue
+	 */
+	public void setText( Catalogue catalogue ) {
+		
+		this.catalogue = catalogue;
+		
+		String text = "";
+		
+		// display only the name if the catalogue is local
+		if ( catalogue.isLocal() )
+			text = catalogue.getLabel();
+		else
+			text = catalogue.getVersion() + " " + catalogue.getLabel();
+		
+		label.setText( text );
+	}
+	
+	/**
+	 * Refresh the label
+	 */
+	public void refresh() {
+		
+		if ( catalogue != null )
+			setText ( catalogue );
+		else
+			setDefaultLabel();
+	}
+	
+	/**
+	 * Redraw the label
+	 */
+	public void redraw() {
+		label.redraw();
 	}
 	
 	@Override
@@ -56,28 +94,13 @@ public class CatalogueLabel implements Observer {
 		// update current catalogue
 		if ( o instanceof GlobalManager ) {
 			
-			Catalogue catalogue;
-			
 			if ( arg instanceof Catalogue )
-				catalogue = (Catalogue) arg;
+				this.catalogue = (Catalogue) arg;
 			else
-				catalogue = null;
+				this.catalogue = null;
 			
 			// update the catalogue label
-			if ( catalogue != null ) {
-				
-				String text = "";
-				
-				// display only the name if the catalogue is local
-				if ( catalogue.isLocal() )
-					text = catalogue.getLabel();
-				else
-					text = catalogue.getVersion() + " " + catalogue.getLabel();
-				
-				label.setText( text );
-			}
-			else
-				setDefaultLabel();
+			refresh();
 		}
 	}
 }

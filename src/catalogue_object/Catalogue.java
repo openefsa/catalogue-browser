@@ -838,23 +838,67 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		
 		return forcedCatalogue;
 	}
+
+	/**
+	 * Confirm the version of the catalogue
+	 * @param username
+	 */
+	public void confirmVersion () {
+		
+		System.out.println ( "Version confirmed for " + this );
+		
+		// remove forced flag
+		version.confirm();
+		
+		System.out.println( "New version " + version.getVersion() );
+		
+		// remove the force editing since now
+		// it is correctly enabled
+		removeForceEdit();
+		
+		// update the version in the db
+		CatalogueDAO catDao = new CatalogueDAO();
+		catDao.update( this );
+	}
 	
+	/**
+	 * Set the current catalogue version as invalid,
+	 * since it has changes made through forced editing
+	 * and the reserve operation does not succeeded 
+	 */
+	public synchronized void invalidate() {
+		
+		System.out.println( "Invalid version for " + this );
+		
+		// add the NULL flag
+		version.invalidate();
+		
+		System.out.println( "New version " + version.getVersion() );
+		
+		// update version in the db
+		CatalogueDAO catDao = new CatalogueDAO();
+		catDao.update( this );
+	}
+	
+	/**
+	 * Check if the version of the catalogue is invalid or not
+	 * @return
+	 */
+	public boolean isInvalid() {
+		return version.isInvalid();
+	}
+
 	/**
 	 * Remove the forced editing from this catalogue
 	 * related to the user we want
 	 */
-	public synchronized void removeForceEdit ( String username ) {
+	private synchronized void removeForceEdit () {
 
 		System.out.println( "Forced editing removed by " 
-				+ username + " for " + this );
-
-		// remove forced version
-		if ( version.isForced() ) {
-			version.removeForced();
-		}
+				+ User.getInstance() + " for " + this );
 		
 		ForceCatEditDAO forceDao = new ForceCatEditDAO();
-		forceDao.removeForceEditing( this, username );
+		forceDao.removeForceEditing( this );
 	}
 	
 	/**
@@ -896,13 +940,16 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 
 	
 	/**
-	 * Reserve the catalogue for the current user.
+	 * Reserve the current catalogue for the current user.
 	 * Note that if you want to unreserve the catalogue you
 	 * must use {@link #unreserve() }
+	 * @param note the reservation note
 	 * @param reserveLevel the reserve level needed. Both
 	 * {@link ReserveLevel.MINOR} or 
 	 * {@link ReserveLevel.MAJOR} are accepted.
-	 * @return the new internal version of the catalogue which was created
+	 * @return the new internal version of the catalogue if a new one is created
+	 * or {@code this} catalogue if the version of the catalogue is simply confirmed
+	 * (only for forced catalogues)
 	 */
 	public synchronized Catalogue reserve( String note, ReserveLevel reserveLevel ) {
 		
@@ -914,10 +961,21 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		
 		User user = User.getInstance();
 
-		// get a new internal version of the catalogue
-		Catalogue newCatalogue = newInternalVersion();
-		System.out.println ( "Creating new internal version " + newCatalogue );
-		
+		Catalogue newCatalogue;
+
+		if ( this.isForceEdit( user.getUsername() ) ) {
+
+			// we simply confirm the forced version and go on with that
+			confirmVersion();
+			newCatalogue = this;
+		}
+		else {
+			// get a new internal version of the catalogue
+			newCatalogue = newInternalVersion();
+			System.out.println ( "Creating new internal version " + newCatalogue );
+		}
+
+		// reserve the catalogue into the db
 		ReservedCatDAO resDao = new ReservedCatDAO();
 		resDao.insert( new ReservedCatalogue(newCatalogue, 
 				user.getUsername(), note, reserveLevel) );
@@ -1008,20 +1066,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		
 		return versionChecker.newInternalVersion();
 	}
-	
-	/**
-	 * Set the current catalogue version as invalid,
-	 * since it has changes made through forced editing
-	 * and the reserve operation does not succeeded 
-	 */
-	public synchronized void invalidate() {
 
-		// add the old flag
-		version.invalidate();
-		
-		CatalogueDAO catDao = new CatalogueDAO();
-		catDao.update( this );
-	}
 	
 	/**
 	 * Set if the catalogue is being reserved or 
@@ -1064,6 +1109,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 */
 	public enum CatalogueStatus {
 		NONE,
+		INVALID,
 		PENDING_ACTION_ONGOING,
 		RESERVED_BY_CURRENT,
 		RESERVED_BY_OTHER,
@@ -1092,7 +1138,9 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		// and the catalogue is the last available
 		// version of the catalogue and the catalogue
 		// is not local and it is not deprecated
-		if ( isRequestingAction() )
+		if ( isInvalid() )
+			problem = CatalogueStatus.INVALID;
+		else if ( isRequestingAction() )
 			problem = CatalogueStatus.PENDING_ACTION_ONGOING;
 		else if ( reservedByOther )
 			problem = CatalogueStatus.RESERVED_BY_OTHER;

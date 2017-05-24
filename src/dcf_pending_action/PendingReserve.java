@@ -94,24 +94,18 @@ public class PendingReserve extends PendingAction {
 		// if the reserve did not succeed and we
 		// had edited the catalogue
 		// invalidate the current catalogue
-		boolean invalid = response != DcfResponse.OK && forced;
-		boolean invalid2 = needNewVersion && forced;
+		boolean invalidResp = response != DcfResponse.OK && forced;
+		boolean invalidVer = needNewVersion && forced;
 
-		if ( invalid || invalid2 ) {
-
-			// if not last version and the catalogue was
-			// forced to editing => stultify the catalogue
-			System.out.println( "Invalid catalogue " + catalogue );
-			invalidate();
-		}
+		// if invalid response and forced edit
+		if ( invalidResp ) 
+			invalidResponse();
 		
-		// Remove the forced editing from the catalogue
-		// if it was enabled
-		// since here we know the real dcf response
-		// remove before reserve! We need to restore the
-		// correct version of the catalogue
-		//if ( forced )
-		//	catalogue.removeForceEdit( username );
+		// if invalid version and forced edit
+		// note that this is called only if the
+		// DcfResponse is OK
+		else if ( invalidVer )
+			invalidVersion();
 		
 		// if the reserve succeeded download the
 		// last internal version if present and
@@ -126,11 +120,20 @@ public class PendingReserve extends PendingAction {
 					@Override
 					public void handleEvent(Event arg0) {
 						reserve();
+						terminate();
 					}
 				});
 			}  // otherwise simply reserve
-			else
+			else {
 				reserve();
+				terminate();
+			}
+			
+		} else {
+
+			// we have completed the pending reserve
+			// process, therefore we can delete it
+			terminate();
 		}
 	}
 
@@ -158,16 +161,32 @@ public class PendingReserve extends PendingAction {
 	}
 
 	/**
+	 * Invalidate the current catalogue since it was
+	 * edited but there is a newer version of it.
+	 */
+	private void invalidVersion() {
+		invalidate();
+		setStatus( PendingReserveStatus.INVALID_VERSION );
+	}
+	
+	/**
+	 * Invalidate the current catalogue since
+	 * it was edited but no reserve was obtained
+	 * to confirm the changes
+	 */
+	private void invalidResponse() {
+		invalidate();
+		setStatus( PendingReserveStatus.INVALID_RESPONSE );
+	}
+	
+	/**
 	 * Stultify the current catalogue. This happens
 	 * if we force the editing mode and then
 	 * we discover that we could not edit it.
 	 */
 	private void invalidate() {
-		
 		Catalogue catalogue = getCatalogue();
-		
 		catalogue.invalidate();
-		setStatus( PendingReserveStatus.INVALIDATED );
 	}
 	
 	@Override
@@ -178,7 +197,7 @@ public class PendingReserve extends PendingAction {
 		
 		// get if we need a new version
 		this.needNewVersion = parser.getCatalogueVersion().compareTo( 
-				getCatalogue().getCatalogueVersion() ) > 0;
+				getCatalogue().getCatalogueVersion() ) < 0;
 	}
 	
 	/**

@@ -1,0 +1,16 @@
+<catalogue>
+<catalogueDesc>
+<code>CATUSERS</code>
+<name>CATUSERS</name>
+<label>CATUSERS</label>
+<scopeNote>This catalogue defines Catalogue Managers users enabled to edit catalogues within the Catalogue Browser</scopeNote>
+<termCodeMask>CU###A</termCodeMask>
+<acceptNonStandardCodes>false</acceptNonStandardCodes>
+<generateMissingCodes>true</generateMissingCodes>
+</catalogueDesc>
+<catalogueVersion>
+<version>1.0</version>
+<validFrom>2017-05-24T11:33:41</validFrom>
+<status>PUBLISHED MAJOR</status>
+</catalogueVersion>
+</catalogue>
