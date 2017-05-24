@@ -117,11 +117,7 @@ public abstract class PendingAction {
 		// update the status
 		setStatus( PendingReserveStatus.SENDING );
 		
-		//Document log = getLog();
-		
-		// TODO RIMUOVI #########################################################
-		Document log = null;
-		priority = Priority.HIGH;
+		Document log = getLog();
 		
 		// if no log in high priority => the available time is finished
 		if ( log == null && priority == Priority.HIGH ) {
@@ -139,12 +135,6 @@ public abstract class PendingAction {
 			
 			// downgrade the pending reserve priority
 			downgradePriority();
-			
-			try {
-				Thread.sleep( 10000 );
-			} catch ( InterruptedException e ) {
-				e.printStackTrace();
-			}
 			
 			// restart the process with low priority
 			log = getLog();
@@ -294,7 +284,7 @@ public abstract class PendingAction {
 			interAttemptsTime = 10000;  // 10 seconds
 			break;
 		case LOW:
-			interAttemptsTime = 5000;  // 5 minutes TODO
+			interAttemptsTime = 300000; // 5 minutes
 			break;
 		default:
 			break;
