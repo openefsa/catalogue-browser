@@ -498,7 +498,7 @@ public class FileMenu implements MainMenuItem {
 						// remove the catalogues from the database
 						for ( Catalogue catalogue : selectedCats ) {
 							
-							if ( catalogue.isReserved() ) {
+							if ( catalogue.isReserved() || catalogue.isRequestingAction() ) {
 								problems = true;
 								continue; 
 							}

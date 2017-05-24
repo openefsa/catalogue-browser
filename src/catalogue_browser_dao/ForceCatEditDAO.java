@@ -96,6 +96,36 @@ public class ForceCatEditDAO {
 	}
 
 	/**
+	 * Remove the forced editing related to a single catalogue
+	 * @return
+	 */
+	public synchronized boolean remove ( Catalogue catalogue ) {
+
+		String query = "delete from APP.FORCED_CATALOGUE where CAT_ID = ?";
+
+		try {
+
+			Connection con = DatabaseManager.getMainDBConnection();
+			PreparedStatement stmt = con.prepareStatement( query );
+
+			stmt.clearParameters();
+
+			stmt.setInt( 1, catalogue.getId() );
+			
+			stmt.executeUpdate();
+			
+			stmt.close();
+			con.close();
+
+		} catch ( SQLException e ) {
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
+	}
+	
+	/**
 	 * Remove the forced editing from the db for the current catalogue
 	 * @return
 	 */

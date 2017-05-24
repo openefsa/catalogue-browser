@@ -19,6 +19,7 @@ public class CatalogueBuilder extends BaseObjectBuilder {
 	String backupDbPath = null;
 	ReserveLevel reserveLevel = ReserveLevel.NONE;
 	private String reserveUsername;
+	private String reserveNote;
 	boolean local = false;                  // default value
 	int forcedCount = 0;
 
@@ -128,6 +129,14 @@ public class CatalogueBuilder extends BaseObjectBuilder {
 	 */
 	public void setReserveUsername(String reserveUsername) {
 		this.reserveUsername = reserveUsername;
+	}
+	
+	/**
+	 * Set the reserve note for reserve actions
+	 * @param reserveNote
+	 */
+	public void setReserveNote(String reserveNote) {
+		this.reserveNote = reserveNote;
 	}
 
 	/**

@@ -4,6 +4,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import catalogue_object.CatalogueVersion;
 import catalogue_object.Status;
 
 /**
@@ -22,6 +23,8 @@ public class LogParser {
 	
 	// The name of the node which contains the operation result code in the log
 	private static final String OPERATION_RESULT_NODE_NAME = "macroOperationResult";
+	
+	private static final String CATALOGUE_VERSION_NODE_NAME = "catalogueVersion";
 	
 	// the log data file
 	private Document log;
@@ -61,6 +64,14 @@ public class LogParser {
 	 */
 	public Status getCatalogueStatus() {
 		return new Status ( getFirstLevelNodeValue ( CATALOGUE_STATUS_NODE_NAME ) );
+	}
+	
+	/**
+	 * Get the catalogue version contained in the log file
+	 * @return
+	 */
+	public CatalogueVersion getCatalogueVersion() {
+		return new CatalogueVersion ( getFirstLevelNodeValue( CATALOGUE_VERSION_NODE_NAME) );
 	}
 	
 	/**

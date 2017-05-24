@@ -1091,9 +1091,6 @@ public class ToolsMenu implements MainMenuItem {
 	private void reserve( Catalogue catalogue, 
 			final ReserveLevel level, String description ) {
 
-		// set that we are reserving the catalogue
-		catalogue.setRequestingAction( true );
-		
 		// reserve the catalogue
 		Dcf dcf = new Dcf();
 

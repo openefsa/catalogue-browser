@@ -146,4 +146,8 @@ public class PendingPublish extends PendingAction {
 		// update the catalogue of the pending action
 		setCatalogue( newVersion );
 	}
+
+
+	@Override
+	public void processLog(Document log) {}
 }

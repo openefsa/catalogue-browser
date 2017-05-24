@@ -6,8 +6,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import global_manager.GlobalManager;
-import messages.Messages;
-import version_control.ReleaseVersion;
 
 /**
  * Class used to create a new code for a term,

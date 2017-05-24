@@ -4,6 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
 import catalogue_object.Catalogue;
+import dcf_user.User;
 import dcf_webservice.DcfResponse;
 import dcf_webservice.ReserveLevel;
 import global_manager.GlobalManager;
@@ -364,7 +365,10 @@ public class DefaultListeners {
 		// created by the pending reserve (only if a previous
 		// version of the catalogue is already opened in the
 		// browser)
-		if ( sameCodeOfCurrent ( newVersion ) ) {
+		// do not open the new version if we have a forced version
+		// since if we are editing
+		if ( sameCodeOfCurrent ( newVersion ) 
+				&& !newVersion.isForceEdit( User.getInstance().getUsername() ) ) {
 			newVersion.open();
 		}
 	}

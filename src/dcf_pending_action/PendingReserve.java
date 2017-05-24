@@ -1,14 +1,8 @@
 package dcf_pending_action;
 
-import java.io.IOException;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
 import catalogue_object.Catalogue;
 import catalogue_object.Status;
@@ -33,6 +27,10 @@ public class PendingReserve extends PendingAction {
 	
 	// the new version of the catalogue if one is found
 	private NewCatalogueInternalVersion newVersion;
+	
+	// boolean which is true if a new version
+	// of the catalogue should be downloaded
+	private boolean needNewVersion = false;
 
 	/**
 	 * Initialize a pending request
@@ -88,13 +86,20 @@ public class PendingReserve extends PendingAction {
 		Catalogue catalogue = getCatalogue();
 		String username = getUsername();
 		
-		boolean invalid = response != DcfResponse.OK && 
-				catalogue.isForceEdit( username );
+		// if we have forced the catalogue
+		boolean forced = catalogue.isForceEdit( username );
 		
 		// if the reserve did not succeed and we
 		// had edited the catalogue
 		// invalidate the current catalogue
-		if ( invalid ) {
+		boolean invalid = response != DcfResponse.OK && forced;
+		boolean invalid2 = needNewVersion && forced;
+
+		if ( invalid || invalid2 ) {
+
+			// if not last version and the catalogue was
+			// forced to editing => stultify the catalogue
+			System.out.println( "Invalid catalogue " + catalogue );
 			invalidate();
 		}
 		
@@ -103,50 +108,44 @@ public class PendingReserve extends PendingAction {
 		// since here we know the real dcf response
 		// remove before reserve! We need to restore the
 		// correct version of the catalogue
-		if ( catalogue.isForceEdit( username ) )
-			catalogue.removeForceEdit( username );
+		//if ( forced )
+		//	catalogue.removeForceEdit( username );
 		
-		// reserve the catalogue if the reserve succeeded
+		// if the reserve succeeded download the
+		// last internal version if present and
+		// then reserve the catalogue
 		if ( response == DcfResponse.OK ) {
-			reserve();
+			
+			if ( needNewVersion ) {
+				
+				// download the last version of the catalogue
+				importLastVersion ( new Listener() {
+					
+					@Override
+					public void handleEvent(Event arg0) {
+						reserve();
+					}
+				});
+			}  // otherwise simply reserve
+			else
+				reserve();
 		}
 	}
-	
+
 	/**
-	 * Reserve the catalogue contained in the pending
-	 * reserve with the pending reserve level
-	 * Note that if we are not working with the last
-	 * internal version, first the last internal version
-	 * will be imported.
+	 * Reserve or unreserve the catalogue related
+	 * to the pending reserve
 	 */
 	private void reserve() {
 		
 		Catalogue catalogue = getCatalogue();
 		
-		// set the catalogue as (un)reserved at the selected level
 		if ( reserveLevel.greaterThan( ReserveLevel.NONE ) ) {
 			
-			// before reserving, check the version of the catalogue
-			// if it is the last one
-			boolean isLast = importLastVersion ( new Listener() {
-				
-				@Override
-				public void handleEvent(Event arg0) {
-					
-					Catalogue catalogue = getCatalogue();
-					
-					// get the new internal version created by the reserve
-					// and set it to the pending operation
-					Catalogue newVersion = catalogue.reserve ( reserveLevel );
-					setCatalogue( newVersion );
-				}
-			});
-			
-			// if not last version and the catalogue was
-			// forced to editing => stultify the catalogue
-			if ( !isLast && catalogue.isForceEdit( getUsername() ) ) {
-				invalidate();
-			}
+			// get the new internal version created by the reserve
+			// and set it to the pending operation
+			Catalogue newVersion = catalogue.reserve ( reserveLevel );
+			setCatalogue( newVersion );
 		}
 		else {
 			catalogue.unreserve ();
@@ -156,8 +155,6 @@ public class PendingReserve extends PendingAction {
 		catalogue.setRequestingAction( false );
 	}
 
-
-	
 	/**
 	 * Stultify the current catalogue. This happens
 	 * if we force the editing mode and then
@@ -169,6 +166,17 @@ public class PendingReserve extends PendingAction {
 		
 		catalogue.invalidate();
 		setStatus( PendingReserveStatus.INVALIDATED );
+	}
+	
+	@Override
+	public void processLog(Document log) {
+		
+		// analyze the log to get the result
+		LogParser parser = new LogParser ( log );
+		
+		// get if we need a new version
+		this.needNewVersion = parser.getCatalogueVersion().compareTo( 
+				getCatalogue().getCatalogueVersion() ) > 0;
 	}
 	
 	/**

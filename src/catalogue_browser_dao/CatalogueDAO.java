@@ -232,6 +232,10 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 			// delete the catalogue database
 			DatabaseManager.deleteDb( catalogue );
 
+			// remove dependencies first
+			ForceCatEditDAO forcedDao = new ForceCatEditDAO();
+			forcedDao.remove ( catalogue );
+			
 			// open the connection of the general DB to remove the catalogue entry
 			// from the local master database
 			Connection con = DatabaseManager.getMainDBConnection();

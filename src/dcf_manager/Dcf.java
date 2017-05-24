@@ -386,6 +386,8 @@ public class Dcf {
 	public void reserve ( Catalogue catalogue, 
 			ReserveLevel level, String description, PendingActionListener listener ) {
 		
+		catalogue.setRequestingAction( true );
+		
 		BackgroundAction reserve = new BackgroundAction( catalogue, 
 				level, description );
 		
@@ -403,6 +405,8 @@ public class Dcf {
 	 */
 	public void publish ( Catalogue catalogue, 
 			PublishLevel level, PendingActionListener listener ) {
+		
+		catalogue.setRequestingAction( true );
 		
 		BackgroundAction publish = new BackgroundAction( catalogue, 
 				level );

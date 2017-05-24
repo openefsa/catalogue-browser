@@ -5,8 +5,8 @@ import java.util.StringTokenizer;
 public class CatalogueVersion extends Version {
 
 	// flag for invalid versions
-	private static final String INVALID_VERSION = "INV";
-	private static final String FORCED_VERSION = "FRC";
+	private static final String INVALID_VERSION = "NULL";
+	private static final String FORCED_VERSION = "TEMP";
 	
 	private boolean invalid;      // true if the internal version is not the last one
 	private boolean forced;       // true if the version is a dummy version
@@ -21,29 +21,28 @@ public class CatalogueVersion extends Version {
 		
 		StringTokenizer st = new StringTokenizer( version, "\\." );
 		
+		// parse the version structure
 		while ( st.hasMoreTokens() ) {
 			
 			String token = st.nextToken();
 			
-			if ( token.equals( FORCED_VERSION ) ||
-					token.equals ( INVALID_VERSION ) ) {
-				
-				if ( token.equals( FORCED_VERSION ) )
+			if ( !st.hasMoreTokens() )
+				break;
+			
+			String nextToken = st.nextToken();
+			
+			if ( nextToken != null ) {
+				if ( nextToken.equals( FORCED_VERSION ) ) {
 					forced = true;
-				else if ( token.equals( INVALID_VERSION ) )
-					invalid = true;
+					forcedCount = Integer.valueOf( token );
+				}
 				
-				forcedCount = Integer.valueOf( st.nextToken() );
+				if ( nextToken.equals( INVALID_VERSION ) ) {
+					invalid = true;
+					forcedCount = Integer.valueOf( token );
+				}
 			}
 		}
-		
-		// if there is the invalid flag
-		if ( version.contains ( INVALID_VERSION ) )
-			invalid = true;
-		
-		// if there is the dummy flag
-		if ( version.contains ( FORCED_VERSION ) )
-			forced = true;
 	}
 	
 	/**
@@ -77,10 +76,10 @@ public class CatalogueVersion extends Version {
 		
 		// add invalid flag
 		if ( invalid )
-			newVersion = newVersion + "." + INVALID_VERSION + "." + forcedCount;
+			newVersion = newVersion + "." + forcedCount + "." + INVALID_VERSION;
 		// add forced flag
 		else if ( forced )
-			newVersion = newVersion + "." + FORCED_VERSION + "." + forcedCount;
+			newVersion = newVersion + "." + forcedCount + "." + FORCED_VERSION;
 		
 		return newVersion;
 	}

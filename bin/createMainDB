@@ -75,12 +75,14 @@ insert into APP.DETAIL_LEVEL (DETAIL_LEVEL_CODE, DETAIL_LEVEL_LABEL, DETAIL_LEVE
 	('P', 'Non-specific term', 'YellowSphere.ico');
 
 
--- table to track the reserve operations
--- of the users
+-- table to track the reserved
+-- catalogues and their reserve level
+-- and reservation note
 create table APP.RESERVED_CATALOGUE (
 
 	CAT_ID integer not null primary key,
 	RESERVE_USERNAME varchar(100) not null,
+	RESERVE_NOTE varchar(1000) not null,
 	RESERVE_LEVEL varchar(50) not null
 );
 

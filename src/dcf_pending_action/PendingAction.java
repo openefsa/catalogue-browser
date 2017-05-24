@@ -14,9 +14,8 @@ import catalogue_object.Catalogue;
 import dcf_log_util.LogDownloader;
 import dcf_user.User;
 import dcf_webservice.DcfResponse;
-import dcf_webservice.Publish;
-import dcf_webservice.ReserveLevel;
 import dcf_webservice.Publish.PublishLevel;
+import dcf_webservice.ReserveLevel;
 import ui_progress_bar.FormProgressBar;
 
 /**
@@ -112,7 +111,11 @@ public abstract class PendingAction {
 		// update the status
 		setStatus( PendingReserveStatus.SENDING );
 		
-		Document log = getLog();
+		//Document log = getLog();
+		
+		// TODO RIMUOVI #########################################################
+		Document log = null;
+		priority = Priority.HIGH;
 		
 		// if no log in high priority => the available time is finished
 		if ( log == null && priority == Priority.HIGH ) {
@@ -131,6 +134,12 @@ public abstract class PendingAction {
 			// downgrade the pending reserve priority
 			downgradePriority();
 			
+			try {
+				Thread.sleep( 30000 );
+			} catch ( InterruptedException e ) {
+				e.printStackTrace();
+			}
+			
 			// restart the process with low priority
 			log = getLog();
 		}
@@ -142,6 +151,8 @@ public abstract class PendingAction {
 		// or it was downgraded to LOW priority and
 		// then it was found since we found it for
 		// sure if we are in LOW priority
+		
+		processLog ( log );
 		
 		// get the response of the dcf looking
 		// into the log document
@@ -176,6 +187,9 @@ public abstract class PendingAction {
 
 		// set the status as completed
 		setStatus( PendingReserveStatus.COMPLETED );
+		
+		// update the catalogue status
+		catalogue.setRequestingAction( false );
 	}
 	
 	/**
@@ -484,6 +498,12 @@ public abstract class PendingAction {
 	 * the pending action was put in queue.
 	 */
 	public abstract void manageBusyStatus ();
+	
+	/**
+	 * Process the log content
+	 * @param log
+	 */
+	public abstract void processLog( Document log );
 	
 	/**
 	 * Extract the dcf response from the retrieved log document

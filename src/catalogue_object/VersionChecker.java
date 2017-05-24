@@ -30,7 +30,9 @@ public class VersionChecker {
 	 */
 	public VersionChecker( Catalogue catalogue ) {
 		this.catalogue = catalogue;
-		this.version = catalogue.getCatalogueVersion();
+		
+		// we use new to avoid to edit the version
+		this.version = new CatalogueVersion( catalogue.getVersion() );
 		this.oldVersion = new CatalogueVersion( catalogue.getVersion() );
 	}
 
@@ -41,6 +43,7 @@ public class VersionChecker {
 	 */
 	public Catalogue publishMajor() {
 		version.incrementMajor();
+		version.removeForced();
 		return apply();
 	}
 	
@@ -51,6 +54,7 @@ public class VersionChecker {
 	 */
 	public Catalogue publishMinor() {
 		version.incrementMinor();
+		version.removeForced();
 		return apply();
 	}
 	
@@ -60,6 +64,7 @@ public class VersionChecker {
 	 */
 	public Catalogue newInternalVersion() {
 		version.incrementInternal();
+		version.removeForced();
 		return apply();
 	}
 	
