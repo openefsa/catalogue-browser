@@ -598,7 +598,6 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 
 				// dropped on the target
 			case 3:
-
 				// we use the term clipboard since this action is the same as
 				// a cut paste branch action
 
@@ -607,7 +606,7 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 
 				// cut and paste the selected terms as children of the target term
 				termClip.cutBranch( getSelectedTerms(), hierarchy );
-				termClip.paste( target, null );
+				termClip.paste( target, hierarchy );
 
 				break;
 
