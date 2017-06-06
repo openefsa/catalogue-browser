@@ -12,14 +12,17 @@ import java.util.StringTokenizer;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import catalogue.Catalogue;
+import catalogue.ReleaseNotesOperation;
 import catalogue_browser_dao.AttributeDAO;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_browser_dao.DatabaseManager;
 import catalogue_browser_dao.HierarchyDAO;
+import catalogue_browser_dao.ReleaseNotesDAO;
+import catalogue_browser_dao.ReleaseNotesOperationDAO;
 import catalogue_browser_dao.TermDAO;
 import catalogue_object.Attribute;
 import catalogue_object.AttributeBuilder;
-import catalogue_object.Catalogue;
 import catalogue_object.Hierarchy;
 import catalogue_object.HierarchyBuilder;
 import catalogue_object.Term;
@@ -32,6 +35,12 @@ import ui_progress_bar.FormProgressBar;
 import ui_search_bar.SearchOptionDAO;
 import user_preferences.CataloguePreferenceDAO;
 
+/**
+ * Class which is used to import an xlsx catalogue
+ * into the database.
+ * @author avonva
+ *
+ */
 public class ImportExcelCatalogue {
 
 	FormProgressBar progressBar;
@@ -69,8 +78,10 @@ public class ImportExcelCatalogue {
 		
 		CatalogueDAO catDao = new CatalogueDAO();
 		
+		Catalogue catalogue = catDao.getCatalogueFromExcel ( catData );
+		
 		// get the catalogue from the data
-		return catDao.getCatalogueFromExcel ( catData );
+		return catalogue;
 	}
 	
 	/**
@@ -117,6 +128,7 @@ public class ImportExcelCatalogue {
 		ResultDataSet termData;
 		ResultDataSet attrData;
 		ResultDataSet hierData;
+		ResultDataSet rnData;  // release notes data
 		try {
 			
 			// get the excel data
@@ -155,6 +167,12 @@ public class ImportExcelCatalogue {
 				
 				CatalogueDAO catDao = new CatalogueDAO();
 				catDao.deleteDBRecords ( currentCatalogue );
+				
+				// set the id to the catalogue
+				int id = catDao.getCatalogue( currentCatalogue.getCode(), 
+						currentCatalogue.getVersion() ).getId();
+				
+				currentCatalogue.setId( id );
 			}
 			catch ( SQLException e ) {
 				
@@ -165,12 +183,21 @@ public class ImportExcelCatalogue {
 				
 				CatalogueDAO catDao = new CatalogueDAO();
 				
-				catDao.insert( currentCatalogue );
+				// set the id to the catalogue
+				int id = catDao.insert( currentCatalogue );
+				
+				currentCatalogue.setId( id );
 				
 				// create the standard database structure for
 				// the new catalogue
 				catDao.createDBTables( currentCatalogue.getDbFullPath() );
 			}
+			
+			System.out.println( currentCatalogue.getReleaseNotes() );
+			
+			// add the catalogue information
+			ReleaseNotesDAO notesDao = new ReleaseNotesDAO( currentCatalogue );
+			notesDao.insert( currentCatalogue.getReleaseNotes() );
 			
 			// here the database exists for sure and we insert the data
 
@@ -211,9 +238,7 @@ public class ImportExcelCatalogue {
 	
 			// import the term sheet into the DB of the current catalogue
 			importTerms ( currentCatalogue, termData );
-			
-			
-			
+
 			
 			// import the attributes values for each term
 			System.out.println( "Importing TERM ATTRIBUTES table" );
@@ -229,12 +254,26 @@ public class ImportExcelCatalogue {
 			
 			System.out.println( "Importing PARENT TERM table" );
 			
-			updateProgressBar( 15, Messages.getString("ImportExcelXLSX.ImportTermParents") );
+			updateProgressBar( 15, 
+					Messages.getString("ImportExcelXLSX.ImportTermParents") );
 			
 			// reset the iterators to the beginning
 			termData.initScan();
 			hierData.initScan();
 			importParentTerms( currentCatalogue, termData, hierData );
+
+			System.out.println( "Importing RELEASE NOTES table" );
+			
+			updateProgressBar( 15, 
+					Messages.getString("ImportExcelXLSX.ImportReleaseNotes") );
+			
+			// import the release notes operations
+			try {
+				rnData = rawData.processSheetName( "releaseNotes" );
+				importReleaseNotesOperations ( currentCatalogue, rnData );
+			} catch ( Exception e ) {
+				System.err.println( "Release notes not found for " + currentCatalogue );
+			}
 
 			// end
 			updateProgressBar( 100, "" );
@@ -762,6 +801,42 @@ public class ImportExcelCatalogue {
 			// close connection
 			stmt.close();
 			con.close();
+			
+			return true;
+
+		} catch (SQLException | NumberFormatException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	/**
+	 * Import into the catalogue database all the release note operations
+	 * @param catalogue
+	 * @param data
+	 * @return
+	 */
+	private boolean importReleaseNotesOperations( Catalogue catalogue, 
+			ResultDataSet data ) {
+
+		try {
+
+			ReleaseNotesOperationDAO opDao = new 
+					ReleaseNotesOperationDAO( catalogue );
+
+			// do until we have data to parse
+			while ( data.next() ) {
+				
+				// get all the ops related to the current excel row
+				// separating the operation info (they are $ separated)
+				ReleaseNotesOperation op = 
+						opDao.getByExcelResultSet( data );
+				
+				int id = opDao.insert( op );
+				op.setId( id );
+			}
+			
+			catalogue.refreshReleaseNotes();
 			
 			return true;
 

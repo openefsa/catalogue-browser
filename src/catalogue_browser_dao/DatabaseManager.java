@@ -13,7 +13,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import catalogue_object.Catalogue;
+import catalogue.Catalogue;
 import global_manager.GlobalManager;
 import sql.SQLScriptExec;
 import user_preferences.UIPreferenceDAO;

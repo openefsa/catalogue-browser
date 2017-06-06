@@ -7,8 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueEntityDAO;
-import catalogue_object.Catalogue;
 import user_preferences.CataloguePreference;
 import user_preferences.CataloguePreferenceDAO;
 

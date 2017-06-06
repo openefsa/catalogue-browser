@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import catalogue.Catalogue;
 import messages.Messages;
 import ui_progress_bar.FormProgressBar;
 
@@ -30,10 +31,11 @@ public class ExportCatalogueWorkbook {
 	/**
 	 * Export the catalogue into a workbook formatted as .xlsx
 	 * Four sheets are created: catalogue, hierarchy, attribute, term
+	 * @param catalogue the catalogue we want to export
 	 * @param filename
 	 * @throws IOException
 	 */
-	public void exportCatalogue( String filename ) throws IOException {
+	public void exportCatalogue( Catalogue catalogue, String filename ) throws IOException {
 		
 		System.out.println ( "Starting export process..." );
 		
@@ -44,25 +46,31 @@ public class ExportCatalogueWorkbook {
 		workbook.setCompressTempFiles( true );
 		
 		// write the catalogue sheet
-		ExportCatalogueSheet catSheet = new ExportCatalogueSheet( workbook, "catalogue" );
+		ExportCatalogueSheet catSheet = new ExportCatalogueSheet( catalogue, workbook, "catalogue" );
 		catSheet.setProgressBar( progressBar, 1, Messages.getString( "Export.CatalogueSheet" ) );
 		catSheet.write();
 
 		// write the hierarchy sheet
-		ExportHierarchySheet hierarchySheet = new ExportHierarchySheet( workbook, "hierarchy" );
+		ExportHierarchySheet hierarchySheet = new ExportHierarchySheet( catalogue, workbook, "hierarchy" );
 		hierarchySheet.setProgressBar( progressBar, 4, Messages.getString( "Export.HierarchySheet" ) );
 		hierarchySheet.write();
 		
 		// write the attribute sheet
-		ExportAttributeSheet attrSheet = new ExportAttributeSheet( workbook, "attribute" );
+		ExportAttributeSheet attrSheet = new ExportAttributeSheet( catalogue, workbook, "attribute" );
 		attrSheet.setProgressBar( progressBar, 5, Messages.getString( "Export.AttributeSheet" ) );
 		attrSheet.write();
 
 		// write the term sheet
-		ExportTermSheet termSheet = new ExportTermSheet( workbook, "term" );
-		termSheet.setProgressBar( progressBar, 85, Messages.getString( "Export.TermSheet" ) );
+		ExportTermSheet termSheet = new ExportTermSheet( catalogue, workbook, "term" );
+		termSheet.setProgressBar( progressBar, 80, Messages.getString( "Export.TermSheet" ) );
 		termSheet.write();
 		
+		// write the term sheet
+		ExportReleaseNotesSheet noteSheet = new ExportReleaseNotesSheet( 
+				catalogue, workbook, "releaseNotes" );
+		
+		noteSheet.setProgressBar( progressBar, 95, Messages.getString( "Export.NotesSheet" ) );
+		noteSheet.write();
 		
 		// last operation
 		progressBar.setLabel( Messages.getString( "Export.WriteSheet" ) );

@@ -5,10 +5,11 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class WorkbookHandler extends DefaultHandler {
 
-	private String	ATTRIBUTE = null;
-	private String	HIERARCHY = null;
-	private String	TERM = null;
-	private String	CATALOGUE = null;
+	private String ATTRIBUTE = null;
+	private String HIERARCHY = null;
+	private String TERM = null;
+	private String CATALOGUE = null;
+	private String RELEASENOTES = null;
 
 	@Override
 	public void startElement ( String uri , String localName , String name , Attributes attributes )
@@ -34,9 +35,17 @@ public class WorkbookHandler extends DefaultHandler {
 				CATALOGUE = attributes.getValue( "r:id" );
 				return;
 			}
+			if ( nameSheet.equals( "RELEASENOTES" ) ) {
+				RELEASENOTES = attributes.getValue( "r:id" );
+				return;
+			}
 		}
 	}
 
+	public String getRELEASENOTES() {
+		return RELEASENOTES;
+	}
+	
 	public String getATTRIBUTE ( ) {
 		return ATTRIBUTE;
 	}

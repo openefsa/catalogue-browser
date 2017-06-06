@@ -25,8 +25,8 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
+import catalogue.Catalogue;
 import catalogue_browser_dao.DatabaseManager;
-import catalogue_object.Catalogue;
 import global_manager.GlobalManager;
 import user_preferences.CataloguePreference;
 import user_preferences.CataloguePreferenceDAO;

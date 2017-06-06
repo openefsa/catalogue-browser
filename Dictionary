@@ -17,4 +17,5 @@ Term type = object which represents the category of a term
 
 Main database = the database which contains all the catalogues metadata and global settings
 Catalogue database = the database of a single catalogue, which contains the catalogue data
-Local catalogue = local version of a catalogue which can be edited without reserving it, but it cannot be uploaded into the dcf
+Local catalogue = local version of a catalogue which can be edited without reserving it, 
+but it cannot be uploaded into the dcf

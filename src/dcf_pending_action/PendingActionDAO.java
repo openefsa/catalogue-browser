@@ -8,10 +8,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_browser_dao.CatalogueEntityDAO;
 import catalogue_browser_dao.DatabaseManager;
-import catalogue_object.Catalogue;
 import dcf_pending_action.PendingAction.Priority;
 import dcf_webservice.Publish.PublishLevel;
 import dcf_webservice.ReserveLevel;

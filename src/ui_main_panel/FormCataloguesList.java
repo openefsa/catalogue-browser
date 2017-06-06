@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
-import catalogue_object.Catalogue;
+import catalogue.Catalogue;
 import messages.Messages;
 import session_manager.RestoreableWindow;
 import session_manager.WindowPreference;

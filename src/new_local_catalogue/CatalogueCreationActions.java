@@ -1,9 +1,9 @@
 package new_local_catalogue;
 
+import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_browser_dao.DatabaseManager;
 import catalogue_browser_dao.HierarchyDAO;
-import catalogue_object.Catalogue;
 import catalogue_object.Hierarchy;
 import user_preferences.CataloguePreferenceDAO;
 import utilities.GlobalUtil;

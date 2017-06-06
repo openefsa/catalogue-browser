@@ -13,6 +13,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Display;
 
+import catalogue.Catalogue;
 import catalogue_browser_dao.ParentTermDAO;
 import catalogue_browser_dao.TermDAO;
 import data_transformation.BooleanConverter;

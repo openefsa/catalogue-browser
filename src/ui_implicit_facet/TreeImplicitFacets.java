@@ -10,7 +10,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 
-import catalogue_object.Catalogue;
+import catalogue.Catalogue;
 import catalogue_object.Hierarchy;
 import messages.Messages;
 import ui_main_panel.HierarchySelector;

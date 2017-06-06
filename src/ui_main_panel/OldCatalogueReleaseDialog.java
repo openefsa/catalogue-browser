@@ -6,7 +6,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
-import catalogue_object.Catalogue;
+import catalogue.Catalogue;
 
 /**
  * Dialog to warn the user that a old version of the selected catalogue is used

@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import catalogue_object.Catalogue;
+import catalogue.Catalogue;
 import catalogue_object.Hierarchy;
 import catalogue_object.Term;
 import global_manager.GlobalManager;

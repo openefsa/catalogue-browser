@@ -4,8 +4,8 @@ import org.eclipse.swt.graphics.Image;
 
 import already_described_terms.DescribedTerm;
 import already_described_terms.PicklistTerm;
+import catalogue.Catalogue;
 import catalogue_browser_dao.TermDAO;
-import catalogue_object.Catalogue;
 import global_manager.GlobalManager;
 import term.LabelProviderTerm;
 

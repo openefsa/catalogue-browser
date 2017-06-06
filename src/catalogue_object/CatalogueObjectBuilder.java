@@ -1,5 +1,7 @@
 package catalogue_object;
 
+import catalogue.Catalogue;
+
 /**
  * Builder for catalogue objects, add the catalogue information
  * to the base object builder

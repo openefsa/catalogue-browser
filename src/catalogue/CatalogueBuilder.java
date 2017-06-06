@@ -1,4 +1,6 @@
-package catalogue_object;
+package catalogue;
+
+import catalogue_object.BaseObjectBuilder;
 
 /**
  * Builder class for generating a catalogue step by step
@@ -17,6 +19,7 @@ public class CatalogueBuilder extends BaseObjectBuilder {
 	String backupDbPath = null;
 	boolean local = false;                  // default value
 	int forcedCount = 0;
+	ReleaseNotes releaseNotes;
 
 	/**
 	 * Set the term code mask of the catalogue
@@ -119,6 +122,16 @@ public class CatalogueBuilder extends BaseObjectBuilder {
 	}
 
 	/**
+	 * Set the release notes of the catalogue
+	 * @param releaseNotes
+	 * @return
+	 */
+	public CatalogueBuilder setReleaseNotes(ReleaseNotes releaseNotes) {
+		this.releaseNotes = releaseNotes;
+		return this;
+	}
+	
+	/**
 	 * Create the catalogue
 	 * @return
 	 */
@@ -127,6 +140,7 @@ public class CatalogueBuilder extends BaseObjectBuilder {
 		// create the catalogue object and return it
 		return new Catalogue ( id, code, name, label, scopenotes, termCodeMask, termCodeLength, termMinCode,
 				acceptNonStandardCodes, generateMissingCodes, version, lastUpdate, validFrom, 
-				validTo, status, catalogueGroups, deprecated, dbFullPath, backupDbPath, local, forcedCount );
+				validTo, status, catalogueGroups, deprecated, dbFullPath, backupDbPath, local, forcedCount, 
+				releaseNotes );
 	}
 }

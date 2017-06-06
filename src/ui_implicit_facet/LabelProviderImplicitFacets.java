@@ -4,8 +4,8 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
+import catalogue.Catalogue;
 import catalogue_object.Attribute;
-import catalogue_object.Catalogue;
 import catalogue_object.Hierarchy;
 import catalogue_object.Nameable;
 import messages.Messages;

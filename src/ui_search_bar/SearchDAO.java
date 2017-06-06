@@ -13,8 +13,8 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
+import catalogue.Catalogue;
 import catalogue_object.Attribute;
-import catalogue_object.Catalogue;
 import catalogue_object.Hierarchy;
 import catalogue_object.Term;
 import term_type.TermType;

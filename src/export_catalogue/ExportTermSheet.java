@@ -5,13 +5,12 @@ import java.util.HashMap;
 
 import org.apache.poi.ss.usermodel.Workbook;
 
+import catalogue.Catalogue;
 import catalogue_browser_dao.AttributeDAO;
 import catalogue_browser_dao.HierarchyDAO;
 import catalogue_object.Attribute;
-import catalogue_object.Catalogue;
 import catalogue_object.Hierarchy;
 import catalogue_object.Mappable;
-import global_manager.GlobalManager;
 import sheet_converter.SheetHeader;
 
 /**
@@ -22,8 +21,13 @@ import sheet_converter.SheetHeader;
  */
 public class ExportTermSheet extends SheetWriter {
 
-	public ExportTermSheet(Workbook workbook, String sheetName) {
+	private Catalogue catalogue;
+	
+	public ExportTermSheet( Catalogue catalogue, 
+			Workbook workbook, String sheetName) {
+		
 		super(workbook, sheetName);
+		this.catalogue = catalogue;
 	}
 
 	@Override
@@ -44,14 +48,7 @@ public class ExportTermSheet extends SheetWriter {
 		headers.put( "TERM_STATUS",            new SheetHeader(i++, "status" ) );
 		headers.put( "TERM_DEPRECATED",        new SheetHeader(i++, "deprecated" ) );
 
-		
-		// get an instance of the global manager
-		GlobalManager manager = GlobalManager.getInstance();
-		
-		// get the current catalogue
-		Catalogue currentCat = manager.getCurrentCatalogue();
-		
-		AttributeDAO attrDao = new AttributeDAO( currentCat );
+		AttributeDAO attrDao = new AttributeDAO( catalogue );
 
 		// for each attribute add the header with the attribute name
 		for ( Attribute attr : attrDao.fetchNonCatalogueAttributes() ) {
@@ -67,7 +64,7 @@ public class ExportTermSheet extends SheetWriter {
 		// and then if we reexport it would be reinserted into the excel twice
 		// and so on...
 		
-		HierarchyDAO hierDao = new HierarchyDAO( currentCat );
+		HierarchyDAO hierDao = new HierarchyDAO( catalogue );
 		
 		for ( Hierarchy hierarchy : hierDao.getAll() ) {
 
@@ -94,14 +91,6 @@ public class ExportTermSheet extends SheetWriter {
 
 	@Override
 	public Collection<? extends Mappable> getData() {
-		
-		// get an instance of the global manager
-		GlobalManager manager = GlobalManager.getInstance();
-		
-		// get the current catalogue
-		Catalogue currentCat = manager.getCurrentCatalogue();
-		
-		return currentCat.getTerms();
+		return catalogue.getTerms();
 	}
-
 }

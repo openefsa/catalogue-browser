@@ -19,11 +19,11 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 
+import catalogue.Catalogue;
 import catalogue_browser_dao.AttributeDAO;
 import catalogue_browser_dao.TermAttributeDAO;
 import catalogue_browser_dao.TermDAO;
 import catalogue_object.Attribute;
-import catalogue_object.Catalogue;
 import catalogue_object.Term;
 import catalogue_object.TermAttribute;
 import dcf_user.User;

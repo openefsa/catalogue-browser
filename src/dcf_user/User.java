@@ -2,7 +2,7 @@ package dcf_user;
 
 import java.util.ArrayList;
 
-import catalogue_object.Catalogue;
+import catalogue.Catalogue;
 import dcf_manager.Dcf;
 
 /**

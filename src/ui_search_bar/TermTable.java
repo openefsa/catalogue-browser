@@ -14,7 +14,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 
-import catalogue_object.Catalogue;
+import catalogue.Catalogue;
 import catalogue_object.Hierarchy;
 import catalogue_object.Term;
 import term.LabelProviderTerm;

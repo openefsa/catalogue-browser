@@ -9,7 +9,7 @@ import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
-import catalogue_object.Catalogue;
+import catalogue.Catalogue;
 import dcf_manager.AttachmentHandler;
 import dcf_manager.Dcf.DcfType;
 import utilities.GlobalUtil;

@@ -1,6 +1,6 @@
 package dcf_webservice;
 
-import catalogue_object.Catalogue;
+import catalogue.Catalogue;
 import dcf_manager.Dcf.DcfType;
 import dcf_pending_action.PendingReserve;
 import dcf_user.User;

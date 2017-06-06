@@ -3,7 +3,7 @@ package ui_main_menu;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
-import catalogue_object.Catalogue.CatalogueStatus;
+import catalogue.Catalogue.CatalogueStatus;
 import messages.Messages;
 import utilities.GlobalUtil;
 

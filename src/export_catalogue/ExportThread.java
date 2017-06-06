@@ -4,12 +4,21 @@ import java.io.IOException;
 
 import org.eclipse.swt.widgets.Display;
 
+import catalogue.Catalogue;
 import excel_file_management.ExcelThread;
 
 public class ExportThread extends ExcelThread {
 
-	public ExportThread(String filename) {
+	private Catalogue catalogue;
+	
+	/**
+	 * Start an export process.
+	 * @param catalogue the catalogue we want to export
+	 * @param filename the .xlsx file which will host the catalogue data
+	 */
+	public ExportThread( Catalogue catalogue, String filename ) {
 		super(filename);
+		this.catalogue = catalogue;
 	}
 	
 	@Override
@@ -20,7 +29,7 @@ public class ExportThread extends ExcelThread {
 		
 		// export the catalogue
 		try {
-			exportCat.exportCatalogue( getFilename() );
+			exportCat.exportCatalogue( catalogue, getFilename() );
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

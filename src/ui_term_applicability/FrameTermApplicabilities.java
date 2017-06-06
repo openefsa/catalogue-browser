@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
-import catalogue_object.Catalogue;
+import catalogue.Catalogue;
 import catalogue_object.Term;
 import messages.Messages;
 

@@ -3,6 +3,7 @@ package catalogue_object;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
+import catalogue.Catalogue;
 import catalogue_browser_dao.ParentTermDAO;
 import data_transformation.BooleanConverter;
 import data_transformation.DateTrimmer;

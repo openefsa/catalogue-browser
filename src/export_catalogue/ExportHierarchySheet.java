@@ -5,16 +5,19 @@ import java.util.HashMap;
 
 import org.apache.poi.ss.usermodel.Workbook;
 
+import catalogue.Catalogue;
 import catalogue_browser_dao.HierarchyDAO;
-import catalogue_object.Catalogue;
 import catalogue_object.Mappable;
-import global_manager.GlobalManager;
 import sheet_converter.SheetHeader;
 
 public class ExportHierarchySheet extends SheetWriter {
 
-	public ExportHierarchySheet(Workbook workbook, String sheetName) {
+	private Catalogue catalogue;
+	
+	public ExportHierarchySheet( Catalogue catalogue, 
+			Workbook workbook, String sheetName) {
 		super(workbook, sheetName);
+		this.catalogue = catalogue;
 	}
 
 	@Override
@@ -41,14 +44,8 @@ public class ExportHierarchySheet extends SheetWriter {
 
 	@Override
 	public ArrayList< ? extends Mappable > getData() {
-		
-		// get an instance of the global manager
-		GlobalManager manager = GlobalManager.getInstance();
-		
-		// get the current catalogue
-		Catalogue currentCat = manager.getCurrentCatalogue();
-		
-		HierarchyDAO hierDao = new HierarchyDAO( currentCat );
+
+		HierarchyDAO hierDao = new HierarchyDAO( catalogue );
 		
 		// get all the hierarchies as data
 		return hierDao.getAll();

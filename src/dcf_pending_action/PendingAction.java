@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-import catalogue_object.Catalogue;
+import catalogue.Catalogue;
 import dcf_log_util.LogDownloader;
 import dcf_user.User;
 import dcf_webservice.DcfResponse;

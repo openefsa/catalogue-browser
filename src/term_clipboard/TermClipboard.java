@@ -7,9 +7,9 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Display;
 
+import catalogue.Catalogue;
 import catalogue_browser_dao.ParentTermDAO;
 import catalogue_object.Applicability;
-import catalogue_object.Catalogue;
 import catalogue_object.Hierarchy;
 import catalogue_object.Term;
 import global_manager.GlobalManager;

@@ -11,8 +11,8 @@ import java.util.Collections;
 import org.eclipse.swt.widgets.Listener;
 import org.w3c.dom.Document;
 
+import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
-import catalogue_object.Catalogue;
 import dcf_pending_action.PendingAction;
 import dcf_pending_action.PendingActionDAO;
 import dcf_pending_action.PendingActionListener;

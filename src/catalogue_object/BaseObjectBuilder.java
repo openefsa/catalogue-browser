@@ -10,17 +10,17 @@ import java.sql.Timestamp;
  */
 public abstract class BaseObjectBuilder {
 
-	int id;
-	String code;
-	String version;
-	String name = "";
-	String label = "";
-	String scopenotes= "";
-	Timestamp lastUpdate = null;
-	Timestamp validFrom = null;
-	Timestamp validTo = null;
-	String status = null;
-	boolean deprecated = false;
+	protected int id;
+	protected String code;
+	protected String version;
+	protected String name = "";
+	protected String label = "";
+	protected String scopenotes= "";
+	protected Timestamp lastUpdate = null;
+	protected Timestamp validFrom = null;
+	protected Timestamp validTo = null;
+	protected String status = null;
+	protected boolean deprecated = false;
 	
 	/**
 	 * Set the id of the object

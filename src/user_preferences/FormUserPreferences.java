@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableColumn;
 
-import catalogue_object.Catalogue;
+import catalogue.Catalogue;
 import global_manager.GlobalManager;
 import messages.Messages;
 import session_manager.RestoreableWindow;

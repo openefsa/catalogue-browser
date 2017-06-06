@@ -5,8 +5,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.w3c.dom.DOMException;
 
+import catalogue.Catalogue;
 import catalogue_browser_dao.DatabaseManager;
-import catalogue_object.Catalogue;
 import dcf_manager.Dcf;
 import import_catalogue.ImportActions;
 import messages.Messages;

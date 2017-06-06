@@ -1,7 +1,7 @@
 package ui_implicit_facet;
 
+import catalogue.Catalogue;
 import catalogue_object.Attribute;
-import catalogue_object.Catalogue;
 import catalogue_object.Term;
 import catalogue_object.TermAttribute;
 import global_manager.GlobalManager;

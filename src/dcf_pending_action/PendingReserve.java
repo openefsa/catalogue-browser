@@ -4,7 +4,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.w3c.dom.Document;
 
-import catalogue_object.Catalogue;
+import catalogue.Catalogue;
 import catalogue_object.Status;
 import dcf_log_util.LogParser;
 import dcf_webservice.DcfResponse;

@@ -2,6 +2,7 @@ package catalogue_object;
 
 import java.sql.Timestamp;
 
+import catalogue.Catalogue;
 import data_transformation.BooleanConverter;
 import data_transformation.DateTrimmer;
 import global_manager.GlobalManager;

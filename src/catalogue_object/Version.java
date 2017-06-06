@@ -1,5 +1,7 @@
 package catalogue_object;
 
+import catalogue.Catalogue;
+
 /**
  * Model and manage catalogues objects versions. It allows comparing
  * versions among them and incrementing their major, minor or internal values.

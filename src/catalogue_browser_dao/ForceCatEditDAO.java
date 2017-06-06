@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import catalogue_object.Catalogue;
+import catalogue.Catalogue;
 import dcf_webservice.ReserveLevel;
 
 /**

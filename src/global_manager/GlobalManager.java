@@ -4,7 +4,7 @@ import java.util.Observable;
 
 import org.eclipse.swt.widgets.Display;
 
-import catalogue_object.Catalogue;
+import catalogue.Catalogue;
 import dcf_user.User;
 
 /**

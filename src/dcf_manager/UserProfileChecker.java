@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
+import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_browser_dao.TermAttributeDAO;
 import catalogue_browser_dao.TermDAO;
-import catalogue_object.Catalogue;
 import catalogue_object.Term;
 import catalogue_object.TermAttribute;
 import dcf_user.User;

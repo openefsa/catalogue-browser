@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 
-import catalogue_object.Catalogue;
+import catalogue.Catalogue;
 import catalogue_object.Hierarchy;
 import global_manager.GlobalManager;
 import messages.Messages;

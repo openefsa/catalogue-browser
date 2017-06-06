@@ -11,8 +11,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 
-import catalogue_object.Catalogue;
-import catalogue_object.CatalogueBuilder;
+import catalogue.Catalogue;
+import catalogue.CatalogueBuilder;
+import catalogue.ReleaseNotes;
 import dcf_user.User;
 import sql.SQLScriptExec;
 import utilities.GlobalUtil;
@@ -382,6 +383,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 		Statement stmt = con.createStatement();
 		stmt.execute( "DELETE FROM APP.PICKLIST_TERM" );
 		stmt.execute( "DELETE FROM APP.RECENT_TERM" );
+		stmt.execute( "DELETE FROM APP.RELEASE_NOTES_OP" );
 		stmt.execute( "DELETE FROM APP.PICKLIST" );
 		stmt.execute( "DELETE FROM APP.PREFERENCE" );
 		stmt.execute( "DELETE FROM APP.PARENT_TERM" );
@@ -482,8 +484,17 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 
 		builder.setDeprecated( rs.getBoolean( "deprecated" ) );
 		
+		String desc = rs.getString( "noteDescription" );
+		ts = rs.getTimestamp( "noteDate" );
+		String vers = rs.getString( "noteInternalVersion" );
+		String note = rs.getString( "internalVersionNote" );
+		
+		builder.setReleaseNotes( new ReleaseNotes(desc, ts, vers, note, null) );
+		
+		Catalogue catalogue = builder.build();
+		
 		// return the catalogue
-		return builder.build();
+		return catalogue;
 	}
 	
 	/**

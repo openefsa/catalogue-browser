@@ -2,6 +2,8 @@ package catalogue_object;
 
 import java.sql.Timestamp;
 
+import catalogue.Catalogue;
+
 /**
  * General object to model an object which is part of a catalogue,
  * as terms, hierarchies and attributes.

@@ -5,9 +5,8 @@ import java.util.HashMap;
 
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
-import catalogue_object.Catalogue;
+import catalogue.Catalogue;
 import catalogue_object.Mappable;
-import global_manager.GlobalManager;
 import sheet_converter.SheetHeader;
 
 /**
@@ -17,13 +16,20 @@ import sheet_converter.SheetHeader;
  */
 public class ExportCatalogueSheet extends SheetWriter {
 
+	private Catalogue catalogue;
+	
 	/**
 	 * Create a sheet
+	 * @param catalogue the catalogue meta data we want to export
 	 * @param workbook
 	 * @param sheetName
 	 */
-	public ExportCatalogueSheet( SXSSFWorkbook workbook, String sheetName ) {
+	public ExportCatalogueSheet( Catalogue catalogue, 
+			SXSSFWorkbook workbook, String sheetName ) {
+		
 		super ( workbook, sheetName );
+		
+		this.catalogue = catalogue;
 	}
 
 	/**
@@ -50,7 +56,10 @@ public class ExportCatalogueSheet extends SheetWriter {
 		headers.put( "CAT_VALID_TO",                  new SheetHeader(13, "validTo" ) );
 		headers.put( "CAT_STATUS",                    new SheetHeader(14, "status" ) );
 		headers.put( "CAT_DEPRECATED",                new SheetHeader(15, "deprecated" ) );
-
+		headers.put( "CAT_RN_DESCRIPTION",            new SheetHeader(16, "noteDescription" ) );
+		headers.put( "CAT_RN_VERSION_DATE",           new SheetHeader(17, "noteVersionDate" ) );
+		headers.put( "CAT_RN_INTERNAL_VERSION",       new SheetHeader(18, "noteInternalVersion" ) );
+		headers.put( "CAT_RN_INTERNAL_VERSION_NOTE",  new SheetHeader(19, "internalVersionNote" ) );
 		return headers;
 	}
 	
@@ -59,14 +68,7 @@ public class ExportCatalogueSheet extends SheetWriter {
 		
 		// set the data to be inserted for the current sheet
 		ArrayList<Mappable> data = new ArrayList<>();
-		
-		// get an instance of the global manager
-		GlobalManager manager = GlobalManager.getInstance();
-		
-		// get the current catalogue
-		Catalogue currentCat = manager.getCurrentCatalogue();
-		
-		data.add( currentCat );
+		data.add( catalogue );
 		
 		return data;
 	}

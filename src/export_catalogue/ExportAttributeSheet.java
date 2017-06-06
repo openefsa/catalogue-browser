@@ -5,10 +5,9 @@ import java.util.HashMap;
 
 import org.apache.poi.ss.usermodel.Workbook;
 
+import catalogue.Catalogue;
 import catalogue_browser_dao.AttributeDAO;
-import catalogue_object.Catalogue;
 import catalogue_object.Mappable;
-import global_manager.GlobalManager;
 import sheet_converter.SheetHeader;
 
 /**
@@ -18,8 +17,13 @@ import sheet_converter.SheetHeader;
  */
 public class ExportAttributeSheet extends SheetWriter {
 
-	public ExportAttributeSheet(Workbook workbook, String sheetName) {
+	private Catalogue catalogue;
+	
+	public ExportAttributeSheet( Catalogue catalogue, 
+			Workbook workbook, String sheetName) {
+		
 		super(workbook, sheetName);
+		this.catalogue = catalogue;
 	}
 
 	@Override
@@ -56,14 +60,8 @@ public class ExportAttributeSheet extends SheetWriter {
 	@Override
 	public ArrayList<? extends Mappable> getData() {
 
-		// get an instance of the global manager
-		GlobalManager manager = GlobalManager.getInstance();
-		
-		// get the current catalogue
-		Catalogue currentCat = manager.getCurrentCatalogue();
-		
 		// initialize dao of attributes
-		AttributeDAO attrDao = new AttributeDAO( currentCat );
+		AttributeDAO attrDao = new AttributeDAO( catalogue );
 		
 		return attrDao.getAll();
 	}

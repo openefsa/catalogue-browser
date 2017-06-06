@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import catalogue.Catalogue;
 import catalogue_browser_dao.AttributeDAO;
 import catalogue_browser_dao.CatalogueEntityDAO;
 import catalogue_object.Attribute;
-import catalogue_object.Catalogue;
 import term_type.TermType;
 import term_type.TermTypeDAO;
 import user_preferences.OptionType;

@@ -1,6 +1,6 @@
 package user_preferences;
 
-import catalogue_object.Catalogue;
+import catalogue.Catalogue;
 
 /**
  * Class to model the record of the tables : type_search_opt and attr_search_opt

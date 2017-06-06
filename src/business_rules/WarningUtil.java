@@ -23,10 +23,10 @@ import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
 
+import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_browser_dao.DatabaseManager;
 import catalogue_browser_dao.TermDAO;
-import catalogue_object.Catalogue;
 import catalogue_object.Hierarchy;
 import catalogue_object.Term;
 import global_manager.GlobalManager;

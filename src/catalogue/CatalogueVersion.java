@@ -1,6 +1,8 @@
-package catalogue_object;
+package catalogue;
 
 import java.util.StringTokenizer;
+
+import catalogue_object.Version;
 
 /**
  * Object to model the version of the catalogue

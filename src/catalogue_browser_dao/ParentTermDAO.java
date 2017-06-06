@@ -8,8 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import catalogue.Catalogue;
 import catalogue_object.Applicability;
-import catalogue_object.Catalogue;
 import catalogue_object.BaseObject;
 import catalogue_object.Hierarchy;
 import catalogue_object.Nameable;

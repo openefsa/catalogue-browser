@@ -3,6 +3,7 @@ package catalogue_object;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import catalogue.Catalogue;
 import catalogue_browser_dao.AttributeDAO;
 import detail_level.DetailLevelGraphics;
 import global_manager.GlobalManager;

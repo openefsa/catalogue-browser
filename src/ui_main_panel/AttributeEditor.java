@@ -17,9 +17,9 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
+import catalogue.Catalogue;
 import catalogue_browser_dao.AttributeDAO;
 import catalogue_object.Attribute;
-import catalogue_object.Catalogue;
 import global_manager.GlobalManager;
 import messages.Messages;
 import property.ContentProviderProperty;

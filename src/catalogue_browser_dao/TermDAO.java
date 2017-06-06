@@ -12,7 +12,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 
-import catalogue_object.Catalogue;
+import catalogue.Catalogue;
 import catalogue_object.Term;
 
 /**

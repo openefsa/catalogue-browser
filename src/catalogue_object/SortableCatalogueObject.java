@@ -2,6 +2,7 @@ package catalogue_object;
 
 import java.sql.Timestamp;
 
+import catalogue.Catalogue;
 import term.WrongKeyException;
 
 /**

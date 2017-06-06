@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 
-import catalogue_object.Catalogue;
+import catalogue.Catalogue;
 import global_manager.GlobalManager;
 import messages.Messages;
 

@@ -4,7 +4,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import catalogue_object.CatalogueVersion;
+import catalogue.CatalogueVersion;
 import catalogue_object.Status;
 
 /**

@@ -14,8 +14,8 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
+import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
-import catalogue_object.Catalogue;
 import dcf_manager.Dcf;
 import dcf_user.User;
 import import_catalogue.ImportActions;

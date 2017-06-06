@@ -1,4 +1,4 @@
-package catalogue_object;
+package catalogue;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -21,10 +21,20 @@ import catalogue_browser_dao.DatabaseManager;
 import catalogue_browser_dao.ForceCatEditDAO;
 import catalogue_browser_dao.HierarchyDAO;
 import catalogue_browser_dao.ParentTermDAO;
+import catalogue_browser_dao.ReleaseNotesDAO;
 import catalogue_browser_dao.ReservedCatDAO;
 import catalogue_browser_dao.TermAttributeDAO;
 import catalogue_browser_dao.TermDAO;
+import catalogue_object.Applicability;
+import catalogue_object.Attribute;
+import catalogue_object.BaseObject;
+import catalogue_object.Hierarchy;
+import catalogue_object.HierarchyBuilder;
+import catalogue_object.Mappable;
 import catalogue_object.Status.StatusValues;
+import catalogue_object.Term;
+import catalogue_object.TermAttribute;
+import catalogue_object.Version;
 import data_transformation.BooleanConverter;
 import data_transformation.DateTrimmer;
 import dcf_manager.Dcf;
@@ -107,33 +117,52 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	// term types of the catalogue (could be empty)
 	public ArrayList< TermType > termTypes;
 	
+	// the catalogue release notes
+	private ReleaseNotes releaseNotes;
+	
 	// default values for detail level and term type
 	private DetailLevelGraphics defaultDetailLevel;
 	private TermType defaultTermType;
 	
 	private int forcedCount;
-	
+
 	/**
 	 * Constructor to create a catalogue object with all its variables
+	 * 
+	 * @param id
 	 * @param code the catalogue code (unique)
 	 * @param name the catalogue name (unique)
 	 * @param label the catalogue label (text which is displayed)
-	 * @param scopeNote
+	 * @param scopenotes
 	 * @param termCodeMask
 	 * @param termCodeLength
+	 * @param termMinCode
 	 * @param acceptNonStandardCodes
 	 * @param generateMissingCodes
 	 * @param version
+	 * @param lastUpdate
+	 * @param validFrom
 	 * @param validTo
 	 * @param status
+	 * @param catalogueGroups
+	 * @param deprecated
+	 * @param dbFullPath
+	 * @param backupDbPath
+	 * @param local
+	 * @param forcedCount
 	 */
-	public Catalogue( int id, String code, String name, String label, String scopenotes, String termCodeMask, String
-			termCodeLength, String termMinCode, boolean acceptNonStandardCodes, boolean generateMissingCodes, String version,
-			Timestamp lastUpdate, Timestamp validFrom, Timestamp validTo, String status, String catalogueGroups, boolean deprecated, 
-			String dbFullPath, String backupDbPath, boolean local, int forcedCount ) {
+	public Catalogue( int id, String code, String name, String label, 
+			String scopenotes, String termCodeMask, String termCodeLength, 
+			String termMinCode, boolean acceptNonStandardCodes, 
+			boolean generateMissingCodes, String version,
+			Timestamp lastUpdate, Timestamp validFrom, Timestamp validTo, 
+			String status, String catalogueGroups, boolean deprecated, 
+			String dbFullPath, String backupDbPath, boolean local, int forcedCount, 
+			ReleaseNotes releaseNotes ) {
 
 		// the id is not important for the catalogue
-		super( id, code, name, label, scopenotes, version, lastUpdate, validFrom, validTo, status, deprecated );
+		super( id, code, name, label, scopenotes, version, lastUpdate, 
+				validFrom, validTo, status, deprecated );
 	
 		// set the version of the catalogue with the
 		// extended Version
@@ -161,6 +190,8 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		
 		this.forcedCount = forcedCount;
 		
+		this.releaseNotes = releaseNotes;
+		
 		// initialize memory for data
 		terms = new HashMap<>();
 		hierarchies = new ArrayList<>();
@@ -185,6 +216,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		refreshTermAttributes();
 		refreshDetailLevels();
 		refreshTermTypes();
+		refreshReleaseNotes();
 	}
 	
 	/**
@@ -214,7 +246,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 				acceptNonStandardCodes, generateMissingCodes, getVersion(), 
 				getLastUpdate(), getValidFrom(), 
 				getValidTo(), getStatus(), catalogueGroups, isDeprecated(), 
-				dbFullPath, backupDbPath, local, 0 );
+				dbFullPath, backupDbPath, local, 0, releaseNotes );
 		
 		return catalogue;
 	}
@@ -529,6 +561,22 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	}
 	
 	/**
+	 * Refresh the catalogue release notes
+	 */
+	public void refreshReleaseNotes() {
+		ReleaseNotesDAO rnDao = new ReleaseNotesDAO( this );
+		releaseNotes = rnDao.getReleaseNotes();
+	}
+	
+	/**
+	 * Get the catalogue release notes
+	 * @return
+	 */
+	public ReleaseNotes getReleaseNotes() {
+		return releaseNotes;
+	}
+	
+	/**
 	 * Refresh the detail levels of the catalogue
 	 */
 	public void refreshDetailLevels() {
@@ -602,7 +650,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	public boolean hasTermTypes () {
 		return !termTypes.isEmpty();
 	}
-
+	
 	/**
 	 * Get all the hierarchies of the catalogue
 	 * @return
@@ -1598,12 +1646,29 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 			break;
 		case "CAT_VALID_TO":
 			if ( getValidTo() != null )
-				value = DateTrimmer.dateToString( getValidTo() ); 
+				value = DateTrimmer.dateToString( getValidTo() );
 			break;
 		case "CAT_STATUS":
 			value = getStatus(); break;
 		case "CAT_DEPRECATED":
 			value = BooleanConverter.toNumericBoolean( String.valueOf( isDeprecated() ) ); break;
+		case "CAT_RN_DESCRIPTION":
+			System.out.println( "Description " + releaseNotes.getDescription() );
+			if ( releaseNotes != null && releaseNotes.getDescription() != null )
+				value = releaseNotes.getDescription();
+			break;
+		case "CAT_RN_VERSION_DATE":
+			if ( releaseNotes != null && releaseNotes.getDate() != null )
+				value = DateTrimmer.dateToString( releaseNotes.getDate() ); 
+			break;
+		case "CAT_RN_INTERNAL_VERSION":
+			if ( releaseNotes != null && releaseNotes.getInternalVersion() != null )
+				value = releaseNotes.getInternalVersion();
+			break;
+		case "CAT_RN_INTERNAL_VERSION_NOTE":
+			if ( releaseNotes != null && releaseNotes.getInternalVersionNote() != null )
+				value = releaseNotes.getInternalVersionNote();
+			break;
 		default:
 			break;
 		}

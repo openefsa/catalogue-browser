@@ -8,7 +8,7 @@ import javax.xml.transform.TransformerException;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
-import catalogue_object.Catalogue;
+import catalogue.Catalogue;
 import folder_zipper.FolderZipper;
 import messages.Messages;
 import ui_progress_bar.FormProgressBar;

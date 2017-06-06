@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 import already_described_terms.Picklist;
 import already_described_terms.PicklistDAO;
-import catalogue_object.Catalogue;
+import catalogue.Catalogue;
 
 public class CataloguePreferenceDAO extends PreferenceDAO {
 

@@ -3,9 +3,9 @@ package already_described_terms;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import catalogue.Catalogue;
 import catalogue_browser_dao.AttributeDAO;
 import catalogue_browser_dao.TermDAO;
-import catalogue_object.Catalogue;
 import catalogue_object.Term;
 import catalogue_object.TermAttribute;
 import global_manager.GlobalManager;

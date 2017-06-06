@@ -7,7 +7,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 
-import catalogue_object.Catalogue;
+import catalogue.Catalogue;
 import global_manager.GlobalManager;
 
 /**

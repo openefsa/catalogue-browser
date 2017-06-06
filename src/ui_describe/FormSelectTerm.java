@@ -26,8 +26,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
+import catalogue.Catalogue;
 import catalogue_object.Attribute;
-import catalogue_object.Catalogue;
 import catalogue_object.GlobalTerm;
 import catalogue_object.Hierarchy;
 import catalogue_object.Nameable;

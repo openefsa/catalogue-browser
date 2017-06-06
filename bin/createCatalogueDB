@@ -136,8 +136,16 @@ create table APP.TERM_TYPE (
 -- add the unique contraint to the code field
 alter table APP.TERM_TYPE add constraint term_type_code_unique unique ( TERM_TYPE_CODE );
 
+-- table to save the catalogue release note information
+create table APP.RELEASE_NOTES_OP (
 
-
+ 	-- id of the term type
+	OP_ID integer not null primary key generated always as identity (start with 1, increment by 1),
+	OP_NAME varchar(300),
+	OP_DATE timestamp,
+	OP_INFO varchar(300),
+	OP_GROUP_ID integer not null -- group the operations into the operationsDetails groups
+);
 
 -- This table is used to store the recently described terms separately for each catalogue
 create table APP.RECENT_TERM (
@@ -145,8 +153,6 @@ create table APP.RECENT_TERM (
 	RECENT_TERM_CODE varchar(3000),  -- the term code with the explicit facets
 	RECENT_TERM_LABEL varchar(3000)  -- term name (it will be the interpreted code)
 );
-
-
 
 
 -- this table contains the code of the imported picklist

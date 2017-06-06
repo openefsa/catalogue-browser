@@ -3,8 +3,8 @@ package dcf_pending_action;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
+import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
-import catalogue_object.Catalogue;
 import import_catalogue.ImportActions;
 import ui_progress_bar.FormProgressBar;
 

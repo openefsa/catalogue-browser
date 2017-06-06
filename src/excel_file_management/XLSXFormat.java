@@ -63,6 +63,8 @@ public class XLSXFormat {
 			res = _wbXml.getHIERARCHY();
 		} else if ( name.toUpperCase().equals( "TERM" ) ) {
 			res = _wbXml.getTERM();
+		} else if ( name.toUpperCase().equals( "RELEASENOTES" ) ) {
+			res = _wbXml.getRELEASENOTES();
 		} else if ( name.toUpperCase().equals( "CATALOGUE" ) ) {
 			res = _wbXml.getCATALOGUE();
 		}

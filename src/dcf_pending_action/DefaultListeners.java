@@ -3,7 +3,7 @@ package dcf_pending_action;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
-import catalogue_object.Catalogue;
+import catalogue.Catalogue;
 import dcf_user.User;
 import dcf_webservice.DcfResponse;
 import dcf_webservice.ReserveLevel;

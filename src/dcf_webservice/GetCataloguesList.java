@@ -23,8 +23,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import catalogue_object.Catalogue;
-import catalogue_object.CatalogueBuilder;
+import catalogue.Catalogue;
+import catalogue.CatalogueBuilder;
 import dcf_manager.Dcf.DcfType;
 import utilities.GlobalUtil;
 

@@ -2,7 +2,7 @@ package export_catalogue;
 
 import org.eclipse.swt.widgets.Listener;
 
-import catalogue_object.Catalogue;
+import catalogue.Catalogue;
 import ui_progress_bar.FormProgressBar;
 
 /**
@@ -31,7 +31,7 @@ public class ExportActions {
 	public void exportCatalogueToExcel ( Catalogue catalogue, String outputFilename, Listener doneListener ) {
 		
 		// create a thread for the excel export
-		ExportThread exportThread = new ExportThread( outputFilename );
+		ExportThread exportThread = new ExportThread( catalogue, outputFilename );
 		exportThread.setProgressBar( progressBar );
 		exportThread.addDoneListener( doneListener );
 		exportThread.start();

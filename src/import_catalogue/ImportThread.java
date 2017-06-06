@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.eclipse.swt.widgets.Display;
 
-import catalogue_object.Catalogue;
+import catalogue.Catalogue;
 import excel_file_management.ExcelThread;
 import utilities.GlobalUtil;
 

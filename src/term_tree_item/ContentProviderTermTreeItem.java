@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-import catalogue_object.Catalogue;
+import catalogue.Catalogue;
 import catalogue_object.GlobalTerm;
 import catalogue_object.Hierarchy;
 import catalogue_object.Nameable;

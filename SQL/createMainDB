@@ -39,7 +39,12 @@ create table APP.CATALOGUE(
 	-- only applicable for internal versions
 	-- of catalogues
 	CAT_DB_BACKUP_PATH varchar(1000),
-	CAT_FORCED_COUNT integer  -- how many times we had forced the editing of this catalogue
+	CAT_FORCED_COUNT integer,  -- how many times we had forced the editing of this catalogue
+	
+	CAT_RN_DESCRIPTION varchar(1000),
+	CAT_RN_VERSION_DATE timestamp,
+	CAT_RN_INTERNAL_VERSION varchar(100),
+	CAT_RN_INTERNAL_VERSION_NOTE varchar(1000)
 );
 
 -- add the unique contraint to the code field

@@ -6,8 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 
-import catalogue_object.Catalogue;
-import catalogue_object.ReservedCatalogue;
+import catalogue.Catalogue;
+import catalogue.ReservedCatalogue;
 import dcf_webservice.ReserveLevel;
 
 /**

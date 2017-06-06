@@ -2,7 +2,7 @@ package term_tree_item;
 
 import java.util.ArrayList;
 
-import catalogue_object.Catalogue;
+import catalogue.Catalogue;
 import catalogue_object.GlobalTerm;
 import catalogue_object.Hierarchy;
 import catalogue_object.Nameable;

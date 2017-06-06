@@ -15,8 +15,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 
+import catalogue.Catalogue;
 import catalogue_browser_dao.TermAttributeDAO;
-import catalogue_object.Catalogue;
 import catalogue_object.Term;
 import dcf_user.User;
 import global_manager.GlobalManager;

@@ -1,4 +1,4 @@
-package catalogue_object;
+package catalogue;
 
 import dcf_webservice.ReserveLevel;
 

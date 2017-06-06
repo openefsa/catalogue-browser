@@ -11,9 +11,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
+import catalogue.Catalogue;
 import catalogue_browser_dao.AttributeDAO;
 import catalogue_object.Attribute;
-import catalogue_object.Catalogue;
 import catalogue_object.TermAttribute;
 import global_manager.GlobalManager;
 

@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 
-import catalogue_object.Catalogue;
+import catalogue.Catalogue;
 import dcf_user.User;
 
 /**
