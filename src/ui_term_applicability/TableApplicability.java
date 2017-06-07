@@ -145,7 +145,8 @@ public class TableApplicability {
 		// create a group for the applicability 
 		Group groupTermApplicability = new Group( parent , SWT.NONE );
 
-		groupTermApplicability.setText( Messages.getString("TableApplicability.TableLabel") ); //$NON-NLS-1$
+		groupTermApplicability.setText( 
+				Messages.getString("TableApplicability.TableLabel") );
 		groupTermApplicability.setLayout( new FillLayout() );
 
 		// layout data for the applicability table group
@@ -174,14 +175,13 @@ public class TableApplicability {
 
 		// Add the "Hierarchy/Facet" column
 		GlobalUtil.addStandardColumn( applicabilityTable, new HierarchyColumnLabelProvider(), 
-				Messages.getString("TableApplicability.HierarchyColumn") ); //$NON-NLS-1$
+				Messages.getString("TableApplicability.HierarchyColumn") );
 
 		// add the "Usage" column and its label provider
 		GlobalUtil.addStandardColumn( applicabilityTable, new UsageColumnLabelProvider(), 
-				Messages.getString("TableApplicability.UsageColumn"), 80, SWT.CENTER ); //$NON-NLS-1$
+				Messages.getString("TableApplicability.UsageColumn"), 80, SWT.CENTER );
 	}
-	
-	
+
 	
 	/**
 	 * Label provider for the column "Hierarchy/Facet"

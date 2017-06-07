@@ -383,10 +383,8 @@ public class TermPropertiesPanel implements Observer {
 		propTab.setEditable( editMode );
 		propTab.refresh();
 		
-		// update the input of the applicability table if editing
-		if ( user.isCatManager() )
-			applTab.setTerm ( term );
-
+		// update the input of the applicability table
+		applTab.setTerm ( term );
 		applTab.refresh();
 		
 		// allow facet editing only in editing mode
