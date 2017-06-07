@@ -41,6 +41,7 @@ import user_preferences.CataloguePreferenceDAO;
  * @author avonva
  *
  */
+@Deprecated
 public class ImportExcelCatalogue {
 
 	FormProgressBar progressBar;
@@ -639,7 +640,8 @@ public class ImportExcelCatalogue {
 	 * @return
 	 * @throws Exception
 	 */
-	private boolean importTermsAttributes ( Catalogue catalogue, ResultDataSet termData, ResultDataSet attrData ) throws SQLException {
+	private boolean importTermsAttributes ( Catalogue catalogue, 
+			ResultDataSet termData, ResultDataSet attrData ) throws SQLException {
 		
 		Connection con;
 

@@ -25,7 +25,6 @@ import xml_to_excel.XmlCatalogueToExcel;
 public class ImportActions {
 	
 	private FormProgressBar progressBar;
-	private boolean local = false;
 	private Catalogue localCat;
 	
 	/**
@@ -59,14 +58,15 @@ public class ImportActions {
 	}
 	
 	/**
-	 * Set to true to import data for
-	 * local catalogues. Pass also the
-	 * local catalogue object
-	 * @param local
+	 * If we are importing a workbook into a local catalogue
+	 * we need to specify which is the local catalogue, otherwise
+	 * we will get errors in the import process due to the wrong
+	 * catalogue code, which is defined by the user for local
+	 * catalogues
+	 * @param localCat
 	 */
-	public void setLocal( Catalogue localCat, boolean local ) {
+	public void setLocal( Catalogue localCat ) {
 		this.localCat = localCat;
-		this.local = local;
 	}
 	
 	/**
@@ -92,7 +92,7 @@ public class ImportActions {
 		// create a thread for the excel import
 		ImportThread importThread = new ImportThread( dbPath, filename );
 
-		importThread.setLocal( localCat, local );
+		importThread.setLocal( localCat );
 		
 		// set the progress bar if needed
 		if ( progressBar != null )

@@ -42,6 +42,15 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 	 */
 	public int insert ( Applicability appl ) {
 		
+		Collection<Applicability> appls = new ArrayList<>();
+		appls.add( appl );
+		
+		ArrayList<Integer> ids = insert ( appls );
+		if ( ids.isEmpty() )
+			return -1;
+		
+		return ids.get( 0 );
+		/*
 		int id = -1;
 		
 		Connection con;
@@ -87,9 +96,69 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 			e.printStackTrace();
 		}
 		
-		return id;
+		return id;*/
 	}
 	
+	public ArrayList<Integer> insert ( Collection<Applicability> appls ) {
+		
+		ArrayList<Integer> ids = new ArrayList<>();
+		
+		Connection con;
+		
+		String query = "insert into APP.PARENT_TERM (TERM_ID, HIERARCHY_ID, "
+				+ "PARENT_TERM_ID, TERM_ORDER, TERM_REPORTABLE, TERM_FLAG)"
+				+ "values (?, ?, ?, ?, ?, ?)";
+		
+		try {
+
+			// get the connection
+			con = catalogue.getConnection();
+
+			// prepare the query
+			PreparedStatement stmt = con.prepareStatement( query, Statement.RETURN_GENERATED_KEYS );
+
+			for ( Applicability appl : appls ) {
+				
+				stmt.clearParameters();
+
+				// Create a new record with the term and its parent in the selected hierarchy
+				stmt.setInt ( 1, appl.getChild().getId() );
+				stmt.setInt ( 2, appl.getHierarchy().getId() );
+
+				// set the parent (the term if term, otherwise null if hierarchy)
+				if ( appl.getParentTerm() instanceof Term )
+					stmt.setInt ( 3, ( (Term) appl.getParentTerm() ).getId() );
+				else
+					stmt.setNull (3, java.sql.Types.INTEGER );
+
+				stmt.setInt     ( 4, appl.getOrder() );
+				stmt.setBoolean ( 5, appl.isReportable() );
+
+				// flag is true since the applicability exists
+				stmt.setBoolean( 6, true );
+
+				stmt.addBatch();
+			}
+			
+			stmt.executeBatch();
+
+			ResultSet rs = stmt.getGeneratedKeys();
+			if ( rs != null ) {
+				while ( rs.next() )
+					ids.add( rs.getInt( 1 ) );
+				rs.close();
+			}
+			
+			stmt.close();
+			con.close();
+			
+
+		} catch ( SQLException e ) {
+			e.printStackTrace();
+		}
+		
+		return ids;
+	}
 
 	/**
 	 * Remove an applicability from the database

@@ -1357,6 +1357,14 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	
 	
 	/**
+	 * Set if the catalogue is a local catalogue or not
+	 * @param local
+	 */
+	public void setLocal( boolean local ) {
+		this.local = local;
+	}
+	
+	/**
 	 * Is the database local? True if the database was created
 	 * through the command "new local catalogue", false otherwise
 	 * @return

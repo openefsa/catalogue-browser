@@ -35,6 +35,15 @@ public class TermAttributeDAO implements CatalogueRelationDAO< TermAttribute, Te
 	@Override
 	public int insert( TermAttribute ta ) {
 
+		Collection<TermAttribute> tas = new ArrayList<>();
+		tas.add( ta );
+		ArrayList<Integer> ids = insert ( tas );
+		
+		if ( ids.isEmpty() )
+			return -1;
+		
+		return ids.get(0);
+		/*
 		int id = -1;
 		
 		String query = "insert into APP.TERM_ATTRIBUTE (TERM_ID, ATTR_ID, ATTR_VALUE) values (?, ?, ?)";
@@ -70,7 +79,65 @@ public class TermAttributeDAO implements CatalogueRelationDAO< TermAttribute, Te
 			e.printStackTrace();
 		}
 		
-		return id;
+		return id;*/
+	}
+	
+	public ArrayList<Integer> insert ( Collection<TermAttribute> tas ) {
+		
+		ArrayList<Integer> ids = new ArrayList<>();
+		
+		Connection con;
+
+		// create the base query for each record
+		String query = "INSERT INTO APP.TERM_ATTRIBUTE (TERM_ID, ATTR_ID, " 
+				+ "ATTR_VALUE ) VALUES ("
+				+ "?, ?, ? )";
+		
+		try {
+
+			// open the DB connection with the catalogue db path which is currently opened
+			con = catalogue.getConnection();
+
+			// create the sql base statement
+			PreparedStatement stmt = con.prepareStatement( query, 
+					Statement.RETURN_GENERATED_KEYS );
+
+			// get the records one by one and insert them into the database
+			for ( TermAttribute ta : tas ) {
+
+				// set the term id
+				stmt.setInt   ( 1, ta.getTerm().getId() );
+
+				// set the attribute id
+				stmt.setInt   ( 2, ta.getAttribute().getId() );
+
+				// set the value parameter
+				stmt.setString( 3, ta.getValue() );
+
+				// add the record to the batch
+				stmt.addBatch();
+			}
+
+			// execute the batch of insertions
+			stmt.executeBatch();
+
+			// get all the ids
+			ResultSet rs = stmt.getGeneratedKeys();
+			
+			if ( rs != null ) {
+				while ( rs.next() )
+					ids.add( rs.getInt( 1 ) );
+				rs.close();
+			}
+			
+			stmt.close();
+			con.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return ids;
 	}
 	
 	@Override

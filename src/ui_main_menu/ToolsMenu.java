@@ -455,8 +455,9 @@ public class ToolsMenu implements MainMenuItem {
 
 				ImportActions importAction = new ImportActions();
 				importAction.setProgressBar( new FormProgressBar( shell, "") );
-				importAction.setLocal( mainMenu.getCatalogue(), 
-						mainMenu.getCatalogue().isLocal() );
+				
+				if ( mainMenu.getCatalogue().isLocal() )
+					importAction.setLocal( mainMenu.getCatalogue() );
 				
 				// import the selected excel into the current catalogue
 				importAction.importXlsx( mainMenu.getCatalogue().getDbFullPath(), 

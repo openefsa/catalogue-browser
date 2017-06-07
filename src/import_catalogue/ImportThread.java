@@ -19,7 +19,6 @@ public class ImportThread extends ExcelThread {
 	private String path;  // path where the db will be created
 	private boolean deleteFiles = false;
 	private Catalogue localCat;
-	private boolean local = false;
 	
 	/**
 	 * Initialize the import thread
@@ -40,14 +39,15 @@ public class ImportThread extends ExcelThread {
 	}
 	
 	/**
-	 * Set to true if we want to import an
-	 * excel file for a local catalogue. Pass
-	 * also the local catalogue
-	 * @param local
+	 * If we are importing a workbook into a local catalogue
+	 * we need to specify which is the local catalogue, otherwise
+	 * we will get errors in the import process due to the wrong
+	 * catalogue code, which is defined by the user for local
+	 * catalogues
+	 * @param localCat
 	 */
-	public void setLocal( Catalogue localCat, boolean local ) {
+	public void setLocal( Catalogue localCat ) {
 		this.localCat = localCat;
-		this.local = local;
 	}
 
 	/**
@@ -58,29 +58,34 @@ public class ImportThread extends ExcelThread {
 		try {
 
 			// prepare the import procedure
-			final ImportExcelCatalogue importCat = new ImportExcelCatalogue();
-			importCat.setProgressBar( getProgressForm() );
+			/*final ImportExcelCatalogue importCat = new ImportExcelCatalogue();
+			importCat.setProgressBar( getProgressForm() );*/
+
+			CatalogueWorkbookImporter importer = new CatalogueWorkbookImporter();
+			importer.setProgressBar( getProgressForm() );
+			if ( localCat != null )
+				importer.setLocal( localCat );
+			
+			importer.importWorkbook( path, getFilename() );
 
 			// start import, return false if wrong catalogue
-			final boolean check;
+			//final boolean check;
 
-			if ( !local ) 
+			/*if ( !local ) 
 				check = importCat.importCatalogue( path, getFilename() );
 			else
 				check = importCat.importLocalCatalogue( localCat, path, getFilename() );
-
+	*/
 			Display.getDefault().syncExec( new Runnable() {
 				
 				@Override
 				public void run ( ) {
 
 					// if wrong catalogue => error
-					if ( !check ) {
+					/*if ( !check ) {
 						handleError();
 						return;
-					}
-
-					System.out.println( "Import completed" );
+					}*/
 					
 					// delete files if necessary
 					if ( deleteFiles ) {

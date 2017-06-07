@@ -33,6 +33,15 @@ public class ReleaseNotesOperationDAO implements CatalogueEntityDAO<ReleaseNotes
 	@Override
 	public int insert( ReleaseNotesOperation op ) {
 
+		Collection<ReleaseNotesOperation> ops = new ArrayList<>();
+		ops.add( op );
+		
+		ArrayList<Integer> ids = insert ( ops );
+		if ( ids.isEmpty() )
+			return -1;
+		
+		return ids.get( 0 );
+		/*
 		int id = -1;
 
 		String query = "insert into APP.RELEASE_NOTES_OP "
@@ -63,7 +72,56 @@ public class ReleaseNotesOperationDAO implements CatalogueEntityDAO<ReleaseNotes
 			e.printStackTrace();
 		}
 
-		return id;
+		return id;*/
+	}
+	
+	/**
+	 * Insert a collection of operations into the database
+	 * @param ops
+	 * @return
+	 */
+	public ArrayList<Integer> insert ( Collection<ReleaseNotesOperation> ops ) {
+		
+		ArrayList<Integer> ids = new ArrayList<>();
+
+		String query = "insert into APP.RELEASE_NOTES_OP "
+				+ "(OP_NAME, OP_DATE, OP_INFO, OP_GROUP_ID) values (?,?,?,?)";
+
+		try {
+
+			Connection con = catalogue.getConnection();
+			PreparedStatement stmt = con.prepareStatement( query, 
+					Statement.RETURN_GENERATED_KEYS );
+
+			for ( ReleaseNotesOperation op : ops ) {
+				
+				stmt.clearParameters();
+				
+				stmt.setString( 1, op.getOpName() );
+				stmt.setTimestamp( 2, op.getOpDate() );
+				stmt.setString( 3, op.getOpInfo() );
+				stmt.setInt( 4, op.getGroupId() );
+				
+				stmt.addBatch();
+			}
+
+			stmt.executeBatch();
+
+			ResultSet rs = stmt.getGeneratedKeys();
+			if ( rs != null ) {
+				while ( rs.next() )
+					ids.add( rs.getInt( 1 ) );
+				rs.close();
+			}
+			
+			stmt.close();
+			con.close();
+
+		} catch ( SQLException e ) {
+			e.printStackTrace();
+		}
+
+		return ids;
 	}
 
 	@Override
