@@ -35,6 +35,8 @@ public class ComboTextBox {
 	private Text textBox;
 	private ComboViewer comboBox;
 	
+	private ISelectionChangedListener listener;
+	
 	private IContentProvider contentProvider;
 	private IBaseLabelProvider labelProvider;
 
@@ -69,6 +71,10 @@ public class ComboTextBox {
 	 */
 	public void addSelectionChangedListener ( ISelectionChangedListener listener ) {
 		
+		// save the listener
+		this.listener = listener;
+		
+		// set the listener
 		if ( comboBox != null )
 			comboBox.addSelectionChangedListener( listener );
 	}
@@ -220,6 +226,9 @@ public class ComboTextBox {
 			// combo box if editing
 			comboBox = new ComboViewer( group , SWT.READ_ONLY );
 			comboBox.getCombo().setData( "obj" );
+			
+			if ( listener != null )
+				addSelectionChangedListener( listener );
 			
 			if ( contentProvider != null )
 				comboBox.setContentProvider( contentProvider );
