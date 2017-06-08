@@ -80,9 +80,7 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 		// get the catalogue and save it as global variable
 		Iterator<Catalogue> iter = data.iterator();
 		catalogue = iter.next();
-		System.out.println ( " is local " + local + " local cat " + localCatalogue );
-		System.out.println ( " db path " + dbPath + " catalogue " + catalogue );
-		System.out.println ( " db path cat " + catalogue.getDbFullPath() );
+
 		// if anything was found => create a new catalogue
 		// as default we create the catalogue using the official folder 
 		// and the catalogue code and version
