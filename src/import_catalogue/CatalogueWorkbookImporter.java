@@ -59,7 +59,7 @@ public class CatalogueWorkbookImporter {
 	 * @throws Exception
 	 */
 	public void importWorkbook( String dbPath, String filename ) throws Exception {
-		
+
 		// get the excel data
 		XLSXFormat rawData = new XLSXFormat( filename );
 		
@@ -68,17 +68,18 @@ public class CatalogueWorkbookImporter {
 		// get the catalogue sheet and check if the catalogues are compatible
 		// (the open catalogue and the one we want to import)
 		ResultDataSet sheetData = rawData.processSheetName( "catalogue" );
+
 		CatalogueSheetImporter catImp = 
 				new CatalogueSheetImporter( dbPath, sheetData );
+		
+		if ( localCat != null )
+			catImp.setLocalCatalogue ( localCat );
+		
 		catImp.importSheet();
 		
-		Catalogue catalogue;
-		
-		// if we are importing a local catalogue
-		if ( localCat != null )
-			catalogue = localCat;
-		else  // get the imported catalogue and go on
-			catalogue = catImp.getImportedCatalogue();
+		// get the imported catalogue (if it was local it is the same)
+		Catalogue catalogue = catImp.getImportedCatalogue();
+		String catExcelCode = catImp.getExcelCode();
 		
 		System.out.println( "Importing hierarchy sheet" );
 		updateProgressBar( 10, Messages.getString("ImportExcelXLSX.ImportHierarchyLabel") );
@@ -87,6 +88,7 @@ public class CatalogueWorkbookImporter {
 		sheetData = rawData.processSheetName( "hierarchy" );
 		HierarchySheetImporter hierImp = new 
 				HierarchySheetImporter( catalogue, sheetData );
+		hierImp.setMasterCode( catExcelCode );
 		
 		// start the import
 		hierImp.importSheet();
@@ -152,7 +154,8 @@ public class CatalogueWorkbookImporter {
 		
 		// add the catalogue information
 		ReleaseNotesDAO notesDao = new ReleaseNotesDAO( catalogue );
-		notesDao.insert( catalogue.getReleaseNotes() );
+		if ( catalogue.getReleaseNotes() != null )
+			notesDao.insert( catalogue.getReleaseNotes() );
 		
 		// import the release notes operations
 		try {

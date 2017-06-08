@@ -1661,7 +1661,6 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		case "CAT_DEPRECATED":
 			value = BooleanConverter.toNumericBoolean( String.valueOf( isDeprecated() ) ); break;
 		case "CAT_RN_DESCRIPTION":
-			System.out.println( "Description " + releaseNotes.getDescription() );
 			if ( releaseNotes != null && releaseNotes.getDescription() != null )
 				value = releaseNotes.getDescription();
 			break;

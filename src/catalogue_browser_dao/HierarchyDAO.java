@@ -112,10 +112,13 @@ public class HierarchyDAO implements CatalogueEntityDAO<Hierarchy> {
 			// update the terms ids with the ones given by the database
 			ResultSet rs = stmt.getGeneratedKeys();
 
-			while ( rs.next() )
-				ids.add( rs.getInt(1) );
+			if ( rs != null ) {
+				while ( rs.next() )
+					ids.add( rs.getInt(1) );
 
-			rs.close();
+				rs.close();
+			}
+			
 			stmt.close();
 			con.close();
 

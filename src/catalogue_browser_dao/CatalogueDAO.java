@@ -455,8 +455,8 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 		CatalogueBuilder builder = new CatalogueBuilder();
 
 		// set the catalogue meta data and create the catalogue object
-		builder.setVersion( rs.getString( "version" ) );
 		builder.setCode( rs.getString( "code" ) );
+		builder.setVersion( rs.getString( "version" ) );
 		builder.setName( rs.getString( "name" ) );
 		builder.setLabel( rs.getString( "label" ) );
 		builder.setScopenotes( rs.getString( "scopeNote" ) );

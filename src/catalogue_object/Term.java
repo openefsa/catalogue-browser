@@ -1562,7 +1562,6 @@ public class Term extends CatalogueObject implements Mappable {
 	 * @param hierarchy
 	 */
 	public void moveBefore ( Term target, Hierarchy hierarchy ) {
-		
 		moveNear( target, hierarchy, true );
 	}
 	
@@ -1572,7 +1571,6 @@ public class Term extends CatalogueObject implements Mappable {
 	 * @param hierarchy
 	 */
 	public void moveAfter ( Term target, Hierarchy hierarchy ) {
-		
 		moveNear( target, hierarchy, false );
 	}
 	
@@ -1585,6 +1583,9 @@ public class Term extends CatalogueObject implements Mappable {
 	 */
 	private void moveNear( Term target, Hierarchy hierarchy, boolean before ) {
 
+		
+		System.out.println( "order before " + this.getOrder( hierarchy ) );
+		
 		// cannot move parent under its children
 		if ( target.hasAncestor( this, hierarchy ) )
 			return;
@@ -1593,7 +1594,10 @@ public class Term extends CatalogueObject implements Mappable {
 		// if after we shift the above siblings by -1
 		// this action is used to free a space between terms
 		int offset = before ? 1 : -1;
+		boolean reportable = this.isReportable( hierarchy );
 
+		System.out.println( "offset " + offset );
+		
 		// remove the applicability of the term related to this hierarchy (we need to 
 		// change it, so we remove it and then we will re add it )
 		this.removeApplicability( this.getApplicability(hierarchy), true );
@@ -1627,11 +1631,12 @@ public class Term extends CatalogueObject implements Mappable {
 
 		// set the new order and the new parent for this term
 		Applicability appl = new Applicability( this, target.getParent(hierarchy), 
-				hierarchy, targetOrder, this.isReportable(hierarchy) );
+				hierarchy, targetOrder, reportable );
 		
 		// add the applicability to the term (permanent)
 		this.addApplicability( appl, true );
 		
+		System.out.println( "order after " + this.getOrder( hierarchy ) );
 		// update the term in RAM
 		termDao.update( this );
 
@@ -1716,7 +1721,6 @@ public class Term extends CatalogueObject implements Mappable {
 						currentOrder = siblingOrder;
 					}
 			}
-				
 		}
 		
 		// here we have the nearest sibling in term of ord code

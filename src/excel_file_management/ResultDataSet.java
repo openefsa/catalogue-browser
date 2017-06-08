@@ -190,7 +190,7 @@ public class ResultDataSet implements ResultSet {
 				
 		if ( key == null )
 			return defaultVal;
-		
+
 		// return the value inside the cell identified by the column letter
 		// and by the current row
 		String value = _currentRow.get( key.toUpperCase() );

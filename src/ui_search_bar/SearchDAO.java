@@ -466,6 +466,7 @@ public class SearchDAO {
 		
 		return attrs;
 	}
+	
 	/**
 	 * Get the logical operator which is used to combine
 	 * the search results on different term fields. We can

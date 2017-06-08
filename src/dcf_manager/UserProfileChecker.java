@@ -83,7 +83,7 @@ public class UserProfileChecker extends Thread {
 		// otherwise if catalogue manager check
 		// which catalogue we can edit
 		// import from xml the catusers catalogue
-		importAction.importXml( null, filename, true, new Listener() {
+		importAction.importXml( null, filename, false, new Listener() {
 
 			@Override
 			public void handleEvent(Event arg0) {

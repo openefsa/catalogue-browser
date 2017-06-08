@@ -21,6 +21,7 @@ public class XLSXFormat {
 	public XLSXFormat( String filename ) throws IOException, OpenXML4JException, SAXException {
 		_fn = filename;
 		pkg = OPCPackage.open( filename, PackageAccess.READ );
+
 		_reader = new XSSFReader( pkg );
 
 		if ( _wbXml == null ) {
@@ -47,6 +48,7 @@ public class XLSXFormat {
 			throw new Exception( "XSSFReader is null" );
 		if ( _wbXml == null )
 			throw new Exception( "WorkbookHandler is null" );
+		
 		InputStream configSheet = _reader.getSheet( fetchSheetName( name ) );
 		SheetOOXMLHandler sheetRowHandl = new SheetOOXMLHandler( _reader.getSharedStringsTable() );
 		_parser.setContentHandler( sheetRowHandl );

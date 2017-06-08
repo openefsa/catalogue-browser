@@ -112,7 +112,9 @@ public abstract class SheetImporter<T> {
 	 * Create the object related to the current sheet row data
 	 * @param rs the result set which contains the information. Note
 	 * that the {@link ResultDataSet#next()} was already called and you
-	 * must not use it!
+	 * must not use it! If you use this method please do not use
+	 * {@link #getAllByResultSet(ResultDataSet)}, otherwise duplicated
+	 * records will be created.
 	 * @return the object we want to import or null (null will be ignored)
 	 */
 	public abstract T getByResultSet( ResultDataSet rs );
@@ -120,7 +122,11 @@ public abstract class SheetImporter<T> {
 	/**
 	 * Get the objects related to the current sheet row data. Note
 	 * that this method should be used only if a row corresponds
-	 * to multiple objects in the application logic.
+	 * to multiple objects in the application logic. Note
+	 * that the {@link ResultDataSet#next()} was already called and you
+	 * must not use it!
+	 * If you use this method please do not use {@link #getByResultSet(ResultDataSet)},
+	 * otherwise duplicated records will be created.
 	 * @param rs
 	 * @return a collection of T objects created starting from
 	 * a single row of the sheet

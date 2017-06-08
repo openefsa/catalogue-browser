@@ -325,12 +325,14 @@ public class TermClipboard {
 
 		case CUT_BRANCH:
 
+			boolean reportable = source.isReportable( sourceHierarchy );
+			
 			// cut the applicability of the child term
 			Applicability appl = source.getApplicability( sourceHierarchy );
 			source.removeApplicability( appl, true );
 
 			// paste it into the new hierarchy under the parent term
-			pasteNode ( destination, source, destinationHierarchy );
+			pasteNode ( destination, source, destinationHierarchy, reportable );
 
 			// NOTE: All the subtree of the cutted term
 			// is automatically moved since we are in the same hierarchy (the sub tree
@@ -342,14 +344,16 @@ public class TermClipboard {
 
 			// here we create the new applicability in the new hierarchy
 			// set the copied term as child of the selected parent term in the selected hierarchy
-			pasteNode ( destination, source, destinationHierarchy );
+			pasteNode ( destination, source, destinationHierarchy,
+					source.isReportable( sourceHierarchy ) );
 
 			break;
 
 		case COPY_BRANCH:
 
 			// paste the root
-			pasteNode ( destination, source, destinationHierarchy );
+			pasteNode ( destination, source, destinationHierarchy, 
+					source.isReportable( sourceHierarchy ) );
 
 			// paste the root subtree
 			pasteSubtree ( destination, source, destinationHierarchy );
@@ -367,8 +371,9 @@ public class TermClipboard {
 	 * in the selected hierarchy
 	 * @return the child with the new applicability added
 	 */
-	private Term pasteNode ( Term parent, Term child, Hierarchy hierarchy ) {
-
+	private Term pasteNode ( Term parent, Term child, 
+			Hierarchy hierarchy, boolean reportable ) {
+		
 		// get an instance of the global manager
 		GlobalManager manager = GlobalManager.getInstance();
 		
@@ -381,7 +386,7 @@ public class TermClipboard {
 		int order = parentDao.getNextAvailableOrder( parent, hierarchy );
 
 		// create a new applicability in the new hierarchy
-		Applicability appl = new Applicability( child, parent, hierarchy, order, true );
+		Applicability appl = new Applicability( child, parent, hierarchy, order, reportable );
 
 		// add the new applicability to the term
 		child.addApplicability( appl, true );
@@ -397,10 +402,12 @@ public class TermClipboard {
 	 * @param child
 	 * @param hierarchy
 	 */
-	private void pasteSubtree( Term parent, Term child, Hierarchy hierarchy ) {
+	private void pasteSubtree( Term parent, Term child, 
+			Hierarchy hierarchy ) {
 
 		// Paste the child term as child of the parent
-		pasteNode ( parent, child, hierarchy );
+		pasteNode ( parent, child, hierarchy, 
+				child.isReportable( hierarchy ) );
 
 		// iterate all the clip term subtree in the old hierarchy
 		TermSubtreeIterator iterator = new TermSubtreeIterator( child, sourceHierarchy );
@@ -412,7 +419,8 @@ public class TermClipboard {
 			Term subtreeParent = subtreeTerm.getParent( sourceHierarchy );
 
 			// link the subtree parent and the child the new hierarchy
-			pasteNode ( subtreeParent, subtreeTerm, hierarchy );
+			pasteNode ( subtreeParent, subtreeTerm, hierarchy, 
+					subtreeTerm.isReportable( hierarchy ) );
 		}
 	}
 	

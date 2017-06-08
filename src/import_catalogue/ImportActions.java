@@ -92,7 +92,9 @@ public class ImportActions {
 		// create a thread for the excel import
 		ImportThread importThread = new ImportThread( dbPath, filename );
 
-		importThread.setLocal( localCat );
+		// if local catalogue
+		if ( localCat != null )
+			importThread.setLocal( localCat );
 		
 		// set the progress bar if needed
 		if ( progressBar != null )

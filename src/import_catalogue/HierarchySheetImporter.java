@@ -16,7 +16,8 @@ import excel_file_management.ResultDataSet;
 public class HierarchySheetImporter extends SheetImporter<Hierarchy> {
 
 	private Catalogue catalogue;
-
+	private String masterCode;
+	
 	/**
 	 * Initialize the import of the hierarchy sheet
 	 * @param catalogue the catalogue which contains the hierarchies
@@ -27,6 +28,15 @@ public class HierarchySheetImporter extends SheetImporter<Hierarchy> {
 		this.catalogue = catalogue;
 	}
 
+	/**
+	 * Set the master hierarchy code (which is the
+	 * catalogue code).
+	 * @param masterCode
+	 */
+	public void setMasterCode( String masterCode ) {
+		this.masterCode = masterCode;
+	}
+	
 	@Override
 	public Hierarchy getByResultSet(ResultDataSet rs) {
 		
@@ -37,12 +47,12 @@ public class HierarchySheetImporter extends SheetImporter<Hierarchy> {
 		if ( code.isEmpty() )
 			return null;
 
-		boolean isMaster = code.equals( catalogue.getCode() );
+		boolean isMaster = code.equals( masterCode );
 
 		HierarchyBuilder builder = new HierarchyBuilder();
 
 		builder.setCatalogue( catalogue );
-
+		
 		// for local catalogues the master
 		// should have the same name of the
 		// local catalogue

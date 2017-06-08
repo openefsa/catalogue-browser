@@ -17,6 +17,12 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 	
 	// the new catalogue
 	private Catalogue catalogue;
+	private Catalogue localCatalogue;
+	
+	// true if we are importing a local catalogue
+	private boolean local;
+	
+	private String excelCatCode;
 	
 	/**
 	 * Initialize the catalogue sheet importer
@@ -25,6 +31,16 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 	 */
 	public CatalogueSheetImporter( String dbPath, ResultDataSet data ) {
 		super(data);
+	}
+	
+	/**
+	 * Pass the local catalogue if we are importing an excel
+	 * file in it.
+	 * @param catalogue
+	 */
+	public void setLocalCatalogue ( Catalogue localCatalogue ) {
+		this.localCatalogue = localCatalogue;
+		this.local = true;
 	}
 
 	@Override
@@ -39,6 +55,14 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 			e.printStackTrace();
 		}
 
+		// save the excel code in global variable
+		excelCatCode = catalogue.getCode();
+		
+		// if local return the local catalogue
+		if ( local )
+			return localCatalogue;
+		
+		// else the excel catalogue
 		return catalogue;
 	}
 
@@ -49,38 +73,38 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 
 	@Override
 	public void insert(Collection<Catalogue> data) {
-
+		
 		if ( data.isEmpty() )
 			return;
 
 		// get the catalogue and save it as global variable
 		Iterator<Catalogue> iter = data.iterator();
 		catalogue = iter.next();
-		
+		System.out.println ( " is local " + local + " local cat " + localCatalogue );
+		System.out.println ( " db path " + dbPath + " catalogue " + catalogue );
+		System.out.println ( " db path cat " + catalogue.getDbFullPath() );
 		// if anything was found => create a new catalogue
 		// as default we create the catalogue using the official folder 
 		// and the catalogue code and version
 		// obtained from the excel sheet
-		if ( dbPath == null )
-			dbPath = catalogue.buildDBFullPath( DatabaseManager.OFFICIAL_CAT_DB_FOLDER + 
-					System.getProperty("file.separator") + "CAT_" + catalogue.getCode() + "_DB" );
+		if ( dbPath == null && !local )
+			dbPath = catalogue.buildDBFullPath( DatabaseManager.OFFICIAL_CAT_DB_FOLDER +
+					"CAT_" + catalogue.getCode() + "_DB" );
 
 		// update the db path of the catalogue
-		catalogue.setDbFullPath( dbPath );
+		if ( !local )
+			catalogue.setDbFullPath( dbPath );
 
 		// try to connect to the database. If it is not present we have an exception and thus we
 		// create the database starting from scrach
 		try {
-
+			
 			Connection con = catalogue.getConnection();
 			con.close();
-
+			
 			// if no exception was thrown => the database exists and we have to delete it
-
 			// delete the content of the old catalogue database
-			System.out.println( "Deleting the database located in " + dbPath );
-
-			//updateProgressBar( 10, Messages.getString("ImportExcelXLSX.DeleteDBLabel") );
+			System.out.println( "Deleting the database located in " + catalogue.getDbFullPath() );
 
 			CatalogueDAO catDao = new CatalogueDAO();
 			catDao.deleteDBRecords ( catalogue );
@@ -95,8 +119,7 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 
 			// otherwise the database does not exist => we create it
 
-			System.out.println ( "Add " + catalogue.getLabel() + " - " + catalogue.getVersion() +
-					" data to the CATALOGUE table");
+			System.out.println ( "Add " + catalogue + " to the catalogue table");
 
 			CatalogueDAO catDao = new CatalogueDAO();
 
@@ -119,5 +142,14 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 	 */
 	public Catalogue getImportedCatalogue() {
 		return catalogue;
+	}
+	
+	/**
+	 * Get the catalogue code contained into
+	 * the catalogue sheet
+	 * @return
+	 */
+	public String getExcelCode() {
+		return excelCatCode;
 	}
 }

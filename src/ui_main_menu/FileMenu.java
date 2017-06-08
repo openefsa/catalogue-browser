@@ -330,12 +330,15 @@ public class FileMenu implements MainMenuItem {
 						}
 						else {  
 							
-							// if we are not logged in, simply warn the user that we cannot
-							// be sure that this is the last release
-							MessageBox mb = new MessageBox( shell, SWT.ICON_INFORMATION );
-							mb.setText( Messages.getString("BrowserMenu.CatalogueReleaseInfoTitle") );
-							mb.setMessage( Messages.getString("BrowserMenu.CatalogueReleaseInfoMessage") );
-							mb.open();
+							// only for official catalogues
+							if ( !selectedCat.isLocal() ) {
+								// if we are not logged in, simply warn the user that we cannot
+								// be sure that this is the last release
+								MessageBox mb = new MessageBox( shell, SWT.ICON_INFORMATION );
+								mb.setText( Messages.getString("BrowserMenu.CatalogueReleaseInfoTitle") );
+								mb.setMessage( Messages.getString("BrowserMenu.CatalogueReleaseInfoMessage") );
+								mb.open();
+							}
 						}
 						
 						// open the catalogue when the dialog is closed

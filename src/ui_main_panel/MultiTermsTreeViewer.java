@@ -574,7 +574,9 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 			switch ( location ) {
 
 				// dropped before the target
-			case 1:
+			case ViewerDropAdapter.LOCATION_BEFORE:
+				
+				System.out.println( "Drop before " + target );
 				
 				for ( Term source : getSelectedTerms() ) {
 					// move the source term before the target term
@@ -584,7 +586,9 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 				break;
 
 				// dropped after the target
-			case 2:
+			case ViewerDropAdapter.LOCATION_AFTER:
+				
+				System.out.println( "Drop after " + target );
 				
 				ArrayList<Term> selectedTerms = getSelectedTerms();
 				
@@ -597,7 +601,7 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 				break;
 
 				// dropped on the target
-			case 3:
+			case ViewerDropAdapter.LOCATION_ON:
 				// we use the term clipboard since this action is the same as
 				// a cut paste branch action
 
@@ -611,7 +615,7 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 				break;
 
 				// dropped into nothing
-			case 4:
+			case ViewerDropAdapter.LOCATION_NONE:
 				break;
 			}
 			

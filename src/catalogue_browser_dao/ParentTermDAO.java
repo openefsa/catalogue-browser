@@ -562,7 +562,8 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 		
 		Connection con;
 		
-		String query = "update APP.PARENT_TERM P set P.TERM_ORDER = P.TERM_ORDER + ? where P.TERM_ID = ? and P.HIERARCHY_ID = ?";
+		String query = "update APP.PARENT_TERM P set P.TERM_ORDER = P.TERM_ORDER + ? "
+				+ "where P.TERM_ID = ? and P.HIERARCHY_ID = ?";
 		
 		try {
 			
@@ -690,7 +691,8 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 		
 		Connection con;
 		
-		String query = "update APP.PARENT_TERM P set P.TERM_ORDER = ? where P.TERM_ID = ? and P.HIERARCHY_ID = ?";
+		String query = "update APP.PARENT_TERM P set P.TERM_ORDER = ? "
+				+ "where P.TERM_ID = ? and P.HIERARCHY_ID = ?";
 		
 		try {
 			
