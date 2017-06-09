@@ -267,7 +267,7 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 		
 		return false;
 	}
-
+	
 	/**
 	 * Get an applicability from the result set, we need term id,
 	 * hierarchy id and parent term id. Then we need also term order and term

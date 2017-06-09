@@ -1555,93 +1555,148 @@ public class Term extends CatalogueObject implements Mappable {
 		
 		return siblings;
 	}
-	
-	/**
-	 * Move a term before another one in the hierarchy order (also among different tree levels)
-	 * @param target
-	 * @param hierarchy
-	 */
-	public void moveBefore ( Term target, Hierarchy hierarchy ) {
-		moveNear( target, hierarchy, true );
-	}
-	
-	/**
-	 * Move a term after another one in the hierarchy order (also among different tree levels)
-	 * @param target
-	 * @param hierarchy
-	 */
-	public void moveAfter ( Term target, Hierarchy hierarchy ) {
-		moveNear( target, hierarchy, false );
-	}
-	
-	
-	/**
-	 * Move the term above or below the target in the selected hierarchy
-	 * @param target
-	 * @param hierarchy
-	 * @param before
-	 */
-	private void moveNear( Term target, Hierarchy hierarchy, boolean before ) {
 
+	public enum Position {
+		BEFORE,
+		AFTER
+	}
+	
+	/**
+	 * Move the term before or after the target depending on
+	 * the position {@code pos}
+	 * @param target the target of the movement
+	 * @param hierarchy the hierarchy in which we move the term
+	 * @param pos before or after the target
+	 */
+	public void move ( Term target, Hierarchy hierarchy, Position pos ) {
 		
-		System.out.println( "order before " + this.getOrder( hierarchy ) );
-		
+		Nameable parent = target.getParent( hierarchy );
+
 		// cannot move parent under its children
-		if ( target.hasAncestor( this, hierarchy ) )
+		if ( target.hasAncestor( this, hierarchy ) ) {
+			System.err.println( "Cannot move parent as child of its children" );
 			return;
-		
-		// if before we shift the below siblings by 1
-		// if after we shift the above siblings by -1
-		// this action is used to free a space between terms
-		int offset = before ? 1 : -1;
-		boolean reportable = this.isReportable( hierarchy );
-
-		System.out.println( "offset " + offset );
-		
-		// remove the applicability of the term related to this hierarchy (we need to 
-		// change it, so we remove it and then we will re add it )
-		this.removeApplicability( this.getApplicability(hierarchy), true );
+		}
 
 		// save the target order
 		int targetOrder = target.getOrder( hierarchy );
+		int thisOrder = this.getOrder( hierarchy );
+		int offset = 1;
 
-		// get the siblings of the target which have an order integer greater than
-		// the target order integer and shift them by 1
-		ArrayList<Term> termsToShift = target.getSiblings( hierarchy, before );
+		// get siblings below target
+		ArrayList<Term> termsToShift = target.getSiblings( hierarchy, true );
+		
+		// move also target down if moving before it
+		if ( pos == Position.BEFORE ) {
+			termsToShift.add( target );
+			
+			// replace target place
+			thisOrder = targetOrder;
+		}
+		else  // place after target
+			thisOrder = targetOrder + 1;
+		
+		ArrayList<Term> sourceSib = this.getSiblings( hierarchy );
 
-		// shift also the target term
-		termsToShift.add( target );
+		// rearrange the siblings order since we remove the source
+		this.normalizeLevel( sourceSib, hierarchy );
+		
+		Applicability thisAppl = this.getApplicability( hierarchy );
+		
+		// remove the applicability of the term related to this hierarchy (we need to 
+		// change it, so we remove it and then we will re add it )
+		this.removeApplicability( thisAppl, true );
+		
+		TermDAO termDao = new TermDAO( catalogue );
+		// update also sources in RAM memory
+		for ( Term t : termsToShift ) {
 
+			// set the new order
+			t.setOrder( hierarchy, t.getOrder( hierarchy ) + offset );
+
+			// update the term in ram
+			termDao.update( t );
+		}
+
+		thisAppl.setOrder( thisOrder );
+		thisAppl.setParentTerm( parent );
+		
+		// add the applicability to the term (permanent)
+		this.addApplicability( thisAppl, true );
+		
 		ParentTermDAO parentDao = new ParentTermDAO( catalogue );
 		
 		// shift all the siblings of the target term by 1 in the selected hierarchy
 		parentDao.shiftTerms( termsToShift, hierarchy, offset );
-
-		TermDAO termDao = new TermDAO( catalogue );
 		
-		// update also sources in RAM memory
-		for ( Term sibling : termsToShift ) {
-
-			// set the new order
-			sibling.setOrder( hierarchy, sibling.getOrder( hierarchy ) + offset );
-
-			// update the term in ram
-			termDao.update( sibling );
-		}
-
-		// set the new order and the new parent for this term
-		Applicability appl = new Applicability( this, target.getParent(hierarchy), 
-				hierarchy, targetOrder, reportable );
-		
-		// add the applicability to the term (permanent)
-		this.addApplicability( appl, true );
-		
-		System.out.println( "order after " + this.getOrder( hierarchy ) );
 		// update the term in RAM
 		termDao.update( this );
-
+		
+		// normalize target siblings and target
+		// since we have added the source
+		ArrayList<Term> targetSib = target.getSiblings( hierarchy );
+		targetSib.add( target );
+		
+		// normalize the target siblings now that the
+		// source is a target sibling (orders are changed)
+		target.normalizeLevel( targetSib, hierarchy );
 	}
 	
+	/**
+	 * Normalize order of term siblings and term itself
+	 * @param hierarchy
+	 * @return
+	 */
+	public ArrayList<Term> normalizeLevel ( final Hierarchy hierarchy ) {
+		
+		ArrayList<Term> terms = this.getSiblings(hierarchy);
+		terms.add( this );
+		
+		return normalizeLevel ( terms, hierarchy );
+	}
+	
+	/**
+	 * Normalize the terms siblings order, that is, all the integer order holes
+	 * between siblings are filled replacing the terms orders with
+	 * increasing numbers (maintaining the same order!).
+	 * @param hierarchy the hierarchy in which the siblings are retrieved
+	 * @return the list of siblings with normalized order
+	 */
+	public ArrayList<Term> normalizeLevel ( ArrayList<Term> termsOnLevel, final Hierarchy hierarchy ) {
+
+		// sort terms by order
+		Collections.sort( termsOnLevel, new Comparator<Term>() {
+			public int compare(Term t1, Term t2) {
+				
+				int o1 = t1.getOrder( hierarchy );
+				int o2 = t2.getOrder( hierarchy );
+				
+				if ( o1 == o2 )
+					return 0;
+				
+				else if ( o1 < o2 )
+					return -1;
+				
+				return 1;
+			};
+		});
+		
+		// normalize order integer replacing orders
+		// with increasing numbers to cover all the
+		// orders holes
+		ParentTermDAO parentDao = new ParentTermDAO(catalogue);
+		for ( int i = 0; i < termsOnLevel.size(); i++ ) {
+			
+			// set order for siblings
+			termsOnLevel.get(i).setOrder( hierarchy, i );
+			
+			// update also in db
+			parentDao.updateTermOrder( termsOnLevel.get(i), hierarchy, i);
+		}
+		
+		return termsOnLevel;
+	}
+
 	/**
 	 * Get the nearest term above this in term of order
 	 * @param hierarchy

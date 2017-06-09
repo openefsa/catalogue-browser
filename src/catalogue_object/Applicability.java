@@ -37,6 +37,9 @@ public class Applicability {
 	public boolean isReportable() {
 		return reportable;
 	}
+	public void setParentTerm(Nameable parentTerm) {
+		this.parentTerm = parentTerm;
+	}
 	public void setReportable(boolean reportable) {
 		this.reportable = reportable;
 	}
@@ -79,7 +82,8 @@ public class Applicability {
 	
 	@Override
 	public String toString() {
-		return "[" + child + " child of " + parentTerm + " in " + hierarchy + "]";
+		return "APPLICABILITY : child=" + child + ";parent=" + parentTerm + ";hierarchy=" + hierarchy + 
+				";order=" + order + ";reportable=" + reportable;
 	}
 	
 }

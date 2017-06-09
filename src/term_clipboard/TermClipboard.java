@@ -290,8 +290,18 @@ public class TermClipboard {
 			return;
 		
 		// for each source we make a paste operation
-		for ( Term term : sources )
+		for ( Term term : sources ) {
 			pasteSingleSource ( term, destination, destinationHierarchy );
+			
+			// if cut operation normalize source level
+			// since we have moved the source
+			if ( clipOp == ClipboardOp.CUT_BRANCH )
+				term.normalizeLevel( destinationHierarchy );
+		}
+		
+		// normalize the destination level since
+		// we have modified it moving source to target
+		destination.normalizeLevel( destinationHierarchy );
 		
 		// reset operation
 		clipOp = ClipboardOp.WAIT;

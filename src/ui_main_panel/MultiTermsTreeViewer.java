@@ -34,6 +34,7 @@ import catalogue.Catalogue;
 import catalogue_object.Hierarchy;
 import catalogue_object.Nameable;
 import catalogue_object.Term;
+import catalogue_object.Term.Position;
 import global_manager.GlobalManager;
 import term.ContentProviderTerm;
 import term.LabelProviderTerm;
@@ -576,11 +577,10 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 				// dropped before the target
 			case ViewerDropAdapter.LOCATION_BEFORE:
 				
-				System.out.println( "Drop before " + target );
+				//System.out.println( "Drop before " + target );
 				
 				for ( Term source : getSelectedTerms() ) {
-					// move the source term before the target term
-					source.moveBefore( target, hierarchy );
+					source.move( target, hierarchy, Position.BEFORE );
 				}
 
 				break;
@@ -588,14 +588,16 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 				// dropped after the target
 			case ViewerDropAdapter.LOCATION_AFTER:
 				
-				System.out.println( "Drop after " + target );
+				//System.out.println( "Drop after " + target );
 				
 				ArrayList<Term> selectedTerms = getSelectedTerms();
 				
 				// move the terms after the target (invert selection to preserve
 				// the order of terms)
 				for ( int i = selectedTerms.size() - 1; i >= 0; i-- ) {
-					selectedTerms.get(i).moveAfter( target, hierarchy );
+					
+					Term source = selectedTerms.get(i);
+					source.move( target, hierarchy, Position.AFTER );
 				}
 
 				break;

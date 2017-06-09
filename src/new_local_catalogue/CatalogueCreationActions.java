@@ -41,9 +41,6 @@ public class CatalogueCreationActions {
 		// create the standard database structure for
 		// the new catalogue
 		catDao.createDBTables( newCatalogue.getDbFullPath() );
-		
-		// open the catalogue
-		newCatalogue.open();
 
 		CataloguePreferenceDAO prefDao = new CataloguePreferenceDAO( newCatalogue );
 		
