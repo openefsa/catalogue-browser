@@ -373,7 +373,7 @@ public class FileMenu implements MainMenuItem {
 				// ask the file to the user
 				String filename = GlobalUtil.showFileDialog( menu.getShell(), 
 						Messages.getString("BrowserMenu.ImportCatalogueCmd"), 
-						new String[] { "*.ecf" } );
+						new String[] { "*.ecf" }, SWT.OPEN );
 
 				if ( filename == null || filename.isEmpty() )
 					return;

@@ -118,7 +118,7 @@ public abstract class PendingAction {
 		setStatus( PendingReserveStatus.SENDING );
 		
 		Document log = getLog();
-		
+
 		// if no log in high priority => the available time is finished
 		if ( log == null && priority == Priority.HIGH ) {
 			
@@ -135,11 +135,16 @@ public abstract class PendingAction {
 			
 			// downgrade the pending reserve priority
 			downgradePriority();
-			
+			try {
+				Thread.sleep( 10000 );
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			// restart the process with low priority
 			log = getLog();
 		}
-		
+
 		// here the log was retrieved for sure
 		// since if it was LOW priority we have
 		// found the log, if it was HIGH priority

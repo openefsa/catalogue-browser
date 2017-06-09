@@ -437,7 +437,7 @@ public class ToolsMenu implements MainMenuItem {
 			public void widgetSelected ( SelectionEvent event ) {
 
 				final String filename = GlobalUtil.showExcelFileDialog( shell, 
-						Messages.getString("BrowserMenu.ImportWindowTitle") );
+						Messages.getString("BrowserMenu.ImportWindowTitle"), SWT.OPEN );
 				
 				// return if no filename retrieved
 				if ( filename == null || filename.isEmpty() )
@@ -509,8 +509,8 @@ public class ToolsMenu implements MainMenuItem {
 				+ mainMenu.getCatalogue().getVersion() + ".xlsx";
 				
 				final String filename = GlobalUtil.showExcelFileDialog( shell, 
-						Messages.getString( "Export.FileDialogTitle" ), 
-						defaultFilename );
+						Messages.getString( "Export.FileDialogTitle"), 
+						defaultFilename, SWT.SAVE  );
 
 				// return if no filename retrieved
 				if ( filename == null || filename.isEmpty() )

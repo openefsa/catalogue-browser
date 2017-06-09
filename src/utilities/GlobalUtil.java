@@ -411,8 +411,10 @@ public class GlobalUtil {
 	 * @param defaultFilename default filename which will appear in the dialog
 	 * @return
 	 */
-	public static String showExcelFileDialog ( Shell shell, String text, String defaultFilename ) {
-		return showFileDialog( shell, text, new String[] { " *.xlsx" }, defaultFilename );
+	public static String showExcelFileDialog ( Shell shell, String text, 
+			String defaultFilename, int buttonType ) {
+		return showFileDialog( shell, text, new String[] { " *.xlsx" }, 
+				defaultFilename, buttonType );
 	}
 	
 	/**
@@ -422,8 +424,8 @@ public class GlobalUtil {
 	 * @param text
 	 * @return
 	 */
-	public static String showExcelFileDialog ( Shell shell, String text ) {
-		return showFileDialog( shell, text, new String[] { " *.xlsx" } );
+	public static String showExcelFileDialog ( Shell shell, String text, int buttonType ) {
+		return showFileDialog( shell, text, new String[] { " *.xlsx" }, buttonType );
 	}
 	
 	/**
@@ -434,9 +436,10 @@ public class GlobalUtil {
 	 * @param defaultFilename the default file name for the dialog
 	 * @return
 	 */
-	public static String showFileDialog ( Shell shell, String text, String[] extensions, String defaultFilename ) {
+	public static String showFileDialog ( Shell shell, String text, 
+			String[] extensions, String defaultFilename, int buttonType ) {
 
-		FileDialog dialog = new FileDialog( shell, SWT.OPEN );
+		FileDialog dialog = new FileDialog( shell, buttonType );
 		
 		// set dialog text
 		dialog.setText( text );
@@ -459,8 +462,8 @@ public class GlobalUtil {
 	 * @param extensions
 	 * @return
 	 */
-	public static String showFileDialog ( Shell shell, String text, String[] extensions ) {
-		return showFileDialog( shell, text, extensions, "" );
+	public static String showFileDialog ( Shell shell, String text, String[] extensions, int buttonType ) {
+		return showFileDialog( shell, text, extensions, "", buttonType );
 	}
 	
 	
