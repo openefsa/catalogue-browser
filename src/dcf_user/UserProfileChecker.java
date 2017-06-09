@@ -2,6 +2,8 @@ package dcf_user;
 
 import java.util.ArrayList;
 
+import javax.xml.soap.SOAPException;
+
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
@@ -23,15 +25,25 @@ import import_catalogue.ImportActions;
  */
 
 public class UserProfileChecker extends Thread {
-	
+
 	private static final String EDITABLE_CATALOGUE_ATTRIBUTE_NAME = "editCat";
 	private Listener doneListener;
-	
+	private Listener errorListener;
+
 	@Override
 	public void run() {
 		setAccessLevel();
 	}
-	
+
+	/**
+	 * Listener called if no attachment is found for the
+	 * cat users catalogue
+	 * @param errorListener
+	 */
+	public void addErrorListener(Listener errorListener) {
+		this.errorListener = errorListener;
+	}
+
 	/**
 	 * listener called when the thread finished its work
 	 * @param doneListener
@@ -46,39 +58,48 @@ public class UserProfileChecker extends Thread {
 	 * @param doneListener
 	 */
 	public void setAccessLevel() {
-		
+
 		System.out.println( "Checking user access level..." );
-		
+
 		String filename = "catUsersCatalogue.xml";
-		
+
 		// ask for exporting catalogue to the dcf
 		// download the cat users catalogue to check 
 		// the access level of the user
 		Dcf dcf = new Dcf();
-		boolean success = dcf.exportCatalogue( 
-				Catalogue.getCatUsersCatalogue(), filename );
+		boolean success;
+		try {
+			success = dcf.exportCatalogue( 
+					Catalogue.getCatUsersCatalogue(), filename );
+		} catch (SOAPException e) {
+			
+			success = false;
+			
+			// call error listener if no catalogue is found
+			errorListener.handleEvent( null );
+		}
 
 		// if failed to download => return we are a data provider! we were not
 		// able to download this file
 		if ( !success ) {
-			
-			System.out.println ( "User access level: Data provider" );
-			
+
+			System.out.println ( "User access level: data provider" );
+
 			// set the current user as data provider
 			User user = User.getInstance();
 			user.setUserLevel( UserAccessLevel.DATA_PROVIDER );
-			
+
 			if ( doneListener != null )
 				doneListener.handleEvent( new Event() );
-			
+
 			return;
 		}
-		
+
 		// otherwise if we managed to download the file
 		// import the catalogue to see which catalogues
 		// we are able to edit as catalogue managers
 		ImportActions importAction = new ImportActions();
-		
+
 		// otherwise if catalogue manager check
 		// which catalogue we can edit
 		// import from xml the catusers catalogue
@@ -86,34 +107,34 @@ public class UserProfileChecker extends Thread {
 
 			@Override
 			public void handleEvent(Event arg0) {
-				
-				System.out.println ( "User access level: Catalogue manager" );
+
+				System.out.println ( "User access level: catalogue manager" );
 
 				User user = User.getInstance();
-				
+
 				// update the editable catalogues
 				// of the user based on its username
 				user.setEditableCat( getEditableCataloguesCodes() );
-				
+
 				// set the current user as catalogue manager
 				user.setUserLevel( UserAccessLevel.CATALOGUE_MANAGER );
-				
+
 				if ( doneListener != null )
 					doneListener.handleEvent( arg0 );
 			}
 		});
 	}
-	
-	
+
+
 	/**
 	 * Get all the editable catalogues codes
 	 * for the current catalogue manager user
 	 * @return
 	 */
 	private ArrayList<String> getEditableCataloguesCodes () {
-		
+
 		CatalogueDAO catDao = new CatalogueDAO();
-		
+
 		// get the users catalogue with all the correct information
 		// (we fetch it since using Catalogue.getCatUsersCatalogue
 		// we have only the catalogue code and version)
@@ -122,14 +143,14 @@ public class UserProfileChecker extends Thread {
 
 		// load the catalogue data into RAM
 		users.loadData();
-		
+
 		// get the attribute related to the access levels
 		TermAttribute editCatAttr = getEditCatAttribute( users );
 
 		// return all the catalogues codes in a list
 		return editCatAttr.getRepeatableValues();
 	}
-	
+
 	/**
 	 * Get the catalogue attribute related to 
 	 * the user access levels
@@ -140,18 +161,18 @@ public class UserProfileChecker extends Thread {
 	private TermAttribute getEditCatAttribute ( Catalogue catalogue ) {
 
 		TermAttribute editCat = null;
-		
+
 		TermDAO termDao = new TermDAO( catalogue );
-		
+
 		User user = User.getInstance();
-		
+
 		// get the term related to the current user
 		// using its username
 		Term userTerm = termDao.getByName( user.getUsername() );
 
 		// initialize term attribute dao
 		TermAttributeDAO taDao = new TermAttributeDAO( catalogue );
-		
+
 		// we get the term attributes related to the user
 		// because we want to discover which catalogues
 		// can be modified by this user
@@ -162,12 +183,12 @@ public class UserProfileChecker extends Thread {
 
 			// if the attribute is indeed the cat users attribute
 			if ( ta.getAttribute().getName().equals( EDITABLE_CATALOGUE_ATTRIBUTE_NAME ) ) {
-				
+
 				editCat = ta;
 				break;
 			}
 		}
-		
+
 		return editCat;
 	}
 }

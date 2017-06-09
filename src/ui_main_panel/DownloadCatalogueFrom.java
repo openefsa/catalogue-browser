@@ -1,5 +1,7 @@
 package ui_main_panel;
 
+import javax.xml.soap.SOAPException;
+
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
@@ -11,6 +13,7 @@ import dcf_manager.Dcf;
 import import_catalogue.ImportActions;
 import messages.Messages;
 import ui_progress_bar.FormProgressBar;
+import utilities.GlobalUtil;
 
 /**
  * Class to manage the download action of a catalogue
@@ -19,6 +22,7 @@ import ui_progress_bar.FormProgressBar;
  */
 public class DownloadCatalogueFrom {
 
+	private Shell shell;
 	private Listener doneListener;
 	private FormProgressBar progressBar;
 
@@ -47,6 +51,8 @@ public class DownloadCatalogueFrom {
 	 */
 	public void display ( final Shell shell ) throws DOMException, Exception {
 
+		this.shell = shell;
+		
 		// Open the catalogue form to visualize the available catalogues and to select
 		// which one has to be downloaded
 		FormCataloguesList catalogueForm = new FormCataloguesList ( shell, 
@@ -72,7 +78,21 @@ public class DownloadCatalogueFrom {
 						// get the selected catalogue from the form
 						final Catalogue selectedCat = (Catalogue) event.data;
 
-						downloadCatalogue( selectedCat );
+						if ( !downloadCatalogue( selectedCat ) ) {
+							
+							shell.getDisplay().asyncExec( new Runnable() {
+								
+								@Override
+								public void run() {
+									if ( progressBar != null )
+										progressBar.close();
+									
+									GlobalUtil.showErrorDialog(shell, 
+											Messages.getString("ExportCatalogue.ErrorTitle"), 
+											Messages.getString("ExportCatalogue.ErrorMessage"));
+								}
+							});
+						}
 					}
 				} ).start();
 
@@ -89,7 +109,7 @@ public class DownloadCatalogueFrom {
 	 * it will be converted into xlsx format to be imported
 	 * @param catalogue
 	 */
-	private void downloadCatalogue ( final Catalogue catalogue ) {
+	private boolean downloadCatalogue ( final Catalogue catalogue ) {
 
 		// Download the catalogue data
 
@@ -108,12 +128,13 @@ public class DownloadCatalogueFrom {
 		// ask for exporting catalogue to the dcf
 		// export the catalogue and save its attachment into an xml file
 		Dcf dcf = new Dcf();
-		boolean success = dcf.exportCatalogue( catalogue, 
-				catalogueXmlFilename);
 
-		if ( !success ) {
-			System.err.println ( "Unable to download " + catalogue );
-			return;
+		try {
+			dcf.exportCatalogue( catalogue, 
+					catalogueXmlFilename);
+		} catch (SOAPException e) {
+			e.printStackTrace();
+			return false;
 		}
 		
 		ImportActions importAction = new ImportActions();
@@ -137,5 +158,7 @@ public class DownloadCatalogueFrom {
 				doneListener.handleEvent( event );
 			}
 		} );
+		
+		return true;
 	}
 }

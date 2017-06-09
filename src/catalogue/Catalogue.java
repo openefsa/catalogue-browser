@@ -307,9 +307,11 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		// remove current catalogue
 		GlobalManager manager = GlobalManager.getInstance();
 
+		Catalogue current = manager.getCurrentCatalogue();
+		
 		// if the current catalogue is the one we are
 		// closing => set the current catalogue as null
-		if ( manager.getCurrentCatalogue().sameAs( this ) )
+		if ( current != null && current.sameAs( this ) )
 			manager.setCurrentCatalogue( null );
 	}
 	

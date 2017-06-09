@@ -369,8 +369,10 @@ public class GlobalUtil {
 			if ( files == null )
 				return;
 			
-			for ( File file : files )
+			for ( File file : files ) {
+				file.setWritable( true );
 				deleteFileCascade( file );
+			}
 		}
 
 		// delete the directory

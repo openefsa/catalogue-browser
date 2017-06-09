@@ -229,9 +229,6 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 
 		try {
 
-			// delete the catalogue database
-			DatabaseManager.deleteDb( catalogue );
-
 			// remove dependencies first
 			ForceCatEditDAO forcedDao = new ForceCatEditDAO();
 			forcedDao.remove ( catalogue );

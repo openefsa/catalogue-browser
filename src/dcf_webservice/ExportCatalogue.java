@@ -49,17 +49,12 @@ public class ExportCatalogue extends SOAPAction {
 	 * Export the catalogue, return true if the procedure was successful
 	 * @return
 	 */
-	public boolean exportCatalogue() {
-		try {
-			String url = getType() == DcfType.PRODUCTION ? URL : TEST_URL;
-			makeRequest( url );
-		} catch (SOAPException e) {
-			e.printStackTrace();
-		}
-		
+	public boolean exportCatalogue() throws SOAPException {
+		String url = getType() == DcfType.PRODUCTION ? URL : TEST_URL;
+		makeRequest( url );
 		return GlobalUtil.fileExists( filename );
 	}
-	
+
 	@Override
 	public SOAPMessage createRequest(SOAPConnection con) throws SOAPException {
 		/*
@@ -105,10 +100,9 @@ public class ExportCatalogue extends SOAPAction {
 		// get the response attachment
 		AttachmentPart attachment = getFirstAttachment( soapResponse );
 		
-		if ( attachment == null ) {
-			System.err.println( "ExportCatalogueFile: Attachment not found for " + catalogue );
-			return null;
-		}
+		// if no attachment => error
+		if ( attachment == null )
+			throw new SOAPException( "ExportCatalogueFile: Attachment not found for " + catalogue );
 		
 		// write the attachment to the file
 		try {

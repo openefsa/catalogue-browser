@@ -8,6 +8,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import javax.xml.soap.SOAPException;
+
 import org.eclipse.swt.widgets.Listener;
 import org.w3c.dom.Document;
 
@@ -266,7 +268,7 @@ public class Dcf {
 	 * @param doneListener {@link Listener } called when
 	 * the thread has finished its work.
 	 */
-	public void setUserLevel( Listener doneListener ) {
+	public void setUserLevel( Listener doneListener, Listener errorListener ) {
 		
 		// set the access level of the user
 		final UserProfileChecker userLevel = new UserProfileChecker();
@@ -316,8 +318,9 @@ public class Dcf {
 	 * @param catalogue the catalogue we want to download
 	 * @param filename the xml filename
 	 * @return true if the export was successful
+	 * @throws SOAPException 
 	 */
-	public boolean exportCatalogue( Catalogue catalogue, String filename ) {
+	public boolean exportCatalogue( Catalogue catalogue, String filename ) throws SOAPException {
 		
 		// export the catalogue and save its attachment into an xml file
 		ExportCatalogue export = new ExportCatalogue ( type, catalogue, filename );

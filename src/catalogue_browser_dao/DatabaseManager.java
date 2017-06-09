@@ -305,6 +305,11 @@ public class DatabaseManager {
 	 */
 	public static void deleteDb ( Catalogue catalogue ) throws IOException {
 		
+		System.gc();
+		
+		// close all the catalogue connections
+		catalogue.close();
+		
 		// delete the DB with all the subfiles
 		GlobalUtil.deleteFileCascade ( new File( catalogue.getDbFullPath() ) );
 

@@ -148,7 +148,7 @@ public class MainPanel implements Observer, RestoreableWindow {
 	 * update and layout
 	 */
 	public void refresh () {
-		System.out.println( "Refreshing ssss" );
+		
 		// redraw menus in the ui thread ( we use async exec since
 		// this method is potentially called by threads not in the UI )
 		Display.getDefault().asyncExec( new Runnable() {

@@ -1,5 +1,6 @@
 package ui_main_menu;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -16,6 +17,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
+import catalogue_browser_dao.DatabaseManager;
 import dcf_manager.Dcf;
 import dcf_user.User;
 import import_catalogue.ImportActions;
@@ -507,7 +509,15 @@ public class FileMenu implements MainMenuItem {
 							}
 							
 							System.out.println ( "Deleting catalogue " + catalogue.getCode() );
-							catDao.delete( catalogue );
+							
+							// delete the catalogue database
+							try {
+								DatabaseManager.deleteDb( catalogue );
+								catDao.delete( catalogue );
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+
 						}
 						
 						if ( problems ) {

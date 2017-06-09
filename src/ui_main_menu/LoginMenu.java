@@ -19,6 +19,7 @@ import ui_main_panel.FormDCFLogin;
 import ui_main_panel.FormDCFLogin.CredentialListener;
 import ui_main_panel.UpdateableUI;
 import ui_progress_bar.FormProgressBar;
+import utilities.GlobalUtil;
 
 public class LoginMenu implements MainMenuItem {
 
@@ -123,6 +124,15 @@ public class LoginMenu implements MainMenuItem {
 											listener.buttonPressed( loginMI, LOGIN_MI, null );
 									}
 								});
+							}
+						}, new Listener() {
+							
+							@Override
+							public void handleEvent(Event arg0) {
+
+								GlobalUtil.showErrorDialog(shell, 
+										Messages.getString("ExportCatalogue.ErrorTitle"), 
+										Messages.getString("ExportCatUsers.ErrorMessage"));
 							}
 						} );
 					}
