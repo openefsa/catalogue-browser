@@ -3,6 +3,8 @@ package ui_main_menu;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
@@ -11,12 +13,14 @@ import messages.Messages;
 import term_code_generator.CodeGenerator;
 import ui_licence.FormBrowser;
 import ui_licence.Startup;
+import ui_main_panel.FormReleaseNotes;
 
 public class AboutMenu implements MainMenuItem {
-
-	private MainMenu mainMenu;
+	
 	private Shell shell;
+	private MainMenu mainMenu;
 	private MenuItem aboutItem;
+	private MenuItem notesItem;
 	
 	public AboutMenu( MainMenu mainMenu, Menu menu ) {
 		this.mainMenu = mainMenu;
@@ -39,6 +43,15 @@ public class AboutMenu implements MainMenuItem {
 		
 		addDerbyLicenceMI ( helpMenu );
 		addFoodexLicenceMI ( helpMenu );
+		notesItem = addNotesMI( helpMenu );
+		
+		helpMenu.addListener( SWT.Show, new Listener() {
+			
+			@Override
+			public void handleEvent(Event arg0) {
+				refresh();
+			}
+		});
 		
 		return helpItem;
 	}
@@ -68,8 +81,7 @@ public class AboutMenu implements MainMenuItem {
 		} );
 	}
 	
-	
-	
+
 	/**
 	 * Add a menu item which allows seeing the licence of the foodex browser
 	 * @param menu
@@ -88,7 +100,32 @@ public class AboutMenu implements MainMenuItem {
 			}
 		} );
 	}
+	
+	/**
+	 * Add the release notes menu item
+	 * @param menu
+	 */
+	private MenuItem addNotesMI ( Menu menu ) {
+		
+		MenuItem notesItem = new MenuItem( menu, SWT.NONE );
+		
+		notesItem.setText( Messages.getString("BrowserMenu.ViewReleaseNotes") );
+
+		notesItem.addSelectionListener( new SelectionAdapter() {
+			@Override
+			public void widgetSelected ( SelectionEvent e ) {
+				FormReleaseNotes notes = new FormReleaseNotes( mainMenu.getCatalogue(), 
+						shell );
+				notes.display();
+			}
+		} );
+		
+		return notesItem;
+	}
 
 	@Override
-	public void refresh() {}
+	public void refresh() {
+		boolean catalogueLoaded = mainMenu.getCatalogue() != null;
+		notesItem.setEnabled( catalogueLoaded );
+	}
 }

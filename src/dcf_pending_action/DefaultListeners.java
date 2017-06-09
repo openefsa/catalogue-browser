@@ -489,6 +489,6 @@ public class DefaultListeners {
 		// show the dialog
 		if ( show )
 			GlobalUtil.showDialog( shell, title, msg,
-					SWT.ICON_INFORMATION );
+					SWT.ICON_ERROR );
 	}
 }
