@@ -12,7 +12,6 @@ import org.eclipse.swt.widgets.Label;
 import messages.Messages;
 import user_preferences.Preference;
 import user_preferences.PreferenceNotFoundException;
-import user_preferences.UIPreference;
 import user_preferences.UIPreferenceDAO;
 
 /**
@@ -28,9 +27,11 @@ public class TermFilter extends Observable {
 	private Composite parent;
 	private Button hideDeprecated;
 	private Button hideNotInUse;
+	private Button hideTermCode;
 	
 	private String deprCode;
 	private String reprCode;
+	private String termCode;
 	
 	/**
 	 * Initialize the term filter
@@ -47,10 +48,11 @@ public class TermFilter extends Observable {
 	 * @param reprCode the code of the preference related to 
 	 * hide not reportable terms
 	 */
-	public void display ( String deprCode, String reprCode ) {
+	public void display ( String deprCode, String reprCode, String termCode ) {
 		
 		this.deprCode = deprCode;
 		this.reprCode = reprCode;
+		this.termCode = termCode;
 		
 		// label which says to choose view options
 		Label applicabilityTitle = new Label( parent , SWT.NONE );
@@ -97,6 +99,24 @@ public class TermFilter extends Observable {
 			}
 		} );
 		
+		hideTermCode = new Button( parent, SWT.CHECK );
+		hideTermCode.setEnabled( false );
+		hideTermCode.setText( Messages.getString("Browser.HideTermCodesButton") );
+
+		hideTermCode.addSelectionListener( new SelectionAdapter() {
+			@Override
+			public void widgetSelected ( SelectionEvent e ) {
+				
+				try {
+					saveStatus();
+				} catch (PreferenceNotFoundException e1) {
+					e1.printStackTrace();
+				}
+				
+				setChanged();
+				notifyObservers();
+			}
+		} );
 		// set the status of the checkboxes
 		// using the last used.
 		//restoreStatus();
@@ -122,8 +142,12 @@ public class TermFilter extends Observable {
 		boolean hideNotRepr = prefDao.getPreferenceBoolValue( 
 				reprCode, false );
 		
+		boolean hideCode = prefDao.getPreferenceBoolValue( 
+				termCode, false );
+		
 		hideDeprecated.setSelection( hideDepr );
 		hideNotInUse.setSelection( hideNotRepr );
+		hideTermCode.setSelection( hideCode );
 		
 		// notify that it is changed
 		setChanged();
@@ -166,6 +190,7 @@ public class TermFilter extends Observable {
 	public void setEnabled( boolean enabled ) {
 		hideDeprecated.setEnabled( enabled );
 		hideNotInUse.setEnabled( enabled );
+		hideTermCode.setEnabled( enabled );
 	}
 	
 	/**
@@ -182,5 +207,13 @@ public class TermFilter extends Observable {
 	 */
 	public boolean isHidingNotReportable() {
 		return hideNotInUse.getSelection();
+	}
+	
+	/**
+	 * Get if we are hiding terms codes
+	 * @return
+	 */
+	public boolean isHidingTermCode() {
+		return hideTermCode.getSelection();
 	}
 }

@@ -250,11 +250,12 @@ public class FormSelectTerm implements Observer, RestoreableWindow {
 		
 		// add the filters to the tree viewer
 		Composite filterComp = new Composite( dialog, SWT.NONE );
-		filterComp.setLayout( new GridLayout( 3, false ) );
+		filterComp.setLayout( new GridLayout( 4, false ) );
 		
 		TermFilter termFilter = new TermFilter( filterComp );
 		termFilter.display( UIPreference.hideDeprDescribe, 
-				UIPreference.hideNotReprDescribe );
+				UIPreference.hideNotReprDescribe,
+				UIPreference.hideTermCodeDescribe );
 		termFilter.setEnabled( true );
 		
 		// open tree viewer with multi selection enabled if required

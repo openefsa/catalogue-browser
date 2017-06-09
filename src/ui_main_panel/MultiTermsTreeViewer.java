@@ -466,10 +466,13 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 			
 			boolean hideDeprecated = ( (TermFilter) arg0 ).isHidingDeprecated();
 			boolean hideNotInUse = ( (TermFilter) arg0 ).isHidingNotReportable();
+			boolean hideTermCode = ( (TermFilter) arg0 ).isHidingTermCode();
 			
 			// update content provider settings
 			contentProvider.setHideDeprecated( hideDeprecated );
 			contentProvider.setHideNotUse( hideNotInUse );
+			
+			labelProvider.setHideCode( hideTermCode );
 			
 			// refresh contents
 			tree.refresh();

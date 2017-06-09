@@ -15,20 +15,22 @@ public class UIPreferenceDAO extends PreferenceDAO {
 		// first we remove all the preferences (avoid errors of duplicated keys)
 		removeAll();
 
-		// create the min search char preference
 		insert( new UIPreference( UIPreference.hideDeprMain, 
 				PreferenceType.BOOLEAN, false ) );
-		
-		// create the min search char preference
+
 		insert( new UIPreference( UIPreference.hideNotReprMain, 
 				PreferenceType.BOOLEAN, false ) );
-		
-		// create the min search char preference
+
+		insert( new UIPreference( UIPreference.hideTermCodeMain, 
+				PreferenceType.BOOLEAN, false ) );
+
 		insert( new UIPreference( UIPreference.hideDeprDescribe, 
 				PreferenceType.BOOLEAN, false ) );
-		
-		// create the min search char preference
+
 		insert( new UIPreference( UIPreference.hideNotReprDescribe, 
+				PreferenceType.BOOLEAN, false ) );
+
+		insert( new UIPreference( UIPreference.hideTermCodeDescribe, 
 				PreferenceType.BOOLEAN, false ) );
 	}
 	

@@ -9,7 +9,6 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
-import catalogue.Catalogue;
 import catalogue_object.GlobalTerm;
 import catalogue_object.Hierarchy;
 import catalogue_object.Nameable;
@@ -36,7 +35,17 @@ public class LabelProviderTerm extends LabelProvider implements IFontProvider {
 
 	// currently selected hierarchy
 	private Hierarchy currentHierarchy;
-
+	private boolean hideCode = false;
+	
+	/**
+	 * Set if we want to hide the term code
+	 * in the visualization
+	 * @param hide
+	 */
+	public void setHideCode( boolean hideCode ) {
+		this.hideCode = hideCode;
+	}
+	
 	/**
 	 * Inizialize the label provider and make it aware of the
 	 * catalogue we are working with
@@ -174,6 +183,10 @@ public class LabelProviderTerm extends LabelProvider implements IFontProvider {
 			// flag for dismissed and not reportable terms
 			String flag = "";
 			
+			// if not hiding code, add it to flag
+			if ( !hideCode )
+				flag = flag + "[" + t.getCode() + "]";
+			
 			// if deprecated add the deprecated flag
 			if ( t.isDeprecated() )
 				flag = flag + Messages.getString("LabelProviderTerm.DeprecatedFlag");
@@ -181,9 +194,9 @@ public class LabelProviderTerm extends LabelProvider implements IFontProvider {
 			// if non reportable add the non reportable flag
 			if ( !t.isReportable( currentHierarchy ) )
 				flag = flag + Messages.getString("LabelProviderTerm.NotReportableFlag");
-			
-			// term name + term code + term flag
-			text = t.getShortName() + " [" + t.getCode() + "]" + flag;
+
+			// term name + term flag
+			text = t.getShortName() + " " + flag;
 			
 		} 
 		else if ( term instanceof Nameable ) {

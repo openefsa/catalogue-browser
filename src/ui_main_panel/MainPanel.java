@@ -614,7 +614,8 @@ public class MainPanel implements Observer, RestoreableWindow {
 		// based on their state (deprecated, not reportable)
 		termFilter = new TermFilter( selectionGroup );
 		termFilter.display( UIPreference.hideDeprMain, 
-				UIPreference.hideNotReprMain );
+				UIPreference.hideNotReprMain, 
+				UIPreference.hideTermCodeMain );
 	}
 
 	/**
