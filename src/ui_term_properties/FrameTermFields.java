@@ -31,6 +31,7 @@ import detail_level.ContentProviderDetailLevel;
 import detail_level.DetailLevelGraphics;
 import detail_level.LabelProviderDetailLevel;
 import messages.Messages;
+import sheet_converter.SpecialValues;
 import term_type.ContentProviderTermType;
 import term_type.LabelProviderTermType;
 import term_type.TermType;
@@ -394,7 +395,7 @@ public class FrameTermFields {
 				if ( term.getTermType() == null ) {
 
 					AttributeDAO attrDao = new AttributeDAO( term.getCatalogue() );
-					Attribute attribute = attrDao.getByName( Attribute.typeName );
+					Attribute attribute = attrDao.getByName( SpecialValues.TERM_TYPE_NAME );
 					TermAttribute termType = new TermAttribute ( term, attribute, tt.getCode() );
 					
 					term.setTermType( termType );
@@ -462,7 +463,7 @@ public class FrameTermFields {
 				if ( term.getDetailLevel() == null ) {
 
 					AttributeDAO attrDao = new AttributeDAO( term.getCatalogue() );
-					Attribute attribute = attrDao.getByName( Attribute.detailName );
+					Attribute attribute = attrDao.getByName( SpecialValues.DETAIL_LEVEL_NAME );
 					TermAttribute detailLevel = new TermAttribute ( term, attribute, dlg.getCode() );
 					
 					term.setDetailLevel( detailLevel );

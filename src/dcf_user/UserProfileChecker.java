@@ -1,4 +1,4 @@
-package dcf_manager;
+package dcf_user;
 
 import java.util.ArrayList;
 
@@ -11,8 +11,7 @@ import catalogue_browser_dao.TermAttributeDAO;
 import catalogue_browser_dao.TermDAO;
 import catalogue_object.Term;
 import catalogue_object.TermAttribute;
-import dcf_user.User;
-import dcf_user.UserAccessLevel;
+import dcf_manager.Dcf;
 import import_catalogue.ImportActions;
 
 /**

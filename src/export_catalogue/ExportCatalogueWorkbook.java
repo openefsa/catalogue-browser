@@ -8,6 +8,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import catalogue.Catalogue;
 import messages.Messages;
+import sheet_converter.Headers;
 import ui_progress_bar.FormProgressBar;
 
 
@@ -46,28 +47,28 @@ public class ExportCatalogueWorkbook {
 		workbook.setCompressTempFiles( true );
 		
 		// write the catalogue sheet
-		ExportCatalogueSheet catSheet = new ExportCatalogueSheet( catalogue, workbook, "catalogue" );
+		ExportCatalogueSheet catSheet = new ExportCatalogueSheet( catalogue, workbook, Headers.CAT_SHEET_NAME );
 		catSheet.setProgressBar( progressBar, 1, Messages.getString( "Export.CatalogueSheet" ) );
 		catSheet.write();
 
 		// write the hierarchy sheet
-		ExportHierarchySheet hierarchySheet = new ExportHierarchySheet( catalogue, workbook, "hierarchy" );
+		ExportHierarchySheet hierarchySheet = new ExportHierarchySheet( catalogue, workbook, Headers.HIER_SHEET_NAME );
 		hierarchySheet.setProgressBar( progressBar, 4, Messages.getString( "Export.HierarchySheet" ) );
 		hierarchySheet.write();
 		
 		// write the attribute sheet
-		ExportAttributeSheet attrSheet = new ExportAttributeSheet( catalogue, workbook, "attribute" );
+		ExportAttributeSheet attrSheet = new ExportAttributeSheet( catalogue, workbook, Headers.ATTR_SHEET_NAME );
 		attrSheet.setProgressBar( progressBar, 5, Messages.getString( "Export.AttributeSheet" ) );
 		attrSheet.write();
 
 		// write the term sheet
-		ExportTermSheet termSheet = new ExportTermSheet( catalogue, workbook, "term" );
+		ExportTermSheet termSheet = new ExportTermSheet( catalogue, workbook, Headers.TERM_SHEET_NAME );
 		termSheet.setProgressBar( progressBar, 80, Messages.getString( "Export.TermSheet" ) );
 		termSheet.write();
 		
 		// write the term sheet
 		ExportReleaseNotesSheet noteSheet = new ExportReleaseNotesSheet( 
-				catalogue, workbook, "releaseNotes" );
+				catalogue, workbook, Headers.NOTES_SHEET_NAME );
 		
 		noteSheet.setProgressBar( progressBar, 95, Messages.getString( "Export.NotesSheet" ) );
 		noteSheet.write();

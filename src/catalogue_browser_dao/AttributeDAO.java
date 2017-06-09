@@ -13,6 +13,7 @@ import catalogue_object.Attribute;
 import catalogue_object.AttributeBuilder;
 import catalogue_object.Term;
 import catalogue_object.TermAttribute;
+import sheet_converter.SpecialValues;
 
 /**
  * Class to manage all the database interactions with the attribute table
@@ -578,10 +579,10 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 
 			stmt.clearParameters();
 			
-			stmt.setString( 1, Attribute.allFacetName );
-			stmt.setString( 2, Attribute.implicitFacetName );
-			stmt.setString( 3, Attribute.detailName );
-			stmt.setString( 4, Attribute.typeName );
+			stmt.setString( 1, SpecialValues.ALL_FACETS_NAME );
+			stmt.setString( 2, SpecialValues.IMPLICIT_FACETS_NAME );
+			stmt.setString( 3, SpecialValues.DETAIL_LEVEL_NAME );
+			stmt.setString( 4, SpecialValues.TERM_TYPE_NAME );
 			stmt.setString( 5, Attribute.catalogueTypeName );
 			
 			// add the results to the output array

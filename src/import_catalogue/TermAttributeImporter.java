@@ -13,6 +13,7 @@ import catalogue_object.RepeatableParser;
 import catalogue_object.Term;
 import catalogue_object.TermAttribute;
 import excel_file_management.ResultDataSet;
+import sheet_converter.Headers;
 
 /**
  * Importer of the term attributes
@@ -54,7 +55,7 @@ public class TermAttributeImporter extends SheetImporter<TermAttribute> {
 		Collection<TermAttribute> tas = new ArrayList<>();
 		
 		// get the term code
-		String termCode = rs.getString ( "termCode" );
+		String termCode = rs.getString ( Headers.TERM_CODE );
 
 		// skip if no term code was found
 		if ( termCode.isEmpty() )

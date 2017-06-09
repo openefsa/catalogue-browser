@@ -6,6 +6,7 @@ import catalogue.Catalogue;
 import data_transformation.BooleanConverter;
 import data_transformation.DateTrimmer;
 import global_manager.GlobalManager;
+import sheet_converter.SpecialValues;
 import term.WrongKeyException;
 
 public class Attribute extends SortableCatalogueObject implements Mappable {
@@ -28,11 +29,6 @@ public class Attribute extends SortableCatalogueObject implements Mappable {
 	public static final String reportableMandatory = "M";
 	public static final String reportableOptional = "O";
 	public static final String reportableDisabled = "D";
-		
-	public static final String implicitFacetName = "implicitFacets";
-	public static final String allFacetName = "allFacets";
-	public static final String detailName = "detailLevel";
-	public static final String typeName = "termType";
 	
 	public static final String stringTypeName = "xs:string";
 	public static final String integerTypeName = "xs:integer";
@@ -142,7 +138,7 @@ public class Attribute extends SortableCatalogueObject implements Mappable {
 	 * @return
 	 */
 	public boolean isDetailLevel() {
-		return getName().equals( detailName );
+		return getName().equals( SpecialValues.DETAIL_LEVEL_NAME );
 	}
 	
 	/**
@@ -150,7 +146,7 @@ public class Attribute extends SortableCatalogueObject implements Mappable {
 	 * @return
 	 */
 	public boolean isTermType() {
-		return getName().equals( typeName );
+		return getName().equals( SpecialValues.TERM_TYPE_NAME );
 	}
 	
 	/**
@@ -158,7 +154,7 @@ public class Attribute extends SortableCatalogueObject implements Mappable {
 	 * @return
 	 */
 	public boolean isImplicitFacet() {
-		return getName().equals( implicitFacetName );
+		return getName().equals( SpecialValues.IMPLICIT_FACETS_NAME );
 	}
 	
 	/**
@@ -167,7 +163,7 @@ public class Attribute extends SortableCatalogueObject implements Mappable {
 	 * @return
 	 */
 	public boolean isAllFacet() {
-		return getName().equals( allFacetName );
+		return getName().equals( SpecialValues.ALL_FACETS_NAME );
 	}
 	
 	
@@ -176,7 +172,7 @@ public class Attribute extends SortableCatalogueObject implements Mappable {
 	 * @return
 	 */
 	public boolean isRepeatable() {
-		return getSingleOrRepeatable().equals( "repeatable" );
+		return getSingleOrRepeatable().equals( cardinalityRepeatable );
 	}
 	
 	/**
@@ -185,7 +181,7 @@ public class Attribute extends SortableCatalogueObject implements Mappable {
 	 * @return
 	 */
 	public boolean isCatalogue() {
-		return type.equals( "catalogue" );
+		return type.equals( catalogueTypeName );
 	}
 	
 	public void setReportable(String reportable) {

@@ -76,10 +76,8 @@ public class ImportExcelCatalogue {
 		
 		// point to the first row
 		catData.next();
-		
-		CatalogueDAO catDao = new CatalogueDAO();
-		
-		Catalogue catalogue = catDao.getCatalogueFromExcel ( catData );
+
+		Catalogue catalogue = CatalogueSheetImporter.getCatalogueFromExcel ( catData );
 		
 		// get the catalogue from the data
 		return catalogue;
@@ -831,8 +829,8 @@ public class ImportExcelCatalogue {
 				
 				// get all the ops related to the current excel row
 				// separating the operation info (they are $ separated)
-				ReleaseNotesOperation op = 
-						opDao.getByExcelResultSet( data );
+				ReleaseNotesOperation op = NotesSheetImporter
+						.getByExcelResultSet( data );
 				
 				int id = opDao.insert( op );
 				op.setId( id );

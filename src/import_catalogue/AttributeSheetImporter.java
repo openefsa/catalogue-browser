@@ -7,6 +7,7 @@ import catalogue_browser_dao.AttributeDAO;
 import catalogue_object.Attribute;
 import catalogue_object.AttributeBuilder;
 import excel_file_management.ResultDataSet;
+import sheet_converter.Headers;
 
 /**
  * Import the attribute sheet into the database
@@ -31,7 +32,7 @@ public class AttributeSheetImporter extends SheetImporter<Attribute> {
 	public Attribute getByResultSet(ResultDataSet rs) {
 		
 		// save the code for future use (ids)
-		String code = rs.getString ( "code" );
+		String code = rs.getString ( Headers.CODE );
 
 		// ignore if no code
 		if ( code.isEmpty() )
@@ -41,28 +42,28 @@ public class AttributeSheetImporter extends SheetImporter<Attribute> {
 
 		builder.setCatalogue( catalogue );
 		builder.setCode( code );
-		builder.setName( rs.getString ( "name" ) );
-		builder.setLabel( rs.getString ( "label" ) );
-		builder.setScopenotes( rs.getString ( "scopeNote" ) );
-		builder.setReportable( rs.getString ( "attributeReportable" ) );
-		builder.setVisible( rs.getBoolean ( "attributeVisible", true ) );
-		builder.setSearchable( rs.getBoolean ( "attributeSearchable", true ) );
-		builder.setOrder( rs.getInt ( "attributeOrder", 1 ) );
-		builder.setType( rs.getString ( "attributeType" ) );
-		builder.setMaxLength( rs.getInt ( "attributeMaxLength", 200 ) );
-		builder.setPrecision( rs.getInt ( "attributePrecision", 10 ) );
-		builder.setScale( rs.getInt ( "attributeScale", 0 ) );
-		builder.setCatalogueCode( rs.getString ( "attributeCatalogueCode" ) );
-		builder.setSingleOrRepeatable( rs.getString ( "attributeSingleOrRepeatable" ) );
-		builder.setInheritance( rs.getString ( "attributeInheritance" ) );
-		builder.setUniqueness( rs.getBoolean ( "attributeUniqueness", false ) );
-		builder.setTermCodeAlias( rs.getBoolean ( "attributeTermCodeAlias", false ) );
-		builder.setLastUpdate( rs.getTimestamp ( "lastUpdate" ) );
-		builder.setValidFrom( rs.getTimestamp ( "validFrom" ) );
-		builder.setValidTo( rs.getTimestamp ( "validTo" ) );
-		builder.setStatus( rs.getString ( "status" ) );
-		builder.setDeprecated( rs.getBoolean ( "deprecated", false ) );
-		builder.setVersion( rs.getString ( "version" ) );
+		builder.setName( rs.getString ( Headers.NAME ) );
+		builder.setLabel( rs.getString ( Headers.LABEL ) );
+		builder.setScopenotes( rs.getString ( Headers.SCOPENOTE ) );
+		builder.setReportable( rs.getString ( Headers.ATTR_REPORT ) );
+		builder.setVisible( rs.getBoolean ( Headers.ATTR_VISIB, true ) );
+		builder.setSearchable( rs.getBoolean ( Headers.ATTR_SEARCH, true ) );
+		builder.setOrder( rs.getInt ( Headers.ATTR_ORDER, 1 ) );
+		builder.setType( rs.getString ( Headers.ATTR_TYPE ) );
+		builder.setMaxLength( rs.getInt ( Headers.ATTR_MAX_LENGTH, 200 ) );
+		builder.setPrecision( rs.getInt ( Headers.ATTR_PRECISION, 10 ) );
+		builder.setScale( rs.getInt ( Headers.ATTR_SCALE, 0 ) );
+		builder.setCatalogueCode( rs.getString ( Headers.ATTR_CAT_CODE ) );
+		builder.setSingleOrRepeatable( rs.getString ( Headers.ATTR_SR ) );
+		builder.setInheritance( rs.getString ( Headers.ATTR_INHERIT ) );
+		builder.setUniqueness( rs.getBoolean ( Headers.ATTR_UNIQUE, false ) );
+		builder.setTermCodeAlias( rs.getBoolean ( Headers.ATTR_ALIAS, false ) );
+		builder.setLastUpdate( rs.getTimestamp ( Headers.LAST_UPDATE ) );
+		builder.setValidFrom( rs.getTimestamp ( Headers.VALID_FROM ) );
+		builder.setValidTo( rs.getTimestamp ( Headers.VALID_TO ) );
+		builder.setStatus( rs.getString ( Headers.STATUS ) );
+		builder.setDeprecated( rs.getBoolean ( Headers.DEPRECATED, false ) );
+		builder.setVersion( rs.getString ( Headers.VERSION ) );
 		
 		return builder.build();
 	}

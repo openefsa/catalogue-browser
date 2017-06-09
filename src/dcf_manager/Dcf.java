@@ -19,6 +19,7 @@ import dcf_pending_action.PendingActionListener;
 import dcf_pending_action.PendingActionValidator;
 import dcf_user.User;
 import dcf_user.UserAccessLevel;
+import dcf_user.UserProfileChecker;
 import dcf_webservice.BackgroundAction;
 import dcf_webservice.BackgroundAction.Type;
 import dcf_webservice.ExportCatalogue;

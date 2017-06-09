@@ -7,6 +7,7 @@ import catalogue_browser_dao.TermDAO;
 import catalogue_object.Term;
 import catalogue_object.TermBuilder;
 import excel_file_management.ResultDataSet;
+import sheet_converter.Headers;
 
 /**
  * Importer of the term sheet
@@ -31,25 +32,25 @@ public class TermSheetImporter extends SheetImporter<Term> {
 	public Term getByResultSet(ResultDataSet rs) {
 		
 		// skip if no term code
-		if ( rs.getString ( "termCode" ).isEmpty() )
+		if ( rs.getString ( Headers.TERM_CODE ).isEmpty() )
 			return null;
 
 		// save the code in order to be able to use it later
 		// for retrieving terms ids
-		String code = rs.getString ( "termCode" );
+		String code = rs.getString ( Headers.TERM_CODE );
 
 		TermBuilder builder = new TermBuilder();
 
 		builder.setCatalogue( catalogue );
 		builder.setCode( code );
-		builder.setName( rs.getString ( "termExtendedName" ) );
-		builder.setLabel( rs.getString ( "termShortName" ) );
-		builder.setScopenotes( rs.getString ( "termScopeNote" ) );
-		builder.setDeprecated( rs.getBoolean ( "deprecated", false ) );
-		builder.setLastUpdate( rs.getTimestamp ( "lastUpdate", true ) );
-		builder.setValidFrom( rs.getTimestamp ( "validFrom", true ) );
-		builder.setValidTo( rs.getTimestamp( "validTo", true ) );
-		builder.setStatus( rs.getString( "status" ) );
+		builder.setName( rs.getString ( Headers.TERM_EXT_NAME ) );
+		builder.setLabel( rs.getString ( Headers.TERM_SHORT_NAME ) );
+		builder.setScopenotes( rs.getString ( Headers.TERM_SCOPENOTE ) );
+		builder.setDeprecated( rs.getBoolean ( Headers.DEPRECATED, false ) );
+		builder.setLastUpdate( rs.getTimestamp ( Headers.LAST_UPDATE, true ) );
+		builder.setValidFrom( rs.getTimestamp ( Headers.VALID_FROM, true ) );
+		builder.setValidTo( rs.getTimestamp( Headers.VALID_TO, true ) );
+		builder.setStatus( rs.getString( Headers.STATUS ) );
 
 		return builder.build();
 	}

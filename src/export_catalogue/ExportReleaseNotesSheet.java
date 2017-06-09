@@ -7,7 +7,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 import catalogue.Catalogue;
 import catalogue_object.Mappable;
-import sheet_converter.NotesSheetConverter;
+import sheet_converter.Headers;
 import sheet_converter.SheetHeader;
 
 /**
@@ -31,10 +31,10 @@ public class ExportReleaseNotesSheet extends SheetWriter {
 		
 		HashMap<String, SheetHeader> headers = new HashMap<>();
 
-		headers.put( "OP_NAME", new SheetHeader(0, NotesSheetConverter.OP_NAME_NODE ) );
-		headers.put( "OP_DATE", new SheetHeader(1, NotesSheetConverter.OP_DATE_NODE ) );
-		headers.put( "OP_INFO", new SheetHeader(2, NotesSheetConverter.OP_INFO_NODE ) );
-		headers.put( "OP_GROUP_ID", new SheetHeader(3, NotesSheetConverter.OP_GROUP_NODE ) );
+		headers.put( "OP_NAME", new SheetHeader(0, Headers.OP_NAME ) );
+		headers.put( "OP_DATE", new SheetHeader(1, Headers.OP_DATE ) );
+		headers.put( "OP_INFO", new SheetHeader(2, Headers.OP_INFO ) );
+		headers.put( "OP_GROUP_ID", new SheetHeader(3, Headers.OP_GROUP ) );
 		return headers;
 	}
 

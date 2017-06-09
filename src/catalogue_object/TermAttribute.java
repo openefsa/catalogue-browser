@@ -7,6 +7,7 @@ import catalogue.Catalogue;
 import catalogue_browser_dao.AttributeDAO;
 import detail_level.DetailLevelGraphics;
 import global_manager.GlobalManager;
+import sheet_converter.SpecialValues;
 import term_type.TermType;
 
 /**
@@ -101,7 +102,7 @@ public class TermAttribute {
 		AttributeDAO attrDao = new AttributeDAO( currentCat );
 		
 		// get the attribute related to the detail levels
-		Attribute attribute = attrDao.getByName( Attribute.detailName );
+		Attribute attribute = attrDao.getByName( SpecialValues.DETAIL_LEVEL_NAME );
 		
 		// create the term attribute with "H" as detail level (which is the hierarchy)
 		TermAttribute ta = new TermAttribute( t, attribute, "H" );
@@ -125,7 +126,7 @@ public class TermAttribute {
 		AttributeDAO attrDao = new AttributeDAO( currentCat );
 		
 		// get the attribute related to term types
-		Attribute attribute = attrDao.getByName( Attribute.typeName );
+		Attribute attribute = attrDao.getByName( SpecialValues.TERM_TYPE_NAME );
 
 		// create the term attribute with the first available term type code
 		TermAttribute ta = new TermAttribute( t, attribute, 

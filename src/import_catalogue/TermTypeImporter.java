@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import catalogue.Catalogue;
+import sheet_converter.SpecialValues;
 import term_type.TermType;
 import term_type.TermTypeDAO;
 
@@ -70,7 +71,7 @@ public class TermTypeImporter {
 			getScopenoteQuery.clearParameters();
 			
 			// get only the term type attribute
-			getScopenoteQuery.setString( 1, "termType" );
+			getScopenoteQuery.setString( 1, SpecialValues.TERM_TYPE_NAME );
 			
 			ResultSet rs = getScopenoteQuery.executeQuery();
 			

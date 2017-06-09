@@ -1,14 +1,18 @@
 package import_catalogue;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Iterator;
 
 import catalogue.Catalogue;
+import catalogue.CatalogueBuilder;
+import catalogue.ReleaseNotes;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_browser_dao.DatabaseManager;
 import excel_file_management.ResultDataSet;
+import sheet_converter.Headers;
 
 public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 
@@ -45,12 +49,11 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 
 	@Override
 	public Catalogue getByResultSet(ResultDataSet rs) {
-
-		CatalogueDAO catDao = new CatalogueDAO();
+		
 		Catalogue catalogue = null;
 
 		try {
-			catalogue = catDao.getCatalogueFromExcel ( rs );
+			catalogue = getCatalogueFromExcel ( rs );
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -65,6 +68,68 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 		// else the excel catalogue
 		return catalogue;
 	}
+	
+
+
+	/**
+	 * Given a result set with catalogues meta data inside it, this function will
+	 * create a catalogue object taking the meta data from the result set
+	 * The function takes the current item of the results set and tries to get the
+	 * catalogue data. Use a while(rs.next) loop for a result set with more than one catalogue
+	 * USED FOR EXCEL CATALOGUES (they have a different naming convention to the ones used in the DB)
+	 * @param rs
+	 * @return
+	 * @throws SQLException
+	 */
+	public static Catalogue getCatalogueFromExcel ( ResultSet rs ) throws SQLException {
+
+		// create a catalogue using a builder
+		CatalogueBuilder builder = new CatalogueBuilder();
+
+		// set the catalogue meta data and create the catalogue object
+		builder.setCode( rs.getString( Headers.CODE ) );
+		builder.setVersion( rs.getString( Headers.VERSION ) );
+		builder.setName( rs.getString( Headers.NAME ) );
+		builder.setLabel( rs.getString( Headers.LABEL ) );
+		builder.setScopenotes( rs.getString( Headers.SCOPENOTE ) );
+		builder.setTermCodeMask( rs.getString( Headers.CAT_CODE_MASK ) );
+		builder.setTermCodeLength( rs.getString( Headers.CAT_CODE_LENGTH ) );
+		builder.setTermMinCode( rs.getString( Headers.CAT_MIN_CODE ) );
+		builder.setAcceptNonStandardCodes( rs.getBoolean( Headers.CAT_ACCEPT_NOT_STD ) );
+		builder.setGenerateMissingCodes( rs.getBoolean( Headers.CAT_GEN_MISSING ) );
+		builder.setStatus( rs.getString( Headers.STATUS ) );
+		builder.setCatalogueGroups( rs.getString( Headers.CAT_GROUPS ) );
+
+		// set the dates with the adequate checks
+		java.sql.Timestamp ts = rs.getTimestamp( Headers.LAST_UPDATE );
+		
+		if ( ts != null )
+			builder.setLastUpdate( ts );
+
+		ts = rs.getTimestamp( Headers.VALID_FROM );
+		if ( ts != null )
+			builder.setValidFrom( ts );
+
+		ts = rs.getTimestamp( Headers.VALID_TO );
+		if ( ts != null )
+			builder.setValidTo( ts );
+
+		builder.setDeprecated( rs.getBoolean( Headers.DEPRECATED ) );
+		
+		String desc = rs.getString( Headers.NOTES_DESCRIPTION );
+		ts = rs.getTimestamp( Headers.NOTES_DATE );
+		String vers = rs.getString( Headers.NOTES_VERSION );
+		String note = rs.getString( Headers.NOTES_NOTE );
+		
+		builder.setReleaseNotes( new ReleaseNotes(desc, ts, vers, note, null) );
+		
+		Catalogue catalogue = builder.build();
+		
+		// return the catalogue
+		return catalogue;
+	}
+	
+	
 
 	@Override
 	public Collection<Catalogue> getAllByResultSet(ResultDataSet rs) {

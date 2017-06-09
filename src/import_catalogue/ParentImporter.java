@@ -13,6 +13,8 @@ import catalogue_object.Hierarchy;
 import catalogue_object.Nameable;
 import catalogue_object.Term;
 import excel_file_management.ResultDataSet;
+import sheet_converter.Headers;
+import sheet_converter.SpecialValues;
 
 public class ParentImporter extends SheetImporter<Applicability> {
 
@@ -45,7 +47,7 @@ public class ParentImporter extends SheetImporter<Applicability> {
 		Collection<Applicability> appls = new ArrayList<>();
 
 		// get the term code
-		String termCode = rs.getString ( "termCode" );
+		String termCode = rs.getString ( Headers.TERM_CODE );
 
 		// skip if no term code was found
 		if ( termCode.isEmpty() )
@@ -58,14 +60,15 @@ public class ParentImporter extends SheetImporter<Applicability> {
 		for ( Hierarchy hierarchy : hierarchies ) {
 
 			// get the parent term code 
-			String parentCode = rs.getString ( getHierarchyFieldName( hierarchy, "ParentCode" ) );
+			String parentCode = rs.getString ( 
+					getHierarchyFieldName( hierarchy, Headers.SUFFIX_PARENT_CODE ) );
 			
 			// next if no parent term is found
 			if ( parentCode == null || parentCode.isEmpty() )
 				continue;
 			
 			// check if we have the root term or not
-			boolean isRoot = parentCode.equalsIgnoreCase( "ROOT" );
+			boolean isRoot = parentCode.equalsIgnoreCase( SpecialValues.NO_PARENT );
 
 			// get the parent term id from the code
 			Integer parentId = termIds.get( parentCode );
@@ -80,15 +83,15 @@ public class ParentImporter extends SheetImporter<Applicability> {
 			
 			// get the term flag
 			//boolean flag = rs.getBoolean( 
-				//	getHierarchyFieldName( hierarchy, "Flag" ), true );
+				//	getHierarchyFieldName( hierarchy, Headers.SUFFIX_FLAG ), true );
 			
 			// get the term order
 			int order = rs.getInt( 
-					getHierarchyFieldName( hierarchy, "Order" ), 0 );
+					getHierarchyFieldName( hierarchy, Headers.SUFFIX_ORDER ), 0 );
 			
 			// get the term reportability
 			boolean reportable = rs.getBoolean( 
-					getHierarchyFieldName( hierarchy, "Reportable" ), true );
+					getHierarchyFieldName( hierarchy, Headers.SUFFIX_REPORT ), true );
 			
 			Applicability appl = createApplicability ( isRoot, termId, parentId, 
 					hierarchy, order, reportable );
@@ -148,7 +151,7 @@ public class ParentImporter extends SheetImporter<Applicability> {
 		
 		// if it is master hierarchy
 		if ( hierarchy.getCode().equals( catalogue.getCode() ) )
-			columnName = Hierarchy.MASTER_HIERARCHY_CODE + field;
+			columnName = Headers.PREFIX_MASTER_CODE + field;
 		else  // else, standard hierarchy
 			columnName = hierarchy.getCode() + field; 
 		

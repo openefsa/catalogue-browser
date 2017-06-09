@@ -7,6 +7,7 @@ import catalogue_browser_dao.HierarchyDAO;
 import catalogue_object.Hierarchy;
 import catalogue_object.HierarchyBuilder;
 import excel_file_management.ResultDataSet;
+import sheet_converter.Headers;
 
 /**
  * Import the hierarchy sheet
@@ -41,7 +42,7 @@ public class HierarchySheetImporter extends SheetImporter<Hierarchy> {
 	public Hierarchy getByResultSet(ResultDataSet rs) {
 		
 		// get the hierarchy code
-		String code = rs.getString ( "code" );
+		String code = rs.getString ( Headers.CODE );
 
 		// if empty ignore
 		if ( code.isEmpty() )
@@ -63,28 +64,28 @@ public class HierarchySheetImporter extends SheetImporter<Hierarchy> {
 		}
 		else {
 			builder.setCode( code );
-			builder.setName( rs.getString ( "name" ) );
-			builder.setLabel( rs.getString ( "label" ) );
+			builder.setName( rs.getString ( Headers.NAME ) );
+			builder.setLabel( rs.getString ( Headers.LABEL ) );
 		}
 
-		builder.setScopenotes( rs.getString ( "scopeNote" ) );
-		builder.setApplicability( rs.getString ( "hierarchyApplicability" ) );
+		builder.setScopenotes( rs.getString ( Headers.SCOPENOTE ) );
+		builder.setApplicability( rs.getString ( Headers.HIER_APPL ) );
 
-		builder.setOrder( rs.getInt ( "hierarchyOrder", 1 ) );
-		builder.setStatus( rs.getString ( "hierarchyStatus" ) );
+		builder.setOrder( rs.getInt ( Headers.HIER_ORDER, 1 ) );
+		builder.setStatus( rs.getString ( Headers.STATUS ) );
 
 		// set the is_master field as true if the hierarchy code
 		// is the same as the catalogue code (convention)
 		// otherwise false
 		builder.setMaster( isMaster );
 
-		builder.setLastUpdate( rs.getTimestamp( "lastUpdate" ) );
-		builder.setValidFrom( rs.getTimestamp( "validFrom" ) );
-		builder.setValidTo( rs.getTimestamp( "validTo" ) );
-		builder.setVersion( rs.getString ( "version" ) );
+		builder.setLastUpdate( rs.getTimestamp( Headers.LAST_UPDATE ) );
+		builder.setValidFrom( rs.getTimestamp( Headers.VALID_FROM ) );
+		builder.setValidTo( rs.getTimestamp( Headers.VALID_TO ) );
+		builder.setVersion( rs.getString ( Headers.VERSION ) );
 
-		builder.setDeprecated( rs.getBoolean( "deprecated", false ) );
-		builder.setGroups( rs.getString ( "hierarchyGroups" ) );
+		builder.setDeprecated( rs.getBoolean( Headers.DEPRECATED, false ) );
+		builder.setGroups( rs.getString ( Headers.HIER_GROUPS ) );
 
 		return builder.build();
 	}

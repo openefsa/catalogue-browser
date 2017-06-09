@@ -13,7 +13,6 @@ import java.util.Comparator;
 
 import catalogue.Catalogue;
 import catalogue.CatalogueBuilder;
-import catalogue.ReleaseNotes;
 import dcf_user.User;
 import sql.SQLScriptExec;
 import utilities.GlobalUtil;
@@ -438,65 +437,6 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 		return found;
 	}
 
-
-	/**
-	 * Given a result set with catalogues meta data inside it, this function will
-	 * create a catalogue object taking the meta data from the result set
-	 * The function takes the current item of the results set and tries to get the
-	 * catalogue data. Use a while(rs.next) loop for a result set with more than one catalogue
-	 * USED FOR EXCEL CATALOGUES (they have a different naming convention to the ones used in the DB)
-	 * @param rs
-	 * @return
-	 * @throws SQLException
-	 */
-	public Catalogue getCatalogueFromExcel ( ResultSet rs ) throws SQLException {
-
-		// create a catalogue using a builder
-		CatalogueBuilder builder = new CatalogueBuilder();
-
-		// set the catalogue meta data and create the catalogue object
-		builder.setCode( rs.getString( "code" ) );
-		builder.setVersion( rs.getString( "version" ) );
-		builder.setName( rs.getString( "name" ) );
-		builder.setLabel( rs.getString( "label" ) );
-		builder.setScopenotes( rs.getString( "scopeNote" ) );
-		builder.setTermCodeMask( rs.getString( "termCodeMask" ) );
-		builder.setTermCodeLength( rs.getString( "termCodeLength" ) );
-		builder.setTermMinCode( rs.getString( "termMinCode" ) );
-		builder.setAcceptNonStandardCodes( rs.getBoolean( "acceptNonStandardCodes" ) );
-		builder.setGenerateMissingCodes( rs.getBoolean( "generateMissingCodes" ) );
-		builder.setStatus( rs.getString( "status" ) );
-		builder.setCatalogueGroups( rs.getString( "catalogueGroups" ) );
-
-		// set the dates with the adequate checks
-		java.sql.Timestamp ts = rs.getTimestamp( "lastUpdate" );
-		
-		if ( ts != null )
-			builder.setLastUpdate( ts );
-
-		ts = rs.getTimestamp( "validFrom" );
-		if ( ts != null )
-			builder.setValidFrom( ts );
-
-		ts = rs.getTimestamp( "validTo" );
-		if ( ts != null )
-			builder.setValidTo( ts );
-
-		builder.setDeprecated( rs.getBoolean( "deprecated" ) );
-		
-		String desc = rs.getString( "noteDescription" );
-		ts = rs.getTimestamp( "noteDate" );
-		String vers = rs.getString( "noteInternalVersion" );
-		String note = rs.getString( "internalVersionNote" );
-		
-		builder.setReleaseNotes( new ReleaseNotes(desc, ts, vers, note, null) );
-		
-		Catalogue catalogue = builder.build();
-		
-		// return the catalogue
-		return catalogue;
-	}
-	
 	/**
 	 * Get the last release of the selected catalogue
 	 * @param catalogue

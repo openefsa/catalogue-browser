@@ -183,24 +183,4 @@ public class ReleaseNotesOperationDAO implements CatalogueEntityDAO<ReleaseNotes
 
 		return ops;
 	}
-	
-	/**
-	 * Get the operation starting from an excel result set
-	 * @param rs
-	 * @return
-	 * @throws SQLException
-	 */
-	public ReleaseNotesOperation getByExcelResultSet(ResultSet rs) throws SQLException {
-
-		String name = rs.getString( NotesSheetConverter.OP_NAME_NODE );
-		Timestamp date = rs.getTimestamp( NotesSheetConverter.OP_DATE_NODE );
-		String info = rs.getString( NotesSheetConverter.OP_INFO_NODE );
-		int groupId = rs.getInt( NotesSheetConverter.OP_GROUP_NODE );
-
-		// create a release note operation with a temp group id
-		ReleaseNotesOperation op = new ReleaseNotesOperation(name, 
-				date, info, groupId);
-
-		return op;
-	}
 }
