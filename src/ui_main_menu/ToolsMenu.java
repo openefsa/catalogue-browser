@@ -751,13 +751,17 @@ public class ToolsMenu implements MainMenuItem {
 			@Override
 			public void widgetSelected ( SelectionEvent event ) {
 				
-				HierarchyEditor e = new HierarchyEditor( shell, 
-						mainMenu.getCatalogue().getHierarchies() );
-				e.Display();
+				HierarchyEditor editor = new HierarchyEditor( shell, 
+						mainMenu.getCatalogue() );
+				editor.Display();
+			
+				boolean changed = editor.isChanged();
+				Event e = new Event();
+				event.data = changed;
 				
 				if ( listener != null )
 					listener.buttonPressed( hierarchyEditorItem, 
-							HIER_EDITOR_MI, null );
+							HIER_EDITOR_MI, e );
 			}
 		} );
 		

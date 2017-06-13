@@ -52,6 +52,8 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 		
 		Catalogue catalogue = null;
 
+		// get the excel catalogue and
+		// its code (used later)
 		try {
 			catalogue = getCatalogueFromExcel ( rs );
 		} catch (SQLException e) {
@@ -61,9 +63,14 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 		// save the excel code in global variable
 		excelCatCode = catalogue.getCode();
 		
-		// if local return the local catalogue
+		// if local return the local catalogue instead
+		// but we need the excel code, therefore we 
+		// get the excel catalogue in both cases
 		if ( local )
-			return localCatalogue;
+			catalogue = localCatalogue;
+		
+		// save the catalogue as global variable
+		this.catalogue = catalogue;
 		
 		// else the excel catalogue
 		return catalogue;
@@ -144,7 +151,7 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 
 		// get the catalogue and save it as global variable
 		Iterator<Catalogue> iter = data.iterator();
-		catalogue = iter.next();
+		Catalogue catalogue = iter.next();
 
 		// if anything was found => create a new catalogue
 		// as default we create the catalogue using the official folder 

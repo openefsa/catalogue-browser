@@ -68,14 +68,6 @@ public class ImportThread extends ExcelThread {
 			
 			importer.importWorkbook( path, getFilename() );
 
-			// start import, return false if wrong catalogue
-			//final boolean check;
-
-			/*if ( !local ) 
-				check = importCat.importCatalogue( path, getFilename() );
-			else
-				check = importCat.importLocalCatalogue( localCat, path, getFilename() );
-	*/
 			Display.getDefault().syncExec( new Runnable() {
 				
 				@Override

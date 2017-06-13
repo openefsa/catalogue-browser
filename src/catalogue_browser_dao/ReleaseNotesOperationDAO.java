@@ -11,7 +11,6 @@ import java.util.Collection;
 
 import catalogue.Catalogue;
 import catalogue.ReleaseNotesOperation;
-import sheet_converter.NotesSheetConverter;
 
 /**
  * Manager of the Release note operation table.
@@ -41,38 +40,6 @@ public class ReleaseNotesOperationDAO implements CatalogueEntityDAO<ReleaseNotes
 			return -1;
 		
 		return ids.get( 0 );
-		/*
-		int id = -1;
-
-		String query = "insert into APP.RELEASE_NOTES_OP "
-				+ "(OP_NAME, OP_DATE, OP_INFO, OP_GROUP_ID) values (?,?,?,?)";
-
-		try {
-
-			Connection con = catalogue.getConnection();
-			PreparedStatement stmt = con.prepareStatement( query, 
-					Statement.RETURN_GENERATED_KEYS );
-
-			stmt.setString( 1, op.getOpName() );
-			stmt.setTimestamp( 2, op.getOpDate() );
-			stmt.setString( 3, op.getOpInfo() );
-			stmt.setInt( 4, op.getGroupId() );
-
-			stmt.executeUpdate();
-
-			ResultSet rs = stmt.getGeneratedKeys();
-			if ( rs.next() )
-				id = rs.getInt( 1 );
-
-			rs.close();
-			stmt.close();
-			con.close();
-
-		} catch ( SQLException e ) {
-			e.printStackTrace();
-		}
-
-		return id;*/
 	}
 	
 	/**
@@ -80,7 +47,7 @@ public class ReleaseNotesOperationDAO implements CatalogueEntityDAO<ReleaseNotes
 	 * @param ops
 	 * @return
 	 */
-	public ArrayList<Integer> insert ( Collection<ReleaseNotesOperation> ops ) {
+	public synchronized ArrayList<Integer> insert ( Collection<ReleaseNotesOperation> ops ) {
 		
 		ArrayList<Integer> ids = new ArrayList<>();
 

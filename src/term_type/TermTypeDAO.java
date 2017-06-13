@@ -75,7 +75,7 @@ public class TermTypeDAO implements CatalogueEntityDAO<TermType> {
 	 * Insert a batch of term types
 	 * @param termTypes
 	 */
-	public void insert ( Collection<TermType> termTypes ) {
+	public synchronized void insert ( Collection<TermType> termTypes ) {
 
 		Connection con;
 

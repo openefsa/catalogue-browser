@@ -50,56 +50,9 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 			return -1;
 		
 		return ids.get( 0 );
-		/*
-		int id = -1;
-		
-		Connection con;
-		
-		String query = "insert into APP.PARENT_TERM (TERM_ID, HIERARCHY_ID, PARENT_TERM_ID, TERM_ORDER, TERM_REPORTABLE)"
-				+ "values (?, ?, ?, ?, ?)";
-		
-		try {
-
-			// get the connection
-			con = catalogue.getConnection();
-
-			// prepare the query
-			PreparedStatement stmt = con.prepareStatement( query, Statement.RETURN_GENERATED_KEYS );
-
-			stmt.clearParameters();
-
-			// Create a new record with the term and its parent in the selected hierarchy
-			stmt.setInt ( 1, appl.getChild().getId() );
-			stmt.setInt ( 2, appl.getHierarchy().getId() );
-			
-			// set the parent (the term if term, otherwise null if hierarchy)
-			if ( appl.getParentTerm() instanceof Term )
-				stmt.setInt ( 3, ( (Term) appl.getParentTerm() ).getId() );
-			else
-				stmt.setNull (3, java.sql.Types.INTEGER );
-			
-			stmt.setInt     ( 4, appl.getOrder() );
-			stmt.setBoolean ( 5, appl.isReportable() );
-			
-			stmt.executeUpdate();
-
-			ResultSet rs = stmt.getGeneratedKeys();
-			if ( rs.next() )
-				id = rs.getInt(1);
-			
-			rs.close();
-			stmt.close();
-			con.close();
-			
-
-		} catch ( SQLException e ) {
-			e.printStackTrace();
-		}
-		
-		return id;*/
 	}
 	
-	public ArrayList<Integer> insert ( Collection<Applicability> appls ) {
+	public synchronized ArrayList<Integer> insert ( Collection<Applicability> appls ) {
 		
 		ArrayList<Integer> ids = new ArrayList<>();
 		

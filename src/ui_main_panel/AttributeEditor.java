@@ -384,6 +384,12 @@ public class AttributeEditor implements RestoreableWindow {
 		WindowPreference.saveOnClosure( this );
 		
 		dialog.open();
+		
+		while ( !dialog.isDisposed() ) {
+			if ( !dialog.getDisplay().readAndDispatch() )
+				dialog.getDisplay().sleep();
+		}
+		dialog.dispose();
 	}
 	
 	@Override

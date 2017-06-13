@@ -53,7 +53,7 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 	 * @param t
 	 * @return
 	 */
-	public ArrayList<Integer> insertTerms ( Collection<Term> terms ) {
+	public synchronized ArrayList<Integer> insertTerms ( Collection<Term> terms ) {
 		
 		ArrayList<Integer> ids = new ArrayList<>();
 		

@@ -30,7 +30,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 	 * the catalogue database is also created.
 	 * @param catalogue
 	 */
-	public int insert ( Catalogue catalogue ) {
+	public synchronized int insert ( Catalogue catalogue ) {
 		
 		int id = -1;
 

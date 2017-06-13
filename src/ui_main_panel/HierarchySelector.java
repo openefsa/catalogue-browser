@@ -172,8 +172,20 @@ public class HierarchySelector extends Observable implements Observer {
 			}
 		} );
 	}
-	
 
+	/**
+	 * Refresh hierarchy selector. This will enabled 
+	 * it if a catalogue was set
+	 */
+	public void refresh() {
+		
+		if ( catalogue == null )
+			return;
+		
+		setInput ( catalogue.getHierarchies() );
+		setEnabled ( true );
+	}
+	
 	/**
 	 * Set the combo box input
 	 * @param hierarchies

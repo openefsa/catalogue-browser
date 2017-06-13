@@ -19,7 +19,6 @@ import org.eclipse.swt.widgets.Shell;
 import catalogue.Catalogue;
 import catalogue_browser_dao.HierarchyDAO;
 import catalogue_object.Hierarchy;
-import global_manager.GlobalManager;
 import messages.Messages;
 import property.ContentProviderProperty;
 import property.EditingSupportSimpleProperty;
@@ -35,14 +34,15 @@ import utilities.GlobalUtil;
 
 public class HierarchyEditor implements RestoreableWindow {
 
+	private boolean changed = false;
+	private Catalogue catalogue;
 	private static final String WINDOW_CODE = "HierarchyEditor";
 	private Shell _shell;
 	private Shell dialog;
 
 	private ArrayList< Hierarchy > _hierarchies;
-
 	private ArrayList< Hierarchy > _hierarchiesToRemove;
-
+	
 	/**
 	 * Apre una finestra per creare la form per l'editing delle Hierarchies e
 	 * dei Facets
@@ -52,7 +52,7 @@ public class HierarchyEditor implements RestoreableWindow {
 		
 		dialog = new Shell( _shell, SWT.SHELL_TRIM | SWT.APPLICATION_MODAL );
 
-		dialog.setText( Messages.getString("HierarchyEditor.HierarchyFacetLabel") ); //$NON-NLS-1$
+		dialog.setText( Messages.getString("HierarchyEditor.HierarchyFacetLabel") );
 		dialog.setSize( 600, 400 );
 		dialog.setLayout( new GridLayout( 1 , false ) );
 
@@ -292,12 +292,6 @@ public class HierarchyEditor implements RestoreableWindow {
 					return;
 				}
 
-				// get an instance of the global manager
-				GlobalManager manager = GlobalManager.getInstance();
-				
-				// get the current catalogue
-				Catalogue currentCat = manager.getCurrentCatalogue();
-				
 				// I am checking that the default is an hierarchy and not a
 				// facet
 				for ( int i = 0 ; i < _hierarchies.size() ; i++ ) {
@@ -311,14 +305,14 @@ public class HierarchyEditor implements RestoreableWindow {
 									Messages.getString("HierarchyEditor.FacetErrorTitle"), 
 									Messages.getString("HierarchyEditor.FacetErrorMessage"));
 
-							setHierarchies( currentCat.getHierarchies() );
+							setHierarchies( catalogue.getHierarchies() );
 							table.refresh();
 							return;
 						}
 					}
 				}
 				
-				HierarchyDAO hierDao = new HierarchyDAO( currentCat );
+				HierarchyDAO hierDao = new HierarchyDAO( catalogue );
 			
 				// Remove all the hierarchies that have to be removed
 				for ( int i = 0 ; i < _hierarchiesToRemove.size() ; i++ ) 
@@ -335,13 +329,11 @@ public class HierarchyEditor implements RestoreableWindow {
 					else
 						hierDao.update( hierarchy );
 				}
-				
-				// refetch all the hierarchies
-				currentCat.refreshHierarchies();
-				
-				// TODO create a listener to update the foodex browser combo box
-				dialog.close();
 
+				// refetch all the hierarchies
+				catalogue.refreshHierarchies();
+				changed = true;
+				dialog.close();
 			}
 
 		} );
@@ -441,7 +433,12 @@ public class HierarchyEditor implements RestoreableWindow {
 		WindowPreference.saveOnClosure( this );
 		
 		dialog.open();
-
+		
+		while ( !dialog.isDisposed() ) {
+			if ( !dialog.getDisplay().readAndDispatch() )
+				dialog.getDisplay().sleep();
+		}
+		dialog.dispose();
 	}
 
 	@Override
@@ -452,6 +449,14 @@ public class HierarchyEditor implements RestoreableWindow {
 	@Override
 	public Shell getWindowShell() {
 		return dialog;
+	}
+	
+	public boolean isChanged() {
+		return changed;
+	}
+	
+	public Catalogue getCatalogue() {
+		return catalogue;
 	}
 	
 	/**
@@ -465,11 +470,12 @@ public class HierarchyEditor implements RestoreableWindow {
 		_hierarchies = hierarchies;
 	}
 
-	public HierarchyEditor( Shell shell, ArrayList< Hierarchy > hierarchies ) {
+	public HierarchyEditor( Shell shell, Catalogue catalogue ) {
 		_shell = shell;
 		_hierarchies = new ArrayList< Hierarchy >();
 		_hierarchiesToRemove = new ArrayList< Hierarchy >();
-		this.setHierarchies( hierarchies );
+		this.catalogue = catalogue;
+		this.setHierarchies( catalogue.getHierarchies() );
 	}
 }
 

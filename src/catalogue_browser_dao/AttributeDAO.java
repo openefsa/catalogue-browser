@@ -37,7 +37,7 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 	 * @param attr
 	 * @return
 	 */
-	public int insert ( Attribute attr ) {
+	public synchronized int insert ( Attribute attr ) {
 		
 		Collection<Attribute> attrs = new ArrayList<>();
 		attrs.add( attr );
@@ -49,7 +49,7 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 	 * @param hierarchy
 	 * @return
 	 */
-	public ArrayList<Integer> insertAttributes ( Collection<Attribute> attrs ) {
+	public synchronized ArrayList<Integer> insertAttributes ( Collection<Attribute> attrs ) {
 
 		ArrayList<Integer> ids = new ArrayList<>();
 		

@@ -49,7 +49,7 @@ public class HierarchyDAO implements CatalogueEntityDAO<Hierarchy> {
 	 * @param hierarchy
 	 * @return
 	 */
-	public ArrayList<Integer> insertHierarchies ( Collection<Hierarchy> hierarchies ) {
+	public synchronized ArrayList<Integer> insertHierarchies ( Collection<Hierarchy> hierarchies ) {
 
 		ArrayList<Integer> ids = new ArrayList<>();
 		

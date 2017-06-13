@@ -43,46 +43,9 @@ public class TermAttributeDAO implements CatalogueRelationDAO< TermAttribute, Te
 			return -1;
 		
 		return ids.get(0);
-		/*
-		int id = -1;
-		
-		String query = "insert into APP.TERM_ATTRIBUTE (TERM_ID, ATTR_ID, ATTR_VALUE) values (?, ?, ?)";
-
-		try {
-
-			Connection con = catalogue.getConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query, Statement.RETURN_GENERATED_KEYS );
-
-			// set the parameters
-			stmt.setInt(1, ta.getTerm().getId() );
-
-			stmt.setInt(2, ta.getAttribute().getId() );
-
-			// set the value
-			stmt.setString( 3, ta.getValue() );
-
-			// execute the update
-			stmt.executeUpdate();
-
-			// update the terms ids with the ones given by the database
-			ResultSet rs = stmt.getGeneratedKeys();
-			
-			if ( rs.next() )
-				id = rs.getInt(1);
-			
-			rs.close();
-			stmt.close();
-			con.close();
-		}
-		catch ( SQLException e ) {
-			e.printStackTrace();
-		}
-		
-		return id;*/
 	}
 	
-	public ArrayList<Integer> insert ( Collection<TermAttribute> tas ) {
+	public synchronized ArrayList<Integer> insert ( Collection<TermAttribute> tas ) {
 		
 		ArrayList<Integer> ids = new ArrayList<>();
 		

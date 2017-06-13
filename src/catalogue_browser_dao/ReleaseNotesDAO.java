@@ -32,7 +32,7 @@ public class ReleaseNotesDAO {
 	 * Insert the catalogue release notes into the db
 	 * @return
 	 */
-	public boolean insert( ReleaseNotes notes ) {
+	public synchronized boolean insert( ReleaseNotes notes ) {
 		
 		String query = "update APP.CATALOGUE set CAT_RN_DESCRIPTION=?, "
 				+ "CAT_RN_VERSION_DATE=?,"

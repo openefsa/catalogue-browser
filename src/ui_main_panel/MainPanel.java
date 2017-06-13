@@ -167,6 +167,8 @@ public class MainPanel implements Observer, RestoreableWindow {
 				tabPanel.redraw();
 				
 				catalogueLabel.refresh();
+
+				hierarchySelector.refresh();
 				
 				searchPanel.refresh( true );
 				//tree.refresh( true );
@@ -496,13 +498,13 @@ public class MainPanel implements Observer, RestoreableWindow {
 					break;
 					
 				case ToolsMenu.ATTR_EDITOR_MI:
-					
+				case ToolsMenu.HIER_EDITOR_MI:
 					// refresh
 					tabPanel.setTerm( tree.getFirstSelectedTerm() );
 					refresh();
 					
 					break;
-					
+
 				default:
 					break;
 				}
