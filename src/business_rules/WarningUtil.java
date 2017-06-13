@@ -1,11 +1,9 @@
 package business_rules;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -21,6 +19,7 @@ import java.util.StringTokenizer;
 
 import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.widgets.Canvas;
@@ -34,8 +33,8 @@ import catalogue_browser_dao.TermDAO;
 import catalogue_object.Hierarchy;
 import catalogue_object.Term;
 import global_manager.GlobalManager;
+import instance_checker.InstanceChecker;
 import naming_convention.Headers;
-import ui_main_panel.CatalogueBrowserMain;
 import utilities.GlobalUtil;
 
 
@@ -64,8 +63,7 @@ public class WarningUtil {
 	private Canvas semaphore;
 	
 	// load into memory all the warning messages from the text file
-	private ArrayList<WarningMessage> warningMessages = 
-			loadWarningMessages( GlobalUtil.warningMessagesFilename );
+	private ArrayList<WarningMessage> warningMessages;
 
 	// Enum type: it identifies the warning messages events (i.e. which message should be shown in a determined event?)
 	// the message id is given by the order of the event definition. So the message with id 1 will be hierarchyBaseTerm etc...
@@ -102,11 +100,10 @@ public class WarningUtil {
 	private WarningLevel currentWarningLevel = WarningLevel.NONE;
 
 	// list of all the processes which may cause a warning (independentely of the base term)
-	private ArrayList <ForbiddenProcess> forbiddenProcesses = 
-			loadForbiddenProcesses(GlobalUtil.businessRuleFilename);
+	private ArrayList <ForbiddenProcess> forbiddenProcesses;
 
 	// load the color options for the warning console and messages
-	private WarningOptions warnOptions = loadWarningOptions( GlobalUtil.warningColorsFilename );
+	private WarningOptions warnOptions;
 	
 	/**
 	 * Start the program by command line
@@ -116,19 +113,25 @@ public class WarningUtil {
 
 		// check if another instance using the database
 		// is already running
-		CatalogueBrowserMain.closeIfAlreadyRunning();
+		InstanceChecker.closeIfAlreadyRunning();
 		
 		// argument checks
-		if ( args.length != 2 ) {
+		if ( args.length != 3 ) {
 			System.err.println( "Wrong number of arguments, please check! "
-					+ "You have to provide two parameters,\n"
-					+ "that is, the input file path (collection of codes to be analysed) "
-					+ "and the output file path.");
+					+ "You have to provide 3 parameters,\n"
+					+ "that is, the input file path (collection of codes to be analysed)"
+					+ ", the output file path, and the working directory, which is"
+					+ "the directory where the catalogue browser files are present");
 			return;
 		}
 
 		WarningUtil.performWarningChecksOnly( args );
 
+		try {
+			InstanceChecker.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		// exit from the program, we do not need anything else
 		return;
 	}
@@ -136,15 +139,28 @@ public class WarningUtil {
 	/**
 	 * Initialize the warning util with the MTX catalogue
 	 */
-	public WarningUtil() throws Exception {
+	public WarningUtil() throws MtxNotFoundException {
 		
 		CatalogueDAO catDao = new CatalogueDAO();
 		Catalogue mtx = catDao.getLastVersionByCode( "MTX" );
 		
 		if ( mtx == null )
-			throw new Exception( "THE MTX CATALOGUE WAS NOT FOUND IN THE DATABASE PLEASE CHECK!" );
+			throw new MtxNotFoundException();
 		
 		this.currentCat = mtx;
+		
+		System.err.println( "Loading catalogue data into RAM..." );
+		
+		currentCat.loadData();
+		
+		loadFileData ();
+	}
+	
+	public class MtxNotFoundException extends FileNotFoundException {
+		private static final long serialVersionUID = 6689235462817235011L;
+		public MtxNotFoundException() {
+			super ( "The MTX catalogue was not found in the catalogues metadata database, please download it." );
+		}
 	}
 	
 	/**
@@ -162,6 +178,16 @@ public class WarningUtil {
 		
 		// get the current catalogue
 		currentCat = manager.getCurrentCatalogue();
+		
+		loadFileData ();
+	}
+	
+	private void loadFileData () {
+
+		forbiddenProcesses = loadForbiddenProcesses(GlobalUtil.getBusinessrulefilename());
+		warnOptions = loadWarningOptions( GlobalUtil.getWarningcolorsfilename() );
+		warningMessages = 
+				loadWarningMessages( GlobalUtil.getWarningmessagesfilename() );
 	}
 	
 	/**
@@ -2218,8 +2244,14 @@ public class WarningUtil {
 	 */
 	public static void performWarningChecksOnly( String[] args ) {
 		
+		// set the working directory to find files
+		// with the absolute path
+		String workingDir = args[2];
+		GlobalUtil.setWorkingDirectory( workingDir );
+		
 		File input = new File( args[0] );
 		FileReader reader;
+
 		try {
 
 			// start the main database
@@ -2231,17 +2263,12 @@ public class WarningUtil {
 			WarningUtil warnUtils;
 			try {
 				warnUtils = new WarningUtil();
-			} catch (Exception e) {
+			} catch (MtxNotFoundException e) {
 				e.printStackTrace();
 				
 				GlobalUtil.showErrorDialog( new Shell(), 
 						"Error", "The MTX catalogue could not be found in the catalogues database. Please"
 								+ "download it using the Catalogue Browser and then restart this program" );
-
-				FileWriter writer = new FileWriter( new File ( args[1] ) );
-				writer.write( "The MTX catalogue could not be found in the catalogues database. Please"
-						+ " download it using the Catalogue Browser and then restart this program" );
-				writer.close();
 				return;
 			}
 			
@@ -2260,10 +2287,11 @@ public class WarningUtil {
 			// for each code perform the warning checks
 			while ( ( line = buffReader.readLine() ) != null ) {
 				
+				System.err.println( "+++++ ANALYZING CODE N° " + (lineCount+1) + " +++++" );
+				
 				// add a separator among the warnings related to different codes
 				if ( lineCount != 0 ) {
 					System.out.println(""); // add new line
-					System.err.println( "+++++ ANALYZING CODE N° " + lineCount + " +++++" );
 				}
 				
 				// perform the warnings checks for the current code 
@@ -2279,9 +2307,18 @@ public class WarningUtil {
 			// close the output file
 			out.close();
 
+			GlobalUtil.showDialog( new Shell(), 
+					"Success", "The checks were successfully completed!",
+							SWT.ICON_INFORMATION);
+
 		} catch ( IOException e) {
 			e.printStackTrace();
-			System.err.println("File Not Found or unable to read file: " + input); //$NON-NLS-1$
+			System.err.println("File Not Found or unable to read file: " + input);
+			
+			GlobalUtil.showDialog( new Shell(), 
+					"Error", "Error occurred during checks, please check the prompt console to see the errors.",
+							SWT.ICON_ERROR);
+			
 			return; 
 		}
 	}

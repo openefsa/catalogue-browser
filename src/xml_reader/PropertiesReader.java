@@ -37,7 +37,7 @@ public class PropertiesReader {
 			in.close();
 		}
 		catch ( IOException e ) {
-			e.printStackTrace();
+			System.err.println( "The default properties file was not found. Please check!" );
 		}
 		
 		return properties;
@@ -83,6 +83,9 @@ public class PropertiesReader {
 		
 		Properties prop = PropertiesReader.getProperties( 
 				GlobalUtil.appPropertiesFile );
+		
+		if ( prop == null )
+			return null;
 		
 		return prop.getProperty( property );
 	}

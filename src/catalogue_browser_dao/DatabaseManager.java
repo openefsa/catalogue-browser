@@ -54,7 +54,8 @@ public class DatabaseManager {
 	 * @return
 	 */
 	private static String getMainDBURL ( ) {
-		return "jdbc:derby:" + OFFICIAL_CAT_DB_FOLDER + MAIN_CAT_DB_FOLDER_NAME + ";user=dbuser;password=dbuserpwd";
+		return "jdbc:derby:" + OFFICIAL_CAT_DB_FOLDER + 
+				MAIN_CAT_DB_FOLDER_NAME + ";user=dbuser;password=dbuserpwd";
 	}
 
 	/**

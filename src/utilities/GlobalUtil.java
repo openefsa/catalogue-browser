@@ -40,6 +40,8 @@ import user_preferences.CataloguePreferenceDAO;
 
 public class GlobalUtil {
 	
+	private static String workDir = "";
+	
 	// directory for the user files as the settings 
 	final static public String     userFileDirName                = "User Files";
 	
@@ -48,8 +50,6 @@ public class GlobalUtil {
 	
 	// file where there is contained the selected picklist for favourite described terms
 	final static public String     selectedPicklistFilename       = getUserFileDir() + "selectedPicklist.txt"; 
-
-
 	
 	// directory which contains all the pick lists
 	final static public String     picklistsDirName               = "Picklists";
@@ -105,14 +105,26 @@ public class GlobalUtil {
 	final static public String     BusinessRulesPref              = "FoodexBrowser.EnableBusinessRules";
 	
 	
-
+	/**
+	 * Set the working directory where the directories should
+	 * be searched.
+	 * @param path
+	 */
+	public static void setWorkingDirectory( String path ) {
+		workDir = path + System.getProperty( "file.separator" );
+		System.setProperty( "user.dir", workDir );
+	}
+	
+	public static String getWorkingDir() {
+		return workDir;
+	}
 
 	/**
 	 * Get the user file directory path
 	 * @return
 	 */
 	public static String getUserFileDir() {
-		return ( userFileDirName + System.getProperty( "file.separator" ) );
+		return ( workDir + userFileDirName + System.getProperty( "file.separator" ) );
 	}
 	
 	/**
@@ -123,12 +135,22 @@ public class GlobalUtil {
 		return ( businessRulesDirName + System.getProperty( "file.separator" ) );
 	}
 	
+	public static String getBusinessrulefilename() {
+		return workDir + businessRuleFilename;
+	}
+	public static String getWarningcolorsfilename() {
+		return workDir + warningColorsFilename;
+	}
+	public static String getWarningmessagesfilename() {
+		return workDir + warningMessagesFilename;
+	}
+	
 	/**
 	 * get the picklists directory path
 	 * @return
 	 */
 	public static String getPicklistDir() {
-		return ( picklistsDirName + System.getProperty( "file.separator" ) );
+		return ( workDir + picklistsDirName + System.getProperty( "file.separator" ) );
 	}
 
 	

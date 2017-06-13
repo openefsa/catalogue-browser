@@ -2,16 +2,13 @@ package ui_main_panel;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.BindException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import catalogue_browser_dao.DatabaseManager;
-import messages.Messages;
+import instance_checker.InstanceChecker;
 import utilities.GlobalUtil;
 import xml_reader.PropertiesReader;
 
@@ -19,36 +16,6 @@ public class CatalogueBrowserMain {
 
 	public static final String ApplicationName = PropertiesReader.getAppName();
 	public static final String ProgramVersion = PropertiesReader.getAppVersion();
-
-	private static ServerSocket socket;
-	private static final int PORT = 9999;  
-
-	/**
-	 * Close the application if it is already running 
-	 * in another instance
-	 */
-	public static void closeIfAlreadyRunning() {
-		
-		try {
-			//Bind to localhost adapter with a zero connection queue 
-			socket = new ServerSocket( PORT, 0, 
-					InetAddress.getByAddress( new byte[] {127,0,0,1} ) );
-		}
-		catch (BindException e) {
-			System.err.println( "Another instance of the catalogue browser is already running!" );
-			
-			GlobalUtil.showErrorDialog( new Shell(), 
-					Messages.getString( "AlreadyRunning.ErrorTitle" ),
-					Messages.getString( "AlreadyRunning.ErrorMessage" ) );
-
-			System.exit(1);
-		}
-		catch (IOException e) {
-			System.err.println( "Unexpected error." );
-			e.printStackTrace();
-			System.exit(2);
-		}
-	}
 	
 	/**
 	 * Main, catalogue browser entry point
@@ -57,7 +24,7 @@ public class CatalogueBrowserMain {
 	 */
 	public static void main ( String[] args ) {
 		
-		closeIfAlreadyRunning();
+		InstanceChecker.closeIfAlreadyRunning();
 		
 		// application start-up message. Usage of System.err used for red chars
 		System.out.println( "Application Started " + System.currentTimeMillis() );
@@ -116,8 +83,7 @@ public class CatalogueBrowserMain {
 		
 		// close socket lock
 		try {
-			if ( socket != null )
-				socket.close();
+			InstanceChecker.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
