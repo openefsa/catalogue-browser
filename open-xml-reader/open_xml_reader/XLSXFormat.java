@@ -1,4 +1,4 @@
-package excel_file_management;
+package open_xml_reader;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -11,28 +11,35 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+/**
+ * This class is used to read the sheets data of
+ * a workbook (open xml format) and then to return its parsed data
+ * into a {@link ResultDataSet}.
+ * @author avonva
+ *
+ */
 public class XLSXFormat {
-	String			_fn		= null;
-	XSSFReader		_reader	= null;
-	XMLReader		_parser	= XMLReaderFactory.createXMLReader( "org.apache.xerces.parsers.SAXParser" );
-	WorkbookHandler	_wbXml	= null;
-	OPCPackage pkg = null;
+	
+	private XMLReader parser = XMLReaderFactory.createXMLReader( 
+			"org.apache.xerces.parsers.SAXParser" );
+	
+	private XSSFReader reader = null;
+	private WorkbookHandler workbookHandler = null;
+	private OPCPackage pkg = null;
 
 	public XLSXFormat( String filename ) throws IOException, OpenXML4JException, SAXException {
-		_fn = filename;
+
 		pkg = OPCPackage.open( filename, PackageAccess.READ );
 
-		_reader = new XSSFReader( pkg );
+		reader = new XSSFReader( pkg );
 
-		if ( _wbXml == null ) {
-			InputStream wbStream = _reader.getWorkbookData();
-			_wbXml = new WorkbookHandler();
-			_parser.setContentHandler( _wbXml );
-			_parser.parse( new InputSource( wbStream ) );
+		if ( workbookHandler == null ) {
+			InputStream wbStream = reader.getWorkbookData();
+			workbookHandler = new WorkbookHandler();
+			parser.setContentHandler( workbookHandler );
+			parser.parse( new InputSource( wbStream ) );
 			wbStream.close();
 		}
-
-		// System.out.println("CONFIG rid:"+_wbXml.getCONFIG());
 	}
 
 	/**
@@ -44,35 +51,33 @@ public class XLSXFormat {
 	 * @throws Exception
 	 */
 	public ResultDataSet processSheetName ( String name ) throws Exception {
-		if ( _reader == null )
+		
+		if ( reader == null )
 			throw new Exception( "XSSFReader is null" );
-		if ( _wbXml == null )
+		if ( workbookHandler == null )
 			throw new Exception( "WorkbookHandler is null" );
 		
-		InputStream configSheet = _reader.getSheet( fetchSheetName( name ) );
-		SheetOOXMLHandler sheetRowHandl = new SheetOOXMLHandler( _reader.getSharedStringsTable() );
-		_parser.setContentHandler( sheetRowHandl );
-		_parser.parse( new InputSource( configSheet ) );
-		configSheet.close();
-		return sheetRowHandl.getResultDataSet();
-	}
-
-	private String fetchSheetName ( String name ) throws Exception {
-		String res = "";
-		if ( name.toUpperCase().equals( "ATTRIBUTE" ) ) {
-			res = _wbXml.getATTRIBUTE();
-		} else if ( name.toUpperCase().equals( "HIERARCHY" ) ) {
-			res = _wbXml.getHIERARCHY();
-		} else if ( name.toUpperCase().equals( "TERM" ) ) {
-			res = _wbXml.getTERM();
-		} else if ( name.toUpperCase().equals( "RELEASENOTES" ) ) {
-			res = _wbXml.getRELEASENOTES();
-		} else if ( name.toUpperCase().equals( "CATALOGUE" ) ) {
-			res = _wbXml.getCATALOGUE();
-		}
-		if ( res.equals( "" ) || res == null )
+		// get the sheet relationship id using the sheet name
+		String sheetRId = workbookHandler.getSheetRelationshipId( name );
+		
+		// if not sheet id is retrieved => exception
+		if ( sheetRId.equals( "" ) || sheetRId == null )
 			throw new Exception( "FoodexXLSXFormat.fetchSheetName res null" );
-		return res;
+		
+		// get the sheet from the reader
+		InputStream sheetReader = reader.getSheet( sheetRId );
+		
+		// parse the sheet and create result data set
+		SheetOOXMLHandler sheetRowHandl = new SheetOOXMLHandler( 
+				reader.getSharedStringsTable() );
+		
+		parser.setContentHandler( sheetRowHandl );
+		parser.parse( new InputSource( sheetReader ) );
+		
+		sheetReader.close();
+		
+		// get the result data set
+		return sheetRowHandl.getResultDataSet();
 	}
 	
 	/**

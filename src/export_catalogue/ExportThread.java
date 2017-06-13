@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.eclipse.swt.widgets.Display;
 
 import catalogue.Catalogue;
-import excel_file_management.ExcelThread;
+import open_xml_reader.ExcelThread;
 
 public class ExportThread extends ExcelThread {
 

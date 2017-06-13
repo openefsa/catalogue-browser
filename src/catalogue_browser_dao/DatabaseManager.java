@@ -308,7 +308,7 @@ public class DatabaseManager {
 		System.gc();
 		
 		// close all the catalogue connections
-		catalogue.close();
+		catalogue.closeConnection();
 		
 		// delete the DB with all the subfiles
 		GlobalUtil.deleteFileCascade ( new File( catalogue.getDbFullPath() ) );

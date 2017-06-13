@@ -1,9 +1,12 @@
 package business_rules;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.text.DateFormat;
@@ -22,6 +25,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 
 import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
@@ -30,6 +34,8 @@ import catalogue_browser_dao.TermDAO;
 import catalogue_object.Hierarchy;
 import catalogue_object.Term;
 import global_manager.GlobalManager;
+import naming_convention.Headers;
+import ui_main_panel.CatalogueBrowserMain;
 import utilities.GlobalUtil;
 
 
@@ -52,13 +58,14 @@ public class WarningUtil {
 	private Catalogue currentCat;
 	
 	// log console
-	TableViewer warningsTable;
+	private TableViewer warningsTable;
 	
 	// semaphore
-	Canvas semaphore;
+	private Canvas semaphore;
 	
 	// load into memory all the warning messages from the text file
-	ArrayList<WarningMessage> warningMessages = loadWarningMessages( GlobalUtil.warningMessagesFilename );
+	private ArrayList<WarningMessage> warningMessages = 
+			loadWarningMessages( GlobalUtil.warningMessagesFilename );
 
 	// Enum type: it identifies the warning messages events (i.e. which message should be shown in a determined event?)
 	// the message id is given by the order of the event definition. So the message with id 1 will be hierarchyBaseTerm etc...
@@ -101,7 +108,50 @@ public class WarningUtil {
 	// load the color options for the warning console and messages
 	private WarningOptions warnOptions = loadWarningOptions( GlobalUtil.warningColorsFilename );
 	
-	// constructor
+	/**
+	 * Start the program by command line
+	 * @param argv
+	 */
+	public static void main ( String[] args ) {
+
+		// check if another instance using the database
+		// is already running
+		CatalogueBrowserMain.closeIfAlreadyRunning();
+		
+		// argument checks
+		if ( args.length != 2 ) {
+			System.err.println( "Wrong number of arguments, please check! "
+					+ "You have to provide two parameters,\n"
+					+ "that is, the input file path (collection of codes to be analysed) "
+					+ "and the output file path.");
+			return;
+		}
+
+		WarningUtil.performWarningChecksOnly( args );
+
+		// exit from the program, we do not need anything else
+		return;
+	}
+
+	/**
+	 * Initialize the warning util with the MTX catalogue
+	 */
+	public WarningUtil() throws Exception {
+		
+		CatalogueDAO catDao = new CatalogueDAO();
+		Catalogue mtx = catDao.getLastVersionByCode( "MTX" );
+		
+		if ( mtx == null )
+			throw new Exception( "THE MTX CATALOGUE WAS NOT FOUND IN THE DATABASE PLEASE CHECK!" );
+		
+		this.currentCat = mtx;
+	}
+	
+	/**
+	 * constructor
+	 * @param warningTable
+	 * @param semaphore
+	 */
 	public WarningUtil( TableViewer warningTable, Canvas semaphore ) {
 		
 		this.warningsTable = warningTable;
@@ -325,7 +375,6 @@ public class WarningUtil {
 		
 		// execute all the warning checks
 		performWarningChecks(fullCode, false);
-
 	}
 	
 	
@@ -745,7 +794,8 @@ public class WarningUtil {
 	 * @param facetIndex
 	 * @param facetCode
 	 */
-	private void forbiddenProcessForRawCommodityCheck ( Term baseTerm, String facetIndex, String facetCode, boolean stdOut ) {
+	private void forbiddenProcessForRawCommodityCheck ( Term baseTerm, String facetIndex, 
+			String facetCode, boolean stdOut ) {
 
 		// return if the base term is not a raw commodity ( no check has to be done ) 
 		// of if the facet is not a process
@@ -753,7 +803,8 @@ public class WarningUtil {
 			return;
 
 		// get the forbidden processes related to the baseTerm
-		ArrayList<ForbiddenProcess> currentFP = getCurrentForbiddenProcesses( baseTerm, forbiddenProcesses, stdOut );
+		ArrayList<ForbiddenProcess> currentFP = getCurrentForbiddenProcesses( baseTerm, 
+				forbiddenProcesses, stdOut );
 
 		// get all the processes codes (NOT ord code!)
 		ArrayList<String> currentFPCodes = new ArrayList<>();
@@ -775,7 +826,8 @@ public class WarningUtil {
 	 * @param facetIndex
 	 * @param facetCode
 	 */
-	private void forbiddenProcessesOrderForDerivativesCheck ( Term baseTerm, String facetIndex, String facetCode, boolean stdOut ) {
+	private void forbiddenProcessesOrderForDerivativesCheck ( Term baseTerm, 
+			String facetIndex, String facetCode, boolean stdOut ) {
 
 		// return if the base term is not a derivative ( no check has to be done ) 
 		// return if the current facet is not a process
@@ -783,7 +835,8 @@ public class WarningUtil {
 			return;
 
 		// get the forbidden processes related to the baseTerm
-		ArrayList<ForbiddenProcess> currentFP = getCurrentForbiddenProcesses( baseTerm, forbiddenProcesses, stdOut );
+		ArrayList<ForbiddenProcess> currentFP = getCurrentForbiddenProcesses( baseTerm, 
+				forbiddenProcesses, stdOut );
 
 		// get all the processes codes (NOT ord code!)
 		ArrayList<String> currentFPCodes = new ArrayList<>();
@@ -1052,8 +1105,8 @@ public class WarningUtil {
 			// get all the applicable hierarchies for the selected base term
 			ArrayList<Hierarchy> hierarchies = baseTerm.getApplicableHierarchies();
 
-			Hierarchy reportingHierarchy = currentCat.getHierarchyByCode( "report" );
-			Hierarchy exposureHierarchy = currentCat.getHierarchyByCode( "expo" );
+			Hierarchy reportingHierarchy = currentCat.getHierarchyByCode( Headers.REPORT );
+			Hierarchy exposureHierarchy = currentCat.getHierarchyByCode( Headers.EXPO );
 			
 			// if the term does not belong to both reporting and exposure hierarchy => warning
 			if( !hierarchies.contains(reportingHierarchy) && !hierarchies.contains(exposureHierarchy) )
@@ -1195,7 +1248,8 @@ public class WarningUtil {
 			// remove the base term
 			implFacetCodes = implFacetCodes.split( "#" )[1]; 
 			
-			// concat the implicit with the explicit (it is important to add the $ separator to maintain the format)
+			// concat the implicit with the explicit (it is important to add the $ 
+			// separator to maintain the format)
 			allFacetsCodes = implFacetCodes.concat( "$" + fullFacetCode );
 		}
 		
@@ -1283,7 +1337,8 @@ public class WarningUtil {
 	 * @param facetIndex
 	 * @param facetCode
 	 */
-	private void sourceInCompositeCheck ( Term baseTerm, String facetIndex, String facetCode, boolean stdOut ) {
+	private void sourceInCompositeCheck ( Term baseTerm, String facetIndex, 
+			String facetCode, boolean stdOut ) {
 		
 		// return if not composite
 		if ( !isCompositeTerm( baseTerm ) )
@@ -1300,7 +1355,8 @@ public class WarningUtil {
 	 * @param facetIndex
 	 * @param facetCode
 	 */
-	private void sourceCommodityInCompositeCheck ( Term baseTerm, String facetIndex, String facetCode, boolean stdOut ) {
+	private void sourceCommodityInCompositeCheck ( Term baseTerm, String facetIndex, 
+			String facetCode, boolean stdOut ) {
 		
 		// return if not composite
 		if ( !isCompositeTerm( baseTerm ) )
@@ -1344,7 +1400,8 @@ public class WarningUtil {
 	 * @param forbiddenProcesses
 	 * @return
 	 */
-	private ArrayList< ForbiddenProcess > getDecimalProcesses ( ArrayList< ForbiddenProcess > forbiddenProcesses ) {
+	private ArrayList< ForbiddenProcess > getDecimalProcesses ( 
+			ArrayList< ForbiddenProcess > forbiddenProcesses ) {
 		
 		// if there is no forbidden process
 		if ( forbiddenProcesses == null )
@@ -1461,7 +1518,8 @@ public class WarningUtil {
 		printWarning( event, postMessageString, false, false );
 	}
 	
-	private void printWarning( WarningEvent event, String postMessageString, boolean attachDatetime, boolean stdOut ) {
+	private void printWarning( WarningEvent event, String postMessageString, 
+			boolean attachDatetime, boolean stdOut ) {
 
 		// create the warning message to be printed
 		String message = createMessage( event, postMessageString, attachDatetime );
@@ -1557,8 +1615,6 @@ public class WarningUtil {
 			// change the color of the semaphore
 			semaphore.setBackground( warningColor );
 		}
-		
-		
 	}
 
 
@@ -1686,7 +1742,8 @@ public class WarningUtil {
 		WarningLevel warningLevel;
 		WarningLevel textWarningLevel;
 
-		private WarningMessage( int id, String message, WarningLevel warningLevel, WarningLevel textWarningLevel ) {
+		private WarningMessage( int id, String message, 
+				WarningLevel warningLevel, WarningLevel textWarningLevel ) {
 			this.id = id;
 			this.message = message;
 			this.warningLevel = warningLevel;
@@ -1998,7 +2055,6 @@ public class WarningUtil {
 						System.err.println( "Error parsing font size in warningColors options.");
 					}
 				}
-				
 			}
 
 			
@@ -2061,7 +2117,8 @@ public class WarningUtil {
 		 * the background color of the console which prints the warnings
 		 * the font size of the messages
 		 */
-		int[] semNoWarnRGB, semLowWarnRGB, semHiWarnRGB, txtNoWarnRGB, txtLowWarnRGB, txtHiWarnRGB, consoleBG = null;
+		int[] semNoWarnRGB, semLowWarnRGB, semHiWarnRGB, txtNoWarnRGB, 
+			txtLowWarnRGB, txtHiWarnRGB, consoleBG = null;
 		int fontSize = 14;
 		
 		/*
@@ -2164,14 +2221,29 @@ public class WarningUtil {
 		File input = new File( args[0] );
 		FileReader reader;
 		try {
-			
-			// TODO check that the MTX exists. If it exists => open it before doing warning checks
-			
+
 			// start the main database
 			DatabaseManager.startMainDB();
 			
-			// start the warning utils
-			WarningUtil warnUtils = new WarningUtil( null, null );
+			// start the warning utils with the mtx catalogue
+			// if it was found. Exception is raised if the MTX
+			// catalogue is not found in the catalogues database
+			WarningUtil warnUtils;
+			try {
+				warnUtils = new WarningUtil();
+			} catch (Exception e) {
+				e.printStackTrace();
+				
+				GlobalUtil.showErrorDialog( new Shell(), 
+						"Error", "The MTX catalogue could not be found in the catalogues database. Please"
+								+ "download it using the Catalogue Browser and then restart this program" );
+
+				FileWriter writer = new FileWriter( new File ( args[1] ) );
+				writer.write( "The MTX catalogue could not be found in the catalogues database. Please"
+						+ " download it using the Catalogue Browser and then restart this program" );
+				writer.close();
+				return;
+			}
 			
 			// output file (it will capture all the standard output)
 			PrintStream out = new PrintStream( new FileOutputStream( args[1] ) );
@@ -2190,8 +2262,8 @@ public class WarningUtil {
 				
 				// add a separator among the warnings related to different codes
 				if ( lineCount != 0 ) {
-					System.out.println(""); // add new line //$NON-NLS-1$
-					System.err.println( "+++++ ANALYZING CODE N° " + lineCount + " +++++" ); //$NON-NLS-1$ //$NON-NLS-2$
+					System.out.println(""); // add new line
+					System.err.println( "+++++ ANALYZING CODE N° " + lineCount + " +++++" );
 				}
 				
 				// perform the warnings checks for the current code 
@@ -2207,7 +2279,7 @@ public class WarningUtil {
 			// close the output file
 			out.close();
 
-		} catch (Exception e) {
+		} catch ( IOException e) {
 			e.printStackTrace();
 			System.err.println("File Not Found or unable to read file: " + input); //$NON-NLS-1$
 			return; 

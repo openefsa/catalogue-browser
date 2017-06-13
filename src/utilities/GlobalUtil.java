@@ -313,7 +313,6 @@ public class GlobalUtil {
 		SimpleDateFormat format = new SimpleDateFormat( dateFormat );
 	    Date parsedDate = format.parse( dateString );
 	    return new java.sql.Timestamp( parsedDate.getTime() );
-		
 	}
 	
 	/**

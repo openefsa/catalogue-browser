@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 import catalogue.Catalogue;
 import catalogue_object.Term;
-import excel_file_management.ResultDataSet;
+import open_xml_reader.ResultDataSet;
 
 /**
  * Sheet importer. Abstract class to create the skeleton program
@@ -34,9 +34,24 @@ public abstract class SheetImporter<T> {
 	}
 	
 	/**
-	 * Initialize the import process of a sheet
+	 * Start the import process of the sheet
+	 * without limitations on the batch size
 	 */
 	public void importSheet() {
+		importSheet( Integer.MAX_VALUE );
+	}
+	
+	/**
+	 * Start the import process of the sheet
+	 * @param batchSize the maximum number of records
+	 * which should be maintained in memory each time
+	 * before inserting them into the physical database
+	 * A bigger batchSize improves the speed of the process,
+	 * but increases the memory usage. On the other hand,
+	 * a smaller batchSize slows down the process but uses
+	 * less ram memory.
+	 */
+	public void importSheet( int batchSize ) {
 		
 		// list of all objects which were parsed
 		Collection<T> objs = new ArrayList<>();
@@ -59,10 +74,28 @@ public abstract class SheetImporter<T> {
 			// were created
 			if ( allObjs != null )
 				objs.addAll( allObjs );
+			
+			// if maximum limit is reached insert
+			// the batch of objects and clear the
+			// array list memory
+			if ( objs.size() >= batchSize ) {
+				
+				insert ( objs );
+				
+				// clear variables
+				allObjs = null;
+				obj = null;
+				objs.clear();
+				
+				// run garbage collector to
+				// remove from memory useless variables
+				System.gc();
+			}
 		}
 		
-		// insert all the T objects into the db
-		insert( objs );
+		// insert all the remaining T objects into the db
+		if ( !objs.isEmpty() )
+			insert( objs );
 	}
 
 	/**

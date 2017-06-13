@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import catalogue.Catalogue;
-import sheet_converter.SpecialValues;
+import naming_convention.SpecialValues;
 import term_type.TermType;
 import term_type.TermTypeDAO;
 

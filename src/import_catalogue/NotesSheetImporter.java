@@ -8,8 +8,8 @@ import java.util.Collection;
 import catalogue.Catalogue;
 import catalogue.ReleaseNotesOperation;
 import catalogue_browser_dao.ReleaseNotesOperationDAO;
-import excel_file_management.ResultDataSet;
-import sheet_converter.Headers;
+import naming_convention.Headers;
+import open_xml_reader.ResultDataSet;
 import sheet_converter.NotesSheetConverter;
 
 public class NotesSheetImporter extends SheetImporter<ReleaseNotesOperation> {

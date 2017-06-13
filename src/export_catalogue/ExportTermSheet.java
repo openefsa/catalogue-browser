@@ -11,8 +11,8 @@ import catalogue_browser_dao.HierarchyDAO;
 import catalogue_object.Attribute;
 import catalogue_object.Hierarchy;
 import catalogue_object.Mappable;
-import sheet_converter.Headers;
-import sheet_converter.SheetHeader;
+import naming_convention.Headers;
+import sheet_header.SheetHeader;
 
 /**
  * Export the terms, attribute values for each term and the term applicabilities

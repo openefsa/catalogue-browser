@@ -286,11 +286,9 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	}
 	
 	/**
-	 * Close the catalogue
+	 * Close the connection with the catalogue db
 	 */
-	public void close() {
-		
-		System.out.println ( "Closing " + this + " at " + dbFullPath );
+	public void closeConnection() {
 		
 		// shutdown the connection, by default this operation throws an exception
 		// but the command is correct! We close the connection since we close the db
@@ -300,6 +298,16 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 			System.out.println ( "System shutted down with code : " + e.getErrorCode() + " and state " + e.getSQLState() );
 			System.out.println ( "Correct shutdown has code 45000 and state 08006" );
 		}
+	}
+	
+	/**
+	 * Close the catalogue
+	 */
+	public void close() {
+		
+		System.out.println ( "Closing " + this + " at " + dbFullPath );
+		
+		closeConnection();
 		
 		// clear data in ram
 		clearData();

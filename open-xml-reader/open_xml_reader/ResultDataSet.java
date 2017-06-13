@@ -1,4 +1,4 @@
-package excel_file_management;
+package open_xml_reader;
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
@@ -18,14 +18,14 @@ import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.poi.ss.usermodel.DateUtil;
-
-import utilities.GlobalUtil;
 
 /**
  * This class provides an interface for data set from Parsing raw excel data.
@@ -271,7 +271,7 @@ public class ResultDataSet implements ResultSet {
 			
 			// if we need to convert from an excel date, we convert it
 			if ( excelDate )
-				ts = GlobalUtil.toSQLTimestamp( DateUtil.getJavaDate( date ) );
+				ts = toSQLTimestamp( DateUtil.getJavaDate( date ) );
 			else // otherwise directly create a timestamp from the long date
 				ts = new Timestamp( date );
 		}
@@ -280,7 +280,7 @@ public class ResultDataSet implements ResultSet {
 			// it was a string! => format as simple string
 			try {
 				
-				ts = GlobalUtil.getTimestampFromString( value, "yyyy/MM/dd" );
+				ts = getTimestampFromString( value, "yyyy/MM/dd" );
 				
 			} catch (ParseException e1) {
 				e1.printStackTrace();
@@ -289,7 +289,35 @@ public class ResultDataSet implements ResultSet {
 		return ts;
 	}
 	
-
+	/**
+	 * Convert a java.util.date in a java.sql.timestamp, in order to store the information
+	 * in a jdbc database
+	 * @param date
+	 * @return
+	 */
+	public static java.sql.Timestamp toSQLTimestamp ( Date date ) {
+		
+		// get the timestamp from the date
+		java.sql.Timestamp timestamp = new java.sql.Timestamp( date.getTime() );
+		
+		// return the timestamp
+		return timestamp; 
+	}
+	
+	/**
+	 * Trasform a date string into a timestamp
+	 * @param dateString
+	 * @param dateFormat
+	 * @return
+	 * @throws ParseException
+	 */
+	public static java.sql.Timestamp getTimestampFromString ( String dateString, 
+			String dateFormat ) throws ParseException {
+		
+		SimpleDateFormat format = new SimpleDateFormat( dateFormat );
+	    Date parsedDate = format.parse( dateString );
+	    return new java.sql.Timestamp( parsedDate.getTime() );
+	}
 	
 	
 	/**

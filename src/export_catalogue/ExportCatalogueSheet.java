@@ -7,8 +7,8 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
 import catalogue.Catalogue;
 import catalogue_object.Mappable;
-import sheet_converter.Headers;
-import sheet_converter.SheetHeader;
+import naming_convention.Headers;
+import sheet_header.SheetHeader;
 
 /**
  * Class to export the current catalogue metadata into a catalogue worksheet

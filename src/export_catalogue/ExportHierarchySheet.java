@@ -8,8 +8,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import catalogue.Catalogue;
 import catalogue_browser_dao.HierarchyDAO;
 import catalogue_object.Mappable;
-import sheet_converter.Headers;
-import sheet_converter.SheetHeader;
+import naming_convention.Headers;
+import sheet_header.SheetHeader;
 
 public class ExportHierarchySheet extends SheetWriter {
 

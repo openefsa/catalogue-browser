@@ -12,8 +12,8 @@ import catalogue_object.Attribute;
 import catalogue_object.RepeatableParser;
 import catalogue_object.Term;
 import catalogue_object.TermAttribute;
-import excel_file_management.ResultDataSet;
-import sheet_converter.Headers;
+import naming_convention.Headers;
+import open_xml_reader.ResultDataSet;
 
 /**
  * Importer of the term attributes

@@ -1,4 +1,4 @@
-package excel_file_management;
+package open_xml_reader;
 
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;

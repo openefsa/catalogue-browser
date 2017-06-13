@@ -2,9 +2,10 @@ package import_catalogue;
 
 import catalogue.Catalogue;
 import catalogue_browser_dao.ReleaseNotesDAO;
-import excel_file_management.ResultDataSet;
-import excel_file_management.XLSXFormat;
 import messages.Messages;
+import naming_convention.Headers;
+import open_xml_reader.ResultDataSet;
+import open_xml_reader.XLSXFormat;
 import ui_progress_bar.FormProgressBar;
 import ui_search_bar.SearchOptionDAO;
 import user_preferences.CataloguePreferenceDAO;
@@ -60,14 +61,17 @@ public class CatalogueWorkbookImporter {
 	 */
 	public void importWorkbook( String dbPath, String filename ) throws Exception {
 
+		updateProgressBar( 1, Messages.getString("ImportExcelXLSX.ReadingData") );
+		
 		// get the excel data
 		XLSXFormat rawData = new XLSXFormat( filename );
 		
 		System.out.println( "Importing catalogue sheet" );
+		updateProgressBar( 1, Messages.getString("ImportExcelXLSX.ImportCatalogue") );
 		
 		// get the catalogue sheet and check if the catalogues are compatible
 		// (the open catalogue and the one we want to import)
-		ResultDataSet sheetData = rawData.processSheetName( "catalogue" );
+		ResultDataSet sheetData = rawData.processSheetName( Headers.CAT_SHEET_NAME );
 
 		CatalogueSheetImporter catImp = 
 				new CatalogueSheetImporter( dbPath, sheetData );
@@ -85,7 +89,7 @@ public class CatalogueWorkbookImporter {
 		updateProgressBar( 10, Messages.getString("ImportExcelXLSX.ImportHierarchyLabel") );
 		
 		// get the hierarchy sheet
-		sheetData = rawData.processSheetName( "hierarchy" );
+		sheetData = rawData.processSheetName( Headers.HIER_SHEET_NAME );
 		HierarchySheetImporter hierImp = new 
 				HierarchySheetImporter( catalogue, sheetData );
 		hierImp.setMasterCode( catExcelCode );
@@ -98,7 +102,7 @@ public class CatalogueWorkbookImporter {
 		updateProgressBar( 10, Messages.getString("ImportExcelXLSX.ImportAttributeLabel") );
 		
 		// get the attribute sheet
-		sheetData = rawData.processSheetName( "attribute" );
+		sheetData = rawData.processSheetName( Headers.ATTR_SHEET_NAME );
 
 		AttributeSheetImporter attrImp = new 
 				AttributeSheetImporter( catalogue, sheetData );
@@ -111,11 +115,11 @@ public class CatalogueWorkbookImporter {
 		updateProgressBar( 20, Messages.getString("ImportExcelXLSX.ImportTermLabel") );
 		
 		// get the term sheet
-		sheetData = rawData.processSheetName( "term" );
+		sheetData = rawData.processSheetName( Headers.TERM_SHEET_NAME );
 		TermSheetImporter termImp = new 
 				TermSheetImporter( catalogue, sheetData );
 		
-		termImp.importSheet();
+		termImp.importSheet( 500 );
 		
 		
 		// restart term data scanning from first
@@ -127,7 +131,7 @@ public class CatalogueWorkbookImporter {
 		// import term attributes
 		TermAttributeImporter taImp = new 
 				TermAttributeImporter( catalogue, sheetData );
-		taImp.importSheet();
+		taImp.importSheet( 2000 );
 		
 		// import the term types related to the attributes
 		TermTypeImporter ttImp = new TermTypeImporter( catalogue );
@@ -144,7 +148,7 @@ public class CatalogueWorkbookImporter {
 		// import parent terms
 		ParentImporter parentImp = new 
 				ParentImporter( catalogue, sheetData );
-		parentImp.importSheet();
+		parentImp.importSheet( 2000 );
 		
 		
 		System.out.println( "Importing release notes sheet" );
@@ -160,7 +164,7 @@ public class CatalogueWorkbookImporter {
 		// import the release notes operations
 		try {
 
-			sheetData = rawData.processSheetName( "releaseNotes" );
+			sheetData = rawData.processSheetName( Headers.NOTES_SHEET_NAME );
 			NotesSheetImporter notesImp = new 
 					NotesSheetImporter( catalogue, sheetData );
 			notesImp.importSheet();

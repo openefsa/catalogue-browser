@@ -1,4 +1,4 @@
-package excel_file_management;
+package open_xml_reader;
 import java.util.ArrayList;
 
 import org.apache.poi.xssf.model.SharedStringsTable;
@@ -7,6 +7,13 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+/**
+ * This class parse a xlsx file and read it as an open xml file.
+ * All the data are written then into the {@link ResultDataSet}
+ * object, which can be used externally to use the data.
+ * @author avonva
+ *
+ */
 public class SheetOOXMLHandler extends DefaultHandler {
 
 	private SharedStringsTable				_sst;

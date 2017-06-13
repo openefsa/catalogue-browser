@@ -11,8 +11,8 @@ import catalogue.CatalogueBuilder;
 import catalogue.ReleaseNotes;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_browser_dao.DatabaseManager;
-import excel_file_management.ResultDataSet;
-import sheet_converter.Headers;
+import naming_convention.Headers;
+import open_xml_reader.ResultDataSet;
 
 public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 

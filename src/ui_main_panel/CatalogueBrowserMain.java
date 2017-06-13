@@ -10,7 +10,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-import business_rules.WarningUtil;
 import catalogue_browser_dao.DatabaseManager;
 import messages.Messages;
 import utilities.GlobalUtil;
@@ -28,7 +27,7 @@ public class CatalogueBrowserMain {
 	 * Close the application if it is already running 
 	 * in another instance
 	 */
-	private static void closeIfAlreadyRunning() {
+	public static void closeIfAlreadyRunning() {
 		
 		try {
 			//Bind to localhost adapter with a zero connection queue 
@@ -83,26 +82,6 @@ public class CatalogueBrowserMain {
 
 		// connect to the main database and start it
 		DatabaseManager.startMainDB();
-
-		// Here the program stars showing the graphical interface, 
-		// so here we call a specific function
-		// to use only warnings if needed
-		if ( args.length > 0 ) {
-			
-			// argument checks
-			if ( args.length != 2 ) {
-				System.err.println( "Wrong number of arguments, please check! Remember that if you want \n"
-						+ "to use the Foodex Browser as Warning Checker you have to provide two parameters,\n"
-						+ "that is, the input file path (collection of codes to be analysed) and the output file path.\n"
-						+ "Otherwise, if you want to open the Foodex Browser Interface, no argument has to be set.");
-				return;
-			}
-			
-			WarningUtil.performWarningChecksOnly( args );
-			
-			// exit from the program, we do not need anything else
-			return;
-		}
 		
 		// create the display and shell
 		Display display = new Display();

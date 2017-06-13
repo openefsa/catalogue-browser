@@ -6,7 +6,7 @@ import catalogue.Catalogue;
 import data_transformation.BooleanConverter;
 import data_transformation.DateTrimmer;
 import global_manager.GlobalManager;
-import sheet_converter.SpecialValues;
+import naming_convention.SpecialValues;
 import term.WrongKeyException;
 
 public class Attribute extends SortableCatalogueObject implements Mappable {

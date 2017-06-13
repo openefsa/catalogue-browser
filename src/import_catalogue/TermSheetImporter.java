@@ -6,8 +6,8 @@ import catalogue.Catalogue;
 import catalogue_browser_dao.TermDAO;
 import catalogue_object.Term;
 import catalogue_object.TermBuilder;
-import excel_file_management.ResultDataSet;
-import sheet_converter.Headers;
+import naming_convention.Headers;
+import open_xml_reader.ResultDataSet;
 
 /**
  * Importer of the term sheet

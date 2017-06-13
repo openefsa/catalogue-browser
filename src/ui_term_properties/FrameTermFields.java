@@ -31,7 +31,7 @@ import detail_level.ContentProviderDetailLevel;
 import detail_level.DetailLevelGraphics;
 import detail_level.LabelProviderDetailLevel;
 import messages.Messages;
-import sheet_converter.SpecialValues;
+import naming_convention.SpecialValues;
 import term_type.ContentProviderTermType;
 import term_type.LabelProviderTermType;
 import term_type.TermType;

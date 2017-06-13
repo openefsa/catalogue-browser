@@ -1,16 +1,10 @@
 package ui_progress_bar;
-import messages.Messages;
-import java.util.Set;
-
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -24,7 +18,6 @@ public class FormProgressBar {
 	private Shell shell;
 	private Shell currentShell;
 	private ProgressBar	progressBar;
-	private Button cancel;
 	private Label label;
 
 	private String title;
@@ -97,46 +90,12 @@ public class FormProgressBar {
 		gridData.grabExcessVerticalSpace = true;
 		progressBar.setLayoutData( gridData );
 
-		// show the cancel button only if it is enabled
-		if ( cancelEnabled ) {
-			cancel = new Button( grp , SWT.TOGGLE );
-			gridData = new GridData();
-			gridData.verticalAlignment = SWT.CENTER;
-			gridData.horizontalAlignment = SWT.FILL;
-			gridData.grabExcessHorizontalSpace = false;
-			gridData.grabExcessVerticalSpace = true;
-			cancel.setLayoutData( gridData );
-			cancel.setText( Messages.getString("FormProgressBar.CancelButton") ); //$NON-NLS-1$
-			cancel.pack(); 
-		}
-
 		Monitor primary = parentShell.getMonitor();
 		Rectangle bounds = primary.getBounds();
 		Rectangle pict = currentShell.getBounds();
 		int x = bounds.x + ( bounds.width - pict.width ) / 2;
 		int y = bounds.y + ( bounds.height - pict.height ) / 2;
 		currentShell.setLocation( x, y );
-
-		// if cancel enabled set the listener 
-		if ( cancelEnabled )
-			cancel.addSelectionListener( new SelectionAdapter() {
-
-				@Override
-				public void widgetSelected ( SelectionEvent event ) {
-
-					currentShell.close();
-
-					// Get all the threads
-					Set<Thread> setOfThread = Thread.getAllStackTraces().keySet();
-
-					// Stop the excel export thread (cancel allowed only for export thread)
-					for(Thread thread : setOfThread){
-						if( thread.getName().equals("ExportThread") ) {
-							thread.interrupt();
-						}
-					}
-				}
-			} );
 	}
 
 	/**

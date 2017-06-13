@@ -13,7 +13,7 @@ import catalogue_object.Attribute;
 import catalogue_object.AttributeBuilder;
 import catalogue_object.Term;
 import catalogue_object.TermAttribute;
-import sheet_converter.SpecialValues;
+import naming_convention.SpecialValues;
 
 /**
  * Class to manage all the database interactions with the attribute table

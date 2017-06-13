@@ -6,8 +6,8 @@ import catalogue.Catalogue;
 import catalogue_browser_dao.HierarchyDAO;
 import catalogue_object.Hierarchy;
 import catalogue_object.HierarchyBuilder;
-import excel_file_management.ResultDataSet;
-import sheet_converter.Headers;
+import naming_convention.Headers;
+import open_xml_reader.ResultDataSet;
 
 /**
  * Import the hierarchy sheet

@@ -12,9 +12,9 @@ import catalogue_object.Applicability;
 import catalogue_object.Hierarchy;
 import catalogue_object.Nameable;
 import catalogue_object.Term;
-import excel_file_management.ResultDataSet;
-import sheet_converter.Headers;
-import sheet_converter.SpecialValues;
+import naming_convention.Headers;
+import naming_convention.SpecialValues;
+import open_xml_reader.ResultDataSet;
 
 public class ParentImporter extends SheetImporter<Applicability> {
 

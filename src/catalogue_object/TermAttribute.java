@@ -7,7 +7,7 @@ import catalogue.Catalogue;
 import catalogue_browser_dao.AttributeDAO;
 import detail_level.DetailLevelGraphics;
 import global_manager.GlobalManager;
-import sheet_converter.SpecialValues;
+import naming_convention.SpecialValues;
 import term_type.TermType;
 
 /**
