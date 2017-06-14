@@ -4,6 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
 import catalogue.Catalogue;
+import dcf_log_util.LogNodesForm;
 import dcf_user.User;
 import dcf_webservice.DcfResponse;
 import dcf_webservice.ReserveLevel;
@@ -46,6 +47,9 @@ public class DefaultListeners {
 								openNewVersion( pp.getCatalogue() );
 							}
 
+							// show log errors
+							showErrorsDialog ( ui, pp );
+							
 							// warn the user of publish status
 							warnPublishResponse( pp, response, ui );
 						}
@@ -99,6 +103,20 @@ public class DefaultListeners {
 		return listener;
 	}
 	
+	/**
+	 * Show the log errors table
+	 * @param ui
+	 * @param pa
+	 */
+	private static void showErrorsDialog ( UpdateableUI ui, PendingAction pa ) {
+		
+		// do not show anything if no log nodes are found
+		if ( pa.getParsedLog().getLogNodes().isEmpty() )
+			return;
+		
+		LogNodesForm errors = new LogNodesForm ( ui.getShell(), pa.getParsedLog() );
+		errors.display();
+	}
 	
 	/**
 	 * Warn the user of the dcf response related to publish operations.
@@ -217,6 +235,9 @@ public class DefaultListeners {
 						if ( pendingAction instanceof PendingReserve ) {
 							
 							PendingReserve pr = (PendingReserve) pendingAction;
+							
+							// show log errors
+							showErrorsDialog ( ui, pr );
 							
 							warnReserveResponse( pr, response, ui );
 						}

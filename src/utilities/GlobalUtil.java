@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.Format;
 import java.text.ParseException;
@@ -330,11 +331,13 @@ public class GlobalUtil {
 	 * @return
 	 * @throws ParseException
 	 */
-	public static java.sql.Timestamp getTimestampFromString ( String dateString, String dateFormat ) throws ParseException {
+	public static Timestamp getTimestampFromString ( String dateString, 
+			String dateFormat ) throws ParseException {
 		
 		SimpleDateFormat format = new SimpleDateFormat( dateFormat );
 	    Date parsedDate = format.parse( dateString );
-	    return new java.sql.Timestamp( parsedDate.getTime() );
+	    Timestamp ts = new Timestamp( parsedDate.getTime() );
+	    return ts;
 	}
 	
 	/**

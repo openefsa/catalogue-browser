@@ -1,6 +1,6 @@
 package dcf_log_util;
 
-import org.w3c.dom.Document;
+import java.io.File;
 
 import dcf_manager.Dcf;
 import dcf_pending_action.PendingAction.Priority;
@@ -70,9 +70,9 @@ public class LogDownloader {
 	 * @return the log if it was found within the maximum number of attempts
 	 * otherwise null.
 	 */
-	public Document getLog() {
+	public File getLog() {
 		
-		Document log = null;
+		File log = null;
 		
 		// number of tried attempts
 		int attemptsCount = 1;

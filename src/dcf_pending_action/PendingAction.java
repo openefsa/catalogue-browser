@@ -1,5 +1,6 @@
 package dcf_pending_action;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -7,16 +8,18 @@ import javax.xml.transform.TransformerException;
 
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import catalogue.Catalogue;
+import dcf_log_util.DcfLog;
+import dcf_log_util.DcfLogParser;
 import dcf_log_util.LogDownloader;
 import dcf_user.User;
 import dcf_webservice.DcfResponse;
 import dcf_webservice.Publish.PublishLevel;
 import dcf_webservice.ReserveLevel;
 import ui_progress_bar.FormProgressBar;
+import utilities.GlobalUtil;
 
 /**
  * Class which models a generic pending action, that is, a
@@ -40,6 +43,7 @@ public abstract class PendingAction {
 	
 	// the reserve log code that we need to retrieve
 	private String logCode;
+	private DcfLog parsedLog;
 
 	// the username of the user who made the reserve action
 	private String username;
@@ -117,7 +121,7 @@ public abstract class PendingAction {
 		// update the status
 		setStatus( PendingReserveStatus.SENDING );
 		
-		Document log = getLog();
+		File log = getLog();
 
 		// if no log in high priority => the available time is finished
 		if ( log == null && priority == Priority.HIGH ) {
@@ -135,12 +139,7 @@ public abstract class PendingAction {
 			
 			// downgrade the pending reserve priority
 			downgradePriority();
-			try {
-				Thread.sleep( 10000 );
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+
 			// restart the process with low priority
 			log = getLog();
 		}
@@ -153,11 +152,13 @@ public abstract class PendingAction {
 		// then it was found since we found it for
 		// sure if we are in LOW priority
 		
-		processLog ( log );
+		this.parsedLog = parseLog ( log );
+		
+		processLog ( parsedLog );
 		
 		// get the response of the dcf looking
 		// into the log document
-		this.response = extractLogResponse( log );
+		this.response = extractLogResponse( parsedLog );
 		
 		// notify that a response was received
 		if ( listener != null )
@@ -165,6 +166,26 @@ public abstract class PendingAction {
 		
 		// process the dcf response
 		processResponse ( response );
+	}
+	
+	/**
+	 * Parse the log file and return it
+	 * @param log
+	 * @return
+	 */
+	private DcfLog parseLog ( File log ) {
+		
+		// analyze the log to get the result
+		DcfLogParser parser = new DcfLogParser ();
+		DcfLog parsedLog = null;
+
+		try {
+			parsedLog = parser.parse( log );
+		} catch (SAXException | IOException e) {
+			e.printStackTrace();
+		}
+		
+		return parsedLog;
 	}
 	
 	/**
@@ -183,6 +204,13 @@ public abstract class PendingAction {
 		
 		// update the catalogue status
 		catalogue.setRequestingAction( false );
+		
+		// delete the log filename
+		try {
+			GlobalUtil.deleteFileCascade( parsedLog.getLogFilename() );
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -276,9 +304,9 @@ public abstract class PendingAction {
 	 * @return the log related to the reserve operation if it
 	 * was found in the available time, otherwise null
 	 */
-	private Document getLog () {
+	private File getLog () {
 		
-		Document log = null;
+		File log = null;
 		
 		int attempts = 12;              // 12 times 10 seconds => 2 minutes
 		long interAttemptsTime = 10000; 
@@ -387,6 +415,14 @@ public abstract class PendingAction {
 	 */
 	public String getLogCode() {
 		return logCode;
+	}
+	
+	/**
+	 * Get the parsed log if it was created.
+	 * @return
+	 */
+	public DcfLog getParsedLog() {
+		return parsedLog;
 	}
 	
 	/**
@@ -504,14 +540,14 @@ public abstract class PendingAction {
 	 * Process the log content
 	 * @param log
 	 */
-	public abstract void processLog( Document log );
+	public abstract void processLog( DcfLog log );
 	
 	/**
 	 * Extract the dcf response from the retrieved log document
 	 * @param log
 	 * @return
 	 */
-	public abstract DcfResponse extractLogResponse ( Document log );
+	public abstract DcfResponse extractLogResponse ( DcfLog log );
 	
 	/**
 	 * Process the dcf response related to this pending action

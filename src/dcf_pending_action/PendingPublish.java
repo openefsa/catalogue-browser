@@ -2,11 +2,10 @@ package dcf_pending_action;
 
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.w3c.dom.Document;
 
 import catalogue.Catalogue;
 import catalogue_object.Status;
-import dcf_log_util.LogParser;
+import dcf_log_util.DcfLog;
 import dcf_webservice.DcfResponse;
 import dcf_webservice.Publish.PublishLevel;
 
@@ -73,15 +72,12 @@ public class PendingPublish extends PendingAction {
 	public void manageBusyStatus() {}
 
 	@Override
-	public DcfResponse extractLogResponse(Document log) {
+	public DcfResponse extractLogResponse(DcfLog log) {
 		
 		DcfResponse response;
 		
-		// analyze the log to get the result
-		LogParser parser = new LogParser ( log );
-		
-		Status catStatus = parser.getCatalogueStatus();
-		boolean correct = parser.isOperationCorrect();
+		Status catStatus = log.getCatalogueStatus();
+		boolean correct = log.isMacroOperationCorrect();
 		boolean isDraft = catStatus.isDraft();
 		
 		// if we have sent a minor reserve but the
@@ -153,5 +149,5 @@ public class PendingPublish extends PendingAction {
 
 
 	@Override
-	public void processLog(Document log) {}
+	public void processLog(DcfLog log) {}
 }

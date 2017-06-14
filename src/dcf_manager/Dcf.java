@@ -1,17 +1,13 @@
 package dcf_manager;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 
 import javax.xml.soap.SOAPException;
 
 import org.eclipse.swt.widgets.Listener;
-import org.w3c.dom.Document;
 
 import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
@@ -331,15 +327,15 @@ public class Dcf {
 	 * Export a log from the dcf given its code
 	 * @param logCode the code of the log which needs to
 	 * be downloaded
-	 * @return a dom document which contains the log
+	 * @return the file which points to the log file
 	 */
-	public Document exportLog ( String logCode ) {
+	public File exportLog ( String logCode ) {
 		
 		// ask for the log to the dcf
 		ExportCatalogueFile export = new ExportCatalogueFile( type );
 
-		// get the log document
-		return export.exportLog( logCode );
+		// write the log document in xml format
+		return export.exportEfficientLog( logCode, logCode + ".xml" );
 	}
 
 	/**
@@ -360,24 +356,7 @@ public class Dcf {
 		ExportCatalogueFile export = new ExportCatalogueFile( type );
 
 		// get the catalogue xml as input stream
-		InputStream stream = export.exportLastInternalVersion( catalogueCode );
-		
-		// if not internal version ok, you can go on
-		if ( stream == null ) {
-			System.out.println ( "No internal version found for " + catalogueCode );
-			return false;
-		}
-
-		// write the input stream into the .xml file
-		byte[] buffer = new byte[ stream.available() ];
-		stream.read( buffer );
-
-		// save the last internal version into a file
-		// in order to possibly import it by the xml
-		File targetFile = new File( filename );
-		OutputStream outStream = new FileOutputStream( targetFile );
-		outStream.write( buffer );
-		outStream.close();
+		export.exportLastInternalVersion( catalogueCode, filename );
 		
 		return true;
 	}

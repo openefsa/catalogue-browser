@@ -2,11 +2,10 @@ package dcf_pending_action;
 
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.w3c.dom.Document;
 
 import catalogue.Catalogue;
 import catalogue_object.Status;
-import dcf_log_util.LogParser;
+import dcf_log_util.DcfLog;
 import dcf_webservice.DcfResponse;
 import dcf_webservice.ReserveLevel;
 
@@ -190,13 +189,10 @@ public class PendingReserve extends PendingAction {
 	}
 	
 	@Override
-	public void processLog(Document log) {
-		
-		// analyze the log to get the result
-		LogParser parser = new LogParser ( log );
+	public void processLog(DcfLog log) {
 		
 		// get if we need a new version
-		this.needNewVersion = parser.getCatalogueVersion().compareTo( 
+		this.needNewVersion = log.getCatalogueVersion().compareTo( 
 				getCatalogue().getCatalogueVersion() ) < 0;
 	}
 	
@@ -206,15 +202,12 @@ public class PendingReserve extends PendingAction {
 	 * @return the dcf response contained in the log
 	 */
 	@Override
-	public DcfResponse extractLogResponse ( Document log ) {
+	public DcfResponse extractLogResponse ( DcfLog log ) {
 		
 		DcfResponse response;
 		
-		// analyze the log to get the result
-		LogParser parser = new LogParser ( log );
-		
-		Status catStatus = parser.getCatalogueStatus();
-		boolean correct = parser.isOperationCorrect();
+		Status catStatus = log.getCatalogueStatus();
+		boolean correct = log.isMacroOperationCorrect();
 		boolean minorForbidden = catStatus.isDraft() && catStatus.isMajor() 
 				&& reserveLevel.isMinor();
 		

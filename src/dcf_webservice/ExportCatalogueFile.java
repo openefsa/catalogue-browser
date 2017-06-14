@@ -1,11 +1,11 @@
 package dcf_webservice;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPConnection;
@@ -14,7 +14,6 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
 import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
 import dcf_manager.AttachmentHandler;
 import dcf_manager.Dcf.DcfType;
@@ -44,6 +43,7 @@ public class ExportCatalogueFile extends SOAPAction {
 	private String catalogueCode;
 	private String exportType;
 	private String fileType;
+	private String filename;
 	
 	/**
 	 * Initialize the export file action
@@ -58,7 +58,7 @@ public class ExportCatalogueFile extends SOAPAction {
 	 */
 	public Document exportLog( String code ) {
 		
-		Object log = exportXml ( code, EXPORT_TYPE_LOG );
+		Object log = exportXml ( code, EXPORT_TYPE_LOG, null );
 		
 		if ( log != null )
 			return (Document) log;
@@ -71,13 +71,28 @@ public class ExportCatalogueFile extends SOAPAction {
 	 * @param catalogueCode the code of the catalogue we want to consider
 	 * @return the input stream containing the xml catalogue data
 	 */
-	public InputStream exportLastInternalVersion ( String catalogueCode ) {
+	public File exportEfficientLog ( String code, String filename ) {
+		
+		Object log = exportXml ( code, EXPORT_TYPE_LOG, XML_FILE_TYPE, filename );
+		
+		if ( log != null )
+			return (File) log;
+		
+		return null;
+	}
+	
+	/**
+	 * Export the last internal version of the catalogue.
+	 * @param catalogueCode the code of the catalogue we want to consider
+	 * @return the input stream containing the xml catalogue data
+	 */
+	public File exportLastInternalVersion ( String catalogueCode, String filename  ) {
 		
 		Object lastVersion = exportXml ( catalogueCode, 
-				EXPORT_TYPE_INTERNAL_VERSION, XML_FILE_TYPE );
+				EXPORT_TYPE_INTERNAL_VERSION, XML_FILE_TYPE, filename );
 		
 		if ( lastVersion != null )
-			return (InputStream) lastVersion;
+			return (File) lastVersion;
 		
 		return null;
 	}
@@ -90,8 +105,8 @@ public class ExportCatalogueFile extends SOAPAction {
 	 * @param exportType the export type (see GDE2)
 	 * @return an object containing the xml structure (document or inputstream)
 	 */
-	private Object exportXml ( String code, String exportType ) {
-		return exportXml( code, exportType, null );
+	private Object exportXml ( String code, String exportType, String filename ) {
+		return exportXml( code, exportType, null, filename );
 	}
 	
 	/**
@@ -103,11 +118,13 @@ public class ExportCatalogueFile extends SOAPAction {
 	 * @param fileType the type of the attachment we want
 	 * @return an object containing the xml structure
 	 */
-	private Object exportXml ( String code, String exportType, String fileType ) {
+	private Object exportXml ( String code, String exportType, 
+			String fileType, String filename ) {
 		
 		this.catalogueCode = code;
 		this.exportType = exportType;
 		this.fileType = fileType;
+		this.filename = filename;
 		
 		Object result = export();
 
@@ -177,10 +194,10 @@ public class ExportCatalogueFile extends SOAPAction {
 		// on the export type field
 		switch ( exportType ) {
 		case EXPORT_TYPE_LOG:
-			response = processXml ( soapResponse );
+			response = processEfficientXml ( soapResponse, true );
 			break;
 		case EXPORT_TYPE_INTERNAL_VERSION:
-			response = processEfficientXml( soapResponse );
+			response = processEfficientXml( soapResponse, false );
 			break;
 		default:
 			break;
@@ -195,7 +212,7 @@ public class ExportCatalogueFile extends SOAPAction {
 	 * @return the input stream containing the xml
 	 * @throws SOAPException
 	 */
-	private InputStream processEfficientXml ( SOAPMessage soapResponse ) throws SOAPException {
+	private File processEfficientXml ( SOAPMessage soapResponse, boolean isZipped ) throws SOAPException {
 		
 		try {
 			
@@ -206,51 +223,27 @@ public class ExportCatalogueFile extends SOAPAction {
 				return null;
 
 			// create an attachment handler to analyze the soap attachment
-			AttachmentHandler handler = new AttachmentHandler( part, false );
+			AttachmentHandler handler = new AttachmentHandler( part, isZipped );
 
-			return handler.readAttachment();
+			File file = new File( filename );
+
+			InputStream inputStream = handler.readAttachment();
+			OutputStream outputStream = new FileOutputStream( file );
+
+			byte[] buf = new byte[512];
+			int num;
+			
+			// write file
+			while ( (num = inputStream.read(buf) ) != -1) {
+				outputStream.write(buf, 0, num);
+			}
+			
+			outputStream.close();
+			inputStream.close();
+			
+			return file;
 
 		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		return null;
-	}
-	
-	/**
-	 * Process the response getting the xml attachment and returning
-	 * it under the Document format.
-	 * @param soapResponse
-	 * @return the dom document which contains the xml attachment
-	 * @throws SOAPException
-	 */
-	private Document processXml( SOAPMessage soapResponse ) throws SOAPException {
-		
-		try {
-
-			AttachmentPart part = getFirstAttachment( soapResponse );
-
-			// if no attachment => errors in processing response, return null
-			if ( part == null )
-				return null;
-
-			// create an attachment handler to analyze the soap attachment
-			AttachmentHandler handler = new AttachmentHandler( part, true );
-
-			// read the xml file with java DOM
-			DocumentBuilderFactory factory =
-					DocumentBuilderFactory.newInstance();
-
-			DocumentBuilder builder = factory.newDocumentBuilder();
-
-			// get the input stream of the log attachment and read it
-			// note that the log file is zipped so we set the
-			// zipped flag to true
-			Document doc = builder.parse( handler.readAttachment() );
-
-			return doc;
-
-		} catch (IOException | ParserConfigurationException | SAXException e) {
 			e.printStackTrace();
 		}
 		

@@ -1,14 +1,12 @@
 package dcf_pending_action;
 
-import org.w3c.dom.Document;
-
 import catalogue.Catalogue;
-import dcf_log_util.LogParser;
+import dcf_log_util.DcfLog;
 import dcf_webservice.DcfResponse;
 
 public class PendingUploadData extends PendingAction {
 
-	public static final String UPLOAD_DATA_TYPE = "uploadData";
+	public static final String UPLOAD_DATA_TYPE = "UPLOAD_DATA";
 	
 	public PendingUploadData(Catalogue catalogue, String logCode, 
 			String username, Priority priority) {
@@ -49,18 +47,15 @@ public class PendingUploadData extends PendingAction {
 	public void manageBusyStatus() {}
 
 	@Override
-	public void processLog(Document log) {}
+	public void processLog(DcfLog log) {}
 
 	@Override
-	public DcfResponse extractLogResponse(Document log) {
+	public DcfResponse extractLogResponse(DcfLog log) {
 		
 		DcfResponse response;
 		
-		// analyze the log to get the result
-		LogParser parser = new LogParser ( log );
-		
 		// was the operation correct?
-		boolean correct = parser.isOperationCorrect();
+		boolean correct = log.isMacroOperationCorrect();
 		
 		if ( correct )
 			response = DcfResponse.OK;
