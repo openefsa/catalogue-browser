@@ -65,8 +65,14 @@ public class Publish extends UploadCatalogueFile {
 	}
 
 	@Override
-	public String getAttachment() {
-		return UploadMessages.getPublishMessage( catalogue.getCode(), level );
+	public CatalogueAttachment getAttachment() {
+		
+		String content = UploadMessages.getPublishMessage( catalogue.getCode(), level );
+		
+		CatalogueAttachment att = new CatalogueAttachment( 
+				AttachmentType.ATTACHMENT, content );
+		
+		return att;
 	}
 
 	@Override

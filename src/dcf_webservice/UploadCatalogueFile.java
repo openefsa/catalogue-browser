@@ -1,5 +1,9 @@
 package dcf_webservice;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Base64;
 
 import javax.xml.soap.SOAPBody;
@@ -10,7 +14,7 @@ import javax.xml.soap.SOAPMessage;
 
 import dcf_log_util.LogCodeFinder;
 import dcf_manager.Dcf.DcfType;
-import dcf_pending_action.PendingReserve;
+import dcf_pending_action.PendingAction;
 
 /**
  * Model the upload catalogue file web service. Use the method
@@ -51,7 +55,7 @@ public abstract class UploadCatalogueFile extends SOAPAction {
 			String url = getType() == DcfType.PRODUCTION ? URL : TEST_URL;
 			
 			// start the reserve operation
-			result = (PendingReserve) makeRequest( url );
+			result = (PendingAction) makeRequest( url );
 
 		} catch (SOAPException e) {
 
@@ -79,12 +83,8 @@ public abstract class UploadCatalogueFile extends SOAPAction {
 		// file data node (child of upload cf)
 		SOAPElement fileData = upload.addChildElement( "fileData" );
 		
-		// add attachment to the request into the node <rowData>
-		// using the right message for the related reserve operation
-		String attachmentData = getAttachment();
-		
-		// encoding attachment with base 64
-		byte[] encodedBytes = Base64.getEncoder().encode( attachmentData.getBytes() );
+		// get the attachment in base64 format
+		byte[] encodedBytes = getEncodedAttachment();
 		
 		// row data node (child of file data)
 		SOAPElement rowData = fileData.addChildElement( "rowData" );
@@ -94,6 +94,38 @@ public abstract class UploadCatalogueFile extends SOAPAction {
 		soapMsg.saveChanges();
 
 		return soapMsg;
+	}
+	
+	/**
+	 * Get the catalogue attachment and encode it based on
+	 * its attachment type.
+	 * @return
+	 */
+	private byte[] getEncodedAttachment () {
+
+		// add attachment to the request into the node <rowData>
+		// using the right message for the related reserve operation
+		CatalogueAttachment att = getAttachment();
+
+		byte[] data = null;
+		if ( att.getType() == AttachmentType.ATTACHMENT ) {
+			data = att.getContent().getBytes();
+		}
+		else {
+			
+			String attachmentPath = att.getContent();
+			Path path = Paths.get( attachmentPath );
+			
+			// read the file as byte array
+			try {
+				data = Files.readAllBytes( path );
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		// encode the data with base64
+		return Base64.getEncoder().encode( data );
 	}
 	
 	@Override
@@ -115,11 +147,67 @@ public abstract class UploadCatalogueFile extends SOAPAction {
 	}
 	
 	/**
+	 * Define the type of the attachment
+	 * @author avonva
+	 *
+	 */
+	public enum AttachmentType {
+		FILE_PATH,
+		ATTACHMENT;
+	}
+	
+	/**
+	 * Catalogue attachment. It contains either a file path
+	 * (with {@link #type} = {@link AttachmentType#FILE_PATH}
+	 * or an attachment its self with {@link #type } = 
+	 * {@link AttachmentType#ATTACHMENT}.
+	 * @author avonva
+	 *
+	 */
+	public class CatalogueAttachment {
+		
+		private AttachmentType type;
+		private String content;
+		
+		/**
+		 * Initialize a catalogue attachment. If you pass in {@code content} a file path
+		 * set as {@code type} the value {@link AttachmentType#FILE_PATH}.
+		 * Otherwise, if you pass in {@code content} the attachment itself in string format,
+		 * set {@code type } = {@link AttachmentType#ATTACHMENT}.
+		 * 
+		 * @param type {@link AttachmentType#FILE_PATH} for file paths,
+		 * {@link AttachmentType#ATTACHMENT} for attachments
+		 * @param content the contents of the attachment, a path or the attachment itself
+		 */
+		public CatalogueAttachment( AttachmentType type, String content ) {
+			this.type = type;
+			this.content = content;
+		}
+		
+		/**
+		 * Get the type of the attachment. 
+		 * @see {@link #CatalogueAttachment}
+		 * @return
+		 */
+		public AttachmentType getType() {
+			return type;
+		}
+		
+		/**
+		 * Get the content of the attachment.
+		 * @return
+		 */
+		public String getContent() {
+			return content;
+		}
+	}
+	
+	/**
 	 * Get the content of the attachment that will be
 	 * attached to the upload catalogue file request
 	 * @return
 	 */
-	public abstract String getAttachment();
+	public abstract CatalogueAttachment getAttachment();
 	
 	/**
 	 * Process the log starting from its code

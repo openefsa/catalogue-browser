@@ -55,14 +55,17 @@ public class Reserve extends UploadCatalogueFile {
 	}
 
 	@Override
-	public String getAttachment() {
-		
+	public CatalogueAttachment getAttachment() {
+
 		// add attachment to the request into the node <rowData>
 		// using the right message for the related reserve operation
-		String attachmentData = UploadMessages.getReserveMessage(
+		String content = UploadMessages.getReserveMessage(
 				catalogue.getCode(), reserveLevel, reserveDescription );
 		
-		return attachmentData;
+		CatalogueAttachment att = new CatalogueAttachment( 
+				AttachmentType.ATTACHMENT, content );
+		
+		return att;
 	}
 
 	/**

@@ -20,7 +20,8 @@ public class PendingPublish extends PendingAction {
 	public static final String TYPE = "PUBLISH";
 	private PublishLevel publishLevel;
 	
-	public PendingPublish( Catalogue catalogue, String logCode, String username, Priority priority, PublishLevel publishLevel ) {
+	public PendingPublish( Catalogue catalogue, String logCode, String username, 
+			Priority priority, PublishLevel publishLevel ) {
 		
 		super(catalogue, logCode, username, "", priority);
 		
