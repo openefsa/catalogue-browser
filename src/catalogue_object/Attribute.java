@@ -55,9 +55,17 @@ public class Attribute extends SortableCatalogueObject implements Mappable {
 		// get the current catalogue
 		Catalogue currentCat = manager.getCurrentCatalogue();
 		
+		int newOrder = 0;
+		for ( Attribute attr : currentCat.getAttributes() ) {
+			// if an attribute with an order greater or equal to
+			// the new attribute order => update the new attribute order
+			if ( attr.getOrder() >= newOrder )
+				newOrder = attr.getOrder() + 1;
+		}
+		
 		return new Attribute( currentCat, -1, 
 				"Change", "Change", "", "", "D", true, false, 
-				Integer.MAX_VALUE, "xs:string", 200, 10, 0, "", cardinalitySingle,
+				newOrder, "xs:string", 200, 10, 0, "", cardinalitySingle,
 				"D", false, false, "", "", null, null, null, false );
 	}
 	

@@ -735,7 +735,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * Add a new term using the term code mask as code generator
 	 * @param parent
 	 * @param hierarchy
-	 * @return
+	 * @return the new term
 	 */
 	public Term addNewTerm ( Term parent, Hierarchy hierarchy ) {
 		
@@ -744,7 +744,29 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		
 		return addNewTerm ( code, parent, hierarchy );
 	}
+
+	/**
+	 * Create a new term using a custom code
+	 * @param code
+	 * @return
+	 */
+	public Term createNewTerm( String code ) {
+		
+		// get a new default term with the custom code
+		Term newTerm = Term.getDefaultTerm( code );
+		return newTerm;
+	}
 	
+	/**
+	 * Create a new term using the catalogue term code mask
+	 * @return
+	 */
+	public Term createNewTerm() {
+		// get a new code following the term code mask of the catalogue
+		String code = CodeGenerator.getTermCode( termCodeMask );
+		return createNewTerm ( code );
+	}
+
 	/**
 	 * Add a new term into the catalogue database as 
 	 * child of the term "parent" in the selected hierarchy. The term is a complete

@@ -71,4 +71,10 @@ public class NotesSheetImporter extends SheetImporter<ReleaseNotesOperation> {
 		
 		opDao.insert( ops );
 	}
+
+	@Override
+	public void end() {
+		// TODO Auto-generated method stub
+		
+	}
 }

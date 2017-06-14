@@ -21,10 +21,7 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 	
 	// the new catalogue
 	private Catalogue catalogue;
-	private Catalogue localCatalogue;
-	
-	// true if we are importing a local catalogue
-	private boolean local;
+	private Catalogue openedCatalogue;
 	
 	private String excelCatCode;
 	
@@ -38,13 +35,12 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 	}
 	
 	/**
-	 * Pass the local catalogue if we are importing an excel
-	 * file in it.
+	 * Pass the opened catalogue if we are importing an excel
+	 * file in it using the Import excel function.
 	 * @param catalogue
 	 */
-	public void setLocalCatalogue ( Catalogue localCatalogue ) {
-		this.localCatalogue = localCatalogue;
-		this.local = true;
+	public void setOpenedCatalogue ( Catalogue openedCatalogue ) {
+		this.openedCatalogue = openedCatalogue;
 	}
 
 	@Override
@@ -61,13 +57,37 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 		}
 
 		// save the excel code in global variable
+		// since if we have a local catalogue this
+		// code will be overridden (and we need it
+		// for the import)
 		excelCatCode = catalogue.getCode();
 		
-		// if local return the local catalogue instead
-		// but we need the excel code, therefore we 
-		// get the excel catalogue in both cases
-		if ( local )
-			catalogue = localCatalogue;
+		// if we have an opened catalogue we need to maintain
+		// its code and version during the import otherwise
+		// it will result in a different db path for storing
+		// the data and thus giving errors
+		if ( openedCatalogue != null ) {
+			
+			catalogue.setCode( openedCatalogue.getCode() );
+			catalogue.setVersion( openedCatalogue.getVersion() );
+
+			// if a local catalogue was set as code name and
+			// label the local catalogue fields to maintain
+			// the right names. Moreover we also maintain
+			// the fields which are related to local catalogues
+			// => version, status and local fields. Version is
+			// important to be maintained otherwise a new database
+			// will be created!
+			if ( openedCatalogue.isLocal() ) {
+				catalogue.setName( openedCatalogue.getName() );
+				catalogue.setLabel( openedCatalogue.getLabel() );
+				catalogue.setStatus( openedCatalogue.getStatus() );
+				catalogue.setLocal( true );
+				catalogue.setDbFullPath( openedCatalogue.getDbFullPath() );
+				catalogue.setBackupDbPath( openedCatalogue.getBackupDbPath() );
+			}
+		}
+		
 		
 		// save the catalogue as global variable
 		this.catalogue = catalogue;
@@ -157,12 +177,12 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 		// as default we create the catalogue using the official folder 
 		// and the catalogue code and version
 		// obtained from the excel sheet
-		if ( dbPath == null && !local )
+		if ( dbPath == null && !catalogue.isLocal() )
 			dbPath = catalogue.buildDBFullPath( DatabaseManager.OFFICIAL_CAT_DB_FOLDER +
 					"CAT_" + catalogue.getCode() + "_DB" );
-
+		
 		// update the db path of the catalogue
-		if ( !local )
+		if ( !catalogue.isLocal() )
 			catalogue.setDbFullPath( dbPath );
 
 		// try to connect to the database. If it is not present we have an exception and thus we
@@ -189,7 +209,9 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 
 			// otherwise the database does not exist => we create it
 
-			System.out.println ( "Add " + catalogue + " to the catalogue table");
+			System.out.println ( "Add " + catalogue + 
+					" to the catalogue table in " + 
+					catalogue.getDbFullPath() );
 
 			CatalogueDAO catDao = new CatalogueDAO();
 
@@ -221,5 +243,11 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 	 */
 	public String getExcelCode() {
 		return excelCatCode;
+	}
+
+	@Override
+	public void end() {
+		// TODO Auto-generated method stub
+		
 	}
 }

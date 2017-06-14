@@ -100,39 +100,17 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 			}
 			
 			stmt.executeBatch();
-			
-			// get an instance of the global manager
-			//GlobalManager manager = GlobalManager.getInstance();
-			
-			// get the current catalogue
-			//Catalogue currentCat = manager.getCurrentCatalogue();
-			
-			// TODO TODO TODO
-			// only if the opened catalogue is the catalogue we are modifying then
-			// refresh the Terms hash map
-			//if ( currentCat != null && catalogue.equals( currentCat ) ) {
 
 			if ( !terms.isEmpty() ) {
 
 				// update the terms ids with the ones given by the database
 				ResultSet rs = stmt.getGeneratedKeys();
-				//int count = 0;
 
 				while ( rs.next() ) {
-
 					ids.add( rs.getInt(1) );
-
-					//Term term = terms.get( count );
-					//term.setId( rs.getInt( 1 ) );
-
-					// add the term to the Terms hashmap
-					//catalogue.addTerm( term );
-
-					//count++;
 				}
 
 				rs.close();
-				//}
 			}
 
 			stmt.close();

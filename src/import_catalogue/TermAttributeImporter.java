@@ -14,6 +14,7 @@ import catalogue_object.Term;
 import catalogue_object.TermAttribute;
 import naming_convention.Headers;
 import open_xml_reader.ResultDataSet;
+import term_code_generator.CodeGenerator;
 
 /**
  * Importer of the term attributes
@@ -26,6 +27,9 @@ public class TermAttributeImporter extends SheetImporter<TermAttribute> {
 	private HashMap<String, Integer> termIds;
 	private ArrayList<Attribute> attributes;
 	
+	// things for append
+	private HashMap<String, String> newCodes;
+	
 	public TermAttributeImporter( Catalogue catalogue, 
 			ResultDataSet termData ) throws SQLException {
 		super( termData );
@@ -37,7 +41,21 @@ public class TermAttributeImporter extends SheetImporter<TermAttribute> {
 		AttributeDAO attrDao = new AttributeDAO ( catalogue );
 		attributes = attrDao.getAll();
 	}
-
+	
+	/**
+	 * Activate this method to manage also new terms (i.e. appended terms) into the 
+	 * term attribute importer class. In particular, if a term with code
+	 * containing {link CodeGenerator#TEMP_TERM_CODE}
+	 * is encountered, its real code is taken from the {@code newCodes}
+	 * hashmap (which was created before in
+	 * the {@link TermSheetImporter#importSheet()} if new terms were
+	 * encountered!) in order to get its reference to the term contained into the db
+	 * @param newCodes
+	 */
+	public void manageNewTerms ( HashMap<String, String> newCodes ) {
+		this.newCodes = newCodes;
+	}
+	
 	@Override
 	public TermAttribute getByResultSet(ResultDataSet rs) {
 		return null;
@@ -56,9 +74,12 @@ public class TermAttributeImporter extends SheetImporter<TermAttribute> {
 		
 		// get the term code
 		String termCode = rs.getString ( Headers.TERM_CODE );
-
+		
+		if ( CodeGenerator.isTempCode( termCode ) )
+			termCode = newCodes.get( termCode );
+		
 		// skip if no term code was found
-		if ( termCode.isEmpty() )
+		if ( termCode == null || termCode.isEmpty() )
 			return null;
 		
 		// get the term id using the term code from the hashmap (global var)
@@ -110,5 +131,11 @@ public class TermAttributeImporter extends SheetImporter<TermAttribute> {
 		TermAttribute ta = new TermAttribute( term, attr, value );
 		
 		return ta;
+	}
+
+	@Override
+	public void end() {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -112,18 +112,14 @@ public class VersionChecker {
 		// note that the db full path is also updated
 		// here!
 		CatalogueDAO catDao = new CatalogueDAO();
-		catDao.insert( newVersionCat );
+		int id = catDao.insert( newVersionCat );
+		
+		// refresh information (we get the db dir!)
+		newVersionCat = catDao.getById( id );
 
 		// note that we don't create the standard
 		// structure of the database since we create
 		// a copy of the old catalogue!
-
-		// copy the catalogue database in the path
-		// of the new catalogue database (since we
-		// have just incremented its version the new
-		// catalogue is just a copy of the old one)
-		//DatabaseManager.copyFolder( catalogue.getDbFullPath(), 
-			//	newVersionCat.getDbFullPath() );
 		
 		try {
 			DatabaseManager.backupCatalogue( catalogue, newVersionCat.getDbFullPath() );

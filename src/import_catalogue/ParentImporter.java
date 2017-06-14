@@ -15,25 +15,56 @@ import catalogue_object.Term;
 import naming_convention.Headers;
 import naming_convention.SpecialValues;
 import open_xml_reader.ResultDataSet;
+import term_code_generator.CodeGenerator;
 
+/**
+ * Import the term applicabilities contained in the term sheet into the database.
+ * This class can manage also new terms which could be possibly created
+ * in the {@link TermSheetImporter#importSheet()}. In fact,
+ * here we manage also the possibility that a parent of a new term
+ * can be also a new term itself.
+ * @author avonva
+ *
+ */
 public class ParentImporter extends SheetImporter<Applicability> {
 
 	private Catalogue catalogue;
 	private HashMap<String, Integer> termIds;
 	private ArrayList<Hierarchy> hierarchies;
+	
+	// things for append
+	private HashMap<String, String> newCodes;
+	// temporary applicabilities
+	private Collection<Applicability> tempAppl;
 
 	public ParentImporter( Catalogue catalogue, 
 			ResultDataSet termData ) throws SQLException {
 
 		super( termData );
 		this.catalogue = catalogue;
-
-		// get all the term ids
-		termIds = createIdHashMap ( catalogue, "TERM_ID", "TERM_CODE", "APP.TERM" );
+		this.newCodes = new HashMap<>();
+		this.tempAppl = new ArrayList<>();
+		
+		// get all the term ids of the database of the catalogue
+		this.termIds = createIdHashMap ( catalogue, "TERM_ID", "TERM_CODE", "APP.TERM" );
 
 		// get all the hierarchies of the catalogue
 		HierarchyDAO hierDao = new HierarchyDAO( catalogue );
-		hierarchies = hierDao.getAll();
+		this.hierarchies = hierDao.getAll();
+	}
+	
+	/**
+	 * Activate this method to manage also new terms (i.e. appended terms) into the 
+	 * parent importer class. In particular, if a term with code
+	 * or parent code containing {link CodeGenerator#TEMP_TERM_CODE}
+	 * is encountered, its real code is taken from the {@code newCodes}
+	 * hashmap (which was created before in
+	 * the {@link TermSheetImporter#importSheet()} if new terms were
+	 * encountered!)
+	 * @param newCodes
+	 */
+	public void manageNewTerms( HashMap<String, String> newCodes ) {
+		this.newCodes = newCodes;
 	}
 
 	@Override
@@ -45,14 +76,22 @@ public class ParentImporter extends SheetImporter<Applicability> {
 	public Collection<Applicability> getAllByResultSet(ResultDataSet rs) {
 
 		Collection<Applicability> appls = new ArrayList<>();
+		boolean addParent = true;
 
 		// get the term code
 		String termCode = rs.getString ( Headers.TERM_CODE );
 
+		// if temp code we need to get the real code
+		// of the term
+		if ( CodeGenerator.isTempCode( termCode ) ) {
+			termCode = newCodes.get( termCode );
+			addParent = false;  // do not add a temporary applicability
+		}
+		
 		// skip if no term code was found
-		if ( termCode.isEmpty() )
+		if ( termCode == null || termCode.isEmpty() )
 			return null;
-
+		
 		// get the term id using the term code from the hashmap (global var)
 		int termId = termIds.get( termCode );
 
@@ -62,6 +101,12 @@ public class ParentImporter extends SheetImporter<Applicability> {
 			// get the parent term code 
 			String parentCode = rs.getString ( 
 					getHierarchyFieldName( hierarchy, Headers.SUFFIX_PARENT_CODE ) );
+			
+			// if temp code we need to get the real code
+			// of the term
+			if ( CodeGenerator.isTempCode( parentCode ) ) {
+				parentCode = newCodes.get( parentCode );
+			}
 			
 			// next if no parent term is found
 			if ( parentCode == null || parentCode.isEmpty() )
@@ -81,13 +126,14 @@ public class ParentImporter extends SheetImporter<Applicability> {
 				continue;
 			}
 			
-			// get the term flag
+			// get the term flag, NOTE this field is useless because it is always 1
+			// if a parent code is defined
 			//boolean flag = rs.getBoolean( 
 				//	getHierarchyFieldName( hierarchy, Headers.SUFFIX_FLAG ), true );
-			
+
 			// get the term order
 			int order = rs.getInt( 
-					getHierarchyFieldName( hierarchy, Headers.SUFFIX_ORDER ), 0 );
+					getHierarchyFieldName( hierarchy, Headers.SUFFIX_ORDER ), -1 );
 			
 			// get the term reportability
 			boolean reportable = rs.getBoolean( 
@@ -96,7 +142,12 @@ public class ParentImporter extends SheetImporter<Applicability> {
 			Applicability appl = createApplicability ( isRoot, termId, parentId, 
 					hierarchy, order, reportable );
 			
-			appls.add( appl );
+			// Add only real parents, not temporary ones!
+			// because we need to define their order code
+			if ( addParent )
+				appls.add( appl );
+			else  // add the applicability to the temporary ones
+				tempAppl.add( appl );
 		}
 		
 		return appls;
@@ -164,4 +215,37 @@ public class ParentImporter extends SheetImporter<Applicability> {
 		parentDao.insert( data );
 	}
 
+	@Override
+	public void end() {
+
+		for ( Applicability appl : tempAppl ) {
+			
+			int order = appl.getOrder();
+			
+			// if order was not defined
+			if ( order == -1 ) {
+
+				Nameable parent = appl.getParentTerm();
+				Hierarchy hierarchy = appl.getHierarchy();
+				
+				// get the first available order for the term in the hierarchy
+				ParentTermDAO parentDao = new ParentTermDAO( catalogue );
+				int newOrder = parentDao.getNextAvailableOrder( 
+						parent, hierarchy );
+				
+				// set the applicability order
+				appl.setOrder( newOrder );
+				
+				// we need a collection since insert works with
+				// collections
+				Collection<Applicability> applCol = new ArrayList<>();
+				applCol.add( appl );
+				
+				// insert the applicability into the database
+				// we need to insert one applicability at a time
+				// otherwise the new order will be always the same
+				insert ( applCol );
+			}
+		}
+	}
 }

@@ -49,7 +49,8 @@ public class PropertiesReader {
 	 */
 	public static DcfType getDcfType () {
 		
-		String value = getValue ( DCF_PROPERTY );
+		// by default we go to test
+		String value = getValue ( DCF_PROPERTY, YES );
 		
 		if ( value.equalsIgnoreCase( YES ) )
 			return DcfType.TEST;
@@ -62,7 +63,7 @@ public class PropertiesReader {
 	 * @return
 	 */
 	public static String getAppName() {
-		return getValue ( APP_NAME_PROPERTY );
+		return getValue ( APP_NAME_PROPERTY, "not found" );
 	}
 	
 	/**
@@ -71,7 +72,7 @@ public class PropertiesReader {
 	 * @return
 	 */
 	public static String getAppVersion() {
-		return getValue( APP_VERSION_PROPERTY );
+		return getValue( APP_VERSION_PROPERTY, "not found" );
 	}
 	
 	/**
@@ -79,13 +80,13 @@ public class PropertiesReader {
 	 * @param property
 	 * @return
 	 */
-	private static String getValue ( String property ) {
+	private static String getValue ( String property, String defaultValue ) {
 		
 		Properties prop = PropertiesReader.getProperties( 
 				GlobalUtil.appPropertiesFile );
 		
 		if ( prop == null )
-			return null;
+			return defaultValue;
 		
 		return prop.getProperty( property );
 	}

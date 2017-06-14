@@ -76,7 +76,8 @@ public class UserProfileChecker extends Thread {
 			success = false;
 			
 			// call error listener if no catalogue is found
-			errorListener.handleEvent( null );
+			if ( errorListener != null )
+				errorListener.handleEvent( null );
 		}
 
 		// if failed to download => return we are a data provider! we were not

@@ -18,7 +18,7 @@ import user_preferences.CataloguePreferenceDAO;
 public class CatalogueWorkbookImporter {
 	
 	// set this to import a local catalogue
-	private Catalogue localCat;
+	private Catalogue openedCat;
 	
 	private FormProgressBar progressBar;
 	
@@ -28,8 +28,8 @@ public class CatalogueWorkbookImporter {
 	 * see {@link Catalogue#isLocal()}
 	 * @param local
 	 */
-	public void setLocal( Catalogue localCat ) {
-		this.localCat = localCat;
+	public void setOpenedCatalogue( Catalogue openedCat ) {
+		this.openedCat = openedCat;
 	}
 	
 	
@@ -76,8 +76,8 @@ public class CatalogueWorkbookImporter {
 		CatalogueSheetImporter catImp = 
 				new CatalogueSheetImporter( dbPath, sheetData );
 		
-		if ( localCat != null )
-			catImp.setLocalCatalogue ( localCat );
+		if ( openedCat != null )
+			catImp.setOpenedCatalogue ( openedCat );
 		
 		catImp.importSheet();
 		
@@ -118,7 +118,6 @@ public class CatalogueWorkbookImporter {
 		sheetData = rawData.processSheetName( Headers.TERM_SHEET_NAME );
 		TermSheetImporter termImp = new 
 				TermSheetImporter( catalogue, sheetData );
-		
 		termImp.importSheet( 500 );
 		
 		
@@ -131,6 +130,7 @@ public class CatalogueWorkbookImporter {
 		// import term attributes
 		TermAttributeImporter taImp = new 
 				TermAttributeImporter( catalogue, sheetData );
+		taImp.manageNewTerms( termImp.getNewCodes() );
 		taImp.importSheet( 2000 );
 		
 		// import the term types related to the attributes
@@ -148,6 +148,9 @@ public class CatalogueWorkbookImporter {
 		// import parent terms
 		ParentImporter parentImp = new 
 				ParentImporter( catalogue, sheetData );
+		
+		// manage also new terms (i.e. the append function )
+		parentImp.manageNewTerms( termImp.getNewCodes() );
 		parentImp.importSheet( 2000 );
 		
 		

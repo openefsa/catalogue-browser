@@ -80,4 +80,10 @@ public class AttributeSheetImporter extends SheetImporter<Attribute> {
 	public Collection<Attribute> getAllByResultSet(ResultDataSet rs) {
 		return null;
 	}
+
+	@Override
+	public void end() {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -25,7 +25,7 @@ import xml_to_excel.XmlCatalogueToExcel;
 public class ImportActions {
 	
 	private FormProgressBar progressBar;
-	private Catalogue localCat;
+	private Catalogue openedCat;
 	
 	/**
 	 * Add a progress bar to the import process
@@ -65,8 +65,8 @@ public class ImportActions {
 	 * catalogues
 	 * @param localCat
 	 */
-	public void setLocal( Catalogue localCat ) {
-		this.localCat = localCat;
+	public void setOpenedCatalogue( Catalogue openedCat ) {
+		this.openedCat = openedCat;
 	}
 	
 	/**
@@ -93,8 +93,8 @@ public class ImportActions {
 		ImportThread importThread = new ImportThread( dbPath, filename );
 
 		// if local catalogue
-		if ( localCat != null )
-			importThread.setLocal( localCat );
+		if ( openedCat != null )
+			importThread.setOpenedCatalogue( openedCat );
 		
 		// set the progress bar if needed
 		if ( progressBar != null )

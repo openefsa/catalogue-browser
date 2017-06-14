@@ -16,6 +16,21 @@ import global_manager.GlobalManager;
  */
 public class CodeGenerator {
 
+	public static final String TEMP_TERM_CODE = "TEMP_";
+	
+	/**
+	 * Check if the term code is a temporary code or not.
+	 * @param code
+	 * @return
+	 */
+	public static boolean isTempCode( String code ) {
+
+		if ( code.toUpperCase().contains( TEMP_TERM_CODE.toUpperCase() ) )
+			return true;
+		
+		return false;
+	}
+	
 	public static int convertAlphaNumToInt32 ( String alphacode ) {
 
 		char[] figures = alphacode.toCharArray();
@@ -339,7 +354,6 @@ public class CodeGenerator {
 				sql = sql + " where " + sqlConstant;
 			}
 
-			System.err.println( "SQL for searching the last generated code: " + sql );
 			PreparedStatement codeStmt = con.prepareStatement( sql );
 
 			ResultSet codeRs = codeStmt.executeQuery();

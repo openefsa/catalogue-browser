@@ -196,9 +196,11 @@ public class FormDCFLogin implements RestoreableWindow {
 				String logTitle;
 				String logMessage;
 				
+				System.out.println( "Check credentials ");
+				
 				// check the correctness of credentials
 				valid = checkCredentials( username, password );
-				
+				System.out.println( "OK");
 				// reset the original cursor
 				GlobalUtil.setShellCursor( parent, SWT.CURSOR_ARROW );
 				

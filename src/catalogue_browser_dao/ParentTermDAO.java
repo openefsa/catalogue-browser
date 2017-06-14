@@ -453,7 +453,14 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 		
 		Connection con;
 
-		String query = " select max(TERM_ORDER) as MAX_ORDER from APP.PARENT_TERM where HIERARCHY_ID = ? and PARENT_TERM_ID = ?";
+		String query = " select max(TERM_ORDER) as MAX_ORDER from APP.PARENT_TERM "
+				+ "where HIERARCHY_ID = ? and ";
+		
+		// if parent is a term set its id 
+		if  ( parent instanceof Term ) 
+			query = query + "PARENT_TERM_ID = ?";
+		else  // otherwise it is null
+			query = query + "PARENT_TERM_ID is null";
 
 		try {
 
@@ -471,8 +478,6 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 			// if parent is a term set its id
 			if ( parent instanceof Term )
 				stmt.setInt ( 2, ( (Term) parent ).getId() );
-			else  // if it is a hierarchy
-				stmt.setNull( 2, java.sql.Types.INTEGER );
 			
 			ResultSet rs = stmt.executeQuery();
 			

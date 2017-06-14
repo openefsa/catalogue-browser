@@ -103,4 +103,10 @@ public class HierarchySheetImporter extends SheetImporter<Hierarchy> {
 	public Collection<Hierarchy> getAllByResultSet(ResultDataSet rs) {
 		return null;
 	}
+
+	@Override
+	public void end() {
+		// TODO Auto-generated method stub
+		
+	}
 }

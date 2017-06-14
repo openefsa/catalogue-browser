@@ -78,6 +78,7 @@ public abstract class SheetImporter<T> {
 			// if maximum limit is reached insert
 			// the batch of objects and clear the
 			// array list memory
+			// or if we are forcing the inserting go on
 			if ( objs.size() >= batchSize ) {
 				
 				insert ( objs );
@@ -96,8 +97,11 @@ public abstract class SheetImporter<T> {
 		// insert all the remaining T objects into the db
 		if ( !objs.isEmpty() )
 			insert( objs );
+		
+		// end the process
+		end();
 	}
-
+	
 	/**
 	 * Create an hashmap to save (key, ids) values (used to save DB ids when we insert the term)
 	 * @param rs
@@ -173,4 +177,9 @@ public abstract class SheetImporter<T> {
 	 * objects. This hashmap is used to get the T objects database ids.
 	 */
 	public abstract void insert ( Collection<T> data );
+	
+	/**
+	 * Called when the parsing is finished.
+	 */
+	public abstract void end ();
 }

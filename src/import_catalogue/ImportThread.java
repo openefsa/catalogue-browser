@@ -18,7 +18,7 @@ public class ImportThread extends ExcelThread {
 
 	private String path;  // path where the db will be created
 	private boolean deleteFiles = false;
-	private Catalogue localCat;
+	private Catalogue openedCat;
 	
 	/**
 	 * Initialize the import thread
@@ -39,15 +39,15 @@ public class ImportThread extends ExcelThread {
 	}
 	
 	/**
-	 * If we are importing a workbook into a local catalogue
-	 * we need to specify which is the local catalogue, otherwise
+	 * If we are importing a workbook into an opened catalogue
+	 * we need to specify which is the catalogue, otherwise
 	 * we will get errors in the import process due to the wrong
-	 * catalogue code, which is defined by the user for local
-	 * catalogues
+	 * db path of the catalogue (which is determined by the
+	 * catalogue code + version)
 	 * @param localCat
 	 */
-	public void setLocal( Catalogue localCat ) {
-		this.localCat = localCat;
+	public void setOpenedCatalogue( Catalogue openedCat ) {
+		this.openedCat = openedCat;
 	}
 
 	/**
@@ -63,8 +63,8 @@ public class ImportThread extends ExcelThread {
 
 			CatalogueWorkbookImporter importer = new CatalogueWorkbookImporter();
 			importer.setProgressBar( getProgressForm() );
-			if ( localCat != null )
-				importer.setLocal( localCat );
+			if ( openedCat != null )
+				importer.setOpenedCatalogue( openedCat );
 			
 			importer.importWorkbook( path, getFilename() );
 

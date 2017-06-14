@@ -38,8 +38,16 @@ public class Hierarchy extends SortableCatalogueObject implements Mappable {
 		// get the current catalogue
 		Catalogue currentCat = manager.getCurrentCatalogue();
 		
+		int newOrder = 0;
+		for ( Hierarchy hierarchy : currentCat.getHierarchies() ) {
+			// if a hierarchy with an order greater or equal to
+			// the new hierarchy order => update the new hierarchy order
+			if ( hierarchy.getOrder() >= newOrder )
+				newOrder = hierarchy.getOrder() + 1;
+		}
+		
 		return new Hierarchy ( currentCat, -1, "Change", "Change", "", "", 
-				"base", Integer.MAX_VALUE, "", false, "", null, null, null, false, "" );
+				"base", newOrder, "", false, "", null, null, null, false, "" );
 	}
 	
 	public Hierarchy( Catalogue catalogue ) {
