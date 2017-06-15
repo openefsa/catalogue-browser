@@ -30,8 +30,8 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 	 * @param dbPath the path where the db of the catalogue should be created
 	 * @param data the catalogue sheet data
 	 */
-	public CatalogueSheetImporter( String dbPath, ResultDataSet data ) {
-		super(data);
+	public CatalogueSheetImporter( String dbPath ) {
+		this.dbPath = dbPath;
 	}
 	
 	/**
@@ -246,8 +246,5 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 	}
 
 	@Override
-	public void end() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void end() {}
 }

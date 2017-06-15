@@ -36,11 +36,13 @@ import org.apache.poi.ss.usermodel.DateUtil;
  */
 public class ResultDataSet implements ResultSet {
 
+	HashMap< String, String > headers;
 	ArrayList< HashMap< String, String >>	_data;
 	HashMap< String, String >				_currentRow;
 	Integer									_currPos	= 0;
 
 	public ResultDataSet() {
+		headers = new HashMap<>();
 		_data = new ArrayList< HashMap< String, String >>();
 		_currentRow = new HashMap< String, String >();
 	}
@@ -50,7 +52,6 @@ public class ResultDataSet implements ResultSet {
 	}
 
 	public void setData ( ArrayList< ArrayList< String >> data ) {
-		
 		initData( data );
 	}
 
@@ -74,7 +75,49 @@ public class ResultDataSet implements ResultSet {
 	}
 
 	public void initScan ( ) {
-		_currentRow = _data.get( 0 );
+		
+		if ( !_data.isEmpty() )
+			_currentRow = _data.get( 0 );
+		
+		_currPos = 0;
+	}
+	
+	public void clear() {
+		
+		// clear all the hashmap data
+		for ( HashMap<String,String> map : _data ) {
+			map.clear();
+		}
+		
+		// clear the array list
+		_data.clear();
+		
+		_currentRow.clear();
+		
+		_currPos = 0;
+	}
+	
+	/**
+	 * Is the result set empty?
+	 * @return
+	 */
+	public boolean isEmpty() {
+		return _data.isEmpty();
+	}
+	
+	/**
+	 * Clear only the data not the headers
+	 */
+	public void clearData() {
+		
+		if ( _data.isEmpty() ) {
+			System.err.println( "Result data set is already empty" );
+			return;
+		}
+
+		// clear all data
+		_data.clear();
+		
 		_currPos = 0;
 	}
 	
@@ -102,13 +145,22 @@ public class ResultDataSet implements ResultSet {
 	 * @return
 	 */
 	public boolean next ( ) {
-		if ( _currPos + 1 >= _data.size() ) {
+		
+		if ( !hasNext() )
+			return false;
+		
+		_currPos++;
+		_currentRow = _data.get( _currPos );
+		
+		return true;
+		
+		/*if ( _currPos + 1 >= _data.size() ) {
 			return false;
 		} else {
 			_currPos++;
 			_currentRow = _data.get( _currPos );
 			return true;
-		}
+		}*/
 	}
 
 	/**
@@ -117,7 +169,7 @@ public class ResultDataSet implements ResultSet {
 	 * @return
 	 */
 	public boolean hasNext ( ) {
-		return _currPos < _data.size();
+		return _currPos < _data.size() - 1;
 	}
 
 	/**
@@ -129,15 +181,16 @@ public class ResultDataSet implements ResultSet {
 		
 		// get the excel column letter from the column header
 		String key = getColumnLetter ( header );
-		
+
 		// if the header is not found return default value
-		if ( key == null )
+		if ( key == null ) {
 			return "";
+		}
 		
 		// return the value inside the cell identified by the column letter
 		// and by the current row
 		String value = _currentRow.get( key.toUpperCase() );
-		
+
 		// if no value found, return the default
 		if ( value == null )
 			return "";
@@ -327,7 +380,7 @@ public class ResultDataSet implements ResultSet {
 	 */
 	private String getColumnLetter ( String colHeader ) {
 		
-		String excelColLetter = _data.get( 0 ).get( colHeader.toUpperCase() );
+		String excelColLetter = headers.get( colHeader.toUpperCase() );
 		
 		return excelColLetter;
 	}
@@ -348,13 +401,14 @@ public class ResultDataSet implements ResultSet {
 	}*/
 
 	public void close ( ) {
-		_data.clear();
+		
+		clear();
 		_currentRow.clear();
 		_currPos = 0;
 	}
 
 	public void setHeader ( String key , String value ) {
-		_data.get( 0 ).put( key.trim(), value.trim() );
+		headers.put( key.trim(), value.trim() );
 	}
 
 	public void setElem ( String key , String value ) {
@@ -374,8 +428,8 @@ public class ResultDataSet implements ResultSet {
 		return _data.get( i );
 	}
 
-	public HashMap< String, String > getHeader ( ) {
-		return _data.get( 0 );
+	public HashMap< String, String > getHeaders ( ) {
+		return headers;
 	}
 
 	@SuppressWarnings("unused")
@@ -384,7 +438,7 @@ public class ResultDataSet implements ResultSet {
 	}
 
 	public boolean contains ( String string ) {
-		return _currentRow.containsKey( _data.get( 0 ).get( string.toUpperCase() ));
+		return _currentRow.containsKey( headers.get( string.toUpperCase() ));
 	}
 
 	@Override

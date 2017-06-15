@@ -1,11 +1,20 @@
 package import_catalogue;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
+import javax.xml.stream.XMLStreamException;
+
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.openxml4j.exceptions.OpenXML4JException;
+import org.xml.sax.SAXException;
+
 import catalogue.Catalogue;
 import catalogue_browser_dao.ReleaseNotesDAO;
 import messages.Messages;
 import naming_convention.Headers;
 import open_xml_reader.ResultDataSet;
-import open_xml_reader.XLSXFormat;
+import open_xml_reader.WorkbookReader;
 import ui_progress_bar.FormProgressBar;
 import ui_search_bar.SearchOptionDAO;
 import user_preferences.CataloguePreferenceDAO;
@@ -55,142 +64,45 @@ public class CatalogueWorkbookImporter {
 		progressBar.setLabel( label );
 	}
 	
-	private void setProgressBarLabel ( String label ) {
-		
-		if ( progressBar == null )
-			return;
-		progressBar.setLabel( label );
-	}
-	
 	/**
 	 * Import the workbook
+	 * @throws XMLStreamException 
+	 * @throws IOException 
+	 * @throws SAXException 
+	 * @throws OpenXML4JException 
+	 * @throws SQLException 
 	 * @throws Exception
 	 */
-	public void importWorkbook( String dbPath, String filename ) throws Exception {
+	public void importWorkbook( String dbPath, String filename ) 
+			throws IOException, XMLStreamException, OpenXML4JException, 
+			SAXException, SQLException {
 
 		updateProgressBar( 1, Messages.getString("ImportExcelXLSX.ReadingData") );
 		
 		// get the excel data
-		XLSXFormat rawData = new XLSXFormat( filename );
+		WorkbookReader workbookReader = new WorkbookReader( filename );
 		
-		System.out.println( "Importing catalogue sheet" );
-		setProgressBarLabel( Messages.getString("ImportExcelXLSX.ImportCatalogue") );
-		
-		// get the catalogue sheet and check if the catalogues are compatible
-		// (the open catalogue and the one we want to import)
-		ResultDataSet sheetData = rawData.processSheetName( Headers.CAT_SHEET_NAME );
-
-		CatalogueSheetImporter catImp = 
-				new CatalogueSheetImporter( dbPath, sheetData );
-		
-		catImp.setProgressBar( progressBar, 1 );
-		
-		if ( openedCat != null )
-			catImp.setOpenedCatalogue ( openedCat );
-		
-		catImp.importSheet();
+		CatalogueSheetImporter catImp = importCatalogueSheet( workbookReader, dbPath );
 		
 		// get the imported catalogue (if it was local it is the same)
 		Catalogue catalogue = catImp.getImportedCatalogue();
 		String catExcelCode = catImp.getExcelCode();
 		
-		System.out.println( "Importing hierarchy sheet" );
-		setProgressBarLabel( Messages.getString("ImportExcelXLSX.ImportHierarchyLabel") );
+		// import hierarchies
+		importHierarchySheet ( workbookReader, catalogue, catExcelCode );
 		
-		// get the hierarchy sheet
-		sheetData = rawData.processSheetName( Headers.HIER_SHEET_NAME );
-		HierarchySheetImporter hierImp = new 
-				HierarchySheetImporter( catalogue, sheetData );
-		hierImp.setProgressBar( progressBar, 2 );
-		hierImp.setMasterCode( catExcelCode );
+		// import attributes
+		importAttributeSheet ( workbookReader, catalogue );
+	
+		// import terms
+		importTermSheet ( workbookReader, catalogue );
 		
-		// start the import
-		hierImp.importSheet();
-		
-		
-		System.out.println( "Importing attribute sheet" );
-		setProgressBarLabel( Messages.getString("ImportExcelXLSX.ImportAttributeLabel") );
-		
-		// get the attribute sheet
-		sheetData = rawData.processSheetName( Headers.ATTR_SHEET_NAME );
-
-		AttributeSheetImporter attrImp = new 
-				AttributeSheetImporter( catalogue, sheetData );
-		attrImp.setProgressBar( progressBar, 2 );
-		// start the import
-		attrImp.importSheet();
-		
-		
-		System.out.println( "Importing term sheet" );
-		setProgressBarLabel( Messages.getString("ImportExcelXLSX.ImportTermLabel") );
-		
-		// get the term sheet
-		sheetData = rawData.processSheetName( Headers.TERM_SHEET_NAME );
-		TermSheetImporter termImp = new 
-				TermSheetImporter( catalogue, sheetData );
-		termImp.setProgressBar( progressBar, 15 );
-		termImp.importSheet( 2000 );
-		
-		
-		// restart term data scanning from first
-		sheetData.initScan();
-		
-		System.out.println( "Importing term attributes" );
-		setProgressBarLabel( Messages.getString("ImportExcelXLSX.ImportTermAttrLabel") );
-		
-		// import term attributes
-		TermAttributeImporter taImp = new 
-				TermAttributeImporter( catalogue, sheetData );
-		taImp.manageNewTerms( termImp.getNewCodes() );
-		taImp.setProgressBar( progressBar, 25 );
-		taImp.importSheet( 2000 );
-		
-		// import the term types related to the attributes
-		TermTypeImporter ttImp = new TermTypeImporter( catalogue );
-		ttImp.importSheet();
-		
-		
-		// restart term data scanning from first
-		sheetData.initScan();
-		
-		System.out.println( "Importing parent terms" );
-		setProgressBarLabel( Messages.getString("ImportExcelXLSX.ImportTermParents") );
-		
-		// import parent terms
-		ParentImporter parentImp = new 
-				ParentImporter( catalogue, sheetData );
-		
-		// manage also new terms (i.e. the append function )
-		parentImp.manageNewTerms( termImp.getNewCodes() );
-		parentImp.setProgressBar( progressBar, 25 );
-		parentImp.importSheet( 2000 );
-		
-		
-		System.out.println( "Importing release notes sheet" );
-		setProgressBarLabel( Messages.getString("ImportExcelXLSX.ImportReleaseNotes") );
-		
-		// add the catalogue information
-		ReleaseNotesDAO notesDao = new ReleaseNotesDAO( catalogue );
-		if ( catalogue.getReleaseNotes() != null )
-			notesDao.insert( catalogue.getReleaseNotes() );
-		
-		// import the release notes operations
-		try {
-
-			sheetData = rawData.processSheetName( Headers.NOTES_SHEET_NAME );
-			NotesSheetImporter notesImp = new 
-					NotesSheetImporter( catalogue, sheetData );
-			notesImp.setProgressBar( progressBar, 5 );
-			notesImp.importSheet();
-			
-		} catch ( Exception e ) {
-			System.err.println( "Release notes not found for " + catalogue );
-		}
+		// import the release note sheet
+		importReleaseNotes ( workbookReader, catalogue );
 
 		// close the connection
-		rawData.close();
+		workbookReader.close();
 
-		
 		// after having imported the excel, we can insert the default preferences
 		System.out.println ( "Insert default preferences values into the database" );
 		
@@ -207,5 +119,197 @@ public class CatalogueWorkbookImporter {
 			progressBar.close();
 		
 		System.out.println( catalogue + " successfully imported in " + catalogue.getDbFullPath() );
+	}
+	
+	/**
+	 * Import the catalogue sheet
+	 * @param workbookReader
+	 * @param dbPath
+	 * @return
+	 * @throws InvalidFormatException
+	 * @throws IOException
+	 * @throws XMLStreamException
+	 */
+	private CatalogueSheetImporter importCatalogueSheet ( WorkbookReader workbookReader, String dbPath ) 
+			throws InvalidFormatException, IOException, XMLStreamException {
+		
+		System.out.println( "Importing catalogue sheet" );
+		updateProgressBar( 1, Messages.getString("ImportExcelXLSX.ImportCatalogue") );
+		
+		// get the catalogue sheet and check if the catalogues are compatible
+		// (the open catalogue and the one we want to import)
+		workbookReader.processSheetName( Headers.CAT_SHEET_NAME );
+
+		ResultDataSet sheetData = workbookReader.next();
+		
+		CatalogueSheetImporter catImp = 
+				new CatalogueSheetImporter( dbPath );
+		
+		if ( openedCat != null )
+			catImp.setOpenedCatalogue ( openedCat );
+		
+		catImp.importData( sheetData );
+		
+		return catImp;
+	}
+	
+	/**
+	 * Import the attribute sheet
+	 * @param workbookReader
+	 * @param catalogue
+	 * @throws XMLStreamException
+	 * @throws InvalidFormatException
+	 * @throws IOException
+	 */
+	private void importAttributeSheet( WorkbookReader workbookReader, Catalogue catalogue ) 
+			throws XMLStreamException, InvalidFormatException, IOException {
+		
+		System.out.println( "Importing attribute sheet" );
+		updateProgressBar( 2, Messages.getString("ImportExcelXLSX.ImportAttributeLabel") );
+		
+		// get the attribute sheet
+		workbookReader.processSheetName( Headers.ATTR_SHEET_NAME );
+
+		ResultDataSet sheetData = workbookReader.next();
+		
+		AttributeSheetImporter attrImp = new 
+				AttributeSheetImporter( catalogue );
+		// start the import
+		attrImp.importData( sheetData );
+	}
+	
+	/**
+	 * Import the hierarchy sheet
+	 * @param workbookReader
+	 * @param catalogue
+	 * @param catExcelCode
+	 * @throws InvalidFormatException
+	 * @throws IOException
+	 * @throws XMLStreamException
+	 */
+	private void importHierarchySheet ( WorkbookReader workbookReader, 
+			Catalogue catalogue, String catExcelCode ) 
+					throws InvalidFormatException, IOException, XMLStreamException {
+		
+		System.out.println( "Importing hierarchy sheet" );
+		updateProgressBar( 2, Messages.getString("ImportExcelXLSX.ImportHierarchyLabel") );
+		
+		// get the hierarchy sheet
+		workbookReader.processSheetName( Headers.HIER_SHEET_NAME );
+		
+		ResultDataSet sheetData = workbookReader.next();
+		
+		HierarchySheetImporter hierImp = new 
+				HierarchySheetImporter( catalogue );
+		hierImp.setMasterCode( catExcelCode );
+		
+		// start the import
+		hierImp.importData( sheetData );
+	}
+	
+	/**
+	 * Import the entire term sheet into the db
+	 * @param workbookReader
+	 * @param catalogue
+	 * @throws InvalidFormatException
+	 * @throws IOException
+	 * @throws XMLStreamException
+	 * @throws SQLException 
+	 */
+	private void importTermSheet ( WorkbookReader workbookReader, Catalogue catalogue ) 
+			throws InvalidFormatException, IOException, XMLStreamException, SQLException {
+
+		final int batchSize = 2000;
+		
+		System.out.println( "Importing term sheet" );
+		updateProgressBar( 15, Messages.getString("ImportExcelXLSX.ImportTermLabel") );
+		
+		// get the term sheet
+		workbookReader.processSheetName( Headers.TERM_SHEET_NAME );
+		workbookReader.setBatchSize( batchSize );
+		
+		TermSheetImporter termImp = new 
+				TermSheetImporter( catalogue );
+		
+		// read the first batch
+		while ( workbookReader.hasNext() ) {
+			ResultDataSet data = workbookReader.next();
+			termImp.importData( data );
+		}
+		
+		System.out.println( "Importing term attributes" );
+		updateProgressBar( 25, Messages.getString("ImportExcelXLSX.ImportTermAttrLabel") );
+		
+		// import term attributes
+		TermAttributeImporter taImp = new 
+				TermAttributeImporter( catalogue );
+		taImp.manageNewTerms( termImp.getNewCodes() );
+		
+		// get the term sheet
+		workbookReader.processSheetName( Headers.TERM_SHEET_NAME );
+		workbookReader.setBatchSize( batchSize );
+
+		// read the first batch
+		while ( workbookReader.hasNext() ) {
+			ResultDataSet data = workbookReader.next();
+			taImp.importData( data );
+		}
+
+		
+		// import the term types related to the attributes
+		TermTypeImporter ttImp = new TermTypeImporter( catalogue );
+		ttImp.importSheet();
+		
+		
+		
+		System.out.println( "Importing parent terms" );
+		updateProgressBar( 25, Messages.getString("ImportExcelXLSX.ImportTermParents") );
+		
+		// import parent terms
+		ParentImporter parentImp = new ParentImporter( catalogue );
+		
+		// manage also new terms (i.e. the append function )
+		parentImp.manageNewTerms( termImp.getNewCodes() );
+		
+		// get the term sheet
+		workbookReader.processSheetName( Headers.TERM_SHEET_NAME );
+		workbookReader.setBatchSize( batchSize );
+		
+		// read the first batch
+		while ( workbookReader.hasNext() ) {
+			ResultDataSet data = workbookReader.next();
+			parentImp.importData( data );
+		}
+	}
+	
+	/**
+	 * Import the release notes
+	 * @param workbookReader
+	 * @param catalogue
+	 */
+	private void importReleaseNotes ( WorkbookReader workbookReader, Catalogue catalogue ) {
+		
+		System.out.println( "Importing release notes sheet" );
+		updateProgressBar( 5, Messages.getString("ImportExcelXLSX.ImportReleaseNotes") );
+		
+		// add the catalogue information
+		ReleaseNotesDAO notesDao = new ReleaseNotesDAO( catalogue );
+		if ( catalogue.getReleaseNotes() != null )
+			notesDao.insert( catalogue.getReleaseNotes() );
+		
+		// import the release notes operations
+		try {
+
+			workbookReader.processSheetName( Headers.NOTES_SHEET_NAME );
+			
+			ResultDataSet sheetData = workbookReader.next();
+			
+			NotesSheetImporter notesImp = new 
+					NotesSheetImporter( catalogue );
+			notesImp.importData( sheetData );
+			
+		} catch ( Exception e ) {
+			System.err.println( "Release notes not found for " + catalogue );
+		}
 	}
 }

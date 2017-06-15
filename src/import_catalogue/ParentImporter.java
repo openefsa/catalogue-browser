@@ -37,10 +37,7 @@ public class ParentImporter extends SheetImporter<Applicability> {
 	// temporary applicabilities
 	private Collection<Applicability> tempAppl;
 
-	public ParentImporter( Catalogue catalogue, 
-			ResultDataSet termData ) throws SQLException {
-
-		super( termData );
+	public ParentImporter( Catalogue catalogue ) throws SQLException {
 		this.catalogue = catalogue;
 		this.newCodes = new HashMap<>();
 		this.tempAppl = new ArrayList<>();

@@ -23,8 +23,7 @@ public class AttributeSheetImporter extends SheetImporter<Attribute> {
 	 * @param catalogue the catalogue which contains the attributes
 	 * @param attrData the sheet data related to the attributes
 	 */
-	public AttributeSheetImporter( Catalogue catalogue, ResultDataSet attrData ) {
-		super ( attrData );
+	public AttributeSheetImporter( Catalogue catalogue ) {
 		this.catalogue = catalogue;
 	}
 
@@ -82,8 +81,5 @@ public class AttributeSheetImporter extends SheetImporter<Attribute> {
 	}
 
 	@Override
-	public void end() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void end() {}
 }

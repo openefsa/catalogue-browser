@@ -41,8 +41,7 @@ public class TermSheetImporter extends SheetImporter<Term> {
 	 * @param catalogue the catalogue which contains the terms
 	 * @param termData the sheet term data
 	 */
-	public TermSheetImporter( Catalogue catalogue, ResultDataSet termData ) {
-		super ( termData );
+	public TermSheetImporter( Catalogue catalogue ) {
 		this.catalogue = catalogue;
 		this.newCodes = new HashMap<>();
 		this.tempTerms = new ArrayList<>();
@@ -50,10 +49,12 @@ public class TermSheetImporter extends SheetImporter<Term> {
 	
 	@Override
 	public Term getByResultSet(ResultDataSet rs) {
-		
+
 		// skip if no term code
-		if ( rs.getString ( Headers.TERM_CODE ).isEmpty() )
+		if ( rs.getString ( Headers.TERM_CODE ).isEmpty() ) {
+			System.err.println( "Empty code found, skipping this term" );
 			return null;
+		}
 
 		// save the code in order to be able to use it later
 		// for retrieving terms ids
@@ -73,7 +74,7 @@ public class TermSheetImporter extends SheetImporter<Term> {
 		builder.setStatus( rs.getString( Headers.STATUS ) );
 
 		Term term = builder.build();
-
+		
 		// if we have a temp term we save it but we 
 		// don't insert it yet, we need to wait all the
 		// others terms first, in order to generate a correct
@@ -93,7 +94,7 @@ public class TermSheetImporter extends SheetImporter<Term> {
 
 	@Override
 	public void insert( Collection<Term> terms ) {
-		
+
 		TermDAO termDao = new TermDAO( catalogue );
 
 		// insert the batch of terms into the db

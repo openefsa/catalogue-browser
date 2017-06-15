@@ -11,7 +11,6 @@ import java.util.HashMap;
 import catalogue.Catalogue;
 import catalogue_object.Term;
 import open_xml_reader.ResultDataSet;
-import ui_progress_bar.FormProgressBar;
 
 /**
  * Sheet importer. Abstract class to create the skeleton program
@@ -24,55 +23,15 @@ import ui_progress_bar.FormProgressBar;
  */
 public abstract class SheetImporter<T> {
 	
-	private FormProgressBar progressBar;
-	private int maxFill;
-	private ResultDataSet data;
-
-	/**
-	 * Initialize the sheet importer
-	 * @param data the sheet data
-	 */
-	public SheetImporter( ResultDataSet data ) {
-		this.data = data;
-	}
-	
-	/**
-	 * Set the progress bar for this import process
-	 * @param progressBar
-	 * @param maxFill the maximum progress that this
-	 * import process can fill in the progress bar
-	 */
-	public void setProgressBar(FormProgressBar progressBar, int maxFill ) {
-		this.progressBar = progressBar;
-		this.maxFill = maxFill;
-	}
-	
 	/**
 	 * Start the import process of the sheet
-	 * without limitations on the batch size
-	 */
-	public void importSheet() {
-		importSheet( Integer.MAX_VALUE );
-	}
-	
-	/**
-	 * Start the import process of the sheet
-	 * @param batchSize the maximum number of records
-	 * which should be maintained in memory each time
-	 * before inserting them into the physical database
-	 * A bigger batchSize improves the speed of the process,
-	 * but increases the memory usage. On the other hand,
-	 * a smaller batchSize slows down the process but uses
 	 * less ram memory.
 	 */
-	public void importSheet( int batchSize ) {
+	public void importData( ResultDataSet data ) {
 		
 		// list of all objects which were parsed
 		Collection<T> objs = new ArrayList<>();
-		
-		// the progress bar increment
-		double increment = (double) maxFill / data.getRowsCount();
-		
+
 		while ( data.next() ) {
 			
 			// read the current line and get the
@@ -91,30 +50,8 @@ public abstract class SheetImporter<T> {
 			// were created
 			if ( allObjs != null )
 				objs.addAll( allObjs );
-			
-			// if maximum limit is reached insert
-			// the batch of objects and clear the
-			// array list memory
-			// or if we are forcing the inserting go on
-			if ( objs.size() >= batchSize ) {
-				
-				insert ( objs );
-				
-				// clear variables
-				allObjs = null;
-				obj = null;
-				objs.clear();
-				
-				// run garbage collector to
-				// remove from memory useless variables
-				System.gc();
-			}
-			
-			// add the progress to the progress bar
-			if ( progressBar != null )
-				progressBar.addProgress( increment );
 		}
-		
+
 		// insert all the remaining T objects into the db
 		if ( !objs.isEmpty() )
 			insert( objs );
@@ -141,7 +78,8 @@ public abstract class SheetImporter<T> {
 		Connection con = catalogue.getConnection();
 		
 		// get the ids and codes
-		PreparedStatement stmt = con.prepareStatement( "SELECT " + idField + "," + codeField + " FROM " + tableName );
+		PreparedStatement stmt = con.prepareStatement( "SELECT " + idField + 
+				"," + codeField + " FROM " + tableName );
 		
 		// get the results
 		ResultSet rs = stmt.executeQuery();

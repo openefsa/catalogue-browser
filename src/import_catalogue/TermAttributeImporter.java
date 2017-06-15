@@ -30,9 +30,8 @@ public class TermAttributeImporter extends SheetImporter<TermAttribute> {
 	// things for append
 	private HashMap<String, String> newCodes;
 	
-	public TermAttributeImporter( Catalogue catalogue, 
-			ResultDataSet termData ) throws SQLException {
-		super( termData );
+	public TermAttributeImporter( Catalogue catalogue ) throws SQLException {
+
 		this.catalogue = catalogue;
 		
 		// get all the term ids

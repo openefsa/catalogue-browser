@@ -10,14 +10,12 @@ import catalogue.ReleaseNotesOperation;
 import catalogue_browser_dao.ReleaseNotesOperationDAO;
 import naming_convention.Headers;
 import open_xml_reader.ResultDataSet;
-import sheet_converter.NotesSheetConverter;
 
 public class NotesSheetImporter extends SheetImporter<ReleaseNotesOperation> {
 
 	private Catalogue catalogue;
 	
-	public NotesSheetImporter( Catalogue catalogue, ResultDataSet data) {
-		super(data);
+	public NotesSheetImporter( Catalogue catalogue ) {
 		this.catalogue = catalogue;
 	}
 
@@ -59,7 +57,6 @@ public class NotesSheetImporter extends SheetImporter<ReleaseNotesOperation> {
 
 	@Override
 	public Collection<ReleaseNotesOperation> getAllByResultSet(ResultDataSet rs) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -73,8 +70,5 @@ public class NotesSheetImporter extends SheetImporter<ReleaseNotesOperation> {
 	}
 
 	@Override
-	public void end() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void end() {}
 }

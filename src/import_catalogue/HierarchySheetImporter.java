@@ -24,8 +24,7 @@ public class HierarchySheetImporter extends SheetImporter<Hierarchy> {
 	 * @param catalogue the catalogue which contains the hierarchies
 	 * @param hierData the sheet hierarchies data
 	 */
-	public HierarchySheetImporter( Catalogue catalogue, ResultDataSet hierData ) {
-		super ( hierData );
+	public HierarchySheetImporter( Catalogue catalogue ) {
 		this.catalogue = catalogue;
 	}
 
@@ -105,8 +104,5 @@ public class HierarchySheetImporter extends SheetImporter<Hierarchy> {
 	}
 
 	@Override
-	public void end() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void end() {}
 }
