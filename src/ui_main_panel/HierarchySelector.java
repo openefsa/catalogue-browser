@@ -174,8 +174,7 @@ public class HierarchySelector extends Observable implements Observer {
 	}
 
 	/**
-	 * Refresh hierarchy selector. This will enabled 
-	 * it if a catalogue was set
+	 * Refresh hierarchy selector.
 	 */
 	public void refresh() {
 		
@@ -183,7 +182,6 @@ public class HierarchySelector extends Observable implements Observer {
 			return;
 		
 		setInput ( catalogue.getHierarchies() );
-		setEnabled ( true );
 	}
 	
 	/**

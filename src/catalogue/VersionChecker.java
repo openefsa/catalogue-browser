@@ -63,8 +63,11 @@ public class VersionChecker {
 	 * @return the new catalogue with the new version
 	 */
 	public Catalogue newInternalVersion() {
+
 		version.incrementInternal();
-		version.confirm();
+		
+		if ( version.isForced() )
+			version.confirm();
 		return apply();
 	}
 	

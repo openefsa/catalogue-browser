@@ -395,10 +395,10 @@ public class TermPropertiesPanel implements Observer {
 
 		// update implicit facets only if necessary since
 		// the operation is quite expensive
-		if ( facetTab.isVisible() )
+		if ( facetTab.isVisible() ) {
 			facetTab.setTerm( term );
-		
-		facetTab.refresh();
+			facetTab.refresh();
+		}
 	}
 
 	@Override

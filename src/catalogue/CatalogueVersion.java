@@ -143,12 +143,6 @@ public class CatalogueVersion extends Version {
 	 * versions.
 	 */
 	public void confirm() {
-		
-		if ( !forced ) {
-			System.err.println( "Cannot confirm non forced version" );
-			return;
-		}
-		
 		forcedCount = 0;
 		forced = false;
 	}
