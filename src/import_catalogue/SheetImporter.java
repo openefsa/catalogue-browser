@@ -11,6 +11,7 @@ import java.util.HashMap;
 import catalogue.Catalogue;
 import catalogue_object.Term;
 import open_xml_reader.ResultDataSet;
+import ui_progress_bar.FormProgressBar;
 
 /**
  * Sheet importer. Abstract class to create the skeleton program
@@ -23,6 +24,8 @@ import open_xml_reader.ResultDataSet;
  */
 public abstract class SheetImporter<T> {
 	
+	private FormProgressBar progressBar;
+	private int maxFill;
 	private ResultDataSet data;
 
 	/**
@@ -31,6 +34,17 @@ public abstract class SheetImporter<T> {
 	 */
 	public SheetImporter( ResultDataSet data ) {
 		this.data = data;
+	}
+	
+	/**
+	 * Set the progress bar for this import process
+	 * @param progressBar
+	 * @param maxFill the maximum progress that this
+	 * import process can fill in the progress bar
+	 */
+	public void setProgressBar(FormProgressBar progressBar, int maxFill ) {
+		this.progressBar = progressBar;
+		this.maxFill = maxFill;
 	}
 	
 	/**
@@ -55,6 +69,9 @@ public abstract class SheetImporter<T> {
 		
 		// list of all objects which were parsed
 		Collection<T> objs = new ArrayList<>();
+		
+		// the progress bar increment
+		double increment = (double) maxFill / data.getRowsCount();
 		
 		while ( data.next() ) {
 			
@@ -92,6 +109,10 @@ public abstract class SheetImporter<T> {
 				// remove from memory useless variables
 				System.gc();
 			}
+			
+			// add the progress to the progress bar
+			if ( progressBar != null )
+				progressBar.addProgress( increment );
 		}
 		
 		// insert all the remaining T objects into the db

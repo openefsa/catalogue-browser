@@ -493,44 +493,76 @@ public class FileMenu implements MainMenuItem {
 				fcl.addListener( new Listener() {
 					
 					@Override
-					public void handleEvent(Event event) {
+					public void handleEvent(final Event event) {
 						
 						@SuppressWarnings("unchecked")
-						ArrayList<Catalogue> selectedCats = (ArrayList<Catalogue>) event.data;
-						
-						boolean problems = false;
-						
-						// remove the catalogues from the database
-						for ( Catalogue catalogue : selectedCats ) {
-							
-							if ( catalogue.isReserved() || catalogue.isRequestingAction() ) {
-								problems = true;
-								continue; 
-							}
-							
-							System.out.println ( "Deleting catalogue " + catalogue.getCode() );
-							
-							// delete the catalogue database
-							try {
-								DatabaseManager.deleteDb( catalogue );
-								catDao.delete( catalogue );
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
+						final ArrayList<Catalogue> selectedCats = (ArrayList<Catalogue>) event.data;
 
-						}
+						// progress bar for deleting catalogues
+						final FormProgressBar progressBar = new FormProgressBar( shell, 
+								Messages.getString("FileMenu.DeleteCatalogue") );
 						
-						if ( problems ) {
-							GlobalUtil.showDialog( shell, 
-									Messages.getString( "Delete.ErrorTitle" ), 
-									Messages.getString( "Delete.ErrorMessage" ), 
-									SWT.ICON_WARNING );
-						}
-						
-						
-						if ( listener != null )
-							listener.buttonPressed( deleteCatMI, 
-									DELETE_CAT_MI, event );
+						new Thread () {
+							public void run() {
+								
+								boolean problems = false;
+								
+								// the gained progress for each deleted catalogue
+								double step = 100 / selectedCats.size();
+								
+								// remove the catalogues from the database
+								for ( Catalogue catalogue : selectedCats ) {
+									
+									progressBar.addProgress( step );
+									
+									if ( catalogue.isReserved() || catalogue.isRequestingAction() ) {
+										problems = true;
+										continue; 
+									}
+									
+									System.out.println ( "Deleting catalogue " + catalogue.getCode() );
+									
+									// delete the catalogue database
+									try {
+										DatabaseManager.deleteDb( catalogue );
+										catDao.delete( catalogue );
+									} catch (IOException e) {
+										e.printStackTrace();
+									}
+								}
+								
+								progressBar.close();
+								
+								// make the variable final
+								final boolean prob = problems;
+								
+								shell.getDisplay().syncExec( new Runnable() {
+									
+									@Override
+									public void run() {
+										
+										// if problems occurred
+										if ( prob ) {
+											GlobalUtil.showDialog( shell, 
+													Messages.getString( "Delete.ErrorTitle" ), 
+													Messages.getString( "Delete.ErrorMessage" ), 
+													SWT.ICON_WARNING );
+										}
+										else {  // if all ok
+											GlobalUtil.showDialog( shell, 
+													Messages.getString( "Delete.OkTitle" ), 
+													Messages.getString( "Delete.OkMessage" ), 
+													SWT.ICON_INFORMATION );
+										}
+										
+										
+										if ( listener != null )
+											listener.buttonPressed( deleteCatMI, 
+													DELETE_CAT_MI, event );
+									}
+								});
+							};
+						}.start();	
 					}
 				});
 			}
@@ -573,20 +605,11 @@ public class FileMenu implements MainMenuItem {
 		
 		GlobalUtil.setShellCursor( shell, SWT.CURSOR_WAIT );
 		
-		// open the catalogue in a separate thread
-		// since it is time consuming
-		shell.getDisplay().syncExec( new Runnable() {
-			
-			@Override
-			public void run() {
-				
-				// close the previous catalogue
-				closeCatalogue();
-				
-				// open the catalogue
-				catalogue.open();
-			}
-		});
+		// close the previous catalogue
+		closeCatalogue();
+		
+		// open the catalogue
+		catalogue.open();
 
 		// refresh menu items
 		mainMenu.refresh();

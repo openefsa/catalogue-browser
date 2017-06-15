@@ -71,11 +71,13 @@ public class XLSXFormat {
 		SheetOOXMLHandler sheetRowHandl = new SheetOOXMLHandler( 
 				reader.getSharedStringsTable() );
 		
+		InputSource inputSource = new InputSource( sheetReader );
+		
 		parser.setContentHandler( sheetRowHandl );
-		parser.parse( new InputSource( sheetReader ) );
-		
+		parser.parse( inputSource );
+
 		sheetReader.close();
-		
+
 		// get the result data set
 		return sheetRowHandl.getResultDataSet();
 	}

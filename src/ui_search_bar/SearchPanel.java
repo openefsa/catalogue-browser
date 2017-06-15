@@ -154,7 +154,7 @@ public class SearchPanel implements Observer {
 		
 		// create a menu item named with the current applicable hierarchy name
 		MenuItem mi = new MenuItem( menu , SWT.PUSH );
-		mi.setText( currentApplicableHierarchy.getName() );
+		mi.setText( currentApplicableHierarchy.getLabel() );
 		
 		// if the menu item is pressed, we call the external listener
 		// passing as data the selected term and the selected hierarchy

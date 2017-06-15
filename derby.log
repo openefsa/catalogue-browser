@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-Thu Jun 15 09:04:13 CEST 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-015c-aa91-1395-000005fc6ff0 
+Thu Jun 15 10:04:50 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-015c-aac8-90ff-000005fc4de8 
 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\CataloguesMetadata with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
 Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
 java.vendor=Oracle Corporation
@@ -12,9 +12,9 @@ os.version=6.1
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
 ----------------------------------------------------------------
-Thu Jun 15 09:04:31 CEST 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 594b8034-015c-aa91-1395-000005fc6ff0 
-on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\CAT_ABUNDANCE_DB\ABUNDANCE_VERSION_4.5.6 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Thu Jun 15 10:04:58 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 98ec802c-015c-aac8-90ff-000005fc4de8 
+on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\LocalCatalogues\CAT_Importprova_DB\Importprova with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
 Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.8.0_111-b14
@@ -25,9 +25,12 @@ os.version=6.1
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
 ----------------------------------------------------------------
-Thu Jun 15 09:04:34 CEST 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 0318c1c3-015c-aa91-1395-000005fc6ff0 
-on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\CAT_CATUSERS_DB\CATUSERS_VERSION_1.0 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Thu Jun 15 10:15:29 CEST 2017:
+Shutting down instance 98ec802c-015c-aac8-90ff-000005fc4de8 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\LocalCatalogues\CAT_Importprova_DB\Importprova with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+----------------------------------------------------------------
+Thu Jun 15 10:15:29 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 08620211-015c-aac8-90ff-000005fc4de8 
+on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\LocalCatalogues\CAT_Importprova_DB\Importprova with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
 Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.8.0_111-b14
@@ -38,12 +41,9 @@ os.version=6.1
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
 ----------------------------------------------------------------
-Thu Jun 15 09:04:43 CEST 2017:
-Shutting down instance 594b8034-015c-aa91-1395-000005fc6ff0 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\CAT_ABUNDANCE_DB\ABUNDANCE_VERSION_4.5.6 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
-----------------------------------------------------------------
-Thu Jun 15 09:04:43 CEST 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance f7e102c9-015c-aa91-1395-000005fc6ff0 
-on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\CAT_ABUNDANCE_DB\ABUNDANCE_VERSION_4.5.6 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Thu Jun 15 10:15:47 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 31d4c223-015c-aac8-90ff-000005fc4de8 
+on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\CAT_ABUNDANCE_DB\ABUNDANCE_VERSION_4.5.7 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
 Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.8.0_111-b14
@@ -54,431 +54,12 @@ os.version=6.1
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
 ----------------------------------------------------------------
-Thu Jun 15 09:04:49 CEST 2017:
-Shutting down instance f7e102c9-015c-aa91-1395-000005fc6ff0 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\CAT_ABUNDANCE_DB\ABUNDANCE_VERSION_4.5.6 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
-Thu Jun 15 09:04:50 CEST 2017 Thread[main,5,main] Cleanup action starting
-java.sql.SQLException: Database 'Database\CAT_ABUNDANCE_DB\ABUNDANCE_VERSION_4.5.5' not found.
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.handleDBNotFound(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.<init>(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
-	at java.security.AccessController.doPrivileged(Native Method)
-	at org.apache.derby.jdbc.InternalDriver.getNewEmbedConnection(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
-	at org.apache.derby.jdbc.AutoloadedDriver.connect(Unknown Source)
-	at java.sql.DriverManager.getConnection(Unknown Source)
-	at java.sql.DriverManager.getConnection(Unknown Source)
-	at catalogue.Catalogue.closeConnection(Catalogue.java:296)
-	at catalogue_browser_dao.DatabaseManager.deleteDb(DatabaseManager.java:312)
-	at ui_main_menu.FileMenu$7$1.handleEvent(FileMenu.java:515)
-	at ui_main_panel.FormCataloguesList.callListener(FormCataloguesList.java:610)
-	at ui_main_panel.FormCataloguesList.performOkActions(FormCataloguesList.java:702)
-	at ui_main_panel.FormCataloguesList.access$0(FormCataloguesList.java:681)
-	at ui_main_panel.FormCataloguesList$2.widgetSelected(FormCataloguesList.java:769)
-	at org.eclipse.swt.widgets.TypedListener.handleEvent(Unknown Source)
-	at org.eclipse.swt.widgets.EventTable.sendEvent(Unknown Source)
-	at org.eclipse.swt.widgets.Widget.sendEvent(Unknown Source)
-	at org.eclipse.swt.widgets.Display.runDeferredEvents(Unknown Source)
-	at org.eclipse.swt.widgets.Display.readAndDispatch(Unknown Source)
-	at ui_main_panel.CatalogueBrowserMain.main(CatalogueBrowserMain.java:75)
-Caused by: ERROR XJ004: Database 'Database\CAT_ABUNDANCE_DB\ABUNDANCE_VERSION_4.5.5' not found.
-	at org.apache.derby.iapi.error.StandardException.newException(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.wrapArgsForTransportAcrossDRDA(Unknown Source)
-	... 29 more
-============= begin nested exception, level (1) ===========
-ERROR XJ004: Database 'Database\CAT_ABUNDANCE_DB\ABUNDANCE_VERSION_4.5.5' not found.
-	at org.apache.derby.iapi.error.StandardException.newException(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.wrapArgsForTransportAcrossDRDA(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.handleDBNotFound(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.<init>(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
-	at java.security.AccessController.doPrivileged(Native Method)
-	at org.apache.derby.jdbc.InternalDriver.getNewEmbedConnection(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
-	at org.apache.derby.jdbc.AutoloadedDriver.connect(Unknown Source)
-	at java.sql.DriverManager.getConnection(Unknown Source)
-	at java.sql.DriverManager.getConnection(Unknown Source)
-	at catalogue.Catalogue.closeConnection(Catalogue.java:296)
-	at catalogue_browser_dao.DatabaseManager.deleteDb(DatabaseManager.java:312)
-	at ui_main_menu.FileMenu$7$1.handleEvent(FileMenu.java:515)
-	at ui_main_panel.FormCataloguesList.callListener(FormCataloguesList.java:610)
-	at ui_main_panel.FormCataloguesList.performOkActions(FormCataloguesList.java:702)
-	at ui_main_panel.FormCataloguesList.access$0(FormCataloguesList.java:681)
-	at ui_main_panel.FormCataloguesList$2.widgetSelected(FormCataloguesList.java:769)
-	at org.eclipse.swt.widgets.TypedListener.handleEvent(Unknown Source)
-	at org.eclipse.swt.widgets.EventTable.sendEvent(Unknown Source)
-	at org.eclipse.swt.widgets.Widget.sendEvent(Unknown Source)
-	at org.eclipse.swt.widgets.Display.runDeferredEvents(Unknown Source)
-	at org.eclipse.swt.widgets.Display.readAndDispatch(Unknown Source)
-	at ui_main_panel.CatalogueBrowserMain.main(CatalogueBrowserMain.java:75)
-============= end nested exception, level (1) ===========
-Cleanup action completed
-Thu Jun 15 09:04:50 CEST 2017 Thread[main,5,main] Cleanup action starting
-java.sql.SQLException: Database 'Database\CAT_ABUNDANCE_DB\ABUNDANCE_VERSION_4.5.4' not found.
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.handleDBNotFound(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.<init>(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
-	at java.security.AccessController.doPrivileged(Native Method)
-	at org.apache.derby.jdbc.InternalDriver.getNewEmbedConnection(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
-	at org.apache.derby.jdbc.AutoloadedDriver.connect(Unknown Source)
-	at java.sql.DriverManager.getConnection(Unknown Source)
-	at java.sql.DriverManager.getConnection(Unknown Source)
-	at catalogue.Catalogue.closeConnection(Catalogue.java:296)
-	at catalogue_browser_dao.DatabaseManager.deleteDb(DatabaseManager.java:312)
-	at ui_main_menu.FileMenu$7$1.handleEvent(FileMenu.java:515)
-	at ui_main_panel.FormCataloguesList.callListener(FormCataloguesList.java:610)
-	at ui_main_panel.FormCataloguesList.performOkActions(FormCataloguesList.java:702)
-	at ui_main_panel.FormCataloguesList.access$0(FormCataloguesList.java:681)
-	at ui_main_panel.FormCataloguesList$2.widgetSelected(FormCataloguesList.java:769)
-	at org.eclipse.swt.widgets.TypedListener.handleEvent(Unknown Source)
-	at org.eclipse.swt.widgets.EventTable.sendEvent(Unknown Source)
-	at org.eclipse.swt.widgets.Widget.sendEvent(Unknown Source)
-	at org.eclipse.swt.widgets.Display.runDeferredEvents(Unknown Source)
-	at org.eclipse.swt.widgets.Display.readAndDispatch(Unknown Source)
-	at ui_main_panel.CatalogueBrowserMain.main(CatalogueBrowserMain.java:75)
-Caused by: ERROR XJ004: Database 'Database\CAT_ABUNDANCE_DB\ABUNDANCE_VERSION_4.5.4' not found.
-	at org.apache.derby.iapi.error.StandardException.newException(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.wrapArgsForTransportAcrossDRDA(Unknown Source)
-	... 29 more
-============= begin nested exception, level (1) ===========
-ERROR XJ004: Database 'Database\CAT_ABUNDANCE_DB\ABUNDANCE_VERSION_4.5.4' not found.
-	at org.apache.derby.iapi.error.StandardException.newException(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.wrapArgsForTransportAcrossDRDA(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.handleDBNotFound(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.<init>(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
-	at java.security.AccessController.doPrivileged(Native Method)
-	at org.apache.derby.jdbc.InternalDriver.getNewEmbedConnection(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
-	at org.apache.derby.jdbc.AutoloadedDriver.connect(Unknown Source)
-	at java.sql.DriverManager.getConnection(Unknown Source)
-	at java.sql.DriverManager.getConnection(Unknown Source)
-	at catalogue.Catalogue.closeConnection(Catalogue.java:296)
-	at catalogue_browser_dao.DatabaseManager.deleteDb(DatabaseManager.java:312)
-	at ui_main_menu.FileMenu$7$1.handleEvent(FileMenu.java:515)
-	at ui_main_panel.FormCataloguesList.callListener(FormCataloguesList.java:610)
-	at ui_main_panel.FormCataloguesList.performOkActions(FormCataloguesList.java:702)
-	at ui_main_panel.FormCataloguesList.access$0(FormCataloguesList.java:681)
-	at ui_main_panel.FormCataloguesList$2.widgetSelected(FormCataloguesList.java:769)
-	at org.eclipse.swt.widgets.TypedListener.handleEvent(Unknown Source)
-	at org.eclipse.swt.widgets.EventTable.sendEvent(Unknown Source)
-	at org.eclipse.swt.widgets.Widget.sendEvent(Unknown Source)
-	at org.eclipse.swt.widgets.Display.runDeferredEvents(Unknown Source)
-	at org.eclipse.swt.widgets.Display.readAndDispatch(Unknown Source)
-	at ui_main_panel.CatalogueBrowserMain.main(CatalogueBrowserMain.java:75)
-============= end nested exception, level (1) ===========
-Cleanup action completed
-Thu Jun 15 09:04:50 CEST 2017 Thread[main,5,main] Cleanup action starting
-java.sql.SQLException: Database 'Database\CAT_ABUNDANCE_DB\ABUNDANCE_VERSION_4.5.3' not found.
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.handleDBNotFound(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.<init>(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
-	at java.security.AccessController.doPrivileged(Native Method)
-	at org.apache.derby.jdbc.InternalDriver.getNewEmbedConnection(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
-	at org.apache.derby.jdbc.AutoloadedDriver.connect(Unknown Source)
-	at java.sql.DriverManager.getConnection(Unknown Source)
-	at java.sql.DriverManager.getConnection(Unknown Source)
-	at catalogue.Catalogue.closeConnection(Catalogue.java:296)
-	at catalogue_browser_dao.DatabaseManager.deleteDb(DatabaseManager.java:312)
-	at ui_main_menu.FileMenu$7$1.handleEvent(FileMenu.java:515)
-	at ui_main_panel.FormCataloguesList.callListener(FormCataloguesList.java:610)
-	at ui_main_panel.FormCataloguesList.performOkActions(FormCataloguesList.java:702)
-	at ui_main_panel.FormCataloguesList.access$0(FormCataloguesList.java:681)
-	at ui_main_panel.FormCataloguesList$2.widgetSelected(FormCataloguesList.java:769)
-	at org.eclipse.swt.widgets.TypedListener.handleEvent(Unknown Source)
-	at org.eclipse.swt.widgets.EventTable.sendEvent(Unknown Source)
-	at org.eclipse.swt.widgets.Widget.sendEvent(Unknown Source)
-	at org.eclipse.swt.widgets.Display.runDeferredEvents(Unknown Source)
-	at org.eclipse.swt.widgets.Display.readAndDispatch(Unknown Source)
-	at ui_main_panel.CatalogueBrowserMain.main(CatalogueBrowserMain.java:75)
-Caused by: ERROR XJ004: Database 'Database\CAT_ABUNDANCE_DB\ABUNDANCE_VERSION_4.5.3' not found.
-	at org.apache.derby.iapi.error.StandardException.newException(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.wrapArgsForTransportAcrossDRDA(Unknown Source)
-	... 29 more
-============= begin nested exception, level (1) ===========
-ERROR XJ004: Database 'Database\CAT_ABUNDANCE_DB\ABUNDANCE_VERSION_4.5.3' not found.
-	at org.apache.derby.iapi.error.StandardException.newException(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.wrapArgsForTransportAcrossDRDA(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.handleDBNotFound(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.<init>(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
-	at java.security.AccessController.doPrivileged(Native Method)
-	at org.apache.derby.jdbc.InternalDriver.getNewEmbedConnection(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
-	at org.apache.derby.jdbc.AutoloadedDriver.connect(Unknown Source)
-	at java.sql.DriverManager.getConnection(Unknown Source)
-	at java.sql.DriverManager.getConnection(Unknown Source)
-	at catalogue.Catalogue.closeConnection(Catalogue.java:296)
-	at catalogue_browser_dao.DatabaseManager.deleteDb(DatabaseManager.java:312)
-	at ui_main_menu.FileMenu$7$1.handleEvent(FileMenu.java:515)
-	at ui_main_panel.FormCataloguesList.callListener(FormCataloguesList.java:610)
-	at ui_main_panel.FormCataloguesList.performOkActions(FormCataloguesList.java:702)
-	at ui_main_panel.FormCataloguesList.access$0(FormCataloguesList.java:681)
-	at ui_main_panel.FormCataloguesList$2.widgetSelected(FormCataloguesList.java:769)
-	at org.eclipse.swt.widgets.TypedListener.handleEvent(Unknown Source)
-	at org.eclipse.swt.widgets.EventTable.sendEvent(Unknown Source)
-	at org.eclipse.swt.widgets.Widget.sendEvent(Unknown Source)
-	at org.eclipse.swt.widgets.Display.runDeferredEvents(Unknown Source)
-	at org.eclipse.swt.widgets.Display.readAndDispatch(Unknown Source)
-	at ui_main_panel.CatalogueBrowserMain.main(CatalogueBrowserMain.java:75)
-============= end nested exception, level (1) ===========
-Cleanup action completed
-Thu Jun 15 09:04:50 CEST 2017 Thread[main,5,main] Cleanup action starting
-java.sql.SQLException: Database 'Database\CAT_ABUNDANCE_DB\ABUNDANCE_VERSION_4.5.2' not found.
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.handleDBNotFound(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.<init>(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
-	at java.security.AccessController.doPrivileged(Native Method)
-	at org.apache.derby.jdbc.InternalDriver.getNewEmbedConnection(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
-	at org.apache.derby.jdbc.AutoloadedDriver.connect(Unknown Source)
-	at java.sql.DriverManager.getConnection(Unknown Source)
-	at java.sql.DriverManager.getConnection(Unknown Source)
-	at catalogue.Catalogue.closeConnection(Catalogue.java:296)
-	at catalogue_browser_dao.DatabaseManager.deleteDb(DatabaseManager.java:312)
-	at ui_main_menu.FileMenu$7$1.handleEvent(FileMenu.java:515)
-	at ui_main_panel.FormCataloguesList.callListener(FormCataloguesList.java:610)
-	at ui_main_panel.FormCataloguesList.performOkActions(FormCataloguesList.java:702)
-	at ui_main_panel.FormCataloguesList.access$0(FormCataloguesList.java:681)
-	at ui_main_panel.FormCataloguesList$2.widgetSelected(FormCataloguesList.java:769)
-	at org.eclipse.swt.widgets.TypedListener.handleEvent(Unknown Source)
-	at org.eclipse.swt.widgets.EventTable.sendEvent(Unknown Source)
-	at org.eclipse.swt.widgets.Widget.sendEvent(Unknown Source)
-	at org.eclipse.swt.widgets.Display.runDeferredEvents(Unknown Source)
-	at org.eclipse.swt.widgets.Display.readAndDispatch(Unknown Source)
-	at ui_main_panel.CatalogueBrowserMain.main(CatalogueBrowserMain.java:75)
-Caused by: ERROR XJ004: Database 'Database\CAT_ABUNDANCE_DB\ABUNDANCE_VERSION_4.5.2' not found.
-	at org.apache.derby.iapi.error.StandardException.newException(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.wrapArgsForTransportAcrossDRDA(Unknown Source)
-	... 29 more
-============= begin nested exception, level (1) ===========
-ERROR XJ004: Database 'Database\CAT_ABUNDANCE_DB\ABUNDANCE_VERSION_4.5.2' not found.
-	at org.apache.derby.iapi.error.StandardException.newException(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.wrapArgsForTransportAcrossDRDA(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.handleDBNotFound(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.<init>(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
-	at java.security.AccessController.doPrivileged(Native Method)
-	at org.apache.derby.jdbc.InternalDriver.getNewEmbedConnection(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
-	at org.apache.derby.jdbc.AutoloadedDriver.connect(Unknown Source)
-	at java.sql.DriverManager.getConnection(Unknown Source)
-	at java.sql.DriverManager.getConnection(Unknown Source)
-	at catalogue.Catalogue.closeConnection(Catalogue.java:296)
-	at catalogue_browser_dao.DatabaseManager.deleteDb(DatabaseManager.java:312)
-	at ui_main_menu.FileMenu$7$1.handleEvent(FileMenu.java:515)
-	at ui_main_panel.FormCataloguesList.callListener(FormCataloguesList.java:610)
-	at ui_main_panel.FormCataloguesList.performOkActions(FormCataloguesList.java:702)
-	at ui_main_panel.FormCataloguesList.access$0(FormCataloguesList.java:681)
-	at ui_main_panel.FormCataloguesList$2.widgetSelected(FormCataloguesList.java:769)
-	at org.eclipse.swt.widgets.TypedListener.handleEvent(Unknown Source)
-	at org.eclipse.swt.widgets.EventTable.sendEvent(Unknown Source)
-	at org.eclipse.swt.widgets.Widget.sendEvent(Unknown Source)
-	at org.eclipse.swt.widgets.Display.runDeferredEvents(Unknown Source)
-	at org.eclipse.swt.widgets.Display.readAndDispatch(Unknown Source)
-	at ui_main_panel.CatalogueBrowserMain.main(CatalogueBrowserMain.java:75)
-============= end nested exception, level (1) ===========
-Cleanup action completed
-Thu Jun 15 09:04:50 CEST 2017 Thread[main,5,main] Cleanup action starting
-java.sql.SQLException: Database 'Database\CAT_ABUNDANCE_DB\ABUNDANCE_VERSION_4.5.1' not found.
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.handleDBNotFound(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.<init>(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
-	at java.security.AccessController.doPrivileged(Native Method)
-	at org.apache.derby.jdbc.InternalDriver.getNewEmbedConnection(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
-	at org.apache.derby.jdbc.AutoloadedDriver.connect(Unknown Source)
-	at java.sql.DriverManager.getConnection(Unknown Source)
-	at java.sql.DriverManager.getConnection(Unknown Source)
-	at catalogue.Catalogue.closeConnection(Catalogue.java:296)
-	at catalogue_browser_dao.DatabaseManager.deleteDb(DatabaseManager.java:312)
-	at ui_main_menu.FileMenu$7$1.handleEvent(FileMenu.java:515)
-	at ui_main_panel.FormCataloguesList.callListener(FormCataloguesList.java:610)
-	at ui_main_panel.FormCataloguesList.performOkActions(FormCataloguesList.java:702)
-	at ui_main_panel.FormCataloguesList.access$0(FormCataloguesList.java:681)
-	at ui_main_panel.FormCataloguesList$2.widgetSelected(FormCataloguesList.java:769)
-	at org.eclipse.swt.widgets.TypedListener.handleEvent(Unknown Source)
-	at org.eclipse.swt.widgets.EventTable.sendEvent(Unknown Source)
-	at org.eclipse.swt.widgets.Widget.sendEvent(Unknown Source)
-	at org.eclipse.swt.widgets.Display.runDeferredEvents(Unknown Source)
-	at org.eclipse.swt.widgets.Display.readAndDispatch(Unknown Source)
-	at ui_main_panel.CatalogueBrowserMain.main(CatalogueBrowserMain.java:75)
-Caused by: ERROR XJ004: Database 'Database\CAT_ABUNDANCE_DB\ABUNDANCE_VERSION_4.5.1' not found.
-	at org.apache.derby.iapi.error.StandardException.newException(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.wrapArgsForTransportAcrossDRDA(Unknown Source)
-	... 29 more
-============= begin nested exception, level (1) ===========
-ERROR XJ004: Database 'Database\CAT_ABUNDANCE_DB\ABUNDANCE_VERSION_4.5.1' not found.
-	at org.apache.derby.iapi.error.StandardException.newException(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.wrapArgsForTransportAcrossDRDA(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.handleDBNotFound(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.<init>(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
-	at java.security.AccessController.doPrivileged(Native Method)
-	at org.apache.derby.jdbc.InternalDriver.getNewEmbedConnection(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
-	at org.apache.derby.jdbc.AutoloadedDriver.connect(Unknown Source)
-	at java.sql.DriverManager.getConnection(Unknown Source)
-	at java.sql.DriverManager.getConnection(Unknown Source)
-	at catalogue.Catalogue.closeConnection(Catalogue.java:296)
-	at catalogue_browser_dao.DatabaseManager.deleteDb(DatabaseManager.java:312)
-	at ui_main_menu.FileMenu$7$1.handleEvent(FileMenu.java:515)
-	at ui_main_panel.FormCataloguesList.callListener(FormCataloguesList.java:610)
-	at ui_main_panel.FormCataloguesList.performOkActions(FormCataloguesList.java:702)
-	at ui_main_panel.FormCataloguesList.access$0(FormCataloguesList.java:681)
-	at ui_main_panel.FormCataloguesList$2.widgetSelected(FormCataloguesList.java:769)
-	at org.eclipse.swt.widgets.TypedListener.handleEvent(Unknown Source)
-	at org.eclipse.swt.widgets.EventTable.sendEvent(Unknown Source)
-	at org.eclipse.swt.widgets.Widget.sendEvent(Unknown Source)
-	at org.eclipse.swt.widgets.Display.runDeferredEvents(Unknown Source)
-	at org.eclipse.swt.widgets.Display.readAndDispatch(Unknown Source)
-	at ui_main_panel.CatalogueBrowserMain.main(CatalogueBrowserMain.java:75)
-============= end nested exception, level (1) ===========
-Cleanup action completed
+Thu Jun 15 10:15:55 CEST 2017:
+Shutting down instance 31d4c223-015c-aac8-90ff-000005fc4de8 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\CAT_ABUNDANCE_DB\ABUNDANCE_VERSION_4.5.7 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
 ----------------------------------------------------------------
-Thu Jun 15 09:04:53 CEST 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 2cd98344-015c-aa91-1395-000005fc6ff0 
-on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\CAT_ABUNDANCE_DB\ABUNDANCE_VERSION_4.5 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
-Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
-java.vendor=Oracle Corporation
-java.runtime.version=1.8.0_111-b14
-user.dir=C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser
-os.name=Windows 7
-os.arch=amd64
-os.version=6.1
-derby.system.home=null
-Database Class Loader started - derby.database.classpath=''
-Thu Jun 15 09:05:11 CEST 2017 Thread[excel,5,main] Cleanup action starting
-java.sql.SQLException: Database 'Database\CAT_ABUNDANCE_DB\ABUNDANCE_VERSION_4.5.6' not found.
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.handleDBNotFound(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.<init>(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
-	at java.security.AccessController.doPrivileged(Native Method)
-	at org.apache.derby.jdbc.InternalDriver.getNewEmbedConnection(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
-	at org.apache.derby.jdbc.AutoloadedDriver.connect(Unknown Source)
-	at java.sql.DriverManager.getConnection(Unknown Source)
-	at java.sql.DriverManager.getConnection(Unknown Source)
-	at catalogue.Catalogue.getConnection(Catalogue.java:1918)
-	at import_catalogue.CatalogueSheetImporter.insert(CatalogueSheetImporter.java:192)
-	at import_catalogue.SheetImporter.importSheet(SheetImporter.java:99)
-	at import_catalogue.SheetImporter.importSheet(SheetImporter.java:41)
-	at import_catalogue.CatalogueWorkbookImporter.importWorkbook(CatalogueWorkbookImporter.java:82)
-	at import_catalogue.ImportThread.run(ImportThread.java:69)
-Caused by: ERROR XJ004: Database 'Database\CAT_ABUNDANCE_DB\ABUNDANCE_VERSION_4.5.6' not found.
-	at org.apache.derby.iapi.error.StandardException.newException(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.wrapArgsForTransportAcrossDRDA(Unknown Source)
-	... 22 more
-============= begin nested exception, level (1) ===========
-ERROR XJ004: Database 'Database\CAT_ABUNDANCE_DB\ABUNDANCE_VERSION_4.5.6' not found.
-	at org.apache.derby.iapi.error.StandardException.newException(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.wrapArgsForTransportAcrossDRDA(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.handleDBNotFound(Unknown Source)
-	at org.apache.derby.impl.jdbc.EmbedConnection.<init>(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
-	at java.security.AccessController.doPrivileged(Native Method)
-	at org.apache.derby.jdbc.InternalDriver.getNewEmbedConnection(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
-	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
-	at org.apache.derby.jdbc.AutoloadedDriver.connect(Unknown Source)
-	at java.sql.DriverManager.getConnection(Unknown Source)
-	at java.sql.DriverManager.getConnection(Unknown Source)
-	at catalogue.Catalogue.getConnection(Catalogue.java:1918)
-	at import_catalogue.CatalogueSheetImporter.insert(CatalogueSheetImporter.java:192)
-	at import_catalogue.SheetImporter.importSheet(SheetImporter.java:99)
-	at import_catalogue.SheetImporter.importSheet(SheetImporter.java:41)
-	at import_catalogue.CatalogueWorkbookImporter.importWorkbook(CatalogueWorkbookImporter.java:82)
-	at import_catalogue.ImportThread.run(ImportThread.java:69)
-============= end nested exception, level (1) ===========
-Cleanup action completed
-----------------------------------------------------------------
-Thu Jun 15 09:05:11 CEST 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 3e064512-015c-aa91-1395-000005fc6ff0 
-on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\CAT_ABUNDANCE_DB\ABUNDANCE_VERSION_4.5.6 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Thu Jun 15 10:15:56 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 8dcb83cd-015c-aac8-90ff-000005fc4de8 
+on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\CAT_ABUNDANCE_DB\ABUNDANCE_VERSION_4.4 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
 Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.8.0_111-b14
@@ -489,18 +70,5 @@ os.version=6.1
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
 ----------------------------------------------------------------
-Thu Jun 15 09:05:13 CEST 2017:
-Shutting down instance 3e064512-015c-aa91-1395-000005fc6ff0 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\CAT_ABUNDANCE_DB\ABUNDANCE_VERSION_4.5.6 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
-----------------------------------------------------------------
-Thu Jun 15 09:05:13 CEST 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 59380640-015c-aa91-1395-000005fc6ff0 
-on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\CAT_ABUNDANCE_DB\ABUNDANCE_VERSION_4.5.6 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
-Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
-java.vendor=Oracle Corporation
-java.runtime.version=1.8.0_111-b14
-user.dir=C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser
-os.name=Windows 7
-os.arch=amd64
-os.version=6.1
-derby.system.home=null
-Database Class Loader started - derby.database.classpath=''
+Thu Jun 15 10:16:05 CEST 2017:
+Shutting down instance 8dcb83cd-015c-aac8-90ff-000005fc4de8 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\CAT_ABUNDANCE_DB\ABUNDANCE_VERSION_4.4 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
