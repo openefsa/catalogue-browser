@@ -5,7 +5,7 @@ import org.eclipse.swt.widgets.Listener;
 
 import catalogue.Catalogue;
 import catalogue_object.Status;
-import dcf_log_util.DcfLog;
+import dcf_log.DcfLog;
 import dcf_webservice.DcfResponse;
 import dcf_webservice.Publish.PublishLevel;
 

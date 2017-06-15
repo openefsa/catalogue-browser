@@ -12,7 +12,7 @@ import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
-import dcf_log_util.LogCodeFinder;
+import dcf_log.LogCodeFinder;
 import dcf_manager.Dcf.DcfType;
 import dcf_pending_action.PendingAction;
 

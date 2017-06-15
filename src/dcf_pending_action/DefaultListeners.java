@@ -4,7 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
 import catalogue.Catalogue;
-import dcf_log_util.LogNodesForm;
+import dcf_log.LogNodesForm;
 import dcf_user.User;
 import dcf_webservice.DcfResponse;
 import dcf_webservice.ReserveLevel;
@@ -111,7 +111,7 @@ public class DefaultListeners {
 	private static void showErrorsDialog ( UpdateableUI ui, PendingAction pa ) {
 		
 		// do not show anything if no log nodes are found
-		if ( pa.getParsedLog().getLogNodes().isEmpty() )
+		if ( pa.getParsedLog().getLogNodesWithErrors().isEmpty() )
 			return;
 		
 		LogNodesForm errors = new LogNodesForm ( ui.getShell(), pa.getParsedLog() );

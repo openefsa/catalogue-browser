@@ -11,9 +11,9 @@ import org.eclipse.swt.widgets.Listener;
 import org.xml.sax.SAXException;
 
 import catalogue.Catalogue;
-import dcf_log_util.DcfLog;
-import dcf_log_util.DcfLogParser;
-import dcf_log_util.LogDownloader;
+import dcf_log.DcfLog;
+import dcf_log.DcfLogParser;
+import dcf_log.LogDownloader;
 import dcf_user.User;
 import dcf_webservice.DcfResponse;
 import dcf_webservice.Publish.PublishLevel;

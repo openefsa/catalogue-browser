@@ -1,6 +1,7 @@
-package dcf_log_util;
+package dcf_log;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import catalogue.CatalogueVersion;
@@ -133,6 +134,24 @@ public class DcfLog {
 	}
 	public Collection<LogNode> getLogNodes() {
 		return logNodes;
+	}
+	/**
+	 * Get all the log nodes that were not successful
+	 * @return
+	 */
+	public Collection<LogNode> getLogNodesWithErrors() {
+		
+		// filter nodes by their result
+		Collection<LogNode> nodes = new ArrayList<>();
+
+		for ( LogNode node : logNodes ) {
+			
+			// if erroneous operation
+			if ( !node.isOperationCorrect() )
+				nodes.add( node );
+		}
+		
+		return nodes;
 	}
 
 	

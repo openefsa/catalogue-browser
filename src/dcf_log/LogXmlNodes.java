@@ -1,4 +1,4 @@
-package dcf_log_util;
+package dcf_log;
 
 /**
  * This class contains all the xml nodes names which are

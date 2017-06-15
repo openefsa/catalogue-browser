@@ -1,4 +1,4 @@
-package dcf_log_util;
+package dcf_log;
 
 import java.util.Collection;
 
@@ -32,6 +32,14 @@ public class LogNode {
 	
 	public Collection<String> getOpLogs() {
 		return opLogs;
+	}
+	
+	/**
+	 * Check if the log node result is: correct
+	 * @return
+	 */
+	public boolean isOperationCorrect() {
+		return result == DcfResponse.OK;
 	}
 	
 	@Override

@@ -1,4 +1,4 @@
-package dcf_log_util;
+package dcf_log;
 
 import java.sql.Timestamp;
 import java.text.ParseException;

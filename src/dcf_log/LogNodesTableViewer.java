@@ -1,4 +1,4 @@
-package dcf_log_util;
+package dcf_log;
 
 import java.util.ArrayList;
 
@@ -9,11 +9,19 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
-import dcf_webservice.DcfResponse;
+import messages.Messages;
 import utilities.GlobalUtil;
 
+/**
+ * Table viewer which shows the {@link DcfLog} operations
+ * (modelled by {@link LogNode}) which did not succeed.
+ * @author avonva
+ *
+ */
 public class LogNodesTableViewer {
 
 	private Composite parent;
@@ -31,19 +39,25 @@ public class LogNodesTableViewer {
 		
 		GlobalUtil.addStandardColumn( table, 
 				new LogNodeLabelProvider( LogNodeLabelProvider.NAME ), 
-				"Name", 100, true, false, SWT.CENTER );
+				Messages.getString( "LogNodesTable.Name" ), 
+				100, true, false, SWT.CENTER );
 		
 		GlobalUtil.addStandardColumn( table, 
 				new LogNodeLabelProvider( LogNodeLabelProvider.RESULT ), 
-				"Operation result", 100, true, false, SWT.CENTER );
+				Messages.getString( "LogNodesTable.Result" ), 
+				100, true, false, SWT.CENTER );
 		
 		GlobalUtil.addStandardColumn( table, 
 				new LogNodeLabelProvider( LogNodeLabelProvider.OP_LOG ), 
-				"Operation log", 600, true, false, SWT.LEFT );
+				Messages.getString( "LogNodesTable.OpLog" ), 
+				600, true, false, SWT.LEFT );
 		
 		table.getTable().setHeaderVisible( true );
 		
 		table.setInput( log );
+		
+		table.getTable().setLayout( new GridLayout( 1, false ) );
+		table.getTable().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 	}
 	
 	private class LogNodesContentProvider implements IStructuredContentProvider {
@@ -63,13 +77,12 @@ public class LogNodesTableViewer {
 				
 				DcfLog log = (DcfLog) arg0;
 				
-				// create the table items
-				for ( LogNode node : log.getLogNodes() ) {
+				// create the table items using the erroneous
+				// log nodes only
+				for ( LogNode node : log.getLogNodesWithErrors() ) {
 					
-					// skip correct nodes
-					if ( node.getResult() == DcfResponse.OK )
-						continue;
-					
+					// for each operation log of a single node, 
+					// create a new item showing name, result and op log
 					for ( String operationLog : node.getOpLogs() ) {
 						
 						LogNodeTableItem item = new LogNodeTableItem ( node.getName(),

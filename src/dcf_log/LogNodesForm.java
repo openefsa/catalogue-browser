@@ -1,8 +1,10 @@
-package dcf_log_util;
+package dcf_log;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Shell;
+
+import messages.Messages;
 
 public class LogNodesForm {
 	
@@ -16,12 +18,17 @@ public class LogNodesForm {
 	}
 	
 	public void display () {
+
 		this.dialog = new Shell( shell , SWT.TITLE | SWT.APPLICATION_MODAL | SWT.SHELL_TRIM );
-		dialog.setText( "Log errors:" );
+		dialog.setText( Messages.getString( "LogNodesForm.Title" ) );
 		
-		dialog.setLayout( new GridLayout(1,false) );
+		dialog.setLayout( new GridLayout( 1, false ) );
 		
-		LogNodesTableViewer table = new LogNodesTableViewer( dialog, log );
+		// add the generic log information
+		new LogMacroOperationViewer( dialog, log );
+		
+		// create the table
+		new LogNodesTableViewer( dialog, log );
 		
 		dialog.open();
 		dialog.pack();

@@ -1,7 +1,7 @@
 package dcf_pending_action;
 
 import catalogue.Catalogue;
-import dcf_log_util.DcfLog;
+import dcf_log.DcfLog;
 import dcf_webservice.DcfResponse;
 
 public class PendingUploadData extends PendingAction {
