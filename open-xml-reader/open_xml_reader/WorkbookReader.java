@@ -14,8 +14,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import import_catalogue.BufferedSheetReader;
-
 /**
  * This class is used to read the sheets data of
  * a workbook (open xml format) and then to return its parsed data
@@ -51,7 +49,7 @@ public class WorkbookReader {
 		// the sheet information (relationshipId)
 		InputStream wbStream = reader.getWorkbookData();
 		workbookHandler = new WorkbookHandler();
-		
+
 		XMLReader parser = XMLReaderFactory.createXMLReader( 
 				"org.apache.xerces.parsers.SAXParser" );
 		parser.setContentHandler( workbookHandler );
@@ -79,7 +77,7 @@ public class WorkbookReader {
 			sheetReader.close();
 		
 		if ( sheetParser != null )
-			sheetParser.close();
+			sheetParser.clear();
 
 		// get the sheet relationship id using the sheet name
 		String sheetRId = workbookHandler.getSheetRelationshipId( name );
@@ -157,4 +155,22 @@ public class WorkbookReader {
 			e.printStackTrace();
 		}
 	}
+	/*public static void main ( String[] args ) throws IOException, XMLStreamException, OpenXML4JException, SAXException, SQLException {
+		
+		DatabaseManager.startMainDB();
+		
+		CatalogueDAO catDao = new CatalogueDAO();
+		ArrayList<Catalogue> cats = catDao.getLocalCatalogues();
+		Catalogue catalogue = null;
+		for ( Catalogue cat : cats ) {
+			if ( cat.getCode().equals( "importprova" ) )
+				catalogue = cat;
+		}
+		
+		CatalogueWorkbookImporter importer = new CatalogueWorkbookImporter();
+		importer.setOpenedCatalogue( catalogue );
+		importer.importWorkbook( 
+				"C:\\Users\\avonva\\Desktop\\CatalogueBrowser\\CatalogueBrowser\\Database\\LocalCatalogues\\CAT_importprova_DB\\importprova", 
+				"C:\\Users\\avonva\\Desktop\\Catalogues\\MTX_8.7_vernazza_final-3.xlsx");
+	}*/
 }

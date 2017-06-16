@@ -225,12 +225,20 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * implicit facets, detail levels and term types
 	 */
 	public void clearData() {
+
 		hierarchies.clear();
 		attributes.clear();
 		facetCategories.clear();
+		
+		for ( Term term : terms.values() ) {
+			term.clear();
+		}
+		
 		terms.clear();
 		detailLevels.clear();
 		termTypes.clear();
+		termsIds.clear();
+		releaseNotes.clear();
 	}
 
 
@@ -307,8 +315,6 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		
 		System.out.println ( "Closing " + this + " at " + dbFullPath );
 		
-		closeConnection();
-		
 		// clear data in ram
 		clearData();
 		
@@ -321,6 +327,8 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		// closing => set the current catalogue as null
 		if ( current != null && current.sameAs( this ) )
 			manager.setCurrentCatalogue( null );
+		
+		closeConnection();
 	}
 	
 	/**

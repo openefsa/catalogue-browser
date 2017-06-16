@@ -60,6 +60,7 @@ public class TermAttributeDAO implements CatalogueRelationDAO< TermAttribute, Te
 
 			// open the DB connection with the catalogue db path which is currently opened
 			con = catalogue.getConnection();
+			con.setAutoCommit( false );
 
 			// create the sql base statement
 			PreparedStatement stmt = con.prepareStatement( query, 
@@ -94,6 +95,8 @@ public class TermAttributeDAO implements CatalogueRelationDAO< TermAttribute, Te
 			}
 			
 			stmt.close();
+			
+			con.commit();
 			con.close();
 
 		} catch (SQLException e) {

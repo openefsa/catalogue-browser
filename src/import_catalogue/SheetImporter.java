@@ -33,28 +33,36 @@ public abstract class SheetImporter<T> {
 		Collection<T> objs = new ArrayList<>();
 
 		while ( data.next() ) {
-			
+
 			// read the current line and get the
 			// related object
 			T obj = getByResultSet( data );
-			
+
 			// get all the objects from the results set
 			Collection<T> allObjs = getAllByResultSet( data );
 			
 			// add the object to the list
 			// if an object was created
-			if ( obj != null )
+			if ( obj != null ) {
 				objs.add( obj );
+				obj = null;
+			}
 			
 			// add the multiple objects to the list if they
 			// were created
-			if ( allObjs != null )
+			if ( allObjs != null ) {
 				objs.addAll( allObjs );
+				allObjs.clear();
+				allObjs = null;
+			}
 		}
 
 		// insert all the remaining T objects into the db
 		if ( !objs.isEmpty() )
 			insert( objs );
+
+		objs.clear();
+		objs = null;
 		
 		// end the process
 		end();

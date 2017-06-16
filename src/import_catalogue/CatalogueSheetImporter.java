@@ -198,6 +198,9 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 
 			CatalogueDAO catDao = new CatalogueDAO();
 			catDao.deleteDBRecords ( catalogue );
+			
+			System.out.println( "Freeing deleted memory..." );
+			catDao.compressDatabase( catalogue );
 
 			// set the id to the catalogue
 			int id = catDao.getCatalogue( catalogue.getCode(), 

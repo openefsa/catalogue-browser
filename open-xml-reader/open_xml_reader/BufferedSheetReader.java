@@ -1,4 +1,4 @@
-package import_catalogue;
+package open_xml_reader;
 
 import java.io.InputStream;
 
@@ -14,8 +14,6 @@ import javax.xml.stream.events.XMLEvent;
 
 import org.apache.poi.xssf.model.SharedStringsTable;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
-
-import open_xml_reader.ResultDataSet;
 
 /**
  * Parser which can be used to parse a huge file in
@@ -33,17 +31,18 @@ public class BufferedSheetReader {
 	// the size of a single batch operation,
 	// i.e., the number of rows processed
 	// before waiting next()
-	private int batchSize;
-	private int processedRows;
+	private int batchSize;        // size of each batch
+	private int processedBatches; // number of processed batches
+	private int processedRows;    // number of processed rows
 	
 	// variables used to keep track of what is
 	// happening
-	private int	currentRow = -1;
-	private String cellType;
-	private String currentCol;
-	private ResultDataSet resultSet;
+	private int	currentRow;       // the row number in the worksheet
+	private String cellType;      // given a row and a column, this is the celltype of the cell
+	private String currentCol;    // current excel column name (as A1, G5, AA4...)
+	private ResultDataSet resultSet;  // object which contains the read data
 	
-	// parser
+	// xml parser
 	XMLEventReader eventReader;
 	
 	public BufferedSheetReader( InputStream input, SharedStringsTable sharedStrings ) 
@@ -52,6 +51,8 @@ public class BufferedSheetReader {
 		this.sharedStrings = sharedStrings;
 		this.resultSet = new ResultDataSet();
 		this.batchSize = -1;
+		this.currentRow = -1;
+		this.processedBatches = 0;
 		
 		// create the reader if not created yet
 		if ( eventReader == null ) {
@@ -74,11 +75,41 @@ public class BufferedSheetReader {
 	}
 	
 	/**
+	 * Clear the data of the parser
+	 */
+	public void clear() {
+		
+		if ( resultSet != null )
+			resultSet.clear();
+		
+		sharedStrings = null;
+		resultSet = null;
+		
+		// run garbage collector
+		System.gc();
+	}
+	
+	/**
 	 * Close the reader
 	 * @throws XMLStreamException 
 	 */
 	public void close () throws XMLStreamException {
-		eventReader.close();
+		
+		if ( eventReader != null )
+			eventReader.close();
+
+		eventReader = null;
+		
+		clear();
+	}
+	
+	/**
+	 * Get the number of processed batches
+	 * up to now
+	 * @return
+	 */
+	public int getProcessedBatches() {
+		return processedBatches;
 	}
 	
 	/**
@@ -113,17 +144,14 @@ public class BufferedSheetReader {
 	 * @throws XMLStreamException
 	 */
 	public ResultDataSet next() throws XMLStreamException {
-		
-		System.out.println ( "CALLED NEXT ###################" );
-		
+
 		// next => start from 0 processed rows
 		processedRows = 0;
 		
 		// clear the result set content but maintain
 		// the headers
 		if ( !resultSet.isEmpty() ) {
-			System.out.println( "CLEANING DATA" );
-			resultSet.clearData();
+			resultSet.clear();
 		}
 
 		// for each node of the xml
@@ -135,22 +163,25 @@ public class BufferedSheetReader {
 			// actions based on the node type
 			switch( event.getEventType() ) {
 
+			// if starting xml node
 			case XMLStreamConstants.START_ELEMENT:
 				start ( event );
 				break;
 
+			// if looking the xml contents
 			case XMLStreamConstants.CHARACTERS:
 				parseCharacters ( event );
 				break;
 
+			// if ending xml node
 			case  XMLStreamConstants.END_ELEMENT:
 				end( event );
 				break;
 			}
 		}
 		
-		// start the scan of the result set
-		resultSet.initScan();
+		// count the processed batches
+		processedBatches++;
 		
 		// return the result set parsed in this step
 		return resultSet;
@@ -211,7 +242,7 @@ public class BufferedSheetReader {
 		if ( cellType != null ) {
 			
 			contents = processString( cellType, contents );
-			
+
 			if ( contents != null )
 				addToResultSet ( colLetter, contents );
 		}
@@ -238,7 +269,11 @@ public class BufferedSheetReader {
 
 		// if end of a row
 		if ( qName.equals( "row" ) ) {
-			resultSet.setRow();
+			
+			// if not header create the row
+			if ( currentRow > 1 )
+				resultSet.setRow();
+			
 			processedRows++;
 		}
 	}
@@ -293,7 +328,7 @@ public class BufferedSheetReader {
 		if ( currentRow == 1 ) {
 			resultSet.setHeader( value.trim().toUpperCase(), colLetter );
 		}
-		else  // data
+		else  // data 
 			resultSet.setElem( colLetter.trim(), value );
 	}
 	

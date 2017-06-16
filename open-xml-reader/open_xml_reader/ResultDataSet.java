@@ -37,64 +37,57 @@ import org.apache.poi.ss.usermodel.DateUtil;
 public class ResultDataSet implements ResultSet {
 
 	HashMap< String, String > headers;
-	ArrayList< HashMap< String, String >>	_data;
-	HashMap< String, String >				_currentRow;
-	Integer									_currPos	= 0;
+	ArrayList< HashMap< String, String >> dataRecords;
+	HashMap< String, String > currentDataRow;
+	Integer cursorPosition = -1;
 
 	public ResultDataSet() {
 		headers = new HashMap<>();
-		_data = new ArrayList< HashMap< String, String >>();
-		_currentRow = new HashMap< String, String >();
-	}
-
-	public ResultDataSet( ArrayList< ArrayList< String >> data ) {
-		initData( data );
-	}
-
-	public void setData ( ArrayList< ArrayList< String >> data ) {
-		initData( data );
-	}
-
-	private void initData ( ArrayList< ArrayList< String >> data ) {
-		Integer i = 0;
-		_data = new ArrayList< HashMap< String, String >>();
-		HashMap< String, String > rowData;
-		for ( ArrayList< String > row : data ) {
-			i++;
-			rowData = new HashMap< String, String >();
-			for ( String cell : row ) {
-				String[] s = cell.split( "\\|" );
-				if ( i == 1 ) {
-					rowData.put( s[0].toUpperCase(), s[1] );
-				} else {
-					rowData.put( s[1], s[0] );
-				}
-			}
-			_data.add( rowData );
-		}
-	}
-
-	public void initScan ( ) {
-		
-		if ( !_data.isEmpty() )
-			_currentRow = _data.get( 0 );
-		
-		_currPos = 0;
+		dataRecords = new ArrayList< HashMap< String, String >>();
+		currentDataRow = new HashMap< String, String >();
 	}
 	
+	/**
+	 * Get the currently processed row
+	 * @return
+	 */
+	public HashMap<String, String> getCurrentRow() {
+		return currentDataRow;
+	}
+	
+	/**
+	 * Get the current position of the cursor (read-only)
+	 * @return
+	 */
+	public Integer getCurrentPosition() {
+		return cursorPosition;
+	}
+
+	/**
+	 * Move the cursor to the -1 position. 
+	 * Calling {@link #next()} after this method
+	 * will return the first data record.
+	 */
+	private void initScan ( ) {
+		cursorPosition = -1;
+	}
+	
+	/**
+	 * Clear all the data (not headers)
+	 */
 	public void clear() {
 		
 		// clear all the hashmap data
-		for ( HashMap<String,String> map : _data ) {
+		for ( HashMap<String,String> map : dataRecords ) {
 			map.clear();
 		}
 		
 		// clear the array list
-		_data.clear();
+		dataRecords.clear();
 		
-		_currentRow.clear();
+		currentDataRow.clear();
 		
-		_currPos = 0;
+		initScan();
 	}
 	
 	/**
@@ -102,23 +95,7 @@ public class ResultDataSet implements ResultSet {
 	 * @return
 	 */
 	public boolean isEmpty() {
-		return _data.isEmpty();
-	}
-	
-	/**
-	 * Clear only the data not the headers
-	 */
-	public void clearData() {
-		
-		if ( _data.isEmpty() ) {
-			System.err.println( "Result data set is already empty" );
-			return;
-		}
-
-		// clear all data
-		_data.clear();
-		
-		_currPos = 0;
+		return dataRecords.isEmpty();
 	}
 	
 	/**
@@ -127,7 +104,7 @@ public class ResultDataSet implements ResultSet {
 	 * @return
 	 */
 	public int getRowsCount() {
-		return _data.size();
+		return dataRecords.size();
 	}
 	
 	/**
@@ -136,41 +113,36 @@ public class ResultDataSet implements ResultSet {
 	 * @return
 	 */
 	public double getProgress() {
-		return 100 * (double) _currPos / _data.size();
+		return 100 * (double) cursorPosition / dataRecords.size();
 	}
 
-	/**
-	 * This method process next element in the data set.
-	 * 
-	 * @return
-	 */
-	public boolean next ( ) {
-		
-		if ( !hasNext() )
-			return false;
-		
-		_currPos++;
-		_currentRow = _data.get( _currPos );
-		
-		return true;
-		
-		/*if ( _currPos + 1 >= _data.size() ) {
-			return false;
-		} else {
-			_currPos++;
-			_currentRow = _data.get( _currPos );
-			return true;
-		}*/
-	}
 
 	/**
 	 * This method confirm that collection of data has next.
 	 * 
 	 * @return
 	 */
-	public boolean hasNext ( ) {
-		return _currPos < _data.size() - 1;
+	private boolean hasNext () {
+		return cursorPosition < dataRecords.size() - 1;
 	}
+	
+	/**
+	 * Move the cursor to the next row. Return true if
+	 * it exists also another row after the 
+	 * returned one.
+	 * @return
+	 */
+	public boolean next () {
+		
+		if ( !hasNext() )
+			return false;
+		
+		cursorPosition++;
+		currentDataRow = dataRecords.get( cursorPosition );
+		
+		return true;
+	}
+
 
 	/**
 	 * Get the cell value in the header key for the current row
@@ -189,7 +161,7 @@ public class ResultDataSet implements ResultSet {
 		
 		// return the value inside the cell identified by the column letter
 		// and by the current row
-		String value = _currentRow.get( key.toUpperCase() );
+		String value = currentDataRow.get( key.toUpperCase() );
 
 		// if no value found, return the default
 		if ( value == null )
@@ -214,7 +186,7 @@ public class ResultDataSet implements ResultSet {
 				
 		// return the value inside the cell identified by the column letter
 		// and by the current row
-		String value = _currentRow.get( key.toUpperCase() );
+		String value = currentDataRow.get( key.toUpperCase() );
 		
 		// if no value found, return the default
 		if ( value == null || value.isEmpty() )
@@ -246,7 +218,7 @@ public class ResultDataSet implements ResultSet {
 
 		// return the value inside the cell identified by the column letter
 		// and by the current row
-		String value = _currentRow.get( key.toUpperCase() );
+		String value = currentDataRow.get( key.toUpperCase() );
 		
 		// if no value found, return the default
 		if ( value == null || value.isEmpty() )
@@ -271,7 +243,7 @@ public class ResultDataSet implements ResultSet {
 		
 		// return the value inside the cell identified by the column letter
 		// and by the current row
-		String value = _currentRow.get( key.toUpperCase() );
+		String value = currentDataRow.get( key.toUpperCase() );
 		
 		// if no value found, return the default
 		if ( value == null || value.isEmpty() )
@@ -309,7 +281,7 @@ public class ResultDataSet implements ResultSet {
 		
 		// return the value inside the cell identified by the column letter
 		// and by the current row
-		String value = _currentRow.get( key.toUpperCase() );
+		String value = currentDataRow.get( key.toUpperCase() );
 		
 		// if no value found, return the default
 		if ( value == null || value.isEmpty() )
@@ -384,48 +356,45 @@ public class ResultDataSet implements ResultSet {
 		
 		return excelColLetter;
 	}
-	
-	/*
-	public String getString ( String string ) {
-		String str = _data.get( 0 ).get( string.toUpperCase() );
-		if (str==null){
-			str="";
-			return str;
-		}
-			
-		str = _currentRow.get( str.toUpperCase() );
-		
-		if (str==null)
-			str="";
-		return str;
-	}*/
 
+	/**
+	 * Close all the dataset
+	 */
 	public void close ( ) {
-		
 		clear();
-		_currentRow.clear();
-		_currPos = 0;
+		currentDataRow.clear();
+		cursorPosition = -1;
 	}
 
+	/**
+	 * Set an header of the data table
+	 * @param key
+	 * @param value
+	 */
 	public void setHeader ( String key , String value ) {
 		headers.put( key.trim(), value.trim() );
 	}
 
+	/**
+	 * Set an element of the current data row
+	 * @param key
+	 * @param value
+	 */
 	public void setElem ( String key , String value ) {
-		_currentRow.put( key, value );
+		currentDataRow.put( key, value );
 	}
 
 	public void setRow ( ) {
-		_data.add( _currentRow );
-		_currentRow = new HashMap< String, String >();
+		dataRecords.add( currentDataRow );
+		currentDataRow = new HashMap< String, String >();
 	}
 
 	public String size ( ) {
-		return new String( Integer.toString( _data.size() ) );
+		return new String( Integer.toString( dataRecords.size() ) );
 	}
 
 	public HashMap< String, String > getData ( Integer i ) {
-		return _data.get( i );
+		return dataRecords.get( i );
 	}
 
 	public HashMap< String, String > getHeaders ( ) {
@@ -434,11 +403,11 @@ public class ResultDataSet implements ResultSet {
 
 	@SuppressWarnings("unused")
 	private String get ( String string ) {
-		return _data.get( 1 ).get( string );
+		return dataRecords.get( 1 ).get( string );
 	}
 
 	public boolean contains ( String string ) {
-		return _currentRow.containsKey( headers.get( string.toUpperCase() ));
+		return currentDataRow.containsKey( headers.get( string.toUpperCase() ));
 	}
 
 	@Override

@@ -90,6 +90,12 @@ public class Term extends CatalogueObject implements Mappable {
 		applicabilities = new ArrayList<>();
 	}
 	
+	public void clear() {
+		implicitFacets.clear();
+		termAttributes.clear();
+		applicabilities.clear();
+	}
+	
 	/**
 	 * Get the full code of a term (base code plus all the term facets)
 	 * If includeImplicit = true, the code will contain also the implicit facets codes

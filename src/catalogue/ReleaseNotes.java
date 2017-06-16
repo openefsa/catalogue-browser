@@ -47,6 +47,10 @@ public class ReleaseNotes {
 		return internalVersionNote;
 	}
 	
+	public void clear() {
+		ops.clear();
+	}
+	
 	/**
 	 * Get the release note groups of operations.
 	 * @return

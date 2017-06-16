@@ -227,11 +227,13 @@ public class SearchOptionDAO implements CatalogueEntityDAO<SearchOption> {
 		TermTypeDAO typeDao = new TermTypeDAO( catalogue );
 		AttributeDAO attrDao = new AttributeDAO( catalogue );
 		
-		for ( TermType tt : typeDao.getAll() )
+		for ( TermType tt : typeDao.getAll() ) {
 			insert ( new SearchOption( catalogue, tt.getId(), true, OptionType.TERM_TYPE ) );
+		}
 		
 		// add only generic attribute
-		for ( Attribute attr : attrDao.fetchGeneric() )
+		for ( Attribute attr : attrDao.fetchGeneric() ) {
 			insert ( new SearchOption( catalogue, attr.getId(), true, OptionType.ATTRIBUTE ) );
+		}
 	}
 }

@@ -50,15 +50,15 @@ public class TermSheetImporter extends SheetImporter<Term> {
 	@Override
 	public Term getByResultSet(ResultDataSet rs) {
 
-		// skip if no term code
-		if ( rs.getString ( Headers.TERM_CODE ).isEmpty() ) {
-			System.err.println( "Empty code found, skipping this term" );
-			return null;
-		}
-
 		// save the code in order to be able to use it later
 		// for retrieving terms ids
 		String code = rs.getString ( Headers.TERM_CODE );
+		
+		// skip if no term code
+		if ( code.isEmpty() ) {
+			System.err.println( "Empty code found, skipping this term" );
+			return null;
+		}
 		
 		TermBuilder builder = new TermBuilder();
 
@@ -94,7 +94,7 @@ public class TermSheetImporter extends SheetImporter<Term> {
 
 	@Override
 	public void insert( Collection<Term> terms ) {
-
+		
 		TermDAO termDao = new TermDAO( catalogue );
 
 		// insert the batch of terms into the db

@@ -66,6 +66,7 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 
 			// get the connection
 			con = catalogue.getConnection();
+			con.setAutoCommit( false );
 
 			// prepare the query
 			PreparedStatement stmt = con.prepareStatement( query, Statement.RETURN_GENERATED_KEYS );
@@ -103,6 +104,8 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 			}
 			
 			stmt.close();
+			
+			con.commit();
 			con.close();
 			
 

@@ -58,6 +58,7 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 		ArrayList<Integer> ids = new ArrayList<>();
 		
 		Connection con = null;
+		PreparedStatement stmt = null;
 		
 		String query = "insert into APP.TERM (TERM_CODE, TERM_EXTENDED_NAME, "
 				+ "TERM_SHORT_NAME, TERM_SCOPENOTE, TERM_DEPRECATED, TERM_LAST_UPDATE, "
@@ -66,8 +67,9 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 		try {
 			
 			con = catalogue.getConnection();
+			con.setAutoCommit( false );
 			
-			PreparedStatement stmt = con.prepareStatement( query, Statement.RETURN_GENERATED_KEYS );
+			stmt = con.prepareStatement( query, Statement.RETURN_GENERATED_KEYS );
 
 			for ( Term t : terms ) {
 				
@@ -112,12 +114,26 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 
 				rs.close();
 			}
-
-			stmt.close();
-			con.close();
+			
+			con.commit();
 			
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+		}
+		finally {
+
+			try {
+				
+				if ( stmt != null )
+					stmt.close();
+				
+				if ( con != null )
+					con.close();
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
 		}
 		
 		return ids;

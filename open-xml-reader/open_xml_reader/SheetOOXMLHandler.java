@@ -129,7 +129,7 @@ public class SheetOOXMLHandler extends DefaultHandler {
 		
 		// if end of sheet
 		if ( qName.equals( "sheetData" ) ) {
-			_resDataSet.initScan();
+			//_resDataSet.initScan();
 		}
 	}
 

@@ -104,7 +104,8 @@ public class CatalogueWorkbookImporter {
 		workbookReader.close();
 
 		// after having imported the excel, we can insert the default preferences
-		System.out.println ( "Insert default preferences values into the database" );
+		System.out.println ( "Insert default preferences values for " + catalogue  + " in " +
+				catalogue.getDbFullPath() );
 		
 		// insert default preferences
 		CataloguePreferenceDAO prefDao = new CataloguePreferenceDAO( catalogue );
@@ -176,6 +177,11 @@ public class CatalogueWorkbookImporter {
 				AttributeSheetImporter( catalogue );
 		// start the import
 		attrImp.importData( sheetData );
+		
+		
+		// import the term types related to the attributes
+		TermTypeImporter ttImp = new TermTypeImporter( catalogue );
+		ttImp.importSheet();
 	}
 	
 	/**
@@ -236,7 +242,7 @@ public class CatalogueWorkbookImporter {
 			ResultDataSet data = workbookReader.next();
 			termImp.importData( data );
 		}
-		
+
 		System.out.println( "Importing term attributes" );
 		updateProgressBar( 25, Messages.getString("ImportExcelXLSX.ImportTermAttrLabel") );
 		
@@ -254,13 +260,6 @@ public class CatalogueWorkbookImporter {
 			ResultDataSet data = workbookReader.next();
 			taImp.importData( data );
 		}
-
-		
-		// import the term types related to the attributes
-		TermTypeImporter ttImp = new TermTypeImporter( catalogue );
-		ttImp.importSheet();
-		
-		
 		
 		System.out.println( "Importing parent terms" );
 		updateProgressBar( 25, Messages.getString("ImportExcelXLSX.ImportTermParents") );

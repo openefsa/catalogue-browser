@@ -1,6 +1,7 @@
 package catalogue_browser_dao;
 
 import java.io.IOException;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -380,6 +381,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 		stmt.execute( "DELETE FROM APP.PICKLIST_TERM" );
 		stmt.execute( "DELETE FROM APP.RECENT_TERM" );
 		stmt.execute( "DELETE FROM APP.RELEASE_NOTES_OP" );
+		stmt.execute( "DELETE FROM APP.SEARCH_OPT" );
 		stmt.execute( "DELETE FROM APP.PICKLIST" );
 		stmt.execute( "DELETE FROM APP.PREFERENCE" );
 		stmt.execute( "DELETE FROM APP.PARENT_TERM" );
@@ -391,6 +393,46 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 				
 		stmt.close();
 		con.close();
+	}
+	
+	/**
+	 * Compress the database to avoid fragmentation
+	 * TODO insert missing tables
+	 */
+	public void compressDatabase( Catalogue catalogue ) {
+		
+		Connection con = null;
+
+		// This will fail, if there are dependencies
+
+		try {
+
+			con = catalogue.getConnection();
+
+			// compact the db table by table
+			CallableStatement cs = con.prepareCall( "CALL SYSCS_UTIL.SYSCS_COMPRESS_TABLE(?, ?, ?)" );
+
+			cs.setString( 1, "APP" );
+
+			cs.setShort( 3, (short) 1 );
+			
+			cs.setString( 2, "PARENT_TERM" );
+			cs.execute();
+			cs.setString( 2, "TERM_ATTRIBUTE" );
+			cs.execute();
+			cs.setString( 2, "TERM" );
+			cs.execute();
+			cs.setString( 2, "ATTRIBUTE" );
+			cs.execute();
+			cs.setString( 2, "HIERARCHY" );
+			cs.execute();
+			
+			cs.close();
+			con.close();
+			
+		} catch ( SQLException e ) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
