@@ -5,6 +5,7 @@ import org.eclipse.swt.widgets.Listener;
 
 import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
+import dcf_manager.Dcf.DcfType;
 import import_catalogue.ImportActions;
 import ui_progress_bar.FormProgressBar;
 
@@ -36,12 +37,18 @@ public class NewCatalogueInternalVersion {
 	// catalogue is stored
 	private String filename;
 	
-	private FormProgressBar progressBar;
+	private DcfType dcfType;
 	
-	public NewCatalogueInternalVersion( String newCode, String newVersion, String filename ) {
+	private FormProgressBar progressBar;
+
+	
+	public NewCatalogueInternalVersion( String newCode, 
+			String newVersion, String filename, 
+			DcfType dcfType ) {
 		this.newCode = newCode;
 		this.newVersion = newVersion;
 		this.filename = filename;
+		this.dcfType = dcfType;
 	}
 	
 	/**
@@ -76,7 +83,7 @@ public class NewCatalogueInternalVersion {
 				// get the new catalogue version
 				CatalogueDAO catDao = new CatalogueDAO();
 				newCatalogue = catDao.getCatalogue( 
-						newCode, newVersion );
+						newCode, newVersion, dcfType );
 				
 				doneListener.handleEvent( arg0 );
 			}

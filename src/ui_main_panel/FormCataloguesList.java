@@ -68,7 +68,8 @@ public class FormCataloguesList implements RestoreableWindow {
 	 * @param catalogues, the catalogues list from which we can choose
 	 * @multiSel can we perform a multiple selection?
 	 */
-	public FormCataloguesList( Shell shell, String title, ArrayList < Catalogue > catalogues, boolean multiSel ) {
+	public FormCataloguesList( Shell shell, String title, 
+			ArrayList < Catalogue > catalogues, boolean multiSel ) {
 		this.shell = shell;
 		this.title = title;
 		this.catalogues = catalogues;

@@ -57,12 +57,9 @@ public class ImportThread extends ExcelThread {
 		
 		try {
 
-			// prepare the import procedure
-			/*final ImportExcelCatalogue importCat = new ImportExcelCatalogue();
-			importCat.setProgressBar( getProgressForm() );*/
-
 			CatalogueWorkbookImporter importer = new CatalogueWorkbookImporter();
 			importer.setProgressBar( getProgressForm() );
+
 			if ( openedCat != null )
 				importer.setOpenedCatalogue( openedCat );
 			

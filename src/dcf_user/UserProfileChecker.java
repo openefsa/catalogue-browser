@@ -140,7 +140,8 @@ public class UserProfileChecker extends Thread {
 		// (we fetch it since using Catalogue.getCatUsersCatalogue
 		// we have only the catalogue code and version)
 		Catalogue users = catDao.getLastVersionByCode(
-				Catalogue.getCatUsersCatalogue().getCode() );
+				Catalogue.getCatUsersCatalogue().getCode(), 
+				Dcf.dcfType );
 
 		// load the catalogue data into RAM
 		users.loadData();

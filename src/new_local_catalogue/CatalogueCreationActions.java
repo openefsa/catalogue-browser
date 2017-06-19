@@ -2,11 +2,9 @@ package new_local_catalogue;
 
 import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
-import catalogue_browser_dao.DatabaseManager;
 import catalogue_browser_dao.HierarchyDAO;
 import catalogue_object.Hierarchy;
 import user_preferences.CataloguePreferenceDAO;
-import utilities.GlobalUtil;
 
 public class CatalogueCreationActions {
 
@@ -29,11 +27,8 @@ public class CatalogueCreationActions {
 		if ( catDao.hasCatalogue( newCatalogue ) )
 			throw new DuplicatedCatalogueException();
 
-		// create the local catalogues directory if needed
-		GlobalUtil.createDirectory( DatabaseManager.LOCAL_CAT_DB_FOLDER );
-
-		// create the subfolder for the catalogue database
-		DatabaseManager.generateDBDirectory( DatabaseManager.LOCAL_CAT_DB_FOLDER, newCatalogue );
+		// create database directory
+		newCatalogue.createDbDir();
 
 		// add the catalogue meta data to the database
 		catDao.insert( newCatalogue );

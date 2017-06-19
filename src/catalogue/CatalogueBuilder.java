@@ -1,6 +1,7 @@
 package catalogue;
 
 import catalogue_object.BaseObjectBuilder;
+import dcf_manager.Dcf.DcfType;
 
 /**
  * Builder class for generating a catalogue step by step
@@ -19,8 +20,17 @@ public class CatalogueBuilder extends BaseObjectBuilder {
 	String backupDbPath = null;
 	boolean local = false;                  // default value
 	int forcedCount = 0;
+	DcfType catalogueType;
 	ReleaseNotes releaseNotes;
 
+	/**
+	 * Set if the catalogue is a production or a test catalogue
+	 * @param catalogueType
+	 */
+	public void setCatalogueType(DcfType catalogueType) {
+		this.catalogueType = catalogueType;
+	}
+	
 	/**
 	 * Set the term code mask of the catalogue
 	 * @param termCodeMask
@@ -138,7 +148,8 @@ public class CatalogueBuilder extends BaseObjectBuilder {
 	public Catalogue build () {
 		
 		// create the catalogue object and return it
-		return new Catalogue ( id, code, name, label, scopenotes, termCodeMask, termCodeLength, termMinCode,
+		return new Catalogue ( id, catalogueType, code, name, label, scopenotes, 
+				termCodeMask, termCodeLength, termMinCode,
 				acceptNonStandardCodes, generateMissingCodes, version, lastUpdate, validFrom, 
 				validTo, status, catalogueGroups, deprecated, dbFullPath, backupDbPath, local, forcedCount, 
 				releaseNotes );

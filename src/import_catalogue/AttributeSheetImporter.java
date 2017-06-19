@@ -49,9 +49,9 @@ public class AttributeSheetImporter extends SheetImporter<Attribute> {
 		builder.setSearchable( rs.getBoolean ( Headers.ATTR_SEARCH, true ) );
 		builder.setOrder( rs.getInt ( Headers.ATTR_ORDER, 1 ) );
 		builder.setType( rs.getString ( Headers.ATTR_TYPE ) );
-		builder.setMaxLength( rs.getInt ( Headers.ATTR_MAX_LENGTH, 200 ) );
-		builder.setPrecision( rs.getInt ( Headers.ATTR_PRECISION, 10 ) );
-		builder.setScale( rs.getInt ( Headers.ATTR_SCALE, 0 ) );
+		builder.setMaxLength( rs.getInt ( Headers.ATTR_MAX_LENGTH, -1 ) );
+		builder.setPrecision( rs.getInt ( Headers.ATTR_PRECISION, -1 ) );
+		builder.setScale( rs.getInt ( Headers.ATTR_SCALE, -1 ) );
 		builder.setCatalogueCode( rs.getString ( Headers.ATTR_CAT_CODE ) );
 		builder.setSingleOrRepeatable( rs.getString ( Headers.ATTR_SR ) );
 		builder.setInheritance( rs.getString ( Headers.ATTR_INHERIT ) );

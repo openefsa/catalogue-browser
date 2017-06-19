@@ -278,7 +278,7 @@ public class FileMenu implements MainMenuItem {
 				
 				CatalogueDAO catDao = new CatalogueDAO();
 				
-				ArrayList < Catalogue > myCatalogues = catDao.getLocalCatalogues();
+				ArrayList < Catalogue > myCatalogues = catDao.getLocalCatalogues( Dcf.dcfType );
 				
 				// Order the catalogues by label name to make a better visualization
 				Collections.sort( myCatalogues );
@@ -476,7 +476,7 @@ public class FileMenu implements MainMenuItem {
 				
 				final CatalogueDAO catDao = new CatalogueDAO();
 				
-				ArrayList < Catalogue > myCatalogues = catDao.getLocalCatalogues();
+				ArrayList < Catalogue > myCatalogues = catDao.getLocalCatalogues( Dcf.dcfType );
 				
 				// Order the catalogues by label name to make a better visualization
 				Collections.sort( myCatalogues );
@@ -639,13 +639,13 @@ public class FileMenu implements MainMenuItem {
 		CatalogueDAO catDao = new CatalogueDAO();
 		
 		// get all the catalogues I have downloaded before and get the size
-		boolean hasCatalogues = catDao.getLocalCatalogues().size() > 0;
+		boolean hasCatalogues = catDao.getLocalCatalogues( Dcf.dcfType ).size() > 0;
 
 		// check if there is at least one catalogue available from the 
 		// catalogue master table. If not => open disabled
 		// can open only if we are not getting updates and we have at least one catalogue downloaded
 		openMI.setEnabled( hasCatalogues && !Dcf.isGettingUpdates() && 
-				catDao.getLocalCatalogues().size() > 0 );
+				catDao.getLocalCatalogues( Dcf.dcfType ).size() > 0 );
 
 		// allow import only if no catalogue is opened
 		importCatMI.setEnabled( mainMenu.getCatalogue() == null );

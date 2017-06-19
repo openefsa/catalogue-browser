@@ -369,11 +369,35 @@ public class Attribute extends SortableCatalogueObject implements Mappable {
 		case "ATTR_SEARCHABLE":
 			value = String.valueOf( isSearchable() ); break;
 		case "ATTR_MAX_LENGTH":
-			value = String.valueOf( getMaxLength() ); break;
+			
+			int maxLength = getMaxLength();
+			
+			if ( maxLength != -1 )
+				value = String.valueOf( maxLength ); 
+			else
+				value = "";
+			break;
+
 		case "ATTR_PRECISION":
-			value = String.valueOf( getPrecision() ); break;
+			
+			int precision = getPrecision();
+			
+			if ( precision != -1 )
+				value = String.valueOf( precision ); 
+			else
+				value = "";
+			break;
+			
 		case "ATTR_SCALE":
-			value = String.valueOf( getScale() ); break;
+			
+			int scale = getScale();
+			
+			if ( scale != -1 )
+				value = String.valueOf( scale ); 
+			else
+				value = "";
+			break;
+
 		case "ATTR_CAT_CODE":
 			value = getCatalogueCode(); break;
 		case "ATTR_SINGLE_REPEATABLE":

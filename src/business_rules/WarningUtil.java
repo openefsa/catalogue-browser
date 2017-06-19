@@ -32,6 +32,7 @@ import catalogue_browser_dao.DatabaseManager;
 import catalogue_browser_dao.TermDAO;
 import catalogue_object.Hierarchy;
 import catalogue_object.Term;
+import dcf_manager.Dcf.DcfType;
 import global_manager.GlobalManager;
 import instance_checker.InstanceChecker;
 import naming_convention.Headers;
@@ -142,7 +143,7 @@ public class WarningUtil {
 	public WarningUtil() throws MtxNotFoundException {
 		
 		CatalogueDAO catDao = new CatalogueDAO();
-		Catalogue mtx = catDao.getLastVersionByCode( "MTX" );
+		Catalogue mtx = catDao.getLastVersionByCode( "MTX", DcfType.PRODUCTION );
 		
 		if ( mtx == null )
 			throw new MtxNotFoundException();

@@ -7,6 +7,8 @@ create table APP.CATALOGUE(
 	-- the id of the catalogue, internally defined
 	CAT_ID integer not null primary key generated always as identity ( start with 1, increment by 1 ),
 	
+	CAT_DCF_TYPE varchar(100) not null,  -- is it a test catalogue or a production catalogue?
+	
 	-- the catalogue version must be unique! We can store different version of the same catalogue
 	-- but not the same version multiple times
 	CAT_CODE varchar(50) not null,
@@ -48,7 +50,7 @@ create table APP.CATALOGUE(
 );
 
 -- add the unique contraint to the code field
-alter table APP.CATALOGUE add constraint cat_code_version_unique unique ( CAT_CODE, CAT_VERSION );
+alter table APP.CATALOGUE add constraint cat_code_version_type_unique unique ( CAT_CODE, CAT_VERSION, CAT_DCF_TYPE );
 
 
 -- table of corex flags, we assume that these are always the same for all the catalogues
@@ -128,7 +130,8 @@ create table APP.PREFERENCE (
 	PREFERENCE_ID integer not null primary key generated always as identity (start with 1, increment by 1),
 	PREFERENCE_KEY varchar(500),   -- key of the preference
 	PREFERENCE_TYPE varchar(500),  -- type of the preference (integer, string, boolean)
-	PREFERENCE_VALUE varchar(3000) -- value of the preference
+	PREFERENCE_VALUE varchar(3000), -- value of the preference
+	PREFERENCE_EDITABLE boolean
 );
 
 -- add the unique contraint to the key field

@@ -208,7 +208,7 @@ public class ResultDataSet implements ResultSet {
 	 * @param defaultVal
 	 * @return
 	 */
-	public int getInt ( String header, int defaultVal ) {
+	public Integer getInt ( String header, Integer defaultVal ) {
 		
 		// get the excel column letter from the column header
 		String key = getColumnLetter ( header );

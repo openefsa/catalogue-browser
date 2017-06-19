@@ -38,6 +38,7 @@ import catalogue_object.Version;
 import data_transformation.BooleanConverter;
 import data_transformation.DateTrimmer;
 import dcf_manager.Dcf;
+import dcf_manager.Dcf.DcfType;
 import dcf_manager.VersionFinder;
 import dcf_pending_action.NewCatalogueInternalVersion;
 import dcf_pending_action.PendingAction;
@@ -65,6 +66,9 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	public static final String ISO_8601_24H_FULL_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
 	public static final String NOT_APPLICABLE_VERSION = "Not applicable";
 	public static final String LOCAL_CATALOGUE_STATUS = "Local catalogue";
+	
+	// is the catalogue a test or production catalogue?
+	private DcfType catalogueType;
 	
 	// the catalogue version is specialized, we need to
 	// manage it separately
@@ -151,7 +155,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * @param local
 	 * @param forcedCount
 	 */
-	public Catalogue( int id, String code, String name, String label, 
+	public Catalogue( int id, DcfType catalogueType, String code, String name, String label, 
 			String scopenotes, String termCodeMask, String termCodeLength, 
 			String termMinCode, boolean acceptNonStandardCodes, 
 			boolean generateMissingCodes, String version,
@@ -164,6 +168,8 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		super( id, code, name, label, scopenotes, version, lastUpdate, 
 				validFrom, validTo, status, deprecated );
 	
+		this.catalogueType = catalogueType;
+		
 		// set the version of the catalogue with the
 		// extended Version
 		this.version = new CatalogueVersion( version );
@@ -248,7 +254,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	public Catalogue clone () {
 
 		// create the catalogue object and return it
-		Catalogue catalogue = new Catalogue ( getId(), getCode(), getName(), 
+		Catalogue catalogue = new Catalogue ( getId(), catalogueType, getCode(), getName(), 
 				getLabel(), getScopenotes(), termCodeMask, 
 				String.valueOf( termCodeLength ), termMinCode,
 				acceptNonStandardCodes, generateMissingCodes, getVersion(), 
@@ -258,7 +264,16 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		
 		return catalogue;
 	}
-
+	
+	/**
+	 * Check if the catalogue is a test 
+	 * or a production catalogue
+	 * @return
+	 */
+	public DcfType getCatalogueType() {
+		return catalogueType;
+	}
+	
 	/**
 	 * Open the current catalogue and load its data into ram
 	 * Note that the user interface observes the changes in
@@ -1344,70 +1359,6 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		return catalogueGroups;
 	}
 
-	/**
-	 * Get the directory which contains the database 
-	 * of the catalogue
-	 * @return
-	 */
-	public String getDBDir() {
-		return dbDir;
-	}
-	
-	/**
-	 * Get the backup path
-	 * @return
-	 */
-	public String getBackupDbPath() {
-		return backupDbPath;
-	}
-	
-	/**
-	 * Set the backup db path (the db which will be
-	 * used as backup of this catalogue if needed)
-	 * @param backupDbPath
-	 */
-	public void setBackupDbPath(String backupDbPath) {
-		this.backupDbPath = backupDbPath;
-	}
-	
-	
-	
-	/**
-	 * Build the full db path of the catalogue with default dir settings
-	 * create also the directory in which the db will be created
-	 * @param catalogue
-	 * @return
-	 */
-	public String createDbDir () {
-		
-		// if local catalogue => local cat dir, otherwise main cat dir
-		String folder = isLocal() ? DatabaseManager.LOCAL_CAT_DB_FOLDER : DatabaseManager.OFFICIAL_CAT_DB_FOLDER;
-
-		String dbDirectory = DatabaseManager.generateDBDirectory( folder, this );
-
-		String dbFullPath = buildDBFullPath( dbDirectory );  // full path of the db from the directory
-		
-		return dbFullPath;
-	}
-	
-	/**
-	 * Get the full path of the db ( directory + dbname ) and set it
-	 * as the path of the catalogue (we build it!)
-	 * @return
-	 */
-	public String buildDBFullPath( String dbDir ) {
-
-		dbFullPath = getDbFullPath ( dbDir, getCode(), getVersion(), local );
-		return dbFullPath;
-	}
-	
-	/**
-	 * Set the full db path directly
-	 * @param dbFullPath
-	 */
-	public void setDbFullPath(String dbFullPath) {
-		this.dbFullPath = dbFullPath;
-	}
 	
 	
 	/**
@@ -1581,6 +1532,107 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		return null;
 	}
 	
+
+	/**
+	 * Get the directory which contains the database 
+	 * of the catalogue
+	 * @return
+	 */
+	public String getDBDir() {
+		return dbDir;
+	}
+	
+	/**
+	 * Get the backup path
+	 * @return
+	 */
+	public String getBackupDbPath() {
+		return backupDbPath;
+	}
+	
+	/**
+	 * Set the backup db path (the db which will be
+	 * used as backup of this catalogue if needed)
+	 * @param backupDbPath
+	 */
+	public void setBackupDbPath(String backupDbPath) {
+		this.backupDbPath = backupDbPath;
+	}
+	
+	/**
+	 * Get then main folder which contains the catalogue database,
+	 * which can be the local folder, the production folder or test folder
+	 * @return
+	 */
+	public String getDbMainDir() {
+		
+		String folder = null;
+		
+		// if local catalogue => local cat dir, otherwise main cat dir
+		// depending on the catalogue type
+		if ( local )
+			folder = DatabaseManager.LOCAL_CAT_DB_FOLDER;
+		else if ( catalogueType == DcfType.PRODUCTION )
+			folder = DatabaseManager.PRODUCTION_CAT_DB_FOLDER;
+		else
+			folder = DatabaseManager.TEST_CAT_DB_FOLDER;
+		
+		return folder;
+	}
+	
+	/**
+	 * Build the full db path of the catalogue with default dir settings
+	 * create also the directory in which the db will be created
+	 * @param catalogue
+	 * @return
+	 */
+	public boolean createDbDir () {
+
+		dbFullPath = getDbPath();
+		
+		return GlobalUtil.createDirectory( dbFullPath );
+	}
+	
+	/**
+	 * Get the complete database path of the catalogue
+	 * @return
+	 */
+	public String getDbPath() {
+
+		String path = getDbMainDir() + System.getProperty("file.separator") + 
+				"CAT_" + getCode() + "_DB" + System.getProperty( "file.separator" );
+		
+		// if local catalogue => we return only the db code as name
+		if ( local )
+			return path + getCode();
+
+		// if instead we have an official catalogue, set also the version
+
+		// name of the catalogue db
+		String dbName = getCode() + "_VERSION_" + version.getVersion();
+
+		return path + dbName;
+	}
+	
+	/**
+	 * Get the full path of the db ( directory + dbname ) and set it
+	 * as the path of the catalogue (we build it!)
+	 * @return
+	 */
+	public String buildDBFullPath( String dbDir ) {
+
+		dbFullPath = getDbFullPath ( dbDir, getCode(), getVersion(), local );
+		return dbFullPath;
+	}
+	
+	/**
+	 * Set the full db path directly
+	 * @param dbFullPath
+	 */
+	public void setDbFullPath(String dbFullPath) {
+		this.dbFullPath = dbFullPath;
+	}
+	
 	/**
 	 * Get the db full path using the catalogues main directory, 
 	 * the catalogue code/version and if the catalogue is local or not
@@ -1750,6 +1802,12 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		builder.setLabel( catalogueCode );
 		builder.setVersion( NOT_APPLICABLE_VERSION );
 		builder.setStatus( LOCAL_CATALOGUE_STATUS );
+		
+		// this is ignored for local catalogues,
+		// but it is easier to manage the case
+		// assigning a value to the variable
+		builder.setCatalogueType( DcfType.LOCAL );
+		
 		builder.setLocal( true );
 
 		return builder.build();
@@ -1763,7 +1821,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		
 		CatalogueDAO catDao = new CatalogueDAO();
 		
-		return catDao.getLastVersionByCode( getCode() );
+		return catDao.getLastVersionByCode( getCode(), catalogueType );
 	}
 	
 	/**
@@ -1779,6 +1837,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		builder.setCode( code );
 		builder.setName( code );
 		builder.setLabel( code );
+		builder.setCatalogueType( Dcf.dcfType );
 		builder.setVersion( "" );
 		
 		return builder.build();
@@ -1825,7 +1884,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	public Catalogue getLastRelease() {
 		
 		CatalogueDAO catDao = new CatalogueDAO();
-		Catalogue lastLocalVersion = catDao.getLastVersionByCode( getCode() );
+		Catalogue lastLocalVersion = catDao.getLastVersionByCode( getCode(), catalogueType );
 		
 		Catalogue lastPublishedRelease = Dcf.getLastPublishedRelease( this );
 		
@@ -1900,7 +1959,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 			// save the new version of the catalogue
 			NewCatalogueInternalVersion newVersion = 
 					new NewCatalogueInternalVersion( getCode(), 
-							finder.getVersion(), input );
+							finder.getVersion(), input, catalogueType );
 
 			return newVersion;
 		}
@@ -1984,7 +2043,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		
 		// check if the last release is already downloaded
 		// if the last release is present into the local catalogues then return true
-		for ( Catalogue cat : catDao.getLocalCatalogues() ) {
+		for ( Catalogue cat : catDao.getLocalCatalogues( catalogueType ) ) {
 
 			if ( cat.getCode().equals( lastRelease.getCode() ) && 
 					cat.getVersion().equals( lastRelease.getVersion() ) ) {

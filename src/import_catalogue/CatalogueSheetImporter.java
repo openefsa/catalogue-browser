@@ -10,7 +10,7 @@ import catalogue.Catalogue;
 import catalogue.CatalogueBuilder;
 import catalogue.ReleaseNotes;
 import catalogue_browser_dao.CatalogueDAO;
-import catalogue_browser_dao.DatabaseManager;
+import dcf_manager.Dcf;
 import naming_convention.Headers;
 import open_xml_reader.ResultDataSet;
 
@@ -87,8 +87,7 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 				catalogue.setBackupDbPath( openedCatalogue.getBackupDbPath() );
 			}
 		}
-		
-		
+
 		// save the catalogue as global variable
 		this.catalogue = catalogue;
 		
@@ -150,6 +149,13 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 		
 		builder.setReleaseNotes( new ReleaseNotes(desc, ts, vers, note, null) );
 		
+		// use as dcf type the one which was used to import the
+		// catalogue, in fact, if we are importing an .ecf,
+		// we import it in test if we are using test, otherwise
+		// in production. Same for downloaded catalogues. For
+		// local catalogues this is ignored
+		builder.setCatalogueType( Dcf.dcfType );
+		
 		Catalogue catalogue = builder.build();
 		
 		// return the catalogue
@@ -177,13 +183,15 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 		// as default we create the catalogue using the official folder 
 		// and the catalogue code and version
 		// obtained from the excel sheet
-		if ( dbPath == null && !catalogue.isLocal() )
-			dbPath = catalogue.buildDBFullPath( DatabaseManager.OFFICIAL_CAT_DB_FOLDER +
-					"CAT_" + catalogue.getCode() + "_DB" );
 		
-		// update the db path of the catalogue
-		if ( !catalogue.isLocal() )
+		if ( dbPath == null && !catalogue.isLocal() ) {
+			
+			dbPath = catalogue.getDbPath();
+			
+			System.out.println( "Import: Db path is null, putting db in: " + dbPath );
+			
 			catalogue.setDbFullPath( dbPath );
+		}
 
 		// try to connect to the database. If it is not present we have an exception and thus we
 		// create the database starting from scrach
@@ -204,7 +212,8 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 
 			// set the id to the catalogue
 			int id = catDao.getCatalogue( catalogue.getCode(), 
-					catalogue.getVersion() ).getId();
+					catalogue.getVersion(), 
+					catalogue.getCatalogueType() ).getId();
 
 			catalogue.setId( id );
 		}

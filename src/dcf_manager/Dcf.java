@@ -52,7 +52,8 @@ public class Dcf {
 	 */
 	public enum DcfType {
 		PRODUCTION,
-		TEST
+		TEST,
+		LOCAL   // if we are using a local catalogue, a "local" dcf
 	}
 	
 	// progress bar
@@ -107,7 +108,7 @@ public class Dcf {
 		// present into the user database
 		// at their last release status!
 		ArrayList < Catalogue > myCatalogues = 
-				catDao.getLastReleaseCatalogues ();
+				catDao.getLastReleaseCatalogues ( dcfType );
 
 		// for each DCF catalogue
 		for ( Catalogue cat : catalogues ) {

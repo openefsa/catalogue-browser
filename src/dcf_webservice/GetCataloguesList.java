@@ -145,6 +145,9 @@ public class GetCataloguesList extends SOAPAction {
 			// Note that since we have only 2 nodes, we can get the last child as the second one
 			cb = addProperties ( cb, catalogueNode.getLastChild() );
 
+			// set the catalogue type according to the dcf used
+			cb.setCatalogueType( getType() );
+			
 			// create the catalogue with the builder
 			Catalogue currentCatalogue = cb.build();
 

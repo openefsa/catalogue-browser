@@ -14,6 +14,7 @@ import java.util.Comparator;
 
 import catalogue.Catalogue;
 import catalogue.CatalogueBuilder;
+import dcf_manager.Dcf.DcfType;
 import dcf_user.User;
 import sql.SQLScriptExec;
 import utilities.GlobalUtil;
@@ -32,9 +33,15 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 	 * @param catalogue
 	 */
 	public synchronized int insert ( Catalogue catalogue ) {
-		
-		int id = -1;
 
+		int id = -1;
+		
+		// create the catalogue directory
+		if ( !catalogue.createDbDir() ) {
+			System.err.println( "Cannot create the catalogue directory for " + catalogue );
+			return id;
+		}
+		
 		try {
 
 			// open the connection
@@ -42,6 +49,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 
 			// insert the catalogue object with its parameters in the CATALOGUE table
 			PreparedStatement stmt = con.prepareStatement( "insert into app.CATALOGUE ("
+					+ "CAT_DCF_TYPE,"
 					+ "CAT_VERSION,"
 					+ "CAT_CODE,"
 					+ "CAT_NAME,"
@@ -61,43 +69,43 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 					+ "CAT_IS_LOCAL,"
 					+ "CAT_DB_PATH,"
 					+ "CAT_DB_BACKUP_PATH,"
-					+ "CAT_FORCED_COUNT ) values (? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
+					+ "CAT_FORCED_COUNT ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
 					Statement.RETURN_GENERATED_KEYS );
 
 			// set the query parameters
-			stmt.setString ( 1,  catalogue.getVersion() );
-			stmt.setString ( 2,  catalogue.getCode() );
-			stmt.setString ( 3,  catalogue.getName() );
-			stmt.setString ( 4,  catalogue.getLabel() );
-			stmt.setString ( 5,  catalogue.getScopenotes() );
-			stmt.setString ( 6,  catalogue.getTermCodeMask() );
-			stmt.setInt    ( 7,  catalogue.getTermCodeLength() );
-			stmt.setString ( 8,  catalogue.getTermMinCode() );
-			stmt.setBoolean( 9,  catalogue.isAcceptNonStandardCodes() );
-			stmt.setBoolean( 10, catalogue.isGenerateMissingCodes() );
-			stmt.setString ( 11, catalogue.getStatus() );
-			stmt.setString ( 12, catalogue.getCatalogueGroups() );
+			stmt.setString ( 1,  catalogue.getCatalogueType().toString() );
+			stmt.setString ( 2,  catalogue.getVersion() );
+			stmt.setString ( 3,  catalogue.getCode() );
+			stmt.setString ( 4,  catalogue.getName() );
+			stmt.setString ( 5,  catalogue.getLabel() );
+			stmt.setString ( 6,  catalogue.getScopenotes() );
+			stmt.setString ( 7,  catalogue.getTermCodeMask() );
+			stmt.setInt    ( 8,  catalogue.getTermCodeLength() );
+			stmt.setString ( 9,  catalogue.getTermMinCode() );
+			stmt.setBoolean( 10,  catalogue.isAcceptNonStandardCodes() );
+			stmt.setBoolean( 11, catalogue.isGenerateMissingCodes() );
+			stmt.setString ( 12, catalogue.getStatus() );
+			stmt.setString ( 13, catalogue.getCatalogueGroups() );
 
-			stmt.setNull ( 13, java.sql.Types.TIMESTAMP );  // last update, we do not know this value
+			stmt.setNull ( 14, java.sql.Types.TIMESTAMP );  // last update, we do not know this value
 
 			if ( catalogue.getValidFrom() != null )
-				stmt.setTimestamp ( 14, GlobalUtil.toSQLTimestamp( catalogue.getValidFrom() ) );
+				stmt.setTimestamp ( 15, GlobalUtil.toSQLTimestamp( catalogue.getValidFrom() ) );
 			else
-				stmt.setNull ( 14, java.sql.Types.TIMESTAMP );
+				stmt.setNull ( 15, java.sql.Types.TIMESTAMP );
 
-			stmt.setNull ( 15, java.sql.Types.TIMESTAMP );  // validTo, we do not know this value
+			stmt.setNull ( 16, java.sql.Types.TIMESTAMP );  // validTo, we do not know this value
 
-			stmt.setBoolean( 16, catalogue.isDeprecated() );
+			stmt.setBoolean( 17, catalogue.isDeprecated() );
 
 			// set if the catalogue is local or not
-			stmt.setBoolean( 17, catalogue.isLocal() );  
+			stmt.setBoolean( 18, catalogue.isLocal() );  
 			
-			// create the db path using the catalogue code and version
-			stmt.setString( 18, catalogue.createDbDir() );
+			stmt.setString( 19, catalogue.getDbPath() );
 			
-			stmt.setString( 19, catalogue.getBackupDbPath() );
+			stmt.setString( 20, catalogue.getBackupDbPath() );
 			
-			stmt.setInt( 20, catalogue.getForcedCount() );
+			stmt.setInt( 21, catalogue.getForcedCount() );
 
 			// execute the query
 			stmt.execute();
@@ -147,6 +155,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 
 			// insert the catalogue object with its parameters in the CATALOGUE table
 			PreparedStatement stmt = con.prepareStatement( "update APP.CATALOGUE set "
+					+ "CAT_DCF_TYPE = ?,"
 					+ "CAT_VERSION = ?,"
 					+ "CAT_CODE = ?,"
 					+ "CAT_NAME = ?,"
@@ -170,39 +179,40 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 					+ " where CAT_ID = ?" );
 
 			// set the query parameters
-			stmt.setString ( 1,  catalogue.getVersion() );
-			stmt.setString ( 2,  catalogue.getCode() );
-			stmt.setString ( 3,  catalogue.getName() );
-			stmt.setString ( 4,  catalogue.getLabel() );
-			stmt.setString ( 5,  catalogue.getScopenotes() );
-			stmt.setString ( 6,  catalogue.getTermCodeMask() );
-			stmt.setInt    ( 7,  catalogue.getTermCodeLength() );
-			stmt.setString ( 8,  catalogue.getTermMinCode() );
-			stmt.setBoolean( 9,  catalogue.isAcceptNonStandardCodes() );
-			stmt.setBoolean( 10,  catalogue.isGenerateMissingCodes() );
-			stmt.setString ( 11, catalogue.getStatus() );
-			stmt.setString ( 12, catalogue.getCatalogueGroups() );
+			stmt.setString ( 1,  catalogue.getCatalogueType().toString() );
+			stmt.setString ( 2,  catalogue.getVersion() );
+			stmt.setString ( 3,  catalogue.getCode() );
+			stmt.setString ( 4,  catalogue.getName() );
+			stmt.setString ( 5,  catalogue.getLabel() );
+			stmt.setString ( 6,  catalogue.getScopenotes() );
+			stmt.setString ( 7,  catalogue.getTermCodeMask() );
+			stmt.setInt    ( 8,  catalogue.getTermCodeLength() );
+			stmt.setString ( 9,  catalogue.getTermMinCode() );
+			stmt.setBoolean( 10,  catalogue.isAcceptNonStandardCodes() );
+			stmt.setBoolean( 11,  catalogue.isGenerateMissingCodes() );
+			stmt.setString ( 12, catalogue.getStatus() );
+			stmt.setString ( 13, catalogue.getCatalogueGroups() );
 			
-			stmt.setNull ( 13, java.sql.Types.TIMESTAMP );  // last update, we do not know this value
+			stmt.setNull ( 14, java.sql.Types.TIMESTAMP );  // last update, we do not know this value
 			
 			if ( catalogue.getValidFrom() != null )
-				stmt.setTimestamp ( 14, GlobalUtil.toSQLTimestamp( catalogue.getValidFrom() ) );
+				stmt.setTimestamp ( 15, GlobalUtil.toSQLTimestamp( catalogue.getValidFrom() ) );
 			else
-				stmt.setNull ( 14, java.sql.Types.TIMESTAMP );
+				stmt.setNull ( 15, java.sql.Types.TIMESTAMP );
 			
-			stmt.setNull ( 15, java.sql.Types.TIMESTAMP );  // validTo, we do not know this value
+			stmt.setNull ( 16, java.sql.Types.TIMESTAMP );  // validTo, we do not know this value
 
-			stmt.setBoolean( 16, catalogue.isDeprecated() );
+			stmt.setBoolean( 17, catalogue.isDeprecated() );
 			
 			// set if the catalogue is local or not
-			stmt.setBoolean( 17, catalogue.isLocal() );  
+			stmt.setBoolean( 18, catalogue.isLocal() );  
 			
-			stmt.setString( 18, catalogue.getDbFullPath() );
-			stmt.setString( 19, catalogue.getBackupDbPath() );  
+			stmt.setString( 19, catalogue.getDbFullPath() );
+			stmt.setString( 20, catalogue.getBackupDbPath() );  
 
-			stmt.setInt( 20, catalogue.getForcedCount() );
+			stmt.setInt( 21, catalogue.getForcedCount() );
 			
-			stmt.setInt ( 21, catalogue.getId() );
+			stmt.setInt ( 22, catalogue.getId() );
 			
 			// execute the query
 			stmt.executeUpdate();
@@ -275,6 +285,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 
 		// set the catalogue meta data and create the catalogue object
 		builder.setId( rs.getInt( "CAT_ID" ) );
+		builder.setCatalogueType( DcfType.valueOf( rs.getString( "CAT_DCF_TYPE" ) ) );
 		builder.setVersion( rs.getString( "CAT_VERSION" ) );
 		builder.setCode( rs.getString( "CAT_CODE" ) );
 		builder.setName( rs.getString( "CAT_NAME" ) );
@@ -311,7 +322,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 		builder.setLocal( rs.getBoolean( "CAT_IS_LOCAL" ) );
 		
 		builder.setForcedCount( rs.getInt( "CAT_FORCED_COUNT" ) );
-		
+
 		// return the catalogue
 		return builder.build();
 	}
@@ -478,10 +489,11 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 
 	/**
 	 * Get the last release of the selected catalogue
+	 * either for test catalogue or production ones
 	 * @param catalogue
 	 * @return
 	 */
-	public Catalogue getLastVersionByCode ( String code ) {
+	public Catalogue getLastVersionByCode ( String code, DcfType catType ) {
 
 		// output
 		Catalogue lastVersion = null;
@@ -498,9 +510,10 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 			// we get also the information related to the reserved catalogues using a LEFT join
 			PreparedStatement stmt = con.prepareStatement( 
 					"select * from APP.CATALOGUE "
-					+ "where CAT_CODE = ?");
+					+ "where CAT_CODE = ? and CAT_DCF_TYPE = ?");
 
 			stmt.setString( 1, code );
+			stmt.setString( 2, catType.toString() );
 
 			// execute the query
 			ResultSet rs = stmt.executeQuery();
@@ -557,9 +570,11 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 	 * Get the catalogues which are the last version of
 	 * the ones which were downloaded locally. We use this feature to check
 	 * if there is an update of a catalogue
+	 * @param catalogueType specify TEST to get all the last release of the test
+	 * catalogues, or PRODUCTION for the ones of production
 	 * @return
 	 */
-	public ArrayList <Catalogue> getLastReleaseCatalogues () {
+	public ArrayList <Catalogue> getLastReleaseCatalogues ( DcfType catalogueType ) {
 
 		// output array
 		ArrayList < Catalogue > catalogues = new ArrayList<>();
@@ -570,7 +585,8 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 				+ "select MAX(CAT_VALID_FROM) as MAX_VF, CAT_CODE "
 				+ "from APP.CATALOGUE "
 				+ "group by CAT_CODE) TEMP "
-				+ "on C.CAT_CODE = TEMP.CAT_CODE and C.CAT_VALID_FROM = TEMP.MAX_VF";
+				+ "on C.CAT_CODE = TEMP.CAT_CODE and C.CAT_VALID_FROM = TEMP.MAX_VF "
+				+ "where C.CAT_DCF_TYPE = ?";
 		
 		try {
 			// open the connection
@@ -581,7 +597,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 			// Get first for each catalogue the max version of it. Then get all the information related to the
 			// last release of the catalogue using a self join on cat code and max_version
 			PreparedStatement stmt = con.prepareStatement( query );
-
+			stmt.setString(1, catalogueType.toString() );
 			
 			// here we have a table which contains only the rows related to the
 			// last version of the catalogue!
@@ -605,12 +621,14 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 	}
 
 	/**
-	 * Retrieve all the meta data of all the catalogues
+	 * Retrieve all the meta data of all the catalogues (of one type)
+	 * @param catalogueType the type of the catalogues which we want to consider
 	 * @return
 	 */
-	public ArrayList < Catalogue > getLocalCatalogues () {
+	public ArrayList < Catalogue > getLocalCatalogues ( DcfType catalogueType ) {
 
-		String query = "select * from APP.CATALOGUE";
+		String query = "select * from APP.CATALOGUE where CAT_DCF_TYPE = ?"
+				+ "or CAT_DCF_TYPE = ?";
 		
 		try {
 
@@ -622,6 +640,8 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 
 			// select the catalogue by code
 			PreparedStatement stmt = con.prepareStatement( query );
+			stmt.setString( 1, catalogueType.toString() );
+			stmt.setString( 2, DcfType.LOCAL.toString() );
 
 			// get the query results
 			ResultSet rs = stmt.executeQuery();
@@ -656,14 +676,15 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 	
 	/**
 	 * Get the catalogue metadata starting from the catalogue code and version
-	 * NOTE never used!!!
 	 * @param catalogueCode
 	 * @return
 	 */
-	public Catalogue getCatalogue ( String catalogueCode, String catalogueVersion ) {
+	public Catalogue getCatalogue ( String catalogueCode, 
+			String catalogueVersion, DcfType catType ) {
 
 		String query = "select * from APP.CATALOGUE t1 "
-				+ "where t1.CAT_CODE = ? and t1.CAT_VERSION = ?";
+				+ "where t1.CAT_CODE = ? and t1.CAT_VERSION = ?"
+				+ "and t1.CAT_DCF_TYPE = ?";
 		
 		try {
 
@@ -676,7 +697,8 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 			// set the catalogue code and version parameters for the statement
 			stmt.setString( 1, catalogueCode );
 			stmt.setString( 2, catalogueVersion );
-
+			stmt.setString( 3, catType.toString() );
+			
 			// get the results
 			ResultSet rs = stmt.executeQuery();
 

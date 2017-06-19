@@ -28,7 +28,7 @@ import utilities.GlobalUtil;
 public class DatabaseManager {
 	
 	// name of the main database (i.e. the one which contains all the catalogues metadata)
-	private static final String MAIN_CAT_DB_FOLDER_NAME = "CataloguesMetadata";
+	private static final String MAIN_CAT_DB_FOLDER_NAME = "MAIN_CATS_DB";
 
 	/**
 	 *  directory which contains all the official databases of the catalogue browser (i.e.
@@ -36,6 +36,18 @@ public class DatabaseManager {
 	 */
 	public static final String OFFICIAL_CAT_DB_FOLDER = "Database" + System.getProperty("file.separator");
 
+	/**
+	 * Where the production catalogues are stored
+	 */
+	public static final String PRODUCTION_CAT_DB_FOLDER = OFFICIAL_CAT_DB_FOLDER 
+			 + "PRODUCTION_CATS";
+
+	/**
+	 * Where the test catalogues are stored
+	 */
+	public static final String TEST_CAT_DB_FOLDER = OFFICIAL_CAT_DB_FOLDER 
+			 + "TEST_CATS";
+	
 	/**
 	 *  folder of the main database which contains all the catalogues
 	 *  metadata
@@ -47,7 +59,7 @@ public class DatabaseManager {
 	 *  folder where the local catalogues are stored
 	 */
 	public static final String LOCAL_CAT_DB_FOLDER = OFFICIAL_CAT_DB_FOLDER + 
-			"LocalCatalogues" + System.getProperty("file.separator");
+			"LOCAL_CATS" + System.getProperty("file.separator");
 
 	/**
 	 * Get a derby connection url to open the main db connection
@@ -140,9 +152,24 @@ public class DatabaseManager {
 		} catch ( SQLException e1 ) {
 
 			System.err.println( "Main database not present, trying to create a new one" );
-
+			
 			// Create a new database if possible
 			createMainDB ();
+			
+			// create official cat directory
+			if ( !GlobalUtil.fileExists( DatabaseManager.OFFICIAL_CAT_DB_FOLDER ) ) {
+				new File( DatabaseManager.OFFICIAL_CAT_DB_FOLDER ).mkdir();
+			}
+			
+			// create production cat directory
+			if ( !GlobalUtil.fileExists( DatabaseManager.PRODUCTION_CAT_DB_FOLDER ) ) {
+				new File( DatabaseManager.PRODUCTION_CAT_DB_FOLDER ).mkdir();
+			}
+			
+			// create test cat directory
+			if ( !GlobalUtil.fileExists( DatabaseManager.TEST_CAT_DB_FOLDER ) ) {
+				new File( DatabaseManager.TEST_CAT_DB_FOLDER ).mkdir();
+			}
 		}
 	}
 	
@@ -207,7 +234,7 @@ public class DatabaseManager {
 	 * @return
 	 * @throws Exception 
 	 */
-	private static String generateDBDirectory ( String root, String folder ) {
+	public static String generateDBDirectory ( String root, String folder ) {
 
 		// create the path of the database
 		String path = root + folder;
@@ -217,11 +244,6 @@ public class DatabaseManager {
 
 		// return the path
 		return path;
-	}
-	
-	public static String generateDBDirectory ( String root, Catalogue catalogue ) {
-
-		return generateDBDirectory( root, "CAT_" + catalogue.getCode() + "_DB" );
 	}
 	
 
