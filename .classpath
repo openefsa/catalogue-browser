@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="SQL"/>
-	<classpathentry kind="src" path="images"/>
 	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="src" path="icons"/>
 	<classpathentry kind="src" path="open-xml-reader"/>
