@@ -212,28 +212,45 @@ public class MainPanel implements Observer, RestoreableWindow {
 				hierarchySelector.getSelectedHierarchy(), 
 				tree.getFirstSelectedTerm() );
 	}
-
+	
 	/**
-	 * load the main panel state related to the current catalogue
+	 * Get the last hierarchy if present
 	 * @param catalogue
+	 * @return
+	 * @throws PreferenceNotFoundException
 	 */
-	private void loadState( Catalogue catalogue ) {
+	private Hierarchy getLastHierarchy( Catalogue catalogue ) 
+			throws PreferenceNotFoundException {
 		
 		CataloguePreferenceDAO prefDao = 
 				new CataloguePreferenceDAO( catalogue );
-		try {
-			
-			// first try to load the last hierarchy
-			Hierarchy lastHierarchy = prefDao.getLastHierarchy();
-			changeHierarchy( lastHierarchy );
-			
-			// then try to load also the last term
-			Term lastTerm = prefDao.getLastTerm();
-			changeHierarchy( lastHierarchy, lastTerm );
-
-		} catch ( PreferenceNotFoundException e ) {
-			System.out.println( "Main panel preferences not found for " + catalogue );
-		}
+		
+		Hierarchy lastHierarchy = null;
+		
+		// first try to load the last hierarchy
+		lastHierarchy = prefDao.getLastHierarchy();
+		
+		return lastHierarchy;
+	}
+	
+	/**
+	 * Get the last term if present
+	 * @param catalogue
+	 * @return
+	 * @throws PreferenceNotFoundException
+	 */
+	private Term getLastTerm( Catalogue catalogue ) 
+			throws PreferenceNotFoundException {
+		
+		CataloguePreferenceDAO prefDao = 
+				new CataloguePreferenceDAO( catalogue );
+		
+		Term lastTerm = null;
+		
+		// first try to load the last hierarchy
+		lastTerm = prefDao.getLastTerm();
+		
+		return lastTerm;
 	}
 	
 	/**
@@ -348,11 +365,32 @@ public class MainPanel implements Observer, RestoreableWindow {
 
 		// set the hierarchy combo box input and select the first available hierarchy
 		hierarchySelector.setInput( catalogue.getHierarchies() );
+		
+		Hierarchy hierarchy;
+		try {
+			
+			// try to load the hierarchy selector state
+			hierarchy = getLastHierarchy ( catalogue );
 
-		// get the selected hierarchy of the combo box and make it the current one
-		Hierarchy currentHierarchy = hierarchySelector.getSelectedHierarchy();
+		} catch (PreferenceNotFoundException e) {
+			
+			// set the first selection of the hierarchy selector
+			// with the default hierarchy if no preference was found
+			hierarchy = catalogue.getDefaultHierarchy();
+		}
 
-		tree.setInput( currentHierarchy );
+		// set the selection
+		hierarchySelector.setSelection( hierarchy );
+
+		// recover the last selected term if present
+		try {
+			Term lastTerm = getLastTerm( catalogue );
+			tree.selectTerm( lastTerm );
+		} catch ( PreferenceNotFoundException e ) {}
+		
+
+		// update also the tree input
+		//tree.setInput( hierarchy );
 	}
 	
 	/**
@@ -495,7 +533,7 @@ public class MainPanel implements Observer, RestoreableWindow {
 						loadData( catalogue );
 						
 						// load the main panel previous state if possible
-						loadState( catalogue );
+						//loadState( catalogue );
 					}
 					
 					break;

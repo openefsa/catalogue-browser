@@ -54,7 +54,6 @@ public class HierarchySelector extends Observable implements Observer {
 
 	private Hierarchy currentHierarchy;
 	
-	
 	/**
 	 * Constructor, create all the graphics under the parent composite
 	 * @param parent
@@ -130,27 +129,22 @@ public class HierarchySelector extends Observable implements Observer {
 			
 			@Override
 			public void selectionChanged(SelectionChangedEvent arg0) {
-				
-				// change current hierarchy
+
+				// get the selection of the combo box and notify observers
 				updateCurrentHierarchy();
 			}
 		});
-		
 		
 		// if hierarchy radio button is pressed
 		hierarchyBtn.addSelectionListener( new SelectionAdapter() {
 			@Override
 			public void widgetSelected ( SelectionEvent event ) {
-				
+
 				// return if the button is in false state
 				if ( !hierarchyBtn.getSelection() )
 					return;
 				
-				// filter combo box items
-				setHierarchyFilter( getHierarchyFilter( false ) );
-				
-				// change current hierarchy
-				updateCurrentHierarchy();	
+				setSelection ( catalogue.getDefaultHierarchy() );
 			}
 		} );
 
@@ -159,22 +153,28 @@ public class HierarchySelector extends Observable implements Observer {
 		facetBtn.addSelectionListener( new SelectionAdapter() {
 			@Override
 			public void widgetSelected ( SelectionEvent event ) {
-				
+
 				// return if the button is in false state
 				if ( !facetBtn.getSelection() )
 					return;
 				
-				// filter combo box items
-				setHierarchyFilter( getHierarchyFilter( true ) );
+				if ( catalogue.getFacetHierarchies().isEmpty() ) {
+					System.err.println( "Cannot select facet radio button, "
+							+ "no facets hierarchies were found for " + catalogue );
+					return;
+				}
 				
-				// change current hierarchy
-				updateCurrentHierarchy();
+				// get the first facet category
+				Hierarchy hierarchy = catalogue.getFacetHierarchies().get(0);
+				
+				// select it
+				setSelection ( hierarchy );
 			}
 		} );
 	}
 
 	/**
-	 * Refresh hierarchy selector.
+	 * Refresh hierarchy selector and its input
 	 */
 	public void refresh() {
 
@@ -202,26 +202,9 @@ public class HierarchySelector extends Observable implements Observer {
 	 * Set the combo box input
 	 * @param hierarchies
 	 */
-	public void setInput ( ArrayList<Hierarchy> hierarchies, 
-			boolean refreshFilter ) {
-
+	public void setInput ( ArrayList<Hierarchy> hierarchies ) {
 		hierarchyCombo.setInput( hierarchies );
 		hierarchyCombo.refresh();
-		
-		// set the first filter
-		if ( refreshFilter )
-			setHierarchyFilter ( getHierarchyFilter( false ) );
-		
-		// update current hierarchy
-		updateCurrentHierarchy();
-	}
-	
-	/**
-	 * Set the combo box input
-	 * @param hierarchies
-	 */
-	public void setInput ( ArrayList<Hierarchy> hierarchies ) {
-		setInput ( hierarchies, true );
 	}
 	
 	/**
@@ -234,10 +217,11 @@ public class HierarchySelector extends Observable implements Observer {
 		
 		// enable only if we have facets (it is useless to have radio buttons if
 		// we have only base hierarchies)
-		hierarchyBtn.setEnabled( enabled && catalogue != null && catalogue.hasAttributeHierarchies() );
+		boolean radioEnabled = enabled && catalogue != null 
+				&& catalogue.hasAttributeHierarchies();
 
-		// enable only if we have facets
-		facetBtn.setEnabled( enabled && catalogue != null && catalogue.hasAttributeHierarchies() );
+		hierarchyBtn.setEnabled( radioEnabled );
+		facetBtn.setEnabled( radioEnabled );
 	}
 	
 	/**
@@ -307,21 +291,6 @@ public class HierarchySelector extends Observable implements Observer {
 		
 		// show facets
 		hierarchyCombo.addFilter( filter );
-		
-		// select as default hierarchy the catalogue default hierarchy 
-		// (the default "default hierarchy" is the master hierarchy)
-		// only if we are in the hierarchy page
-		if ( hierarchyBtn.getSelection() 
-				&& catalogue.getDefaultHierarchy() != null ) {
-
-			hierarchyCombo.setSelection( new StructuredSelection 
-					( catalogue.getDefaultHierarchy() ) );
-			
-			System.err.println( "Changing with " + catalogue.getDefaultHierarchy() );
-		}
-		else
-			// select the first available item if we are in the facet page
-			hierarchyCombo.getCombo().select(0);
 	}
 	
 	/**

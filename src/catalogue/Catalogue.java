@@ -678,6 +678,20 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	}
 	
 	/**
+	 * Get all the facet hierarchies of the catalogue
+	 * @return
+	 */
+	public ArrayList<Hierarchy> getFacetHierarchies() {
+		ArrayList<Hierarchy> facets = new ArrayList<>();
+		for ( Hierarchy hierarchy : hierarchies ) {
+			if ( hierarchy.isFacet() )
+				facets.add( hierarchy );
+		}
+		
+		return facets;
+	}
+	
+	/**
 	 * Get all the catalogue terms
 	 * @return
 	 */
