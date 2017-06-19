@@ -15,7 +15,8 @@ public class UIPreference extends Preference {
 	public static final String hideNotReprDescribe = "hideNotReprDescribe";
 	public static final String hideTermCodeDescribe = "hideTermCodeDescribe";
 	
-	public UIPreference( String key, PreferenceType type, Object value ) {
-		super(key, type, value);
+	public UIPreference( String key, PreferenceType type, 
+			Object value, boolean editable ) {
+		super(key, type, value, editable);
 	}
 }

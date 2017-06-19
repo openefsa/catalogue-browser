@@ -8,6 +8,8 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.layout.GridData;
@@ -40,6 +42,8 @@ import ui_search_bar.HierarchyEvent;
 import ui_search_bar.SearchEvent;
 import ui_search_bar.SearchListener;
 import ui_search_bar.SearchPanel;
+import user_preferences.CataloguePreferenceDAO;
+import user_preferences.PreferenceNotFoundException;
 import user_preferences.UIPreference;
 import utilities.GlobalUtil;
 
@@ -188,7 +192,50 @@ public class MainPanel implements Observer, RestoreableWindow {
 		});
 	}
 	
+	/**
+	 * Save the state of the main panel for the current 
+	 * catalogue (selected hierarchy and selected term!)
+	 */
+	private void saveState () {
+		
+		Catalogue current = GlobalManager.getInstance().getCurrentCatalogue();
+		
+		// no catalogue opened, return
+		if ( current == null )
+			return;
+		
+		// save main panel state
+		CataloguePreferenceDAO prefDao = 
+				new CataloguePreferenceDAO ( current );
+		
+		prefDao.saveMainPanelState ( 
+				hierarchySelector.getSelectedHierarchy(), 
+				tree.getFirstSelectedTerm() );
+	}
 
+	/**
+	 * load the main panel state related to the current catalogue
+	 * @param catalogue
+	 */
+	private void loadState( Catalogue catalogue ) {
+		
+		CataloguePreferenceDAO prefDao = 
+				new CataloguePreferenceDAO( catalogue );
+		try {
+			
+			// first try to load the last hierarchy
+			Hierarchy lastHierarchy = prefDao.getLastHierarchy();
+			changeHierarchy( lastHierarchy );
+			
+			// then try to load also the last term
+			Term lastTerm = prefDao.getLastTerm();
+			changeHierarchy( lastHierarchy, lastTerm );
+
+		} catch ( PreferenceNotFoundException e ) {
+			System.out.println( "Main panel preferences not found for " + catalogue );
+		}
+	}
+	
 	/**
 	 * Set the name and the image of the shell. Moreover, set the layout and the paint listener
 	 */
@@ -204,6 +251,15 @@ public class MainPanel implements Observer, RestoreableWindow {
 		} );
 		
 		shell.setMaximized( true );
+		
+		// if shell disposed
+		shell.addDisposeListener( new DisposeListener() {
+			
+			@Override
+			public void widgetDisposed(DisposeEvent arg0) {
+				saveState();
+			}
+		});
 		
 		// restore the old dimensions of the window
 		WindowPreference.restore( this );
@@ -422,7 +478,7 @@ public class MainPanel implements Observer, RestoreableWindow {
 			
 			@Override
 			public void buttonPressed( MenuItem button, int code, Event event ) {
-				
+
 				switch ( code ) {
 				case FileMenu.OPEN_CAT_MI:
 					
@@ -437,11 +493,17 @@ public class MainPanel implements Observer, RestoreableWindow {
 					if ( !catalogue.isEmpty() ) {
 						enableUI( true );
 						loadData( catalogue );
+						
+						// load the main panel previous state if possible
+						loadState( catalogue );
 					}
 					
 					break;
 					
 				case FileMenu.CLOSE_CAT_MI:
+					
+					// save the current state for the current catalogue
+					saveState();
 					
 					removeData();
 					enableUI( false );

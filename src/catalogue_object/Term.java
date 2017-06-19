@@ -1895,16 +1895,21 @@ public class Term extends CatalogueObject implements Mappable {
 		return "TERM " + getId() + "; code=" + getCode() + ";name=" + getName();
 	}
 	
-	/**
-	 * This method must be defined for work on HashMaps.
-	 * @param t
-	 * @return
-	 */
-	public boolean equals(Term t){
-		if ( !this.getCode().isEmpty()&& !t.getCode().isEmpty() )
-			return this.getCode().equals( t.getCode() );
-		else
-			return this.getId() == t.getId();
+	@Override
+	public boolean equals( Object term ) {
+		
+		if ( term instanceof Term ) {
+
+			String code = ( (Term) term ).getCode();
+			int id = ( (Term) term ).getId();
+			
+			if ( !this.getCode().isEmpty()&& !code.isEmpty() )
+				return this.getCode().equals( code );
+			else
+				return this.getId() == id;
+		}
+
+		return super.equals( term );
 	}
 
 }

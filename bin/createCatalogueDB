@@ -183,9 +183,10 @@ alter table APP.PICKLIST_TERM add foreign key ( PICKLIST_ID ) references APP.PIC
 -- This table stores all the user preferences related to a single catalogue. We use the logic key value
 create table APP.PREFERENCE (
 	PREFERENCE_ID integer not null primary key generated always as identity (start with 1, increment by 1),
-	PREFERENCE_KEY varchar(500),   -- key of the preference
-	PREFERENCE_TYPE varchar(500),  -- type of the preference (integer, string, boolean)
-	PREFERENCE_VALUE varchar(3000) -- value of the preference
+	PREFERENCE_KEY varchar(500),    -- key of the preference
+	PREFERENCE_TYPE varchar(500),   -- type of the preference (integer, string, boolean)
+	PREFERENCE_VALUE varchar(3000), -- value of the preference
+	PREFERENCE_EDITABLE boolean     -- can the user edit the preference in the browser?
 );
 
 -- add the unique contraint to the key field

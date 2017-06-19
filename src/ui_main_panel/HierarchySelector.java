@@ -177,11 +177,43 @@ public class HierarchySelector extends Observable implements Observer {
 	 * Refresh hierarchy selector.
 	 */
 	public void refresh() {
-		
+
 		if ( catalogue == null )
 			return;
 		
-		setInput ( catalogue.getHierarchies() );
+		// refresh only if needed
+		boolean needRefresh = false;
+		for ( Hierarchy hierarchy : catalogue.getHierarchies() ) {
+			@SuppressWarnings("unchecked")
+			ArrayList<Hierarchy> input = (ArrayList<Hierarchy> ) hierarchyCombo.getInput();
+			if ( !input.contains( hierarchy ) ) {
+				needRefresh = true;
+				break;
+			}
+		}
+		
+		if ( needRefresh ) {
+			setInput ( catalogue.getHierarchies() );
+			hierarchyCombo.refresh();
+		}
+	}
+	
+	/**
+	 * Set the combo box input
+	 * @param hierarchies
+	 */
+	public void setInput ( ArrayList<Hierarchy> hierarchies, 
+			boolean refreshFilter ) {
+
+		hierarchyCombo.setInput( hierarchies );
+		hierarchyCombo.refresh();
+		
+		// set the first filter
+		if ( refreshFilter )
+			setHierarchyFilter ( getHierarchyFilter( false ) );
+		
+		// update current hierarchy
+		updateCurrentHierarchy();
 	}
 	
 	/**
@@ -189,15 +221,7 @@ public class HierarchySelector extends Observable implements Observer {
 	 * @param hierarchies
 	 */
 	public void setInput ( ArrayList<Hierarchy> hierarchies ) {
-
-		hierarchyCombo.setInput( hierarchies );
-		hierarchyCombo.refresh();
-		
-		// set the first filter
-		setHierarchyFilter ( getHierarchyFilter( false ) );
-		
-		// update current hierarchy
-		updateCurrentHierarchy();
+		setInput ( hierarchies, true );
 	}
 	
 	/**
@@ -221,7 +245,7 @@ public class HierarchySelector extends Observable implements Observer {
 	 * @param hierarchy
 	 */
 	public void setSelection ( Hierarchy hierarchy ) {
-		
+
 		hierarchyBtn.setSelection( hierarchy.isHierarchy() );
 		facetBtn.setSelection( hierarchy.isFacet() );
 		
@@ -284,13 +308,16 @@ public class HierarchySelector extends Observable implements Observer {
 		// show facets
 		hierarchyCombo.addFilter( filter );
 		
-		// select as default hierarchy the catalogue default hierarchy (the default default hierarchy is the master hierarchy)
+		// select as default hierarchy the catalogue default hierarchy 
+		// (the default "default hierarchy" is the master hierarchy)
 		// only if we are in the hierarchy page
 		if ( hierarchyBtn.getSelection() 
 				&& catalogue.getDefaultHierarchy() != null ) {
 
 			hierarchyCombo.setSelection( new StructuredSelection 
 					( catalogue.getDefaultHierarchy() ) );
+			
+			System.err.println( "Changing with " + catalogue.getDefaultHierarchy() );
 		}
 		else
 			// select the first available item if we are in the facet page

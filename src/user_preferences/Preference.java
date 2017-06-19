@@ -8,6 +8,7 @@ package user_preferences;
 public class Preference {
 	private String key, value;
 	private PreferenceType type;
+	private boolean editable;
 	
 	/**
 	 * Constructor with key, value. The value variable is always converted to string
@@ -15,10 +16,11 @@ public class Preference {
 	 * @param key
 	 * @param value
 	 */
-	public Preference( String key, PreferenceType type, Object value ) {
+	public Preference( String key, PreferenceType type, Object value, boolean editable ) {
 		this.key = key;
 		this.type = type;
 		this.value = String.valueOf( value );
+		this.editable = editable;
 	}
 	
 	/**
@@ -35,6 +37,14 @@ public class Preference {
 	 */
 	public PreferenceType getType() {
 		return type;
+	}
+	
+	/**
+	 * Check if the user can edit the preference or not
+	 * @return
+	 */
+	public boolean isEditable() {
+		return editable;
 	}
 	
 	/**

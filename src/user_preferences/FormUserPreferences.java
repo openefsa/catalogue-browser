@@ -59,8 +59,12 @@ public class FormUserPreferences implements RestoreableWindow {
 		CataloguePreferenceDAO prefDao = new CataloguePreferenceDAO( currentCat );
 		
 		// load the catalogue preferences
-		preferences = prefDao.getAll();
+		ArrayList<Preference> preferences = prefDao.getAll();
 		
+		for ( Preference pref : preferences ) {
+			if ( pref.isEditable() )
+				this.preferences.add( pref );
+		}
 	}
 	
 	@Override
@@ -80,7 +84,7 @@ public class FormUserPreferences implements RestoreableWindow {
 
 		this.dialog = new Shell( _shell, SWT.SHELL_TRIM | SWT.APPLICATION_MODAL );
 		
-		dialog.setText( Messages.getString("FormUserPreferences.OptionsLabel") ); //$NON-NLS-1$
+		dialog.setText( Messages.getString("FormUserPreferences.OptionsLabel") );
 		dialog.setSize( 400, 350 );
 		dialog.setLayout( new GridLayout( 1 , false ) );
 		
@@ -131,7 +135,7 @@ public class FormUserPreferences implements RestoreableWindow {
 				String value = ( (Preference) arg0 ).getValue();
 				
 				if ( value == null )
-					value = Messages.getString("FormUserPreferences.NotFound"); //$NON-NLS-1$
+					value = Messages.getString("FormUserPreferences.NotFound");
 				
 				return value;
 			}
@@ -148,7 +152,7 @@ public class FormUserPreferences implements RestoreableWindow {
 		} );
 		
 		TableColumn colCode = viewerColumnCode.getColumn();
-		colCode.setText( Messages.getString("FormUserPreferences.SettingColumn") ); //$NON-NLS-1$
+		colCode.setText( Messages.getString("FormUserPreferences.SettingColumn") );
 		colCode.setWidth( 200 );
 		colCode.setResizable( true );
 		colCode.setMoveable( false );
@@ -168,7 +172,7 @@ public class FormUserPreferences implements RestoreableWindow {
 		
 		TableViewerColumn viewerColumnName = new TableViewerColumn( table , SWT.NONE );
 		TableColumn colName = viewerColumnName.getColumn();
-		colName.setText( Messages.getString("FormUserPreferences.ValueColumn") ); //$NON-NLS-1$
+		colName.setText( Messages.getString("FormUserPreferences.ValueColumn") );
 		colName.setWidth( 250 );
 		colName.setResizable( true );
 		colName.setMoveable( false );
@@ -187,7 +191,7 @@ public class FormUserPreferences implements RestoreableWindow {
 			@Override
 			protected void setValue( Object arg0, Object value ) {
 
-				CataloguePreference preference = (CataloguePreference) arg0;
+				Preference preference = (Preference) arg0;
 				
 				String newValue = null;
 				
@@ -284,10 +288,8 @@ public class FormUserPreferences implements RestoreableWindow {
 				
 				// do not edit favourite picklist
 				Preference pref = (Preference) arg0;
-				if ( pref.getKey().equals( CataloguePreference.currentPicklistKey ) )
-					return false;
-				
-				return true;  // can edit the values
+
+				return pref.isEditable();
 			}
 		} );
 		

@@ -16,22 +16,22 @@ public class UIPreferenceDAO extends PreferenceDAO {
 		removeAll();
 
 		insert( new UIPreference( UIPreference.hideDeprMain, 
-				PreferenceType.BOOLEAN, false ) );
+				PreferenceType.BOOLEAN, false, true ) );
 
 		insert( new UIPreference( UIPreference.hideNotReprMain, 
-				PreferenceType.BOOLEAN, false ) );
+				PreferenceType.BOOLEAN, false, true ) );
 
 		insert( new UIPreference( UIPreference.hideTermCodeMain, 
-				PreferenceType.BOOLEAN, false ) );
+				PreferenceType.BOOLEAN, false, true ) );
 
 		insert( new UIPreference( UIPreference.hideDeprDescribe, 
-				PreferenceType.BOOLEAN, false ) );
+				PreferenceType.BOOLEAN, false, true ) );
 
 		insert( new UIPreference( UIPreference.hideNotReprDescribe, 
-				PreferenceType.BOOLEAN, false ) );
+				PreferenceType.BOOLEAN, false, true ) );
 
 		insert( new UIPreference( UIPreference.hideTermCodeDescribe, 
-				PreferenceType.BOOLEAN, false ) );
+				PreferenceType.BOOLEAN, false, true ) );
 	}
 	
 	@Override

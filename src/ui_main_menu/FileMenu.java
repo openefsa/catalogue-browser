@@ -442,13 +442,13 @@ public class FileMenu implements MainMenuItem {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				
-				// close the catalogue
-				closeCatalogue();
-				
+
 				if ( listener != null )
 					listener.buttonPressed( closeCatMI, 
 							CLOSE_CAT_MI, null );
+				
+				// close the catalogue
+				closeCatalogue();
 			}
 			
 			@Override

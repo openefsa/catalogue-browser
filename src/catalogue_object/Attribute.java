@@ -421,12 +421,12 @@ public class Attribute extends SortableCatalogueObject implements Mappable {
 			System.err.println ( "Cannot get the hierarchy of a non-catalogue attribute" );
 			return null; 
 		}
-		
+
 		String catalogueCode = catalogue.getCode();
 		
 		// search the hierarchy
 		for ( Hierarchy h : catalogue.getHierarchies() ) {
-			
+
 			// get the catalogue code and the hierarchy code from the composite field of the attribute
 			// these information are separated by a dot
 			// codes[0] => the code of the catalogue which contains the hierarchy
@@ -440,9 +440,10 @@ public class Attribute extends SortableCatalogueObject implements Mappable {
 				continue;
 			}
 			
+			// skip check if local catalogue, since its code is not relevant
 			// skip if the catalogue code is not the same as the current catalogue
 			// (because we cannot retrieve the information)
-			if ( !codes[0].equals( catalogueCode ) )
+			if ( !catalogue.isLocal() && !codes[0].equals( catalogueCode ) )
 				continue;
 			
 			// if the hierarchy code of the catalogue attribute is the same

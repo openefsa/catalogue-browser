@@ -93,11 +93,13 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference>{
 
 			if ( rs.next() ) {
 
-				String type = rs.getString( "PREFERENCE_TYPE" );
-				String value = rs.getString( "PREFERENCE_VALUE" );
+				Preference p = getByResultSet( rs );
+
+				//String type = rs.getString( "PREFERENCE_TYPE" );
+				//String value = rs.getString( "PREFERENCE_VALUE" );
 
 				// create the preference
-				pref = new CataloguePreference( key, PreferenceType.getTypeFromName(type), value );
+				pref = new CataloguePreference( p );
 			}
 
 			rs.close();
@@ -167,19 +169,22 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference>{
 
 		Connection con;
 
-		String query = "insert into APP.PREFERENCE (PREFERENCE_KEY, PREFERENCE_TYPE, PREFERENCE_VALUE) values (?,?,?)";
+		String query = "insert into APP.PREFERENCE (PREFERENCE_KEY, "
+				+ "PREFERENCE_TYPE, PREFERENCE_VALUE, PREFERENCE_EDITABLE) values (?,?,?,?)";
 
 		try {
 
 			con = getConnection();
 
-			PreparedStatement stmt = con.prepareStatement( query, Statement.RETURN_GENERATED_KEYS );
+			PreparedStatement stmt = con.prepareStatement( query, 
+					Statement.RETURN_GENERATED_KEYS );
 
 			stmt.clearParameters();
 
 			stmt.setString( 1, pref.getKey() );
 			stmt.setString( 2, pref.getType().name() );
 			stmt.setString( 3, pref.getValue() );
+			stmt.setBoolean( 4, pref.isEditable() );
 
 			stmt.executeUpdate();
 
@@ -209,7 +214,8 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference>{
 
 		Connection con;
 
-		String query = "update APP.PREFERENCE set PREFERENCE_TYPE = ?, PREFERENCE_VALUE = ? where PREFERENCE_KEY = ?";
+		String query = "update APP.PREFERENCE set PREFERENCE_TYPE = ?, "
+				+ "PREFERENCE_VALUE = ?, PREFERENCE_EDITABLE = ? where PREFERENCE_KEY = ?";
 
 		try {
 
@@ -221,7 +227,8 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference>{
 
 			stmt.setString( 1, pref.getType().name() );
 			stmt.setString( 2, pref.getValue() );
-			stmt.setString( 3, pref.getKey() );
+			stmt.setBoolean( 3, pref.isEditable() );
+			stmt.setString( 4, pref.getKey() );
 
 			stmt.executeUpdate();
 
@@ -259,7 +266,7 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference>{
 			e.printStackTrace();
 		}
 	}
-	
+
 	public boolean remove(Preference object) {
 		// TODO Auto-generated method stub
 		return false;
@@ -269,19 +276,87 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference>{
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	/**
+	 * Check if the preference is already present or not
+	 * @param pref
+	 * @return
+	 */
+	public boolean contains ( String key ) {
+		return contains ( new Preference( key, null, null, false ) );
+	}
+	
+	/**
+	 * Check if the preference is already present or not
+	 * @param pref
+	 * @return
+	 */
+	public boolean contains ( Preference pref ) {
 
+		boolean contained = false;
+
+		Connection con;
+
+		String query = "select * from APP.PREFERENCE where PREFERENCE_KEY = ?";
+
+		try {
+
+			con = getConnection();
+
+			PreparedStatement stmt = con.prepareStatement( query );
+
+			stmt.setString( 1, pref.getKey() );
+			
+			ResultSet rs = stmt.executeQuery();
+
+			if ( rs.next() )
+				contained = true;
+
+			rs.close();
+			stmt.close();
+			con.close();
+
+		} catch ( SQLException e ) {
+			e.printStackTrace();
+		}
+
+		return contained;
+	}
+	
+	/**
+	 * Insert a preference if not present, otherwise
+	 * update it
+	 * @param pref
+	 */
+	public void insertUpdate ( Preference pref ) {
+		
+		if ( !contains( pref.getKey() ) ) {
+
+			// create the preference
+			insert( pref );
+		}
+		else {
+			// update the preference
+			update( pref );
+		}
+	}
+
+	/**
+	 * Get the preference from the result set
+	 */
 	public Preference getByResultSet(ResultSet rs) throws SQLException {
 
 		String key = rs.getString( "PREFERENCE_KEY" );
 		String type = rs.getString( "PREFERENCE_TYPE" );
 		String value = rs.getString( "PREFERENCE_VALUE" );
+		boolean editable = rs.getBoolean( "PREFERENCE_EDITABLE" );
 
 		// create the preference
 		Preference pref = new Preference( key, 
-				PreferenceType.getTypeFromName(type), value );
+				PreferenceType.getTypeFromName(type), value, editable );
 
 		return pref;
 	}
-	
+
 	public abstract Connection getConnection() throws SQLException;
 }
