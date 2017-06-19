@@ -348,10 +348,13 @@ public class Term extends CatalogueObject implements Mappable {
 	}
 	
 	/**
-	 * Get the term short name
+	 * Get the term short name of the term
+	 * @param replace set this to true if you want that
+	 * if the short name is not present to get the extended
+	 * name instead (same as calling {@link #getName()})
 	 * @return
 	 */
-	public String getShortName() {
+	public String getShortName( boolean replace ) {
 
 		if ( getLabel().equals( "" ) )
 			return getName();
@@ -530,7 +533,7 @@ public class Term extends CatalogueObject implements Mappable {
 		case "TERM_EXTENDED_NAME":
 			value = getName(); break;
 		case "TERM_SHORT_NAME":
-			value = getShortName(); break;
+			value = getShortName( false ); break;
 		case "TERM_SCOPENOTE":
 			value = getScopenotes(); break;
 		case "TERM_VERSION":

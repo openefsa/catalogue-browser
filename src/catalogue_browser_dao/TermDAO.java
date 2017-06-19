@@ -77,7 +77,7 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 				
 				stmt.setString( 1, t.getCode() );
 				stmt.setString( 2, t.getName() );
-				stmt.setString( 3, t.getShortName() );
+				stmt.setString( 3, t.getShortName(false) );
 				stmt.setString( 4, t.getScopenotes() );
 				stmt.setBoolean( 5, t.isDeprecated() );
 
@@ -161,7 +161,7 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 			
 			stmt.setString( 1, t.getCode() );
 			stmt.setString( 2, t.getName() );
-			stmt.setString( 3, t.getShortName() );
+			stmt.setString( 3, t.getShortName(false) );
 			stmt.setString( 4, t.getScopenotes() );
 			stmt.setBoolean( 5, t.isDeprecated() );
 			

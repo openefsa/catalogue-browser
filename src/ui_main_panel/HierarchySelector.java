@@ -228,8 +228,17 @@ public class HierarchySelector extends Observable implements Observer {
 	 * Select the chosen hierarchy
 	 * @param hierarchy
 	 */
+	@SuppressWarnings("unchecked")
 	public void setSelection ( Hierarchy hierarchy ) {
 
+		// the hierarchy is not in the hierarchies list
+		if ( !( (ArrayList<Hierarchy>) hierarchyCombo.getInput() ).
+				contains ( hierarchy ) ) {
+			System.err.println( "Cannot change hierarchy selector selection with " 
+				+ hierarchy + " since it is not contained in the available hierarchies");
+			return;
+		}
+		
 		hierarchyBtn.setSelection( hierarchy.isHierarchy() );
 		facetBtn.setSelection( hierarchy.isFacet() );
 		

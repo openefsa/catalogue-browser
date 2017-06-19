@@ -143,7 +143,7 @@ public class FrameTermFields {
 			extName.setText( term.getName() );
 		
 		if ( shortName != null )
-			shortName.setText( term.getShortName() );
+			shortName.setText( term.getShortName( false ) );
 		
 		if ( scopenotes != null )
 			scopenotes.setTerm( term );
@@ -656,12 +656,12 @@ public class FrameTermFields {
 							Messages.getString("TermProperties.InputErrorMessage") );
 
 					// restore previous value
-					termShortName.setText( term.getShortName() );
+					termShortName.setText( term.getShortName( false ) );
 					return;
 				} 
 
 				// return if the name does not change at all
-				if ( termShortName.getText().equals( term.getShortName() ) )
+				if ( termShortName.getText().equals( term.getShortName( false ) ) )
 					return;
 
 
@@ -678,7 +678,7 @@ public class FrameTermFields {
 							Messages.getString("TermProperties.InputErrorTitle"), 
 							Messages.getString( "TermProperties.InputErrorMessage2") );
 
-					termShortName.setText( term.getShortName() );
+					termShortName.setText( term.getShortName( false ) );
 
 					return;
 

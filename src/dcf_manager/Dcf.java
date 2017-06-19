@@ -29,6 +29,7 @@ import dcf_webservice.Publish.PublishLevel;
 import dcf_webservice.Reserve;
 import dcf_webservice.ReserveLevel;
 import dcf_webservice.UploadCatalogueFile;
+import dcf_webservice.UploadData;
 import ui_progress_bar.FormProgressBar;
 import xml_reader.PropertiesReader;
 
@@ -39,6 +40,9 @@ import xml_reader.PropertiesReader;
  *
  */
 public class Dcf {
+	
+	// get the dcf type and store it for the whole program
+	public static final DcfType dcfType = PropertiesReader.getDcfType();
 	
 	/**
 	 * Enumerator to identify the dcf
@@ -65,27 +69,6 @@ public class Dcf {
 	 *  false otherwise
 	 */
 	private static boolean gettingUpdates = false;
-	
-	private DcfType type;
-	
-
-	/**
-	 * Initialize the dcf. The {@link #Dcf(DcfType)} is
-	 * defined in the configuration file.
-	 */
-	public Dcf() {
-		this.type = PropertiesReader.getDcfType();
-	}
-	
-	/**
-	 * Inizialize the Dcf.
-	 * @param type set to {@link DcfType#PRODUCTION}
-	 * to operate on production dcf, otherwise set
-	 * to {@link DcfType#TEST} to operate on dcf test
-	 */
-	public Dcf( DcfType type ) {
-		this.type = type;
-	}
 
 	/**
 	 * Get all the catalogues which can 
@@ -254,7 +237,7 @@ public class Dcf {
 	 * @return true if the dcf is responding correctly
 	 */
 	public boolean ping() {
-		Ping ping = new Ping( type );
+		Ping ping = new Ping( dcfType );
 		return ping.ping();
 	}
 	
@@ -300,7 +283,7 @@ public class Dcf {
 		ArrayList<Catalogue> list = new ArrayList<>();
 		
 		try {
-			list = new GetCataloguesList( type ).getCataloguesList();
+			list = new GetCataloguesList( dcfType ).getCataloguesList();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -319,7 +302,7 @@ public class Dcf {
 	public boolean exportCatalogue( Catalogue catalogue, String filename ) throws SOAPException {
 		
 		// export the catalogue and save its attachment into an xml file
-		ExportCatalogue export = new ExportCatalogue ( type, catalogue, filename );
+		ExportCatalogue export = new ExportCatalogue ( dcfType, catalogue, filename );
 		return export.exportCatalogue();
 	}
 	
@@ -332,7 +315,7 @@ public class Dcf {
 	public File exportLog ( String logCode ) {
 		
 		// ask for the log to the dcf
-		ExportCatalogueFile export = new ExportCatalogueFile( type );
+		ExportCatalogueFile export = new ExportCatalogueFile( dcfType );
 
 		// write the log document in xml format
 		return export.exportEfficientLog( logCode, logCode + ".xml" );
@@ -353,7 +336,7 @@ public class Dcf {
 			String filename ) throws IOException {
 		
 		// ask for the log to the dcf
-		ExportCatalogueFile export = new ExportCatalogueFile( type );
+		ExportCatalogueFile export = new ExportCatalogueFile( dcfType );
 
 		// get the catalogue xml as input stream
 		export.exportLastInternalVersion( catalogueCode, filename );
@@ -373,11 +356,14 @@ public class Dcf {
 		// initialize the required service
 		switch ( actionType ) {
 		case RESERVE:
-			req = new Reserve( type );
+			req = new Reserve( dcfType );
 			break;
 		case PUBLISH:
-			req = new Publish( type );
+			req = new Publish( dcfType );
 			break;
+		case UPLOAD_DATA:
+			req = new UploadData( dcfType );
+			break;	
 		default:
 			break;
 		}
@@ -426,11 +412,26 @@ public class Dcf {
 	}
 	
 	/**
-	 * Start a single pending reserve process
-	 * @param pr the pending reserve we want to start (i.e. we want
-	 * to check if the dcf finished the reserve operation related
-	 * to the pending reserve
-	 * @param listener called to listen reserve events
+	 * Start an upload data operation in background.
+	 * @param catalogue the catalogue we want to publish
+	 * @param listener listener called when publish events occur
+	 * see {@link PendingActionListener} to check which are the events
+	 */
+	public void uploadDataBG ( Catalogue catalogue, 
+			PendingActionListener listener ) {
+		
+		catalogue.setRequestingAction( true );
+		
+		BackgroundAction upload = new BackgroundAction( catalogue );
+		
+		upload.setListener( listener );
+		upload.start();
+	}
+	
+	/**
+	 * Start a single pending action process
+	 * @param pa the pending action we want to start
+	 * @param listener called to listen pending action events
 	 */
 	public void startPendingAction ( PendingAction pa, PendingActionListener listener ) {
 
@@ -465,6 +466,12 @@ public class Dcf {
 			// skip all the pending reserves which
 			// were not made by the current user
 			if ( !pa.madeBy( User.getInstance() ) )
+				continue;
+			
+			// skip all the pending actions which were
+			// made on a different DCF (e.g. actions in
+			// test will not start if we connect to dcf production)
+			if ( dcfType != pa.getDcfType() )
 				continue;
 			
 			startPendingAction ( pa, listener );

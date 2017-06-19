@@ -57,3 +57,14 @@ In this way we are hiding the master hierarchy of the MTX catalogue with the Rep
 4) Term short name not present
 
 If the term short name is not present, then the extended name is shown instead.
+
+
+5) DefaultProperties.xml
+
+This xml file defines some properties which can be changed without recompiling the tool. In particular:
+1- Application.Name defines the name which will be displayed and considered 
+   as the name of the tool
+2- Application.Version defines the current version of the catalogue 
+   (it will be displayed after the Application.Name)
+3- Dcf.EnableTest defines if the tool should connect to the dcf test or to dcf production. Set YES to use the
+   dcf test. Other values will be ignored and the dcf production will be used.

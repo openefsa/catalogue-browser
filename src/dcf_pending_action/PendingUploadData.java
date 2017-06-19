@@ -2,15 +2,16 @@ package dcf_pending_action;
 
 import catalogue.Catalogue;
 import dcf_log.DcfLog;
+import dcf_manager.Dcf.DcfType;
 import dcf_webservice.DcfResponse;
 
 public class PendingUploadData extends PendingAction {
 
-	public static final String UPLOAD_DATA_TYPE = "UPLOAD_DATA";
+	public static final String TYPE = "UPLOAD_DATA";
 	
 	public PendingUploadData(Catalogue catalogue, String logCode, 
-			String username, Priority priority) {
-		super(catalogue, logCode, username, "", priority);
+			String username, Priority priority, DcfType dcfType) {
+		super(catalogue, logCode, username, "", priority, dcfType);
 	}
 
 	/**
@@ -21,11 +22,11 @@ public class PendingUploadData extends PendingAction {
 	 * @return the pending upload data object
 	 */
 	public static PendingUploadData addPendingUploadData ( String logCode, 
-			Catalogue catalogue, String username ) {
+			Catalogue catalogue, String username, DcfType dcfType ) {
 		
 		// we create a new pending publish with FAST priority
 		PendingUploadData pud = new PendingUploadData( catalogue, logCode, 
-				username, Priority.HIGH );
+				username, Priority.HIGH, dcfType );
 		
 		// create a pending publish object in order to
 		// retry the log retrieval (also if the application
@@ -40,7 +41,7 @@ public class PendingUploadData extends PendingAction {
 	
 	@Override
 	public String getType() {
-		return UPLOAD_DATA_TYPE;
+		return TYPE;
 	}
 
 	@Override

@@ -145,7 +145,8 @@ create table APP.PENDING_ACTION (
 	ACTION_NOTE varchar(1000) not null,    -- the action note if needed
 	ACTION_PRIORITY varchar(50) not null,  -- fast or slow, how fast we should complete the reserve
 	ACTION_TYPE varchar(100) not null,     -- the action type
-	ACTION_DATA varchar(50) not null       -- data, as the reserve level (none, minor, major)
+	ACTION_DATA varchar(50) not null,       -- data, as the reserve level (none, minor, major)
+	ACTION_DCF_TYPE varchar(100) not null   -- on which type of dcf the action was created (test or production)
 );
 
 -- add the unique contraint to the log id field

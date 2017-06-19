@@ -12,6 +12,7 @@ import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_browser_dao.CatalogueEntityDAO;
 import catalogue_browser_dao.DatabaseManager;
+import dcf_manager.Dcf.DcfType;
 import dcf_pending_action.PendingAction.Priority;
 import dcf_webservice.Publish.PublishLevel;
 import dcf_webservice.ReserveLevel;
@@ -29,7 +30,7 @@ public class PendingActionDAO implements CatalogueEntityDAO<PendingAction> {
 		int id = -1;
 		String query = "insert into APP.PENDING_ACTION (ACTION_LOG_CODE, "
 				+ "ACTION_DATA, CAT_ID, ACTION_USERNAME, ACTION_NOTE, "
-				+ "ACTION_PRIORITY, ACTION_TYPE ) values (?,?,?,?,?,?,?)";
+				+ "ACTION_PRIORITY, ACTION_TYPE, ACTION_DCF_TYPE ) values (?,?,?,?,?,?,?,?)";
 		
 		try {
 			
@@ -46,6 +47,7 @@ public class PendingActionDAO implements CatalogueEntityDAO<PendingAction> {
 			stmt.setString( 5, object.getNote() );
 			stmt.setString( 6, object.getPriority().toString() );
 			stmt.setString( 7, object.getType() );
+			stmt.setString( 8, object.getDcfType().toString() );
 			
 			// insert the pending reserve object
 			stmt.executeUpdate();
@@ -148,6 +150,8 @@ public class PendingActionDAO implements CatalogueEntityDAO<PendingAction> {
 		
 		String type = rs.getString( "ACTION_TYPE" );
 		
+		DcfType dcfType = DcfType.valueOf( rs.getString( "ACTION_DCF_TYPE" ) );
+		
 		// get the catalogue related to the code and version
 		CatalogueDAO catDao = new CatalogueDAO();
 		Catalogue catalogue = catDao.getById( catId );
@@ -159,16 +163,24 @@ public class PendingActionDAO implements CatalogueEntityDAO<PendingAction> {
 			
 			ReserveLevel rLevel = ReserveLevel.valueOf( rs.getString( "ACTION_DATA" ) );
 			
-			pa = new PendingReserve( catalogue, logCode, username, note, rLevel, priority );
+			pa = new PendingReserve( catalogue, logCode, 
+					username, note, rLevel, priority, dcfType );
 			break;
 			
 		case PendingPublish.TYPE:
 			
 			PublishLevel pLevel = PublishLevel.valueOf( rs.getString( "ACTION_DATA" ) );
 			
-			pa = new PendingPublish( catalogue, logCode, username, priority, pLevel );
+			pa = new PendingPublish( catalogue, logCode, 
+					username, priority, pLevel, dcfType );
 			break;
+		
+		case PendingUploadData.TYPE:
 			
+			pa = new PendingUploadData( catalogue, logCode, 
+					username, priority, dcfType );
+			
+			break;
 		default:
 			break;
 		}
@@ -214,15 +226,18 @@ public class PendingActionDAO implements CatalogueEntityDAO<PendingAction> {
 	/**
 	 * Get a pending reserve by the related catalogue. We can have
 	 * only one catalogue related to the pending reserves, thus we
-	 * can use this method as a bijective function
+	 * can use this method as a bijective function. Note that we have
+	 * to specify the dcf type since some actions can be performed
+	 * in test, while others in production.
 	 * @param catalogue
+	 * @param type Test or Production
 	 * @return
 	 */
-	public Collection<PendingAction> getByCatalogue ( Catalogue catalogue ) {
+	public Collection<PendingAction> getByCatalogue ( Catalogue catalogue, DcfType type ) {
 		
 		Collection<PendingAction> prs = new ArrayList<>();
 		
-		String query = "select * from APP.PENDING_ACTION where CAT_ID = ?";
+		String query = "select * from APP.PENDING_ACTION where CAT_ID = ? and ACTION_DCF_TYPE = ?";
 		
 		try {
 			
@@ -231,6 +246,7 @@ public class PendingActionDAO implements CatalogueEntityDAO<PendingAction> {
 			PreparedStatement stmt = con.prepareStatement( query );
 			
 			stmt.setInt( 1, catalogue.getId() );
+			stmt.setString( 2, type.toString() );
 			
 			ResultSet rs = stmt.executeQuery();
 			

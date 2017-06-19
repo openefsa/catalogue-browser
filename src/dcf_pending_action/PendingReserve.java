@@ -6,6 +6,7 @@ import org.eclipse.swt.widgets.Listener;
 import catalogue.Catalogue;
 import catalogue_object.Status;
 import dcf_log.DcfLog;
+import dcf_manager.Dcf.DcfType;
 import dcf_webservice.DcfResponse;
 import dcf_webservice.ReserveLevel;
 
@@ -41,9 +42,9 @@ public class PendingReserve extends PendingAction {
 	 * @param priority the priority of the pending reserve
 	 */
 	public PendingReserve( Catalogue catalogue, String logCode, String username, String note, 
-			ReserveLevel reserveLevel, Priority priority ) {
+			ReserveLevel reserveLevel, Priority priority, DcfType dcfType ) {
 		
-		super( catalogue, logCode, username, note, priority );
+		super( catalogue, logCode, username, note, priority, dcfType );
 		
 		this.reserveLevel = reserveLevel;
 		
@@ -64,11 +65,11 @@ public class PendingReserve extends PendingAction {
 	 * @return the new pending reserve
 	 */
 	public static PendingReserve addPendingReserve ( Catalogue catalogue, String logCode, 
-			String username, String note, ReserveLevel level ) {
+			String username, String note, ReserveLevel level, DcfType dcfType ) {
 		
 		// we create a new pending reserve with FAST priority
 		PendingReserve pr = new PendingReserve( catalogue, logCode, 
-				username, note, level, Priority.HIGH );
+				username, note, level, Priority.HIGH, dcfType );
 		
 		// create a pending reserve object in order to
 		// retry the log retrieval (also if the application

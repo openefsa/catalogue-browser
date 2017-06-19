@@ -14,6 +14,7 @@ import catalogue.Catalogue;
 import dcf_log.DcfLog;
 import dcf_log.DcfLogParser;
 import dcf_log.LogDownloader;
+import dcf_manager.Dcf.DcfType;
 import dcf_user.User;
 import dcf_webservice.DcfResponse;
 import dcf_webservice.Publish.PublishLevel;
@@ -62,6 +63,9 @@ public abstract class PendingAction {
 
 	// the priority of the pending reserve
 	private Priority priority;
+	
+	// on which dcf we make the action
+	private DcfType dcfType;
 
 	// the status of the pending reserve
 	private PendingReserveStatus status;
@@ -82,12 +86,13 @@ public abstract class PendingAction {
 	 * @param priority the action priority
 	 */
 	public PendingAction( Catalogue catalogue, String logCode, 
-			String username, String note, Priority priority ) {
+			String username, String note, Priority priority, DcfType dcfType ) {
 		this.catalogue = catalogue;
 		this.logCode = logCode;
 		this.username = username;
 		this.note = note;
 		this.priority = priority;
+		this.dcfType = dcfType;
 		this.data = "";
 	}
 
@@ -352,6 +357,15 @@ public abstract class PendingAction {
 	 */
 	public PendingReserveStatus getStatus() {
 		return status;
+	}
+	
+	/**
+	 * Get on which dcf we have made the
+	 * request for this pending action.
+	 * @return
+	 */
+	public DcfType getDcfType() {
+		return dcfType;
 	}
 	
 	/**

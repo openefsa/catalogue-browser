@@ -81,7 +81,8 @@ public class Publish extends UploadCatalogueFile {
 		// create a pending publish object
 		
 		PendingPublish pp = PendingPublish.addPendingPublish(
-				logCode, level, catalogue, User.getInstance().getUsername() );
+				logCode, level, catalogue, 
+				User.getInstance().getUsername(), getType() );
 		
 		return pp;
 	}

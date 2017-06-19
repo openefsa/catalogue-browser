@@ -1187,7 +1187,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	public boolean isRequestingAction() {
 		
 		PendingActionDAO prDao = new PendingActionDAO();
-		Collection<PendingAction> pas = prDao.getByCatalogue ( this );
+		Collection<PendingAction> pas = prDao.getByCatalogue ( this, Dcf.dcfType );
 		return !pas.isEmpty() || requestingAction;
 	}
 	

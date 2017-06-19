@@ -28,7 +28,8 @@ public class BackgroundAction extends Thread {
 	
 	public enum Type {
 		RESERVE,
-		PUBLISH
+		PUBLISH,
+		UPLOAD_DATA
 	}
 	
 	/**
@@ -57,6 +58,15 @@ public class BackgroundAction extends Thread {
 		this.catalogue = catalogue;
 		this.pLevel = level;
 		this.type = Type.PUBLISH;
+	}
+	
+	/**
+	 * Initialize an upload data action
+	 * @param catalogue the catalogue we want to upload
+	 */
+	public BackgroundAction( Catalogue catalogue ) {
+		this.catalogue = catalogue;
+		this.type = Type.UPLOAD_DATA;
 	}
 	
 	/**

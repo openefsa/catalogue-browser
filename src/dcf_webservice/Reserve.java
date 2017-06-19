@@ -84,7 +84,7 @@ public class Reserve extends UploadCatalogueFile {
 		// add a pending reserve object to the db
 		// to save the request
 		PendingReserve pr = PendingReserve.addPendingReserve( catalogue,
-				logCode, username, reserveDescription, reserveLevel );
+				logCode, username, reserveDescription, reserveLevel, getType() );
 
 		return pr;
 	}

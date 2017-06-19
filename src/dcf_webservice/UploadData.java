@@ -63,7 +63,7 @@ public class UploadData extends UploadCatalogueFile {
 		
 		// create a pending upload data object
 		PendingUploadData pud = PendingUploadData.addPendingUploadData ( logCode, catalogue, 
-				User.getInstance().getUsername() );
+				User.getInstance().getUsername(), getType() );
 		
 		// return it
 		return pud;

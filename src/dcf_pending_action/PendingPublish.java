@@ -6,6 +6,7 @@ import org.eclipse.swt.widgets.Listener;
 import catalogue.Catalogue;
 import catalogue_object.Status;
 import dcf_log.DcfLog;
+import dcf_manager.Dcf.DcfType;
 import dcf_webservice.DcfResponse;
 import dcf_webservice.Publish.PublishLevel;
 
@@ -20,9 +21,9 @@ public class PendingPublish extends PendingAction {
 	private PublishLevel publishLevel;
 	
 	public PendingPublish( Catalogue catalogue, String logCode, String username, 
-			Priority priority, PublishLevel publishLevel ) {
+			Priority priority, PublishLevel publishLevel, DcfType dcfType ) {
 		
-		super(catalogue, logCode, username, "", priority);
+		super(catalogue, logCode, username, "", priority, dcfType);
 		
 		this.publishLevel = publishLevel;
 		setData( publishLevel.toString() );
@@ -38,11 +39,12 @@ public class PendingPublish extends PendingAction {
 	 * @return
 	 */
 	public static PendingPublish addPendingPublish ( String logCode, 
-			PublishLevel level, Catalogue catalogue, String username ) {
+			PublishLevel level, Catalogue catalogue, String username, 
+			DcfType dcfType ) {
 		
 		// we create a new pending publish with FAST priority
 		PendingPublish pr = new PendingPublish( catalogue, logCode, 
-				username, Priority.HIGH, level );
+				username, Priority.HIGH, level, dcfType );
 		
 		// create a pending publish object in order to
 		// retry the log retrieval (also if the application

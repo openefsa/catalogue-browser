@@ -196,7 +196,7 @@ public class LabelProviderTerm extends LabelProvider implements IFontProvider {
 				flag = flag + Messages.getString("LabelProviderTerm.NotReportableFlag");
 
 			// term name + term flag
-			text = t.getShortName() + " " + flag;
+			text = t.getShortName( true ) + " " + flag;
 			
 		} 
 		else if ( term instanceof Nameable ) {
