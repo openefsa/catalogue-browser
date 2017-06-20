@@ -1,5 +1,8 @@
 package ui_main_panel;
 
+import java.io.File;
+import java.io.IOException;
+
 import javax.xml.soap.SOAPException;
 
 import org.eclipse.swt.widgets.Event;
@@ -150,7 +153,21 @@ public class DownloadCatalogueFrom {
 			importCat.setProgressBar( progressBar );
 		
 		// set the listener
-		importCat.addDoneListener( doneListener );
+		importCat.addDoneListener( new Listener() {
+			
+			@Override
+			public void handleEvent(Event arg0) {
+
+				try {
+					GlobalUtil.deleteFileCascade( new File( catalogueXmlFilename ) );
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+				if ( doneListener != null )
+					doneListener.handleEvent( arg0 );
+			}
+		} );
 		
 		importCat.start();
 		

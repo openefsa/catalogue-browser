@@ -1,5 +1,7 @@
 package dcf_user;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.xml.soap.SOAPException;
@@ -16,6 +18,7 @@ import catalogue_object.TermAttribute;
 import dcf_manager.Dcf;
 import import_catalogue.ImportCatalogueThread;
 import import_catalogue.ImportCatalogueThread.ImportFileFormat;
+import utilities.GlobalUtil;
 
 /**
  * Class to ask to the DCF the users access level. In particular:
@@ -62,7 +65,7 @@ public class UserProfileChecker extends Thread {
 
 		System.out.println( "Checking user access level..." );
 
-		String filename = "catUsersCatalogue.xml";
+		final String filename = "catUsersCatalogue.xml";
 
 		// ask for exporting catalogue to the dcf
 		// download the cat users catalogue to check 
@@ -117,6 +120,12 @@ public class UserProfileChecker extends Thread {
 				// set the current user as catalogue manager
 				user.setUserLevel( UserAccessLevel.CATALOGUE_MANAGER );
 
+				try {
+					GlobalUtil.deleteFileCascade( new File( filename ) );
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
 				if ( doneListener != null )
 					doneListener.handleEvent( arg0 );
 			}

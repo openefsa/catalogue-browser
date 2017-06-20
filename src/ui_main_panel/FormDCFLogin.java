@@ -5,13 +5,18 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import dcf_manager.Dcf;
+import dcf_manager.Dcf.DcfType;
 import dcf_user.User;
 import messages.Messages;
 import session_manager.RestoreableWindow;
@@ -74,6 +79,21 @@ public class FormDCFLogin implements RestoreableWindow {
 		gridData.widthHint = 200;
 		
 		dialog.setLayoutData( gridData );
+		
+		Label dcfTypeLabel = new Label ( dialog, SWT.CENTER );
+		
+		String dcfTypeText = Dcf.dcfType == DcfType.PRODUCTION ?
+				Messages.getString( "BrowserMenu.DCFLoginProduction" ) :
+					Messages.getString( "BrowserMenu.DCFLoginTest" );
+		dcfTypeLabel.setText( dcfTypeText );
+		
+		// set the label font to italic and bold
+		FontData fontData = Display.getCurrent().getSystemFont().getFontData()[0];
+
+		Font font = new Font( Display.getCurrent(), 
+				new FontData( fontData.getName(), fontData.getHeight() + 3, SWT.NONE ) );
+
+		dcfTypeLabel.setFont ( font );
 		
 		// add username password text box
 		addCredential ( dialog );
