@@ -1,6 +1,8 @@
 package open_xml_reader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -13,6 +15,12 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
+
+import catalogue.Catalogue;
+import catalogue_browser_dao.CatalogueDAO;
+import catalogue_browser_dao.DatabaseManager;
+import dcf_manager.Dcf.DcfType;
+import import_catalogue.CatalogueWorkbookImporter;
 
 /**
  * This class is used to read the sheets data of
@@ -155,22 +163,23 @@ public class WorkbookReader {
 			e.printStackTrace();
 		}
 	}
-	/*public static void main ( String[] args ) throws IOException, XMLStreamException, OpenXML4JException, SAXException, SQLException {
+	public static void main ( String[] args ) throws IOException, XMLStreamException, 
+	OpenXML4JException, SAXException, SQLException {
 		
 		DatabaseManager.startMainDB();
 		
 		CatalogueDAO catDao = new CatalogueDAO();
-		ArrayList<Catalogue> cats = catDao.getLocalCatalogues();
+		ArrayList<Catalogue> cats = catDao.getLocalCatalogues( DcfType.LOCAL );
 		Catalogue catalogue = null;
 		for ( Catalogue cat : cats ) {
-			if ( cat.getCode().equals( "importprova" ) )
+			if ( cat.getCode().equals( "MTX" ) )
 				catalogue = cat;
 		}
 		
 		CatalogueWorkbookImporter importer = new CatalogueWorkbookImporter();
 		importer.setOpenedCatalogue( catalogue );
 		importer.importWorkbook( 
-				"C:\\Users\\avonva\\Desktop\\CatalogueBrowser\\CatalogueBrowser\\Database\\LocalCatalogues\\CAT_importprova_DB\\importprova", 
-				"C:\\Users\\avonva\\Desktop\\Catalogues\\MTX_8.7_vernazza_final-3.xlsx");
-	}*/
+				"C:\\Users\\avonva\\Desktop\\CatalogueBrowser\\CatalogueBrowser\\Database\\LocalCatalogues\\CAT_MTX_DB\\MTX", 
+				"C:\\Users\\avonva\\Desktop\\MTX_8.7.xlsx");
+	}
 }

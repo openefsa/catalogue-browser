@@ -34,7 +34,7 @@ import org.apache.poi.ss.usermodel.DateUtil;
  * @author thomm
  * 
  */
-public class ResultDataSet implements ResultSet {
+public class ResultDataSet implements ResultSet, Cloneable {
 
 	HashMap< String, String > headers;
 	ArrayList< HashMap< String, String >> dataRecords;
@@ -45,6 +45,38 @@ public class ResultDataSet implements ResultSet {
 		headers = new HashMap<>();
 		dataRecords = new ArrayList< HashMap< String, String >>();
 		currentDataRow = new HashMap< String, String >();
+	}
+	
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+
+		ResultDataSet cloned = new ResultDataSet();
+		
+		// copy headers
+		cloned.setHeaders ( headers );
+		
+		// copy data
+		for ( HashMap<String,String> row : dataRecords ) {
+			
+			HashMap<String,String> newRow = new HashMap<>();
+			
+			for ( String key : row.keySet() ) {
+				newRow.put( key, row.get(key) );
+			}
+			cloned.addRow ( newRow );
+		}
+		
+		cloned.initScan();
+
+		return cloned;
+	}
+	
+	private void setHeaders ( HashMap< String, String > headers ) {
+		this.headers = headers;
+	}
+	
+	private void addRow ( HashMap< String, String > row ) {
+		dataRecords.add( row );
 	}
 	
 	/**
@@ -91,6 +123,32 @@ public class ResultDataSet implements ResultSet {
 	}
 	
 	/**
+	 * Print the first {@code numRows} of rows
+	 * of the dataset
+	 * @param numRows
+	 */
+	@Deprecated
+	public void printRows ( int numRows ) {
+		
+		int counter = 0;
+		
+		String printHeaders = "";
+		for ( String value : headers.values() )
+			printHeaders = printHeaders + "h" + value + ";";
+		
+		System.out.println( printHeaders );
+		
+		for ( HashMap<String,String> map : dataRecords ) {
+			System.out.println( map );
+			counter++;
+
+			if ( counter >= numRows )
+				break;
+
+		}
+	}
+	
+	/**
 	 * Is the result set empty?
 	 * @return
 	 */
@@ -122,7 +180,7 @@ public class ResultDataSet implements ResultSet {
 	 * 
 	 * @return
 	 */
-	private boolean hasNext () {
+	public boolean hasNext () {
 		return cursorPosition < dataRecords.size() - 1;
 	}
 	

@@ -598,6 +598,10 @@ public class MainPanel implements Observer, RestoreableWindow {
 				
 				case ToolsMenu.IMPORT_CAT_MI:
 					
+					// remove all the search table results
+					// since we change the content of the catalogue
+					searchPanel.removeAll();
+					
 					// get the current catalogue
 					Catalogue catalogue = GlobalManager.getInstance()
 							.getCurrentCatalogue();

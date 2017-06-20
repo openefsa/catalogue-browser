@@ -93,10 +93,10 @@ public class CatalogueWorkbookImporter {
 		
 		// import attributes
 		importAttributeSheet ( workbookReader, catalogue );
-	
+
 		// import terms
 		importTermSheet ( workbookReader, catalogue );
-		
+
 		// import the release note sheet
 		importReleaseNotes ( workbookReader, catalogue );
 
@@ -213,6 +213,53 @@ public class CatalogueWorkbookImporter {
 		hierImp.importData( sheetData );
 	}
 	
+	private void importQuickly ( WorkbookReader workbookReader, 
+			SheetImporter<?> importer ) throws XMLStreamException, 
+			CloneNotSupportedException {
+		
+		if ( !workbookReader.hasNext() )
+			return;
+		
+		ResultDataSet fetched = workbookReader.next();
+
+		// read the first batch
+		while ( fetched != null ) {
+			
+			// copy the data set to use it in the import
+			ResultDataSet current = (ResultDataSet) fetched.clone();
+			
+			// meanwhile read the second batch
+			// note that this will override the fetched
+			// result data set since we are pointing to
+			// that result data set
+			SheetReaderThread t = new SheetReaderThread( workbookReader );
+			t.start();
+			
+			//current.printRows( 5) ;
+			// import the first batch of data
+			// while reading the second
+			importer.importData( current );
+
+			// wait that the read thread is finished
+			try {
+				
+				t.join();
+				
+				// close used result set
+				current.close();
+				
+				if ( t.getData() == null ) {
+					if ( fetched != null ) {
+						fetched.close();
+						fetched = null;
+					}
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	/**
 	 * Import the entire term sheet into the db
 	 * @param workbookReader
@@ -238,10 +285,17 @@ public class CatalogueWorkbookImporter {
 				TermSheetImporter( catalogue );
 		
 		// read the first batch
-		while ( workbookReader.hasNext() ) {
+		/*while ( workbookReader.hasNext() ) {
 			ResultDataSet data = workbookReader.next();
 			termImp.importData( data );
+		}*/
+		
+		try {
+			importQuickly ( workbookReader, termImp );
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
 		}
+
 
 		System.out.println( "Importing term attributes" );
 		updateProgressBar( 25, Messages.getString("ImportExcelXLSX.ImportTermAttrLabel") );
@@ -255,11 +309,17 @@ public class CatalogueWorkbookImporter {
 		workbookReader.processSheetName( Headers.TERM_SHEET_NAME );
 		workbookReader.setBatchSize( batchSize );
 
+		try {
+			importQuickly ( workbookReader, taImp );
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		
 		// read the first batch
-		while ( workbookReader.hasNext() ) {
+		/*while ( workbookReader.hasNext() ) {
 			ResultDataSet data = workbookReader.next();
 			taImp.importData( data );
-		}
+		}*/
 		
 		System.out.println( "Importing parent terms" );
 		updateProgressBar( 25, Messages.getString("ImportExcelXLSX.ImportTermParents") );
@@ -274,11 +334,17 @@ public class CatalogueWorkbookImporter {
 		workbookReader.processSheetName( Headers.TERM_SHEET_NAME );
 		workbookReader.setBatchSize( batchSize );
 		
+		try {
+			importQuickly ( workbookReader, parentImp );
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		
 		// read the first batch
-		while ( workbookReader.hasNext() ) {
+		/*while ( workbookReader.hasNext() ) {
 			ResultDataSet data = workbookReader.next();
 			parentImp.importData( data );
-		}
+		}*/
 	}
 	
 	/**
