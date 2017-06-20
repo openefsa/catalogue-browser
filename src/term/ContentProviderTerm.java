@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
+import catalogue_object.AvailableHierarchiesTerm;
 import catalogue_object.Hierarchy;
 import catalogue_object.Nameable;
 import catalogue_object.Term;
@@ -18,6 +19,9 @@ public class ContentProviderTerm implements ITreeContentProvider {
 
 	// current hierarchy
 	private Hierarchy hierarchy;
+	
+	// root of the tree
+	private Object root;
 
 	// applicability flags of the tree, which terms should be visualized?
 	private boolean hideDeprecated = false;
@@ -80,13 +84,21 @@ public class ContentProviderTerm implements ITreeContentProvider {
 
 		// if we have a hierarchy we simply get all its terms
 		// in the first level
-		else if ( arg0 instanceof Hierarchy ) {
+		// do not show hierarchies children if we are showing available hierarchies term
+		else if ( arg0 instanceof Hierarchy && !( root instanceof AvailableHierarchiesTerm ) ) {
 
 			// get the terms which are at the first level in the hierarchy
 			ArrayList<Term> children = 
 					((Hierarchy) arg0).getFirstLevelNodes( hideDeprecated, hideNotUse );
 
 			elem.addAll( children );
+		}
+		
+		else if ( arg0 instanceof AvailableHierarchiesTerm ) {
+			
+			// show only the hierarchies in which the term is not present
+			Term term = ((AvailableHierarchiesTerm) arg0).getTerm();
+			elem.addAll( term.getNewHierarchies() );
 		}
 		
 		return elem.toArray();
@@ -100,6 +112,9 @@ public class ContentProviderTerm implements ITreeContentProvider {
 	 * foodexDAO.getFirstLevelNodes() method.
 	 */
 	public Object[] getElements ( Object arg0 ) {
+		
+		this.root = arg0;
+		
 		return getChildren( arg0 );
 	}
 
@@ -132,7 +147,8 @@ public class ContentProviderTerm implements ITreeContentProvider {
 
 		boolean hasChildren = false;
 
-		if ( arg0 instanceof Hierarchy ){
+		if ( arg0 instanceof Hierarchy && 
+				!( root instanceof AvailableHierarchiesTerm ) ){
 			hasChildren = !( (Hierarchy) arg0).getFirstLevelNodes( 
 					hasChildren, hideNotUse ).isEmpty();
 		}

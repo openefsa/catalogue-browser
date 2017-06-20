@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import catalogue.Catalogue;
 import catalogue_browser_dao.ParentTermDAO;
 import catalogue_object.Applicability;
+import catalogue_object.AvailableHierarchiesTerm;
 import catalogue_object.Hierarchy;
 import catalogue_object.Nameable;
 import catalogue_object.Term;
@@ -298,8 +299,11 @@ public class TableApplicability {
 
 		new MenuItem( applicabilityOperationMenu , SWT.SEPARATOR );
 
+		final MenuItem addHier = addHierarchyApplMI ( applicabilityOperationMenu );
+		final MenuItem addParent = addParentApplMI ( applicabilityOperationMenu );
+		
 		// add add item
-		final MenuItem addMI = addAddApplicabilityMI ( applicabilityOperationMenu );
+		//final MenuItem addMI = addAddApplicabilityMI ( applicabilityOperationMenu );
 
 		// add edit item
 		final MenuItem editApplicability = addEditApplicabilityMI ( applicabilityOperationMenu );
@@ -317,14 +321,15 @@ public class TableApplicability {
 				
 				User user = User.getInstance();
 				
+				boolean editable = user.canEdit( term.getCatalogue() );
 				// can modify only if editing and if we have selected some applicabilities
-				boolean enabled = !applicabilityTable.getSelection().isEmpty() 
-						&& user.canEdit( term.getCatalogue() );
+				boolean selected = !applicabilityTable.getSelection().isEmpty();
 				
-				openMI.setEnabled( enabled );
-				addMI.setEnabled( enabled );
-				editApplicability.setEnabled( enabled );
-				removeMI.setEnabled( enabled );
+				openMI.setEnabled( selected );
+				addHier.setEnabled( editable );
+				addParent.setEnabled( editable );
+				editApplicability.setEnabled( selected && editable );
+				removeMI.setEnabled( selected && editable );
 				
 				if ( applicabilityTable.getSelection().isEmpty() )
 					return;
@@ -338,7 +343,7 @@ public class TableApplicability {
 				boolean canRemove = !appl.getHierarchy().isMaster() &&
 						term.hasChildren( appl.getHierarchy(), false, false );
 
-				removeMI.setEnabled( enabled && canRemove );
+				removeMI.setEnabled( selected && editable && canRemove );
 				
 			}
 		});
@@ -439,34 +444,102 @@ public class TableApplicability {
 		return removeApplicability;
 	}
 	
-	/*
-	 * Add a add applicability menu item into the table
+	/**
+	 * 
+	 * @param menu
+	 * @return
 	 */
-	private MenuItem addAddApplicabilityMI ( Menu menu ) {
+	private MenuItem addParentApplMI ( Menu menu ) {
 		
-		MenuItem addApplicability = new MenuItem( menu , SWT.PUSH );
-		addApplicability.setText( Messages.getString("TableApplicability.AddCmd") );
+		MenuItem addParentAppl = new MenuItem( menu , SWT.PUSH );
+		addParentAppl.setText( Messages.getString("TableApplicability.AddParentCmd") );
+		
+		// select the terms in the master hierarchy
+		addApplSelectionListener ( addParentAppl, term.getCatalogue().getMasterHierarchy() );
+		
+		return addParentAppl;
+	}
+	
+	/**
+	 * 
+	 * @param menu
+	 * @return
+	 */
+	private MenuItem addHierarchyApplMI ( Menu menu ) {
+		
+		MenuItem addHierarchyAppl = new MenuItem( menu , SWT.PUSH );
+		addHierarchyAppl.setText( Messages.getString("TableApplicability.AddHierarchyCmd") );
+		
+		// select the hierarchies in the available ones
+		// related to the term selected in the constructor
+		addApplSelectionListener ( addHierarchyAppl, 
+				new AvailableHierarchiesTerm( term ) );
+		
+		return addHierarchyAppl;
+	}
+	
+	/**
+	 * Ask to the user to select a term from the list
+	 * @param root the root of the list, set an hierarchies to see
+	 * its terms, or AvailableHierarchiesTerm to see the hierarchies
+	 * in which the term is not present
+	 * @return
+	 */
+	private Nameable selectTerm ( Object root ) {
+		
+		FormSelectTerm f = new FormSelectTerm( parent.getShell(), 
+				Messages.getString("TableApplicability.SelectTermWindowTitle"),
+				term.getCatalogue(), false );
+		
+		// use the master hierarchy to choose the parent term
+		// then you can select all the other hierarchies with the
+		// guided approach
+		if ( root instanceof Hierarchy )
+			f.setRootTerm( (Hierarchy) root );
+		else if ( root instanceof AvailableHierarchiesTerm )
+			f.setRootTerm( (AvailableHierarchiesTerm) root );
+		else {
+			System.err.println( "Applicability: Cannot set FormSelectTerm.setRootTerm "
+					+ "with an object which is not Hierarchy or "
+					+ "AvailableHierarchiesTerm. Object:" + root );
+			return null;
+		}
+		
+		f.display();
+		
+		// return if nothing was selected
+		if ( f.getSelectedTerms() == null || f.getSelectedTerms().isEmpty() )
+			return null;
+		
+		Nameable parentTerm = (Nameable) f.getSelectedTerms().get(0);
+		
+		return parentTerm;
+	}
+	
+	/**
+	 * Select the hierarchies in which we want to add the 
+	 * parent child relationship
+	 * @param parentTerm
+	 */
+	private ArrayList<Hierarchy> selectHierarchies ( final Term parentTerm ) {
+		
+		FormSelectApplicableHierarchies form = new FormSelectApplicableHierarchies(
+				parentTerm, term, parent.getShell() );
+
+		form.display();
+
+		return form.getHierarchies();
+	}
+	
+	private void addApplSelectionListener ( MenuItem mi, final Object root ) {
 
 		// if we add an applicability open the select term form to choose the parent
-		addApplicability.addSelectionListener( new SelectionAdapter() {
+		mi.addSelectionListener( new SelectionAdapter() {
+
 			@Override
 			public void widgetSelected ( SelectionEvent e ) {
-
-				FormSelectTerm f = new FormSelectTerm( parent.getShell(), 
-						Messages.getString("TableApplicability.SelectTermWindowTitle"),
-						term.getCatalogue(), false );
 				
-				// use the master hierarchy to choose the parent term
-				// then you can select all the other hierarchies with the
-				// guided approach
-				f.setRootTerm( term.getCatalogue().getMasterHierarchy() );
-				f.display();
-				
-				// return if nothing was selected
-				if ( f.getSelectedTerms() == null || f.getSelectedTerms().isEmpty() )
-					return;
-				
-				final Nameable parentTerm = (Nameable) f.getSelectedTerms().get(0);
+				final Nameable parentTerm = selectTerm ( root );
 				
 				// if we have selected a term => get all the hierarchies where the parent is
 				// presnet but the child not and add the applicabilities
@@ -482,29 +555,13 @@ public class TableApplicability {
 						return;
 					}
 					
+					// ask to the user to select in which hierarchies
+					// we should add the relation
+					ArrayList<Hierarchy> hierarchies = selectHierarchies ( (Term) parentTerm );
 					
-					FormSelectApplicableHierarchies form = new FormSelectApplicableHierarchies(
-							(Term) parentTerm, term, parent.getShell() );
-					
-					// if the ok button is pressed add all the applicabilities to the selected hierarchies
-					form.addDoneListener( new Listener() {
-						
-						@Override
-						public void handleEvent(Event event) {
-							
-							// get all the selected hierarchies
-							@SuppressWarnings("unchecked")
-							ArrayList<Hierarchy> hierarchies = ( ArrayList<Hierarchy> ) event.data;
-							
-							// for each hierarchy add the applicability
-							for ( Hierarchy hierarchy : hierarchies )
-								addApplicability ( parentTerm, hierarchy );
-							
-							applicabilityTable.refresh();
-						}
-					});
-					
-					form.display();
+					// for each hierarchy add the applicability
+					for ( Hierarchy hierarchy : hierarchies )
+						addApplicability ( parentTerm, hierarchy );
 					
 				}  // if we have selected a hierarchy, then we add the applicability between the term
 				   // and the hierarchy itself (which is the parent)
@@ -512,22 +569,15 @@ public class TableApplicability {
 					addApplicability ( parentTerm, (Hierarchy) parentTerm );
 				}
 				
-				
 				applicabilityTable.refresh();
 
 				// call the add listener if it is defined
 				if ( addListener != null )
 					addListener.handleEvent( new Event() );
 			}
-
 		} );
-		
-		return addApplicability;
 	}
-	
-	
 
-	
 	/**
 	 * Set the applicability between the selected term and the parent in the selected hierarchy
 	 * @param parent

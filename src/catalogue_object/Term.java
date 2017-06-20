@@ -1202,6 +1202,25 @@ public class Term extends CatalogueObject implements Mappable {
 	}
 	
 	/**
+	 * Get all the hierarchies in which this term is not
+	 * present.
+	 * @return
+	 */
+	public ArrayList<Hierarchy> getNewHierarchies() {
+		
+		ArrayList<Hierarchy> applHierarchies = getApplicableHierarchies();
+		ArrayList<Hierarchy> hierarchies = new ArrayList<>();
+
+		// get the hierarchies where this term is not present
+		for ( Hierarchy hierarchy : catalogue.getHierarchies() ) {
+			if ( !applHierarchies.contains( hierarchy ) )
+				hierarchies.add( hierarchy );
+		}
+		
+		return hierarchies;
+	}
+	
+	/**
 	 * Get the hierarchies where:
 	 * - the child is not present
 	 * - the parent is present and does not have the child in its children

@@ -1,7 +1,6 @@
 package ui_term_applicability;
 
 import java.util.ArrayList;
-import messages.Messages;
 
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -17,13 +16,13 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
 import catalogue_object.Hierarchy;
 import catalogue_object.Term;
+import messages.Messages;
 
 /**
  * This form allows selecting one or more hierarchies among the hierarchies which contains the parent
@@ -35,20 +34,14 @@ public class FormSelectApplicableHierarchies {
 
 	private Term parentTerm, child;
 	private Composite parent;
-	private Listener doneListener;
+	
+	private ArrayList<Hierarchy> hierarchies;
 	
 	public FormSelectApplicableHierarchies( Term parentTerm, Term child, Composite parent ) {
 		this.parentTerm = parentTerm;
 		this.child = child;
 		this.parent = parent;
-	}
-	
-	/**
-	 * Add a listener which is called when the ok button is pressed. Contains all the selected hierarchies in data
-	 * @param listener
-	 */
-	public void addDoneListener ( Listener listener ) {
-		doneListener = listener;
+		this.hierarchies = new ArrayList<>();
 	}
 	
 	/**
@@ -95,26 +88,12 @@ public class FormSelectApplicableHierarchies {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				
-				// call the listeneer if it was set
-				if ( doneListener != null ) {
-					
-					Event event = new Event();
-					
-					ArrayList<Hierarchy> selectedHierarchies = new ArrayList<>();
-					
-					// for each hierarchy put it into the array list
-					for ( Object item : table.getCheckedElements() ) {
-						selectedHierarchies.add( (Hierarchy) item );
-					}
-		
-					// set the data
-					event.data = selectedHierarchies;
-					
-					doneListener.handleEvent( event );
-					
+
+				// for each hierarchy put it into the array list
+				for ( Object item : table.getCheckedElements() ) {
+					hierarchies.add( (Hierarchy) item );
 				}
-				
+
 				dialog.close();
 			}
 			
@@ -125,7 +104,23 @@ public class FormSelectApplicableHierarchies {
 		// show the dialog
 		dialog.pack();
 		dialog.open();
-		dialog.setVisible(true);  
+		dialog.setVisible(true);
+		
+
+		while ( !dialog.isDisposed() ) {
+			if ( !dialog.getDisplay().readAndDispatch() )
+				dialog.getDisplay().sleep();
+		}
+		
+		dialog.dispose();
+	}
+	
+	/**
+	 * Get the selected hierarchies
+	 * @return
+	 */
+	public ArrayList<Hierarchy> getHierarchies() {
+		return hierarchies;
 	}
 	
 	/**

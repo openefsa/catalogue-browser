@@ -216,6 +216,20 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 	}
 	
 	/**
+	 * Get the first selected term of the tree if it is present
+	 * @return
+	 */
+	public Nameable getFirstSelectedObj() {
+		
+		ArrayList<Nameable> objs = getSelectedObjs();
+		
+		if ( objs.isEmpty() )
+			return null;
+		
+		return objs.get(0);
+	}
+	
+	/**
 	 * Get the inner tree viewer
 	 * @return
 	 */

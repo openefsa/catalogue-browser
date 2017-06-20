@@ -72,6 +72,8 @@ public class FormSelectTerm implements Observer, RestoreableWindow {
 	private TableSelectedDescriptors selectedDescriptors;
 	private FrameTermFields termPropTab = null;
 	
+	private boolean searchEnabled = true;
+	
 	/**
 	 * Initialize the form with the shell and the title string. The boolean enableMultipleSelection is used
 	 * to initialize the treeviewer as multiple selector or not.
@@ -120,6 +122,7 @@ public class FormSelectTerm implements Observer, RestoreableWindow {
 	 */
 	public void setRootTerm ( GlobalTerm rootTerm ) {
 		this.rootTerm = rootTerm;
+		this.searchEnabled = false;
 	}
 	
 	/**
@@ -242,9 +245,11 @@ public class FormSelectTerm implements Observer, RestoreableWindow {
 				}
 			}
 		});
-		
+
 		// show the search bar
 		searchBar.display();
+		
+		searchBar.setEnabled( searchEnabled );
 
 		dialog.setDefaultButton( searchBar.getButton() );
 		
@@ -531,14 +536,14 @@ public class FormSelectTerm implements Observer, RestoreableWindow {
 			// if no element was checked, then add the selected
 			// term (if there is one)
 			if ( selectedTerms.isEmpty() && !tree.isSelectionEmpty() ) {
-				selectedTerms.add( tree.getFirstSelectedTerm() );
+				selectedTerms.add( tree.getFirstSelectedObj() );
 			}
 		}
 		else {
 			
 			// add the selected term if it was set
 			if ( !tree.isSelectionEmpty() )
-				selectedTerms.add( tree.getFirstSelectedTerm() );
+				selectedTerms.add( tree.getFirstSelectedObj() );
 		}
 	}
 	
