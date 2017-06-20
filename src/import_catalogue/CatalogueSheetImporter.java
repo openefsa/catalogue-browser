@@ -83,8 +83,8 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 				catalogue.setLabel( openedCatalogue.getLabel() );
 				catalogue.setStatus( openedCatalogue.getStatus() );
 				catalogue.setLocal( true );
-				catalogue.setDbFullPath( openedCatalogue.getDbFullPath() );
 				catalogue.setBackupDbPath( openedCatalogue.getBackupDbPath() );
+				catalogue.setCatalogueType( openedCatalogue.getCatalogueType() );
 			}
 		}
 
@@ -94,7 +94,7 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 		// else the excel catalogue
 		return catalogue;
 	}
-	
+
 
 
 	/**
@@ -189,8 +189,6 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 			dbPath = catalogue.getDbPath();
 			
 			System.out.println( "Import: Db path is null, putting db in: " + dbPath );
-			
-			catalogue.setDbFullPath( dbPath );
 		}
 
 		// try to connect to the database. If it is not present we have an exception and thus we
@@ -202,7 +200,7 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 			
 			// if no exception was thrown => the database exists and we have to delete it
 			// delete the content of the old catalogue database
-			System.out.println( "Deleting the database located in " + catalogue.getDbFullPath() );
+			System.out.println( "Deleting the database located in " + catalogue.getDbPath() );
 
 			CatalogueDAO catDao = new CatalogueDAO();
 			catDao.deleteDBRecords ( catalogue );
@@ -223,7 +221,7 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 
 			System.out.println ( "Add " + catalogue + 
 					" to the catalogue table in " + 
-					catalogue.getDbFullPath() );
+					catalogue.getDbPath() );
 
 			CatalogueDAO catDao = new CatalogueDAO();
 
@@ -234,7 +232,7 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 
 			// create the standard database structure for
 			// the new catalogue
-			catDao.createDBTables( catalogue.getDbFullPath() );
+			catDao.createDBTables( catalogue.getDbPath() );
 		}
 	}
 	

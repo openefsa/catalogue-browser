@@ -268,6 +268,10 @@ public class TermClipboard {
 	 */
 	public boolean canPaste ( Term destination, Hierarchy destinationHierarchy ) {
 		
+		// if wrong operation
+		if ( destinationHierarchy == null || destination == null )
+			return false;
+		
 		// check if we can paste every source
 		for ( Term source : sources ) {
 			if ( !canPasteSource( source, destination, destinationHierarchy ) )

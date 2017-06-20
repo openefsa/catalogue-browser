@@ -467,6 +467,8 @@ public class GlobalUtil {
 
 		FileDialog dialog = new FileDialog( shell, buttonType );
 		
+		dialog.setOverwrite( true );
+		
 		// set dialog text
 		dialog.setText( text );
 		
@@ -520,10 +522,8 @@ public class GlobalUtil {
 			Format formatter;
 			formatter = new SimpleDateFormat( "yyyyMMddhhmmss" );
 
-			
-			
 			String code = currentCat.getCode();
-			String dbDir = currentCat.getDbFullPath();
+			String dbDir = currentCat.getDbPath();
 			
 			FileOutputStream os = null;
 			try {

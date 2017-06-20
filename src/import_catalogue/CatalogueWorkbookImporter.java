@@ -105,7 +105,7 @@ public class CatalogueWorkbookImporter {
 
 		// after having imported the excel, we can insert the default preferences
 		System.out.println ( "Insert default preferences values for " + catalogue  + " in " +
-				catalogue.getDbFullPath() );
+				catalogue.getDbPath() );
 		
 		// insert default preferences
 		CataloguePreferenceDAO prefDao = new CataloguePreferenceDAO( catalogue );
@@ -119,7 +119,7 @@ public class CatalogueWorkbookImporter {
 		if ( progressBar != null )
 			progressBar.close();
 		
-		System.out.println( catalogue + " successfully imported in " + catalogue.getDbFullPath() );
+		System.out.println( catalogue + " successfully imported in " + catalogue.getDbPath() );
 	}
 	
 	/**

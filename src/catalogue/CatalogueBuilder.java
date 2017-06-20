@@ -16,7 +16,6 @@ public class CatalogueBuilder extends BaseObjectBuilder {
 	boolean acceptNonStandardCodes = true;  // default value
 	boolean generateMissingCodes = false;   // default value
 	String catalogueGroups = null;
-	String dbFullPath = null;
 	String backupDbPath = null;
 	boolean local = false;                  // default value
 	int forcedCount = 0;
@@ -113,16 +112,6 @@ public class CatalogueBuilder extends BaseObjectBuilder {
 
 	/**
 	 * Set the external reference to the db which contains
-	 * the real data of the catalogue
-	 * @param dbPath
-	 */
-	public CatalogueBuilder setDbFullPath(String dbFullPath) {
-		this.dbFullPath = dbFullPath;
-		return this;
-	}
-
-	/**
-	 * Set the external reference to the db which contains
 	 * a backup of the catalogue db before starting editing it.
 	 * @param backupDbPath
 	 */
@@ -151,7 +140,7 @@ public class CatalogueBuilder extends BaseObjectBuilder {
 		return new Catalogue ( id, catalogueType, code, name, label, scopenotes, 
 				termCodeMask, termCodeLength, termMinCode,
 				acceptNonStandardCodes, generateMissingCodes, version, lastUpdate, validFrom, 
-				validTo, status, catalogueGroups, deprecated, dbFullPath, backupDbPath, local, forcedCount, 
+				validTo, status, catalogueGroups, deprecated, backupDbPath, local, forcedCount, 
 				releaseNotes );
 	}
 }

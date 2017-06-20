@@ -109,7 +109,7 @@ public class VersionChecker {
 		if ( oldVersion.isForced() )
 			newVersionCat.setBackupDbPath( catalogue.getBackupDbPath() );
 		else
-			newVersionCat.setBackupDbPath( catalogue.getDbFullPath() );
+			newVersionCat.setBackupDbPath( catalogue.getDbPath() );
 		
 		// insert the new catalogue into the database
 		// note that the db full path is also updated
@@ -125,7 +125,7 @@ public class VersionChecker {
 		// a copy of the old catalogue!
 		
 		try {
-			DatabaseManager.backupCatalogue( catalogue, newVersionCat.getDbFullPath() );
+			DatabaseManager.backupCatalogue( catalogue, newVersionCat.getDbPath() );
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

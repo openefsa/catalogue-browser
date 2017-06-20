@@ -6,7 +6,8 @@ import org.eclipse.swt.widgets.Listener;
 import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
 import dcf_manager.Dcf.DcfType;
-import import_catalogue.ImportActions;
+import import_catalogue.ImportCatalogueThread;
+import import_catalogue.ImportCatalogueThread.ImportFileFormat;
 import ui_progress_bar.FormProgressBar;
 
 /**
@@ -65,21 +66,19 @@ public class NewCatalogueInternalVersion {
 	 */
 	public void importNewCatalogueVersion ( final Listener doneListener ) {
 		
+		ImportCatalogueThread importCat = new 
+				ImportCatalogueThread( null, filename, ImportFileFormat.XML );
+		
 		// download the last internal version
 		// and when the process is finished
 		// reserve the NEW catalogue
-		ImportActions imprt = new ImportActions();
-
 		if ( progressBar != null )
-			imprt.setProgressBar( progressBar );
+			importCat.setProgressBar( progressBar );
 		
-		// import the catalogue xml and remove the file at
-		// the end of the process
-		imprt.importXml( null, filename, true, new Listener() {
+		importCat.addDoneListener( new Listener() {
 			
 			@Override
 			public void handleEvent(Event arg0) {
-
 				// get the new catalogue version
 				CatalogueDAO catDao = new CatalogueDAO();
 				newCatalogue = catDao.getCatalogue( 
@@ -87,7 +86,9 @@ public class NewCatalogueInternalVersion {
 				
 				doneListener.handleEvent( arg0 );
 			}
-		} );
+		});
+		
+		importCat.start();
 	}
 	
 	/**

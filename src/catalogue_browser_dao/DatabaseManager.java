@@ -59,7 +59,7 @@ public class DatabaseManager {
 	 *  folder where the local catalogues are stored
 	 */
 	public static final String LOCAL_CAT_DB_FOLDER = OFFICIAL_CAT_DB_FOLDER + 
-			"LOCAL_CATS" + System.getProperty("file.separator");
+			"LOCAL_CATS";
 
 	/**
 	 * Get a derby connection url to open the main db connection
@@ -334,11 +334,11 @@ public class DatabaseManager {
 		catalogue.closeConnection();
 		
 		// delete the DB with all the subfiles
-		GlobalUtil.deleteFileCascade ( new File( catalogue.getDbFullPath() ) );
+		GlobalUtil.deleteFileCascade ( new File( catalogue.getDbPath() ) );
 
 		// check if no catalogue is present in the parent folder, if so delete also the
 		// parent directory (the dir which contains all the catalogue versions)
-		File parent = new File( catalogue.getDbFullPath() ).getParentFile();
+		File parent = new File( catalogue.getDbPath() ).getParentFile();
 		if ( parent.listFiles().length == 0 )
 			parent.delete();
 	}
@@ -350,7 +350,7 @@ public class DatabaseManager {
 	 * @throws IOException
 	 */
 	public static void copyDb ( Catalogue catalogue, String destPath ) throws IOException {
-		copyDb ( catalogue.getDbFullPath(), destPath );
+		copyDb ( catalogue.getDbPath(), destPath );
 	}
 	
 	/**
@@ -471,7 +471,7 @@ public class DatabaseManager {
 		deleteDb ( catalogue );
 		
 		// copy the backup into the catalogue database
-		copyFolder ( catalogue.getBackupDbPath(), catalogue.getDbFullPath() );
+		copyFolder ( catalogue.getBackupDbPath(), catalogue.getDbPath() );
 		
 		// open the catalogue
 		catalogue.open();

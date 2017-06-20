@@ -36,12 +36,6 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 
 		int id = -1;
 		
-		// create the catalogue directory
-		if ( !catalogue.createDbDir() ) {
-			System.err.println( "Cannot create the catalogue directory for " + catalogue );
-			return id;
-		}
-		
 		try {
 
 			// open the connection
@@ -82,7 +76,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 			stmt.setString ( 7,  catalogue.getTermCodeMask() );
 			stmt.setInt    ( 8,  catalogue.getTermCodeLength() );
 			stmt.setString ( 9,  catalogue.getTermMinCode() );
-			stmt.setBoolean( 10,  catalogue.isAcceptNonStandardCodes() );
+			stmt.setBoolean( 10, catalogue.isAcceptNonStandardCodes() );
 			stmt.setBoolean( 11, catalogue.isGenerateMissingCodes() );
 			stmt.setString ( 12, catalogue.getStatus() );
 			stmt.setString ( 13, catalogue.getCatalogueGroups() );
@@ -207,7 +201,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 			// set if the catalogue is local or not
 			stmt.setBoolean( 18, catalogue.isLocal() );  
 			
-			stmt.setString( 19, catalogue.getDbFullPath() );
+			stmt.setString( 19, catalogue.getDbPath() );
 			stmt.setString( 20, catalogue.getBackupDbPath() );  
 
 			stmt.setInt( 21, catalogue.getForcedCount() );
@@ -314,9 +308,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 			builder.setValidTo( ts );
 
 		builder.setDeprecated( rs.getBoolean( "CAT_DEPRECATED" ) );
-		
-		builder.setDbFullPath( rs.getString( "CAT_DB_PATH" ) );
-		
+
 		builder.setBackupDbPath( rs.getString( "CAT_DB_BACKUP_PATH" ) );
 
 		builder.setLocal( rs.getBoolean( "CAT_IS_LOCAL" ) );

@@ -8,9 +8,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.w3c.dom.DOMException;
 
 import catalogue.Catalogue;
-import catalogue_browser_dao.DatabaseManager;
 import dcf_manager.Dcf;
-import import_catalogue.ImportActions;
+import import_catalogue.ImportCatalogueThread;
+import import_catalogue.ImportCatalogueThread.ImportFileFormat;
 import messages.Messages;
 import ui_progress_bar.FormProgressBar;
 import utilities.GlobalUtil;
@@ -137,27 +137,22 @@ public class DownloadCatalogueFrom {
 			return false;
 		}
 		
-		ImportActions importAction = new ImportActions();
+		// set the catalogue type according to the dcf one
+		catalogue.setCatalogueType( Dcf.dcfType );
+		
+		ImportCatalogueThread importCat = 
+				new ImportCatalogueThread( 
+						catalogue.getDbMainDir(), 
+						catalogueXmlFilename, 
+						ImportFileFormat.XML );
 
 		if ( progressBar != null )
-			importAction.setProgressBar( progressBar );
-
-		// import the catalogue in order to convert the catalogue xml to excel
-		// when the import is finished, delete the xml file
-		// we create the database in the official folder of catalogues, since we are downloading from dcf
-		importAction.importXml( catalogue.buildDBFullPath( DatabaseManager.OFFICIAL_CAT_DB_FOLDER ), 
-				catalogueXmlFilename, true, new Listener() {
-
-			@Override
-			public void handleEvent(Event event) {
-
-				// free memory from the import garbage
-				System.gc();
-
-				// call the super listener of the parent
-				doneListener.handleEvent( event );
-			}
-		} );
+			importCat.setProgressBar( progressBar );
+		
+		// set the listener
+		importCat.addDoneListener( doneListener );
+		
+		importCat.start();
 		
 		return true;
 	}

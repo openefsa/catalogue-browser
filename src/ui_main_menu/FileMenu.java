@@ -20,7 +20,8 @@ import catalogue_browser_dao.CatalogueDAO;
 import catalogue_browser_dao.DatabaseManager;
 import dcf_manager.Dcf;
 import dcf_user.User;
-import import_catalogue.ImportActions;
+import import_catalogue.ImportCatalogueThread;
+import import_catalogue.ImportCatalogueThread.ImportFileFormat;
 import messages.Messages;
 import new_local_catalogue.CatalogueCreationActions;
 import new_local_catalogue.DuplicatedCatalogueException;
@@ -391,17 +392,18 @@ public class FileMenu implements MainMenuItem {
 				if ( val == SWT.CANCEL )
 					return;
 				
-				ImportActions importAction = new ImportActions();
-				importAction.setProgressBar( new FormProgressBar( shell, "") );
+				ImportCatalogueThread importCat = 
+						new ImportCatalogueThread( null, 
+								filename, ImportFileFormat.ECF );
 				
-				// start the import from the ecf file
-				// we save the db where the excel files says (i.e. in the official folder
-				// we create a folder with the catalogue code and version which are read from
-				// the excel sheet of the catalogue
-				importAction.importEcf( null, filename, true, new Listener() {
+				//ImportActions importAction = new ImportActions();
+				importCat.setProgressBar( new FormProgressBar( shell, 
+						Messages.getString("Browser.ImportEcfBarTitle") ) );
+				
+				importCat.addDoneListener( new Listener() {
 					
 					@Override
-					public void handleEvent(Event event) {
+					public void handleEvent(Event arg0) {
 						
 						// refresh menu items when the import is 
 						// finished (needed to refresh open and delete buttons)
@@ -414,9 +416,24 @@ public class FileMenu implements MainMenuItem {
 						
 						if ( listener != null )
 							listener.buttonPressed( importCatMI, 
-									IMPORT_CAT_MI, event );
+									IMPORT_CAT_MI, arg0 );
 					}
-				} );
+				});
+				
+				importCat.start();
+				
+				// start the import from the ecf file
+				// we save the db where the excel files says (i.e. in the official folder
+				// we create a folder with the catalogue code and version which are read from
+				// the excel sheet of the catalogue
+				/*importAction.importEcf( null, filename, true, new Listener() {
+					
+					@Override
+					public void handleEvent(Event event) {
+						
+						
+					}
+				} );*/
 			}
 			
 			@Override

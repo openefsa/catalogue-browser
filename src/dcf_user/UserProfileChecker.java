@@ -14,7 +14,8 @@ import catalogue_browser_dao.TermDAO;
 import catalogue_object.Term;
 import catalogue_object.TermAttribute;
 import dcf_manager.Dcf;
-import import_catalogue.ImportActions;
+import import_catalogue.ImportCatalogueThread;
+import import_catalogue.ImportCatalogueThread.ImportFileFormat;
 
 /**
  * Class to ask to the DCF the users access level. In particular:
@@ -96,16 +97,12 @@ public class UserProfileChecker extends Thread {
 			return;
 		}
 
-		// otherwise if we managed to download the file
-		// import the catalogue to see which catalogues
-		// we are able to edit as catalogue managers
-		ImportActions importAction = new ImportActions();
-
-		// otherwise if catalogue manager check
-		// which catalogue we can edit
-		// import from xml the catusers catalogue
-		importAction.importXml( null, filename, true, new Listener() {
-
+		// import the catusers catalogue
+		ImportCatalogueThread importCat = new ImportCatalogueThread(
+				null, filename, ImportFileFormat.XML );
+		
+		importCat.addDoneListener( new Listener() {
+			
 			@Override
 			public void handleEvent(Event arg0) {
 
@@ -124,6 +121,8 @@ public class UserProfileChecker extends Thread {
 					doneListener.handleEvent( arg0 );
 			}
 		});
+		
+		importCat.start();
 	}
 
 

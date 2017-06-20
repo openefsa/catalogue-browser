@@ -64,14 +64,13 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	
 	// date format of the catalogues
 	public static final String ISO_8601_24H_FULL_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+	
+	// version and status of local catalogues
 	public static final String NOT_APPLICABLE_VERSION = "Not applicable";
 	public static final String LOCAL_CATALOGUE_STATUS = "Local catalogue";
-	
-	// is the catalogue a test or production catalogue?
-	private DcfType catalogueType;
-	
+
 	// the catalogue version is specialized, we need to
-	// manage it separately
+	// manage it separately from the standard Version
 	CatalogueVersion version;
 	
 	// catalogue meta data
@@ -81,14 +80,11 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	private boolean acceptNonStandardCodes;
 	private boolean generateMissingCodes;
 	private String catalogueGroups;
+	private DcfType catalogueType;  // is the catalogue a test or production catalogue?
 
-	// external reference which locates the catalogue real data (not meta data)
-	// this field is initialized when the catalogue meta data are inserted in the CATALOGUE table
-	private String dbDir;       // db directory
-	private String dbFullPath;  // db full path with filename
-	private String backupDbPath; // path where it is located the backup of the catalogue db
+	private String backupDbPath;  // path where it is located the backup of the catalogue db
 	
-	private boolean local;    // if the catalogue is a new local catalogue or not
+	private boolean local;  // if the catalogue is a new local catalogue or not
 	
 	// boolean set to true if we start
 	// a pending action on this catalogue
@@ -161,7 +157,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 			boolean generateMissingCodes, String version,
 			Timestamp lastUpdate, Timestamp validFrom, Timestamp validTo, 
 			String status, String catalogueGroups, boolean deprecated, 
-			String dbFullPath, String backupDbPath, boolean local, int forcedCount, 
+			String backupDbPath, boolean local, int forcedCount, 
 			ReleaseNotes releaseNotes ) {
 
 		// the id is not important for the catalogue
@@ -173,7 +169,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		// set the version of the catalogue with the
 		// extended Version
 		this.version = new CatalogueVersion( version );
-		
+
 		this.termCodeMask = termCodeMask;
 
 		// convert the term code length into integer if possible
@@ -184,18 +180,12 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		}
 
 		this.termMinCode = termMinCode;
-
 		this.acceptNonStandardCodes = acceptNonStandardCodes;
 		this.generateMissingCodes = generateMissingCodes;
-
 		this.catalogueGroups = catalogueGroups;
-
-		this.dbFullPath = dbFullPath;
 		this.backupDbPath = backupDbPath;
 		this.local = local;
-		
 		this.forcedCount = forcedCount;
-		
 		this.releaseNotes = releaseNotes;
 		
 		// initialize memory for data
@@ -260,9 +250,17 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 				acceptNonStandardCodes, generateMissingCodes, getVersion(), 
 				getLastUpdate(), getValidFrom(), 
 				getValidTo(), getStatus(), catalogueGroups, isDeprecated(), 
-				dbFullPath, backupDbPath, local, 0, releaseNotes );
+				backupDbPath, local, 0, releaseNotes );
 		
 		return catalogue;
+	}
+	
+	/**
+	 * Set the type of the catalogue. Test or production.
+	 * @param catalogueType
+	 */
+	public void setCatalogueType(DcfType catalogueType) {
+		this.catalogueType = catalogueType;
 	}
 	
 	/**
@@ -283,7 +281,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 */
 	public void open() {
 		
-		System.out.println ( "Opening " + this + " at " + dbFullPath );
+		System.out.println ( "Opening " + this + " at " + getDbPath() );
 		
 		// load the catalogue data into RAM
 		loadData();
@@ -305,7 +303,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * @return
 	 */
 	public String getShutdownDBURL() {
-		return "jdbc:derby:" + dbFullPath + ";user=dbuser;password=dbuserpwd;shutdown=true";
+		return "jdbc:derby:" + getDbPath() + ";user=dbuser;password=dbuserpwd;shutdown=true";
 	}
 	
 	/**
@@ -328,7 +326,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 */
 	public void close() {
 		
-		System.out.println ( "Closing " + this + " at " + dbFullPath );
+		System.out.println ( "Closing " + this + " at " + getDbPath() );
 		
 		// clear data in ram
 		clearData();
@@ -1538,9 +1536,9 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * of the catalogue
 	 * @return
 	 */
-	public String getDBDir() {
+/*	public String getDBDir() {
 		return dbDir;
-	}
+	}*/
 	
 	/**
 	 * Get the backup path
@@ -1587,10 +1585,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * @return
 	 */
 	public boolean createDbDir () {
-
-		dbFullPath = getDbPath();
-		
-		return GlobalUtil.createDirectory( dbFullPath );
+		return GlobalUtil.createDirectory( getDbPath() );
 	}
 	
 	/**
@@ -1619,19 +1614,19 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * as the path of the catalogue (we build it!)
 	 * @return
 	 */
-	public String buildDBFullPath( String dbDir ) {
+	/*public String buildDBFullPath( String dbDir ) {
 
 		dbFullPath = getDbFullPath ( dbDir, getCode(), getVersion(), local );
 		return dbFullPath;
 	}
-	
+	*/
 	/**
 	 * Set the full db path directly
 	 * @param dbFullPath
 	 */
-	public void setDbFullPath(String dbFullPath) {
+/*	public void setDbFullPath(String dbFullPath) {
 		this.dbFullPath = dbFullPath;
-	}
+	}*/
 	
 	/**
 	 * Get the db full path using the catalogues main directory, 
@@ -1644,7 +1639,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * @param local
 	 * @return
 	 */
-	public static String getDbFullPath ( String dbDir, String code, String version, boolean local ) {
+/*	public static String getDbFullPath ( String dbDir, String code, String version, boolean local ) {
 
 		// if local catalogue => we return only the db code as name
 		if ( local )
@@ -1658,7 +1653,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		// create the full path and assign it
 		return dbDir + System.getProperty( "file.separator" ) + dbName;
 	}
-	
+*/
 	
 	/**
 	 * Get the path of the Db of the catalogue
@@ -1666,9 +1661,9 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * see also {@link #buildDBFullPath( String dbDir ) buildDBFullPath}
 	 * @return
 	 */
-	public String getDbFullPath() {
+	/*public String getDbFullPath() {
 		return dbFullPath;
-	}
+	}*/
 
 	/**
 	 * Get the default hierarchy for this catalogue, default is the master
@@ -2006,7 +2001,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * @return
 	 */
 	public String getDbUrl() {
-		return "jdbc:derby:" + dbFullPath + ";user=dbuser;password=dbuserpwd";
+		return "jdbc:derby:" + getDbPath() + ";user=dbuser;password=dbuserpwd";
 	}
 	
 

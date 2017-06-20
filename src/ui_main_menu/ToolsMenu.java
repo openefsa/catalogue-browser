@@ -26,10 +26,11 @@ import catalogue_browser_dao.DatabaseManager;
 import dcf_manager.Dcf;
 import dcf_pending_action.DefaultListeners;
 import dcf_user.User;
-import dcf_webservice.ReserveLevel;
 import dcf_webservice.Publish.PublishLevel;
+import dcf_webservice.ReserveLevel;
 import export_catalogue.ExportActions;
-import import_catalogue.ImportActions;
+import import_catalogue.ImportCatalogueThread;
+import import_catalogue.ImportCatalogueThread.ImportFileFormat;
 import messages.Messages;
 import ui_general_graphics.DialogSingleText;
 import ui_main_panel.AttributeEditor;
@@ -452,21 +453,25 @@ public class ToolsMenu implements MainMenuItem {
 				// return if cancel was pressed
 				if ( val == SWT.CANCEL )
 					return;
-
-				ImportActions importAction = new ImportActions();
-				importAction.setProgressBar( new FormProgressBar( shell, "") );
+	
+				ImportCatalogueThread importCat = 
+						new ImportCatalogueThread( 
+								mainMenu.getCatalogue().getDbPath(), 
+								filename, ImportFileFormat.XLSX );
+				
+				importCat.setProgressBar( new FormProgressBar( shell,
+						Messages.getString( "Browser.ImportXlsxBarTitle" ) ) );
 				
 				// set the opened catalogue since we are importing
 				// in an already existing catalogue
-				importAction.setOpenedCatalogue( mainMenu.getCatalogue() );
+				importCat.setOpenedCatalogue( mainMenu.getCatalogue() );
 				
-				// import the selected excel into the current catalogue
-				importAction.importXlsx( mainMenu.getCatalogue().getDbFullPath(), 
-						filename, false, new Listener() {
-
+				// set the listener
+				importCat.addDoneListener( new Listener() {
+					
 					@Override
-					public void handleEvent(Event event) {
-
+					public void handleEvent(Event arg0) {
+						
 						// load catalogue data in ram
 						// we do not open it since it is already opened
 						mainMenu.getCatalogue().loadData();
@@ -474,7 +479,7 @@ public class ToolsMenu implements MainMenuItem {
 						
 						if ( listener != null )
 							listener.buttonPressed( importItem, 
-									IMPORT_CAT_MI, event );
+									IMPORT_CAT_MI, arg0 );
 						
 						GlobalUtil.showDialog( shell, 
 								Messages.getString("Import.ImportSuccessTitle"), 
@@ -482,6 +487,8 @@ public class ToolsMenu implements MainMenuItem {
 								SWT.ICON_INFORMATION );
 					}
 				});
+				
+				importCat.start();
 			}
 		} );
 		
