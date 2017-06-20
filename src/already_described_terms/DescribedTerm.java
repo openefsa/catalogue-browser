@@ -102,7 +102,7 @@ public class DescribedTerm {
 		// we just need name and code, then we add the implicit facets.
 		Term baseTermCopy = new Term( currentCat );
 		baseTermCopy.setName( baseTerm.getName() );
-		baseTermCopy.setShortName( baseTerm.getShortName(true) );
+		baseTermCopy.setShortName( baseTerm.getShortName(false) );
 		baseTermCopy.setCode( baseTerm.getCode() );
 		
 		// initialize dao of attributes

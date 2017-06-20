@@ -356,7 +356,7 @@ public class Term extends CatalogueObject implements Mappable {
 	 */
 	public String getShortName( boolean replace ) {
 
-		if ( getLabel().equals( "" ) )
+		if ( replace && getLabel().equals( "" ) )
 			return getName();
 		
 		return getLabel();

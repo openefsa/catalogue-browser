@@ -65,7 +65,7 @@ public class Attribute extends SortableCatalogueObject implements Mappable {
 		
 		return new Attribute( currentCat, -1, 
 				"Change", "Change", "", "", "D", true, false, 
-				newOrder, "xs:string", 200, 10, 0, "", cardinalitySingle,
+				newOrder, "xs:string", -1, -1, -1, "", cardinalitySingle,
 				"D", false, false, "", "", null, null, null, false );
 	}
 	
@@ -316,11 +316,23 @@ public class Attribute extends SortableCatalogueObject implements Mappable {
 			case "searchable":
 				value = String.valueOf( isSearchable() ); break;
 			case "maxlength":
-				value = String.valueOf( getMaxLength() ); break;
+				if ( getMaxLength() == -1 )
+					value = "";
+				else
+					value = String.valueOf( getMaxLength() ); 
+				break;
 			case "precision":
-				value = String.valueOf( getPrecision() ); break;
+				if ( getPrecision() == -1 )
+					value = "";
+				else
+					value = String.valueOf( getPrecision() ); 
+				break;
 			case "scale":
-				value = String.valueOf( getScale() ); break;
+				if ( getScale() == -1 )
+					value = "";
+				else
+					value = String.valueOf( getScale() ); 
+				break;
 			case "catcode":
 				value = getCatalogueCode(); break;
 			case "single_repeatable":

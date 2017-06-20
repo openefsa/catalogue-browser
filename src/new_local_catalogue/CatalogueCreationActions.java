@@ -4,6 +4,7 @@ import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_browser_dao.HierarchyDAO;
 import catalogue_object.Hierarchy;
+import dcf_manager.Dcf.DcfType;
 import user_preferences.CataloguePreferenceDAO;
 
 public class CatalogueCreationActions {
@@ -13,7 +14,8 @@ public class CatalogueCreationActions {
 	 * Return the new catalogue object
 	 * @throws DuplicatedCatalogueException 
 	 */
-	public static Catalogue newLocalCatalogue ( String catalogueCode ) throws DuplicatedCatalogueException {
+	public static Catalogue newLocalCatalogue ( String catalogueCode ) 
+			throws DuplicatedCatalogueException {
 
 		// replace spaces with underscores
 		catalogueCode = catalogueCode.replaceAll(" ", "_" );
@@ -23,8 +25,11 @@ public class CatalogueCreationActions {
 
 		CatalogueDAO catDao = new CatalogueDAO();
 		
-		// if a catalogue with the same code was already added => error!
-		if ( catDao.hasCatalogue( newCatalogue ) )
+		Catalogue alreadyPresentCat = catDao.getCatalogue( newCatalogue.getCode(), 
+				newCatalogue.getVersion(), DcfType.LOCAL );
+
+		// if a local catalogue with the same code was already added => error!
+		if ( alreadyPresentCat != null )
 			throw new DuplicatedCatalogueException();
 
 		// create database directory
