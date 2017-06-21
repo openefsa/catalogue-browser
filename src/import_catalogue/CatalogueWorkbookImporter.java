@@ -213,6 +213,22 @@ public class CatalogueWorkbookImporter {
 		hierImp.importData( sheetData );
 	}
 	
+	/**
+	 * Import a sheet in a smarter way. In particular, two parallel
+	 * threads are started. The first thread reads the data from the
+	 * workbookReader object. The second thread writes the read data
+	 * into the database. Note that the first thread reads the data
+	 * also while the second one is writing the data of the previous
+	 * batch. This results in improved performances, since delay times
+	 * are reduced. Note that this method requires that you set a
+	 * batch size for the workbookReader (see {@link WorkbookReader#setBatchSize(int)}, 
+	 * otherwise the data would not be separable, since they are
+	 * all contained in a single big batch.
+	 * @param workbookReader the reader with a sheet already loaded
+	 * @param importer the sheet importer
+	 * @throws XMLStreamException
+	 * @throws CloneNotSupportedException
+	 */
 	private void importQuickly ( WorkbookReader workbookReader, 
 			SheetImporter<?> importer ) throws XMLStreamException, 
 			CloneNotSupportedException {
@@ -248,6 +264,7 @@ public class CatalogueWorkbookImporter {
 				// close used result set
 				current.close();
 				
+				// if no next data stop!
 				if ( t.getData() == null ) {
 					if ( fetched != null ) {
 						fetched.close();
@@ -283,13 +300,7 @@ public class CatalogueWorkbookImporter {
 		
 		TermSheetImporter termImp = new 
 				TermSheetImporter( catalogue );
-		
-		// read the first batch
-		/*while ( workbookReader.hasNext() ) {
-			ResultDataSet data = workbookReader.next();
-			termImp.importData( data );
-		}*/
-		
+
 		try {
 			importQuickly ( workbookReader, termImp );
 		} catch (CloneNotSupportedException e) {
@@ -315,12 +326,6 @@ public class CatalogueWorkbookImporter {
 			e.printStackTrace();
 		}
 		
-		// read the first batch
-		/*while ( workbookReader.hasNext() ) {
-			ResultDataSet data = workbookReader.next();
-			taImp.importData( data );
-		}*/
-		
 		System.out.println( "Importing parent terms" );
 		updateProgressBar( 25, Messages.getString("ImportExcelXLSX.ImportTermParents") );
 		
@@ -339,12 +344,6 @@ public class CatalogueWorkbookImporter {
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}
-		
-		// read the first batch
-		/*while ( workbookReader.hasNext() ) {
-			ResultDataSet data = workbookReader.next();
-			parentImp.importData( data );
-		}*/
 	}
 	
 	/**

@@ -163,7 +163,7 @@ public class WorkbookReader {
 			e.printStackTrace();
 		}
 	}
-	public static void main ( String[] args ) throws IOException, XMLStreamException, 
+	/*public static void main ( String[] args ) throws IOException, XMLStreamException, 
 	OpenXML4JException, SAXException, SQLException {
 		
 		DatabaseManager.startMainDB();
@@ -181,5 +181,5 @@ public class WorkbookReader {
 		importer.importWorkbook( 
 				"C:\\Users\\avonva\\Desktop\\CatalogueBrowser\\CatalogueBrowser\\Database\\LocalCatalogues\\CAT_MTX_DB\\MTX", 
 				"C:\\Users\\avonva\\Desktop\\MTX_8.7.xlsx");
-	}
+	}*/
 }

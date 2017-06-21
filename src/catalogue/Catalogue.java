@@ -1708,6 +1708,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 					defaultHierarchy = temp;
 			}
 		}
+
 		return defaultHierarchy;
 	}
 
