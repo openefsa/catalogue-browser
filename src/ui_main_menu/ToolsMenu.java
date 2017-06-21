@@ -32,6 +32,7 @@ import export_catalogue.ExportActions;
 import import_catalogue.ImportCatalogueThread;
 import import_catalogue.ImportCatalogueThread.ImportFileFormat;
 import messages.Messages;
+import sas_remote_procedures.XmlChangesCreator;
 import ui_general_graphics.DialogSingleText;
 import ui_main_panel.AttributeEditor;
 import ui_main_panel.HierarchyEditor;
@@ -57,6 +58,7 @@ public class ToolsMenu implements MainMenuItem {
 	public static final int ATTR_EDITOR_MI = 10;
 	public static final int SEARCH_OPT_MI = 11;
 	public static final int USER_PREF_MI = 12;
+	public static final int CREATE_XML_MI = 13;
 	
 	private MenuListener listener;
 	
@@ -68,6 +70,7 @@ public class ToolsMenu implements MainMenuItem {
 	private MenuItem reserveMI;           // reserve catalogue
 	private MenuItem unreserveMI;         // unreserve catalogue
 	private MenuItem uploadDataMI;        // upload changes of the catalogue
+	private MenuItem createXmlMI;
 	private MenuItem publishMI;           // publish a draft catalogue
 	private MenuItem resetMI;             // reset the catalogues data to the previous version
 	private MenuItem importMI;
@@ -121,6 +124,7 @@ public class ToolsMenu implements MainMenuItem {
 
 			reserveMI = addReserveMI ( toolsMenu );
 			unreserveMI = addUnreserveMI ( toolsMenu );
+			createXmlMI = addCreateXmlMI ( toolsMenu );
 			uploadDataMI = addUploadDataMI( toolsMenu );
 			publishMI = addPublishMI( toolsMenu );
 			resetMI = addResetMI( toolsMenu );
@@ -258,6 +262,62 @@ public class ToolsMenu implements MainMenuItem {
 		unreserveMI.setEnabled( false );
 		
 		return unreserveMI;
+	}
+	
+	/**
+	 * Add the menu item used to create the xml
+	 * which contains the difference between the
+	 * catalogue I have in my local database and the
+	 * official version of the catalogue.
+	 * @param menu
+	 * @return
+	 */
+	private MenuItem addCreateXmlMI ( Menu menu ) {
+		
+		final MenuItem createXmlMI = new MenuItem( menu , SWT.PUSH );
+		createXmlMI.setText( Messages.getString("BrowserMenu.CreateXml") );
+		createXmlMI.addSelectionListener( new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				
+				FormProgressBar progressBar = 
+						new FormProgressBar( shell, 
+								Messages.getString("BrowserMenu.CreateXmlBarTitle") );
+				
+				// ask for the xml creation to the sas server
+				XmlChangesCreator xmlCreator = new XmlChangesCreator();
+				xmlCreator.setProgressBar( progressBar );
+				
+				xmlCreator.setAbortListener( new Listener() {
+					
+					@Override
+					public void handleEvent(Event arg0) {
+						GlobalUtil.showErrorDialog( shell, 
+								Messages.getString( "CreateXml.ErrorTitle" ), 
+								(String) arg0.data );
+					}
+				});
+				
+				xmlCreator.setDoneListener( new Listener() {
+					
+					@Override
+					public void handleEvent(Event arg0) {
+						GlobalUtil.showDialog( shell, 
+								Messages.getString("CreateXml.SuccessTitle"), 
+								Messages.getString("CreateXml.SuccessMessage"), 
+								SWT.ICON_INFORMATION );
+					}
+				});
+				
+				xmlCreator.createXml( mainMenu.getCatalogue() );
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {}
+		});
+		
+		return createXmlMI;
 	}
 	
 	/**
@@ -525,7 +585,7 @@ public class ToolsMenu implements MainMenuItem {
 						Messages.getString("Export.ProgressBarTitle") ) );
 				
 				// export the opened catalogue
-				export.exportCatalogueToExcel( mainMenu.getCatalogue(), 
+				export.exportAsync( mainMenu.getCatalogue(), 
 						filename, new Listener() {
 
 					@Override

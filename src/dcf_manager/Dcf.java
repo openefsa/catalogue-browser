@@ -428,7 +428,7 @@ public class Dcf {
 		upload.setListener( listener );
 		upload.start();
 	}
-	
+
 	/**
 	 * Start a single pending action process
 	 * @param pa the pending action we want to start

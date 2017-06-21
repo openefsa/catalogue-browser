@@ -18,6 +18,8 @@ public class PropertiesReader {
 	private static final String APP_VERSION_PROPERTY = "Application.Version";
 	private static final String DCF_PROPERTY = "Dcf.EnableTest";
 	private static final String YES = "YES";
+	private static final String DCF_XML_CREATOR = 
+			"DcfXmlChangesCreator.RemotePath";
 	
 	/**
 	 * Read the application properties from the xml file
@@ -73,6 +75,15 @@ public class PropertiesReader {
 	 */
 	public static String getAppVersion() {
 		return getValue( APP_VERSION_PROPERTY, "not found" );
+	}
+	
+	/**
+	 * Get the version of the application from the 
+	 * properties file
+	 * @return
+	 */
+	public static String getDcfXmlCreatorPath() {
+		return getValue( DCF_XML_CREATOR, "not found" );
 	}
 	
 	/**

@@ -22,10 +22,10 @@ public class ExportCatalogueWorkbook {
 	private FormProgressBar progressBar;  // progress bar to show the export process to the user
 	
 	/**
-	 * Constructor, we instantiate the progress bar
+	 * Set the progress bar if needed
 	 * @param progressBar
 	 */
-	public ExportCatalogueWorkbook( FormProgressBar progressBar ) {
+	public void setProgressBar(FormProgressBar progressBar) {
 		this.progressBar = progressBar;
 	}
 	
@@ -48,44 +48,70 @@ public class ExportCatalogueWorkbook {
 		
 		// write the catalogue sheet
 		ExportCatalogueSheet catSheet = new ExportCatalogueSheet( catalogue, workbook, Headers.CAT_SHEET_NAME );
-		catSheet.setProgressBar( progressBar, 1, Messages.getString( "Export.CatalogueSheet" ) );
+		
+		if ( progressBar != null )
+			catSheet.setProgressBar( progressBar, 1, 
+					Messages.getString( "Export.CatalogueSheet" ) );
+		
 		catSheet.write();
 
 		// write the hierarchy sheet
 		ExportHierarchySheet hierarchySheet = new ExportHierarchySheet( catalogue, workbook, Headers.HIER_SHEET_NAME );
-		hierarchySheet.setProgressBar( progressBar, 4, Messages.getString( "Export.HierarchySheet" ) );
+		
+		if ( progressBar != null )
+			hierarchySheet.setProgressBar( progressBar, 4, 
+					Messages.getString( "Export.HierarchySheet" ) );
+		
 		hierarchySheet.write();
 		
 		// write the attribute sheet
 		ExportAttributeSheet attrSheet = new ExportAttributeSheet( catalogue, workbook, Headers.ATTR_SHEET_NAME );
-		attrSheet.setProgressBar( progressBar, 5, Messages.getString( "Export.AttributeSheet" ) );
+		
+		if ( progressBar != null )
+			attrSheet.setProgressBar( progressBar, 5, 
+					Messages.getString( "Export.AttributeSheet" ) );
+		
 		attrSheet.write();
 
 		// write the term sheet
 		ExportTermSheet termSheet = new ExportTermSheet( catalogue, workbook, Headers.TERM_SHEET_NAME );
-		termSheet.setProgressBar( progressBar, 80, Messages.getString( "Export.TermSheet" ) );
+		
+		if ( progressBar != null )
+			termSheet.setProgressBar( progressBar, 80, 
+					Messages.getString( "Export.TermSheet" ) );
+		
 		termSheet.write();
 		
 		// write the term sheet
 		ExportReleaseNotesSheet noteSheet = new ExportReleaseNotesSheet( 
 				catalogue, workbook, Headers.NOTES_SHEET_NAME );
 		
-		noteSheet.setProgressBar( progressBar, 95, Messages.getString( "Export.NotesSheet" ) );
+		if ( progressBar != null )
+			noteSheet.setProgressBar( progressBar, 95, 
+					Messages.getString( "Export.NotesSheet" ) );
+		
 		noteSheet.write();
 		
 		// last operation
-		progressBar.setLabel( Messages.getString( "Export.WriteSheet" ) );
+		if ( progressBar != null )
+			progressBar.setLabel( Messages.getString( "Export.WriteSheet" ) );
 
 		// write in the workbook
 		OutputStream out = new FileOutputStream( filename );
 		workbook.write( out );
 		
-		// fill progress bar
-		progressBar.fillBar();
-		
 		// close workbook and progress bar
 		workbook.close();
-		progressBar.close();
+		
+		out.close();
+
+		// fill progress bar
+		if ( progressBar != null )
+			progressBar.fillBar();
+
+		if ( progressBar != null )
+			progressBar.close();
+
 		
 		System.out.println ( "Export finished" );
 	}

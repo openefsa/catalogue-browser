@@ -350,22 +350,10 @@ public class DatabaseManager {
 	 * @throws IOException
 	 */
 	public static void copyDb ( Catalogue catalogue, String destPath ) throws IOException {
-		copyDb ( catalogue.getDbPath(), destPath );
+		copyFileInto ( catalogue.getDbPath(), destPath );
 	}
 	
-	/**
-	 * Copy a folder and its files into another path
-	 * @param sourcePath the source folder
-	 * @param destPath the destination folder
-	 * @throws IOException
-	 */
-	public static void copyDb ( String sourcePath, String destPath ) throws IOException {
-		
-		// get the source from the catalogue
-		File source = new File ( sourcePath );
-
-		// set the destination
-		File dest = new File ( destPath );
+	public static void copyFileInto ( File source, File dest ) throws IOException {
 
 		FileInputStream input = null;
 		FileOutputStream out = null;
@@ -384,6 +372,23 @@ public class DatabaseManager {
 		input.close();
 		sourceChannel.close();
 		destChannel.close();
+	}
+	
+	/**
+	 * Copy a folder and its files into another path
+	 * @param sourcePath the source folder
+	 * @param destPath the destination folder
+	 * @throws IOException
+	 */
+	public static void copyFileInto ( String sourcePath, String destPath ) throws IOException {
+		
+		// get the source from the catalogue
+		File source = new File ( sourcePath );
+
+		// set the destination
+		File dest = new File ( destPath );
+
+		copyFileInto ( source, dest );
 	}
 	
 	/**

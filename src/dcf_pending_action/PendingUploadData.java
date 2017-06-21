@@ -5,8 +5,13 @@ import dcf_log.DcfLog;
 import dcf_manager.Dcf.DcfType;
 import dcf_webservice.DcfResponse;
 
+/**
+ * Pending action used to call an upload data request
+ * @author avonva
+ *
+ */
 public class PendingUploadData extends PendingAction {
-
+	
 	public static final String TYPE = "UPLOAD_DATA";
 	
 	public PendingUploadData(Catalogue catalogue, String logCode, 
@@ -65,6 +70,8 @@ public class PendingUploadData extends PendingAction {
 		
 		if ( response == DcfResponse.OK )
 			System.out.println ( "upload data: successfully completed" );
+		else
+			System.out.println( "upload data: failed" );
 		
 		return response;
 	}

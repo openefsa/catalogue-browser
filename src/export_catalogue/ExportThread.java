@@ -25,7 +25,10 @@ public class ExportThread extends ExcelThread {
 	public void run() {
 		
 		// prepare the import procedure
-		final ExportCatalogueWorkbook exportCat = new ExportCatalogueWorkbook( getProgressForm() );
+		final ExportCatalogueWorkbook exportCat = new ExportCatalogueWorkbook();
+		
+		if ( getProgressForm() != null )
+			exportCat.setProgressBar( getProgressForm() );
 		
 		// export the catalogue
 		try {
