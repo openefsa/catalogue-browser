@@ -144,9 +144,7 @@ public class DownloadCatalogueFrom {
 		catalogue.setCatalogueType( Dcf.dcfType );
 		
 		ImportCatalogueThread importCat = 
-				new ImportCatalogueThread( 
-						catalogue.getDbMainDir(), 
-						catalogueXmlFilename, 
+				new ImportCatalogueThread( catalogueXmlFilename, 
 						ImportFileFormat.XML );
 
 		if ( progressBar != null )

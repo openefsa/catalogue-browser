@@ -16,24 +16,12 @@ import open_xml_reader.ResultDataSet;
 
 public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 
-	// the path where the db of the catalogue should be created
-	private String dbPath;
-	
 	// the new catalogue
 	private Catalogue catalogue;
 	private Catalogue openedCatalogue;
-	
+
 	private String excelCatCode;
-	
-	/**
-	 * Initialize the catalogue sheet importer
-	 * @param dbPath the path where the db of the catalogue should be created
-	 * @param data the catalogue sheet data
-	 */
-	public CatalogueSheetImporter( String dbPath ) {
-		this.dbPath = dbPath;
-	}
-	
+
 	/**
 	 * Pass the opened catalogue if we are importing an excel
 	 * file in it using the Import excel function.
@@ -45,7 +33,7 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 
 	@Override
 	public Catalogue getByResultSet(ResultDataSet rs) {
-		
+
 		Catalogue catalogue = null;
 
 		// get the excel catalogue and
@@ -61,13 +49,13 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 		// code will be overridden (and we need it
 		// for the import)
 		excelCatCode = catalogue.getCode();
-		
+
 		// if we have an opened catalogue we need to maintain
 		// its code and version during the import otherwise
 		// it will result in a different db path for storing
 		// the data and thus giving errors
 		if ( openedCatalogue != null ) {
-			
+
 			catalogue.setCode( openedCatalogue.getCode() );
 			catalogue.setVersion( openedCatalogue.getVersion() );
 
@@ -90,12 +78,10 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 
 		// save the catalogue as global variable
 		this.catalogue = catalogue;
-		
+
 		// else the excel catalogue
 		return catalogue;
 	}
-
-
 
 	/**
 	 * Given a result set with catalogues meta data inside it, this function will
@@ -128,7 +114,7 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 
 		// set the dates with the adequate checks
 		java.sql.Timestamp ts = rs.getTimestamp( Headers.LAST_UPDATE );
-		
+
 		if ( ts != null )
 			builder.setLastUpdate( ts );
 
@@ -141,28 +127,28 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 			builder.setValidTo( ts );
 
 		builder.setDeprecated( rs.getBoolean( Headers.DEPRECATED ) );
-		
+
 		String desc = rs.getString( Headers.NOTES_DESCRIPTION );
 		ts = rs.getTimestamp( Headers.NOTES_DATE );
 		String vers = rs.getString( Headers.NOTES_VERSION );
 		String note = rs.getString( Headers.NOTES_NOTE );
-		
+
 		builder.setReleaseNotes( new ReleaseNotes(desc, ts, vers, note, null) );
-		
+
 		// use as dcf type the one which was used to import the
 		// catalogue, in fact, if we are importing an .ecf,
 		// we import it in test if we are using test, otherwise
 		// in production. Same for downloaded catalogues. For
 		// local catalogues this is ignored
 		builder.setCatalogueType( Dcf.dcfType );
-		
+
 		Catalogue catalogue = builder.build();
-		
+
 		// return the catalogue
 		return catalogue;
 	}
-	
-	
+
+
 
 	@Override
 	public Collection<Catalogue> getAllByResultSet(ResultDataSet rs) {
@@ -171,7 +157,7 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 
 	@Override
 	public void insert(Collection<Catalogue> data) {
-		
+
 		if ( data.isEmpty() )
 			return;
 
@@ -179,73 +165,77 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 		Iterator<Catalogue> iter = data.iterator();
 		Catalogue catalogue = iter.next();
 
-		// if anything was found => create a new catalogue
-		// as default we create the catalogue using the official folder 
-		// and the catalogue code and version
-		// obtained from the excel sheet
-		
-		if ( dbPath == null && !catalogue.isLocal() ) {
-			
-			dbPath = catalogue.getDbPath();
-			
-			System.out.println( "Import: Db path is null, putting db in: " + dbPath );
-		}
+		// create the catalogue database
+		createDatabase( catalogue );
+	}
 
-		// try to connect to the database. If it is not present we have an exception and thus we
-		// create the database starting from scrach
+	/**
+	 * Create the database of the catalogue if not present. 
+	 * If another database is already present it will be deleted
+	 * and a new database will be created.
+	 * @param catalogue
+	 */
+	private static void createDatabase ( Catalogue catalogue ) {
+
+		int catalogueId;
+		
+		// try to connect to the database. If it is not present we have an 
+		// exception and thus we create the database starting from scratch
 		try {
-			
+
 			Connection con = catalogue.getConnection();
 			con.close();
-			
+
 			// if no exception was thrown => the database exists and we have to delete it
 			// delete the content of the old catalogue database
 			System.out.println( "Deleting the database located in " + catalogue.getDbPath() );
 
 			CatalogueDAO catDao = new CatalogueDAO();
 			catDao.deleteDBRecords ( catalogue );
-			
+
 			System.out.println( "Freeing deleted memory..." );
 			catDao.compressDatabase( catalogue );
 
 			// set the id to the catalogue
-			int id = catDao.getCatalogue( catalogue.getCode(), 
+			catalogueId = catDao.getCatalogue( catalogue.getCode(), 
 					catalogue.getVersion(), 
 					catalogue.getCatalogueType() ).getId();
-
-			catalogue.setId( id );
 		}
 		catch ( SQLException e ) {
 
 			// otherwise the database does not exist => we create it
 
 			System.out.println ( "Add " + catalogue + 
-					" to the catalogue table in " + 
-					catalogue.getDbPath() );
+					" to the catalogue table. Db location: " + catalogue.getDbPath() );
 
 			CatalogueDAO catDao = new CatalogueDAO();
 
-			// set the id to the catalogue
-			int id = catDao.insert( catalogue );
-
-			catalogue.setId( id );
+			// insert the new catalogue into the main catalogues db
+			catalogueId = catDao.insert( catalogue );
 
 			// create the standard database structure for
 			// the new catalogue
 			catDao.createDBTables( catalogue.getDbPath() );
 		}
+		
+		// set the catalogue id
+		catalogue.setId( catalogueId );
 	}
-	
+
 	/**
 	 * Get the imported catalogue. Note that you
 	 * should call {@link #importSheet()} before
-	 * this. Otherwise you will get null.
+	 * this. Otherwise you will get null. The imported
+	 * catalogue contains the excel data into it, but
+	 * if {@link #setOpenedCatalogue(Catalogue)} was
+	 * set, then some fields were overridden, as the
+	 * code, the name, the label...
 	 * @return
 	 */
 	public Catalogue getImportedCatalogue() {
 		return catalogue;
 	}
-	
+
 	/**
 	 * Get the catalogue code contained into
 	 * the catalogue sheet

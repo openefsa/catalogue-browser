@@ -44,68 +44,29 @@ public class GlobalUtil {
 	private static String workDir = "";
 	
 	// directory for the user files as the settings 
-	final static public String     userFileDirName                = "User Files";
+	final static public String CONFIG_FILES_DIR_NAME = "ConfigFiles";
+	final static public String CONFIG_FILES_DIR_PATH = getConfigDir();
+	final static public String CONFIG_FILE = getConfigDir() + "Config.xml";
 	
-	// directory for the user files as the settings 
-	final static public String     userFileDir                    = getUserFileDir();
-	
-	// file where there is contained the selected picklist for favourite described terms
-	final static public String     selectedPicklistFilename       = getUserFileDir() + "selectedPicklist.txt"; 
 	
 	// directory which contains all the pick lists
-	final static public String     picklistsDirName               = "Picklists";
-	
-	// directory which contains all the pick lists
-	final static public String     picklistsDir                   = getPicklistDir();
+	final static public String PICKLISTS_DIR_NAME = "Picklists";
+	final static public String PICKLISTS_DIR_PATH = getPicklistDir();
 
 	// directory which contains all the pick lists
-	final static public String     businessRulesDirName           = "Business Rules";
-	
-	// directory which contains all the pick lists
-	final static public String     businessRulesDir               = getBRFileDir();
+	final static public String BUSINESS_RULES_DIR_NAME = "Business Rules";
+	final static public String BUSINESS_RULES_DIR_PATH = getBusinessRulesDir();
 
-	// the header of the recentlyDescribeTermsFilename file
-	final static public String     recentlyDescribeTermsHeader    = "level;Pick list elements;pick list code\r\n";
-	
-	// the filename of the file which contains the warning messages for the describe window
-	final static public String     warningMessagesFilename        = getBRFileDir() + "warningMessages.txt";
-	
-	// the filename of the file which contains the warning colors for the warning describe window
-	final static public String     warningColorsFilename          = getBRFileDir() + "warningColors.txt";
-	
-	// file where the recently described terms are saved
-	final static public String     recentlyDescribeTermsFilename  = getUserFileDir() + "recentlyDescribedTerms.txt";
+	// the filename of the warning messages and colors
+	final static public String WARNING_MESSAGES_FILE = getBusinessRulesDir() + "warningMessages.txt";
+	final static public String WARNING_COLORS_FILE = getBusinessRulesDir() + "warningColors.txt";
 	
 	// the filename of the file which contains the business rule for the describe 
-	final static public String     businessRuleFilename           = getBRFileDir() + "BR_Data.csv";
+	final static public String BUSINESS_RULES_FILE = getBusinessRulesDir() + "BR_Data.csv";
 	
 	// the filename of the file which contains the business rule EXCEPTIONS for the describe 
-	final static public String     businessRulexceptionsFilename  = getBRFileDir() + "BR_Exceptions.csv";
-	
-	// the filename of the file which contains the global search options for the state flags
-	final static public String    _listStateFlagFile              = getUserFileDir() + "listStateFlag.txt";
-	
-	// the filename of the file which contains the global search options for the state flags
-	final static public String    _listSearchNamesFile            = getUserFileDir() + "listSearchNames.txt";
-	
-	// the default file for the user preferences xml
-	final static public String     userPreferencesFile            = getUserFileDir() + "userPreferences.xml";
-	
-	// the filename of the default property file (xml)
-	final static public String     appPropertiesFile          = getUserFileDir() + "DefaultProperties.xml";
-	
-	// the filename of the file which stores the information related to the windows dimensions etc
-	final static public String     restoreSessionWindowFile       = getUserFileDir() + "restoreSession.properties";
-	
-	// name of user preferences fields
-	final static public String     minSearchCharPref              = "FoodexBrowser.MinSearchChar";
-	final static public String     loggingPref                    = "FoodexBrowser.Logging";
-	final static public String     currentDirPref                 = "FoodexBrowser.CurrentDirectory";
-	final static public String     copyImplicitPref               = "FoodexBrowser.CopyImplicitFacets";
-	final static public String     maxRecentTermsPref             = "FoodexBrowser.MaxRecentTerms";
-	final static public String     BusinessRulesPref              = "FoodexBrowser.EnableBusinessRules";
-	
-	
+	final static public String BUSINESS_RULES_EX_FILE = getBusinessRulesDir() + "BR_Exceptions.csv";
+
 	/**
 	 * Set the working directory where the directories should
 	 * be searched.
@@ -124,26 +85,28 @@ public class GlobalUtil {
 	 * Get the user file directory path
 	 * @return
 	 */
-	public static String getUserFileDir() {
-		return ( workDir + userFileDirName + System.getProperty( "file.separator" ) );
+	public static String getConfigDir() {
+		return ( workDir + CONFIG_FILES_DIR_NAME + 
+				System.getProperty( "file.separator" ) );
 	}
 	
 	/**
 	 * get the business rules directory path
 	 * @return
 	 */
-	public static String getBRFileDir() {
-		return ( businessRulesDirName + System.getProperty( "file.separator" ) );
+	public static String getBusinessRulesDir() {
+		return ( BUSINESS_RULES_DIR_NAME + 
+				System.getProperty( "file.separator" ) );
 	}
 	
 	public static String getBusinessrulefilename() {
-		return workDir + businessRuleFilename;
+		return workDir + BUSINESS_RULES_FILE;
 	}
 	public static String getWarningcolorsfilename() {
-		return workDir + warningColorsFilename;
+		return workDir + WARNING_COLORS_FILE;
 	}
 	public static String getWarningmessagesfilename() {
-		return workDir + warningMessagesFilename;
+		return workDir + WARNING_MESSAGES_FILE;
 	}
 	
 	/**
@@ -151,7 +114,8 @@ public class GlobalUtil {
 	 * @return
 	 */
 	public static String getPicklistDir() {
-		return ( workDir + picklistsDirName + System.getProperty( "file.separator" ) );
+		return ( workDir + PICKLISTS_DIR_NAME + 
+				System.getProperty( "file.separator" ) );
 	}
 
 	
@@ -175,11 +139,14 @@ public class GlobalUtil {
 	 * @param moveable, if the column is moveable
 	 * @return
 	 */
-	public static TableViewerColumn addStandardColumn ( TableViewer parentTable, ColumnLabelProvider labelProvider, 
-			String name, int width, boolean resizable, boolean moveable, int alignment ) {
+	public static TableViewerColumn addStandardColumn ( 
+			TableViewer parentTable, ColumnLabelProvider labelProvider, 
+			String name, int width, boolean resizable, 
+			boolean moveable, int alignment ) {
 
 		// Add the column to the parent table
-		TableViewerColumn column = new TableViewerColumn( parentTable, SWT.NONE );
+		TableViewerColumn column = new TableViewerColumn( parentTable, 
+				SWT.NONE );
 
 		// set the label provider for column
 		column.setLabelProvider( labelProvider );
@@ -201,10 +168,12 @@ public class GlobalUtil {
 	 * @param width
 	 * @return
 	 */
-	public static TableViewerColumn addStandardColumn ( TableViewer parentTable, ColumnLabelProvider labelProvider, 
+	public static TableViewerColumn addStandardColumn ( 
+			TableViewer parentTable, ColumnLabelProvider labelProvider, 
 			String name, int width ) {
 
-		return addStandardColumn( parentTable, labelProvider, name, width, true, true, SWT.LEFT );
+		return addStandardColumn( parentTable, labelProvider, 
+				name, width, true, true, SWT.LEFT );
 	}
 	
 
@@ -217,10 +186,12 @@ public class GlobalUtil {
 	 * @param alignment
 	 * @return
 	 */
-	public static TableViewerColumn addStandardColumn ( TableViewer parentTable, ColumnLabelProvider labelProvider, 
+	public static TableViewerColumn addStandardColumn ( 
+			TableViewer parentTable, ColumnLabelProvider labelProvider, 
 			String name, int width, int alignment ) {
 
-		return addStandardColumn( parentTable, labelProvider, name, width, true, true, alignment );
+		return addStandardColumn( parentTable, labelProvider, 
+				name, width, true, true, alignment );
 	}
 	
 	/**
@@ -233,10 +204,12 @@ public class GlobalUtil {
 	 * @param moveable
 	 * @return
 	 */
-	public static TableViewerColumn addStandardColumn ( TableViewer parentTable, ColumnLabelProvider labelProvider, 
+	public static TableViewerColumn addStandardColumn ( 
+			TableViewer parentTable, ColumnLabelProvider labelProvider, 
 			String name, int width, boolean resizable, boolean moveable ) {
 
-		return addStandardColumn( parentTable, labelProvider, name, width, resizable, moveable, SWT.LEFT );
+		return addStandardColumn( parentTable, labelProvider, 
+				name, width, resizable, moveable, SWT.LEFT );
 	}
 	
 	/**
@@ -246,10 +219,12 @@ public class GlobalUtil {
 	 * @param name
 	 * @return
 	 */
-	public static TableViewerColumn addStandardColumn ( TableViewer parentTable, 
+	public static TableViewerColumn addStandardColumn ( 
+			TableViewer parentTable, 
 			ColumnLabelProvider labelProvider, String name ) {
 		
-		return addStandardColumn(parentTable, labelProvider, name, 150, true, false);
+		return addStandardColumn(parentTable, labelProvider, 
+				name, 150, true, false);
 	}
 	
 	/**
@@ -319,7 +294,8 @@ public class GlobalUtil {
 		Date date = SQLTimestampToDate ( ts );
 		
 		// convert the time stamp to string
-		DateFormat sdf = new SimpleDateFormat ( Catalogue.ISO_8601_24H_FULL_FORMAT );
+		DateFormat sdf = new SimpleDateFormat ( 
+				Catalogue.ISO_8601_24H_FULL_FORMAT );
 		
 		return sdf.format( date );
 	}
@@ -358,10 +334,12 @@ public class GlobalUtil {
 	 * @throws UnsupportedOperationException
 	 * @throws SOAPException
 	 */
-	public static SOAPConnection openSOAPConnection () throws UnsupportedOperationException, SOAPException {
+	public static SOAPConnection openSOAPConnection () 
+			throws UnsupportedOperationException, SOAPException {
 		
 		// Connect to the DCF, given username and password
-		SOAPConnectionFactory connectionFactory = SOAPConnectionFactory.newInstance();
+		SOAPConnectionFactory connectionFactory = 
+				SOAPConnectionFactory.newInstance();
 
 		// create the soap connection
 		return connectionFactory.createConnection();

@@ -67,7 +67,7 @@ public class NewCatalogueInternalVersion {
 	public void importNewCatalogueVersion ( final Listener doneListener ) {
 		
 		ImportCatalogueThread importCat = new 
-				ImportCatalogueThread( null, filename, ImportFileFormat.XML );
+				ImportCatalogueThread( filename, ImportFileFormat.XML );
 		
 		// download the last internal version
 		// and when the process is finished

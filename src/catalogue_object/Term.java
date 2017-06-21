@@ -1501,6 +1501,7 @@ public class Term extends CatalogueObject implements Mappable {
 	
 	/**
 	 * Get a default new term ( created when we add a new term into the browser )
+	 * @param code the code of the new term
 	 * @return
 	 */
 	public static Term getDefaultTerm( String code ) {
@@ -1514,6 +1515,12 @@ public class Term extends CatalogueObject implements Mappable {
 		return getDefaultTerm( currentCat, code );
 	}
 	
+	/**
+	 * Get a default new term
+	 * @param catalogue the catalogue which will contain the new term
+	 * @param code the code of the new term
+	 * @return
+	 */
 	public static Term getDefaultTerm( Catalogue catalogue, 
 			String code ) {
 		

@@ -102,7 +102,7 @@ public class UserProfileChecker extends Thread {
 
 		// import the catusers catalogue
 		ImportCatalogueThread importCat = new ImportCatalogueThread(
-				null, filename, ImportFileFormat.XML );
+				filename, ImportFileFormat.XML );
 		
 		importCat.addDoneListener( new Listener() {
 			

@@ -450,7 +450,7 @@ public class WarningUtil {
 
 		// load exceptions terms and their forbidden processes (these elements have priority over the standard forbidden processes)
 		ArrayList< ForbiddenProcess > exceptionForbiddenProcesses = 
-				loadForbiddenProcesses( GlobalUtil.businessRulexceptionsFilename );
+				loadForbiddenProcesses( GlobalUtil.BUSINESS_RULES_EX_FILE );
 
 		// Warn Group Exceptions, if the base term is an exception then it is itself the warn group
 		if ( isWarnGroup( baseTerm.getCode(), exceptionForbiddenProcesses ) ) {

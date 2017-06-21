@@ -30,7 +30,6 @@ import xml_to_excel.XmlCatalogueToExcel;
 public class ImportCatalogueThread extends Thread {
 
 	private String filename;  // path of the file
-	private String path;  // path where the db will be created
 	private ImportFileFormat format;  // the format of the file
 
 	private Catalogue openedCat;
@@ -60,15 +59,13 @@ public class ImportCatalogueThread extends Thread {
 	
 	/**
 	 * Initialize the import thread
-	 * @param path the path where the new database should be created
 	 * @param filename path of the file we want to import
 	 * @param format in which format is the file that we want to import
 	 */
-	public ImportCatalogueThread( String path, String filename, 
+	public ImportCatalogueThread( String filename, 
 			ImportFileFormat format ) {
 
 		this.filename = filename;
-		this.path = path;
 		this.format = format;
 		this.garbage = new ArrayList<>();
 	}
@@ -226,7 +223,7 @@ public class ImportCatalogueThread extends Thread {
 			
 			// import the catalogue contained in the
 			// xlsx file into the specified path (db path)
-			importer.importWorkbook( path, filename );
+			importer.importWorkbook( filename );
 
 		} catch ( final Exception e ) {
 			e.printStackTrace();

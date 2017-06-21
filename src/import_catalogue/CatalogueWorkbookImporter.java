@@ -33,9 +33,10 @@ public class CatalogueWorkbookImporter {
 	
 	/**
 	 * Set this to true if the catalogue you
-	 * are importing is a local catalogue 
-	 * see {@link Catalogue#isLocal()}
-	 * @param local
+	 * are importing an .xlsx in a catalogue
+	 * (the one opened in the main panel)
+	 * in order to override its data
+	 * @param openedCat
 	 */
 	public void setOpenedCatalogue( Catalogue openedCat ) {
 		this.openedCat = openedCat;
@@ -73,16 +74,18 @@ public class CatalogueWorkbookImporter {
 	 * @throws SQLException 
 	 * @throws Exception
 	 */
-	public void importWorkbook( String dbPath, String filename ) 
+	public void importWorkbook( String filename ) 
 			throws IOException, XMLStreamException, OpenXML4JException, 
 			SAXException, SQLException {
 
+		long importTimeStart = System.currentTimeMillis();
+		
 		updateProgressBar( 1, Messages.getString("ImportExcelXLSX.ReadingData") );
 		
 		// get the excel data
 		WorkbookReader workbookReader = new WorkbookReader( filename );
 		
-		CatalogueSheetImporter catImp = importCatalogueSheet( workbookReader, dbPath );
+		CatalogueSheetImporter catImp = importCatalogueSheet( workbookReader );
 		
 		// get the imported catalogue (if it was local it is the same)
 		Catalogue catalogue = catImp.getImportedCatalogue();
@@ -94,22 +97,21 @@ public class CatalogueWorkbookImporter {
 		// import attributes
 		importAttributeSheet ( workbookReader, catalogue );
 
-		long time = System.currentTimeMillis();
+		long termTimeStart = System.currentTimeMillis();
 		
 		// import terms
 		importTermSheet ( workbookReader, catalogue );
 
-		System.out.println( "Tempo " + (System.currentTimeMillis()-time)/1000.00 + " secondi " );
+		long termTimeEnd = System.currentTimeMillis();
 		
 		// import the release note sheet
 		importReleaseNotes ( workbookReader, catalogue );
 
-		// close the connection
+		// close the connection with excel reader
 		workbookReader.close();
 
 		// after having imported the excel, we can insert the default preferences
-		System.out.println ( "Insert default preferences values for " + catalogue  + " in " +
-				catalogue.getDbPath() );
+		System.out.println ( "Creating default preferences" );
 		
 		// insert default preferences
 		CataloguePreferenceDAO prefDao = new CataloguePreferenceDAO( catalogue );
@@ -119,11 +121,17 @@ public class CatalogueWorkbookImporter {
 		SearchOptionDAO optDao = new SearchOptionDAO ( catalogue );
 		optDao.insertDefaultSearchOpt();
 		
+		long importTimeEnd = System.currentTimeMillis();
+		
 		// end process
 		if ( progressBar != null )
 			progressBar.close();
 		
 		System.out.println( catalogue + " successfully imported in " + catalogue.getDbPath() );
+		
+		System.out.println( "Statistics: " + 
+				"overall time = " + (importTimeEnd-importTimeStart)/1000.00 + " seconds" +
+				"; term sheet time = " + (termTimeEnd-termTimeStart)/1000.00 + " seconds" );
 	}
 	
 	/**
@@ -135,7 +143,7 @@ public class CatalogueWorkbookImporter {
 	 * @throws IOException
 	 * @throws XMLStreamException
 	 */
-	private CatalogueSheetImporter importCatalogueSheet ( WorkbookReader workbookReader, String dbPath ) 
+	private CatalogueSheetImporter importCatalogueSheet ( WorkbookReader workbookReader ) 
 			throws InvalidFormatException, IOException, XMLStreamException {
 		
 		System.out.println( "Importing catalogue sheet" );
@@ -147,8 +155,7 @@ public class CatalogueWorkbookImporter {
 
 		ResultDataSet sheetData = workbookReader.next();
 		
-		CatalogueSheetImporter catImp = 
-				new CatalogueSheetImporter( dbPath );
+		CatalogueSheetImporter catImp = new CatalogueSheetImporter();
 		
 		if ( openedCat != null )
 			catImp.setOpenedCatalogue ( openedCat );
@@ -189,10 +196,15 @@ public class CatalogueWorkbookImporter {
 	}
 	
 	/**
-	 * Import the hierarchy sheet
+	 * Import the hierarchy sheet. Note that you need to set
+	 * the master hierarchy code, since if we are overriding
+	 * an already existing catalogue which has its own master
+	 * code, we cannot use it, we need the master hierarchy
+	 * code contained in the excel sheet to get the master
+	 * hierarchy data correctly.
 	 * @param workbookReader
 	 * @param catalogue
-	 * @param catExcelCode
+	 * @param catExcelCode the master hierarchy code
 	 * @throws InvalidFormatException
 	 * @throws IOException
 	 * @throws XMLStreamException
@@ -210,8 +222,7 @@ public class CatalogueWorkbookImporter {
 		ResultDataSet sheetData = workbookReader.next();
 		
 		HierarchySheetImporter hierImp = new 
-				HierarchySheetImporter( catalogue );
-		hierImp.setMasterCode( catExcelCode );
+				HierarchySheetImporter( catalogue, catExcelCode );
 		
 		// start the import
 		hierImp.importData( sheetData );
@@ -237,7 +248,7 @@ public class CatalogueWorkbookImporter {
 	 */
 	private void importQuickly ( WorkbookReader workbookReader, String sheetName,
 			int batchSize, final SheetImporter<?> importer ) throws XMLStreamException, 
-			CloneNotSupportedException, InvalidFormatException, IOException {
+			InvalidFormatException, IOException {
 		
 		QuickImporter quickImp = new QuickImporter( workbookReader, sheetName, batchSize ) {
 			
@@ -251,7 +262,10 @@ public class CatalogueWorkbookImporter {
 	}
 
 	/**
-	 * Import the entire term sheet into the db
+	 * Import the entire term sheet into the db. Note that you have
+	 * to import the hierarchies and the attributes before importing
+	 * this sheet. See {@link #importAttributeSheet(WorkbookReader, Catalogue)}
+	 * and {@link #importHierarchySheet(WorkbookReader, Catalogue, String)}.
 	 * @param workbookReader
 	 * @param catalogue
 	 * @throws InvalidFormatException
@@ -267,15 +281,14 @@ public class CatalogueWorkbookImporter {
 		System.out.println( "Importing term sheet" );
 		updateProgressBar( 15, Messages.getString("ImportExcelXLSX.ImportTermLabel") );
 
-		TermSheetImporter termImp = new 
-				TermSheetImporter( catalogue );
+		TermSheetImporter termImp = new TermSheetImporter( catalogue );
 
-		try {
-			importQuickly ( workbookReader, Headers.TERM_SHEET_NAME, batchSize, termImp );
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-		}
+		// import terms in a quick way
+		importQuickly ( workbookReader, Headers.TERM_SHEET_NAME, batchSize, termImp );
 
+		// note that we need to have imported the terms to import
+		// term attributes and parent terms!
+		
 		System.out.println( "Importing term attributes and parent terms" );
 		updateProgressBar( 25, Messages.getString("ImportExcelXLSX.ImportTermAttrLabel") );
 		
@@ -286,11 +299,7 @@ public class CatalogueWorkbookImporter {
 		
 		tapImporter.manageNewTerms( termImp.getNewCodes() );
 		
-		try {
-			tapImporter.importSheet();
-		} catch (CloneNotSupportedException e1) {
-			e1.printStackTrace();
-		}
+		tapImporter.importSheet();
 	}
 	
 	/**

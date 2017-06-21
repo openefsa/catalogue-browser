@@ -1,8 +1,6 @@
 package open_xml_reader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.SQLException;
-import java.util.ArrayList;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -15,12 +13,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
-
-import catalogue.Catalogue;
-import catalogue_browser_dao.CatalogueDAO;
-import catalogue_browser_dao.DatabaseManager;
-import dcf_manager.Dcf.DcfType;
-import import_catalogue.CatalogueWorkbookImporter;
 
 /**
  * This class is used to read the sheets data of
@@ -162,103 +154,5 @@ public class WorkbookReader {
 		} catch (IOException | XMLStreamException e) {
 			e.printStackTrace();
 		}
-	}
-
-	/*public static void main ( String[] args ) {
-		CatalogueDAO catDao = new CatalogueDAO();
-		Catalogue catalogue = Catalogue.getDefaultCatalogue("Bagigio");
-
-		try {
-
-			Connection con = catalogue.getConnection();
-			con.close();
-
-			// if no exception was thrown => the database exists and we have to delete it
-			// delete the content of the old catalogue database
-			System.out.println( "Deleting the database located in " + catalogue.getDbPath() );
-
-			catDao.deleteDBRecords ( catalogue );
-
-			System.out.println( "Freeing deleted memory..." );
-			catDao.compressDatabase( catalogue );
-
-			// set the id to the catalogue
-			int id = catDao.getCatalogue( catalogue.getCode(), 
-					catalogue.getVersion(), 
-					catalogue.getCatalogueType() ).getId();
-
-			catalogue.setId( id );
-		}
-		catch ( SQLException e ) {
-
-			// otherwise the database does not exist => we create it
-
-			System.out.println ( "Add " + catalogue + 
-					" to the catalogue table in " + 
-					catalogue.getDbPath() );
-
-			// set the id to the catalogue
-			int id = catDao.insert( catalogue );
-
-			catalogue.setId( id );
-
-			// create the standard database structure for
-			// the new catalogue
-			catDao.createDBTables( catalogue.getDbPath() );
-		}
-
-		// create several terms
-		ArrayList<Term> terms = new ArrayList<>();
-		for ( int i = 0; i < 2000; i++ ) {
-			terms.add( Term.getDefaultTerm( catalogue, i + "bagigioa1" ) );
-		}
-
-		// create several terms
-		final ArrayList<Term> terms2 = new ArrayList<>();
-		for ( int i = 2002; i < 4000; i++ ) {
-			terms.add( Term.getDefaultTerm( catalogue, i + "bagigioa2" ) );
-		}
-
-
-
-		final TermDAO termDao = new TermDAO( catalogue );
-
-		// insert in one thread
-		Thread insert = new Thread( new Runnable() {
-
-			@Override
-			public void run() {
-				System.out.println( "Started second" );
-				termDao.insertTerms ( terms2 );
-				System.out.println( "Finished second" );
-			}
-		});
-
-		insert.start();
-		System.out.println( "Started first" );
-		// insert in the other thread
-		termDao.insertTerms( terms );
-
-		System.out.println( "Finished first" );
-	}
-*/
-	public static void main ( String[] args ) throws IOException, XMLStreamException, 
-	OpenXML4JException, SAXException, SQLException {
-
-		DatabaseManager.startMainDB();
-
-		CatalogueDAO catDao = new CatalogueDAO();
-		ArrayList<Catalogue> cats = catDao.getLocalCatalogues( DcfType.LOCAL );
-		Catalogue catalogue = null;
-		for ( Catalogue cat : cats ) {
-			if ( cat.getCode().equals( "MTX" ) )
-				catalogue = cat;
-		}
-
-		CatalogueWorkbookImporter importer = new CatalogueWorkbookImporter();
-		importer.setOpenedCatalogue( catalogue );
-		importer.importWorkbook( 
-				"C:\\Users\\avonva\\Desktop\\CatalogueBrowser\\CatalogueBrowser\\Database\\LocalCatalogues\\CAT_MTX_DB\\MTX", 
-				"C:\\Users\\avonva\\Desktop\\MTX_8.7.xlsx");
 	}
 }

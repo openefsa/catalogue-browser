@@ -400,7 +400,6 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 	
 	/**
 	 * Compress the database to avoid fragmentation
-	 * TODO insert missing tables
 	 */
 	public void compressDatabase( Catalogue catalogue ) {
 		
@@ -429,7 +428,21 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 			cs.execute();
 			cs.setString( 2, "HIERARCHY" );
 			cs.execute();
-			
+			cs.setString( 2, "PICKLIST_TERM" );
+			cs.execute();
+			cs.setString( 2, "RECENT_TERM" );
+			cs.execute();
+			cs.setString( 2, "RELEASE_NOTES_OP" );
+			cs.execute();
+			cs.setString( 2, "SEARCH_OPT" );
+			cs.execute();
+			cs.setString( 2, "PICKLIST" );
+			cs.execute();
+			cs.setString( 2, "PREFERENCE" );
+			cs.execute();
+			cs.setString( 2, "TERM_TYPE" );
+			cs.execute();
+
 			cs.close();
 			con.close();
 			

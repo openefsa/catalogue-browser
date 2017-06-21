@@ -48,7 +48,6 @@ public class Ping extends SOAPAction {
 			String url = getType() == DcfType.PRODUCTION ? URL : TEST_URL;
 			check = (boolean) makeRequest( url );
 		} catch (SOAPException e) {
-			e.printStackTrace();
 			check = false;
 		}
 

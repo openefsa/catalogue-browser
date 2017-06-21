@@ -18,6 +18,15 @@ public class QuickParentAttributesImporter extends QuickImporter {
 	private TermAttributeImporter taImp;
 	private ParentImporter parentImp;
 	
+	/**
+	 * Initialize the importer.
+	 * @param catalogue the catalogue in which we want to import the data
+	 * @param workbookReader the excel reader
+	 * @param termSheetName the name of the sheet of terms
+	 * @param batchSize the size of the batches which will be used to import
+	 * the data. See {@link WorkbookReader#setBatchSize(int)}.
+	 * @throws SQLException
+	 */
 	public QuickParentAttributesImporter( Catalogue catalogue, WorkbookReader workbookReader, 
 			String termSheetName, int batchSize ) throws SQLException {
 		super(workbookReader, termSheetName, batchSize );
@@ -58,6 +67,9 @@ public class QuickParentAttributesImporter extends QuickImporter {
 				
 				// import the dataset
 				taImp.importData( clonedRs );
+				
+				// close the dataset
+				clonedRs.close();
 			}
 		});
 		

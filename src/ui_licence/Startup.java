@@ -59,7 +59,7 @@ public class Startup {
 
 		if ( _dialog ) {
 			Label l = new Label( startupWindow , SWT.NONE );
-			l.setText( Messages.getString( "Startup.AppVersion" ) + CatalogueBrowserMain.ProgramVersion );
+			l.setText( Messages.getString( "Startup.AppVersion" ) + CatalogueBrowserMain.APP_VERSION );
 
 			shellGridData = new GridData();
 			shellGridData.horizontalAlignment = SWT.FILL;

@@ -10,7 +10,7 @@ import naming_convention.Headers;
 import open_xml_reader.ResultDataSet;
 
 /**
- * Import the hierarchy sheet
+ * Import the hierarchy sheet into the catalogue database.
  * @author avonva
  *
  */
@@ -21,19 +21,21 @@ public class HierarchySheetImporter extends SheetImporter<Hierarchy> {
 	
 	/**
 	 * Initialize the import of the hierarchy sheet
-	 * @param catalogue the catalogue which contains the hierarchies
-	 * @param hierData the sheet hierarchies data
+	 * @param catalogue the catalogue in which we want to import the hierarchies
+	 * @param masterCode the master hierarchy code. Note that this is different
+	 * from the {@code catalogue} code. In fact, if we import
+	 * overriding an existing catalogue, the catalogue code could be potentially 
+	 * different from the one reported into the
+	 * excel catalogue sheet, since we can import a different catalogue compared to the
+	 * one we are overriding. Therefore, we cannot simply use {@link Catalogue#getCode()}
+	 * to access the master hierarchy code, but we need the information retrieved
+	 * directly from the excel sheet (which can be retrieved using
+	 * {@link CatalogueSheetImporter#getExcelCode()} after having imported
+	 * the catalogue sheet). We need this information since the excel workbook
+	 * uses its own master hierarchy code.
 	 */
-	public HierarchySheetImporter( Catalogue catalogue ) {
+	public HierarchySheetImporter( Catalogue catalogue, String masterCode ) {
 		this.catalogue = catalogue;
-	}
-
-	/**
-	 * Set the master hierarchy code (which is the
-	 * catalogue code).
-	 * @param masterCode
-	 */
-	public void setMasterCode( String masterCode ) {
 		this.masterCode = masterCode;
 	}
 	
@@ -44,8 +46,10 @@ public class HierarchySheetImporter extends SheetImporter<Hierarchy> {
 		String code = rs.getString ( Headers.CODE );
 
 		// if empty ignore
-		if ( code.isEmpty() )
+		if ( code.isEmpty() ) {
+			System.err.println( "Empty hierarchy code found, skipping..." );
 			return null;
+		}
 
 		boolean isMaster = code.equals( masterCode );
 

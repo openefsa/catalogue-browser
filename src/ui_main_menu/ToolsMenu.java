@@ -53,11 +53,10 @@ public class ToolsMenu implements MainMenuItem {
 	public static final int EXPORT_CAT_MI = 6;
 	public static final int IMPORT_PICKLIST_MI = 7;
 	public static final int FAV_PICKLIST_MI = 8;
-	public static final int COMPACT_DB_MI = 9;
-	public static final int HIER_EDITOR_MI = 10;
-	public static final int ATTR_EDITOR_MI = 11;
-	public static final int SEARCH_OPT_MI = 12;
-	public static final int USER_PREF_MI = 13;
+	public static final int HIER_EDITOR_MI = 9;
+	public static final int ATTR_EDITOR_MI = 10;
+	public static final int SEARCH_OPT_MI = 11;
+	public static final int USER_PREF_MI = 12;
 	
 	private MenuListener listener;
 	
@@ -75,7 +74,6 @@ public class ToolsMenu implements MainMenuItem {
 	private MenuItem exportMI;
 	private MenuItem importPicklistMI;
 	private MenuItem favouritePicklistMI;
-	private MenuItem compactDBMI;
 	private MenuItem hierarchyEditMI;
 	private MenuItem attributeEditMI; 
 	private MenuItem searchOptMI;
@@ -139,9 +137,6 @@ public class ToolsMenu implements MainMenuItem {
 		
 		// favourite picklist
 		favouritePicklistMI = addFavouritePicklistMI ( toolsMenu );
-
-		// compact database
-		compactDBMI = addCompactDBMI ( toolsMenu );
 
 		// editors only if the catalogue can be edited
 		if ( mainMenu.getCatalogue() != null && 
@@ -455,9 +450,7 @@ public class ToolsMenu implements MainMenuItem {
 					return;
 	
 				ImportCatalogueThread importCat = 
-						new ImportCatalogueThread( 
-								mainMenu.getCatalogue().getDbPath(), 
-								filename, ImportFileFormat.XLSX );
+						new ImportCatalogueThread( filename, ImportFileFormat.XLSX );
 				
 				importCat.setProgressBar( new FormProgressBar( shell,
 						Messages.getString( "Browser.ImportXlsxBarTitle" ) ) );
@@ -716,35 +709,7 @@ public class ToolsMenu implements MainMenuItem {
 		
 		return picklistItem;
 	}
-	
-	
-	/**
-	 * Add a menu item which allows compacting the DB
-	 * @param menu
-	 */
-	private MenuItem addCompactDBMI ( Menu menu ) {
-		
-		final MenuItem compressDBItem = new MenuItem( menu , SWT.NONE );
 
-		compressDBItem.setText( Messages.getString("BrowserMenu.CompactDBCmd") );
-
-		compressDBItem.addSelectionListener( new SelectionAdapter() {
-			@Override
-			public void widgetSelected ( SelectionEvent event ) {
-
-				DatabaseManager.compressDatabase();
-
-				if ( listener != null )
-					listener.buttonPressed( compressDBItem, 
-							COMPACT_DB_MI, null );
-			}
-		} );
-		
-		compressDBItem.setEnabled( false );
-		
-		return compressDBItem;
-	}
-	
 	/**
 	 * Add a menu item which allows modifying the hierarchies names
 	 * @param menu
@@ -905,8 +870,6 @@ public class ToolsMenu implements MainMenuItem {
 		
 		// check if the current catalogue is not empty (has data in it)
 		boolean nonEmptyCat = !mainMenu.getCatalogue().isEmpty();
-		
-		compactDBMI.setEnabled( true );
 
 		// we can export only for non local catalogues, since if we
 		// export a local catalogue we create an excel which has as

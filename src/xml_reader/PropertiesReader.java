@@ -83,7 +83,7 @@ public class PropertiesReader {
 	private static String getValue ( String property, String defaultValue ) {
 		
 		Properties prop = PropertiesReader.getProperties( 
-				GlobalUtil.appPropertiesFile );
+				GlobalUtil.CONFIG_FILE );
 		
 		if ( prop == null )
 			return defaultValue;

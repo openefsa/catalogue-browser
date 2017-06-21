@@ -9,6 +9,13 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import open_xml_reader.ResultDataSet;
 import open_xml_reader.WorkbookReader;
 
+/**
+ * Import a work sheet in a quicker way
+ * separating the import and reading work using threads.
+ * To use this class you need to implement {@link #importData(ResultDataSet)}.
+ * @author avonva
+ *
+ */
 public abstract class QuickImporter {
 
 	protected WorkbookReader workbookReader;
@@ -30,7 +37,7 @@ public abstract class QuickImporter {
 	 * @throws InvalidFormatException 
 	 */
 	public void importSheet () 
-			throws CloneNotSupportedException, XMLStreamException, InvalidFormatException, IOException {
+			throws XMLStreamException, InvalidFormatException, IOException {
 		
 		// get the sheet
 		workbookReader.processSheetName( sheetName );
@@ -45,7 +52,13 @@ public abstract class QuickImporter {
 		while ( fetched != null ) {
 			
 			// copy the data set to use it in the import
-			ResultDataSet current = (ResultDataSet) fetched.clone();
+			ResultDataSet current;
+			try {
+				current = (ResultDataSet) fetched.clone();
+			} catch (CloneNotSupportedException e1) {
+				e1.printStackTrace();
+				return;
+			}
 			
 			// meanwhile read the second batch
 			// note that this will override the fetched

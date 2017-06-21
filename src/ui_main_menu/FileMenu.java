@@ -393,7 +393,7 @@ public class FileMenu implements MainMenuItem {
 					return;
 				
 				ImportCatalogueThread importCat = 
-						new ImportCatalogueThread( null, 
+						new ImportCatalogueThread(
 								filename, ImportFileFormat.ECF );
 				
 				//ImportActions importAction = new ImportActions();

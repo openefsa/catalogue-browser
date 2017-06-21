@@ -12,10 +12,16 @@ import instance_checker.InstanceChecker;
 import utilities.GlobalUtil;
 import xml_reader.PropertiesReader;
 
+/**
+ * Entry point for the Catalogue Browser application.
+ * The user interfaces and the database are started here.
+ * @author avonva
+ *
+ */
 public class CatalogueBrowserMain {
 
-	public static final String ApplicationName = PropertiesReader.getAppName();
-	public static final String ProgramVersion = PropertiesReader.getAppVersion();
+	public static final String APP_NAME = PropertiesReader.getAppName();
+	public static final String APP_VERSION = PropertiesReader.getAppVersion();
 	
 	/**
 	 * Main, catalogue browser entry point
@@ -38,13 +44,13 @@ public class CatalogueBrowserMain {
 		// Files checks, create directories if they don't exist
 
 		// if the user files directory does not exist create it
-		if ( !GlobalUtil.fileExists( GlobalUtil.userFileDir ) ) {
-			new File( GlobalUtil.userFileDir ).mkdir();
+		if ( !GlobalUtil.fileExists( GlobalUtil.CONFIG_FILES_DIR_PATH ) ) {
+			new File( GlobalUtil.CONFIG_FILES_DIR_PATH ).mkdir();
 		}
 
 		// if the business rules directory does not exist create it
-		if ( !GlobalUtil.fileExists( GlobalUtil.businessRulesDir ) ) {
-			new File( GlobalUtil.businessRulesDir ).mkdir();
+		if ( !GlobalUtil.fileExists( GlobalUtil.BUSINESS_RULES_DIR_PATH ) ) {
+			new File( GlobalUtil.BUSINESS_RULES_DIR_PATH ).mkdir();
 		}
 
 		// connect to the main database and start it
@@ -55,7 +61,7 @@ public class CatalogueBrowserMain {
 		Shell shell = new Shell ( display );
 		
 		// set the application name in the shell
-		shell.setText( ApplicationName + " " + ProgramVersion );
+		shell.setText( APP_NAME + " " + APP_VERSION );
 		
 		// set the application image into the shell
 		shell.setImage( new Image( Display.getCurrent(), 
