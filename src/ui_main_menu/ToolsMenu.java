@@ -254,9 +254,7 @@ public class ToolsMenu implements MainMenuItem {
 			}
 
 			@Override
-			public void widgetDefaultSelected(SelectionEvent arg0) {
-				
-			}
+			public void widgetDefaultSelected(SelectionEvent arg0) {}
 		});
 		
 		unreserveMI.setEnabled( false );
@@ -289,6 +287,7 @@ public class ToolsMenu implements MainMenuItem {
 				XmlChangesCreator xmlCreator = new XmlChangesCreator();
 				xmlCreator.setProgressBar( progressBar );
 				
+				// if wrong
 				xmlCreator.setAbortListener( new Listener() {
 					
 					@Override
@@ -299,6 +298,7 @@ public class ToolsMenu implements MainMenuItem {
 					}
 				});
 				
+				// if ok
 				xmlCreator.setDoneListener( new Listener() {
 					
 					@Override
@@ -310,6 +310,7 @@ public class ToolsMenu implements MainMenuItem {
 					}
 				});
 				
+				// start
 				xmlCreator.createXml( mainMenu.getCatalogue() );
 			}
 

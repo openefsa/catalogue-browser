@@ -290,7 +290,7 @@ public class CatalogueWorkbookImporter {
 		// term attributes and parent terms!
 		
 		System.out.println( "Importing term attributes and parent terms" );
-		updateProgressBar( 25, Messages.getString("ImportExcelXLSX.ImportTermAttrLabel") );
+		updateProgressBar( 50, Messages.getString("ImportExcelXLSX.ImportTermAttrLabel") );
 		
 		// import term attributes and parent terms in a parallel way
 		// since they are independent processes

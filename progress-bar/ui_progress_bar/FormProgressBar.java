@@ -5,6 +5,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -63,7 +64,7 @@ public class FormProgressBar {
 		currentShell.setSize( 300, 130 );
 		currentShell.setLayout( new FillLayout() );
 
-		Group grp = new Group( currentShell , SWT.NONE );
+		Composite grp = new Group( currentShell , SWT.NONE );
 		grp.setLayout( new GridLayout( 2 , false ) );
 
 

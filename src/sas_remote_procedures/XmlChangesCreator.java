@@ -59,7 +59,8 @@ public class XmlChangesCreator {
 	private Listener doneListener;
 
 	/**
-	 * Create the .xml file which contains the differences
+	 * Ask to the sas server to create the .xml file 
+	 * which contains the differences
 	 * between {@code catalogue} and its official version
 	 * hosted on the dcf. The .xml file will be created on
 	 * the remote folder, which is defined in

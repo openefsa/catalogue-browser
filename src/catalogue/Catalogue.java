@@ -2071,7 +2071,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 */
 	@Override
 	public String toString() {
-		return "CATALOGUE: " + getCode() + ", version " + getVersion();
+		return "CATALOGUE: " + getCode() + " " + getVersion();
 	}
 
 

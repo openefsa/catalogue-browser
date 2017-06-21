@@ -38,16 +38,19 @@ public class ExportCatalogueWorkbook {
 	 */
 	public void exportCatalogue( Catalogue catalogue, String filename ) throws IOException {
 		
+		long startTime = System.currentTimeMillis();
+		
 		System.out.println ( "Starting export process..." );
 		
 		// the workbook which will be created with the export
-		SXSSFWorkbook workbook = new SXSSFWorkbook( new XSSFWorkbook() , 100 , true , true );
-		
+		SXSSFWorkbook workbook = new SXSSFWorkbook();
+
 		// set that we want to maintain the temp files smaller
 		workbook.setCompressTempFiles( true );
 		
 		// write the catalogue sheet
-		ExportCatalogueSheet catSheet = new ExportCatalogueSheet( catalogue, workbook, Headers.CAT_SHEET_NAME );
+		ExportCatalogueSheet catSheet = new ExportCatalogueSheet( catalogue, 
+				workbook, Headers.CAT_SHEET_NAME );
 		
 		if ( progressBar != null )
 			catSheet.setProgressBar( progressBar, 1, 
@@ -56,7 +59,8 @@ public class ExportCatalogueWorkbook {
 		catSheet.write();
 
 		// write the hierarchy sheet
-		ExportHierarchySheet hierarchySheet = new ExportHierarchySheet( catalogue, workbook, Headers.HIER_SHEET_NAME );
+		ExportHierarchySheet hierarchySheet = new ExportHierarchySheet( catalogue, 
+				workbook, Headers.HIER_SHEET_NAME );
 		
 		if ( progressBar != null )
 			hierarchySheet.setProgressBar( progressBar, 4, 
@@ -65,7 +69,8 @@ public class ExportCatalogueWorkbook {
 		hierarchySheet.write();
 		
 		// write the attribute sheet
-		ExportAttributeSheet attrSheet = new ExportAttributeSheet( catalogue, workbook, Headers.ATTR_SHEET_NAME );
+		ExportAttributeSheet attrSheet = new ExportAttributeSheet( catalogue, 
+				workbook, Headers.ATTR_SHEET_NAME );
 		
 		if ( progressBar != null )
 			attrSheet.setProgressBar( progressBar, 5, 
@@ -74,7 +79,8 @@ public class ExportCatalogueWorkbook {
 		attrSheet.write();
 
 		// write the term sheet
-		ExportTermSheet termSheet = new ExportTermSheet( catalogue, workbook, Headers.TERM_SHEET_NAME );
+		ExportTermSheet termSheet = new ExportTermSheet( catalogue, 
+				workbook, Headers.TERM_SHEET_NAME );
 		
 		if ( progressBar != null )
 			termSheet.setProgressBar( progressBar, 80, 
@@ -112,7 +118,7 @@ public class ExportCatalogueWorkbook {
 		if ( progressBar != null )
 			progressBar.close();
 
-		
-		System.out.println ( "Export finished" );
+		System.out.println( "Export finished, statistics: overall time = " 
+				+ (System.currentTimeMillis()-startTime)/1000.00 + " seconds" );
 	}
 }
