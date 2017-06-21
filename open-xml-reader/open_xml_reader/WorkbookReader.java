@@ -30,7 +30,7 @@ import import_catalogue.CatalogueWorkbookImporter;
  *
  */
 public class WorkbookReader {
-	
+
 	private BufferedSheetReader sheetParser;
 	private InputStream sheetReader;
 	private XSSFReader reader = null;
@@ -62,7 +62,7 @@ public class WorkbookReader {
 				"org.apache.xerces.parsers.SAXParser" );
 		parser.setContentHandler( workbookHandler );
 		parser.parse( new InputSource( wbStream ) );
-		
+
 		wbStream.close();
 	}
 
@@ -83,19 +83,19 @@ public class WorkbookReader {
 		// close the previous sheet reader if there was one
 		if ( sheetReader != null )
 			sheetReader.close();
-		
+
 		if ( sheetParser != null )
 			sheetParser.clear();
 
 		// get the sheet relationship id using the sheet name
 		String sheetRId = workbookHandler.getSheetRelationshipId( name );
-		
+
 		// if not sheet id is retrieved => exception
 		if ( sheetRId.equals( "" ) || sheetRId == null ) {
 			System.err.println( "No sheet named " + name + " was found!" );
 			return;
 		}
-		
+
 		// get the sheet from the reader
 		sheetReader = reader.getSheet( sheetRId );
 
@@ -103,7 +103,7 @@ public class WorkbookReader {
 		sheetParser = new BufferedSheetReader ( sheetReader, 
 				reader.getSharedStringsTable() );
 	}
-	
+
 	/**
 	 * The parser has other nodes to parse?
 	 * @return
@@ -115,7 +115,7 @@ public class WorkbookReader {
 
 		return sheetParser.hasNext();
 	}
-	
+
 	/**
 	 * Set the batch size of the current
 	 * {@link #sheetParser}. Using {@link #next()}
@@ -126,10 +126,10 @@ public class WorkbookReader {
 	 * @param batchSize
 	 */
 	public void setBatchSize ( int batchSize ) {
-		
+
 		if ( sheetParser == null )
 			return;
-		
+
 		sheetParser.setBatchSize(batchSize);
 	}
 	public BufferedSheetReader getSheetParser() {
@@ -141,33 +141,112 @@ public class WorkbookReader {
 	 * @throws XMLStreamException
 	 */
 	public ResultDataSet next() throws XMLStreamException {
-		
+
 		if ( sheetParser == null )
 			return null;
-		
+
 		return sheetParser.next();
 	}
-	
+
 	/**
 	 * Close the dataset
 	 */
 	public void close() {
 		try {
-			
+
 			if ( sheetParser != null )
 				sheetParser.close();
-			
+
 			sheetReader.close();
 			pkg.close();
 		} catch (IOException | XMLStreamException e) {
 			e.printStackTrace();
 		}
 	}
-	/*public static void main ( String[] args ) throws IOException, XMLStreamException, 
+
+	/*public static void main ( String[] args ) {
+		CatalogueDAO catDao = new CatalogueDAO();
+		Catalogue catalogue = Catalogue.getDefaultCatalogue("Bagigio");
+
+		try {
+
+			Connection con = catalogue.getConnection();
+			con.close();
+
+			// if no exception was thrown => the database exists and we have to delete it
+			// delete the content of the old catalogue database
+			System.out.println( "Deleting the database located in " + catalogue.getDbPath() );
+
+			catDao.deleteDBRecords ( catalogue );
+
+			System.out.println( "Freeing deleted memory..." );
+			catDao.compressDatabase( catalogue );
+
+			// set the id to the catalogue
+			int id = catDao.getCatalogue( catalogue.getCode(), 
+					catalogue.getVersion(), 
+					catalogue.getCatalogueType() ).getId();
+
+			catalogue.setId( id );
+		}
+		catch ( SQLException e ) {
+
+			// otherwise the database does not exist => we create it
+
+			System.out.println ( "Add " + catalogue + 
+					" to the catalogue table in " + 
+					catalogue.getDbPath() );
+
+			// set the id to the catalogue
+			int id = catDao.insert( catalogue );
+
+			catalogue.setId( id );
+
+			// create the standard database structure for
+			// the new catalogue
+			catDao.createDBTables( catalogue.getDbPath() );
+		}
+
+		// create several terms
+		ArrayList<Term> terms = new ArrayList<>();
+		for ( int i = 0; i < 2000; i++ ) {
+			terms.add( Term.getDefaultTerm( catalogue, i + "bagigioa1" ) );
+		}
+
+		// create several terms
+		final ArrayList<Term> terms2 = new ArrayList<>();
+		for ( int i = 2002; i < 4000; i++ ) {
+			terms.add( Term.getDefaultTerm( catalogue, i + "bagigioa2" ) );
+		}
+
+
+
+		final TermDAO termDao = new TermDAO( catalogue );
+
+		// insert in one thread
+		Thread insert = new Thread( new Runnable() {
+
+			@Override
+			public void run() {
+				System.out.println( "Started second" );
+				termDao.insertTerms ( terms2 );
+				System.out.println( "Finished second" );
+			}
+		});
+
+		insert.start();
+		System.out.println( "Started first" );
+		// insert in the other thread
+		termDao.insertTerms( terms );
+
+		System.out.println( "Finished first" );
+	}
+*/
+	public static void main ( String[] args ) throws IOException, XMLStreamException, 
 	OpenXML4JException, SAXException, SQLException {
-		
+
 		DatabaseManager.startMainDB();
-		
+
 		CatalogueDAO catDao = new CatalogueDAO();
 		ArrayList<Catalogue> cats = catDao.getLocalCatalogues( DcfType.LOCAL );
 		Catalogue catalogue = null;
@@ -175,11 +254,11 @@ public class WorkbookReader {
 			if ( cat.getCode().equals( "MTX" ) )
 				catalogue = cat;
 		}
-		
+
 		CatalogueWorkbookImporter importer = new CatalogueWorkbookImporter();
 		importer.setOpenedCatalogue( catalogue );
 		importer.importWorkbook( 
 				"C:\\Users\\avonva\\Desktop\\CatalogueBrowser\\CatalogueBrowser\\Database\\LocalCatalogues\\CAT_MTX_DB\\MTX", 
 				"C:\\Users\\avonva\\Desktop\\MTX_8.7.xlsx");
-	}*/
+	}
 }

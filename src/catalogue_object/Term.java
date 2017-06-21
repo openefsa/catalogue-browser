@@ -1511,7 +1511,13 @@ public class Term extends CatalogueObject implements Mappable {
 		// get the current catalogue
 		Catalogue currentCat = manager.getCurrentCatalogue();
 		
-		Term term = new Term( currentCat );
+		return getDefaultTerm( currentCat, code );
+	}
+	
+	public static Term getDefaultTerm( Catalogue catalogue, 
+			String code ) {
+		
+		Term term = new Term( catalogue );
 
 		term.setCode( code );
 		
@@ -1527,16 +1533,15 @@ public class Term extends CatalogueObject implements Mappable {
 		term.setValidFrom( new java.sql.Timestamp( System.currentTimeMillis() ) );
 
 		// if the catalogue supports detail levels add the default
-		if ( currentCat.hasDetailLevelAttribute() )
+		if ( catalogue.hasDetailLevelAttribute() )
 			term.setDetailLevel( TermAttribute.getDefaultDetailLevel( term ) );
 
 		// if the catalogue supports term types add the default
-		if ( currentCat.hasTermTypeAttribute() )
+		if ( catalogue.hasTermTypeAttribute() )
 			term.setTermType( TermAttribute.getDefaultTermType( term ) );
-
+		
 		return term;
 	}
-	
 	
 	/**
 	 * Get all the term siblings in the selected hierarchy

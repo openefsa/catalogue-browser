@@ -94,9 +94,13 @@ public class CatalogueWorkbookImporter {
 		// import attributes
 		importAttributeSheet ( workbookReader, catalogue );
 
+		long time = System.currentTimeMillis();
+		
 		// import terms
 		importTermSheet ( workbookReader, catalogue );
 
+		System.out.println( "Tempo " + (System.currentTimeMillis()-time)/1000.00 + " secondi " );
+		
 		// import the release note sheet
 		importReleaseNotes ( workbookReader, catalogue );
 
@@ -228,53 +232,22 @@ public class CatalogueWorkbookImporter {
 	 * @param importer the sheet importer
 	 * @throws XMLStreamException
 	 * @throws CloneNotSupportedException
+	 * @throws IOException 
+	 * @throws InvalidFormatException 
 	 */
-	private void importQuickly ( WorkbookReader workbookReader, 
-			SheetImporter<?> importer ) throws XMLStreamException, 
-			CloneNotSupportedException {
+	private void importQuickly ( WorkbookReader workbookReader, String sheetName,
+			int batchSize, final SheetImporter<?> importer ) throws XMLStreamException, 
+			CloneNotSupportedException, InvalidFormatException, IOException {
 		
-		if ( !workbookReader.hasNext() )
-			return;
-		
-		ResultDataSet fetched = workbookReader.next();
-
-		// read the first batch
-		while ( fetched != null ) {
+		QuickImporter quickImp = new QuickImporter( workbookReader, sheetName, batchSize ) {
 			
-			// copy the data set to use it in the import
-			ResultDataSet current = (ResultDataSet) fetched.clone();
-			
-			// meanwhile read the second batch
-			// note that this will override the fetched
-			// result data set since we are pointing to
-			// that result data set
-			SheetReaderThread t = new SheetReaderThread( workbookReader );
-			t.start();
-			
-			//current.printRows( 5) ;
-			// import the first batch of data
-			// while reading the second
-			importer.importData( current );
-
-			// wait that the read thread is finished
-			try {
-				
-				t.join();
-				
-				// close used result set
-				current.close();
-				
-				// if no next data stop!
-				if ( t.getData() == null ) {
-					if ( fetched != null ) {
-						fetched.close();
-						fetched = null;
-					}
-				}
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			@Override
+			public void importData(ResultDataSet rs) {
+				importer.importData( rs );
 			}
-		}
+		};
+		
+		quickImp.importSheet();
 	}
 
 	/**
@@ -289,60 +262,34 @@ public class CatalogueWorkbookImporter {
 	private void importTermSheet ( WorkbookReader workbookReader, Catalogue catalogue ) 
 			throws InvalidFormatException, IOException, XMLStreamException, SQLException {
 
-		final int batchSize = 2000;
+		final int batchSize = 100;
 		
 		System.out.println( "Importing term sheet" );
 		updateProgressBar( 15, Messages.getString("ImportExcelXLSX.ImportTermLabel") );
-		
-		// get the term sheet
-		workbookReader.processSheetName( Headers.TERM_SHEET_NAME );
-		workbookReader.setBatchSize( batchSize );
-		
+
 		TermSheetImporter termImp = new 
 				TermSheetImporter( catalogue );
 
 		try {
-			importQuickly ( workbookReader, termImp );
+			importQuickly ( workbookReader, Headers.TERM_SHEET_NAME, batchSize, termImp );
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}
 
-
-		System.out.println( "Importing term attributes" );
+		System.out.println( "Importing term attributes and parent terms" );
 		updateProgressBar( 25, Messages.getString("ImportExcelXLSX.ImportTermAttrLabel") );
 		
-		// import term attributes
-		TermAttributeImporter taImp = new 
-				TermAttributeImporter( catalogue );
-		taImp.manageNewTerms( termImp.getNewCodes() );
+		// import term attributes and parent terms in a parallel way
+		// since they are independent processes
+		QuickParentAttributesImporter tapImporter = new QuickParentAttributesImporter( catalogue, 
+				workbookReader, Headers.TERM_SHEET_NAME, batchSize );
 		
-		// get the term sheet
-		workbookReader.processSheetName( Headers.TERM_SHEET_NAME );
-		workbookReader.setBatchSize( batchSize );
-
-		try {
-			importQuickly ( workbookReader, taImp );
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-		}
-		
-		System.out.println( "Importing parent terms" );
-		updateProgressBar( 25, Messages.getString("ImportExcelXLSX.ImportTermParents") );
-		
-		// import parent terms
-		ParentImporter parentImp = new ParentImporter( catalogue );
-		
-		// manage also new terms (i.e. the append function )
-		parentImp.manageNewTerms( termImp.getNewCodes() );
-		
-		// get the term sheet
-		workbookReader.processSheetName( Headers.TERM_SHEET_NAME );
-		workbookReader.setBatchSize( batchSize );
+		tapImporter.manageNewTerms( termImp.getNewCodes() );
 		
 		try {
-			importQuickly ( workbookReader, parentImp );
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
+			tapImporter.importSheet();
+		} catch (CloneNotSupportedException e1) {
+			e1.printStackTrace();
 		}
 	}
 	

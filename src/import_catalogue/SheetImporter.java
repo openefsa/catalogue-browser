@@ -24,8 +24,7 @@ import open_xml_reader.ResultDataSet;
 public abstract class SheetImporter<T> {
 	
 	/**
-	 * Start the import process of the sheet
-	 * less ram memory.
+	 * Start the import process of the sheet.
 	 */
 	public void importData( ResultDataSet data ) {
 		
