@@ -120,6 +120,7 @@ public class TableApplicability {
 		
 		// set the current term 
 		this.term = term;
+		this.catalogue = term.getCatalogue();
 		
 		// set the input for the table
 		applicabilityTable.setInput( term.getApplicabilities() );
@@ -274,10 +275,20 @@ public class TableApplicability {
 		public Object[] getElements ( Object applicabilities ) {
 			@SuppressWarnings("unchecked")
 			ArrayList< Applicability > apps = (ArrayList< Applicability >) applicabilities;
-			if ( apps != null )
-				return apps.toArray();
-			else
-				return null;
+			
+			ArrayList< Applicability > displayedApps = new ArrayList<>();
+			for ( Applicability appl : apps ) {
+				
+				// hide master if required
+				if ( catalogue.isMasterHierarchyHidden() && 
+						appl.relatedToHierarchy( catalogue.getMasterHierarchy() ) ) {
+					continue;
+				}
+				// otherwise add it
+				displayedApps.add( appl );
+			}
+			
+			return displayedApps.toArray();
 		}
 	}
 	

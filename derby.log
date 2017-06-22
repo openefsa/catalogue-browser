@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-Thu Jun 22 11:27:32 CEST 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-015c-cf20-cbfb-000006d297d8 
+Thu Jun 22 11:37:32 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-015c-cf29-f4e6-000006d2a430 
 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\MAIN_CATS_DB with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
 Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
 java.vendor=Oracle Corporation
@@ -12,9 +12,9 @@ os.version=6.1
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
 ----------------------------------------------------------------
-Thu Jun 22 11:27:39 CEST 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 98ec802c-015c-cf20-cbfb-000006d297d8 
-on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\LOCAL_CATS\CAT_MTX_DB\MTX with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Thu Jun 22 11:37:38 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 98ec802c-015c-cf29-f4e6-000006d2a430 
+on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_MTX_DB\MTX_VERSION_9.3 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
 Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.8.0_111-b14
@@ -25,5 +25,18 @@ os.version=6.1
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
 ----------------------------------------------------------------
-Thu Jun 22 11:29:19 CEST 2017:
-Shutting down instance a816c00e-015c-cf20-cbfb-000006d297d8 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\MAIN_CATS_DB with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Thu Jun 22 11:38:19 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 9afb4577-015c-cf29-f4e6-000006d2a430 
+on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_CATUSERS_DB\CATUSERS_VERSION_1.0 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_111-b14
+user.dir=C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser
+os.name=Windows 7
+os.arch=amd64
+os.version=6.1
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Thu Jun 22 11:38:30 CEST 2017:
+Shutting down instance a816c00e-015c-cf29-f4e6-000006d2a430 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\MAIN_CATS_DB with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
