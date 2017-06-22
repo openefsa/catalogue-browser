@@ -312,6 +312,10 @@ public class ToolsMenu implements MainMenuItem {
 				
 				// start
 				xmlCreator.createXml( mainMenu.getCatalogue() );
+				
+				if ( listener != null )
+					listener.buttonPressed( createXmlMI, 
+							CREATE_XML_MI, null );
 			}
 
 			@Override
@@ -340,13 +344,9 @@ public class ToolsMenu implements MainMenuItem {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 
-				//TODO
-				// export the open catalogue to excel
+				XmlChangesCreator xmlCreator = new XmlChangesCreator();
 				
-				
-				// copy the excel file into the shared folder
-				// to start the sas procedure to upload
-				// the catalogue changes
+				xmlCreator.downloadXml( mainMenu.getCatalogue() );
 				
 				
 				if ( listener != null )
@@ -360,7 +360,7 @@ public class ToolsMenu implements MainMenuItem {
 			}
 		});
 		
-		uploadDataMI.setEnabled( false );
+		uploadDataMI.setEnabled( true );
 		
 		return uploadDataMI;
 	}

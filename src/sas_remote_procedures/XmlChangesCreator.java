@@ -2,6 +2,9 @@ package sas_remote_procedures;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -13,7 +16,6 @@ import dcf_manager.Dcf.DcfType;
 import dcf_webservice.UploadData;
 import export_catalogue.ExportActions;
 import ui_progress_bar.FormProgressBar;
-import xml_reader.PropertiesReader;
 
 /**
  * This class is used to compute the differences
@@ -29,13 +31,6 @@ import xml_reader.PropertiesReader;
  */
 public class XmlChangesCreator {
 
-	/**
-	 * Path of the sas procedure which converts the exported catalogue
-	 * file into an .xml file which contains all its differences (in
-	 * terms of dcf operations) with the official catalogue.
-	 */
-	private static final String CHANGES_CREATOR_PATH = 
-			PropertiesReader.getDcfXmlCreatorPath() + System.getProperty("file.separator");
 	
 	/**
 	 * The export format of the exported file as soon
@@ -49,10 +44,22 @@ public class XmlChangesCreator {
 	private static final String CORRECT_FORMAT = ".xlsx";
 	
 	/**
+	 * The format of the file which will be produced
+	 * by the sas procedure
+	 */
+	private static final String REMOTE_CORRECT_FORMAT = ".xml";
+	
+	/**
 	 * The format of the lock file which will be created
 	 * at the end of the process
 	 */
 	private static final String END_FORMAT = ".end";
+	
+	/**
+	 * The format of the lock file which will be created
+	 * at the end of the process
+	 */
+	private static final String REMOTE_END_FORMAT = ".process.end";
 	
 	private FormProgressBar progressBar;
 	private Listener abortListener;
@@ -67,12 +74,14 @@ public class XmlChangesCreator {
 	 * {@link #CHANGES_CREATOR_PATH}.
 	 * @param catalogue
 	 */
-	public void createXml( Catalogue catalogue ) {
+	public void createXml( final Catalogue catalogue ) {
 
 		System.out.println( "Starting xml creation procedure for " + catalogue );
 		
+		final String filename = createUniqueCode( catalogue );
+		
 		// TODO define a conventional filename
-		final String filename = catalogue.getCode() + "_" + catalogue.getVersion();
+		//final String filename = catalogue.getCode() + "_" + catalogue.getVersion();
 		final String startFilename = filename + START_FORMAT;
 		
 		// export the catalogue into the start file
@@ -84,11 +93,13 @@ public class XmlChangesCreator {
 			@Override
 			public void handleEvent(Event arg0) {
 
+				String basepath = SasRemotePaths.CHANGES_CREATOR_PATH;
+				
 				// file involved into the process
 				File startFile = new File ( startFilename );
-				File remoteStartFile = new File ( CHANGES_CREATOR_PATH + startFilename );
-				File remoteXlsxFile = new File ( CHANGES_CREATOR_PATH + filename + CORRECT_FORMAT );
-				File remoteEndFile = new File ( CHANGES_CREATOR_PATH + filename + END_FORMAT );
+				File remoteStartFile = new File ( basepath + startFilename );
+				File remoteXlsxFile = new File ( basepath + filename + CORRECT_FORMAT );
+				File remoteEndFile = new File ( basepath + filename + END_FORMAT );
 				
 				// copy the start file into the remote folder
 				// where the sas procedure can read the file
@@ -107,6 +118,9 @@ public class XmlChangesCreator {
 				if ( !createEndFile( remoteEndFile ) )
 					return;
 				
+				// save the xml filename into the database
+				saveXmlFilename ( catalogue, filename );
+				
 				System.out.println( "Process finished" );
 				
 				// call the done listener
@@ -116,7 +130,88 @@ public class XmlChangesCreator {
 			}
 		} );
 	}
+	
+	/**
+	 * Download the xml file
+	 * @param catalogue
+	 * @return the xml file
+	 */
+	public File downloadXml ( Catalogue catalogue ) {
+		
+		System.out.println( "Downloading xml" );
+		
+		// get the xml filename related to this catalogue
+		XmlUpdateFileDAO xmlDao = new XmlUpdateFileDAO();
+		XmlUpdateFile xmlUpdateFile = xmlDao.getById( catalogue.getId() );
+		
+		if ( xmlUpdateFile == null ) {
+			System.err.println( "Cannot find an xml filename for " + catalogue );
+			return null;
+		}
+		
+		System.out.println( "Filename " + xmlUpdateFile.getXmlFilename() );
+		
+		String endFilename = SasRemotePaths.CHANGES_CREATOR_PATH + 
+				xmlUpdateFile.getXmlFilename() + REMOTE_END_FORMAT;
+		
+		File endFile = new File ( endFilename );
+		
+		System.out.println( "Searching " + endFilename );
+		
+		// search for the lock file
+		// wait 5 seconds each time
+		while ( !endFile.exists() ) {
+			
+			try {
+				Thread.sleep( 5000 );
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		System.out.println( "File " + endFilename + " found!" );
+		
+		// here the file exists therefore we can go on
+		
+		String xmlFilename = SasRemotePaths.CHANGES_CREATOR_PATH + 
+				xmlUpdateFile.getXmlFilename() + REMOTE_CORRECT_FORMAT;
+		File xmlFile = new File ( xmlFilename );
+		
+		// copy the file in the local directory
+		if ( !copy( xmlFile, new File (".") ) )
+			return null;
+		
+		System.out.println( "Process terminated" );
+		
+		return xmlFile;
+	}
 
+	/**
+	 * Create a unique code for the current catalogue, in order
+	 * to be able to correctly retrieve the correct xml file
+	 * @param catalogue
+	 * @return
+	 */
+	private String createUniqueCode ( Catalogue catalogue ) {
+		
+		StringBuilder builder = new StringBuilder();
+		builder.append( catalogue.getCode() );
+		builder.append( "_" );
+		builder.append( catalogue.getVersion() );
+		builder.append( "_" );
+		
+		// use today date as encoding to use a unique id
+		Date date = Calendar.getInstance().getTime();
+	    SimpleDateFormat sdf = new SimpleDateFormat( "yyyyMMdd_hhmmss" );
+		String encodedDate = sdf.format( date );
+		
+		builder.append( encodedDate );
+		builder.append( "_" );
+		builder.append( "BR" );
+		
+		return builder.toString();
+	}
+	
 	/**
 	 * Copy the source file into the target file
 	 * @param source
@@ -184,6 +279,22 @@ public class XmlChangesCreator {
 		}
 		
 		return true;
+	}
+	
+	/**
+	 * Save the just created xml filename in the db, in order to be able
+	 * to use it subsequently in the application.
+	 * @param catalogue
+	 * @param xmlFilename
+	 */
+	private void saveXmlFilename ( Catalogue catalogue, String xmlFilename ) {
+		
+		XmlUpdateFileDAO xmlDao = new XmlUpdateFileDAO();
+		XmlUpdateFile xml = new XmlUpdateFile( catalogue, xmlFilename );
+		
+		// remove if present and then insert
+		xmlDao.remove( xml );
+		xmlDao.insert( new XmlUpdateFile( catalogue, xmlFilename ) );
 	}
 	
 	/**

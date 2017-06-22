@@ -56,12 +56,12 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 		Connection con = null;
 
 		// set the query to insert a new attribtue
-		String query = "INSERT INTO APP.ATTRIBUTE (ATTR_CODE, ATTR_NAME , " 
+		String query = "insert into APP.ATTRIBUTE (ATTR_CODE, ATTR_NAME , " 
 				+ "ATTR_LABEL, ATTR_SCOPENOTE, ATTR_REPORTABLE, ATTR_VISIBLE, ATTR_SEARCHABLE,"
 				+ "ATTR_ORDER, ATTR_TYPE, ATTR_MAX_LENGTH, ATTR_PRECISION, ATTR_SCALE,"
 				+ "ATTR_CAT_CODE, ATTR_SINGLE_REPEATABLE, ATTR_INHERITANCE,"
 				+ "ATTR_UNIQUENESS, ATTR_TERM_CODE_ALIAS, ATTR_LAST_UPDATE, ATTR_VALID_FROM,"
-				+ "ATTR_VALID_TO, ATTR_STATUS, ATTR_DEPRECATED, ATTR_VERSION ) VALUES ("
+				+ "ATTR_VALID_TO, ATTR_STATUS, ATTR_DEPRECATED, ATTR_VERSION ) values ("
 				+ "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
 
 		try {

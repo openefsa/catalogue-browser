@@ -157,3 +157,19 @@ alter table APP.PENDING_ACTION add constraint log_code_unique unique ( ACTION_LO
 
 -- set the foreign keys for PENDING_RESERVE table
 alter table APP.PENDING_ACTION add foreign key ( CAT_ID ) references APP.CATALOGUE ( CAT_ID );
+
+-- table to save the xml filename which are generated
+-- when calling the sas remote procedure. These xml
+-- files contains several dcf instructions which were
+-- created comparing the local version of one catalogue
+-- to its official version, in order to make the updates
+-- necessary to align the two versions.
+-- Only one xml per catalogue is allowed
+create table APP.CAT_UPDATES_XML (
+
+	CAT_ID integer not null primary key,
+	XML_FILENAME varchar(1000) not null
+);
+
+-- set the foreign keys for CAT_UPDATES_XML table
+alter table APP.CAT_UPDATES_XML add foreign key ( CAT_ID ) references APP.CATALOGUE ( CAT_ID );

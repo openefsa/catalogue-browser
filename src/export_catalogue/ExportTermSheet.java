@@ -41,7 +41,7 @@ public class ExportTermSheet extends SheetWriter {
 		headers.put( "TERM_CODE",              new SheetHeader(i++, Headers.TERM_CODE ) );
 		headers.put( "TERM_EXTENDED_NAME",     new SheetHeader(i++, Headers.TERM_EXT_NAME ) );
 		headers.put( "TERM_SHORT_NAME",        new SheetHeader(i++, Headers.TERM_SHORT_NAME ) );
-		headers.put( "TERM_SCOPENOTE",         new SheetHeader(i++, Headers.SCOPENOTE ) );
+		headers.put( "TERM_SCOPENOTE",         new SheetHeader(i++, Headers.TERM_SCOPENOTE ) );
 		headers.put( "TERM_VERSION",           new SheetHeader(i++, Headers.VERSION ) );
 		headers.put( "TERM_LAST_UPDATE",       new SheetHeader(i++, Headers.LAST_UPDATE ) );
 		headers.put( "TERM_VALID_FROM",        new SheetHeader(i++, Headers.VALID_FROM ) );
