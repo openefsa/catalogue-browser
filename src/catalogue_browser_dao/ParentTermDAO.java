@@ -362,8 +362,8 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 	 * @param hierarchy
 	 * @return
 	 */
-	public ArrayList< Term > getChildren ( Nameable t, Hierarchy hierarchy, boolean hideDeprecatedTerms,
-			boolean hideNonReportableTerms ) {
+	public ArrayList< Term > getChildren ( Nameable t, Hierarchy hierarchy, boolean hideDeprecated,
+			boolean hideDismissed ) {
 		
 		// output list
 		ArrayList< Term > children = new ArrayList< Term >();
@@ -383,7 +383,7 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 		
 		
 		// if we want to hide deprecated terms we select only the non deprecated
-		if ( hideDeprecatedTerms )
+		if ( hideDeprecated )
 			query = query + " and T.TERM_DEPRECATED = false ";
 		
 		// order results
@@ -419,8 +419,8 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 				// if we want to hide non reportable terms, we check if the term has reportable children in the current hierarchy
 				// and if it is reportable. If it has not reportable children and it is not reportable
 				// we hide it!
-				if ( hideNonReportableTerms )
-					canAdd = child.isReportable( hierarchy ) || child.hasReportableChildren( hierarchy );
+				if ( hideDismissed )
+					canAdd = !child.isDismissed(hierarchy);
 				
 				// if we can add, then add the child
 				if ( canAdd )
@@ -434,7 +434,7 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 			
 		} catch ( SQLException sqle ) {
 			sqle.printStackTrace();
-			return null;
+			return children;
 		}
 		
 		return children;

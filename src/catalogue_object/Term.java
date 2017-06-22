@@ -1278,6 +1278,18 @@ public class Term extends CatalogueObject implements Mappable {
 	
 
 	/**
+	 * Check if a term is dismissed, that is, a term which
+	 * is not reportable and do not have reportable children
+	 * @param hierarchy
+	 * @return
+	 */
+	public boolean isDismissed ( Hierarchy hierarchy ) {
+		boolean repChilden = hasReportableChildren ( hierarchy );
+		return !repChilden && !isReportable( hierarchy );
+	}
+	
+
+	/**
 	 * How the term name should be visualized according to its applicability?
 	 * @param hierarchy
 	 * @return
@@ -1285,7 +1297,7 @@ public class Term extends CatalogueObject implements Mappable {
 	public Font getApplicabilityFont ( Hierarchy hierarchy ) {
 		
 		// if we have a deprecated term or a non reportable term
-		if ( this.isDeprecated() || !this.isReportable( hierarchy ) ) {
+		if ( this.isDeprecated() || this.isDismissed( hierarchy ) ) {
 			
 			FontData fontData = Display.getCurrent().getSystemFont().getFontData()[0];
 

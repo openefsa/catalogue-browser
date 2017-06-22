@@ -191,8 +191,11 @@ public class LabelProviderTerm extends LabelProvider implements IFontProvider {
 			if ( t.isDeprecated() )
 				flag = flag + Messages.getString("LabelProviderTerm.DeprecatedFlag");
 			
+			else if ( t.isDismissed( currentHierarchy ) )
+				flag = flag + Messages.getString("LabelProviderTerm.DismissedFlag");
+			
 			// if non reportable add the non reportable flag
-			if ( !t.isReportable( currentHierarchy ) )
+			else if ( !t.isReportable( currentHierarchy ) )
 				flag = flag + Messages.getString("LabelProviderTerm.NotReportableFlag");
 
 			// term name + term flag
