@@ -3,6 +3,7 @@ import java.util.ArrayList;
 
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSource;
@@ -193,8 +194,18 @@ public class FormTermCoder implements RestoreableWindow {
 			}
 		});
 
+		// sash form to resize panels
+		SashForm sashForm = new SashForm( _dialog, SWT.HORIZONTAL);
+		sashForm.setLayout( new GridLayout(1,false) );
+		GridData gData = new GridData();
+		gData.grabExcessHorizontalSpace = true;
+		gData.grabExcessVerticalSpace = true;
+		gData.verticalAlignment = SWT.FILL;
+		gData.horizontalAlignment = SWT.FILL;
+		sashForm.setLayoutData( gData );
+		
 		// implicit facets tree viewer, we set that new facets will be considered as explicit
-		implicitFacets = new FrameTermImplicitFacets( _dialog, FacetType.EXPLICIT, catalogue );
+		implicitFacets = new FrameTermImplicitFacets( sashForm, FacetType.EXPLICIT, catalogue );
 
 		implicitFacets.setHierarchy( catalogue.getMasterHierarchy() );
 
@@ -220,7 +231,7 @@ public class FormTermCoder implements RestoreableWindow {
 
 
 		// the composite which contains: full code, interpreter, semaphore, console (warning messages) 
-		Composite rightSide = new Composite( _dialog, SWT.APPLICATION_MODAL | SWT.SHELL_TRIM );
+		Composite rightSide = new Composite( sashForm, SWT.APPLICATION_MODAL | SWT.SHELL_TRIM );
 		rightSide.setLayout( new GridLayout(1, false) );
 
 
@@ -229,7 +240,6 @@ public class FormTermCoder implements RestoreableWindow {
 		 */
 
 		Composite codeDescriptionComposite = new Composite( rightSide , SWT.APPLICATION_MODAL | SWT.SHELL_TRIM );
-		// Composite c = new Composite(oldDescribeNavigator, SWT.NONE);
 
 		GridData gridData = new GridData();/* layout esterno */
 		gridData.verticalAlignment = SWT.FILL;
@@ -538,6 +548,8 @@ public class FormTermCoder implements RestoreableWindow {
 		// default action is to copy the code
 		setDefaultButton( copy );
 
+		sashForm.setWeights( new int[] { 1, 2 } );
+		
 		_dialog.setMaximized( false );
 		_dialog.pack();
 		
@@ -577,7 +589,6 @@ public class FormTermCoder implements RestoreableWindow {
 			if ( !_dialog.getDisplay().readAndDispatch() )
 				_dialog.getDisplay().sleep();
 		}
-
 
 		_dialog.dispose();
 	}
