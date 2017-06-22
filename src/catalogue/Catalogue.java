@@ -679,7 +679,20 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * @return
 	 */
 	public boolean hasTermTypes () {
-		return !termTypes.isEmpty();
+		// since term types always have the
+		// none term type, the list is empty
+		// if we have one or less term types
+		return !(termTypes.size() <= 1);
+	}
+	
+	/**
+	 * Check if the catalogue has some implicit generic
+	 * attributes
+	 * @return
+	 */
+	public boolean hasGenericAttributes() {
+		AttributeDAO attrDao = new AttributeDAO( this );
+		return !attrDao.fetchGeneric().isEmpty();
 	}
 	
 	/**

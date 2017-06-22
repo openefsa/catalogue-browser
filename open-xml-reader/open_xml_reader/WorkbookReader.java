@@ -2,6 +2,9 @@ package open_xml_reader;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import javax.xml.stream.XMLStreamException;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -11,8 +14,6 @@ import org.apache.poi.openxml4j.opc.PackageAccess;
 import org.apache.poi.xssf.eventusermodel.XSSFReader;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  * This class is used to read the sheets data of
@@ -50,10 +51,14 @@ public class WorkbookReader {
 		InputStream wbStream = reader.getWorkbookData();
 		workbookHandler = new WorkbookHandler();
 
-		XMLReader parser = XMLReaderFactory.createXMLReader( 
-				"org.apache.xerces.parsers.SAXParser" );
-		parser.setContentHandler( workbookHandler );
-		parser.parse( new InputSource( wbStream ) );
+		SAXParserFactory factory = SAXParserFactory.newInstance();
+		SAXParser parser = null;
+		try {
+			parser = factory.newSAXParser();
+			parser.parse( new InputSource( wbStream ), workbookHandler );
+		} catch (ParserConfigurationException | SAXException e) {
+			e.printStackTrace();
+		}
 
 		wbStream.close();
 	}

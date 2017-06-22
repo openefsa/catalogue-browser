@@ -17,6 +17,7 @@
 /messages/
 /new_local_catalogue/
 /property/
+/sas_remote_procedures/
 /session_manager/
 /sql/
 /term/
@@ -31,11 +32,3 @@
 /ui_implicit_facet/
 /ui_licence/
 /ui_main_menu/
-/ui_main_panel/
-/open_xml_reader/
-/utilities/
-/xml_reader/
-/sas_remote_procedures/
-/ui_progress_bar/
-/ui_search_bar/
-/ui_term_applicability/

@@ -940,8 +940,11 @@ public class ToolsMenu implements MainMenuItem {
 
 		importPicklistMI.setEnabled( hasFacets );
 		favouritePicklistMI.setEnabled( hasFacets && hasPicklists );
+
+		boolean searchPrefEnabled = nonEmptyCat && ( mainMenu.getCatalogue().hasTermTypes() ||
+				mainMenu.getCatalogue().hasGenericAttributes() );
 		
-		searchOptMI.setEnabled( nonEmptyCat );
+		searchOptMI.setEnabled( searchPrefEnabled );
 		userPrefMI.setEnabled( true );
 
 		// enable disable publish mi
