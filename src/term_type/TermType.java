@@ -35,4 +35,9 @@ public class TermType {
 		
 		return code.equals( tt.getCode() );
 	}
+	
+	@Override
+	public String toString() {
+		return "TERM TYPE: id=" + id + ";code=" + code + ";label=" + label;
+	}
 }

@@ -129,18 +129,18 @@ public class SearchDAO {
 	 * @return
 	 */
 	private boolean isTypeSearchable( Term term ) {
-		
+
 		// if the catalogue does not use term types
 		// we return true as default to avoid blocking
 		// search operations
-		if ( catalogue.hasTermTypes() )
+		if ( !catalogue.hasTermTypes() )
 			return true;
-		
+
 		// if the term does not have a term type
 		// we include it in the results as default
 		if ( term.getTermType() == null )
 			return true;
-		
+
 		// get the searchable term types
 		Collection<TermType> types = getSearchableTermTypes();
 
@@ -443,7 +443,7 @@ public class SearchDAO {
 		for ( SearchOption opt : opts ) {
 			types.add( catalogue.getTermTypeById( opt.getId() ) );
 		}
-		
+
 		return types;
 	}
 	
