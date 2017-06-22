@@ -205,14 +205,71 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * levels and term types
 	 */
 	public void loadData() {
-		refreshHierarchies();
-		refreshTerms();
-		refreshAttributes();
-		refreshApplicabities();
-		refreshTermAttributes();
-		refreshDetailLevels();
-		refreshTermTypes();
-		refreshReleaseNotes();
+
+		// thread to load small data
+		Thread baseThread = new Thread ( new Runnable() {
+			
+			@Override
+			public void run() {
+				refreshHierarchies();
+				refreshAttributes();
+				refreshTermTypes();
+				refreshDetailLevels();
+				refreshReleaseNotes();
+			}
+		});
+		
+		// Thread to load terms
+		Thread termThread = new Thread( new Runnable() {
+			
+			@Override
+			public void run() {
+				refreshTerms();
+			}
+		});
+		
+		// load terms and base information
+		baseThread.start();
+		termThread.start();
+		
+		// wait to finish, since the applicabilities
+		// and term attributes need the terms in the
+		// RAM memory
+		try {
+			baseThread.join();
+			termThread.join();
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
+		
+		// refresh applicabilities and term attributes in parallel
+		Thread applThread = new Thread( new Runnable() {
+			
+			@Override
+			public void run() {
+				refreshApplicabities();
+			}
+		});
+
+		Thread taThread = new Thread ( new Runnable() {
+			
+			@Override
+			public void run() {
+				refreshTermAttributes();
+			}
+		});
+		
+
+		applThread.start();
+		taThread.start();
+		
+		// wait to finish
+		try {
+			taThread.join();
+			applThread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
