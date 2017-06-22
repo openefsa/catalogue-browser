@@ -117,7 +117,7 @@ public class Dcf {
 			// we have found a catalogue which has not been downloaded yet
 			// note we add it only if it is not deprecated
 			// do not show cat users catalogue to users
-			if ( myCatalogues.contains( cat ) || cat.isDeprecated() || 
+			if ( myCatalogues.contains( cat ) || 
 					cat.isCatUsersCatalogue() )
 				continue;
 			

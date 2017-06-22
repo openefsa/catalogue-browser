@@ -14,6 +14,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -34,6 +35,7 @@ import catalogue.Catalogue;
 import messages.Messages;
 import session_manager.RestoreableWindow;
 import session_manager.WindowPreference;
+import ui_general_graphics.TableResizer;
 import utilities.GlobalUtil;
 
 
@@ -50,7 +52,7 @@ public class FormCataloguesList implements RestoreableWindow {
 	private static final String OK_KEY = "okButton"; 
 	private static final String CANCEL_KEY = "cancelButton";
 	private static final String WINDOW_CODE = "FormCataloguesList";
-	
+
 	private String okButtonText = Messages.getString("FormCataloguesList.DownloadButton");
 	private String cancelButtonText = Messages.getString("FormCataloguesList.CancelButton");
 
@@ -60,7 +62,7 @@ public class FormCataloguesList implements RestoreableWindow {
 	private ArrayList < Catalogue > catalogues;  // input parameter
 	private boolean multiSel;            // multiple selection on or off?
 	private Listener innerListener;              // listener called when a catalogue is selected
-	
+
 	/**
 	 * Initialize the form parameters
 	 * @param shell, the parent shell
@@ -75,7 +77,7 @@ public class FormCataloguesList implements RestoreableWindow {
 		this.catalogues = catalogues;
 		this.multiSel = multiSel;
 	}
-	
+
 	public FormCataloguesList( Shell shell, String title, ArrayList < Catalogue > catalogues ) {
 		this ( shell, title, catalogues, true );
 	}
@@ -91,18 +93,18 @@ public class FormCataloguesList implements RestoreableWindow {
 
 		// set the dialog layout
 		dialog.setLayout( new GridLayout( 1 , false ) );
-		
+
 		// ### catalogue table ###
-		
+
 		// create the table which displays the catalogue information
 		final TableViewer table = createCatalogueTable ( dialog, columns );
 
 		// set the table input
 		table.setInput( catalogues );
-		
+
 		table.addDoubleClickListener( createOkClickListener( dialog, table ) );
 
-		
+
 		// ### user buttons ###
 
 		// create the buttons used for choosing ok or cancel
@@ -114,7 +116,7 @@ public class FormCataloguesList implements RestoreableWindow {
 		// get the cancel button from the composite
 		Button cancelButton = (Button) getCompositeChildByKey ( buttonsComposite, CANCEL_KEY );
 
-		
+
 		// ### buttons listeners ###
 
 		// set the listener for the ok button
@@ -125,28 +127,31 @@ public class FormCataloguesList implements RestoreableWindow {
 
 		// resize the dialog to the preferred size (the hints)
 		dialog.pack();
-		
+
 		// restore the preferred settings if present
 		WindowPreference.restore( this );
-		
+
 		// save the window dimensions when close
 		WindowPreference.saveOnClosure( this );
-		
+
 		// show the dialog
 		dialog.setVisible( true );  
 		dialog.open();
+		
+		TableResizer resizer = new TableResizer( table.getTable() );
+		resizer.apply();
 	}
-	
+
 	@Override
 	public String getWindowCode() {
 		return WINDOW_CODE;
 	}
-	
+
 	@Override
 	public Shell getWindowShell() {
 		return dialog;
 	}
-	
+
 	/**
 	 * Set the cancel button text
 	 * @param cancelButtonText
@@ -154,7 +159,7 @@ public class FormCataloguesList implements RestoreableWindow {
 	public void setCancelButtonText(String cancelButtonText) {
 		this.cancelButtonText = cancelButtonText;
 	}
-	
+
 	/**
 	 * Set the Ok button text
 	 * @param okButtonText
@@ -173,7 +178,7 @@ public class FormCataloguesList implements RestoreableWindow {
 		// create a composite for hosting the buttons
 		Composite buttonsComposite = new Composite( parent, SWT.NONE );
 		buttonsComposite.setLayout( new RowLayout() );
-		
+
 		GridData gridData = new GridData();
 		gridData.horizontalAlignment = SWT.CENTER;
 		gridData.grabExcessHorizontalSpace = true;
@@ -198,7 +203,7 @@ public class FormCataloguesList implements RestoreableWindow {
 		// return the composite
 		return buttonsComposite;
 	}
-	
+
 
 	/**
 	 * Create the table viewer which contains the catalogues information
@@ -212,15 +217,15 @@ public class FormCataloguesList implements RestoreableWindow {
 		// create a table to show the catalogues information
 		// SWT.FULL_SELECTION is set to select the entire row of the table, independently of the selected column
 		// This was done since we have to select a single catalogue, not a catalogue column
-		
+
 		// we create a check box table viewer for multiple selection, otherwise we create a standard
 		// single selection table
-		TableViewer table;
+		final TableViewer table;
 		if ( multiSel )
-			table = CheckboxTableViewer.newCheckList( parent, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | 
+			table = CheckboxTableViewer.newCheckList( dialog, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | 
 					SWT.FULL_SELECTION );
 		else
-			table = new TableViewer ( parent, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | 
+			table = new TableViewer ( dialog, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | 
 					SWT.FULL_SELECTION | SWT.SINGLE );
 
 		// set the content provider of the table
@@ -228,14 +233,14 @@ public class FormCataloguesList implements RestoreableWindow {
 
 		// set the layout data for the table (note: these will be used also for the dialog)
 		GridData gridData = new GridData();
-		gridData.minimumHeight = 400;
-		gridData.heightHint = 500;
+		gridData.minimumHeight = 250;
+		gridData.heightHint = 300;
 		gridData.widthHint = 600;
 		gridData.minimumWidth = 300;
 		gridData.verticalAlignment = SWT.FILL;
 		gridData.horizontalAlignment = SWT.FILL;
 		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = false;
+		gridData.grabExcessVerticalSpace = true;
 
 		// set the layout data of the table
 		table.getTable().setLayoutData( gridData );
@@ -243,14 +248,13 @@ public class FormCataloguesList implements RestoreableWindow {
 		// make the columns names visible
 		table.getTable().setHeaderVisible( true );
 
-
 		// ### TABLE COLUMNS ###
-		
+
 		// Add column by key
 		for ( String columnKey : columns ) {
 			addColumnByKey ( table, columnKey );
 		}
-
+		
 		return table;
 	}
 
@@ -259,9 +263,13 @@ public class FormCataloguesList implements RestoreableWindow {
 	 * TODO IMPLEMENT THE UNIMPLEMENTED COLUMNS IF NECESSARY
 	 * @param table
 	 * @param columnKey
+	 * @param rightFill true if you want the column to be extended if the window
+	 * is stretched
 	 */
-	private void addColumnByKey ( TableViewer table, String columnKey ) {
-		
+	private TableViewerColumn addColumnByKey ( TableViewer table, String columnKey ) {
+
+		TableViewerColumn col = null;
+
 		switch ( columnKey.toLowerCase() ) {
 		case "code": 
 			break;
@@ -269,12 +277,12 @@ public class FormCataloguesList implements RestoreableWindow {
 			break;
 		case "label": 
 			// Add the "Label" column
-			GlobalUtil.addStandardColumn( table, new CatalogueLabelLabelProvider(), 
+			col = GlobalUtil.addStandardColumn( table, new CatalogueLabelLabelProvider(), 
 					Messages.getString("FormCataloguesList.NameColumn"), 225, true, false ); 
 			break;
 		case "scopenote": 
 			// Add the "Scopenote" column
-			GlobalUtil.addStandardColumn( table, new CatalogueScopeNoteLabelProvider(), 
+			col = GlobalUtil.addStandardColumn( table, new CatalogueScopeNoteLabelProvider(), 
 					Messages.getString("FormCataloguesList.ScopenoteColumn"), 300, true, false ); 
 			break;
 		case "code_mask": 
@@ -287,30 +295,31 @@ public class FormCataloguesList implements RestoreableWindow {
 			break;
 		case "version": 
 			// Add the "Version" column
-			GlobalUtil.addStandardColumn( table, new CatalogueVersionLabelProvider(),
+			col = GlobalUtil.addStandardColumn( table, new CatalogueVersionLabelProvider(),
 					Messages.getString("FormCataloguesList.VersionColumn"), 100, true, false, SWT.CENTER ); 
 			break;
 		case "last_update": 
 			break;
 		case "valid_from": 
 			// Add the "Last release" column
-			GlobalUtil.addStandardColumn( table, new CatalogueValidFromLabelProvider(), 
+			col = GlobalUtil.addStandardColumn( table, new CatalogueValidFromLabelProvider(), 
 					Messages.getString("FormCataloguesList.LastReleaseColumn"), 90, true, false, SWT.CENTER ); 
 			break;
 		case "valid_to": 
 			break;
 		case "status": 
 			// Add the "Status" column
-			GlobalUtil.addStandardColumn( table, new CatalogueStatusLabelProvider(), 
+			col = GlobalUtil.addStandardColumn( table, new CatalogueStatusLabelProvider(), 
 					Messages.getString("FormCataloguesList.StatusColumn"), 150, true, false, SWT.CENTER ); 
 			break;
 		case "reserve": 
 			// Add the "reserved by" column
-			GlobalUtil.addStandardColumn( table, new CatalogueUsernameLabelProvider(), 
-					Messages.getString("FormCataloguesList.ReserveColumn"), 100, true, false, SWT.CENTER );
+			col = GlobalUtil.addStandardColumn( table, new CatalogueUsernameLabelProvider(), 
+					Messages.getString("FormCataloguesList.ReserveColumn"), 115, true, false, SWT.CENTER );
 			break;
 		}
-		
+
+		return col;
 	}
 
 	/*==========================================
@@ -507,7 +516,7 @@ public class FormCataloguesList implements RestoreableWindow {
 			return sdf.format( date );
 		}
 	}
-	
+
 	/**
 	 * Label provider for the catalogue reserved by
 	 * @author avonva
@@ -574,10 +583,10 @@ public class FormCataloguesList implements RestoreableWindow {
 	 * @param listener
 	 */
 	public void addListener ( Listener listener ) {
-		
+
 		if ( listener == null )
 			return;
-		
+
 		this.innerListener = listener;
 	}
 
@@ -601,7 +610,7 @@ public class FormCataloguesList implements RestoreableWindow {
 
 		// set as data the selected catalogues if multisel
 		// otherwise set the unique selected catalogue
-		
+
 		if ( multiSel )
 			event.data = catalogues;
 		else
@@ -622,22 +631,22 @@ public class FormCataloguesList implements RestoreableWindow {
 		// If check box table viewer get the checked elements
 		if ( multiSel )
 			return getCheckedCatalogues( (CheckboxTableViewer) viewer );		
-		
+
 		// otherwise, if we have a simple table viewer, get the selected elements
 		return getSelectedCatalogues( viewer );
 	}
 
-	
+
 	/**
 	 * Get the selected catalogues, works only with tableviewer with single or multi selection
 	 * @param viewer
 	 * @return
 	 */
 	private ArrayList<Catalogue> getSelectedCatalogues ( TableViewer viewer ) {
-		
+
 		// output array
 		ArrayList <Catalogue> selectedCats = new ArrayList<>();
-		
+
 		// get the selection
 		ISelection selection = viewer.getSelection();
 
@@ -652,23 +661,23 @@ public class FormCataloguesList implements RestoreableWindow {
 		while ( iterator.hasNext() ) {
 			selectedCats.add( (Catalogue) iterator.next() );
 		}
-		
+
 		return selectedCats;
 	}
-	
+
 	/**
 	 * Get all the checked catalogues, works only with check box table viewer
 	 * @param viewer
 	 * @return
 	 */
 	private ArrayList<Catalogue> getCheckedCatalogues ( CheckboxTableViewer viewer ) {
-		
+
 		ArrayList <Catalogue> selectedCats = new ArrayList<>();
 
 		// get all the checked catalogues and return them
 		for ( Object cat : ((CheckboxTableViewer) viewer).getCheckedElements() )
 			selectedCats.add( (Catalogue) cat );
-		
+
 		return selectedCats;
 	}
 
@@ -680,29 +689,29 @@ public class FormCataloguesList implements RestoreableWindow {
 	 * @param viewer
 	 */
 	private void performOkActions ( Shell dialog, TableViewer viewer ) {
-		
+
 		// get the selected/checked catalogue from the table viewer
 		ArrayList<Catalogue> catalogues = getCatalogues ( viewer );
-		
+
 		// if no catalogue was selected warn the user and stop the operation
 		if ( catalogues == null || catalogues.isEmpty() ) {
-			
+
 			// warn the user
 			MessageBox mb = new MessageBox ( dialog, SWT.ICON_WARNING );
 			mb.setText( Messages.getString("FormCataloguesList.WarningTitle") );
 			mb.setMessage( Messages.getString("FormCataloguesList.WarningMessage") );
 			mb.open();
-			
+
 			return;
 		}
 
 		// close the dialog
 		dialog.close();
-		
+
 		// call the Class listener to notify the parent of the selected catalogue
 		callListener ( catalogues );
 	}
-	
+
 
 	/**
 	 * Search a child widget inside a parent composite
@@ -760,23 +769,23 @@ public class FormCataloguesList implements RestoreableWindow {
 	 * @return
 	 */
 	private SelectionListener createOkListener ( final Shell dialog, final TableViewer viewer ) {
-		
+
 		// create the selection listener
 		SelectionListener okListener = new SelectionListener() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				
+
 				performOkActions( dialog, viewer );
 			}
 
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {}
 		};
-		
+
 		return okListener;
 	}
-	
+
 	/**
 	 * Same as createOkListener, but for a double click event
 	 * @param dialog
@@ -784,24 +793,24 @@ public class FormCataloguesList implements RestoreableWindow {
 	 * @return
 	 */
 	private IDoubleClickListener createOkClickListener ( final Shell dialog, final TableViewer viewer ) {
-		
+
 		IDoubleClickListener listener = new IDoubleClickListener() {
-			
+
 			@Override
 			public void doubleClick(DoubleClickEvent arg0) {
-				
+
 				if ( multiSel ) {
-					
-				/*
-					
+
+					/*
+
 					// get the selected elements from the table
 					Object element = ( (IStructuredSelection) viewer.getSelection() )
 							.getFirstElement();
-					
-					
+
+
 					// get if it is checked or not
 					boolean isChecked = ( (CheckboxTableViewer) viewer ).getChecked( element );
-					
+
 					// invert the check
 					( (CheckboxTableViewer) viewer ).setChecked( element, !isChecked );*/
 				}
@@ -809,7 +818,7 @@ public class FormCataloguesList implements RestoreableWindow {
 					performOkActions( dialog, viewer );
 			}
 		};
-		
+
 		return listener;
 	}
 }

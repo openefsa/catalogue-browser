@@ -2162,6 +2162,13 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	@Override
 	public int compareTo( Catalogue cat ) {
 		
+		// deprecated catalogues goes to the end
+		if ( this.isDeprecated() )
+			return 1;
+		
+		if ( cat.isDeprecated() )
+			return -1;
+		
 		if ( getLabel().equals( cat.getLabel() ) ) {
 			
 			// compare the versions if equal label

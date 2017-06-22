@@ -312,8 +312,19 @@ public class FileMenu implements MainMenuItem {
 						// get the selected catalogue from the listener event
 						final Catalogue selectedCat = ( Catalogue ) event.data;
 						
+						if ( selectedCat.isDeprecated() ) {
+							
+							int val = GlobalUtil.showDialog( shell, 
+									selectedCat.getLabel(), 
+									Messages.getString("BrowserMenu.CatalogueDeprecatedMessage"), 
+									SWT.ICON_WARNING | SWT.YES | SWT.NO );
+							
+							if ( val == SWT.NO )
+								return;
+						}
+						
 						// if the user is logged in we can check the updates
-						if ( user.isLogged() ) {
+						else if ( user.isLogged() ) {
 							
 							// check if there is a catalogue update
 							boolean hasUpdate = selectedCat.hasUpdate();
@@ -331,7 +342,7 @@ public class FileMenu implements MainMenuItem {
 								dialog.open();
 							}
 						}
-						else {  
+						else {
 							
 							// only for official catalogues
 							if ( !selectedCat.isLocal() ) {
