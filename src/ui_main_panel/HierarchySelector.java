@@ -163,7 +163,7 @@ public class HierarchySelector extends Observable implements Observer {
 							+ "no facets hierarchies were found for " + catalogue );
 					return;
 				}
-				
+
 				// get the first facet category
 				Hierarchy hierarchy = catalogue.getFacetHierarchies().get(0);
 				
@@ -180,22 +180,26 @@ public class HierarchySelector extends Observable implements Observer {
 
 		if ( catalogue == null )
 			return;
-		
-		// refresh only if needed
-		boolean needRefresh = false;
-		for ( Hierarchy hierarchy : catalogue.getHierarchies() ) {
-			@SuppressWarnings("unchecked")
-			ArrayList<Hierarchy> input = (ArrayList<Hierarchy> ) hierarchyCombo.getInput();
-			if ( !input.contains( hierarchy ) ) {
-				needRefresh = true;
-				break;
+
+		setInput ( catalogue.getHierarchies() );
+
+		// try to select the previous hierarchy
+		if ( currentHierarchy != null ) {
+			if ( !setSelection( currentHierarchy ) ) {
+				// set the master or the default hierarchy
+				// as selection (default choice)
+				setSelection ( catalogue.getDefaultHierarchy() );
 			}
 		}
-		
-		if ( needRefresh ) {
-			setInput ( catalogue.getHierarchies() );
-			hierarchyCombo.refresh();
-		}
+
+		hierarchyCombo.refresh();
+	}
+
+	/**
+	 * Refresh the hierarchy selector filter
+	 */
+	public void refreshFilter () {
+		setHierarchyFilter( getHierarchyFilter( facetBtn.getSelection() ) );
 	}
 	
 	/**
@@ -227,16 +231,17 @@ public class HierarchySelector extends Observable implements Observer {
 	/**
 	 * Select the chosen hierarchy
 	 * @param hierarchy
+	 * @return false if the hierarchy was not changed true otherwise
 	 */
 	@SuppressWarnings("unchecked")
-	public void setSelection ( Hierarchy hierarchy ) {
+	public boolean setSelection ( Hierarchy hierarchy ) {
 
 		// the hierarchy is not in the hierarchies list
 		if ( !( (ArrayList<Hierarchy>) hierarchyCombo.getInput() ).
 				contains ( hierarchy ) ) {
 			System.err.println( "Cannot change hierarchy selector selection with " 
 				+ hierarchy + " since it is not contained in the available hierarchies");
-			return;
+			return false;
 		}
 		
 		hierarchyBtn.setSelection( hierarchy.isHierarchy() );
@@ -248,6 +253,8 @@ public class HierarchySelector extends Observable implements Observer {
 		hierarchyCombo.setSelection( new StructuredSelection( hierarchy ) );
 		
 		updateCurrentHierarchy();
+		
+		return true;
 	}
 	
 	/**

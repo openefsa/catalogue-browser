@@ -52,7 +52,7 @@ public class Applicability {
 	 * @param h
 	 * @return
 	 */
-	public boolean hasHierarchy ( Hierarchy h ) {
+	public boolean relatedToHierarchy ( Hierarchy h ) {
 		
 		if ( h == null ) {
 			try {

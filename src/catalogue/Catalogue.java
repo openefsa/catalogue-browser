@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
@@ -49,6 +50,7 @@ import detail_level.DetailLevelDAO;
 import detail_level.DetailLevelGraphics;
 import global_manager.GlobalManager;
 import messages.Messages;
+import property.SorterCatalogueObject;
 import term_code_generator.CodeGenerator;
 import term_type.TermType;
 import term_type.TermTypeDAO;
@@ -770,6 +772,10 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 			if ( hierarchy.isFacet() )
 				facets.add( hierarchy );
 		}
+		
+		// sort facets
+		SorterCatalogueObject sorter = new SorterCatalogueObject();
+		Collections.sort( facets, sorter );
 		
 		return facets;
 	}
@@ -1759,21 +1765,23 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		while ( st.hasMoreTokens() ) {
 
 			String token = st.nextToken();
-
 			// remove spaces
 			token = token.trim();
 
 			if ( token.toLowerCase().contains( "[hideMasterWith".toLowerCase() ) ) {
 
-				String[] split = token.split( "=.*]" );
-
+				String[] split = token.split( "=" );
+				
 				// go to the next iteration if wrong split
 				if ( split.length != 2 )
 					continue;
 
-				// return the default hierarchy
-				Hierarchy temp = getHierarchyByCode( split[1] );
+				// remove the "]" character at the end of the token
+				String hierarchyCode = split[1].replace("]", "");
 
+				// return the default hierarchy
+				Hierarchy temp = getHierarchyByCode( hierarchyCode );
+				
 				if ( temp != null )
 					defaultHierarchy = temp;
 			}
@@ -2126,16 +2134,16 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * @return
 	 */
 	public boolean isMasterHierarchyHidden () {
-		
+
 		User user = User.getInstance();
 		
-		// if we are in read only mode and the default hierarchy 
+		// if we are not catalogue managers and the default hierarchy 
 		// is not the master hierarchy
 		// then we have to hide the master hierarchy
-		return user.canEdit( this ) && 
+		return !user.isCatManager() && 
 				!getDefaultHierarchy().isMaster();
 	}
-	
+
 	/**
 	 * Override the to string method to print easily the catalogue
 	 */

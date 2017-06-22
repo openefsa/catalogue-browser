@@ -165,6 +165,14 @@ public class User {
 	}
 	
 	/**
+	 * Get the user level if it was defined
+	 * @return
+	 */
+	public UserAccessLevel getUserLevel() {
+		return userLevel;
+	}
+	
+	/**
 	 * Get if we are searching the user access level in this moment.
 	 * @return
 	 */

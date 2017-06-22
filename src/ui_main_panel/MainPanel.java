@@ -372,25 +372,24 @@ public class MainPanel implements Observer, RestoreableWindow {
 			// try to load the hierarchy selector state
 			hierarchy = getLastHierarchy ( catalogue );
 
-			// set the first selection of the hierarchy selector
-			// with the default hierarchy if no preference was found
-			Hierarchy defaultHierarchy = catalogue.getDefaultHierarchy();
-			
-			// since a read only user in some cases should not
-			// see the master hierarchy, it the last hierarchy is
-			// the master but the default is not and the user is
-			// a read only user => we do not show the master but
-			// we pass the default hierarchy instead
-			if ( hierarchy.isMaster() && !defaultHierarchy.isMaster() &&
-					GlobalManager.getInstance().isReadOnly() )
-				hierarchy = defaultHierarchy;
-			
 		} catch (PreferenceNotFoundException e) {
 			
 			// set the first selection of the hierarchy selector
 			// with the default hierarchy if no preference was found
 			hierarchy = catalogue.getDefaultHierarchy();
 		}
+		
+		// set the first selection of the hierarchy selector
+		// with the default hierarchy if no preference was found
+		Hierarchy defaultHierarchy = catalogue.getDefaultHierarchy();
+		
+		// since a read only user in some cases should not
+		// see the master hierarchy, it the last hierarchy is
+		// the master but the default is not and the user is
+		// a read only user => we do not show the master but
+		// we pass the default hierarchy instead
+		if ( catalogue.isMasterHierarchyHidden() && hierarchy.isMaster() )
+			hierarchy = defaultHierarchy;
 
 		// set the selection
 		hierarchySelector.setSelection( hierarchy );
@@ -613,15 +612,13 @@ public class MainPanel implements Observer, RestoreableWindow {
 					}
 					
 					break;
-					
-				case ToolsMenu.ATTR_EDITOR_MI:
+
 				case ToolsMenu.HIER_EDITOR_MI:
+				case ToolsMenu.ATTR_EDITOR_MI:
 					// refresh
 					tabPanel.setTerm( tree.getFirstSelectedTerm() );
 					refresh();
-					
 					break;
-
 				default:
 					break;
 				}
@@ -635,6 +632,7 @@ public class MainPanel implements Observer, RestoreableWindow {
 				switch ( code ) {
 				case LoginMenu.LOGIN_MI:
 					refresh();
+					hierarchySelector.refreshFilter();
 					break;
 				default:
 					break;

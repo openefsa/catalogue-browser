@@ -465,7 +465,7 @@ public class TermsTreePanel extends Observable implements Observer {
 			// allow only if the term has all the subtree deprecated, allow only for
 			// major releases
 			deprecateTerm.setEnabled ( canEditMajor && 
-					getFirstSelectedTerm().hasDeprecatedChildren() );
+					getFirstSelectedTerm().hasAllChildrenDeprecated() );
 		}
 		
 		// check if the selected terms can be moved in the current hierarchy

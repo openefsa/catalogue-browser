@@ -448,12 +448,36 @@ public class Term extends CatalogueObject implements Mappable {
 		for ( Applicability appl : applicabilities ) {
 			
 			// if we have found the correct hierarchy return
-			if ( appl.hasHierarchy( hierarchy ) ) {
+			if ( appl.relatedToHierarchy( hierarchy ) ) {
 				return appl;
 			}
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * Check if the term appears only in the master hierarchy.
+	 * @param hierarchy
+	 */
+	public boolean isOnlyInMaster () {
+		
+		Hierarchy master = catalogue.getMasterHierarchy();
+		
+		boolean appearInMaster = false;
+		boolean onlyInMaster = true;
+		for ( Applicability appl : applicabilities ) {
+			
+			Hierarchy current = appl.getHierarchy();
+			
+			if ( !current.equals( master ) )
+				onlyInMaster = false;
+			
+			if ( current.equals( master ) )
+				appearInMaster = true;
+		}
+		
+		return appearInMaster && onlyInMaster;
 	}
 	
 	
@@ -758,7 +782,7 @@ public class Term extends CatalogueObject implements Mappable {
 		for ( Applicability appl : applicabilities ) {
 			
 			// search the chosen hierarchy
-			if ( appl.hasHierarchy( hierarchy ) ) {
+			if ( appl.relatedToHierarchy( hierarchy ) ) {
 				
 				// update the reportability of the term in the selected hierarchy
 				appl.setReportable( reportable );
@@ -867,7 +891,7 @@ public class Term extends CatalogueObject implements Mappable {
 
 
 	/**
-	 * Add a generic term attribute to the term
+	 * Add a term attribute to the term
 	 * @param ta
 	 */
 	public void addAttribute ( TermAttribute ta ) {
@@ -1073,7 +1097,7 @@ public class Term extends CatalogueObject implements Mappable {
 		for ( Applicability appl : applicabilities ) {
 			
 			// if we have found the correct hierarchy return
-			if ( appl.hasHierarchy( hierarchy ) ) {
+			if ( appl.relatedToHierarchy( hierarchy ) ) {
 				
 				// return null if the parent is a hierarchy
 				if ( appl.getParentTerm() instanceof Hierarchy )
@@ -1267,7 +1291,7 @@ public class Term extends CatalogueObject implements Mappable {
 
 			// the current applicability contains the hierarchy?
 			// if so check reportability
-			if ( appl.hasHierarchy( hierarchy ) ) {
+			if ( appl.relatedToHierarchy( hierarchy ) ) {
 				reportable = appl.isReportable();
 				break;
 			}
@@ -1284,8 +1308,14 @@ public class Term extends CatalogueObject implements Mappable {
 	 * @return
 	 */
 	public boolean isDismissed ( Hierarchy hierarchy ) {
-		boolean repChilden = hasReportableChildren ( hierarchy );
-		return !repChilden && !isReportable( hierarchy );
+		
+		boolean repChilden = hasOnlyDeprecatedOrNotReportableChildren ( hierarchy );
+		
+		// if all the children are deprecated or not reportable
+		// and the term is not reportable and not deprecated,
+		// then it is dismissed (if it is deprecated then it is
+		// only deprecated, not dismissed)
+		return ( repChilden ) && !isReportable( hierarchy ) && !isDeprecated();
 	}
 	
 
@@ -1316,7 +1346,7 @@ public class Term extends CatalogueObject implements Mappable {
 	 * if all its children (in all the applicable hierarchies) are deprecated
 	 * @return
 	 */
-	public boolean hasDeprecatedChildren() {
+	public boolean hasAllChildrenDeprecated() {
 
 		// for each applicable hierarchy of the term we check if all the sub tree is
 		// deprecated or not
@@ -1401,6 +1431,29 @@ public class Term extends CatalogueObject implements Mappable {
 		return false;
 	}
 	
+	/**
+	 * Check if the term is deprecable or not. A term is deprecable 
+	 * if all its children (in all the applicable hierarchies) are deprecated
+	 * @return
+	 */
+	public boolean hasOnlyDeprecatedOrNotReportableChildren( Hierarchy hierarchy ) {
+
+		// create a subtree iterator for all the terms contained in the subtree
+		// related to this parent term in the current hierarchy
+		TermSubtreeIterator iterator = new TermSubtreeIterator( this, hierarchy );
+
+		Term currentChild;
+
+		// do until we have processed all the children of the entire sub tree
+		while ( ( currentChild = iterator.next() ) != null ) {
+
+			// check if the child is reportable and not deprecated
+			if ( currentChild.isReportable( hierarchy ) && !currentChild.isDeprecated() )
+				return false;
+		}
+
+		return true;
+	}
 
 	/**
 	 * Get the note text without the links

@@ -105,6 +105,14 @@ public class SearchDAO {
 			
 			Term term = catalogue.getTermById( id );
 			
+			// if master hierarchy is hidden and the
+			// term appears only in the master we need
+			// to hide it!
+			if ( catalogue.isMasterHierarchyHidden() ) {
+				if ( term.isOnlyInMaster() )
+					continue;
+			}
+			
 			// if the term type of the term is searchable and also one 
 			// of the hierarchy of the term is searchable, add it
 			if ( isTypeSearchable( term ) && hasHierachySearchable( term, hierarchies ) ) {
