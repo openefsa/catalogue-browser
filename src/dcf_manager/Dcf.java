@@ -19,17 +19,12 @@ import dcf_user.User;
 import dcf_user.UserAccessLevel;
 import dcf_user.UserProfileChecker;
 import dcf_webservice.BackgroundAction;
-import dcf_webservice.BackgroundAction.Type;
 import dcf_webservice.ExportCatalogue;
 import dcf_webservice.ExportCatalogueFile;
 import dcf_webservice.GetCataloguesList;
 import dcf_webservice.Ping;
-import dcf_webservice.Publish;
 import dcf_webservice.Publish.PublishLevel;
-import dcf_webservice.Reserve;
 import dcf_webservice.ReserveLevel;
-import dcf_webservice.UploadCatalogueFile;
-import dcf_webservice.UploadData;
 import ui_progress_bar.FormProgressBar;
 import xml_reader.PropertiesReader;
 
@@ -312,8 +307,9 @@ public class Dcf {
 	 * @param logCode the code of the log which needs to
 	 * be downloaded
 	 * @return the file which points to the log file
+	 * @throws SOAPException 
 	 */
-	public File exportLog ( String logCode ) {
+	public File exportLog ( String logCode ) throws SOAPException {
 		
 		// ask for the log to the dcf
 		ExportCatalogueFile export = new ExportCatalogueFile( dcfType );
@@ -332,9 +328,10 @@ public class Dcf {
 	 * last internal version of the catalogue
 	 * @return true if the file was correctly created
 	 * @throws IOException
+	 * @throws SOAPException 
 	 */
 	public boolean exportCatalogueInternalVersion ( String catalogueCode, 
-			String filename ) throws IOException {
+			String filename ) throws IOException, SOAPException {
 		
 		// ask for the log to the dcf
 		ExportCatalogueFile export = new ExportCatalogueFile( dcfType );

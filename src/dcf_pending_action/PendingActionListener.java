@@ -1,5 +1,6 @@
 package dcf_pending_action;
 
+import catalogue.Catalogue;
 import dcf_webservice.DcfResponse;
 
 /**
@@ -11,10 +12,15 @@ import dcf_webservice.DcfResponse;
 public interface PendingActionListener {
 	
 	/**
+	 * Called when there are connection problems
+	 */
+	public void connectionFailed( Catalogue catalogue );
+	
+	/**
 	 * Called when the request is prepared and
 	 * it is ready to be sent.
 	 */
-	public void requestPrepared ();
+	public void requestPrepared( Catalogue catalogue );
 	
 	/**
 	 * Called when the reserve request was successfully sent

@@ -1,5 +1,7 @@
 package dcf_webservice;
 
+import javax.xml.soap.SOAPException;
+
 import catalogue.Catalogue;
 import dcf_manager.Dcf.DcfType;
 import dcf_pending_action.PendingPublish;
@@ -51,8 +53,9 @@ public class Publish extends UploadCatalogueFile {
 	 * publish level.
 	 * @param catalogue
 	 * @param level
+	 * @throws SOAPException 
 	 */
-	public PendingPublish publish ( Catalogue catalogue, PublishLevel level ) {
+	public PendingPublish publish ( Catalogue catalogue, PublishLevel level ) throws SOAPException {
 		
 		this.catalogue = catalogue;
 		this.level = level;

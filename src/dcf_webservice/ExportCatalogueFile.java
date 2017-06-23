@@ -55,8 +55,9 @@ public class ExportCatalogueFile extends SOAPAction {
 	/**
 	 * Export a log from the DCF given its code
 	 * @param code
+	 * @throws SOAPException 
 	 */
-	public Document exportLog( String code ) {
+	public Document exportLog( String code ) throws SOAPException {
 		
 		Object log = exportXml ( code, EXPORT_TYPE_LOG, null );
 		
@@ -70,8 +71,10 @@ public class ExportCatalogueFile extends SOAPAction {
 	 * Export the last internal version of the catalogue.
 	 * @param catalogueCode the code of the catalogue we want to consider
 	 * @return the input stream containing the xml catalogue data
+	 * @throws SOAPException 
 	 */
-	public File exportEfficientLog ( String code, String filename ) {
+	public File exportEfficientLog ( String code, String filename ) 
+			throws SOAPException {
 		
 		Object log = exportXml ( code, EXPORT_TYPE_LOG, XML_FILE_TYPE, filename );
 		
@@ -85,8 +88,10 @@ public class ExportCatalogueFile extends SOAPAction {
 	 * Export the last internal version of the catalogue.
 	 * @param catalogueCode the code of the catalogue we want to consider
 	 * @return the input stream containing the xml catalogue data
+	 * @throws SOAPException 
 	 */
-	public File exportLastInternalVersion ( String catalogueCode, String filename  ) {
+	public File exportLastInternalVersion ( String catalogueCode, String filename  ) 
+			throws SOAPException {
 		
 		Object lastVersion = exportXml ( catalogueCode, 
 				EXPORT_TYPE_INTERNAL_VERSION, XML_FILE_TYPE, filename );
@@ -104,8 +109,10 @@ public class ExportCatalogueFile extends SOAPAction {
 	 * catalogue code or the log code
 	 * @param exportType the export type (see GDE2)
 	 * @return an object containing the xml structure (document or inputstream)
+	 * @throws SOAPException 
 	 */
-	private Object exportXml ( String code, String exportType, String filename ) {
+	private Object exportXml ( String code, String exportType, String filename ) 
+			throws SOAPException {
 		return exportXml( code, exportType, null, filename );
 	}
 	
@@ -117,9 +124,10 @@ public class ExportCatalogueFile extends SOAPAction {
 	 * @param exportType the export type (see GDE2)
 	 * @param fileType the type of the attachment we want
 	 * @return an object containing the xml structure
+	 * @throws SOAPException 
 	 */
 	private Object exportXml ( String code, String exportType, 
-			String fileType, String filename ) {
+			String fileType, String filename ) throws SOAPException {
 		
 		this.catalogueCode = code;
 		this.exportType = exportType;
@@ -134,19 +142,13 @@ public class ExportCatalogueFile extends SOAPAction {
 	/**
 	 * Make the export request.
 	 * @return
+	 * @throws SOAPException 
 	 */
-	private Object export() {
-		
-		try {
-			
-			String url = getType() == DcfType.PRODUCTION ? URL : TEST_URL;
-			
-			return makeRequest( url );
-		} catch (SOAPException e) {
-			e.printStackTrace();
-		}
-		
-		return null;
+	private Object export() throws SOAPException {
+
+		String url = getType() == DcfType.PRODUCTION ? URL : TEST_URL;
+
+		return makeRequest( url );
 	}
 
 	@Override

@@ -2,14 +2,14 @@ package dcf_webservice;
 
 import java.io.File;
 
+import javax.xml.soap.SOAPException;
+
 import catalogue.Catalogue;
 import dcf_manager.Dcf;
 import dcf_pending_action.PendingAction;
 import dcf_pending_action.PendingActionListener;
 import dcf_webservice.Publish.PublishLevel;
 import sas_remote_procedures.XmlChangesCreator;
-import sas_remote_procedures.XmlUpdateFile;
-import sas_remote_procedures.XmlUpdateFileDAO;
 import ui_progress_bar.FormProgressBar;
 
 /**
@@ -19,25 +19,25 @@ import ui_progress_bar.FormProgressBar;
  *
  */
 public class BackgroundAction extends Thread {
-	
+
 	public enum Type {
 		RESERVE,
 		PUBLISH,
 		UPLOAD_DATA
 	}
-	
+
 	private Type type;
 	private Catalogue catalogue;
-	
+
 	// publish stuff
 	private PublishLevel pLevel;
-	
+
 	// reserve stuff
 	private ReserveLevel rLevel;
 	private String rDescription;
-	
+
 	private FormProgressBar progressBar;
-	
+
 	private PendingActionListener listener; // listen to events
 
 	/**
@@ -50,7 +50,7 @@ public class BackgroundAction extends Thread {
 		this.pLevel = level;
 		this.type = Type.PUBLISH;
 	}
-	
+
 	/**
 	 * Initialize an {@link UploadData} action
 	 * @param catalogue the catalogue we want to upload
@@ -59,7 +59,7 @@ public class BackgroundAction extends Thread {
 		this.catalogue = catalogue;
 		this.type = Type.UPLOAD_DATA;
 	}
-	
+
 	/**
 	 * Initialize a {@link Reserve} action
 	 * @param catalogue the catalogue we want to reserve
@@ -74,7 +74,7 @@ public class BackgroundAction extends Thread {
 		this.rDescription = rDescription;
 		this.type = Type.RESERVE;
 	}
-	
+
 	/**
 	 * Start the pending action defined in the
 	 * constructor and send it to the dcf.
@@ -86,63 +86,78 @@ public class BackgroundAction extends Thread {
 
 		// notify that we are ready to perform the action
 		if ( listener != null )
-			listener.requestPrepared();
-		
+			listener.requestPrepared( catalogue );
+
 		PendingAction pa = null;
-		
-		switch ( type ) {
-		case RESERVE:
-			// start the reserve process
-			pa = ((Reserve) req).reserve( catalogue, rLevel, rDescription );
-			break;
-			
-		case PUBLISH:
-			// start the publish process
-			pa = ((Publish) req).publish( catalogue, pLevel );
-			break;
-			
-		case UPLOAD_DATA:
-			
-			// download the xml from the server if possible
-			XmlChangesCreator xmlCreator = new XmlChangesCreator();
-			File xmlFile = xmlCreator.downloadXml( catalogue );
-			
-			if ( xmlFile == null ) {
-				System.err.println( "No .xml file found in " + xmlFile + " for " + catalogue );
+
+		try {
+
+			switch ( type ) {
+			case RESERVE:
+				// start the reserve process
+				pa = ((Reserve) req).reserve( catalogue, rLevel, rDescription );
+				break;
+
+			case PUBLISH:
+				// start the publish process
+				pa = ((Publish) req).publish( catalogue, pLevel );
+				break;
+
+			case UPLOAD_DATA:
+
+				// download the xml from the server if possible
+				XmlChangesCreator xmlCreator = new XmlChangesCreator();
+				File xmlFile = xmlCreator.downloadXml( catalogue );
+
+				if ( xmlFile == null ) {
+					System.err.println( "No .xml file found in " + xmlFile + " for " + catalogue );
+					return;
+				}
+
+				// upload the xml file to the dcf using upload catalogue file
+				pa = ( (UploadData) req ).uploadData( catalogue, xmlFile.getAbsolutePath() );
+				break;
+
+			default:
+				System.err.println( "Type " + type + " not defined in BackgroundAction#run()" );
 				return;
 			}
+		}
+		catch ( SOAPException e ) {
 			
-			// upload the xml file to the dcf using upload catalogue file
-			pa = ( (UploadData) req ).uploadData( catalogue, xmlFile.getAbsolutePath() );
-			break;
+			catalogue.setRequestingAction( false );
 			
-		default:
-			System.err.println( "Type " + type + " not defined in BackgroundAction#run()" );
+			// notify that the connection is bad
+			// note that here the pending action was
+			// not created, so we are consistent
+			if ( listener != null )
+				listener.connectionFailed( catalogue );
+
 			return;
 		}
-		
+
 		// if we have successfully sent the request,
 		// we can notify the caller that we have
 		// the log code of the request saved in the database
 		if ( listener != null && pa != null )
 			listener.requestSent( pa, pa.getLogCode() );
-		
+
 		// start the pending reserve we have just created
 		Dcf dcf = new Dcf();
 		dcf.setProgressBar( progressBar );
 		dcf.startPendingAction( pa, listener );
 	}
-	
-	
+
+
 	/**
 	 * Initialize an upload catalogue file action and return it
 	 * @param actionType
 	 * @return
 	 */
 	public UploadCatalogueFile getService ( Type actionType ) {
-		
+
 		UploadCatalogueFile req = null;
-		
+
 		// initialize the required service
 		switch ( actionType ) {
 		case RESERVE:
@@ -157,7 +172,7 @@ public class BackgroundAction extends Thread {
 		default:
 			break;
 		}
-		
+
 		return req;
 	}
 
@@ -168,7 +183,7 @@ public class BackgroundAction extends Thread {
 	public void setListener(PendingActionListener listener) {
 		this.listener = listener;
 	}
-	
+
 	/**
 	 * Set the progress bar which will be used if a new
 	 * version of the catalogue is downloaded

@@ -34,9 +34,7 @@ import messages.Messages;
 import sas_remote_procedures.XmlChangesCreator;
 import ui_general_graphics.DialogSingleText;
 import ui_main_panel.AttributeEditor;
-import ui_main_panel.DefaultListeners;
 import ui_main_panel.HierarchyEditor;
-import ui_main_panel.UpdateableUI;
 import ui_progress_bar.FormProgressBar;
 import user_preferences.CataloguePreferenceDAO;
 import user_preferences.FormSearchOptions;
@@ -1144,22 +1142,7 @@ public class ToolsMenu implements MainMenuItem {
 
 		dcf.setProgressBar( progressBar );
 		
-		dcf.reserveBG( catalogue, 
-				level, 
-				description, 
-				DefaultListeners.getReserveListener( new UpdateableUI() {
-
-					@Override
-					public void updateUI(Object data) {
-						mainMenu.update( data );
-					}
-
-					@Override
-					public Shell getShell() {
-						return shell;
-					}
-				} ) 
-			);
+		dcf.reserveBG( catalogue, level, description, mainMenu.getListener() );
 	}
 	
 	/**
@@ -1183,20 +1166,7 @@ public class ToolsMenu implements MainMenuItem {
 		
 		// publish the catalogue (only for drafts)
 		Dcf dcf = new Dcf();
-		dcf.publishBG( catalogue,
-				level,
-				DefaultListeners.getPublishListener( new UpdateableUI() {
-
-					@Override
-					public void updateUI(Object data) {
-						mainMenu.update( data );
-					}
-
-					@Override
-					public Shell getShell() {
-						return shell;
-					}
-				} ) );
+		dcf.publishBG( catalogue, level, mainMenu.getListener() );
 		
 		// restore cursor
 		GlobalUtil.setShellCursor( shell, SWT.CURSOR_ARROW );
@@ -1209,19 +1179,13 @@ public class ToolsMenu implements MainMenuItem {
 	 */
 	private void uploadData ( Catalogue catalogue ) {
 
+		// set wait cursor
+		GlobalUtil.setShellCursor( shell, SWT.CURSOR_WAIT );
+		
 		Dcf dcf = new Dcf();
-		dcf.uploadDataBG( catalogue, 
-				DefaultListeners.getUploadDataListener( new UpdateableUI() {
-					
-					@Override
-					public void updateUI(Object data) {
-						mainMenu.update( data );
-					}
-					
-					@Override
-					public Shell getShell() {
-						return shell;
-					}
-				} ) );
+		dcf.uploadDataBG( catalogue, mainMenu.getListener() );
+		
+		// restore cursor
+		GlobalUtil.setShellCursor( shell, SWT.CURSOR_ARROW );
 	}
 }

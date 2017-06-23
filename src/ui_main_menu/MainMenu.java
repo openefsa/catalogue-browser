@@ -8,7 +8,10 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 
 import catalogue.Catalogue;
+import dcf_pending_action.PendingActionListener;
 import global_manager.GlobalManager;
+import ui_main_panel.UpdateableUI;
+import ui_pending_action_listener.DefaultListeners;
 
 /**
  * Main menu of the catalogue browser. The menu bar is subdivided in
@@ -144,6 +147,32 @@ public class MainMenu extends Observable implements Observer {
 		update( null );
 	}
 	
+	
+	/**
+	 * Get the listener related to pending actions
+	 * in order to make actions based on pending actions
+	 * status and response
+	 * @return
+	 */
+	protected PendingActionListener getListener() {
+		
+		PendingActionListener listener = 
+				DefaultListeners.getDefaultPendingListener( 
+						new UpdateableUI() {
+			
+			@Override
+			public void updateUI(Object data) {
+				update( data );
+			}
+			
+			@Override
+			public Shell getShell() {
+				return shell;
+			}
+		});
+		
+		return listener;
+	}
 	
 	/**
 	 * Listener to observe file menu items

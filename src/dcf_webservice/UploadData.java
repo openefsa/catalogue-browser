@@ -2,6 +2,8 @@ package dcf_webservice;
 
 import java.io.File;
 
+import javax.xml.soap.SOAPException;
+
 import catalogue.Catalogue;
 import dcf_manager.Dcf.DcfType;
 import dcf_pending_action.PendingUploadData;
@@ -33,8 +35,9 @@ public class UploadData extends UploadCatalogueFile {
 	 * @param catalogue the catalogue we want to upload
 	 * @param filename the xml attachment which contains all the
 	 * changes which need to be uploaded
+	 * @throws SOAPException 
 	 */
-	public PendingUploadData uploadData ( Catalogue catalogue, String filename  ) {
+	public PendingUploadData uploadData ( Catalogue catalogue, String filename  ) throws SOAPException {
 		this.catalogue = catalogue;
 		this.filename = filename;
 		

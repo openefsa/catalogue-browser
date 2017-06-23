@@ -1,5 +1,7 @@
 package dcf_pending_action;
 
+import javax.xml.soap.SOAPException;
+
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
@@ -105,7 +107,7 @@ public class PendingPublish extends PendingAction {
 	}
 
 	@Override
-	public void processResponse(DcfResponse response) {
+	public void processResponse(DcfResponse response) throws SOAPException {
 		
 		// only correct operations
 		if ( response != DcfResponse.OK ) {

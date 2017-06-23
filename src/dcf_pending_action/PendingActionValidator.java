@@ -1,5 +1,7 @@
 package dcf_pending_action;
 
+import javax.xml.soap.SOAPException;
+
 import ui_progress_bar.FormProgressBar;
 
 /**
@@ -35,8 +37,39 @@ public class PendingActionValidator extends Thread {
 		pendingAction.setListener( listener );
 		pendingAction.setProgressBar( progressBar );
 		
-		// start the pending reserve process
-		pendingAction.start();
+		boolean notify = true;
+		boolean started = false;
+		
+		// do until the process is successful
+		while ( !started ) {
+			
+			// start the pending reserve process
+			try {
+				
+				pendingAction.start( notify );
+
+				// success => started!
+				started = true;
+
+			} catch (SOAPException e) {
+
+				notify = false;
+				
+				// bad connection, wait connection
+				System.err.println( "Bad internet connection. The " 
+						+ pendingAction + " waits one minute to restart" );
+				
+				// wait one minute
+				try {
+					Thread.sleep( 60000 );
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+			}
+			
+			// update catalogue status
+			pendingAction.getCatalogue().setRequestingAction( false );
+		}
 	}
 	
 	/**

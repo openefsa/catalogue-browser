@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.StringTokenizer;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.soap.SOAPException;
 import javax.xml.transform.TransformerException;
 
 import org.xml.sax.SAXException;
@@ -2001,9 +2002,10 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * @throws SAXException 
 	 * @throws ParserConfigurationException 
 	 * @throws TransformerException 
+	 * @throws SOAPException 
 	 */
 	public NewCatalogueInternalVersion getLastInternalVersion() throws IOException, 
-	TransformerException, ParserConfigurationException, SAXException {
+	TransformerException, ParserConfigurationException, SAXException, SOAPException {
 
 		String format = ".xml";
 		String filename = "temp_" + getCode();

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.soap.SOAPException;
 import javax.xml.transform.TransformerException;
 
 import org.eclipse.swt.widgets.Event;
@@ -99,13 +100,15 @@ public abstract class PendingAction {
 	/**
 	 * Start the reserve operation for the current catalogue
 	 * with the current reserve level
+	 * @throws SOAPException 
 	 */
-	public void start () {
+	public void start ( boolean notifyStart ) throws SOAPException {
 		
 		System.out.println( "Starting " + this );
 		
 		// we are starting the process
-		setStatus( PendingReserveStatus.STARTED );
+		if ( notifyStart )
+			setStatus( PendingReserveStatus.STARTED );
 		
 		// send the pending reserve request
 		// to the dcf
@@ -120,14 +123,15 @@ public abstract class PendingAction {
 	 * @param listener called if the dcf is found busy while
 	 * asking for the log with HIGH priority
 	 * @return the log response
+	 * @throws SOAPException 
 	 */
-	private void send() {
+	private void send() throws SOAPException {
 		
 		// update the status
 		setStatus( PendingReserveStatus.SENDING );
-		
-		File log = getLog();
 
+		File log = getLog();
+		
 		// if no log in high priority => the available time is finished
 		if ( log == null && priority == Priority.HIGH ) {
 			
@@ -250,8 +254,10 @@ public abstract class PendingAction {
 	 * needed when we finish the method.
 	 * @return true if we already had the last internal version, 
 	 * false otherwise
+	 * @throws SOAPException 
 	 */
-	public boolean importLastVersion ( final Listener doneListener ) {
+	public boolean importLastVersion ( final Listener doneListener ) 
+			throws SOAPException {
 		
 		try {
 			
@@ -308,8 +314,9 @@ public abstract class PendingAction {
 	 * behavior of the process is defined by {@link #priority}
 	 * @return the log related to the reserve operation if it
 	 * was found in the available time, otherwise null
+	 * @throws SOAPException 
 	 */
-	private File getLog () {
+	private File getLog () throws SOAPException {
 		
 		File log = null;
 		
@@ -566,6 +573,7 @@ public abstract class PendingAction {
 	/**
 	 * Process the dcf response related to this pending action
 	 * @param response the retrieved response
+	 * @throws SOAPException 
 	 */
-	public abstract void processResponse ( DcfResponse response );
+	public abstract void processResponse ( DcfResponse response ) throws SOAPException;
 }

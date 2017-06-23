@@ -12,12 +12,11 @@ import org.eclipse.swt.widgets.Shell;
 import dcf_manager.Dcf;
 import dcf_pending_action.PendingPublish;
 import dcf_pending_action.PendingReserve;
+import dcf_pending_action.PendingUploadData;
 import dcf_user.User;
 import messages.Messages;
-import ui_main_panel.DefaultListeners;
 import ui_main_panel.FormDCFLogin;
 import ui_main_panel.FormDCFLogin.CredentialListener;
-import ui_main_panel.UpdateableUI;
 import ui_progress_bar.FormProgressBar;
 import utilities.GlobalUtil;
 
@@ -170,36 +169,15 @@ public class LoginMenu implements MainMenuItem {
 				progressBar.getLocation().y + 170 );
 		
 		// start reserve actions
-		dcf.startPendingActions( PendingReserve.TYPE,
-				DefaultListeners.getReserveListener( 
-						new UpdateableUI() {
-			
-			@Override
-			public void updateUI(Object data) {
-				mainMenu.update( data );
-			}
-			
-			@Override
-			public Shell getShell() {
-				return shell;
-			}
-		}));
+		dcf.startPendingActions( PendingReserve.TYPE, 
+				mainMenu.getListener() );
 		
 		// start publish actions
 		dcf.startPendingActions( PendingPublish.TYPE, 
-				
-				DefaultListeners.getPublishListener( 
-						new UpdateableUI() {
-			
-			@Override
-			public void updateUI(Object data) {
-				mainMenu.update( data );
-			}
-			
-			@Override
-			public Shell getShell() {
-				return shell;
-			}
-		}));
+				mainMenu.getListener() );
+		
+		// start upload data actions
+		dcf.startPendingActions( PendingUploadData.TYPE, 
+				mainMenu.getListener() );
 	}
 }

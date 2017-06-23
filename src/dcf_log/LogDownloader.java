@@ -2,6 +2,8 @@ package dcf_log;
 
 import java.io.File;
 
+import javax.xml.soap.SOAPException;
+
 import dcf_manager.Dcf;
 import dcf_pending_action.PendingAction.Priority;
 
@@ -69,8 +71,9 @@ public class LogDownloader {
 	 * process goes on until the maximum number of attempts is reached.
 	 * @return the log if it was found within the maximum number of attempts
 	 * otherwise null.
+	 * @throws SOAPException 
 	 */
-	public File getLog() {
+	public File getLog() throws SOAPException {
 		
 		File log = null;
 		

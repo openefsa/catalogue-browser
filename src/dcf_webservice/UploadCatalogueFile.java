@@ -45,26 +45,19 @@ public abstract class UploadCatalogueFile extends SOAPAction {
 	 * Upload the attached file to the dcf and get the 
 	 * processed response
 	 * @return
+	 * @throws SOAPException 
 	 */
-	public Object upload() {
-		
+	public Object upload() throws SOAPException {
+
 		Object result = null;
+		String url = getType() == DcfType.PRODUCTION ? URL : TEST_URL;
 
-		try {
-			
-			String url = getType() == DcfType.PRODUCTION ? URL : TEST_URL;
-			
-			// start the reserve operation
-			result = (PendingAction) makeRequest( url );
+		// start the reserve operation
+		result = (PendingAction) makeRequest( url );
 
-		} catch (SOAPException e) {
-
-			e.printStackTrace();
-		}
-		
 		return result;
 	}
-	
+
 	/**
 	 * Create the reserve request message
 	 */

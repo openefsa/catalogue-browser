@@ -1,5 +1,7 @@
 package dcf_webservice;
 
+import javax.xml.soap.SOAPException;
+
 import catalogue.Catalogue;
 import dcf_manager.Dcf.DcfType;
 import dcf_pending_action.PendingReserve;
@@ -39,9 +41,10 @@ public class Reserve extends UploadCatalogueFile {
 	 * @param reserveDescription a description of why we are (un)reserving
 	 * @return the pending reserve which containes all the information related
 	 * to this reserve request
+	 * @throws SOAPException 
 	 */
 	public PendingReserve reserve( Catalogue catalogue, ReserveLevel reserveLevel, 
-			String reserveDescription ) {
+			String reserveDescription ) throws SOAPException {
 		
 		this.catalogue = catalogue;
 		this.reserveLevel = reserveLevel;
