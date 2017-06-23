@@ -1,11 +1,15 @@
 package dcf_webservice;
 
+import java.io.File;
+
 import catalogue.Catalogue;
 import dcf_manager.Dcf;
 import dcf_pending_action.PendingAction;
 import dcf_pending_action.PendingActionListener;
-import dcf_pending_action.PendingPublish;
 import dcf_webservice.Publish.PublishLevel;
+import sas_remote_procedures.XmlChangesCreator;
+import sas_remote_procedures.XmlUpdateFile;
+import sas_remote_procedures.XmlUpdateFileDAO;
 import ui_progress_bar.FormProgressBar;
 
 /**
@@ -15,16 +19,6 @@ import ui_progress_bar.FormProgressBar;
  *
  */
 public class BackgroundAction extends Thread {
-
-	private Type type;
-	private Catalogue catalogue;
-	private PublishLevel pLevel;
-	
-	private ReserveLevel rLevel;
-	private String rDescription;
-	private FormProgressBar progressBar;
-	
-	private PendingActionListener listener; // listen to events
 	
 	public enum Type {
 		RESERVE,
@@ -32,25 +26,22 @@ public class BackgroundAction extends Thread {
 		UPLOAD_DATA
 	}
 	
-	/**
-	 * Set the listener for reserve events.
-	 * @param listener
-	 */
-	public void setListener(PendingActionListener listener) {
-		this.listener = listener;
-	}
+	private Type type;
+	private Catalogue catalogue;
 	
-	/**
-	 * Set the progress bar which will be used if a new
-	 * version of the catalogue is downloaded
-	 * @param progressBar
-	 */
-	public void setProgressBar(FormProgressBar progressBar) {
-		this.progressBar = progressBar;
-	}
+	// publish stuff
+	private PublishLevel pLevel;
 	
+	// reserve stuff
+	private ReserveLevel rLevel;
+	private String rDescription;
+	
+	private FormProgressBar progressBar;
+	
+	private PendingActionListener listener; // listen to events
+
 	/**
-	 * Initialize a publish action
+	 * Initialize a {@link Publish} action
 	 * @param catalogue the catalogue we want to publish
 	 * @param level the publish level required
 	 */
@@ -61,7 +52,7 @@ public class BackgroundAction extends Thread {
 	}
 	
 	/**
-	 * Initialize an upload data action
+	 * Initialize an {@link UploadData} action
 	 * @param catalogue the catalogue we want to upload
 	 */
 	public BackgroundAction( Catalogue catalogue ) {
@@ -70,7 +61,7 @@ public class BackgroundAction extends Thread {
 	}
 	
 	/**
-	 * Initialize a reserve action
+	 * Initialize a {@link Reserve} action
 	 * @param catalogue the catalogue we want to reserve
 	 * @param reserveLevel the reserve level we want
 	 * @param reserveDescription the reserve description
@@ -84,11 +75,14 @@ public class BackgroundAction extends Thread {
 		this.type = Type.RESERVE;
 	}
 	
+	/**
+	 * Start the pending action defined in the
+	 * constructor and send it to the dcf.
+	 */
 	@Override
 	public void run() {
 
-		Dcf dcf = new Dcf();
-		UploadCatalogueFile req = dcf.uploadCatFile( type );
+		UploadCatalogueFile req = getService( type );
 
 		// notify that we are ready to perform the action
 		if ( listener != null )
@@ -104,10 +98,27 @@ public class BackgroundAction extends Thread {
 			
 		case PUBLISH:
 			// start the publish process
-			pa = (PendingPublish) ((Publish) req).publish( catalogue, pLevel );
+			pa = ((Publish) req).publish( catalogue, pLevel );
 			break;
+			
+		case UPLOAD_DATA:
+			
+			// download the xml from the server if possible
+			XmlChangesCreator xmlCreator = new XmlChangesCreator();
+			File xmlFile = xmlCreator.downloadXml( catalogue );
+			
+			if ( xmlFile == null ) {
+				System.err.println( "No .xml file found in " + xmlFile + " for " + catalogue );
+				return;
+			}
+			
+			// upload the xml file to the dcf using upload catalogue file
+			pa = ( (UploadData) req ).uploadData( catalogue, xmlFile.getAbsolutePath() );
+			break;
+			
 		default:
-			break;
+			System.err.println( "Type " + type + " not defined in BackgroundAction#run()" );
+			return;
 		}
 		
 		// if we have successfully sent the request,
@@ -117,7 +128,53 @@ public class BackgroundAction extends Thread {
 			listener.requestSent( pa, pa.getLogCode() );
 		
 		// start the pending reserve we have just created
-		dcf.setProgressBar(progressBar);
+		Dcf dcf = new Dcf();
+		dcf.setProgressBar( progressBar );
 		dcf.startPendingAction( pa, listener );
+	}
+	
+	
+	/**
+	 * Initialize an upload catalogue file action and return it
+	 * @param actionType
+	 * @return
+	 */
+	public UploadCatalogueFile getService ( Type actionType ) {
+		
+		UploadCatalogueFile req = null;
+		
+		// initialize the required service
+		switch ( actionType ) {
+		case RESERVE:
+			req = new Reserve( Dcf.dcfType );
+			break;
+		case PUBLISH:
+			req = new Publish( Dcf.dcfType );
+			break;
+		case UPLOAD_DATA:
+			req = new UploadData( Dcf.dcfType );
+			break;	
+		default:
+			break;
+		}
+		
+		return req;
+	}
+
+	/**
+	 * Set the listener for reserve events.
+	 * @param listener
+	 */
+	public void setListener(PendingActionListener listener) {
+		this.listener = listener;
+	}
+	
+	/**
+	 * Set the progress bar which will be used if a new
+	 * version of the catalogue is downloaded
+	 * @param progressBar
+	 */
+	public void setProgressBar(FormProgressBar progressBar) {
+		this.progressBar = progressBar;
 	}
 }

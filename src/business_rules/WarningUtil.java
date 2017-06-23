@@ -1804,7 +1804,7 @@ public class WarningUtil {
 		}
 	}
 
-	/** TODO: Metti i messaggi di defaults
+	/**
 	 * Create the default file which contains the warning messages
 	 * @param filename
 	 * @return

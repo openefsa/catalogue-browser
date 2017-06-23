@@ -15,6 +15,7 @@ import catalogue_browser_dao.DatabaseManager;
 import dcf_manager.Dcf.DcfType;
 import dcf_webservice.UploadData;
 import export_catalogue.ExportActions;
+import messages.Messages;
 import ui_progress_bar.FormProgressBar;
 
 /**
@@ -31,7 +32,6 @@ import ui_progress_bar.FormProgressBar;
  */
 public class XmlChangesCreator {
 
-	
 	/**
 	 * The export format of the exported file as soon
 	 * as the export is finished
@@ -167,6 +167,7 @@ public class XmlChangesCreator {
 		
 		if ( xmlUpdateFile == null ) {
 			System.err.println( "Cannot find an xml filename for " + catalogue );
+			abort( Messages.getString( "XmlChangesCreator.XmlAbort" ) );
 			return null;
 		}
 		
@@ -324,7 +325,7 @@ public class XmlChangesCreator {
 					" in " + newFile + ". Aborting operation...";
 			
 			System.out.println( error );
-			abort( error );
+			abort( Messages.getString( "XmlChangesCreator.RenameAbort" ) );
 		}
 		
 		return success;

@@ -10,7 +10,7 @@ import dcf_pending_action.PendingActionListener;
 import dcf_pending_action.PendingPublish;
 import dcf_pending_action.PendingReserve;
 import dcf_pending_action.PendingReserveStatus;
-import dcf_user.User;
+import dcf_pending_action.PendingUploadData;
 import dcf_webservice.DcfResponse;
 import dcf_webservice.ReserveLevel;
 import global_manager.GlobalManager;
@@ -19,6 +19,122 @@ import utilities.GlobalUtil;
 
 public class DefaultListeners {
 
+	public static PendingActionListener getUploadDataListener ( final UpdateableUI ui ) {
+		
+		PendingActionListener listener = new PendingActionListener() {
+			
+			@Override
+			public void statusChanged(PendingAction pendingAction, PendingReserveStatus status) {}
+			
+			@Override
+			public void responseReceived( final PendingAction pendingAction, final DcfResponse response) {
+				ui.getShell().getDisplay().asyncExec( new Runnable() {
+					
+
+					@Override
+					public void run() {
+						// if pending publish
+						if ( pendingAction instanceof PendingUploadData ) {
+
+							PendingUploadData pud = (PendingUploadData) pendingAction;
+
+							// show log errors
+							showErrorsDialog ( ui, pud );
+							
+							// warn the user of upload data status
+							warnUploadDataResponse( pud, response, ui );
+						}
+					}
+				});
+			}
+			
+			@Override
+			public void requestSent( final PendingAction pendingAction, String logCode) {
+				
+				ui.getShell().getDisplay().asyncExec( new Runnable() {
+					@Override
+					public void run() {
+						
+						// remove shell lock if we start sending
+						// (we have the log code at this point)
+						ShellLocker.removeLock( ui.getShell() );
+
+						Catalogue catalogue = pendingAction.getCatalogue();
+						String preMessage = createPremessage( catalogue );
+						
+						// warn that the operation was sent
+						GlobalUtil.showDialog( ui.getShell(), 
+								Messages.getString( "UpData.StartedTitle" ),
+								preMessage + Messages.getString( "UpData.StartedMessage" ),
+								SWT.ICON_INFORMATION );
+					}
+				});
+			}
+			
+			@Override
+			public void requestPrepared() {
+				
+				ui.getShell().getDisplay().asyncExec( new Runnable() {
+
+					@Override
+					public void run() {
+
+						// lock the closure of the window since
+						// we are making important things (i.e.
+						// sending reserve requests or importing
+						// new catalogue versions)
+						ShellLocker.setLock( ui.getShell(), 
+								Messages.getString( "MainPanel.CannotCloseTitle" ), 
+								Messages.getString( "MainPanel.CannotCloseMessage" ) );
+					}
+				});
+			}
+		};
+		
+		return listener;
+	}
+	
+	/**
+	 * Warn the user of the dcf response related to upload data operations.
+	 * @param pud
+	 * @param response
+	 * @param ui
+	 */
+	private static void warnUploadDataResponse ( PendingUploadData pud, 
+			DcfResponse response, UpdateableUI ui ) {
+		
+		Catalogue catalogue = pud.getCatalogue();
+		
+		String title = null;
+		String msg = createPremessage( catalogue );
+		int icon = SWT.ICON_INFORMATION;
+		
+		Shell shell = ui.getShell();
+		
+		switch ( response ) {
+			case ERROR:
+				title = Messages.getString( "UpData.ErrorTitle" );
+				msg += Messages.getString( "UpData.ErrorMessage" );
+				icon = SWT.ICON_ERROR;
+				break;
+			case AP:
+				title = Messages.getString( "UpData.ApTitle" );
+				msg += Messages.getString( "UpData.ApMessage" );
+				icon = SWT.ICON_ERROR;
+				break;
+			case OK:
+				title = Messages.getString( "UpData.OkTitle" );
+				msg += Messages.getString( "UpData.OkMessage" );
+				break;
+			default:
+				break;
+		}
+
+		// show the dialog
+		GlobalUtil.showDialog( shell, title, msg,
+				icon );
+	}
+	
 	/**
 	 * Get the default publish listener
 	 * @param ui
@@ -44,11 +160,6 @@ public class DefaultListeners {
 						if ( pendingAction instanceof PendingPublish ) {
 
 							PendingPublish pp = (PendingPublish) pendingAction;
-
-							// open the new version if ok response
-							if ( response == DcfResponse.OK ) {
-								openNewVersion( pp.getCatalogue() );
-							}
 
 							// show log errors
 							showErrorsDialog ( ui, pp );
@@ -133,6 +244,7 @@ public class DefaultListeners {
 		
 		String title = null;
 		String msg = createPremessage( catalogue );
+		int icon = SWT.ICON_INFORMATION;
 		
 		Shell shell = ui.getShell();
 		
@@ -140,14 +252,17 @@ public class DefaultListeners {
 			case ERROR:
 				title = Messages.getString( "Publish.ErrorTitle" );
 				msg += Messages.getString( "Publish.ErrorMessage" );
+				icon = SWT.ICON_ERROR;
 				break;
 			case AP:
 				title = Messages.getString( "Publish.ApTitle" );
 				msg += Messages.getString( "Publish.ApMessage" );
+				icon = SWT.ICON_ERROR;
 				break;
 			case FORBIDDEN:
 				title = Messages.getString( "Publish.MinorErrorTitle" );
 				msg += Messages.getString( "Publish.MinorErrorMessage" );
+				icon = SWT.ICON_ERROR;
 				break;
 			case OK:
 				title = Messages.getString( "Publish.OkTitle" );
@@ -159,7 +274,7 @@ public class DefaultListeners {
 
 		// show the dialog
 		GlobalUtil.showDialog( shell, title, msg,
-				SWT.ICON_INFORMATION );
+				icon );
 	}
 	
 	/**
@@ -334,45 +449,6 @@ public class DefaultListeners {
 		};
 		
 		return listener;
-	}
-
-	/**
-	 * Check if the catalogue has the same code of the current catalogue
-	 * or not
-	 * @param catalogue
-	 * @return
-	 */
-	private static boolean sameCodeOfCurrent( Catalogue catalogue ) {
-		
-		Catalogue current = 
-				GlobalManager.getInstance().getCurrentCatalogue();
-		
-		// open the new version of the catalogue if it was
-		// created by the pending reserve (only if a previous
-		// version of the catalogue is already opened in the
-		// browser)
-		return ( current != null && 
-				current.equals( catalogue ) );
-	}
-	
-	/**
-	 * Open the new version of the catalogue only if
-	 * there is an older version already opened in the
-	 * browser
-	 * @param newVersion
-	 */
-	private static void openNewVersion( Catalogue newVersion ) {
-		
-		// open the new version of the catalogue if it was
-		// created by the pending reserve (only if a previous
-		// version of the catalogue is already opened in the
-		// browser)
-		// do not open the new version if we have a forced version
-		// since if we are editing
-		if ( sameCodeOfCurrent ( newVersion ) 
-				&& !newVersion.isForceEdit( User.getInstance().getUsername() ) ) {
-			newVersion.open();
-		}
 	}
 	
 	/**

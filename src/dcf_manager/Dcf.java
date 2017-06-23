@@ -346,33 +346,6 @@ public class Dcf {
 	}
 	
 	/**
-	 * Initialize an upload catalogue file action and return it
-	 * @param actionType
-	 * @return
-	 */
-	public UploadCatalogueFile uploadCatFile ( Type actionType ) {
-		
-		UploadCatalogueFile req = null;
-		
-		// initialize the required service
-		switch ( actionType ) {
-		case RESERVE:
-			req = new Reserve( dcfType );
-			break;
-		case PUBLISH:
-			req = new Publish( dcfType );
-			break;
-		case UPLOAD_DATA:
-			req = new UploadData( dcfType );
-			break;	
-		default:
-			break;
-		}
-		
-		return req;
-	}
-	
-	/**
 	 * Start a reserve operation in background.
 	 * @param catalogue the catalogue we want to reserve
 	 * @param level the reserve level we want

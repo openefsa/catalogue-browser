@@ -343,11 +343,8 @@ public class ToolsMenu implements MainMenuItem {
 
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-
-				XmlChangesCreator xmlCreator = new XmlChangesCreator();
 				
-				xmlCreator.downloadXml( mainMenu.getCatalogue() );
-				
+				uploadData ( mainMenu.getCatalogue() );
 				
 				if ( listener != null )
 					listener.buttonPressed( uploadDataMI, 
@@ -1203,5 +1200,28 @@ public class ToolsMenu implements MainMenuItem {
 		
 		// restore cursor
 		GlobalUtil.setShellCursor( shell, SWT.CURSOR_ARROW );
+	}
+	
+	/**
+	 * Upload the data of the current catalogue to the dcf
+	 * in order to update the changes we have done locally
+	 * @param catalogue
+	 */
+	private void uploadData ( Catalogue catalogue ) {
+
+		Dcf dcf = new Dcf();
+		dcf.uploadDataBG( catalogue, 
+				DefaultListeners.getUploadDataListener( new UpdateableUI() {
+					
+					@Override
+					public void updateUI(Object data) {
+						mainMenu.update( data );
+					}
+					
+					@Override
+					public Shell getShell() {
+						return shell;
+					}
+				} ) );
 	}
 }
