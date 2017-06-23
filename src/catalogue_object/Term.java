@@ -108,7 +108,7 @@ public class Term extends CatalogueObject implements Mappable {
 
 		// get all the facet categories
 		ArrayList< Attribute > facetCategories = catalogue.getFacetCategories();
-		
+
 		String result = "";
 		String descriptorCodes = "";
 		
@@ -142,7 +142,7 @@ public class Term extends CatalogueObject implements Mappable {
 			
 			// get the implicit facets descriptors from the term if needed
 			if ( includeImplicit ) {
-				
+
 				for ( DescriptorTreeItem item : this.getInheritedImplicitFacets( facetCategory ) ) {
 					
 					descriptors.add( item.getDescriptor() );
@@ -179,6 +179,7 @@ public class Term extends CatalogueObject implements Mappable {
 			result = result + descriptorCodes.substring( 0, descriptorCodes.length() - 1 );
 		else
 			result = getCode();
+
 		return result;
 	}
 	
@@ -865,15 +866,18 @@ public class Term extends CatalogueObject implements Mappable {
 	 * @return
 	 */
 	public ArrayList<FacetDescriptor> getDescriptorsByCategory ( Attribute facetCategory, boolean implicit ) {
-		
+
 		// output array
 		ArrayList<FacetDescriptor> facets = new ArrayList<>();
-		
+
 		// for each facet descriptor we search for the descriptors of a single category
 		for ( FacetDescriptor descriptor : implicitFacets ) {
 			
 			// if we do not want the implicit facets => skip implicit
 			if ( !implicit && descriptor.getFacetType() == FacetType.IMPLICIT )
+				continue;
+			
+			if ( descriptor.getFacetCategory() == null )
 				continue;
 			
 			// check if correct facet category

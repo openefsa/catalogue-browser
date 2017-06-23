@@ -58,14 +58,14 @@ public class GlobalUtil {
 	final static public String BUSINESS_RULES_DIR_PATH = getBusinessRulesDir();
 
 	// the filename of the warning messages and colors
-	final static public String WARNING_MESSAGES_FILE = getBusinessRulesDir() + "warningMessages.txt";
-	final static public String WARNING_COLORS_FILE = getBusinessRulesDir() + "warningColors.txt";
+	final static public String WARNING_MESSAGES_FILE = "warningMessages.txt";
+	final static public String WARNING_COLORS_FILE = "warningColors.txt";
 	
 	// the filename of the file which contains the business rule for the describe 
-	final static public String BUSINESS_RULES_FILE = getBusinessRulesDir() + "BR_Data.csv";
+	final static public String BUSINESS_RULES_FILE = "BR_Data.csv";
 	
 	// the filename of the file which contains the business rule EXCEPTIONS for the describe 
-	final static public String BUSINESS_RULES_EX_FILE = getBusinessRulesDir() + "BR_Exceptions.csv";
+	final static public String BUSINESS_RULES_EX_FILE = "BR_Exceptions.csv";
 
 	/**
 	 * Set the working directory where the directories should
@@ -95,18 +95,40 @@ public class GlobalUtil {
 	 * @return
 	 */
 	public static String getBusinessRulesDir() {
-		return ( BUSINESS_RULES_DIR_NAME + 
+		return ( workDir + BUSINESS_RULES_DIR_NAME + 
 				System.getProperty( "file.separator" ) );
 	}
 	
-	public static String getBusinessrulefilename() {
-		return workDir + BUSINESS_RULES_FILE;
+	/**
+	 * Get the business rules filename
+	 * @return
+	 */
+	public static String getBRData() {
+		return getBusinessRulesDir() + BUSINESS_RULES_FILE;
 	}
-	public static String getWarningcolorsfilename() {
-		return workDir + WARNING_COLORS_FILE;
+	
+	/**
+	 * Get the business rules exception filename
+	 * @return
+	 */
+	public static String getBRExceptions() {
+		return getBusinessRulesDir() + BUSINESS_RULES_EX_FILE;
 	}
-	public static String getWarningmessagesfilename() {
-		return workDir + WARNING_MESSAGES_FILE;
+	
+	/**
+	 * Get the warning messages filename
+	 * @return
+	 */
+	public static String getBRMessages() {
+		return getBusinessRulesDir() + WARNING_MESSAGES_FILE;
+	}
+	
+	/**
+	 * Get the warning colors filename
+	 * @return
+	 */
+	public static String getBRColors() {
+		return getBusinessRulesDir() + WARNING_COLORS_FILE;
 	}
 	
 	/**

@@ -55,13 +55,13 @@ import utilities.GlobalUtil;
 public class WarningUtil {
 
 	private Catalogue currentCat;
-	
+
 	// log console
 	private TableViewer warningsTable;
-	
+
 	// semaphore
 	private Canvas semaphore;
-	
+
 	// load into memory all the warning messages from the text file
 	private ArrayList<WarningMessage> warningMessages;
 
@@ -104,130 +104,135 @@ public class WarningUtil {
 
 	// load the color options for the warning console and messages
 	private WarningOptions warnOptions;
-	
+
 	/**
 	 * Start the program by command line
 	 * @param argv
 	 */
 	public static void main ( String[] args ) {
 
-		// check if another instance using the database
-		// is already running
-		InstanceChecker.closeIfAlreadyRunning();
-		
-		// argument checks
-		if ( args.length != 3 ) {
-			System.err.println( "Wrong number of arguments, please check! "
-					+ "You have to provide 3 parameters,\n"
-					+ "that is, the input file path (collection of codes to be analysed)"
-					+ ", the output file path, and the working directory, which is"
-					+ "the directory where the catalogue browser files are present");
+		try {
+			// check if another instance using the database
+			// is already running
+			InstanceChecker.closeIfAlreadyRunning();
+
+			// argument checks
+			if ( args.length != 3 ) {
+				System.err.println( "Wrong number of arguments, please check! "
+						+ "You have to provide 3 parameters,\n"
+						+ "that is, the input file path (collection of codes to be analysed)"
+						+ ", the output file path, and the working directory, which is"
+						+ "the directory where the catalogue browser files are present");
+				return;
+			}
+
+			WarningUtil.performWarningChecksOnly( args );
+
+			try {
+				InstanceChecker.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			// exit from the program, we do not need anything else
 			return;
 		}
-
-		WarningUtil.performWarningChecksOnly( args );
-
-		try {
-			InstanceChecker.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+		catch ( Exception e ) {
+			GlobalUtil.showDialog( new Shell(), 
+					"Error", e.getMessage(), SWT.ICON_ERROR);
 		}
-		// exit from the program, we do not need anything else
-		return;
 	}
 
 	/**
 	 * Initialize the warning util with the MTX catalogue
 	 */
 	public WarningUtil() throws MtxNotFoundException {
-		
+
 		CatalogueDAO catDao = new CatalogueDAO();
 		Catalogue mtx = catDao.getLastVersionByCode( "MTX", DcfType.PRODUCTION );
-		
+
 		if ( mtx == null )
 			throw new MtxNotFoundException();
-		
+
 		this.currentCat = mtx;
-		
+
 		System.err.println( "Loading catalogue data into RAM..." );
-		
+
 		currentCat.loadData();
-		
+
 		loadFileData ();
 	}
-	
+
 	public class MtxNotFoundException extends FileNotFoundException {
 		private static final long serialVersionUID = 6689235462817235011L;
 		public MtxNotFoundException() {
 			super ( "The MTX catalogue was not found in the catalogues metadata database, please download it." );
 		}
 	}
-	
+
 	/**
 	 * constructor
 	 * @param warningTable
 	 * @param semaphore
 	 */
 	public WarningUtil( TableViewer warningTable, Canvas semaphore ) {
-		
+
 		this.warningsTable = warningTable;
 		this.semaphore = semaphore;
-		
+
 		// get an instance of the global manager
 		GlobalManager manager = GlobalManager.getInstance();
-		
+
 		// get the current catalogue
 		currentCat = manager.getCurrentCatalogue();
-		
+
 		loadFileData ();
 	}
-	
+
 	private void loadFileData () {
 
-		forbiddenProcesses = loadForbiddenProcesses(GlobalUtil.getBusinessrulefilename());
-		warnOptions = loadWarningOptions( GlobalUtil.getWarningcolorsfilename() );
-		warningMessages = 
-				loadWarningMessages( GlobalUtil.getWarningmessagesfilename() );
+		forbiddenProcesses = loadForbiddenProcesses( GlobalUtil.getBRData() );
+		warnOptions = loadWarningOptions( GlobalUtil.getBRColors() );
+		warningMessages = loadWarningMessages( GlobalUtil.getBRMessages() );
 	}
-	
+
 	/**
 	 * Given a full code, perform all the implemented checks
 	 * @param fullCode
 	 * @param stdOut should be the warnings messages printed in the stdOut? used with batch checking tool
 	 */
 	public void performWarningChecks ( String fullCode, boolean stdOut ) {
-		
+
 		/* 
 		 * RETRIEVE BASE TERM FROM FULL CODE
 		 */
-		
+
 		// split the full code in order to get the base term code and the facets code separately
 		String[] splits = fullCode.split( "#" );
-		
+
 		// get the base term code (the first part of the full code)
 		String baseTermCode = splits[0];
-		
+
 		TermDAO termDao = new TermDAO( currentCat );
-		
+
 		Term baseTerm = termDao.getByCode( baseTermCode );
-		
+
 		// if the base term is not in the database (for macro excel)
 		if ( baseTerm == null )
 			return;
-		
+
 		/* 
 		 * MAKE SOME WARNING CHECKS AND WARN THE USER IF NECESSARY
 		 */
-		
+
 		// check if the base term is a hierarchy or not
 		hierarchyAsBasetermCheck ( baseTerm, stdOut );
-		
+
 		// check if the baseTerm belongs to the reporting or the exposure hierarchy
 		noRepNoExpHierarchyCheck ( baseTerm, stdOut );
-		
+
 		// check if the base term belongs to the exposure hierarchy or not
 		exposureHierarchyCheck( baseTerm, stdOut );
-		
+
 		// check if an non specific base term is selected
 		nonSpecificTermCheck ( baseTerm, stdOut );
 
@@ -241,42 +246,42 @@ public class WarningUtil {
 		// in term of applicability of processes (they are defined in the BR_Data.csv)
 		Term warnGroup = getWarnGroup( baseTerm, stdOut );	
 
-		
+
 		// Contains at position i how many processes with ordCode = i
 		// are added by the user in an explicit way
 		// used to check the mutually exclusive property
 		ArrayList<ForbiddenProcess> explicit = new ArrayList<>();
-		
+
 		// Here we takes the facet codes from the full code
 		String fullFacetsCodes = splits[1];
 
 		// implicit facets of the base term
 		ArrayList < ForbiddenProcess > implicit = getImplicitForbiddenProcesses(baseTerm, 
 				forbiddenProcesses, stdOut);
-		
+
 		// tokenize the rest of the full code to get all the facets codes separately
 		StringTokenizer st = new StringTokenizer(fullFacetsCodes, "$");
-		
+
 		// get all the facets codes parsing the fullFacetsCodes
 		while ( st.hasMoreTokens() ) {
-			
+
 			// get the next facet code
 			String facetFullcode = st.nextToken();
-			
+
 			// get the code of each facet (example of facet code: F01.A0FGM)
 			// the first part indicates the facet index, while the second part
 			// identify the facet. 
 			String[] facetComponents = splitFacetFullCode ( facetFullcode );
-			
+
 			// the facet index
 			String facetIndex = facetComponents[0];
-			
+
 			// delete the first part of the code (i.e. the facet index)
 			String facetCode = facetComponents[1];
-	
+
 			// get the facet by code
 			Term facet = termDao.getByCode( facetCode );
-			
+
 			// if the facet is not present into the database return (for excel macro)
 			if ( facet == null )
 				return;
@@ -284,30 +289,30 @@ public class WarningUtil {
 			// check if a forbidden process is used or raw commodities
 			if ( warnGroup != null )
 				forbiddenProcessForRawCommodityCheck ( baseTerm, facetIndex, facetCode, stdOut );
-			
+
 			// check if the order of processes is violated for derivatives
 			if ( warnGroup != null )
 				forbiddenProcessesOrderForDerivativesCheck ( baseTerm, facetIndex, facetCode, stdOut );
-			
-			
+
+
 			// check if a non-specific facet is selected
 			nonSpecificTermCheck ( facet, stdOut );
-			
+
 			// check if the generic process facet is selected
 			genericProcessedFacetCheck ( facet, stdOut );
-			
+
 			// check if the user added an ingredient to a raw commodity or to a derivative
 			minorIngredientCheck( baseTerm, facetIndex, facetCode, stdOut );
-			
+
 			// check if a source is added to a composite term
 			sourceInCompositeCheck( baseTerm, facetIndex, facetCode, stdOut );
-			
+
 			// check if a source commodity is added to a composite term
 			sourceCommodityInCompositeCheck( baseTerm, facetIndex, facetCode, stdOut );
-				
+
 			// if it is indeed a warn group
 			if ( warnGroup != null ) {
-				
+
 				// get all the forbidden processes related to the base term 
 				// (defined in the BR_Data.csv or BR_exceptions.csv)
 				ArrayList<ForbiddenProcess> currentFP = getCurrentForbiddenProcesses( baseTerm, 
@@ -315,7 +320,7 @@ public class WarningUtil {
 
 				// get the forbidden processes codes (NOT ord code!) related to the base term
 				ArrayList<String> currentFPCodes = new ArrayList<>();
-				
+
 				for ( ForbiddenProcess proc : currentFP )
 					currentFPCodes.add( proc.getForbiddenProcessCode() );
 
@@ -324,12 +329,12 @@ public class WarningUtil {
 
 					// get the position in the arraylist
 					int index = currentFPCodes.indexOf( facetCode );
-					
+
 					boolean isAncestor = false;
-					
+
 					// check if the explicit process is a descendant of some implicit facet
 					for ( ForbiddenProcess proc : implicit ) {
-						
+
 						// get the facet terms related to the forbidden processes codes
 						Term ancestor = termDao.getByCode( proc.getForbiddenProcessCode() );
 						Term descendant = termDao.getByCode( currentFP.get( index ).getForbiddenProcessCode() );
@@ -337,39 +342,39 @@ public class WarningUtil {
 						// if the added process is a son of one of the implicit process
 						// add it but remove the implicit, in order to ignore it
 						if ( descendant.hasAncestor( ancestor, currentCat.getHierarchyByCode( "process" ) ) ) {
-							
+
 							isAncestor = true;
-							
+
 							// add the forbidden process into the added processes arraylist
 							// since we want to check only the forbidden processes mutually exclusivity	
-							
+
 							explicit.add( currentFP.get( index ) );
-							
+
 							// remove the implicit
 							implicit.remove( proc );
 							break;
 						}
 					}
-					
+
 					// if there is no relation => add the process without
 					// taking care of implicit processes
 					if ( !isAncestor )
 						explicit.add( currentFP.get( index ) );
-						
+
 				}
 			}
 		}
-		
+
 		// check if the user added only one source commodity to a raw commodity
 		sourceCommodityRawCheck ( baseTerm, fullFacetsCodes, stdOut );
-		
+
 		// check if the user added more than one source commodity to a derivative or if
 		// he added a source to a derivative and only one source commodity
 		sourceCommodityDerivativeCheck ( baseTerm, fullFacetsCodes, stdOut );
-		
+
 		// check if decimal order of the processes ordCodes is correctly applied
 		if ( warnGroup != null ) {
-			
+
 			// check if the ord code are correct (i.e. no implicit ord code >= explicit ord codes)
 			decimalOrderCheck( baseTerm, implicit, explicit, stdOut );
 
@@ -377,34 +382,34 @@ public class WarningUtil {
 			mutuallyExclusiveCheck ( baseTerm, explicit, implicit, stdOut );
 		}
 	}
-	
+
 	/**
 	 * Refresh the warning table, that is, remove all the warnings and recompute them starting from the fullCode
 	 * of the term. Examples of full code: A0DPP or  A0DPP#F01.A0FGM or A0DPP#F01.A0FGM$F04.A000J
 	 * @param fullCode: the full code of a term (IMPORTANT: without the implicit facets code if enabled!)
 	 */
 	public void refreshWarningsTable( String fullCode ) {
-		
+
 		/* 
 		 * GRAPHICS UPDATE
 		 */
-		
+
 		// reset the warning messages and level
 		resetWarningState();
-		
+
 		// refresh the graphics ( font and colors )
 		refreshWarningTableGraphics();
-		
+
 		/*
 		 * CHECKS 
 		 */
-		
+
 		// execute all the warning checks
 		performWarningChecks(fullCode, false);
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Reset the warnings contents and level
 	 */
@@ -416,7 +421,7 @@ public class WarningUtil {
 		currentWarningLevel = WarningLevel.NONE;
 	}
 
-	
+
 	/**
 	 * Refresh the graphics of the warning table accordingly to the warning options
 	 */
@@ -425,7 +430,7 @@ public class WarningUtil {
 		// set the font size of the warnings table accordingly to the warning options
 		FontDescriptor descriptor = FontDescriptor.createFrom( 
 				warningsTable.getTable().getFont() ).setHeight( warnOptions.getFontSize() );
-		
+
 		warningsTable.getTable().setFont( descriptor.createFont( Display.getCurrent() ) );
 
 		// set the background color of the table accordingly to the warning options
@@ -449,7 +454,7 @@ public class WarningUtil {
 
 		// load exceptions terms and their forbidden processes (these elements have priority over the standard forbidden processes)
 		ArrayList< ForbiddenProcess > exceptionForbiddenProcesses = 
-				loadForbiddenProcesses( GlobalUtil.BUSINESS_RULES_EX_FILE );
+				loadForbiddenProcesses( GlobalUtil.getBRExceptions() );
 
 		// Warn Group Exceptions, if the base term is an exception then it is itself the warn group
 		if ( isWarnGroup( baseTerm.getCode(), exceptionForbiddenProcesses ) ) {
@@ -521,27 +526,26 @@ public class WarningUtil {
 	 */
 	private ArrayList<ForbiddenProcess> getImplicitForbiddenProcesses ( Term term,
 			ArrayList<ForbiddenProcess> forbiddenProcesses, boolean stdOut ) {
-		
-		// get the warn group of the term
-		Term warnGroup = getWarnGroup( term, stdOut );
-
-		// if it is not a warn group => no forbidden processes are defined
-		if ( warnGroup == null )
-			return null;
 
 		// initialize the output array
 		ArrayList<ForbiddenProcess> implicitForbiddenProcesses = new ArrayList<>();
-
 		
+		// get the warn group of the term
+		Term warnGroup = getWarnGroup( term, stdOut );
+		
+		// if it is not a warn group => no forbidden processes are defined
+		if ( warnGroup == null )
+			return implicitForbiddenProcesses;
+
 		// get the full code of the term, in order to extract the process code
 		// the implicit facets are inserted by default!
 		String fullCode = term.getFullCode( true, true );
-
+		
 		// if there are not facets, return (it is only the base term)
 		if ( fullCode.split("#").length < 2 )
-			return null;
+			return implicitForbiddenProcesses;
 
-		
+
 		// parse the facet codes
 		StringTokenizer st = new StringTokenizer(fullCode.split("#")[1], "$");
 
@@ -581,11 +585,11 @@ public class WarningUtil {
 	private String[] splitFacetFullCode ( String facetFullCode ) {
 
 		String[] split = facetFullCode.split("\\.");
-		
+
 		// the facet index
 		String facetIndex = split[0];
 		String facetCode = "";
-		
+
 		if ( split.length > 1 )
 			facetCode = split[1];
 
@@ -615,10 +619,10 @@ public class WarningUtil {
 
 		// for each forbidden process
 		for ( int i = 0; i < forbiddenProcesses.size(); i++ ) {
-			
+
 			// if the warn group term related to the current forbidden process is actually the warn group of the baseTerm
 			if ( forbiddenProcesses.get(i).getBaseTermGroupCode().equals( warnGroup.getCode() ) ) {
-				
+
 				// add the related process to the forbidden processes
 				currentFP.add( forbiddenProcesses.get(i) ); 
 			}
@@ -660,6 +664,10 @@ public class WarningUtil {
 	 */
 	private double getMinOrdCode( ArrayList<ForbiddenProcess> forbiddenProcesses ) { 
 
+		// if no processes
+		if ( forbiddenProcesses == null )
+			return 0;
+		
 		// set the min to the maximum double value in order to be sure to update minimum values correctly
 		double minOrdCode = Double.MAX_VALUE;
 
@@ -699,7 +707,7 @@ public class WarningUtil {
 		return ( term.getTermType().getValue().equals("d") );
 	}
 
-	
+
 	/**
 	 * Check if the term is a composite (simple or complex)
 	 * @param term
@@ -708,7 +716,7 @@ public class WarningUtil {
 	private boolean isCompositeTerm ( Term term ) {
 		return ( term.getTermType().getValue().equals("s") || term.getTermType().getValue().equals("c") );
 	}
-	
+
 	/**
 	 * check if the term is a feed term
 	 * @param term
@@ -717,8 +725,8 @@ public class WarningUtil {
 	private boolean isFeedTerm ( Term term ) {
 		return ( term.getName().contains("(feed)") );
 	}
-	
-	
+
+
 	/**
 	 * check if the facet is a source commodity facet
 	 * @param facetIndex
@@ -727,7 +735,7 @@ public class WarningUtil {
 	private boolean isSourceCommodityFacet ( String facetIndex ) {
 		return ( facetIndex.equals("F27") );
 	}
-	
+
 	/**
 	 * Check if the term is a non-specific term
 	 * @param term
@@ -775,8 +783,8 @@ public class WarningUtil {
 				facet.getCode().equals("A0CHS") );
 	}
 
-	
-	
+
+
 	/** FIRST WARNING CHECK
 	 *  Check if the base term is a hierarchy. If it is, rise a warning (discourage its use)
 	 *  Check also if the hierarchy is an exposure hierarchy or not and rise a warning if it is a non
@@ -872,7 +880,7 @@ public class WarningUtil {
 		// get the implicit processes of the base term
 		ArrayList<ForbiddenProcess> implicitProcesses = 
 				getImplicitForbiddenProcesses( baseTerm, forbiddenProcesses, stdOut );
-
+		
 		// get the minimum ord code of the implicit processes
 		double minImplicitOrdCode = getMinOrdCode( implicitProcesses );
 
@@ -911,18 +919,18 @@ public class WarningUtil {
 		// Return if null parameters
 		if ( explicitProcesses == null || implicitProcesses == null )
 			return;
-		
+
 		// if no explicit process are present return! In fact, the implicit processes alone 
 		// do not have to be checked
 		// if the base term is not a derivative return, this check is only for derivatives
 		if ( explicitProcesses.isEmpty() || !isDerivativeTerm( baseTerm ) )
 			return;
-		
+
 		// create a unique list of processes (used later)
 		ArrayList< ForbiddenProcess > allProcess = new ArrayList<>();
 		allProcess.addAll( explicitProcesses );
 		allProcess.addAll( implicitProcesses );
-		
+
 		// get all the ord codes starting from the forbidden processes
 		// both explicit and implicit ones
 		ArrayList< Double > ordCodes = new ArrayList<>();
@@ -931,18 +939,18 @@ public class WarningUtil {
 		// we can use different 0 items together without
 		// incurring in the mutually exclusive problem
 		// therefore we exclude them from this check
-		
+
 		for( ForbiddenProcess proc : explicitProcesses)
 			if ( proc.getOrdCode() != 0 )
 				ordCodes.add( proc.getOrdCode() );
 			else allProcess.remove( proc ); // if it is 0 remove from the all process
-		
+
 		for( ForbiddenProcess proc : implicitProcesses)
 			if ( proc.getOrdCode() != 0 )
 				ordCodes.add( proc.getOrdCode() );
 			else allProcess.remove( proc ); // if it is 0 remove from the all process
-			
-		
+
+
 		// get all the distinct ord codes and see if there are duplicates
 		// if this is the case print a warning! You have violated the mutually exclusive property
 		// the case in which only implicit facet are present was already managed at the beginning
@@ -951,7 +959,7 @@ public class WarningUtil {
 
 		// for each ord code in the unique set of ordCodes of the selected processes
 		for( double ordCode : uniqueOrdCodes ) {
-			
+
 			// Are there any duplicated ord code? If yes => warning! you can use only one process
 			// with this ord code
 			if ( Collections.frequency( ordCodes, ordCode) > 1 ) {
@@ -959,7 +967,7 @@ public class WarningUtil {
 				// get the processes codes and attach them into the warning message
 				StringBuilder sb = new StringBuilder();
 				for ( int i = 0; i < ordCodes.size(); i++ ) {
-					
+
 					// if the process owns the same ord code add its code to the warning string
 					if( ordCodes.get(i) == ordCode )
 						sb.append( allProcess.get(i).getForbiddenProcessCode() );
@@ -994,11 +1002,11 @@ public class WarningUtil {
 		// only check for derivatives
 		if ( !isDerivativeTerm( baseTerm ) )
 			return;
-		
+
 		// if there are not implicit or explicit processes
 		if ( implicitProcesses == null || explicitProcesses == null )
 			return;
-		
+
 		/* HOW THIS CHECK WORKS: 
 		 * 1 - retrieve the processes (implicit and explicit ones) which have a decimal ord code 
 		 * 2 - compute the max integer part of these ord codes. For example if we have: 1.1, 1.2, 2.1, 3.1 the 
@@ -1133,7 +1141,7 @@ public class WarningUtil {
 
 			Hierarchy reportingHierarchy = currentCat.getHierarchyByCode( Headers.REPORT );
 			Hierarchy exposureHierarchy = currentCat.getHierarchyByCode( Headers.EXPO );
-			
+
 			// if the term does not belong to both reporting and exposure hierarchy => warning
 			if( !hierarchies.contains(reportingHierarchy) && !hierarchies.contains(exposureHierarchy) )
 				printWarning( WarningEvent.NoRepNoExpBaseTerm, baseTerm.getCode(), false, stdOut );
@@ -1204,28 +1212,28 @@ public class WarningUtil {
 	 * @param facetCode
 	 */
 	private void sourceCommodityRawCheck ( Term baseTerm, String fullFacetCode, boolean stdOut ) {
-		
+
 		// if the base term is not a raw commodity no checks have to be done
 		if ( !isRawCommodityTerm( baseTerm ) )
 			return;
-		
+
 		// tokenize the facets => the implicit are not considered since
 		// raw commodities have their self as source commodity and should not
 		// be taken into account
 		StringTokenizer st = new StringTokenizer( fullFacetCode, "$" );
-		
+
 		// count the source commodity
 		int sourceCommodityFacetCount = 0;
-		
+
 		// diagnostic string builder
 		StringBuilder sb = new StringBuilder();
-		
+
 		// for each facet
 		while ( st.hasMoreTokens() ) {
-			
+
 			// split the facet code
 			String[] split = splitFacetFullCode( st.nextToken() );
-			
+
 			// count the number of source commodities facets
 			if ( isSourceCommodityFacet(split[0]) ) {
 				sourceCommodityFacetCount++;
@@ -1233,21 +1241,21 @@ public class WarningUtil {
 				sb.append(" - ");
 			}
 		}
-		
+
 		// get all the involved terms
 		String termsInvolved = sb.toString();
 
 		// remove the last " - " if present (i.e. at least one source c. was added)
 		if ( sourceCommodityFacetCount > 0 )
 			termsInvolved = termsInvolved.substring(0, termsInvolved.length() - " - ".length() );
-		
+
 		// if only one source commodity is selected => you cannot use only 1 SC! At least two are required
 		if ( sourceCommodityFacetCount == 1 ) {
 			printWarning(WarningEvent.SingleSourceCommodityToRaw, termsInvolved, false, stdOut );
 		}
 	}
 
-	
+
 	/**
 	 * ELEVENTH CHECK, check if a source is added to derivative. If a source commodity is already specified
 	 * then the source must be used only to specify better the source commodity. If more than one source commodity
@@ -1260,25 +1268,25 @@ public class WarningUtil {
 		// if the base term is not a derivative no checks have to be done
 		if ( !isDerivativeTerm( baseTerm ) )
 			return;
-		
+
 		// get the full code with the implicit facet
 		String implFacetCodes = baseTerm.getFullCode( true, true );
-		
+
 		// all facets contains all the facet in the usual format facetHead.facet$...
 		String allFacetsCodes = fullFacetCode;
-		
+
 		// if there are some implicit facets => add them to the string to parse
 		// and retrieve implicit source and source commodity 
 		if ( implFacetCodes.split( "#" ).length > 1 ) {
-			
+
 			// remove the base term
 			implFacetCodes = implFacetCodes.split( "#" )[1]; 
-			
+
 			// concat the implicit with the explicit (it is important to add the $ 
 			// separator to maintain the format)
 			allFacetsCodes = implFacetCodes.concat( "$" + fullFacetCode );
 		}
-		
+
 		// tokenize the all facets (we use the entire code to count the number of facets)
 		StringTokenizer st = new StringTokenizer( allFacetsCodes, "$" );
 
@@ -1294,56 +1302,56 @@ public class WarningUtil {
 
 			// split the facet in facet header and facet code
 			String[] split = splitFacetFullCode( st.nextToken() );
-			
+
 			// count the number of source commodities facets
 			if ( isSourceCommodityFacet(split[0]) ) {
-				
+
 				// source commodity facet found
 				sourceCommodityFacetCount++;
-				
+
 				// append for diagnostic 
 				sb.append( split[1] );
 				sb.append(" - ");
 			}
-			
+
 			// count the number of source facets
 			if ( isSourceFacet(split[0]) ) {
-				
+
 				// source facet found
 				sourceFacetCount++;
-				
+
 				// append for diagnostic 
 				sb.append( split[1] );
 				sb.append(" - ");
 			}
 		}
 
-		
+
 		// get all the involved terms
 		String termsInvolved = sb.toString();
-		
+
 		// remove the last " - " if present (i.e. at least one element between source and source c. was added)
 		if ( sourceFacetCount > 0 || sourceCommodityFacetCount > 0 )
 			termsInvolved = termsInvolved.substring(0, termsInvolved.length() - " - ".length() );
-		
+
 		// if only one source commodity is selected => you cannot use only 1 SC! At least two are required
 		if ( sourceCommodityFacetCount == 1 && sourceFacetCount > 0 ) {
 			printWarning(WarningEvent.SourceToDerivative, termsInvolved, false, stdOut );
 		}
-		
+
 		// if more than two source commodities and one source were added => warning
 		else if ( sourceCommodityFacetCount >= 2 && sourceFacetCount > 0 ) {
 			printWarning(WarningEvent.MixedDerivative, termsInvolved, false, stdOut );
 		}
 	}
 
-	
+
 	/** 12th CHECK
 	 * Check if the term is in the exposure hierarchy and it is not a feed term. If not, rise a warning
 	 * @param baseTerm
 	 */
 	private void exposureHierarchyCheck ( Term baseTerm, boolean stdOut ) {
-		
+
 		// if the term is a feed term, no checks have to be done
 		if ( isFeedTerm( baseTerm ) )
 			return;
@@ -1356,7 +1364,7 @@ public class WarningUtil {
 
 	}
 
-	
+
 	/**
 	 * Check if a source is added to a composite food
 	 * @param baseTerm
@@ -1365,7 +1373,7 @@ public class WarningUtil {
 	 */
 	private void sourceInCompositeCheck ( Term baseTerm, String facetIndex, 
 			String facetCode, boolean stdOut ) {
-		
+
 		// return if not composite
 		if ( !isCompositeTerm( baseTerm ) )
 			return;
@@ -1374,7 +1382,7 @@ public class WarningUtil {
 		if ( isSourceFacet( facetIndex ) )
 			printWarning( WarningEvent.SourceInComposite, facetCode, false, stdOut );
 	}
-	
+
 	/**
 	 * Check if a source commodity is added to a composite food
 	 * @param baseTerm
@@ -1383,7 +1391,7 @@ public class WarningUtil {
 	 */
 	private void sourceCommodityInCompositeCheck ( Term baseTerm, String facetIndex, 
 			String facetCode, boolean stdOut ) {
-		
+
 		// return if not composite
 		if ( !isCompositeTerm( baseTerm ) )
 			return;
@@ -1392,7 +1400,7 @@ public class WarningUtil {
 		if ( isSourceCommodityFacet( facetIndex ) )
 			printWarning( WarningEvent.SourceCommodityInComposite, facetCode, false, stdOut );
 	}
-	
+
 	/**
 	 * Retrieve the ordCodes with decimal points starting from the forbidden processes
 	 * @param forbiddenProcesses
@@ -1403,7 +1411,7 @@ public class WarningUtil {
 		// if there is no forbidden process
 		if ( forbiddenProcesses == null )
 			return null;
-		
+
 		// prepare output vector
 		ArrayList< Double > decimalOrdCodes = new ArrayList<>();
 
@@ -1428,11 +1436,11 @@ public class WarningUtil {
 	 */
 	private ArrayList< ForbiddenProcess > getDecimalProcesses ( 
 			ArrayList< ForbiddenProcess > forbiddenProcesses ) {
-		
+
 		// if there is no forbidden process
 		if ( forbiddenProcesses == null )
 			return null;
-		
+
 		// prepare output vector
 		ArrayList< ForbiddenProcess > decimalProcess = new ArrayList<>();
 
@@ -1448,8 +1456,8 @@ public class WarningUtil {
 
 		return( decimalProcess );
 	}
-	
-	
+
+
 	/**
 	 * Get the integer part / decimal part of a double number
 	 * @param number
@@ -1476,7 +1484,7 @@ public class WarningUtil {
 	}
 
 
-	
+
 
 	/**
 	 * Create the message string to be printed into the console (or to be used in excel files for macros)
@@ -1486,7 +1494,7 @@ public class WarningUtil {
 	 * @return
 	 */
 	public String createMessage( WarningEvent event, String postMessageString, boolean attachDatetime ) {
-		
+
 		// get the message from the arraylist of warning messages
 		// ( it uses the eventID to retrieve the related message which has as ID the same as the eventID,
 		// we can do this thanks to the pre-sorting action made when the messages are loaded
@@ -1506,7 +1514,7 @@ public class WarningUtil {
 			Date date = new Date();
 			message = message + " (time: " + dateFormat.format(date) + ")";
 		}
-		
+
 		return ( message );
 	}
 
@@ -1518,7 +1526,7 @@ public class WarningUtil {
 	public WarningLevel getSemaphoreLevel( WarningEvent event ) {
 		return warningMessages.get(event.ordinal()).getWarningLevel();
 	}
-	
+
 	/**
 	 * get the warning level of the text message
 	 * @param event
@@ -1527,7 +1535,7 @@ public class WarningUtil {
 	public WarningLevel getTextLevel( WarningEvent event ) {
 		return warningMessages.get(event.ordinal()).getTextWarningLevel();
 	}
-	
+
 	/**
 	 * Print a warning into the warningsTable
 	 * It appends the date time to the message
@@ -1538,28 +1546,28 @@ public class WarningUtil {
 	 * @param attachDatetime: should the datetime be attached at the end of the message?
 	 */
 
-	
+
 	@SuppressWarnings("unused")
 	private void printWarning( WarningEvent event, String postMessageString ) {
 		printWarning( event, postMessageString, false, false );
 	}
-	
+
 	private void printWarning( WarningEvent event, String postMessageString, 
 			boolean attachDatetime, boolean stdOut ) {
 
 		// create the warning message to be printed
 		String message = createMessage( event, postMessageString, attachDatetime );
-		
+
 		// get the warning levels for making colours
 		WarningLevel semaphoreLevel = getSemaphoreLevel( event );
 		WarningLevel textWarningLevel = getTextLevel( event );
 
-		
+
 		// if the message should be printed into the standard output
 		// CSV line semicolon separated
 		// do not print the base term successfully added warning! It is useless for the excel macro
 		if ( stdOut && event != WarningEvent.BaseTermSuccessfullyAdded ) {
-			
+
 			StringBuilder sb = new StringBuilder();
 			sb.append( message );
 			sb.append( ";" );
@@ -1571,15 +1579,15 @@ public class WarningUtil {
 			System.out.print( sb.toString() + "|");
 			return;
 		}
-		
-		
+
+
 		// if graphical object are not used
 		if ( warningsTable == null || semaphore == null )
 			return;
-		
+
 		// print the message into the warnings table
 		warningsTable.add( message );
-		
+
 		// scroll the table to the new message
 		warningsTable.reveal( message );
 
@@ -1723,7 +1731,7 @@ public class WarningUtil {
 
 				// create a warning message object with the message id and the content of the message (the next token)
 				warningMessages.add( new WarningMessage( messageId, message, warningLevel, textWarningLevel ) );
-				
+
 				// new line
 				lineCount++;
 			}
@@ -1867,7 +1875,7 @@ public class WarningUtil {
 			sb.append("12;if a single source commodity is selected for raw commodity;Only multiple source commodities allowed, "
 					+ "for mixed raw commodities!;HIGH;HIGH");
 			sb.append("\r\n");
-			
+
 			// 13 message
 			sb.append("13;if a source is selected for mixed derivative (more than one F27.);"
 					+ "Source facet not allowed in mixed derivatives;HIGH;HIGH");
@@ -1877,12 +1885,12 @@ public class WarningUtil {
 			sb.append("14;if a source is selected for derivative with only one F27.;"
 					+ "Make sure that Source is used for better specifying the raw source -otherwise forbidden;LOW;LOW");
 			sb.append("\r\n");
-			
+
 			// 15 message
 			sb.append("15;if a base term not valid in the exposure hierarchy is chosen;"
 					+ "Not valid for human exposure calculation;NONE;HIGH");
 			sb.append("\r\n");
-			
+
 			// 16 message
 			sb.append("16;if a source is selected for composite (c or s);Source is not applicable for composite food;HIGH;HIGH");
 			sb.append("\r\n");
@@ -1890,7 +1898,7 @@ public class WarningUtil {
 			// 17 message
 			sb.append("17;if a source commodity is selected for composite (c or s);Source commodity is not applicable for composite food;HIGH;HIGH");
 			sb.append("\r\n");
-			
+
 			// 18 message
 			sb.append("18;if two processes (implicit or explicit) with decimal ordcode and same integer part are applied (at least one explicit);"
 					+ "You are trying to generate an already existing derivative!;HIGH;HIGH");
@@ -1907,50 +1915,50 @@ public class WarningUtil {
 		}
 	}
 
-	
+
 	/**
 	 * Open the file filename and retrieve the forbidden processes for hierarchies
 	 * the file must be a CSV file with 5 fields: baseTermGroupCode, baseTermGroupName, forbiddenProcessCode, forbiddenProcessName, ordCode
 	 * @param filename, the csv filename
 	 * @return an array list of forbidden processes
 	 */
-	
+
 	public static ArrayList<ForbiddenProcess> loadForbiddenProcesses( String filename ) {
-		
+
 		try {
-			
+
 			ArrayList<ForbiddenProcess> forbiddenProcesses = new ArrayList<>();
-			
+
 			// FileReader reads text files in the default encoding.
 			FileReader fileReader = new FileReader(filename);
-			
+
 			// Always wrap FileReader in BufferedReader.
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
-			
+
 			String line;
 			int lineCount = 0;
 
 			// while there is a line to be red
 			while ( ( line = bufferedReader.readLine() ) != null ) {
-				
+
 				// Skip the headers
 				if( lineCount == 0 ) {
 					lineCount++;
 					continue;
 				}
-				
+
 				// analyze the line tokens
 				StringTokenizer st = new StringTokenizer(line, ";");
-	
+
 				// parse the string, get the base term group code
 				String baseTermGroupCode = st.nextToken();
-	
+
 				// token related to the base term group name, it is useless for the checks
 				st.nextToken();
-	
+
 				// get the process code related to the base term group
 				String forbiddenProcessCode = st.nextToken();
-	
+
 				// token related to the forbidden process name, it is useless for the checks
 				st.nextToken();
 
@@ -1962,23 +1970,26 @@ public class WarningUtil {
 					forbiddenProcesses.add( new ForbiddenProcess( baseTermGroupCode, forbiddenProcessCode, ordCode ) );
 				}
 				catch (Exception e) { System.err.println(" Error: no double format found in " + filename + "!"); }
-				
+
 				// next line
 				lineCount++;
 			}
-			
+
 			// Close the connection
 			bufferedReader.close();
-			
+
 			return( forbiddenProcesses );
 
 		}
 		catch (Exception e) {
+
+			GlobalUtil.showErrorDialog( new Shell(), "Error", e.getMessage() );
+
 			System.err.println(filename + " not found or parsing errors.");
 			return null;
 		}
 	}
-	
+
 	/**
 	 * This class is used to store all the information related to the forbidden processes
 	 * for each hierarchy group which contains derivatives. In fact, a warning should be
@@ -1990,23 +2001,23 @@ public class WarningUtil {
 	 *
 	 */
 	public static class ForbiddenProcess {
-		
+
 		// create the variables of interest
 		// baseTermGroupCode: the code of hierarchies which could be subjected to warnings
 		// forbiddenProcessCode: the code of a forbidden process related to the baseTermGroup selected
 		// ordCode: code used to check the order of the process applicability
 		String baseTermGroupCode, forbiddenProcessCode;
 		double ordCode;
-		
+
 		public ForbiddenProcess( String baseTermGroupCode, String forbiddenProcessCode, double ordCode ) {
 			this.baseTermGroupCode = baseTermGroupCode;
 			this.forbiddenProcessCode = forbiddenProcessCode;
 			this.ordCode = ordCode;
 		}
-		
-		
+
+
 		// getter methods
-		
+
 		public String getBaseTermGroupCode() {
 			return baseTermGroupCode;
 		}
@@ -2017,11 +2028,11 @@ public class WarningUtil {
 			return ordCode;
 		}
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 	/**
 	 * Parse the file of the warning options and load into memory all the color and font options required
 	 * @param filename
@@ -2029,28 +2040,28 @@ public class WarningUtil {
 	 */
 	public static WarningOptions loadWarningOptions ( String filename ) {
 		try {
-			
+
 			File file = new File( filename );
 			if ( !file.exists() ) {
 				createDefaultWarnColorOptionsFile( filename );
 			}
-			
+
 			WarningOptions options = new WarningOptions();
-			
+
 			// FileReader reads text files in the default encoding.
 			FileReader fileReader = new FileReader( filename );
-			
+
 			// Always wrap FileReader in BufferedReader.
 			BufferedReader bufferedReader = new BufferedReader( fileReader );
-			
+
 			String line;
-			
+
 			// while there is a line to be red
 			while ( ( line = bufferedReader.readLine() ) != null ) {
-				
+
 				// remove white spaces
 				line = line.replace(" ", "");
-				
+
 				// analyze the line tokens
 				StringTokenizer st = new StringTokenizer(line, "=");
 
@@ -2059,34 +2070,34 @@ public class WarningUtil {
 
 				// font size is the only field which is not an RGB value
 				if ( !fieldName.equals("WarnFontSize") ) {
-					
+
 					// get the RGB values
 					int[] rgb = parseRGB( st.nextToken(), ";" );
-					
+
 					// add them to the options
 					switch( fieldName ) {
-						case "SemaphoreNoWarn": options.setSemNoWarnRGB( rgb ); break;
-						case "SemaphoreLowWarn": options.setSemLowWarnRGB( rgb ); break;
-						case "SemaphoreHighWarn": options.setSemHiWarnRGB( rgb ); break;
-						case "TxtNoWarn": options.setTxtNoWarnRGB(rgb); break;
-						case "TxtLowWarn": options.setTxtLowWarnRGB(rgb); break;	
-						case "TxtHighWarn": options.setTxtHiWarnRGB(rgb); break;
-						case "ConsoleBG": options.setConsoleBG( rgb ); break;
+					case "SemaphoreNoWarn": options.setSemNoWarnRGB( rgb ); break;
+					case "SemaphoreLowWarn": options.setSemLowWarnRGB( rgb ); break;
+					case "SemaphoreHighWarn": options.setSemHiWarnRGB( rgb ); break;
+					case "TxtNoWarn": options.setTxtNoWarnRGB(rgb); break;
+					case "TxtLowWarn": options.setTxtLowWarnRGB(rgb); break;	
+					case "TxtHighWarn": options.setTxtHiWarnRGB(rgb); break;
+					case "ConsoleBG": options.setConsoleBG( rgb ); break;
 					}
 				}
 				else {  // font size, parse the integer
 					try {
-					options.setFontSize( Integer.parseInt( st.nextToken() ) ); }
+						options.setFontSize( Integer.parseInt( st.nextToken() ) ); }
 					catch( Exception e ) {
 						System.err.println( "Error parsing font size in warningColors options.");
 					}
 				}
 			}
 
-			
+
 			// Close the connection
 			bufferedReader.close();
-			
+
 			return( options );
 
 		}
@@ -2095,7 +2106,7 @@ public class WarningUtil {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Function to parse RGB values separated by a delim character
 	 * @param line
@@ -2105,23 +2116,23 @@ public class WarningUtil {
 	static int[] parseRGB( String line, String delim ) {
 
 		StringTokenizer st = new StringTokenizer( line , delim );
-		
+
 		// three numbers have to be present for RGB coding
 		if ( st.countTokens() != 3 )
 			return null;
-		
+
 		try {
 			// get the RGB values
-			
+
 			String token = st.nextToken();
 			int red = Integer.parseInt( token );
-			
+
 			token = st.nextToken();
 			int green = Integer.parseInt( token );
-			
+
 			token = st.nextToken();
 			int blue = Integer.parseInt( token );
-			
+
 			return ( new int[] {red, green, blue} );
 		}
 		catch( Exception e ) {
@@ -2129,14 +2140,14 @@ public class WarningUtil {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * class which contains all the options related to the warnings colors 
 	 * @author Valentino
 	 *
 	 */
 	public static class WarningOptions {
-		
+
 		/* RGB values: 
 		 * the color of the semaphore in the three warning levels,
 		 * the color of the log messages in the three warning levels
@@ -2144,9 +2155,9 @@ public class WarningUtil {
 		 * the font size of the messages
 		 */
 		int[] semNoWarnRGB, semLowWarnRGB, semHiWarnRGB, txtNoWarnRGB, 
-			txtLowWarnRGB, txtHiWarnRGB, consoleBG = null;
+		txtLowWarnRGB, txtHiWarnRGB, consoleBG = null;
 		int fontSize = 14;
-		
+
 		/*
 		 * SETTER METHODS
 		 */
@@ -2174,7 +2185,7 @@ public class WarningUtil {
 		public void setFontSize(int fontSize) {
 			this.fontSize = fontSize;
 		}
-		
+
 		/*
 		 * GETTER METHODS
 		 */
@@ -2203,7 +2214,7 @@ public class WarningUtil {
 			return fontSize;
 		}
 	}
-	
+
 	/**
 	 * Function to create the default warning color options
 	 * @param filename
@@ -2216,7 +2227,7 @@ public class WarningUtil {
 
 			// string builder to build the string ( or simply a string can be used... )
 			StringBuilder sb = new StringBuilder();
-			
+
 			sb.append("SemaphoreNoWarn = 0;255;0\r\n" 
 					+ "SemaphoreLowWarn = 255;255;0\r\n"
 					+ "SemaphoreHighWarn = 255;0;0\r\n"
@@ -2225,10 +2236,10 @@ public class WarningUtil {
 					+ "TxtHighWarn = 255;0;0\r\n"
 					+ "ConsoleBG = 0;0;0\r\n"
 					+ "WarnFontSize = 14\r\n");
-			
+
 			// write the string
 			out.write( sb.toString() );
-			
+
 			// close the connection
 			out.close();
 		}
@@ -2236,24 +2247,24 @@ public class WarningUtil {
 			System.err.println( "Cannot create the file " + filename );
 		}	
 	}
-	
+
 	/**
 	 * Use only the business rules check of the FoodexBrowser
 	 * Useful in combination of excel data
 	 * @param args
 	 */
 	public static void performWarningChecksOnly( String[] args ) {
-		
+
 		// set the working directory to find files
 		// with the absolute path
 		String workingDir = args[2];
 		GlobalUtil.setWorkingDirectory( workingDir );
-		
+
 		File input = new File( args[0] );
 		FileReader reader;
 
 		try {
-			
+
 			// start the warning utils with the mtx catalogue
 			// if it was found. Exception is raised if the MTX
 			// catalogue is not found in the catalogues database
@@ -2262,35 +2273,35 @@ public class WarningUtil {
 				warnUtils = new WarningUtil();
 			} catch (MtxNotFoundException e) {
 				e.printStackTrace();
-				
+
 				GlobalUtil.showErrorDialog( new Shell(), 
 						"Error", "The MTX catalogue could not be found in the catalogues database. Please "
 								+ "download it using the Catalogue Browser and then restart this program" );
 				return;
 			}
-			
+
 			// output file (it will capture all the standard output)
 			PrintStream out = new PrintStream( new FileOutputStream( args[1] ) );
 			System.setOut( out );  // redirect standard output to the file
-			
+
 			// read the codes from the input file
 			reader = new FileReader( input );
 			BufferedReader buffReader = new BufferedReader( reader );
-			
+
 			String line;  // current line of the file
-			
+
 			int lineCount = 0; // count the line of the file
-			
+
 			// for each code perform the warning checks
 			while ( ( line = buffReader.readLine() ) != null ) {
-				
+
 				System.err.println( "+++++ ANALYZING CODE N° " + (lineCount+1) + " +++++" );
-				
+
 				// add a separator among the warnings related to different codes
 				if ( lineCount != 0 ) {
 					System.out.println(""); // add new line
 				}
-				
+
 				// perform the warnings checks for the current code 
 				warnUtils.performWarningChecks( line , true );
 
@@ -2300,22 +2311,20 @@ public class WarningUtil {
 
 			// close the input file
 			buffReader.close();
-			
+
 			// close the output file
 			out.close();
 
 			GlobalUtil.showDialog( new Shell(), 
 					"Success", "The checks were successfully completed!",
-							SWT.ICON_INFORMATION);
+					SWT.ICON_INFORMATION);
 
-		} catch ( IOException e) {
+		} catch ( Exception e) {
 			e.printStackTrace();
-			System.err.println("File Not Found or unable to read file: " + input);
-			
+
 			GlobalUtil.showDialog( new Shell(), 
-					"Error", "Error occurred during checks, please check the prompt console to see the errors.",
-							SWT.ICON_ERROR);
-			
+					"Error", e.getMessage(), SWT.ICON_ERROR);
+
 			return; 
 		}
 	}

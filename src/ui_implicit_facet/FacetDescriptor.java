@@ -1,10 +1,8 @@
 package ui_implicit_facet;
 
-import catalogue.Catalogue;
 import catalogue_object.Attribute;
 import catalogue_object.Term;
 import catalogue_object.TermAttribute;
-import global_manager.GlobalManager;
 
 /**
  * This class specify more the term attribute class (which is an attribute with its value associated to a term)
@@ -123,15 +121,9 @@ public class FacetDescriptor {
 	 * descriptors always the "implicitFacets" dcf attribute)
 	 */
 	public Attribute getFacetCategory() {
-		
-		// get an instance of the global manager
-		GlobalManager manager = GlobalManager.getInstance();
-		
-		// get the current catalogue
-		Catalogue currentCat = manager.getCurrentCatalogue();
-		
+
 		// search for the correct attribute
-		for ( Attribute attr : currentCat.getFacetCategories() ) {
+		for ( Attribute attr : descriptor.getCatalogue().getFacetCategories() ) {
 			if ( attr.getCode().equals( header ) ) {
 				return attr;
 			}

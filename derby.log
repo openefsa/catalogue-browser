@@ -1,24 +1,24 @@
 ----------------------------------------------------------------
-Fri Jun 23 09:07:25 CEST 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-015c-d3c6-e29b-000006db8448 
-on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\MAIN_CATS_DB with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Fri Jun 23 10:29:30 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-015c-d412-06ef-000006db4748 
+on database directory C:\CatalogueBrowser64bit\Database\MAIN_CATS_DB with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
 Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.8.0_111-b14
-user.dir=C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser
+user.dir=C:\CatalogueBrowser64bit\
 os.name=Windows 7
 os.arch=amd64
 os.version=6.1
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
 ----------------------------------------------------------------
-Fri Jun 23 09:07:26 CEST 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 08264012-015c-d3c6-e29b-000006db8448 
-on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_ABUNDANCE_DB\ABUNDANCE_VERSION_4.5 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Fri Jun 23 10:29:30 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 08264012-015c-d412-06ef-000006db4748 
+on database directory C:\CatalogueBrowser64bit\Database\PRODUCTION_CATS\CAT_MTX_DB\MTX_VERSION_8.7 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
 Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.8.0_111-b14
-user.dir=C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser
+user.dir=C:\CatalogueBrowser64bit\
 os.name=Windows 7
 os.arch=amd64
 os.version=6.1

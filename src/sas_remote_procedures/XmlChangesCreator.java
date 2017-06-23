@@ -102,12 +102,24 @@ public class XmlChangesCreator {
 			@Override
 			public void handleEvent(Event arg0) {
 
+				// base remote path of the sas procedure
 				String basepath = SasRemotePaths.CHANGES_CREATOR_PATH;
-				
-				// file involved into the local process
+
+				// .start file which is created by the local application
+				// which contains the catalogue export .xlsx hidden in a .start file
 				File startFile = new File ( startFilename );
+				
+				// path where the local .start file should be copied
 				File remoteStartFile = new File ( basepath + startFilename );
+				
+				// name which will be given to the .start file when 
+				// it is copied into the remote folder. In particular, we
+				// will rename it into .xlsx once the .start is successfully
+				// copied into the remote folder (avoid file system problems)
 				File remoteXlsxFile = new File ( basepath + filename + LOCAL_EXPORT_FORMAT );
+				
+				// .end file which is used as green semaphore, i.e., to warn
+				// the sas procedure that it can start processing the .xlsx file
 				File remoteEndFile = new File ( basepath + filename + END_FORMAT );
 				
 				// copy the start file into the remote folder
