@@ -528,11 +528,11 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 			// get the catalogues data and add them to the output array list
 			while ( rs.next() )
 				catalogues.add( getByResultSet ( rs ) );
-			
+
 			// if no catalogues return
 			if ( catalogues.isEmpty() )
 				return null;
-			
+
 			// sort the catalogues according to their version
 			catalogues.sort( new Comparator<Catalogue>() {
 				public int compare( Catalogue o1, Catalogue o2 ) {
@@ -556,7 +556,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 						return -1;
 				};
 			});
-			
+
 			// get the most recent catalogue
 			lastVersion = catalogues.get(0);
 			

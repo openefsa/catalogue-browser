@@ -28,7 +28,6 @@ import org.eclipse.swt.widgets.Shell;
 
 import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
-import catalogue_browser_dao.DatabaseManager;
 import catalogue_browser_dao.TermDAO;
 import catalogue_object.Hierarchy;
 import catalogue_object.Term;
@@ -2254,9 +2253,6 @@ public class WarningUtil {
 		FileReader reader;
 
 		try {
-
-			// start the main database
-			DatabaseManager.startMainDB();
 			
 			// start the warning utils with the mtx catalogue
 			// if it was found. Exception is raised if the MTX
@@ -2268,7 +2264,7 @@ public class WarningUtil {
 				e.printStackTrace();
 				
 				GlobalUtil.showErrorDialog( new Shell(), 
-						"Error", "The MTX catalogue could not be found in the catalogues database. Please"
+						"Error", "The MTX catalogue could not be found in the catalogues database. Please "
 								+ "download it using the Catalogue Browser and then restart this program" );
 				return;
 			}

@@ -66,7 +66,7 @@ public class DatabaseManager {
 	 * @return
 	 */
 	private static String getMainDBURL ( ) {
-		return "jdbc:derby:" + OFFICIAL_CAT_DB_FOLDER + 
+		return "jdbc:derby:" + GlobalUtil.getWorkingDir() + OFFICIAL_CAT_DB_FOLDER + 
 				MAIN_CAT_DB_FOLDER_NAME + ";user=dbuser;password=dbuserpwd";
 	}
 
@@ -75,7 +75,8 @@ public class DatabaseManager {
 	 * @return
 	 */
 	private static String stopMainDBURL ( ) {
-		return "jdbc:derby:" + OFFICIAL_CAT_DB_FOLDER + MAIN_CAT_DB_FOLDER_NAME + ";shutdown=true";
+		return "jdbc:derby:" + GlobalUtil.getWorkingDir() + 
+				OFFICIAL_CAT_DB_FOLDER + MAIN_CAT_DB_FOLDER_NAME + ";shutdown=true";
 	}
 
 	/**
@@ -83,7 +84,8 @@ public class DatabaseManager {
 	 * @return
 	 */
 	private static String createMainDBURL ( ) {
-		return "jdbc:derby:" + OFFICIAL_CAT_DB_FOLDER + MAIN_CAT_DB_FOLDER_NAME + ";create=true";
+		return "jdbc:derby:" + GlobalUtil.getWorkingDir() + 
+				OFFICIAL_CAT_DB_FOLDER + MAIN_CAT_DB_FOLDER_NAME + ";create=true";
 	}
 
 	/**
@@ -92,7 +94,6 @@ public class DatabaseManager {
 	 * @throws SQLException
 	 */
 	public static Connection getMainDBConnection () throws SQLException {
-
 		return DriverManager.getConnection( getMainDBURL() );
 	}
 

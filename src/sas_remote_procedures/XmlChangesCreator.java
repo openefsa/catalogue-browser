@@ -41,13 +41,13 @@ public class XmlChangesCreator {
 	/**
 	 * The correct export format of the catalogue data
 	 */
-	private static final String CORRECT_FORMAT = ".xlsx";
+	private static final String LOCAL_EXPORT_FORMAT = ".xlsx";
 	
 	/**
 	 * The format of the file which will be produced
 	 * by the sas procedure
 	 */
-	private static final String REMOTE_CORRECT_FORMAT = ".xml";
+	private static final String REMOTE_OUT_FORMAT = ".xml";
 	
 	/**
 	 * The format of the lock file which will be created
@@ -57,7 +57,14 @@ public class XmlChangesCreator {
 	
 	/**
 	 * The format of the lock file which will be created
-	 * at the end of the process
+	 * when the remote procedure starts processing the
+	 * .xlsx file to create the .xml file
+	 */
+	private static final String REMOTE_START_FORMAT = ".process.start";
+	
+	/**
+	 * The format of the file which confirms that the
+	 * procedure has terminated the conversion
 	 */
 	private static final String REMOTE_END_FORMAT = ".process.end";
 	
@@ -78,10 +85,12 @@ public class XmlChangesCreator {
 
 		System.out.println( "Starting xml creation procedure for " + catalogue );
 		
-		final String filename = createUniqueCode( catalogue );
+		// delete the old input if present, since it is not more useful
+		// because we are requesting a new xml related to the same catalogue
+		deleteOldInput( catalogue );
 		
-		// TODO define a conventional filename
-		//final String filename = catalogue.getCode() + "_" + catalogue.getVersion();
+		final String filename = createUniqueCode( catalogue );
+
 		final String startFilename = filename + START_FORMAT;
 		
 		// export the catalogue into the start file
@@ -95,10 +104,10 @@ public class XmlChangesCreator {
 
 				String basepath = SasRemotePaths.CHANGES_CREATOR_PATH;
 				
-				// file involved into the process
+				// file involved into the local process
 				File startFile = new File ( startFilename );
 				File remoteStartFile = new File ( basepath + startFilename );
-				File remoteXlsxFile = new File ( basepath + filename + CORRECT_FORMAT );
+				File remoteXlsxFile = new File ( basepath + filename + LOCAL_EXPORT_FORMAT );
 				File remoteEndFile = new File ( basepath + filename + END_FORMAT );
 				
 				// copy the start file into the remote folder
@@ -121,7 +130,7 @@ public class XmlChangesCreator {
 				// save the xml filename into the database
 				saveXmlFilename ( catalogue, filename );
 				
-				System.out.println( "Process finished" );
+				System.out.println( " Create xml process finished" );
 				
 				// call the done listener
 				if ( doneListener != null ) {
@@ -158,6 +167,7 @@ public class XmlChangesCreator {
 		
 		System.out.println( "Searching " + endFilename );
 		
+		// POLLING
 		// search for the lock file
 		// wait 5 seconds each time
 		while ( !endFile.exists() ) {
@@ -173,19 +183,69 @@ public class XmlChangesCreator {
 		
 		// here the file exists therefore we can go on
 		
-		String xmlFilename = SasRemotePaths.CHANGES_CREATOR_PATH + 
-				xmlUpdateFile.getXmlFilename() + REMOTE_CORRECT_FORMAT;
-		File xmlFile = new File ( xmlFilename );
+		String remoteXmlFilename = SasRemotePaths.CHANGES_CREATOR_PATH + 
+				xmlUpdateFile.getXmlFilename() + REMOTE_OUT_FORMAT;
+		
+		String localXmlFilename = xmlUpdateFile.getXmlFilename() + REMOTE_OUT_FORMAT;
+		
+		File remoteXmlFile = new File ( remoteXmlFilename );
+		File localXmlFile = new File ( localXmlFilename );
 		
 		// copy the file in the local directory
-		if ( !copy( xmlFile, new File (".") ) )
+		if ( !copy( remoteXmlFile, localXmlFile ) )
 			return null;
 		
-		System.out.println( "Process terminated" );
+		System.out.println( "Download xml process finished" );
 		
-		return xmlFile;
+		return localXmlFile;
 	}
 
+	/**
+	 * Delete a previous {@value #LOCAL_EXPORT_FORMAT} file
+	 * from the remote folder if the sas procedure did not 
+	 * started the conversion of that file.
+	 * @param filename
+	 * @return
+	 */
+	private boolean deleteOldInput( Catalogue catalogue ) {
+
+		XmlUpdateFileDAO xmlDao = new XmlUpdateFileDAO();
+		XmlUpdateFile xmlUp = xmlDao.getById( catalogue.getId() );
+		
+		// set the name of the base filename
+		String filename = SasRemotePaths.CHANGES_CREATOR_PATH 
+				+ xmlUp.getXmlFilename();
+		
+		boolean lockDeleted = false;
+		boolean dataDeleted = false;
+		
+		// check if the remote lock exists or not
+		File remoteStartProcFile = new File ( filename + REMOTE_START_FORMAT );
+		
+		// if it exists, the procedure was started
+		// therefore we cannot do anything
+		if ( remoteStartProcFile.exists() )
+			return lockDeleted;
+		
+		// otherwise we delete both the local export file and its
+		// green semaphore
+		File remoteEndFile = new File ( filename + END_FORMAT );
+		File remoteXlsxFile = new File ( filename + LOCAL_EXPORT_FORMAT );
+
+		if ( remoteEndFile.exists() )
+			lockDeleted = remoteEndFile.delete();
+		
+		if ( remoteXlsxFile.exists() )
+			dataDeleted = remoteXlsxFile.delete();
+
+		if ( lockDeleted )
+			System.out.println( "old " + remoteEndFile + " deleted" );
+		
+		if ( dataDeleted )
+			System.out.println( "old " + remoteXlsxFile + " deleted" );
+		
+		return lockDeleted && dataDeleted;
+	}
 	/**
 	 * Create a unique code for the current catalogue, in order
 	 * to be able to correctly retrieve the correct xml file
@@ -343,5 +403,13 @@ public class XmlChangesCreator {
 		cat.loadData();
 		XmlChangesCreator creator = new XmlChangesCreator ();
 		creator.createXml( cat );
+		
+		try {
+			Thread.sleep( 5000 );
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		creator.downloadXml( cat );
 	}
 }

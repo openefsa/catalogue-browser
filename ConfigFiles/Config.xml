@@ -4,6 +4,6 @@
 <comment>Default Properties</comment>
 <entry key="Application.Name">EFSA Catalogues Browser</entry>
 <entry key="Application.Version">1.0.0</entry>
-<entry key="Dcf.EnableTest">YES</entry>
+<entry key="Dcf.EnableTest">NO</entry>
 <entry key="DcfXmlChangesCreator.RemotePath">C:\Users\avonva\Desktop\CatalogueBrowser</entry>
 </properties>
