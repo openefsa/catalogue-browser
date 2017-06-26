@@ -142,6 +142,15 @@ public class Attribute extends SortableCatalogueObject implements Mappable {
 	}
 	
 	/**
+	 * Check if the attribute is a generic attribute
+	 * @return
+	 */
+	public boolean isGeneric() {
+		return !isTermType() && !isDetailLevel() && !isCatalogue() 
+				&& !isImplicitFacet() && !isAllFacet();
+	}
+	
+	/**
 	 * Check if the attribute is the corex flag (or level of detail)
 	 * @return
 	 */

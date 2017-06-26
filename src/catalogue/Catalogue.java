@@ -797,6 +797,22 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		return attributes;
 	}
 	
+	
+	/**
+	 * Get the generic attributes of the catalogue
+	 * @return
+	 */
+	public Collection<Attribute> getGenericAttributes() {
+		
+		Collection<Attribute> attrs = new ArrayList<>();
+		for ( Attribute attr : attributes ) {
+			if ( attr.isGeneric() )
+				attrs.add( attr );
+		}
+		
+		return attrs;
+	}
+	
 	/**
 	 * Get all the implicit facets of the catalogue
 	 * @return

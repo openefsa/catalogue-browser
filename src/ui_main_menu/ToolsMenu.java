@@ -21,7 +21,6 @@ import already_described_terms.PicklistDAO;
 import already_described_terms.PicklistParser;
 import already_described_terms.PicklistTerm;
 import catalogue.Catalogue;
-import catalogue_browser_dao.AttributeDAO;
 import catalogue_browser_dao.DatabaseManager;
 import dcf_manager.Dcf;
 import dcf_user.User;
@@ -781,16 +780,13 @@ public class ToolsMenu implements MainMenuItem {
 			public void widgetSelected ( SelectionEvent event ) {
 				
 				HierarchyEditor editor = new HierarchyEditor( shell, 
-						mainMenu.getCatalogue() );
-				editor.Display();
-			
-				boolean changed = editor.isChanged();
-				Event e = new Event();
-				event.data = changed;
-				
+						mainMenu.getCatalogue(), 
+						Messages.getString("HierarchyEditor.HierarchyFacetLabel") );
+				editor.display();
+
 				if ( listener != null )
 					listener.buttonPressed( hierarchyEditorItem, 
-							HIER_EDITOR_MI, e );
+							HIER_EDITOR_MI, null );
 			}
 		} );
 		
@@ -812,17 +808,14 @@ public class ToolsMenu implements MainMenuItem {
 		attributeEditorItem.addSelectionListener( new SelectionAdapter() {
 			@Override
 			public void widgetSelected ( SelectionEvent event ) {
-				
-				// initialize dao of attributes
-				AttributeDAO attrDao = new AttributeDAO( mainMenu.getCatalogue() );
-				
-				AttributeEditor e = new AttributeEditor( shell , attrDao.getAll() );
-				e.Display();
+
+				AttributeEditor editor = new AttributeEditor( shell, mainMenu.getCatalogue(), 
+						Messages.getString("FormAttribute.DialogTitle") );
+				editor.display();
 				
 				if ( listener != null )
 					listener.buttonPressed( attributeEditorItem, 
 							ATTR_EDITOR_MI, null );
-				
 			}
 		} );
 

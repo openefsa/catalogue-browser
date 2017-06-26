@@ -244,7 +244,7 @@ public class Hierarchy extends SortableCatalogueObject implements Mappable {
 		if ( obj instanceof Hierarchy )
 			return getId() == ( (Hierarchy) obj ).getId();
 		
-		return false;
+		return super.equals(obj);
 	}
 	
 	@Override

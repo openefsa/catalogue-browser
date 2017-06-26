@@ -41,7 +41,12 @@ public class HierarchyDAO implements CatalogueEntityDAO<Hierarchy> {
 		Collection<Hierarchy> hierarchies = new ArrayList<>();
 		hierarchies.add( hierarchy );
 		
-		return insertHierarchies( hierarchies ).get(0);
+		ArrayList<Integer> ids = insertHierarchies( hierarchies );
+		
+		if ( ids.isEmpty() )
+			return -1;
+		
+		return ids.get(0);
 	}
 
 	/**
