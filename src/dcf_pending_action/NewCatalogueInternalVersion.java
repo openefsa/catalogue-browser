@@ -1,5 +1,7 @@
 package dcf_pending_action;
 
+import java.io.IOException;
+
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
@@ -9,6 +11,7 @@ import dcf_manager.Dcf.DcfType;
 import import_catalogue.ImportCatalogueThread;
 import import_catalogue.ImportCatalogueThread.ImportFileFormat;
 import ui_progress_bar.FormProgressBar;
+import utilities.GlobalUtil;
 
 /**
  * Class to manage new version of a catalogue using only
@@ -83,6 +86,13 @@ public class NewCatalogueInternalVersion {
 				CatalogueDAO catDao = new CatalogueDAO();
 				newCatalogue = catDao.getCatalogue( 
 						newCode, newVersion, dcfType );
+				
+				// delete useless file
+				try {
+					GlobalUtil.deleteFileCascade( filename );
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				
 				doneListener.handleEvent( arg0 );
 			}

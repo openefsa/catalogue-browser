@@ -2055,6 +2055,10 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 
 			return newVersion;
 		}
+		else {
+			// delete useless files
+			GlobalUtil.deleteFileCascade( input );
+		}
 
 		return null;
 	}

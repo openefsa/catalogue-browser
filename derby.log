@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-Mon Jun 26 14:34:31 CEST 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-015c-e465-6d38-000006d250d0 
+Mon Jun 26 14:41:39 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-015c-e46b-f429-000006d221e8 
 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\MAIN_CATS_DB with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
 Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
 java.vendor=Oracle Corporation
@@ -12,8 +12,8 @@ os.version=6.1
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
 ----------------------------------------------------------------
-Mon Jun 26 14:34:47 CEST 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance e0b94027-015c-e465-6d38-000006d250d0 
+Mon Jun 26 14:41:57 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance e0b94027-015c-e46b-f429-000006d221e8 
 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_CATUSERS_DB\CATUSERS_VERSION_1.0 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
 Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
 java.vendor=Oracle Corporation
@@ -25,9 +25,9 @@ os.version=6.1
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
 ----------------------------------------------------------------
-Mon Jun 26 14:34:57 CEST 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 3ad9c0eb-015c-e465-6d38-000006d250d0 
-on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_BASIC_EFFECT_DB\BASIC_EFFECT_VERSION_1.5.15 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Mon Jun 26 14:42:04 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 140200f0-015c-e46b-f429-000006d221e8 
+on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_BASIC_EFFECT_DB\BASIC_EFFECT_VERSION_1.5.17 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
 Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.8.0_111-b14
@@ -38,12 +38,12 @@ os.version=6.1
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
 ----------------------------------------------------------------
-Mon Jun 26 14:35:18 CEST 2017:
-Shutting down instance 3ad9c0eb-015c-e465-6d38-000006d250d0 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_BASIC_EFFECT_DB\BASIC_EFFECT_VERSION_1.5.15 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Mon Jun 26 14:43:04 CEST 2017:
+Shutting down instance 140200f0-015c-e46b-f429-000006d221e8 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_BASIC_EFFECT_DB\BASIC_EFFECT_VERSION_1.5.17 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
 ----------------------------------------------------------------
-Mon Jun 26 14:35:18 CEST 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a62d04d8-015c-e465-6d38-000006d250d0 
-on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_BASIC_EFFECT_DB\BASIC_EFFECT_VERSION_1.5.16 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Mon Jun 26 14:43:04 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 8d0e869c-015c-e46b-f429-000006d221e8 
+on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_BASIC_EFFECT_DB\BASIC_EFFECT_VERSION_1.5.18 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
 Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.8.0_111-b14
