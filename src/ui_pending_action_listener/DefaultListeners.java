@@ -9,7 +9,7 @@ import dcf_pending_action.PendingAction;
 import dcf_pending_action.PendingActionListener;
 import dcf_pending_action.PendingPublish;
 import dcf_pending_action.PendingReserve;
-import dcf_pending_action.PendingReserveStatus;
+import dcf_pending_action.PendingActionStatus;
 import dcf_pending_action.PendingUploadData;
 import dcf_webservice.DcfResponse;
 import dcf_webservice.ReserveLevel;
@@ -18,8 +18,24 @@ import ui_main_panel.ShellLocker;
 import ui_main_panel.UpdateableUI;
 import utilities.GlobalUtil;
 
+/**
+ * This class contains all the actions and messages which are processed
+ * and displayed depending on the pending actions states and response.
+ * In fact, the user is notified if something important happens.
+ * We put all this stuff here to make the code clearer and to reuse
+ * the same listener in two different places (login button and
+ * tools menu)
+ * @author avonva
+ *
+ */
 public class DefaultListeners {
 
+	/**
+	 * Get the default listeners for pending actions
+	 * @param ui the ui which hosts the messages and needs possibly updates
+	 * if some special conditions occur
+	 * @return the default listener
+	 */
 	public static PendingActionListener getDefaultPendingListener ( final UpdateableUI ui ) {
 		
 		PendingActionListener listener = new PendingActionListener() {
@@ -43,7 +59,7 @@ public class DefaultListeners {
 			
 			@Override
 			public void statusChanged( final PendingAction pendingAction, 
-					final PendingReserveStatus status) {
+					final PendingActionStatus status) {
 				
 				ui.getShell().getDisplay().asyncExec( new Runnable() {
 
@@ -166,7 +182,7 @@ public class DefaultListeners {
 	 * @param response
 	 * @param ui
 	 */
-	private static void warnStatus ( PendingAction pa, PendingReserveStatus status, UpdateableUI ui ) {
+	private static void warnStatus ( PendingAction pa, PendingActionStatus status, UpdateableUI ui ) {
 		
 		Catalogue catalogue = pa.getCatalogue();
 		
@@ -248,7 +264,7 @@ public class DefaultListeners {
 	 * @param response
 	 * @return
 	 */
-	private static String getStatusMessage ( PendingAction pa, PendingReserveStatus status ) {
+	private static String getStatusMessage ( PendingAction pa, PendingActionStatus status ) {
 		
 		String msg = null;
 		PendingActionMessages pam = getCurrentMessageBox( pa );
@@ -259,18 +275,21 @@ public class DefaultListeners {
 		return msg;
 	}
 	
+	/**
+	 * Perform some actions related to pending reserves
+	 * and to its status
+	 * @param pr
+	 * @param status
+	 * @param ui
+	 */
 	private static void performStatusAction ( final PendingReserve pr, 
-			final PendingReserveStatus status, final UpdateableUI ui ) {
+			final PendingActionStatus status, final UpdateableUI ui ) {
 
 		ui.getShell().getDisplay().asyncExec( new Runnable() {
 			
 			@Override
 			public void run() {
-				Catalogue catalogue = pr.getCatalogue();
-				ReserveLevel level = pr.getReserveLevel();
 
-				String preMessage = createPremessage ( catalogue );
-				
 				switch ( status ) {
 				
 				case IMPORTING_LAST_VERSION:
@@ -307,20 +326,6 @@ public class DefaultListeners {
 				case COMPLETED:
 					// process completed, remove lock
 					ShellLocker.removeLock( ui.getShell() );
-					
-					if ( pr.getResponse() == DcfResponse.OK ) {
-
-						String title = Messages.getString( "Reserve.OkTitle" );
-						String msg = preMessage;
-						if ( level.greaterThan( ReserveLevel.NONE ) )
-							msg += Messages.getString( "Reserve.OkMessage" );
-						else
-							msg += Messages.getString( "Unreserve.OkMessage" );
-
-						// show the dialog
-						GlobalUtil.showDialog( ui.getShell(), title, msg,
-								SWT.ICON_INFORMATION );
-					}
 					
 					break;
 				

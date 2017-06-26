@@ -1,6 +1,6 @@
 package ui_pending_action_listener;
 
-import dcf_pending_action.PendingReserveStatus;
+import dcf_pending_action.PendingActionStatus;
 import dcf_webservice.DcfResponse;
 import messages.Messages;
 
@@ -35,7 +35,7 @@ public class PendingPublishMessages implements PendingActionMessages {
 	 * No status message is shown for publish
 	 */
 	@Override
-	public String getStatusMessage(PendingReserveStatus status) {
+	public String getStatusMessage(PendingActionStatus status) {
 		
 		String msg = null;
 		

@@ -1,6 +1,6 @@
 package ui_pending_action_listener;
 
-import dcf_pending_action.PendingReserveStatus;
+import dcf_pending_action.PendingActionStatus;
 import dcf_webservice.DcfResponse;
 
 public interface PendingActionMessages {
@@ -19,5 +19,5 @@ public interface PendingActionMessages {
 	 * @param status
 	 * @return
 	 */
-	public String getStatusMessage ( PendingReserveStatus status );
+	public String getStatusMessage ( PendingActionStatus status );
 }

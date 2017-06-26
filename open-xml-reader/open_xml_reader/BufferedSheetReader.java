@@ -17,7 +17,7 @@ import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 
 /**
  * Parser which can be used to parse a huge file in
- * a buffered way, without maintaing all the information
+ * a buffered way, without maintaining all the information
  * in ram memory.
  * @author avonva
  *

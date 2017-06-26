@@ -168,7 +168,7 @@ public class PendingReserve extends PendingAction {
 	 */
 	private void invalidVersion() {
 		invalidate();
-		setStatus( PendingReserveStatus.INVALID_VERSION );
+		setStatus( PendingActionStatus.INVALID_VERSION );
 	}
 	
 	/**
@@ -178,7 +178,7 @@ public class PendingReserve extends PendingAction {
 	 */
 	private void invalidResponse() {
 		invalidate();
-		setStatus( PendingReserveStatus.INVALID_RESPONSE );
+		setStatus( PendingActionStatus.INVALID_RESPONSE );
 	}
 	
 	/**
@@ -275,7 +275,7 @@ public class PendingReserve extends PendingAction {
 		if ( !catalogue.isForceEdit( getUsername() ) 
 				&& reserveLevel.greaterThan( ReserveLevel.NONE ) ) {
 			
-			setStatus( PendingReserveStatus.FORCING_EDITING );
+			setStatus( PendingActionStatus.FORCING_EDITING );
 			
 			Catalogue forcedCat = catalogue.forceEdit( 
 					getUsername(), reserveLevel );

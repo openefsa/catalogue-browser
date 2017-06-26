@@ -700,7 +700,8 @@ public class ToolsMenu implements MainMenuItem {
 			@Override
 			public void handleEvent(Event event) {
 
-				// reset the item of the menu, in order to update with the current picklists in the app.jar folder
+				// reset the item of the menu, in order to update with 
+				// the current picklists in the app.jar folder
 				for (MenuItem item : selectPicklistMenu.getItems() ) {
 					item.dispose();
 				}
@@ -881,7 +882,6 @@ public class ToolsMenu implements MainMenuItem {
 				if ( listener != null )
 					listener.buttonPressed( userPrefItem, 
 							USER_PREF_MI, null );
-
 			}
 		} );
 		

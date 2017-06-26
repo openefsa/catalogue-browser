@@ -6,7 +6,7 @@ package dcf_pending_action;
  * @author avonva
  *
  */
-public enum PendingReserveStatus {
+public enum PendingActionStatus {
 	
 	STARTED,                // if the pending reserve is just started
 	SENDING,                // if we are sending the pending reserve

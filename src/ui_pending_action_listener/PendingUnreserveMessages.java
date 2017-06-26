@@ -1,6 +1,6 @@
 package ui_pending_action_listener;
 
-import dcf_pending_action.PendingReserveStatus;
+import dcf_pending_action.PendingActionStatus;
 import dcf_webservice.DcfResponse;
 import messages.Messages;
 
@@ -12,6 +12,9 @@ public class PendingUnreserveMessages implements PendingActionMessages {
 		String msg = null;
 		
 		switch ( response ) {
+		case OK:
+			msg = Messages.getString( "Unreserve.OkMessage" );
+			break;
 		case ERROR:
 			msg = Messages.getString( "Unreserve.ErrorMessage" );
 			break;
@@ -29,7 +32,7 @@ public class PendingUnreserveMessages implements PendingActionMessages {
 	}
 
 	@Override
-	public String getStatusMessage(PendingReserveStatus status) {
+	public String getStatusMessage(PendingActionStatus status) {
 		
 		String msg = null;
 

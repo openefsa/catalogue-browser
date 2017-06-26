@@ -69,7 +69,7 @@ public abstract class PendingAction {
 	private DcfType dcfType;
 
 	// the status of the pending reserve
-	private PendingReserveStatus status;
+	private PendingActionStatus status;
 
 	//  the dcf response to the pending reserve
 	private DcfResponse response;
@@ -108,7 +108,7 @@ public abstract class PendingAction {
 		
 		// we are starting the process
 		if ( notifyStart )
-			setStatus( PendingReserveStatus.STARTED );
+			setStatus( PendingActionStatus.STARTED );
 		
 		// send the pending reserve request
 		// to the dcf
@@ -128,7 +128,7 @@ public abstract class PendingAction {
 	private void send() throws SOAPException {
 		
 		// update the status
-		setStatus( PendingReserveStatus.SENDING );
+		setStatus( PendingActionStatus.SENDING );
 
 		File log = getLog();
 		
@@ -142,7 +142,7 @@ public abstract class PendingAction {
 			// and that the pending reserve was queued
 			// we call it after having forced the editing
 			// in order to refresh correctly the UI
-			setStatus( PendingReserveStatus.QUEUED );
+			setStatus( PendingActionStatus.QUEUED );
 
 			System.out.println( "Downgrading to LOW priority " + this );
 			
@@ -209,7 +209,7 @@ public abstract class PendingAction {
 		prDao.remove( this );
 
 		// set the status as completed
-		setStatus( PendingReserveStatus.COMPLETED );
+		setStatus( PendingActionStatus.COMPLETED );
 		
 		// update the catalogue status
 		catalogue.setRequestingAction( false );
@@ -243,7 +243,7 @@ public abstract class PendingAction {
 	 * If a new internal version is found the import process
 	 * starts and the the status of the 
 	 * pending reserve is set to 
-	 * {@link PendingReserveStatus#OLD_VERSION}. In this case,
+	 * {@link PendingActionStatus#OLD_VERSION}. In this case,
 	 * only when the import process is finished the 
 	 * {@code doneListener} is called.
 	 * 
@@ -275,7 +275,7 @@ public abstract class PendingAction {
 			}
 			
 			// update the status of the pending reserve
-			setStatus( PendingReserveStatus.IMPORTING_LAST_VERSION );
+			setStatus( PendingActionStatus.IMPORTING_LAST_VERSION );
 			
 			System.out.println ( this + ": This is not the last version "
 					+ "of the catalogue, importing " + lastVersion );
@@ -304,7 +304,7 @@ public abstract class PendingAction {
 				ParserConfigurationException | SAXException e) {
 			e.printStackTrace();
 			
-			setStatus( PendingReserveStatus.ERROR );
+			setStatus( PendingActionStatus.ERROR );
 		}
 		return true;
 	}
@@ -350,7 +350,7 @@ public abstract class PendingAction {
 	 * Set the status of the pending reserve
 	 * @param status
 	 */
-	protected void setStatus( PendingReserveStatus status ) {
+	protected void setStatus( PendingActionStatus status ) {
 		
 		this.status = status;
 		
@@ -362,7 +362,7 @@ public abstract class PendingAction {
 	 * Get the current status
 	 * @return
 	 */
-	public PendingReserveStatus getStatus() {
+	public PendingActionStatus getStatus() {
 		return status;
 	}
 	
