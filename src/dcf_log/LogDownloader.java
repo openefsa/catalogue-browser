@@ -94,7 +94,7 @@ public class LogDownloader {
 				break;
 			}
 
-			System.err.print ( "Log not found, retrying after " 
+			System.err.print ( "Log " + logCode + " not found, retrying after " 
 					+ (interAttemptsTime/1000) + " seconds the attempt n° " 
 					+ (attemptsCount+1) );
 			

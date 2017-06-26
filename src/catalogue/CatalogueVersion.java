@@ -189,4 +189,9 @@ public class CatalogueVersion extends Version {
 		// else they are equal
 		return 0;
 	}
+	
+	@Override
+	public String toString() {
+		return getVersion();
+	}
 }

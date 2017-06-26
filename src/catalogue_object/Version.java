@@ -219,6 +219,11 @@ public class Version {
 	}
 	
 	@Override
+	public String toString() {
+		return getVersion();
+	}
+	
+	@Override
 	public boolean equals(Object obj) {
 
 		if ( !( obj instanceof Version ) )

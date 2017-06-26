@@ -379,8 +379,8 @@ public abstract class CatalogueObjectEditor<T extends SortableCatalogueObject> i
 				// if a duplicate is found I show the error
 				if ( doubleCode ) {
 					GlobalUtil.showErrorDialog( shell, 
-							Messages.getString("HierarchyEditor.DuplicatedCodesTitle"), 
-							Messages.getString("HierarchyEditor.DuplicatedCodesMessage"));
+							Messages.getString("Editor.DuplicatedCodesTitle"), 
+							Messages.getString("Editor.DuplicatedCodesMessage"));
 					return;
 				}
 				

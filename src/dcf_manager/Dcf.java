@@ -105,38 +105,33 @@ public class Dcf {
 		ArrayList < Catalogue > myCatalogues = 
 				catDao.getLastReleaseCatalogues ( dcfType );
 
-		// for each DCF catalogue
+		// Check for each official catalogues
+		// if we already have it downloaded or not
 		for ( Catalogue cat : catalogues ) {
-			
-			// if the catalogue is not contained in the my catalogues
-			// we have found a catalogue which has not been downloaded yet
-			// note we add it only if it is not deprecated
-			// do not show cat users catalogue to users
-			if ( myCatalogues.contains( cat ) || 
-					cat.isCatUsersCatalogue() )
-				continue;
-			
-			catalogueToShow.add( cat );
-		}
-		
-		
-		// here we searches for catalogues updates
-		for ( Catalogue myCat : myCatalogues ) {
 
-			// if we already have the last release go on
-			if ( myCat.isLastRelease() )
-				continue;
+			boolean addCat = true;
 			
-			// get the catalogue which is the updated version of the
-			// my cat catalogue (or null if no update is available)
-			Catalogue updateCat = getLastPublishedRelease ( myCat );
-			
-			// if there is an update => add the catalogue to the list
-			// we exclude the cat users catalogue since it is downloaded
-			// automatically with the login process
-			if ( updateCat != null && !updateCat.isCatUsersCatalogue() ) {
-				catalogueToShow.add( updateCat );
+			// for each already downloaded catalogue
+			for ( Catalogue myCat : myCatalogues ) {
+
+				// skip if same code and version (i.e.,
+				// the same catalogue is already downloaded)
+				if ( myCat.sameAs( cat ) ) {
+					addCat = false;
+					continue;
+				}
+				
+				// if same code but older version
+				// skip, we already have the last version
+				if ( myCat.equals( cat ) && !myCat.isOlder( cat ) ) {
+					addCat = false;
+					continue;
+				}
 			}
+			
+			// if we can add the catalogue add it
+			if ( addCat ) 
+				catalogueToShow.add( cat );
 		}
 
 		// sort catalogues by label and version
