@@ -1,8 +1,6 @@
 package ui_term_properties;
 
 
-import java.util.ArrayList;
-
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -24,12 +22,10 @@ import org.eclipse.swt.widgets.Shell;
 
 import catalogue_browser_dao.AttributeDAO;
 import catalogue_browser_dao.TermAttributeDAO;
-import catalogue_object.Attribute;
 import catalogue_object.Term;
 import catalogue_object.TermAttribute;
 import dcf_user.User;
 import messages.Messages;
-import ui_term_properties.EditingSupportImplicitAttribute.Column;
 import utilities.GlobalUtil;
 
 /**
@@ -38,7 +34,7 @@ import utilities.GlobalUtil;
  * @author avonva
  *
  */
-public class TableTermAttributes {
+public class TableImplicitAttributes {
 
 	private Composite parent;
 	
@@ -47,7 +43,7 @@ public class TableTermAttributes {
 	private TableViewerColumn valueCol;
 	private Term term;
 	
-	public TableTermAttributes( Composite parent ) {
+	public TableImplicitAttributes( Composite parent ) {
 
 		this.parent = parent;
 		
@@ -117,7 +113,7 @@ public class TableTermAttributes {
 			removeEdit();
 		
 		// set the input for the table
-		table.setInput( term.getGenericAttributes() );
+		table.setInput( term );
 		
 		// refresh the table
 		table.refresh();
@@ -129,9 +125,11 @@ public class TableTermAttributes {
 	private void addEdit () {
 
 		// set editing support for both columns
-		keyCol.setEditingSupport( getEditingSupport( keyCol, EditingSupportImplicitAttribute.Column.KEY ) );
+		keyCol.setEditingSupport( getEditingSupport( keyCol, 
+				EditingSupportImplicitAttribute.Column.KEY ) );
 
-		valueCol.setEditingSupport( getEditingSupport( valueCol, EditingSupportImplicitAttribute.Column.VALUE ) );
+		valueCol.setEditingSupport( getEditingSupport( valueCol, 
+				EditingSupportImplicitAttribute.Column.VALUE ) );
 
 		// set the contextual menu for editing purposes
 		Menu menu = createMenu ( parent.getShell(), table );
@@ -263,57 +261,8 @@ public class TableTermAttributes {
 	private EditingSupportImplicitAttribute getEditingSupport ( TableViewerColumn col, 
 			final EditingSupportImplicitAttribute.Column column ) {
 		
-		EditingSupportImplicitAttribute edit = new EditingSupportImplicitAttribute( table.getTable(),
-				col, column);
-		
-		edit.addUpdateListener( new Listener() {
-			
-			@Override
-			public void handleEvent(Event event) {
-				
-				@SuppressWarnings("unchecked")
-				ArrayList<Object> data = (ArrayList<Object>) event.data;
-				
-				// get the term attribute
-				TermAttribute ta = (TermAttribute) data.get(0);
-				
-				// get the new value (key or value)
-				String newValue = (String) data.get(1);
-				
-				if ( column == Column.KEY ) {
-					
-					// initialize dao for attributes
-					AttributeDAO attrDao = new AttributeDAO( ta.getTerm().getCatalogue() );
-					
-					// update the term attribute attribute: we search for the correct attribute
-					// which matches the name = newValue (since we are modifying the key)
-					for ( Attribute attr : attrDao.getAll() ) {
-
-						// if we have found the correct attribute
-						if ( attr.getName().equals( newValue ) ) {
-							
-							// update the attribute
-							ta.setAttribute( attr );
-							break;
-						}
-					}
-				}
-				
-				// if instead we are updating the term attribute value
-				if ( column == Column.VALUE )
-					ta.setValue( newValue );
-				
-				// initialize term attribute dao
-				TermAttributeDAO taDao = new TermAttributeDAO( ta.getTerm().getCatalogue() );
-				
-				// update the term attributes permanently in the db
-				taDao.updateByA1( term );
-				
-				// refresh the table with the term (the term attribute was taken from
-				// the term, therefore the term is already updated)
-				setTerm ( term );
-			}
-		});
+		EditingSupportImplicitAttribute edit = new EditingSupportImplicitAttribute( table.getTable(), 
+				table, term.getCatalogue(), col, column );
 		
 		return edit;
 	}
@@ -358,15 +307,11 @@ public class TableTermAttributes {
 		/**
 		 * Get the attributes
 		 */
-		public Object[] getElements ( Object attributes ) {
+		public Object[] getElements ( Object obj ) {
 			
-			@SuppressWarnings("unchecked")
-			ArrayList< Attribute > attrs = (ArrayList< Attribute >) attributes;
+			Term term = (Term) obj;
 			
-			if ( attrs != null )
-				return attrs.toArray();
-			else
-				return null;
+			return term.getGenericAttributes().toArray();
 		}
 	}
 }

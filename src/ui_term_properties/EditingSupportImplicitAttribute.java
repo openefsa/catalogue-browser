@@ -5,22 +5,28 @@ import java.util.ArrayList;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 
 import catalogue.Catalogue;
 import catalogue_browser_dao.AttributeDAO;
+import catalogue_browser_dao.TermAttributeDAO;
 import catalogue_object.Attribute;
 import catalogue_object.TermAttribute;
-import global_manager.GlobalManager;
 
 public class EditingSupportImplicitAttribute extends EditingSupport {
 
+	private Catalogue catalogue;
 	private Composite parent;
-	private Listener updateListener;
+	
+	private TermAttribute ta;
+	private ArrayList<Attribute> attrs;
+	private ArrayList<String> attrsLabels;
+	
+	private TableViewer table;
 	
 	public enum Column {
 		KEY,
@@ -29,42 +35,48 @@ public class EditingSupportImplicitAttribute extends EditingSupport {
 	
 	Column column;
 	
-	public EditingSupportImplicitAttribute( Composite parent, TableViewerColumn viewer, Column column ) {
+	public EditingSupportImplicitAttribute( Composite parent, final TableViewer table,
+			final Catalogue catalogue, TableViewerColumn viewer, Column column ) {
 		super( viewer.getViewer() );
+		this.catalogue = catalogue;
 		this.column = column;
 		this.parent = parent;
+		this.table = table;
 	}
 
 	@Override
 	protected boolean canEdit(Object arg0) {
 		return true;
 	}
-	
-	/**
-	 * Add an update listener which is called when something needs to be updated
-	 * @param listener
-	 */
-	public void addUpdateListener ( Listener listener ) {
-		updateListener = listener;
-	}
 
 	@Override
 	protected CellEditor getCellEditor(Object arg0) {
 
+		// get the selected attribute
+		ta = (TermAttribute) ( (IStructuredSelection) table.
+				getSelection() ).getFirstElement();
+		
+		AttributeDAO attrDao = new AttributeDAO( catalogue );
+		attrs = attrDao.getApplicableAttributes( ta.getTerm() );
+		
+		// get the remaining attributes labels
+		attrsLabels = new ArrayList<>();
+		
+		for ( int i = 0; i < attrs.size(); i++ ) {
+			attrsLabels.add( attrs.get(i).getLabel() );
+		}
+		
+		// convert into array
+		String[] items = new String[ attrsLabels.size() ];
+		for ( int i = 0; i < attrsLabels.size(); ++i )
+			items[i] = attrsLabels.get(i);
+		
 		TermAttribute ta = (TermAttribute) arg0;
 		String attrType = ta.getAttribute().getType();
-		
-		// get an instance of the global manager
-		GlobalManager manager = GlobalManager.getInstance();
-		
-		// get the current catalogue
-		Catalogue currentCat = manager.getCurrentCatalogue();
-		
-		AttributeDAO attrDao = new AttributeDAO( currentCat );
-		
+
 		// if we are modifying the key object
 		if ( column == Column.KEY ) {
-			return new ComboBoxCellEditor( parent, attrDao.getApplicableAttributesNames( ta.getTerm() ) );
+			return new ComboBoxCellEditor( parent, items );
 		}
 		
 		// if we are modifying the value object
@@ -82,62 +94,39 @@ public class EditingSupportImplicitAttribute extends EditingSupport {
 
 		TermAttribute ta = (TermAttribute) arg0;
 		
-		// get the information from the user properties file
 		Object value = ta.getValue();
 		
 		CellEditor e = getCellEditor( arg0 );
 		if ( e instanceof  ComboBoxCellEditor ) {
-			
-			// get the index of the selected item
-			int index = 0;
-			for ( String item : ( (ComboBoxCellEditor) e).getItems() ) {
-
-				// if we have found the right value, stop and save the index as value
-				if ( item.equals( ta.getValue() ) )
-					break;
-
-				index++;
-			}
-			
-			value = index;
+			value = attrs.indexOf( ta.getAttribute() );
 		}
 		
 		return value;
-
 	}
 
 	@Override
 	protected void setValue(Object termAttribute, Object value) {
 		
-		String newValue = null;
+		TermAttribute ta = (TermAttribute) termAttribute;
 		
 		CellEditor e = getCellEditor( termAttribute );
 		if ( e instanceof ComboBoxCellEditor ) {
 			
-			String [] items = ( (ComboBoxCellEditor) e).getItems();
-			
-			// avoid out of bounds exceptions (sometimes a -1 is returned if no element is clicked)
+			// update the attribute of the term attribute
 			int intval = (int) value;
-			if ( intval >= 0 && intval < items.length )
-				newValue = items[ intval ];
-			else  // otherwise return and do nothing
-				return;
+			if ( intval >= 0 && intval < attrs.size() )
+				ta.setAttribute( attrs.get( intval ) );
 		}
-		else
-			newValue = (String) value;
+		else  // update the term attribute value
+			ta.setValue( (String) value );
 		
-		// handle the event
-		if ( updateListener != null ) {
-			
-			// hack to pass 2 different argument
-			ArrayList<Object> data = new ArrayList<>();
-			data.add( termAttribute );
-			data.add( newValue );
-
-			Event event = new Event();
-			event.data = data;
-			updateListener.handleEvent( event );
-		}
+		// initialize term attribute dao
+		TermAttributeDAO taDao = new TermAttributeDAO( ta.getTerm().getCatalogue() );
+		
+		// update the term attributes permanently in the db
+		taDao.updateByA1( ta.getTerm() );
+		
+		// refresh the table
+		table.refresh();
 	}
-
 }

@@ -634,20 +634,20 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 	}
 	
 	/**
-	 * Get all the attributes names which can be added to 
+	 * Get all the attributes labels which can be added to 
 	 * a term (non repeatable attributes can be added only one time!)
 	 * @param t
 	 * @return
 	 */
-	public String[] getApplicableAttributesNames ( Term t ) {
+	public ArrayList<String> getApplicableAttributesLabel ( Term t ) {
 		
 		ArrayList<Attribute> attrs = getApplicableAttributes( t );
 		
 		// get the remaining attributes names
-		String[] attrsNames = new String[ attrs.size() ];
+		ArrayList<String> attrsNames = new ArrayList<>();
 		
 		for ( int i = 0; i < attrs.size(); i++ ) {
-			attrsNames[i] = attrs.get(i).getName();
+			attrsNames.add( attrs.get(i).getLabel() );
 		}
 		
 		return attrsNames;

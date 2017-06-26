@@ -53,7 +53,7 @@ public class FrameTermFields {
 	private Text extName;
 	private Text shortName;
 	private ScopenotesWithLinks scopenotes;
-	private TableTermAttributes attributes;
+	private TableImplicitAttributes attributes;
 
 	private Listener updateListener = null;       // listener called when a term property is updated and saved
 	
@@ -790,9 +790,9 @@ public class FrameTermFields {
 	 * @param parent
 	 * @return
 	 */
-	private TableTermAttributes addTermAttributes ( Composite parent ) {
+	private TableImplicitAttributes addTermAttributes ( Composite parent ) {
 
-		final TableTermAttributes termAttrTable = new TableTermAttributes ( parent );
+		final TableImplicitAttributes termAttrTable = new TableImplicitAttributes ( parent );
 		return termAttrTable;
 	}
 }
