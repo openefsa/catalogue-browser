@@ -23,7 +23,7 @@ import org.apache.poi.xssf.usermodel.XSSFRichTextString;
  *
  */
 public class BufferedSheetReader {
-	
+
 	// shared string table related to the sheet
 	// we are reading
 	private SharedStringsTable sharedStrings;
@@ -57,6 +57,10 @@ public class BufferedSheetReader {
 		// create the reader if not created yet
 		if ( eventReader == null ) {
 			XMLInputFactory factory = XMLInputFactory.newInstance();
+			
+			// say to the parser to avoid to separate strings
+			// into several pieces
+			factory.setProperty( XMLInputFactory.IS_COALESCING, true );
 			eventReader = factory.createXMLEventReader( input );
 		}
 	}
@@ -273,7 +277,7 @@ public class BufferedSheetReader {
 			// if not header create the row
 			if ( currentRow > 1 )
 				resultSet.setRow();
-			
+
 			processedRows++;
 		}
 	}
