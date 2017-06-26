@@ -25,7 +25,6 @@ import utilities.GlobalUtil;
  */
 public class DownloadCatalogueFrom {
 
-	private Shell shell;
 	private Listener doneListener;
 	private FormProgressBar progressBar;
 
@@ -53,8 +52,6 @@ public class DownloadCatalogueFrom {
 	 * @throws Exception
 	 */
 	public void display ( final Shell shell ) throws DOMException, Exception {
-
-		this.shell = shell;
 		
 		// Open the catalogue form to visualize the available catalogues and to select
 		// which one has to be downloaded

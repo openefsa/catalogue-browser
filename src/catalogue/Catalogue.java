@@ -377,7 +377,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 			DriverManager.getConnection( getShutdownDBURL() );
 		} catch (SQLException e) {
 			System.out.println ( "System shutted down with code : " + e.getErrorCode() + " and state " + e.getSQLState() );
-			System.out.println ( "Correct shutdown has code 45000 and state 08006" );
+			System.out.println ( "Correct shutdown has code 45000 and state 08006 or XJ004" );
 		}
 	}
 	
