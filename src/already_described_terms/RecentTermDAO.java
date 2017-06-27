@@ -186,7 +186,7 @@ public class RecentTermDAO implements CatalogueEntityDAO<DescribedTerm> {
 		String label = rs.getString( "RECENT_TERM_LABEL" );
 		
 		// add a new recent term
-		return new DescribedTerm(code, label);
+		return new DescribedTerm( catalogue, code, label );
 	}
 
 	@Override

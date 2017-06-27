@@ -1076,7 +1076,7 @@ public class TermsTreePanel extends Observable implements Observer {
 	private MenuItem addFavouritePicklistMI ( Menu menu ) {
 		
 		MenuItem picklistMenuItem = new MenuItem( menu , SWT.NONE );
-		picklistMenuItem.setText( Messages.getString("BrowserTreeMenu.PicklistCmd") ); //$NON-NLS-1$
+		picklistMenuItem.setText( Messages.getString("BrowserTreeMenu.PicklistCmd") );
 
 		picklistMenuItem.addSelectionListener( new SelectionAdapter() {
 
@@ -1090,7 +1090,8 @@ public class TermsTreePanel extends Observable implements Observer {
 				
 				// show the window which shows all the terms of a favourite pick list
 				FormDescribedTerms rdt = new FormDescribedTerms( shell, 
-						Messages.getString("BrowserTreeMenu.PicklistWindowTitle"), catalogue, picklist.getTerms() );
+						Messages.getString("BrowserTreeMenu.PicklistWindowTitle"), 
+						catalogue, picklist.getTerms() );
 				
 				rdt.display( catalogue );
 			}

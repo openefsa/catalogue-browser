@@ -321,20 +321,20 @@ public class Dcf {
 	 * we want to download
 	 * @param filename the filename in which we want to store the
 	 * last internal version of the catalogue
-	 * @return true if the file was correctly created
+	 * @return the file which was created
 	 * @throws IOException
 	 * @throws SOAPException 
 	 */
-	public boolean exportCatalogueInternalVersion ( String catalogueCode, 
+	public File exportCatalogueInternalVersion ( String catalogueCode, 
 			String filename ) throws IOException, SOAPException {
 		
 		// ask for the log to the dcf
 		ExportCatalogueFile export = new ExportCatalogueFile( dcfType );
 
 		// get the catalogue xml as input stream
-		export.exportLastInternalVersion( catalogueCode, filename );
+		File file = export.exportLastInternalVersion( catalogueCode, filename );
 		
-		return true;
+		return file;
 	}
 	
 	/**

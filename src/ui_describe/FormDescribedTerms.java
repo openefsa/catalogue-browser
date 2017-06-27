@@ -34,6 +34,7 @@ import catalogue.Catalogue;
 import messages.Messages;
 import session_manager.RestoreableWindow;
 import session_manager.WindowPreference;
+import utilities.GlobalUtil;
 
 public class FormDescribedTerms implements RestoreableWindow {
 
@@ -65,7 +66,8 @@ public class FormDescribedTerms implements RestoreableWindow {
 	 * @param invertOrder should the order of the term be reversed? (used for visualizing recent terms starting
 	 *                    from the more recent
 	 */
-	public FormDescribedTerms( Shell parentShell, String title, Catalogue catalogue, ArrayList<?> describedTerms ) {
+	public FormDescribedTerms( Shell parentShell, String title, 
+			Catalogue catalogue, ArrayList<?> describedTerms ) {
 		
 		_shell = parentShell;
 		_title = title;
@@ -166,13 +168,13 @@ public class FormDescribedTerms implements RestoreableWindow {
 
 
 		Group searchComposite = new Group( baseTermComposite, SWT.NONE );
-		searchComposite.setText( Messages.getString("FormRecentlyDescribe.SearchTermTitle") ); //$NON-NLS-1$
+		searchComposite.setText( Messages.getString("FormRecentlyDescribe.SearchTermTitle") );
 		searchComposite.setLayout( new GridLayout(3, false) );
 
 		
 		searchTextBox = new Text ( searchComposite, SWT.SEARCH );
 		searchTextBox.setEditable( true );
-		searchTextBox.setMessage( Messages.getString("FormRecentlyDescribe.SearchTip")); //$NON-NLS-1$
+		searchTextBox.setMessage( Messages.getString("FormRecentlyDescribe.SearchTip"));
 		
 		
 		findSearch = new Button( searchComposite, SWT.NONE );
@@ -223,14 +225,14 @@ public class FormDescribedTerms implements RestoreableWindow {
 
 		// label for full code text box
 		Label fullCodeLabel = new Label( codeComposite , SWT.NONE );
-		fullCodeLabel.setText( Messages.getString("FormRecentlyDescribe.FullCodeLabel")); //$NON-NLS-1$
+		fullCodeLabel.setText( Messages.getString("FormRecentlyDescribe.FullCodeLabel"));
 
 		// text boxes to show the full code 
 		final Text fullCode = new Text( codeComposite, SWT.BORDER | SWT.READ_ONLY | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP );
 
 		// label for interpreted text box
 		Label interpLabel = new Label( codeComposite , SWT.NONE );
-		interpLabel.setText( Messages.getString("FormRecentlyDescribe.InterpretedCodeLabel")); //$NON-NLS-1$
+		interpLabel.setText( Messages.getString("FormRecentlyDescribe.InterpretedCodeLabel"));
 
 		// text box for the interpreted code
 		final Text interpretedCode = new Text( codeComposite, SWT.BORDER | SWT.READ_ONLY | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP );
@@ -258,6 +260,7 @@ public class FormDescribedTerms implements RestoreableWindow {
 		GridData buttonGD = new GridData();
 		buttonGD.verticalAlignment = SWT.FILL;
 		buttonGD.grabExcessHorizontalSpace = true;
+		buttonGD.minimumWidth = 150;
 
 		// composite which contains the buttons
 		Composite buttonComposite = new Composite( _dialog, SWT.NONE );
@@ -266,12 +269,12 @@ public class FormDescribedTerms implements RestoreableWindow {
 
 		// open the recent element in the describe window
 		Button okButton = new Button( buttonComposite, SWT.PUSH );
-		okButton.setText(Messages.getString("FormRecentlyDescribe.LoadButton")); //$NON-NLS-1$
+		okButton.setText(Messages.getString("FormRecentlyDescribe.LoadButton"));
 		okButton.setLayoutData( buttonGD );
 
 		// cancel the operation
 		Button cancelButton = new Button( buttonComposite, SWT.PUSH );
-		cancelButton.setText(Messages.getString("FormRecentlyDescribe.CancelButton")); //$NON-NLS-1$
+		cancelButton.setText(Messages.getString("FormRecentlyDescribe.CancelButton"));
 		cancelButton.setLayoutData( buttonGD );
 
 		// when an element is selected from the table
@@ -283,12 +286,20 @@ public class FormDescribedTerms implements RestoreableWindow {
 					IStructuredSelection selection = (IStructuredSelection) baseTermsTable.getSelection();
 
 					// get the selected item
-					DescribedTerm fc = (DescribedTerm) selection.getFirstElement();
+					DescribedTerm describedTerm = (DescribedTerm) selection.getFirstElement();
+					
+					fullCode.setText( describedTerm.getCode() );
 
-					fullCode.setText( fc.getCode() );
+					// if not valid stop
+					if ( !describedTerm.isValid() ) {
+						GlobalUtil.showErrorDialog( _shell, 
+								describedTerm.getCode(), 
+								Messages.getString( "FormRecentlyDescribe.InvalidTermMessage" ) );
+						return;
+					}
 
 					// create the interpreted code starting from the fullcode
-					interpretedCode.setText( fc.getTerm().getInterpretedCode() );
+					interpretedCode.setText( describedTerm.getTerm().getInterpretedCode() );
 				}
 			}
 		});
@@ -354,10 +365,10 @@ public class FormDescribedTerms implements RestoreableWindow {
 					IStructuredSelection selection = (IStructuredSelection) baseTermsTable.getSelection();
 					
 					// get the selected item
-					DescribedTerm fc = (DescribedTerm) selection.getFirstElement();
-
+					DescribedTerm describedTerm = (DescribedTerm) selection.getFirstElement();
+					
 					// load in the describe window the selected term
-					loadTermInDescribe( fc );
+					loadTermInDescribe( describedTerm );
 				}
 			}
 
@@ -451,7 +462,15 @@ public class FormDescribedTerms implements RestoreableWindow {
 	 * @param describedTerm
 	 */
 	private void loadTermInDescribe ( DescribedTerm describedTerm ) {
-
+		
+		// if not valid stop
+		if ( !describedTerm.isValid() ) {
+			GlobalUtil.showErrorDialog( _shell, 
+					describedTerm.getCode(), 
+					Messages.getString( "FormRecentlyDescribe.InvalidTermMessage" ) );
+			return;
+		}
+		
 		// open the describe window
 		FormTermCoder tcf = new FormTermCoder( _shell, 
 				Messages.getString("FormRecentlyDescribe.DescribeWindowTitle"), catalogue );

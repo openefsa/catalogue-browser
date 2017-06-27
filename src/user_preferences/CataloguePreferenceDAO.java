@@ -134,11 +134,13 @@ public class CataloguePreferenceDAO extends PreferenceDAO {
 	 */
 	public void setFavouritePicklist ( Picklist picklist ) {
 
+		String code = picklist == null ? null : String.valueOf( picklist.getCode() );
+		
 		// create a preference for the currently selected picklist
 		// in order to store it into the database
 		CataloguePreference pref = new CataloguePreference ( 
 				CataloguePreference.currentPicklistKey, PreferenceType.STRING,
-				String.valueOf( picklist.getCode() ), false );
+				code, false );
 
 		// update the preference related to the picklist
 		update( pref );

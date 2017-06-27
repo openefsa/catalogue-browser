@@ -31,6 +31,7 @@ public class DcfLog {
 	private DcfResponse macroOpResult;
 	private Collection<String> macroOpLogs;
 	private Collection<LogNode> logNodes;
+	private Collection<LogNode> validationErrors;
 	
 	/**
 	 * Initialize a dcf log document
@@ -48,11 +49,13 @@ public class DcfLog {
 	 * result
 	 * @param logNodes a list of nodes which gives information related to
 	 * each single operation requested
+	 * @param validationErrors list of errors that explain why not success
 	 */
 	public DcfLog ( String action, Timestamp transmissionDate, Timestamp processingDate,
 			String uploadedFilename, String catalogueCode, String catalogueVersion, 
 			String catalogueStatus, String macroOpName, DcfResponse macroOpResult, 
-			Collection<String> macroOpLogs, Collection<LogNode> logNodes ) {
+			Collection<String> macroOpLogs, Collection<LogNode> logNodes,
+			Collection<LogNode> validationErrors ) {
 		
 		this.action = action;
 		this.transmissionDate = transmissionDate;
@@ -65,6 +68,7 @@ public class DcfLog {
 		this.macroOpResult = macroOpResult;
 		this.macroOpLogs = macroOpLogs;
 		this.logNodes = logNodes;
+		this.validationErrors = validationErrors;
 	}
 	
 	public void setLogFilename(String logFilename) {
@@ -135,6 +139,9 @@ public class DcfLog {
 	public Collection<LogNode> getLogNodes() {
 		return logNodes;
 	}
+	public Collection<LogNode> getValidationErrors() {
+		return validationErrors;
+	}
 	/**
 	 * Get all the log nodes that were not successful
 	 * @return
@@ -146,6 +153,12 @@ public class DcfLog {
 
 		for ( LogNode node : logNodes ) {
 			
+			// if erroneous operation
+			if ( !node.isOperationCorrect() )
+				nodes.add( node );
+		}
+		
+		for ( LogNode node : validationErrors ) {
 			// if erroneous operation
 			if ( !node.isOperationCorrect() )
 				nodes.add( node );

@@ -51,4 +51,9 @@ public class Picklist {
 		
 		return id == picklist.getId() || code == picklist.getCode();
 	}
+	
+	@Override
+	public String toString() {
+		return "PICKLIST: id=" + id + ";code=" + code + ";terms=" + terms;
+	}
 }

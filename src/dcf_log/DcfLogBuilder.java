@@ -29,6 +29,7 @@ public class DcfLogBuilder {
 	private DcfResponse macroOpResult;
 	private Collection<String> macroOpLogs;
 	private Collection<LogNode> logNodes;
+	private Collection<LogNode> validationErrors;
 	
 	/**
 	 * Initialize the dcf log builder memory
@@ -36,6 +37,7 @@ public class DcfLogBuilder {
 	public DcfLogBuilder() {
 		macroOpLogs = new ArrayList<String>();
 		logNodes = new ArrayList<LogNode>();
+		validationErrors = new ArrayList<LogNode>();
 	}
 	
 	/**
@@ -94,6 +96,9 @@ public class DcfLogBuilder {
 	public void addLogNode( LogNode node ) {
 		this.logNodes.add( node );
 	}
+	public void addValidationErrorNode ( LogNode node ) {
+		this.validationErrors.add( node );
+	}
 
 	
 	/**
@@ -103,6 +108,6 @@ public class DcfLogBuilder {
 	public DcfLog build() {
 		return new DcfLog(action, transmissionDate, processingDate, uploadedFilename, 
 				catalogueCode, catalogueVersion, catalogueStatus, macroOpName, 
-				macroOpResult, macroOpLogs, logNodes);
+				macroOpResult, macroOpLogs, logNodes, validationErrors);
 	}
 }

@@ -1,5 +1,7 @@
 package already_described_terms;
 
+import catalogue.Catalogue;
+
 /**
  * This class is used to model a term which is contained in a picklist (excel file with already described terms)
  * @author avonva
@@ -17,9 +19,9 @@ public class PicklistTerm extends DescribedTerm {
 	 * @param code
 	 * @param label
 	 */
-	public PicklistTerm( int level, String code, String label ) {
+	public PicklistTerm( Catalogue catalogue, int level, String code, String label ) {
 		
-		super(code, label);
+		super(catalogue, code, label);
 		
 		this.level = level;
 	}

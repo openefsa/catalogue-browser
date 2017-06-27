@@ -1,5 +1,6 @@
 package catalogue;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -2030,9 +2031,11 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 
 		Dcf dcf = new Dcf();
 
-		// export the internal version in the file
-		boolean written = dcf.exportCatalogueInternalVersion( 
+		File file = dcf.exportCatalogueInternalVersion( 
 				getCode(), input );
+		
+		// export the internal version in the file
+		boolean written = file != null;
 
 		// if no internal version is retrieved we have
 		// the last version of the catalogue

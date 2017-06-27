@@ -59,10 +59,10 @@ create table APP.DETAIL_LEVEL(
 	DETAIL_LEVEL_ID integer not null primary key generated always as identity (start with 1, increment by 1),
 	
 	-- its code (h, m, f...)
-	DETAIL_LEVEL_CODE varchar(1),
+	DETAIL_LEVEL_CODE varchar(50) not null,
 	
 	-- the human readable name
-	DETAIL_LEVEL_LABEL varchar(500),
+	DETAIL_LEVEL_LABEL varchar(500) not null,
 	
 	-- the image name related to the detail level
 	DETAIL_LEVEL_IMAGE_NAME varchar(1000)
@@ -128,9 +128,9 @@ create table APP.WINDOW_PREF (
 
 create table APP.PREFERENCE (
 	PREFERENCE_ID integer not null primary key generated always as identity (start with 1, increment by 1),
-	PREFERENCE_KEY varchar(500),   -- key of the preference
-	PREFERENCE_TYPE varchar(500),  -- type of the preference (integer, string, boolean)
-	PREFERENCE_VALUE varchar(3000), -- value of the preference
+	PREFERENCE_KEY varchar(500) not null,   -- key of the preference
+	PREFERENCE_TYPE varchar(500) not null,  -- type of the preference (integer, string, boolean)
+	PREFERENCE_VALUE varchar(3000) not null, -- value of the preference
 	PREFERENCE_EDITABLE boolean
 );
 
@@ -145,11 +145,11 @@ create table APP.PENDING_ACTION (
 	ACTION_LOG_CODE varchar(500) not null, -- code of the log related to the pending reserve action
 	CAT_ID integer not null,
 	ACTION_USERNAME varchar(50) not null,  -- the name of the user which made the reserve
-	ACTION_NOTE varchar(1000) not null,    -- the action note if needed
+	ACTION_NOTE varchar(1000),    -- the action note if needed
 	ACTION_PRIORITY varchar(50) not null,  -- fast or slow, how fast we should complete the reserve
 	ACTION_TYPE varchar(100) not null,     -- the action type
-	ACTION_DATA varchar(50) not null,       -- data, as the reserve level (none, minor, major)
-	ACTION_DCF_TYPE varchar(100) not null   -- on which type of dcf the action was created (test or production)
+	ACTION_DATA varchar(1000) not null,    -- data, as the reserve level (none, minor, major)
+	ACTION_DCF_TYPE varchar(100) not null  -- on which type of dcf the action was created (test or production)
 );
 
 -- add the unique contraint to the log id field

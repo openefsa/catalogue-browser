@@ -31,6 +31,8 @@ import import_catalogue.ImportCatalogueThread;
 import import_catalogue.ImportCatalogueThread.ImportFileFormat;
 import messages.Messages;
 import sas_remote_procedures.XmlChangesCreator;
+import sas_remote_procedures.XmlUpdateFile;
+import sas_remote_procedures.XmlUpdateFileDAO;
 import ui_general_graphics.DialogSingleText;
 import ui_main_panel.AttributeEditor;
 import ui_main_panel.HierarchyEditor;
@@ -56,6 +58,7 @@ public class ToolsMenu implements MainMenuItem {
 	public static final int SEARCH_OPT_MI = 11;
 	public static final int USER_PREF_MI = 12;
 	public static final int CREATE_XML_MI = 13;
+	public static final int DELETE_PICKLIST_MI = 7;
 	
 	private MenuListener listener;
 	
@@ -74,6 +77,7 @@ public class ToolsMenu implements MainMenuItem {
 	private MenuItem exportMI;
 	private MenuItem importPicklistMI;
 	private MenuItem favouritePicklistMI;
+	private MenuItem removePicklistMI;
 	private MenuItem hierarchyEditMI;
 	private MenuItem attributeEditMI; 
 	private MenuItem searchOptMI;
@@ -138,6 +142,9 @@ public class ToolsMenu implements MainMenuItem {
 		
 		// favourite picklist
 		favouritePicklistMI = addFavouritePicklistMI ( toolsMenu );
+		
+		// delete picklist
+		removePicklistMI = addRemovePicklistMI ( toolsMenu );
 
 		// editors only if the catalogue can be edited
 		if ( mainMenu.getCatalogue() != null && 
@@ -318,6 +325,8 @@ public class ToolsMenu implements MainMenuItem {
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {}
 		});
+		
+		createXmlMI.setEnabled( false );
 		
 		return createXmlMI;
 	}
@@ -645,7 +654,8 @@ public class ToolsMenu implements MainMenuItem {
 					GlobalUtil.setShellCursor( shell, SWT.CURSOR_WAIT );
 					
 					// parse the picklist as a csv semicolon separated file
-					PicklistParser parse = new PicklistParser ( filename, ";" );
+					PicklistParser parse = new PicklistParser ( mainMenu.getCatalogue(), 
+							filename, ";" );
 					
 					ArrayList <PicklistTerm> picklistTerms = new ArrayList<>();
 					PicklistTerm currentTerm;
@@ -752,6 +762,88 @@ public class ToolsMenu implements MainMenuItem {
 							if ( listener != null )
 								listener.buttonPressed( picklistItem, 
 										FAV_PICKLIST_MI, null );
+						}
+						
+						@Override
+						public void widgetDefaultSelected(SelectionEvent e) {}
+					});
+				}
+			}
+		});
+		
+		picklistItem.setEnabled( false );
+		
+		return picklistItem;
+	}
+	
+
+	private MenuItem addRemovePicklistMI ( Menu menu ) {
+		
+		final MenuItem picklistItem = new MenuItem( menu , SWT.CASCADE );
+		
+		picklistItem.setText( Messages.getString("BrowserMenu.DeletePicklistCmd") );
+
+		// Initialize the menu
+		final Menu selectPicklistMenu = new Menu( shell , SWT.DROP_DOWN );
+
+		// add the menu
+		picklistItem.setMenu( selectPicklistMenu );
+
+		// when the menu is showed
+		selectPicklistMenu.addListener(SWT.Show, new Listener() {
+
+			@Override
+			public void handleEvent(Event event) {
+
+				// reset the item of the menu, in order to update with 
+				// the current picklists in the app.jar folder
+				for (MenuItem item : selectPicklistMenu.getItems() ) {
+					item.dispose();
+				}
+				
+				PicklistDAO pickDao = new PicklistDAO( mainMenu.getCatalogue() );
+				
+				// for each imported picklist we create a menu item in order to allow choosing
+				// the favourite picklist
+				for ( Picklist picklist : pickDao.getAll() ) {
+				
+					final MenuItem mi = new MenuItem( selectPicklistMenu, SWT.PUSH );
+					mi.setText( picklist.getCode() );
+					
+					// set the data for the menu item
+					mi.setData( picklist );
+					
+					// actions taken when this menu item is pressed
+					mi.addSelectionListener( new SelectionListener() {
+						
+						@Override
+						public void widgetSelected(SelectionEvent e) {
+							
+							// Update the selected picklist into the preference database:
+							
+							// get the selected picklist id starting from the picklist code
+							// the menu items has the picklist code in the data field
+							Picklist selectedPicklist = (Picklist) mi.getData();
+
+							CataloguePreferenceDAO prefDao = new CataloguePreferenceDAO( 
+									mainMenu.getCatalogue() );
+							
+							// get the favourite picklist
+							Picklist favouritePicklist = prefDao.getFavouritePicklist();
+							
+							// remove favourite picklist if necessary
+							if ( favouritePicklist != null && 
+									selectedPicklist.equals( favouritePicklist) )
+								prefDao.setFavouritePicklist( null ); 
+							
+							PicklistDAO pickDao = new PicklistDAO( mainMenu.getCatalogue() );
+							// delete the selected picklist from the database
+							pickDao.remove( selectedPicklist );
+							
+
+							if ( listener != null )
+								listener.buttonPressed( picklistItem, 
+										DELETE_PICKLIST_MI, null );
 						}
 						
 						@Override
@@ -928,6 +1020,7 @@ public class ToolsMenu implements MainMenuItem {
 
 		importPicklistMI.setEnabled( hasFacets );
 		favouritePicklistMI.setEnabled( hasFacets && hasPicklists );
+		removePicklistMI.setEnabled( hasFacets && hasPicklists );
 
 		boolean searchPrefEnabled = nonEmptyCat && ( mainMenu.getCatalogue().hasTermTypes() ||
 				mainMenu.getCatalogue().hasGenericAttributes() );
@@ -980,6 +1073,11 @@ public class ToolsMenu implements MainMenuItem {
 					publishMI.setEnabled( false );
 				}
 				
+				if ( createXmlMI != null ) {
+					createXmlMI.setText( Messages.getString( "Reserve.WaitingResponse" ) );
+					createXmlMI.setEnabled( false );
+				}
+				
 				if ( uploadDataMI != null ) {
 					uploadDataMI.setText( Messages.getString( "Reserve.WaitingResponse" ) );
 					uploadDataMI.setEnabled( false );
@@ -1018,9 +1116,19 @@ public class ToolsMenu implements MainMenuItem {
 				}
 				
 				if ( uploadDataMI != null ) {
-					uploadDataMI.setText( Messages.getString( "BrowserMenu.UploadData" ) );
+					uploadDataMI.setText( Messages.getString( "BrowserMenu.UploadData" ) );			
+					
+					// check if we have already created an xml file for this catalogue
+					XmlUpdateFileDAO xmlDao = new XmlUpdateFileDAO();
+					XmlUpdateFile xml = xmlDao.getById( mainMenu.getCatalogue().getId() );
+					uploadDataMI.setEnabled( unReservable && xml != null );
 				}
 
+				if ( createXmlMI != null ) {
+					createXmlMI.setText( Messages.getString( "BrowserMenu.CreateXml" ) );
+					createXmlMI.setEnabled( unReservable );
+				}
+				
 				if ( publishMI != null ) {
 					publishMI.setText( Messages.getString( "BrowserMenu.Publish" ) );
 				}

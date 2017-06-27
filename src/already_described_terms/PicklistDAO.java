@@ -421,7 +421,7 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 				String label = rs.getString( "PICKLIST_TERM_LABEL" );
 				
 				// add the current term to the output list
-				PicklistTerm term = new PicklistTerm( level, code, label );
+				PicklistTerm term = new PicklistTerm( catalogue, level, code, label );
 				terms.add( term );
 			}
 			
@@ -488,7 +488,7 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 				String label = rs.getString( "PICKLIST_TERM_LABEL" );
 
 				// add the current term to the output list
-				PicklistTerm picklistTerm = new PicklistTerm( level, code, label );
+				PicklistTerm picklistTerm = new PicklistTerm( catalogue, level, code, label );
 				terms.add( picklistTerm );
 			}
 			
@@ -504,8 +504,29 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 	}
 
 	@Override
-	public boolean remove(Picklist object) {
-		// TODO Auto-generated method stub
+	public boolean remove(Picklist picklist) {
+		
+		// delete all the pick-list terms
+		// to remove dependencies
+		deletePicklistTerms( picklist );
+
+		String query = "delete from APP.PICKLIST where PICKLIST_ID = ?";
+		
+		try {
+			
+			Connection con = catalogue.getConnection();
+			PreparedStatement stmt = con.prepareStatement( query );
+			stmt.setInt( 1, picklist.getId() );
+			stmt.executeUpdate();
+			
+			stmt.close();
+			con.close();
+			
+			return true;
+		} catch ( SQLException e ) {
+			e.printStackTrace();
+		}
+		
 		return false;
 	}
 

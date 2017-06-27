@@ -28,6 +28,10 @@ public class LogNodeBuilder {
 		this.result = DcfResponse.valueOf( result );
 		return this;
 	}
+	public LogNodeBuilder setResult(DcfResponse result) {
+		this.result = result;
+		return this;
+	}
 	public LogNodeBuilder addOpLog( String opLog ) {
 		opLogs.add( opLog );
 		return this;

@@ -1,6 +1,7 @@
 package already_described_terms;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.StringTokenizer;
 
 import catalogue.Catalogue;
@@ -8,7 +9,6 @@ import catalogue_browser_dao.AttributeDAO;
 import catalogue_browser_dao.TermDAO;
 import catalogue_object.Term;
 import catalogue_object.TermAttribute;
-import global_manager.GlobalManager;
 import ui_implicit_facet.FacetDescriptor;
 import ui_implicit_facet.FacetType;
 
@@ -19,14 +19,20 @@ import ui_implicit_facet.FacetType;
  */
 public class DescribedTerm {
 
+	private Catalogue catalogue;
 	private String code, label;
 
 	// the code is a full-code baseTerm#facetHeader.facetCode$...
-	public DescribedTerm( String code, String label ) {
+	public DescribedTerm( Catalogue catalogue, String code, String label ) {
+		this.catalogue = catalogue;
 		this.code = code;
 		this.label = label;
 	}
 
+	/**
+	 * Get the full code of the described term
+	 * @return
+	 */
 	public String getCode() {
 		return code;
 	}
@@ -34,12 +40,32 @@ public class DescribedTerm {
 		return label;
 	}
 	
+	/**
+	 * Get the base term code of the described term
+	 * @return
+	 */
 	public String getBaseTermCode() {
-		return code.split("#")[0];
+		
+		String[] split = code.split("#");
+		
+		if ( split.length > 0 )
+			return split[0];
+		
+		return null;
 	}
 	
+	/**
+	 * Get the facets full code of the described term
+	 * @return
+	 */
 	public String getFacetsCodes() {
-		return code.split("#")[1];
+		
+		String[] split = code.split("#");
+		
+		if ( split.length > 1 )
+			return split[1];
+		
+		return null;
 	}
 	
 	/**
@@ -71,16 +97,18 @@ public class DescribedTerm {
 	 * @return
 	 */
 	public Term getBaseTerm() {
+		return getTerm ( getBaseTermCode() );
+	}
+	
+	/**
+	 * Get a term from the database given its code
+	 * @param code
+	 * @return
+	 */
+	private Term getTerm ( String code ) {
 		
-		// get an instance of the global manager
-		GlobalManager manager = GlobalManager.getInstance();
-		
-		// get the current catalogue
-		Catalogue currentCat = manager.getCurrentCatalogue();
-		
-		TermDAO termDao = new TermDAO( currentCat );
-		
-		return termDao.getByCode( getBaseTermCode() );
+		TermDAO termDao = new TermDAO( catalogue );
+		return termDao.getByCode( code );
 	}
 	
 	/**
@@ -91,22 +119,16 @@ public class DescribedTerm {
 		
 		Term baseTerm = getBaseTerm();
 		
-		// get an instance of the global manager
-		GlobalManager manager = GlobalManager.getInstance();
-		
-		// get the current catalogue
-		Catalogue currentCat = manager.getCurrentCatalogue();
-		
 		// create the base term copy (to avoid ovverriding things! If we act directly to the base term
 		// its implicit facets will be changed and we do not want that
 		// we just need name and code, then we add the implicit facets.
-		Term baseTermCopy = new Term( currentCat );
+		Term baseTermCopy = new Term( catalogue );
 		baseTermCopy.setName( baseTerm.getName() );
 		baseTermCopy.setShortName( baseTerm.getShortName(false) );
 		baseTermCopy.setCode( baseTerm.getCode() );
 		
 		// initialize dao of attributes
-		AttributeDAO attrDao = new AttributeDAO( currentCat );
+		AttributeDAO attrDao = new AttributeDAO( catalogue );
 
 		// for each explicit facet, we add the facet to the base term
 		for ( String facetFullCode : getFullFacetCodes() ) {
@@ -153,6 +175,26 @@ public class DescribedTerm {
 		return inExplicit || inImplicit;
 	}
 	
+	/**
+	 * Check if all the terms referred by this described term
+	 * are present into the database or not.
+	 * @return
+	 */
+	public boolean isValid () {
+	
+		// if invalid base term return false
+		if ( getBaseTerm() == null )
+			return false;
+		
+		// if invalid facets return false
+		Collection<String> facets = getFullFacetCodes();
+		for ( String facet : facets ) {
+			if ( getTerm( facet ) == null )
+				return false;
+		}
+		
+		return true;
+	}
 	
 	
 	@Override

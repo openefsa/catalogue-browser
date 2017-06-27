@@ -188,7 +188,7 @@ public class FormTermCoder implements RestoreableWindow {
 				RecentTermDAO recentDao = new RecentTermDAO( catalogue );
 				
 				// insert a new Recent term created with the full code of the selected term and with the 
-				recentDao.insert( new DescribedTerm( fullCode.getText(), 
+				recentDao.insert( new DescribedTerm( catalogue, fullCode.getText(), 
 						_tempTerm.getInterpretedCode() ) );
 				
 			}

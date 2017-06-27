@@ -28,4 +28,7 @@ public class LogXmlNodes {
 	public static final String OP_RESULT = "operationResult";
 	public static final String OP_LOGS_BLOCK = "operationLogs";
 	public static final String OP_LOG = "operationLog";
+	
+	public static final String VALIDATION_ERROR_BLOCK = "validationErrorLogs";
+	public static final String VALIDATION_ERROR = "validationError";
 }

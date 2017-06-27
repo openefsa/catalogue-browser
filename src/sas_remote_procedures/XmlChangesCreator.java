@@ -47,7 +47,7 @@ public class XmlChangesCreator {
 	 * The format of the file which will be produced
 	 * by the sas procedure
 	 */
-	private static final String REMOTE_OUT_FORMAT = ".xml";
+	public static final String REMOTE_OUT_FORMAT = ".xml";
 	
 	/**
 	 * The format of the lock file which will be created
@@ -224,6 +224,9 @@ public class XmlChangesCreator {
 
 		XmlUpdateFileDAO xmlDao = new XmlUpdateFileDAO();
 		XmlUpdateFile xmlUp = xmlDao.getById( catalogue.getId() );
+		
+		if ( xmlUp == null )
+			return false;
 		
 		// set the name of the base filename
 		String filename = SasRemotePaths.CHANGES_CREATOR_PATH 

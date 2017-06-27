@@ -4,6 +4,8 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import dcf_webservice.DcfResponse;
+
 /**
  * Handler used to parse a dcf log document.
  * @author avonva
@@ -15,12 +17,14 @@ public class LogParserHandler extends DefaultHandler {
 	// while reading data from the xml file
 	private DcfLogBuilder logBuilder;
 	private LogNodeBuilder nodeBuilder;
+	private LogNodeBuilder validationBuilder;
 	
 	private StringBuilder lastContent;
 	
 	// booleans to know in which xml block we are
 	private boolean operationsBlock;
 	private boolean macroLogsBlock;
+	private boolean validationErrorsBlock;
 
 	/**
 	 * Initialize the log parser handler memory
@@ -30,6 +34,7 @@ public class LogParserHandler extends DefaultHandler {
 		logBuilder = new DcfLogBuilder();
 		operationsBlock = false;
 		macroLogsBlock = false;
+		validationErrorsBlock = false;
 	}
 
 	// when a node is encountered
@@ -56,6 +61,11 @@ public class LogParserHandler extends DefaultHandler {
 		case LogXmlNodes.MACRO_OP_LOGS_BLOCK:
 			macroLogsBlock = true;
 			break;
+			
+		case LogXmlNodes.VALIDATION_ERROR:
+			validationErrorsBlock = true;
+			validationBuilder = new LogNodeBuilder();
+			break;
 		
 		default:
 			break;
@@ -66,8 +76,9 @@ public class LogParserHandler extends DefaultHandler {
 	// when the end of a node is encountered
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 
-		analyzeMacroOperationsBlock(qName);
-		analyzeOperationsBlock(qName);
+		analyzeMacroOperationsBlock( qName );
+		analyzeOperationsBlock( qName );
+		analyzeValidationErrorsBlock ( qName );
 		
 		switch ( qName ) {
 		
@@ -86,6 +97,12 @@ public class LogParserHandler extends DefaultHandler {
 		// end macro operations log block
 		case LogXmlNodes.MACRO_OP_LOGS_BLOCK:
 			macroLogsBlock = false;
+			break;
+
+		case LogXmlNodes.VALIDATION_ERROR:
+			validationErrorsBlock = false;
+			logBuilder.addLogNode( validationBuilder.build() );
+			validationBuilder = null;
 			break;
 			
 		default:
@@ -146,6 +163,20 @@ public class LogParserHandler extends DefaultHandler {
 		}
 	}
 
+	/**
+	 * Analyze the validation errors blocks
+	 * @param qName
+	 */
+	private void analyzeValidationErrorsBlock ( String qName ) {
+		
+		if ( !validationErrorsBlock )
+			return;
+		
+		validationBuilder.setResult( DcfResponse.ERR );
+		validationBuilder.setName( LogXmlNodes.VALIDATION_ERROR );
+		validationBuilder.addOpLog( getValue() );
+	}
+	
 	/**
 	 * Analyze the log nodes inside the operations block
 	 * @param qName

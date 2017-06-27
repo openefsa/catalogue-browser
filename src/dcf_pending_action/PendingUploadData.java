@@ -1,9 +1,15 @@
 package dcf_pending_action;
 
+import java.io.IOException;
+
 import catalogue.Catalogue;
 import dcf_log.DcfLog;
 import dcf_manager.Dcf.DcfType;
 import dcf_webservice.DcfResponse;
+import sas_remote_procedures.XmlChangesCreator;
+import sas_remote_procedures.XmlUpdateFile;
+import sas_remote_procedures.XmlUpdateFileDAO;
+import utilities.GlobalUtil;
 
 /**
  * Pending action used to call an upload data request
@@ -78,6 +84,27 @@ public class PendingUploadData extends PendingAction {
 
 	@Override
 	public void processResponse(DcfResponse response) {
+		
+		// remove the xml from the database
+		XmlUpdateFileDAO xmlDao = new XmlUpdateFileDAO();
+		XmlUpdateFile xml = xmlDao.getById( getCatalogue().getId() );
+		
+		if ( xml != null ) {
+			
+			// delete file on disk
+			try {
+				GlobalUtil.deleteFileCascade( xml.getXmlFilename() + 
+						XmlChangesCreator.REMOTE_OUT_FORMAT );
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			// delete record on db
+			xmlDao.remove( xml );
+		}
+		else
+			System.err.println ( "Cannot delete xml file related to " + getCatalogue() );
+		
 		// terminate the upload data action
 		terminate();
 	}

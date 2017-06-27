@@ -6,6 +6,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
+import catalogue.Catalogue;
+
 /**
  * Parse a pick-list csv file to extract its information
  * The pick-list csv file is composed by 3 columns:
@@ -15,10 +17,14 @@ import java.util.StringTokenizer;
  */
 public class PicklistParser {
 
-	String delim, currentLine;
-	BufferedReader reader;
+	private Catalogue catalogue;
+	private String delim;
+	private String currentLine;
+	private BufferedReader reader;
 	
-	public PicklistParser( String filename, String delim ) {
+	public PicklistParser( Catalogue catalogue, String filename, String delim ) {
+		
+		this.catalogue = catalogue;
 		
 		File file = new File( filename );
 		
@@ -58,8 +64,10 @@ public class PicklistParser {
 	public PicklistTerm nextTerm() {
 
 		try {
-			if ( !hasNext() )
+			if ( !hasNext() ) {
+				reader.close();
 				return null;
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -79,7 +87,7 @@ public class PicklistParser {
 		String code = st.nextToken();
 
 		// create a picklist and return it
-		PicklistTerm pt = new PicklistTerm(level, code, label);
+		PicklistTerm pt = new PicklistTerm( catalogue, level, code, label );
 
 		return pt;
 	}
