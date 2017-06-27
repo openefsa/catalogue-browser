@@ -6,7 +6,7 @@ import catalogue.Catalogue;
 import dcf_log.DcfLog;
 import dcf_manager.Dcf.DcfType;
 import dcf_webservice.DcfResponse;
-import sas_remote_procedures.XmlChangesCreator;
+import sas_remote_procedures.XmlUpdatesCreator;
 import sas_remote_procedures.XmlUpdateFile;
 import sas_remote_procedures.XmlUpdateFileDAO;
 import utilities.GlobalUtil;
@@ -94,7 +94,7 @@ public class PendingUploadData extends PendingAction {
 			// delete file on disk
 			try {
 				GlobalUtil.deleteFileCascade( xml.getXmlFilename() + 
-						XmlChangesCreator.REMOTE_OUT_FORMAT );
+						XmlUpdatesCreator.REMOTE_OUT_FORMAT );
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

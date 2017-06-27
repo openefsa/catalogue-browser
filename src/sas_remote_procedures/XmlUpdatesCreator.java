@@ -30,7 +30,7 @@ import ui_progress_bar.FormProgressBar;
  * @author avonva
  *
  */
-public class XmlChangesCreator {
+public class XmlUpdatesCreator {
 
 	/**
 	 * The export format of the exported file as soon
@@ -78,7 +78,7 @@ public class XmlChangesCreator {
 	 * between {@code catalogue} and its official version
 	 * hosted on the dcf. The .xml file will be created on
 	 * the remote folder, which is defined in
-	 * {@link #CHANGES_CREATOR_PATH}.
+	 * {@link #XML_UPDATES_CREATOR_PATH}.
 	 * @param catalogue
 	 */
 	public void createXml( final Catalogue catalogue ) {
@@ -103,24 +103,24 @@ public class XmlChangesCreator {
 			public void handleEvent(Event arg0) {
 
 				// base remote path of the sas procedure
-				String basepath = SasRemotePaths.CHANGES_CREATOR_PATH;
-
+				String inputFolder = SasRemotePaths.XML_UPDATES_CREATOR_INPUT_FOLDER;
+				System.out.println( inputFolder );
 				// .start file which is created by the local application
 				// which contains the catalogue export .xlsx hidden in a .start file
 				File startFile = new File ( startFilename );
 				
 				// path where the local .start file should be copied
-				File remoteStartFile = new File ( basepath + startFilename );
+				File remoteStartFile = new File ( inputFolder + startFilename );
 				
 				// name which will be given to the .start file when 
 				// it is copied into the remote folder. In particular, we
 				// will rename it into .xlsx once the .start is successfully
 				// copied into the remote folder (avoid file system problems)
-				File remoteXlsxFile = new File ( basepath + filename + LOCAL_EXPORT_FORMAT );
+				File remoteXlsxFile = new File ( inputFolder + filename + LOCAL_EXPORT_FORMAT );
 				
 				// .end file which is used as green semaphore, i.e., to warn
 				// the sas procedure that it can start processing the .xlsx file
-				File remoteEndFile = new File ( basepath + filename + END_FORMAT );
+				File remoteEndFile = new File ( inputFolder + filename + END_FORMAT );
 				
 				// copy the start file into the remote folder
 				// where the sas procedure can read the file
@@ -173,7 +173,7 @@ public class XmlChangesCreator {
 		
 		System.out.println( "Filename " + xmlUpdateFile.getXmlFilename() );
 		
-		String endFilename = SasRemotePaths.CHANGES_CREATOR_PATH + 
+		String endFilename = SasRemotePaths.XML_UPDATES_CREATOR_UPDATE_FOLDER + 
 				xmlUpdateFile.getXmlFilename() + REMOTE_END_FORMAT;
 		
 		File endFile = new File ( endFilename );
@@ -196,7 +196,7 @@ public class XmlChangesCreator {
 		
 		// here the file exists therefore we can go on
 		
-		String remoteXmlFilename = SasRemotePaths.CHANGES_CREATOR_PATH + 
+		String remoteXmlFilename = SasRemotePaths.XML_UPDATES_CREATOR_UPDATE_FOLDER + 
 				xmlUpdateFile.getXmlFilename() + REMOTE_OUT_FORMAT;
 		
 		String localXmlFilename = xmlUpdateFile.getXmlFilename() + REMOTE_OUT_FORMAT;
@@ -229,7 +229,7 @@ public class XmlChangesCreator {
 			return false;
 		
 		// set the name of the base filename
-		String filename = SasRemotePaths.CHANGES_CREATOR_PATH 
+		String filename = SasRemotePaths.XML_UPDATES_CREATOR_UPDATE_FOLDER 
 				+ xmlUp.getXmlFilename();
 		
 		boolean lockDeleted = false;
@@ -417,7 +417,7 @@ public class XmlChangesCreator {
 		CatalogueDAO catDao = new CatalogueDAO();
 		Catalogue cat = catDao.getCatalogue( "ABUNDANCE", "4.5", DcfType.TEST );
 		cat.loadData();
-		XmlChangesCreator creator = new XmlChangesCreator ();
+		XmlUpdatesCreator creator = new XmlUpdatesCreator ();
 		creator.createXml( cat );
 		
 		try {

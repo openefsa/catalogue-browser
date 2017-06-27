@@ -30,7 +30,7 @@ import export_catalogue.ExportActions;
 import import_catalogue.ImportCatalogueThread;
 import import_catalogue.ImportCatalogueThread.ImportFileFormat;
 import messages.Messages;
-import sas_remote_procedures.XmlChangesCreator;
+import sas_remote_procedures.XmlUpdatesCreator;
 import sas_remote_procedures.XmlUpdateFile;
 import sas_remote_procedures.XmlUpdateFileDAO;
 import ui_general_graphics.DialogSingleText;
@@ -288,7 +288,7 @@ public class ToolsMenu implements MainMenuItem {
 								Messages.getString("BrowserMenu.CreateXmlBarTitle") );
 				
 				// ask for the xml creation to the sas server
-				XmlChangesCreator xmlCreator = new XmlChangesCreator();
+				XmlUpdatesCreator xmlCreator = new XmlUpdatesCreator();
 				xmlCreator.setProgressBar( progressBar );
 				
 				// if wrong

@@ -45,6 +45,7 @@ import ui_search_bar.SearchPanel;
 import user_preferences.CataloguePreferenceDAO;
 import user_preferences.PreferenceNotFoundException;
 import user_preferences.UIPreference;
+import user_preferences.UIPreferenceDAO;
 import utilities.GlobalUtil;
 
 /**
@@ -116,6 +117,18 @@ public class MainPanel implements Observer, RestoreableWindow {
 		// shell name, image, window dimensions (based on
 		// widget! Need to call it after addWidgets)
 		setShellGraphics();
+		
+		// open the last catalogue if present
+		try {
+			Catalogue catalogue = getLastOpenedCatalogue();
+			catalogue.open();
+			
+			// enable the user interface only if we have data in the current catalogue
+			if ( !catalogue.isEmpty() ) {
+				enableUI( true );
+				loadData( catalogue );
+			}
+		} catch (PreferenceNotFoundException e) {}
 	}
 	
 	/**
@@ -193,10 +206,33 @@ public class MainPanel implements Observer, RestoreableWindow {
 	}
 	
 	/**
+	 * Save the last opened catalogue
+	 */
+	private void saveOpenedCatalogue() {
+		
+		Catalogue current = GlobalManager.getInstance().getCurrentCatalogue();
+
+		// save main panel state
+		UIPreferenceDAO prefDao = new UIPreferenceDAO ();
+		prefDao.saveOpenedCatalogue( current );
+	}
+	
+	/**
+	 * Get the last opened catalogue if there is one
+	 * @return
+	 * @throws PreferenceNotFoundException
+	 */
+	private Catalogue getLastOpenedCatalogue() throws PreferenceNotFoundException {
+		// save main panel state
+		UIPreferenceDAO prefDao = new UIPreferenceDAO ();
+		return prefDao.getLastCatalogue();
+	}
+
+	/**
 	 * Save the state of the main panel for the current 
 	 * catalogue (selected hierarchy and selected term!)
 	 */
-	private void saveState () {
+	private void saveState() {
 		
 		Catalogue current = GlobalManager.getInstance().getCurrentCatalogue();
 		
@@ -275,6 +311,7 @@ public class MainPanel implements Observer, RestoreableWindow {
 			@Override
 			public void widgetDisposed(DisposeEvent arg0) {
 				saveState();
+				saveOpenedCatalogue();
 			}
 		});
 		
@@ -543,9 +580,6 @@ public class MainPanel implements Observer, RestoreableWindow {
 					if ( !catalogue.isEmpty() ) {
 						enableUI( true );
 						loadData( catalogue );
-						
-						// load the main panel previous state if possible
-						//loadState( catalogue );
 					}
 					
 					break;

@@ -91,7 +91,7 @@ public class CataloguePreferenceDAO extends PreferenceDAO {
 	 */
 	public Hierarchy getLastHierarchy () throws PreferenceNotFoundException {
 		
-		CataloguePreference pref = getPreference( CataloguePreference.LAST_HIER_PREF );
+		Preference pref = getPreference( CataloguePreference.LAST_HIER_PREF );
 		
 		Hierarchy hierarchy;
 		
@@ -113,7 +113,7 @@ public class CataloguePreferenceDAO extends PreferenceDAO {
 	 */
 	public Term getLastTerm () throws PreferenceNotFoundException {
 		
-		CataloguePreference pref = getPreference( CataloguePreference.LAST_TERM_PREF );
+		Preference pref = getPreference( CataloguePreference.LAST_TERM_PREF );
 		
 		Term term;
 		

@@ -70,10 +70,10 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference>{
 	 * @return
 	 * @throws PreferenceNotFoundException 
 	 */
-	public CataloguePreference getPreference ( String key ) throws PreferenceNotFoundException {
+	public Preference getPreference ( String key ) throws PreferenceNotFoundException {
 
 		// output
-		CataloguePreference pref = null;
+		Preference pref = null;
 
 		Connection con;
 
@@ -92,14 +92,7 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference>{
 			ResultSet rs = stmt.executeQuery();
 
 			if ( rs.next() ) {
-
-				Preference p = getByResultSet( rs );
-
-				//String type = rs.getString( "PREFERENCE_TYPE" );
-				//String value = rs.getString( "PREFERENCE_VALUE" );
-
-				// create the preference
-				pref = new CataloguePreference( p );
+				pref = getByResultSet( rs );
 			}
 
 			rs.close();
@@ -268,7 +261,28 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference>{
 	}
 
 	public boolean remove(Preference object) {
-		// TODO Auto-generated method stub
+		
+		Connection con;
+
+		String query = "delete from APP.PREFERENCE where PREFERENCE_KEY = ?";
+
+		try {
+
+			con = getConnection();
+
+			PreparedStatement stmt = con.prepareStatement( query );
+			stmt.setString( 1, object.getKey() );
+			stmt.executeUpdate();
+
+			stmt.close();
+			con.close();
+			
+			return true;
+
+		} catch ( SQLException e ) {
+			e.printStackTrace();
+		}
+		
 		return false;
 	}
 

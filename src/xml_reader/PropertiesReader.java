@@ -18,9 +18,10 @@ public class PropertiesReader {
 	private static final String APP_VERSION_PROPERTY = "Application.Version";
 	private static final String DCF_PROPERTY = "Dcf.EnableTest";
 	private static final String YES = "YES";
-	private static final String DCF_XML_CREATOR = 
-			"DcfXmlChangesCreator.RemotePath";
-	
+	private static final String DCF_XML_CREATOR = "DcfXmlUpdatesCreator.RemotePath";
+	private static final String DCF_XML_CREATOR_IN = "DcfXmlUpdatesCreator.InputFolder";
+	private static final String DCF_XML_CREATOR_UPDATE = "DcfXmlUpdatesCreator.UpdateFolder";
+	private static final String DCF_XML_CREATOR_OUT = "DcfXmlUpdatesCreator.OutputFolder";
 	/**
 	 * Read the application properties from the xml file
 	 * @return
@@ -84,6 +85,19 @@ public class PropertiesReader {
 	 */
 	public static String getDcfXmlCreatorPath() {
 		return getValue( DCF_XML_CREATOR, "not found" );
+	}
+	
+
+	public static String getXmlCreatorInputFolder() {
+		return getValue( DCF_XML_CREATOR_IN, "not found" );
+	}
+	
+	public static String getXmlCreatorUpdateFolder() {
+		return getValue( DCF_XML_CREATOR_UPDATE, "not found" );
+	}
+	
+	public static String getXmlCreatorOutputFolder() {
+		return getValue( DCF_XML_CREATOR_OUT, "not found" );
 	}
 	
 	/**

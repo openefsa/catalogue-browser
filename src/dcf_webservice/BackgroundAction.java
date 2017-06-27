@@ -9,7 +9,7 @@ import dcf_manager.Dcf;
 import dcf_pending_action.PendingAction;
 import dcf_pending_action.PendingActionListener;
 import dcf_webservice.Publish.PublishLevel;
-import sas_remote_procedures.XmlChangesCreator;
+import sas_remote_procedures.XmlUpdatesCreator;
 import ui_progress_bar.FormProgressBar;
 
 /**
@@ -106,7 +106,7 @@ public class BackgroundAction extends Thread {
 			case UPLOAD_DATA:
 
 				// download the xml from the server if possible
-				XmlChangesCreator xmlCreator = new XmlChangesCreator();
+				XmlUpdatesCreator xmlCreator = new XmlUpdatesCreator();
 				File xmlFile = xmlCreator.downloadXml( catalogue );
 
 				if ( xmlFile == null ) {
