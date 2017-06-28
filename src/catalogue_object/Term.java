@@ -1692,6 +1692,7 @@ public class Term extends CatalogueObject implements Mappable {
 		int thisOrder = this.getOrder( hierarchy );
 		int offset = 1;
 
+		
 		// get siblings below target
 		ArrayList<Term> termsToShift = target.getSiblings( hierarchy, true );
 		
@@ -1704,11 +1705,8 @@ public class Term extends CatalogueObject implements Mappable {
 		}
 		else  // place after target
 			thisOrder = targetOrder + 1;
-		
-		ArrayList<Term> sourceSib = this.getSiblings( hierarchy );
 
-		// rearrange the siblings order since we remove the source
-		this.normalizeLevel( sourceSib, hierarchy );
+		ArrayList<Term> sourceSib = this.getSiblings( hierarchy );
 		
 		Applicability thisAppl = this.getApplicability( hierarchy );
 		
@@ -1716,15 +1714,14 @@ public class Term extends CatalogueObject implements Mappable {
 		// change it, so we remove it and then we will re add it )
 		this.removeApplicability( thisAppl, true );
 		
-		TermDAO termDao = new TermDAO( catalogue );
-		// update also sources in RAM memory
-		for ( Term t : termsToShift ) {
+		// rearrange the siblings order since we have removed the source
+		this.normalizeLevel( sourceSib, hierarchy );
 
-			// set the new order
+		// add the offset for source level in RAM memory
+		// (Used when the source is taken from the same level
+		// of the target, since we create an additional hole)
+		for ( Term t : sourceSib ) {
 			t.setOrder( hierarchy, t.getOrder( hierarchy ) + offset );
-
-			// update the term in ram
-			termDao.update( t );
 		}
 
 		thisAppl.setOrder( thisOrder );
@@ -1738,8 +1735,10 @@ public class Term extends CatalogueObject implements Mappable {
 		// shift all the siblings of the target term by 1 in the selected hierarchy
 		parentDao.shiftTerms( termsToShift, hierarchy, offset );
 		
-		// update the term in RAM
-		termDao.update( this );
+		// add offset to target level in RAM
+		for ( Term t : termsToShift ) {
+			t.setOrder( hierarchy, t.getOrder( hierarchy ) + offset );
+		}
 		
 		// normalize target siblings and target
 		// since we have added the source
@@ -1748,7 +1747,7 @@ public class Term extends CatalogueObject implements Mappable {
 		
 		// normalize the target siblings now that the
 		// source is a target sibling (orders are changed)
-		target.normalizeLevel( targetSib, hierarchy );
+		target.normalizeLevel( targetSib, hierarchy );	
 	}
 	
 	/**
@@ -1797,10 +1796,10 @@ public class Term extends CatalogueObject implements Mappable {
 		for ( int i = 0; i < termsOnLevel.size(); i++ ) {
 			
 			// set order for siblings
-			termsOnLevel.get(i).setOrder( hierarchy, i );
+			termsOnLevel.get(i).setOrder( hierarchy, i + 1 );
 			
 			// update also in db
-			parentDao.updateTermOrder( termsOnLevel.get(i), hierarchy, i);
+			parentDao.updateTermOrder( termsOnLevel.get(i), hierarchy, i + 1 );
 		}
 		
 		return termsOnLevel;

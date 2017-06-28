@@ -132,7 +132,6 @@ public class TableApplicability {
 		createApplicabilityMenu(); 
 	}
 	
-	
 	/**
 	 * Constructor, given the parent composite create on it an applicability table
 	 * @param parent
@@ -182,6 +181,10 @@ public class TableApplicability {
 		// add the "Usage" column and its label provider
 		GlobalUtil.addStandardColumn( applicabilityTable, new UsageColumnLabelProvider(), 
 				Messages.getString("TableApplicability.UsageColumn"), 80, SWT.CENTER );
+		
+		// add the "Usage" column and its label provider
+		GlobalUtil.addStandardColumn( applicabilityTable, new UsageColumnOrderProvider(), 
+				Messages.getString("TableApplicability.OrderColumn"), 100, SWT.CENTER );
 	}
 
 	
@@ -213,7 +216,18 @@ public class TableApplicability {
 		}
 	}
 	
-	
+	/**
+	 * Label provider for the column "Usage"
+	 * @author avonva
+	 *
+	 */
+	private class UsageColumnOrderProvider extends ColumnLabelProvider {
+		@Override
+		public String getText ( Object element ) {
+			Applicability p = (Applicability) element;
+			return String.valueOf( p.getOrder() );
+		}
+	}
 	
 	/**
 	 * Label provider for the column "Term"
@@ -235,7 +249,7 @@ public class TableApplicability {
 			Nameable t = p.getParentTerm();
 			
 			// it there is no parent we have to report the hierarchy image
-			if ( t == null || t.getLabel() == null || t.getLabel().isEmpty() )
+			if ( t instanceof Hierarchy )
 				return termLabelProvider.getImage( p.getHierarchy() );
 			
 			return termLabelProvider.getImage( t );
@@ -251,7 +265,7 @@ public class TableApplicability {
 			Nameable t = p.getParentTerm();
 			
 			// it there is no parent we have to report the hierarchy name
-			if ( t == null || t.getLabel() == null || t.getLabel().isEmpty() )
+			if ( t instanceof Hierarchy )
 				return p.getHierarchy().getLabel();
 			
 			termLabelProvider.setCurrentHierarchy( p.getHierarchy() );

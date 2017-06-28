@@ -81,7 +81,6 @@ public class XmlUpdateFileDAO implements CatalogueEntityDAO<XmlUpdateFile> {
 
 	@Override
 	public boolean update(XmlUpdateFile object) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
