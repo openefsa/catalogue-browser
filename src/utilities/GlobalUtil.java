@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.Format;
@@ -40,6 +42,8 @@ import user_preferences.CataloguePreferenceDAO;
  */
 
 public class GlobalUtil {
+	
+	private static final String TEMP_DIR_NAME = "TempFiles";
 	
 	private static String workDir = "";
 	
@@ -139,6 +143,15 @@ public class GlobalUtil {
 		return ( workDir + PICKLISTS_DIR_NAME + 
 				System.getProperty( "file.separator" ) );
 	}
+	
+	/**
+	 * get the temporary files directory path
+	 * @return
+	 */
+	public static String getTempDir() {
+		return ( workDir + TEMP_DIR_NAME + 
+				System.getProperty( "file.separator" ) );
+	}
 
 	
 	/**
@@ -149,6 +162,27 @@ public class GlobalUtil {
 	public static boolean fileExists ( String filename ) {
 		File check = new File ( filename );
 		return ( check.exists() );
+	}
+	
+	/**
+	 * Create the application folders if they do not exist
+	 */
+	public static void createApplicationFolders() {
+		
+		// create the user files directory
+		if ( !fileExists( CONFIG_FILES_DIR_PATH ) ) {
+			new File( CONFIG_FILES_DIR_PATH ).mkdir();
+		}
+
+		// create the business rules directory
+		if ( !fileExists( BUSINESS_RULES_DIR_PATH ) ) {
+			new File( BUSINESS_RULES_DIR_PATH ).mkdir();
+		}
+		
+		// create the temp directory 
+		if ( !fileExists( getTempDir() ) ) {
+			new File( getTempDir() ).mkdir();
+		}
 	}
 	
 	/**
@@ -399,9 +433,11 @@ public class GlobalUtil {
 			}
 		}
 
+		Files.delete( Paths.get( directory.getAbsolutePath() ) );
+		
 		// delete the directory
-		if ( !directory.delete() )
-			throw new FileNotFoundException( "Failed to delete file: " + directory );
+		//if ( !directory.delete() )
+		//	throw new FileNotFoundException( "Failed to delete file: " + directory );
 	}
 
 	/**

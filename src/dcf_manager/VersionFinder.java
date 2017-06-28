@@ -34,8 +34,10 @@ public class VersionFinder {
 	 * @throws SAXException
 	 * @throws IOException
 	 */
-	public VersionFinder( String filename, String output ) throws TransformerException, 
+	public VersionFinder( String filename ) throws TransformerException, 
 	ParserConfigurationException, SAXException, IOException {
+		
+		String output = filename + "_last_version.xml";
 		
 		// filter the catalogue xml contained in the file
 		// to get only its version in order to reduce the

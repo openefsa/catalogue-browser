@@ -1,6 +1,5 @@
 package ui_main_panel;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.swt.graphics.Image;
@@ -40,18 +39,9 @@ public class CatalogueBrowserMain {
 
 		// database path
 		System.out.println( "Locating main database path in: " + DatabaseManager.MAIN_CAT_DB_FOLDER );
-		
-		// Files checks, create directories if they don't exist
 
-		// if the user files directory does not exist create it
-		if ( !GlobalUtil.fileExists( GlobalUtil.CONFIG_FILES_DIR_PATH ) ) {
-			new File( GlobalUtil.CONFIG_FILES_DIR_PATH ).mkdir();
-		}
-
-		// if the business rules directory does not exist create it
-		if ( !GlobalUtil.fileExists( GlobalUtil.BUSINESS_RULES_DIR_PATH ) ) {
-			new File( GlobalUtil.BUSINESS_RULES_DIR_PATH ).mkdir();
-		}
+		// create the directories of the application
+		GlobalUtil.createApplicationFolders();
 
 		// connect to the main database and start it
 		DatabaseManager.startMainDB();

@@ -1,5 +1,6 @@
 package dcf_log;
 
+import java.io.File;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,7 +19,7 @@ import dcf_webservice.DcfResponse;
 public class DcfLog {
 	
 	// the filename which contains the log
-	private String logFilename;
+	private File logFile;
 	
 	private String action;
 	private Timestamp transmissionDate;
@@ -35,7 +36,6 @@ public class DcfLog {
 	
 	/**
 	 * Initialize a dcf log document
-	 * @param logFilename the filename which contains the log
 	 * @param action the dcf action related to the log
 	 * @param transmissionDate when the request was transmitted
 	 * @param processingDate when the request was processed
@@ -70,12 +70,21 @@ public class DcfLog {
 		this.logNodes = logNodes;
 		this.validationErrors = validationErrors;
 	}
-	
-	public void setLogFilename(String logFilename) {
-		this.logFilename = logFilename;
+
+	/**
+	 * Set the file which contains the log
+	 * @param logFile
+	 */
+	public void setLogFile ( File logFile ) {
+		this.logFile = logFile;
 	}
-	public String getLogFilename() {
-		return logFilename;
+	
+	/**
+	 * Get the file which contains the log
+	 * @return
+	 */
+	public File getLogFile() {
+		return logFile;
 	}
 	public String getAction() {
 		return action;

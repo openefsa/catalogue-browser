@@ -13,8 +13,6 @@ import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
-import org.w3c.dom.Document;
-
 import dcf_manager.AttachmentHandler;
 import dcf_manager.Dcf.DcfType;
 
@@ -51,32 +49,19 @@ public class ExportCatalogueFile extends SOAPAction {
 	public ExportCatalogueFile( DcfType type ) {
 		super( type, EXPORT_FILE_NAMESPACE );
 	}
-	
+
 	/**
-	 * Export a log from the DCF given its code
-	 * @param code
+	 * Download a log file related to an upload catalogue file operation.
+	 * @param code the code of the log we want to download
+	 * @param filename the file where we want to store the log
+	 * @return a File object which points to the log file
 	 * @throws SOAPException 
 	 */
-	public Document exportLog( String code ) throws SOAPException {
-		
-		Object log = exportXml ( code, EXPORT_TYPE_LOG, null );
-		
-		if ( log != null )
-			return (Document) log;
-		
-		return null;
-	}
-	
-	/**
-	 * Export the last internal version of the catalogue.
-	 * @param catalogueCode the code of the catalogue we want to consider
-	 * @return the input stream containing the xml catalogue data
-	 * @throws SOAPException 
-	 */
-	public File exportEfficientLog ( String code, String filename ) 
+	public File exportLog ( String code, String filename ) 
 			throws SOAPException {
 		
-		Object log = exportXml ( code, EXPORT_TYPE_LOG, XML_FILE_TYPE, filename );
+		Object log = exportXml ( code, EXPORT_TYPE_LOG, 
+				XML_FILE_TYPE, filename );
 		
 		if ( log != null )
 			return (File) log;
@@ -87,33 +72,21 @@ public class ExportCatalogueFile extends SOAPAction {
 	/**
 	 * Export the last internal version of the catalogue.
 	 * @param catalogueCode the code of the catalogue we want to consider
-	 * @return the input stream containing the xml catalogue data
+	 * @param filename the file where we want to store the downloaded catalogue
+	 * @return a File object which points to the downloaded catalogue .xml file
 	 * @throws SOAPException 
 	 */
 	public File exportLastInternalVersion ( String catalogueCode, String filename  ) 
 			throws SOAPException {
 		
 		Object lastVersion = exportXml ( catalogueCode, 
-				EXPORT_TYPE_INTERNAL_VERSION, XML_FILE_TYPE, filename );
+				EXPORT_TYPE_INTERNAL_VERSION, 
+				XML_FILE_TYPE, filename );
 		
 		if ( lastVersion != null )
 			return (File) lastVersion;
 		
 		return null;
-	}
-	
-	/**
-	 * Export an xml file given the code and export type fields
-	 * to be inserted in the request.
-	 * @param code code of the object we are considering as the
-	 * catalogue code or the log code
-	 * @param exportType the export type (see GDE2)
-	 * @return an object containing the xml structure (document or inputstream)
-	 * @throws SOAPException 
-	 */
-	private Object exportXml ( String code, String exportType, String filename ) 
-			throws SOAPException {
-		return exportXml( code, exportType, null, filename );
 	}
 	
 	/**
@@ -196,10 +169,10 @@ public class ExportCatalogueFile extends SOAPAction {
 		// on the export type field
 		switch ( exportType ) {
 		case EXPORT_TYPE_LOG:
-			response = processEfficientXml ( soapResponse, true );
+			response = processXml ( soapResponse, true );
 			break;
 		case EXPORT_TYPE_INTERNAL_VERSION:
-			response = processEfficientXml( soapResponse, false );
+			response = processXml( soapResponse, false );
 			break;
 		default:
 			break;
@@ -214,7 +187,7 @@ public class ExportCatalogueFile extends SOAPAction {
 	 * @return the input stream containing the xml
 	 * @throws SOAPException
 	 */
-	private File processEfficientXml ( SOAPMessage soapResponse, boolean isZipped ) throws SOAPException {
+	private File processXml ( SOAPMessage soapResponse, boolean isZipped ) throws SOAPException {
 		
 		try {
 			

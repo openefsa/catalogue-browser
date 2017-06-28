@@ -2006,7 +2006,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		if ( last != null && this.isOlder( last ) ) {
 			return false;
 		}
-		
+
 		return true;
 	}
 	
@@ -2023,16 +2023,14 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 */
 	public NewCatalogueInternalVersion getLastInternalVersion() throws IOException, 
 	TransformerException, ParserConfigurationException, SAXException, SOAPException {
-
+		
+		String filename = GlobalUtil.getTempDir() + "temp_" + getCode();
 		String format = ".xml";
-		String filename = "temp_" + getCode();
-		String input = filename + format;
-		String output = filename + "_version" + format;
+		String output = filename + format;
 
 		Dcf dcf = new Dcf();
 
-		File file = dcf.exportCatalogueInternalVersion( 
-				getCode(), input );
+		File file = dcf.exportCatalogueInternalVersion( getCode(), output );
 		
 		// export the internal version in the file
 		boolean written = file != null;
@@ -2042,7 +2040,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		if ( !written )
 			return null;
 
-		VersionFinder finder = new VersionFinder( input, output );
+		VersionFinder finder = new VersionFinder( output );
 
 		// compare the catalogues versions
 		CatalogueVersion intVersion = new CatalogueVersion ( finder.getVersion() );
@@ -2054,13 +2052,13 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 			// save the new version of the catalogue
 			NewCatalogueInternalVersion newVersion = 
 					new NewCatalogueInternalVersion( getCode(), 
-							finder.getVersion(), input, catalogueType );
+							finder.getVersion(), output, catalogueType );
 
 			return newVersion;
 		}
 		else {
 			// delete useless files
-			GlobalUtil.deleteFileCascade( input );
+			GlobalUtil.deleteFileCascade( output );
 		}
 
 		return null;

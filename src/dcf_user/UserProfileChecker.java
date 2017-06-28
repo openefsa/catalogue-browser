@@ -65,7 +65,7 @@ public class UserProfileChecker extends Thread {
 
 		System.out.println( "Checking user access level..." );
 
-		final String filename = "catUsersCatalogue.xml";
+		final String filename = GlobalUtil.getTempDir() + "catUsersCatalogue.xml";
 
 		// ask for exporting catalogue to the dcf
 		// download the cat users catalogue to check 

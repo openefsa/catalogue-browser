@@ -47,6 +47,15 @@ public class XmlUpdateFileDAO implements CatalogueEntityDAO<XmlUpdateFile> {
 
 	@Override
 	public boolean remove(XmlUpdateFile object) {
+		return removeById( object.getCatalogue().getId() );
+	}
+	
+	/**
+	 * Remove the Xml by its database id
+	 * @param id
+	 * @return
+	 */
+	public boolean removeById( int id ) {
 		
 		String query = "delete from APP.CAT_UPDATES_XML where CAT_ID = ?";
 
@@ -54,7 +63,7 @@ public class XmlUpdateFileDAO implements CatalogueEntityDAO<XmlUpdateFile> {
 			Connection con = DatabaseManager.getMainDBConnection();
 			PreparedStatement stmt = con.prepareStatement( query );
 
-			stmt.setInt( 1, object.getCatalogue().getId() );
+			stmt.setInt( 1, id );
 
 			stmt.executeUpdate();
 

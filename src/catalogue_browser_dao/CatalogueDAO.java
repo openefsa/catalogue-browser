@@ -16,6 +16,7 @@ import catalogue.Catalogue;
 import catalogue.CatalogueBuilder;
 import dcf_manager.Dcf.DcfType;
 import dcf_user.User;
+import sas_remote_procedures.XmlUpdateFileDAO;
 import sql.SQLScriptExec;
 import utilities.GlobalUtil;
 
@@ -233,8 +234,11 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 	public boolean delete ( Catalogue catalogue ) {
 
 		try {
-
+			
 			// remove dependencies first
+			XmlUpdateFileDAO xmlDao = new XmlUpdateFileDAO();
+			xmlDao.removeById( catalogue.getId() );
+
 			ForceCatEditDAO forcedDao = new ForceCatEditDAO();
 			forcedDao.remove ( catalogue );
 			

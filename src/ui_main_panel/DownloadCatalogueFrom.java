@@ -95,10 +95,6 @@ public class DownloadCatalogueFrom {
 						}
 					}
 				} ).start();
-
-				// TODO manage the import threads! => for now we allow only one catalogue at a time
-				// for each selected catalogue create the record into the master table
-				// and create its related database
 			}
 		});
 	}
@@ -123,15 +119,14 @@ public class DownloadCatalogueFrom {
 		System.out.println ( "Downloading " + catalogue );
 
 		// filename of the xml catalogue
-		final String catalogueXmlFilename = catalogue.getCode() + ".xml";
+		final String catalogueXmlFilename = GlobalUtil.getTempDir() + catalogue.getCode() + ".xml";
 
 		// ask for exporting catalogue to the dcf
 		// export the catalogue and save its attachment into an xml file
 		Dcf dcf = new Dcf();
 
 		try {
-			dcf.exportCatalogue( catalogue, 
-					catalogueXmlFilename);
+			dcf.exportCatalogue( catalogue, catalogueXmlFilename );
 		} catch (SOAPException e) {
 			e.printStackTrace();
 			return false;

@@ -216,7 +216,7 @@ public abstract class PendingAction {
 		
 		// delete the log filename
 		try {
-			GlobalUtil.deleteFileCascade( parsedLog.getLogFilename() );
+			GlobalUtil.deleteFileCascade( parsedLog.getLogFile() );
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -108,7 +108,9 @@ public class ImportCatalogueThread extends Thread {
 		
 		try {
 
-			String outputFolder = filename + "_unzip";
+			File inputFile = new File ( filename );
+			
+			String outputFolder = GlobalUtil.getTempDir() + inputFile.getName() + "_unzip";
 
 			// unzip the ecf file into the xml
 			FolderZipper.extractFolder( filename, outputFolder );

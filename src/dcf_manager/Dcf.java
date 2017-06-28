@@ -26,6 +26,7 @@ import dcf_webservice.Ping;
 import dcf_webservice.Publish.PublishLevel;
 import dcf_webservice.ReserveLevel;
 import ui_progress_bar.FormProgressBar;
+import utilities.GlobalUtil;
 import xml_reader.PropertiesReader;
 
 /**
@@ -310,7 +311,7 @@ public class Dcf {
 		ExportCatalogueFile export = new ExportCatalogueFile( dcfType );
 
 		// write the log document in xml format
-		return export.exportEfficientLog( logCode, logCode + ".xml" );
+		return export.exportLog( logCode, GlobalUtil.getTempDir() + logCode + ".xml" );
 	}
 
 	/**

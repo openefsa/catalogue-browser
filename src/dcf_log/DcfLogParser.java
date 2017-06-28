@@ -57,7 +57,7 @@ public class DcfLogParser {
 		saxParser.parse( file, handler );
 		
 		DcfLog log = handler.getDcfLog();
-		log.setLogFilename( file.getName() );
+		log.setLogFile( file );
 		
 		return log;
 	}
