@@ -68,7 +68,8 @@ public class LoginMenu implements MainMenuItem {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
-				FormDCFLogin login = new FormDCFLogin( shell, Messages.getString( "BrowserMenu.DCFLoginWindowTitle" ) );
+				FormDCFLogin login = new FormDCFLogin( shell, 
+						Messages.getString( "BrowserMenu.DCFLoginWindowTitle" ) );
 
 				login.addCredentialListener( new CredentialListener() {
 					
@@ -102,6 +103,14 @@ public class LoginMenu implements MainMenuItem {
 							}
 						} );
 
+						// progress bar for the user level
+						// Note that the progress bar does not block the user interaction
+						FormProgressBar progressBar = new FormProgressBar(shell, 
+								Messages.getString( "Login.UserLevelProgressBarTitle" ),
+								false, SWT.TITLE );
+
+						dcf.setProgressBar( progressBar );
+						
 						// start checking the access level of the user
 						dcf.setUserLevel( new Listener() {
 							
@@ -121,6 +130,16 @@ public class LoginMenu implements MainMenuItem {
 										
 										if ( listener != null )
 											listener.buttonPressed( loginMI, LOGIN_MI, null );
+										
+										String title = Messages.getString( "Login.PermissionTitle" );
+										String msg;
+										
+										if ( User.getInstance().isCatManager() )
+											msg = Messages.getString("Login.CatalogueManagerMessage");
+										else
+											msg = Messages.getString("Login.DataProviderMessage");
+										
+										GlobalUtil.showDialog(shell, title, msg, SWT.ICON_INFORMATION );
 									}
 								});
 							}

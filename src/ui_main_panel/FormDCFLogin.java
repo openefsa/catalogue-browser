@@ -213,10 +213,8 @@ public class FormDCFLogin implements RestoreableWindow {
 				
 				String username = usernameText.getText();
 				String password = passwdText.getText();
-				String logTitle;
-				String logMessage;
 				
-				System.out.println( "Check credentials ");
+				System.out.println( "Checking credentials" );
 				
 				// check the correctness of credentials
 				valid = checkCredentials( username, password );
@@ -226,26 +224,23 @@ public class FormDCFLogin implements RestoreableWindow {
 				
 				// check if the credentials are correct or not
 				if ( valid ) {
-					
-					logTitle = Messages.getString("FormDCFLogin.WelcomeTitle");
-					logMessage = Messages.getString("FormDCFLogin.WelcomeMessage") + usernameText.getText();
 
 					// close the dialog
 					parent.close();
 				}
 				else {
 					
-					logTitle = Messages.getString("FormDCFLogin.ErrorTitle");
-					logMessage = Messages.getString("FormDCFLogin.WrongCredentialMessage");
+					String logTitle = Messages.getString("FormDCFLogin.ErrorTitle");
+					String logMessage = Messages.getString("FormDCFLogin.WrongCredentialMessage");
+					
+					// show the dialog to show the login results
+					GlobalUtil.showErrorDialog( shell, logTitle, 
+							logMessage );
 				}
 				
 				// call the listener if it was set
 				if ( listener != null )
 					listener.credentialsSet( username, password, valid );
-				
-				// show the dialog to show the login results
-				GlobalUtil.showDialog( shell, logTitle, 
-						logMessage, SWT.ICON_INFORMATION );
 			}
 		});
 		

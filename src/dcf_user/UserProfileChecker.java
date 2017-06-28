@@ -18,6 +18,7 @@ import catalogue_object.TermAttribute;
 import dcf_manager.Dcf;
 import import_catalogue.ImportCatalogueThread;
 import import_catalogue.ImportCatalogueThread.ImportFileFormat;
+import ui_progress_bar.FormProgressBar;
 import utilities.GlobalUtil;
 
 /**
@@ -33,10 +34,20 @@ public class UserProfileChecker extends Thread {
 	private static final String EDITABLE_CATALOGUE_ATTRIBUTE_NAME = "editCat";
 	private Listener doneListener;
 	private Listener errorListener;
+	
+	private FormProgressBar progressBar;
 
 	@Override
 	public void run() {
 		setAccessLevel();
+	}
+	
+	/**
+	 * Set the progress bar
+	 * @param progressBar
+	 */
+	public void setProgressBar(FormProgressBar progressBar) {
+		this.progressBar = progressBar;
 	}
 
 	/**
@@ -65,12 +76,21 @@ public class UserProfileChecker extends Thread {
 
 		System.out.println( "Checking user access level..." );
 
+		// add progress
+		if ( progressBar != null )
+			progressBar.addProgress( 10 );
+		
+		
 		final String filename = GlobalUtil.getTempDir() + "catUsersCatalogue.xml";
 
 		// ask for exporting catalogue to the dcf
 		// download the cat users catalogue to check 
 		// the access level of the user
 		Dcf dcf = new Dcf();
+		
+		// set the progress bar for the download action
+		dcf.setProgressBar( progressBar );
+		
 		boolean success;
 		try {
 			success = dcf.exportCatalogue( 
@@ -93,6 +113,9 @@ public class UserProfileChecker extends Thread {
 			// set the current user as data provider
 			User user = User.getInstance();
 			user.setUserLevel( UserAccessLevel.DATA_PROVIDER );
+			
+			if ( progressBar != null )
+				progressBar.close();
 
 			if ( doneListener != null )
 				doneListener.handleEvent( new Event() );
@@ -103,6 +126,9 @@ public class UserProfileChecker extends Thread {
 		// import the catusers catalogue
 		ImportCatalogueThread importCat = new ImportCatalogueThread(
 				filename, ImportFileFormat.XML );
+		
+		// set the progress bar for the import
+		importCat.setProgressBar( progressBar );
 		
 		importCat.addDoneListener( new Listener() {
 			

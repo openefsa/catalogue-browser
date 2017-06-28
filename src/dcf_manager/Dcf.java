@@ -245,6 +245,8 @@ public class Dcf {
 		final UserProfileChecker userLevel = new UserProfileChecker();
 		
 		userLevel.addDoneListener( doneListener );
+
+		userLevel.setProgressBar( progressBar );
 		
 		userLevel.start();
 	}

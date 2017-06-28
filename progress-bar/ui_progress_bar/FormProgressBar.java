@@ -49,7 +49,7 @@ public class FormProgressBar {
 	 * @param shell the shell where to create the progress bar
 	 * @param title the title of the progress bar
 	 */
-	public FormProgressBar( Shell shell , String title ) {
+	public FormProgressBar( Shell shell, String title ) {
 		this( shell, title, false, SWT.TITLE | SWT.APPLICATION_MODAL );
 	}
 	
