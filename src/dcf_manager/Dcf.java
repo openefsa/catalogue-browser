@@ -380,6 +380,21 @@ public class Dcf {
 		publish.start();
 	}
 	
+
+	/**
+	 * Start the xml download in background (for upload data actions)
+	 * @param catalogue
+	 * @param listener
+	 */
+	public void downloadXmlBG ( Catalogue catalogue, final PendingActionListener listener ) {
+		
+		catalogue.setRequestingAction( true );
+		
+		BackgroundAction download = new BackgroundAction( catalogue );
+		download.setListener( listener );
+		download.start();
+	}
+	
 	/**
 	 * Start an upload data operation in background.
 	 * @param catalogue the catalogue we want to publish
@@ -396,20 +411,6 @@ public class Dcf {
 		upload.setListener( listener );
 		
 		upload.start();
-	}
-
-	/**
-	 * Start the xml downlod in background
-	 * @param catalogue
-	 * @param listener
-	 */
-	public void downloadXmlBG ( Catalogue catalogue, final PendingActionListener listener ) {
-		
-		catalogue.setRequestingAction( true );
-		
-		BackgroundAction download = new BackgroundAction( catalogue );
-		download.setListener( listener );
-		download.start();
 	}
 
 	/**

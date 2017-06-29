@@ -84,6 +84,11 @@ public class PendingXmlDownload extends PendingAction {
 		
 		// finish this action
 		terminate();
+		
+		// we are still requesting an action
+		// the terminate call set this to false therefore
+		// we reset to true since we are uploading the data
+		getCatalogue().setRequestingAction( true );
 	}
 	
 	@Override
