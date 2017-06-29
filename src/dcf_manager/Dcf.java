@@ -386,15 +386,30 @@ public class Dcf {
 	 * @param listener listener called when publish events occur
 	 * see {@link PendingActionListener} to check which are the events
 	 */
-	public void uploadDataBG ( Catalogue catalogue, 
-			PendingActionListener listener ) {
+	public void uploadDataBG ( final Catalogue catalogue, File xmlFile, 
+			final PendingActionListener listener ) {
 		
 		catalogue.setRequestingAction( true );
 		
-		BackgroundAction upload = new BackgroundAction( catalogue );
-		
+		// start the upload data action with the downloaded xml
+		BackgroundAction upload = new BackgroundAction( catalogue, xmlFile );
 		upload.setListener( listener );
+		
 		upload.start();
+	}
+
+	/**
+	 * Start the xml downlod in background
+	 * @param catalogue
+	 * @param listener
+	 */
+	public void downloadXmlBG ( Catalogue catalogue, final PendingActionListener listener ) {
+		
+		catalogue.setRequestingAction( true );
+		
+		BackgroundAction download = new BackgroundAction( catalogue );
+		download.setListener( listener );
+		download.start();
 	}
 
 	/**

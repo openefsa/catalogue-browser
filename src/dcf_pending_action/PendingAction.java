@@ -216,7 +216,8 @@ public abstract class PendingAction {
 		
 		// delete the log filename
 		try {
-			GlobalUtil.deleteFileCascade( parsedLog.getLogFile() );
+			if ( parsedLog != null && parsedLog.getLogFile() != null )
+				GlobalUtil.deleteFileCascade( parsedLog.getLogFile() );
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -539,6 +540,10 @@ public abstract class PendingAction {
 	 */
 	public FormProgressBar getProgressBar() {
 		return progressBar;
+	}
+	
+	public PendingActionListener getListener() {
+		return listener;
 	}
 	
 	/**

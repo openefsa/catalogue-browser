@@ -11,6 +11,8 @@ import dcf_pending_action.PendingPublish;
 import dcf_pending_action.PendingReserve;
 import dcf_pending_action.PendingActionStatus;
 import dcf_pending_action.PendingUploadData;
+import dcf_pending_action.PendingXmlDownload;
+import dcf_webservice.BackgroundAction.Type;
 import dcf_webservice.DcfResponse;
 import dcf_webservice.ReserveLevel;
 import messages.Messages;
@@ -106,7 +108,7 @@ public class DefaultListeners {
 					public void run() {
 						
 						// remove the lock from the shell
-						ShellLocker.removeLock( ui.getShell() );	
+						ShellLocker.removeLock( ui.getShell() );
 						
 						// if we are unreserving the catalogue, as we start the
 						// unreserve request we disable the editing mode
@@ -120,7 +122,7 @@ public class DefaultListeners {
 			}
 			
 			@Override
-			public void requestPrepared( Catalogue catalogue ) {
+			public void requestPrepared( Catalogue catalogue, final Type type ) {
 				
 				ui.getShell().getDisplay().asyncExec( new Runnable() {
 
@@ -131,9 +133,13 @@ public class DefaultListeners {
 						// we are making important things (i.e.
 						// sending upload cat file requests or importing
 						// new catalogue versions)
-						ShellLocker.setLock( ui.getShell(), 
-								Messages.getString( "MainPanel.CannotCloseTitle" ), 
-								Messages.getString( "MainPanel.CannotCloseMessage" ) );
+						
+						// but download xml updates does not need this
+						if ( type != Type.DOWNLOAD_XML_UPDATES ) {
+							ShellLocker.setLock( ui.getShell(), 
+									Messages.getString( "MainPanel.CannotCloseTitle" ), 
+									Messages.getString( "MainPanel.CannotCloseMessage" ) );
+						}
 					}
 				});
 			}
@@ -232,7 +238,10 @@ public class DefaultListeners {
 
 		else if ( pa instanceof PendingPublish )
 			pam = new PendingPublishMessages();
-
+		
+		else if ( pa instanceof PendingXmlDownload )
+			pam = new PendingDownloadMessages();
+		
 		else if ( pa instanceof PendingUploadData )
 			pam = new PendingUploadDataMessages();
 

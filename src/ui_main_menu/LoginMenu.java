@@ -13,6 +13,7 @@ import dcf_manager.Dcf;
 import dcf_pending_action.PendingPublish;
 import dcf_pending_action.PendingReserve;
 import dcf_pending_action.PendingUploadData;
+import dcf_pending_action.PendingXmlDownload;
 import dcf_user.User;
 import messages.Messages;
 import ui_main_panel.FormDCFLogin;
@@ -197,6 +198,10 @@ public class LoginMenu implements MainMenuItem {
 		
 		// start upload data actions
 		dcf.startPendingActions( PendingUploadData.TYPE, 
+				mainMenu.getListener() );
+		
+		// start upload data actions
+		dcf.startPendingActions( PendingXmlDownload.TYPE, 
 				mainMenu.getListener() );
 	}
 }

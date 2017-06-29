@@ -24,7 +24,8 @@ public class XmlUpdateFileDAO implements CatalogueEntityDAO<XmlUpdateFile> {
 
 		int id = object.getCatalogue().getId();
 
-		String query = "insert into APP.CAT_UPDATES_XML (CAT_ID, XML_FILENAME) values (?,?)";
+		String query = "insert into APP.CAT_UPDATES_XML "
+				+ "(CAT_ID, XML_FILENAME) values (?,?)";
 
 		try {
 			Connection con = DatabaseManager.getMainDBConnection();

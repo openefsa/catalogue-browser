@@ -401,6 +401,20 @@ public class GlobalUtil {
 		return connectionFactory.createConnection();
 	}
 	
+	/**
+	 * Copy the source file into the target file
+	 * @param source
+	 * @param target
+	 * @return
+	 * @throws IOException 
+	 */
+	public static void copyFile ( File source, File target ) throws IOException {
+		
+		System.out.println( "Copying " + source + " into " + target );
+		
+		// copy the .start file into the sas folder
+		DatabaseManager.copyFolder( source, target );
+	}
 	
 	/**
 	 * Delete a folder with all the sub files.

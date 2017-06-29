@@ -4,12 +4,15 @@ import java.io.File;
 
 import javax.xml.soap.SOAPException;
 
+import org.eclipse.swt.widgets.Listener;
+
 import catalogue.Catalogue;
 import dcf_manager.Dcf;
 import dcf_pending_action.PendingAction;
 import dcf_pending_action.PendingActionListener;
+import dcf_pending_action.PendingXmlDownload;
+import dcf_user.User;
 import dcf_webservice.Publish.PublishLevel;
-import sas_remote_procedures.XmlUpdatesCreator;
 import ui_progress_bar.FormProgressBar;
 
 /**
@@ -23,6 +26,7 @@ public class BackgroundAction extends Thread {
 	public enum Type {
 		RESERVE,
 		PUBLISH,
+		DOWNLOAD_XML_UPDATES,
 		UPLOAD_DATA
 	}
 
@@ -36,9 +40,13 @@ public class BackgroundAction extends Thread {
 	private ReserveLevel rLevel;
 	private String rDescription;
 
+	// upload data stuff
+	private File xmlFile;
+	
 	private FormProgressBar progressBar;
 
 	private PendingActionListener listener; // listen to events
+	private Listener doneListener;
 
 	/**
 	 * Initialize a {@link Publish} action
@@ -54,10 +62,12 @@ public class BackgroundAction extends Thread {
 	/**
 	 * Initialize an {@link UploadData} action
 	 * @param catalogue the catalogue we want to upload
+	 * @param xmlFile the xml updates file we will upload as attachment
 	 */
-	public BackgroundAction( Catalogue catalogue ) {
+	public BackgroundAction( Catalogue catalogue, File xmlFile ) {
 		this.catalogue = catalogue;
 		this.type = Type.UPLOAD_DATA;
+		this.xmlFile = xmlFile;
 	}
 
 	/**
@@ -74,6 +84,15 @@ public class BackgroundAction extends Thread {
 		this.rDescription = rDescription;
 		this.type = Type.RESERVE;
 	}
+	
+	/**
+	 * Create a download XML updates pending action
+	 * @param catalogue
+	 */
+	public BackgroundAction ( Catalogue catalogue ) {
+		this.catalogue = catalogue;
+		this.type = Type.DOWNLOAD_XML_UPDATES;
+	}
 
 	/**
 	 * Start the pending action defined in the
@@ -82,11 +101,12 @@ public class BackgroundAction extends Thread {
 	@Override
 	public void run() {
 
+		// get the correct service for the correct upload type
 		UploadCatalogueFile req = getService( type );
-
+		
 		// notify that we are ready to perform the action
 		if ( listener != null )
-			listener.requestPrepared( catalogue );
+			listener.requestPrepared( catalogue, type );
 
 		PendingAction pa = null;
 
@@ -105,17 +125,21 @@ public class BackgroundAction extends Thread {
 
 			case UPLOAD_DATA:
 
-				// download the xml from the server if possible
-				XmlUpdatesCreator xmlCreator = new XmlUpdatesCreator();
-				File xmlFile = xmlCreator.downloadXml( catalogue );
-
 				if ( xmlFile == null ) {
-					System.err.println( "No .xml file found in " + xmlFile + " for " + catalogue );
-					return;
-				}
-
-				// upload the xml file to the dcf using upload catalogue file
+					System.err.println( "Null upload data file, blocking action" );
+					break;
+				}	
+				
+				// upload the downloaded xml file to the dcf using upload catalogue file
 				pa = ( (UploadData) req ).uploadData( catalogue, xmlFile.getAbsolutePath() );
+				break;
+				
+			case DOWNLOAD_XML_UPDATES:
+				
+				// create xml pending data
+				pa = PendingXmlDownload.addPendingDownload(
+						catalogue, User.getInstance().getUsername(), Dcf.dcfType );
+
 				break;
 
 			default:
@@ -146,8 +170,12 @@ public class BackgroundAction extends Thread {
 		Dcf dcf = new Dcf();
 		dcf.setProgressBar( progressBar );
 		dcf.startPendingAction( pa, listener );
+		
+		// call the listener, the process is finished
+		if ( doneListener != null ) {
+			doneListener.handleEvent( null );
+		}
 	}
-
 
 	/**
 	 * Initialize an upload catalogue file action and return it
@@ -182,6 +210,14 @@ public class BackgroundAction extends Thread {
 	 */
 	public void setListener(PendingActionListener listener) {
 		this.listener = listener;
+	}
+	
+	/**
+	 * Listener called when the actions are finished
+	 * @param doneListener
+	 */
+	public void setDoneListener(Listener doneListener) {
+		this.doneListener = doneListener;
 	}
 
 	/**

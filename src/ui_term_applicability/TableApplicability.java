@@ -176,7 +176,7 @@ public class TableApplicability {
 
 		// Add the "Hierarchy/Facet" column
 		GlobalUtil.addStandardColumn( applicabilityTable, new HierarchyColumnLabelProvider(), 
-				Messages.getString("TableApplicability.HierarchyColumn") );
+				Messages.getString("TableApplicability.HierarchyColumn"), 150, SWT.CENTER );
 
 		// add the "Usage" column and its label provider
 		GlobalUtil.addStandardColumn( applicabilityTable, new UsageColumnLabelProvider(), 
@@ -372,7 +372,6 @@ public class TableApplicability {
 				
 			}
 		});
-		
 
 		applicabilityTable.getTable().setMenu( applicabilityOperationMenu );
 		

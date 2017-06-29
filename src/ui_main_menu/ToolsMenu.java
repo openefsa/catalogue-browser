@@ -30,7 +30,7 @@ import export_catalogue.ExportActions;
 import import_catalogue.ImportCatalogueThread;
 import import_catalogue.ImportCatalogueThread.ImportFileFormat;
 import messages.Messages;
-import sas_remote_procedures.XmlUpdatesCreator;
+import sas_remote_procedures.XmlUpdatesFactory;
 import sas_remote_procedures.XmlUpdateFile;
 import sas_remote_procedures.XmlUpdateFileDAO;
 import ui_general_graphics.DialogSingleText;
@@ -288,7 +288,7 @@ public class ToolsMenu implements MainMenuItem {
 								Messages.getString("BrowserMenu.CreateXmlBarTitle") );
 				
 				// ask for the xml creation to the sas server
-				XmlUpdatesCreator xmlCreator = new XmlUpdatesCreator();
+				XmlUpdatesFactory xmlCreator = new XmlUpdatesFactory();
 				xmlCreator.setProgressBar( progressBar );
 				
 				// if wrong
@@ -1283,8 +1283,9 @@ public class ToolsMenu implements MainMenuItem {
 		// set wait cursor
 		GlobalUtil.setShellCursor( shell, SWT.CURSOR_WAIT );
 		
+		// start downloading the file
 		Dcf dcf = new Dcf();
-		dcf.uploadDataBG( catalogue, mainMenu.getListener() );
+		dcf.downloadXmlBG( catalogue, mainMenu.getListener() );
 		
 		// restore cursor
 		GlobalUtil.setShellCursor( shell, SWT.CURSOR_ARROW );

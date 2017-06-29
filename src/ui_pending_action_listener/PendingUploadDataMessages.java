@@ -35,7 +35,7 @@ public class PendingUploadDataMessages implements PendingActionMessages {
 		
 		switch ( status ) {
 		case STARTED:
-			msg = Messages.getString( "Reserve.StartedMessage" );
+			msg = Messages.getString( "UpData.StartedMessage" );
 			break;
 		default:
 			break;

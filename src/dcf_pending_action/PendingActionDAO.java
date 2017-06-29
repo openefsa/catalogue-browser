@@ -181,6 +181,12 @@ public class PendingActionDAO implements CatalogueEntityDAO<PendingAction> {
 					username, priority, dcfType );
 			
 			break;
+			
+		case PendingXmlDownload.TYPE:
+			
+			pa = new PendingXmlDownload( catalogue, username, dcfType );
+			
+			break;
 		default:
 			break;
 		}

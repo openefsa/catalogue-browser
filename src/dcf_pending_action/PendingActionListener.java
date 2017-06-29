@@ -1,6 +1,7 @@
 package dcf_pending_action;
 
 import catalogue.Catalogue;
+import dcf_webservice.BackgroundAction.Type;
 import dcf_webservice.DcfResponse;
 
 /**
@@ -26,8 +27,9 @@ public interface PendingActionListener {
 	 * it is ready to be sent.
 	 * @param catalogue the catalogue which is implied into
 	 * the pending action that failed
+	 * @param type the pending action type
 	 */
-	public void requestPrepared( Catalogue catalogue );
+	public void requestPrepared( Catalogue catalogue, Type type );
 	
 	/**
 	 * Called when the reserve request was successfully sent
@@ -37,8 +39,7 @@ public interface PendingActionListener {
 	 * @param logCode the log code which was found in the dcf
 	 * soap response
 	 */
-	public void requestSent ( PendingAction pendingAction, 
-			String logCode );
+	public void requestSent ( PendingAction pendingAction, String logCode );
 	
 	/**
 	 * Called when a pending reserve is completed
