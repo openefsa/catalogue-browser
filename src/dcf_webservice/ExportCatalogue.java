@@ -110,7 +110,8 @@ public class ExportCatalogue extends SOAPAction {
 			// the attachment is not zipped!
 			AttachmentHandler handler = new AttachmentHandler( attachment, false );
 			handler.writeAttachment( filename );
-			
+			handler.close();
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

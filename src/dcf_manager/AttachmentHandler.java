@@ -1,10 +1,12 @@
 package dcf_manager;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.zip.ZipInputStream;
 
 import javax.xml.soap.AttachmentPart;
@@ -17,8 +19,9 @@ import folder_zipper.FolderZipper;
  * @author avonva
  *
  */
-public class AttachmentHandler {
+public class AttachmentHandler implements Closeable {
 	
+	private ArrayList<InputStream> inputToClose;
 	private AttachmentPart attachment;
 	private boolean isZipped;
 	
@@ -33,6 +36,7 @@ public class AttachmentHandler {
 	public AttachmentHandler( AttachmentPart attachment, boolean isZipped ) {
 		this.attachment = attachment;
 		this.isZipped = isZipped;
+		this.inputToClose = new ArrayList<>();
 	}
 
 	/**
@@ -45,19 +49,24 @@ public class AttachmentHandler {
 	 */
 	public InputStream readAttachment () throws SOAPException, IOException {
 
+		InputStream attachmentStream = attachment.getRawContent();
+		inputToClose.add( attachmentStream );
+		
 		// if zipped return the zipped stream
 		if ( isZipped ) {
 
 			// unzip the input stream
-			ZipInputStream zipStream = new ZipInputStream( attachment.getRawContent() );
+			ZipInputStream zipStream = new ZipInputStream( attachmentStream );
 
+			inputToClose.add( zipStream );
+			
 			// get the next entry
 			zipStream.getNextEntry();
 
 			return zipStream;
 		}
 		else {  // else the standard stream
-			return attachment.getRawContent();
+			return attachmentStream;
 		}
 	}
 
@@ -89,13 +98,11 @@ public class AttachmentHandler {
 	 */
 	private void writeZippedAttachment ( String filename ) throws SOAPException, IOException {
 
-		// unzip the input stream
-		InputStream zipStream = readAttachment();
-
 		// unzip the stream into the file
-		FolderZipper.unzipStream( zipStream, filename );
-
-		zipStream.close();
+		FolderZipper.unzipStream( readAttachment(), filename );
+		
+		// close zip stream and nested stream
+		close();
 	}
 
 	/**
@@ -116,8 +123,25 @@ public class AttachmentHandler {
 		File targetFile = new File( filename );
 		OutputStream outStream = new FileOutputStream( targetFile );
 		outStream.write( buffer );
+		
+		// close stream
 		outStream.close();
 
-		input.close();
+		// close input stream of read attachment
+		close();
+	}
+	
+	/**
+	 * Close the streams
+	 * @throws IOException
+	 */
+	public void close() throws IOException {
+		
+		for ( InputStream input : inputToClose ) {
+			input.close();
+		}
+		
+		// remove all objects
+		inputToClose.clear();
 	}
 }

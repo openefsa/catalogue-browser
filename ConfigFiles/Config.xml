@@ -5,7 +5,7 @@
 <entry key="Application.Name">EFSA Catalogues Browser</entry>
 <entry key="Application.Version">1.0.0</entry>
 <entry key="Dcf.EnableTest">YES</entry>
-<entry key="DcfXmlUpdatesCreator.RemotePath">\\efsa.eu.int\fileserver\SASOperational\DataShare\Data\DATA\SSD\METADATA\CAT_BROWSER</entry>
+<entry key="DcfXmlUpdatesCreator.RemotePath">C:\Users\avonva\Desktop\ServerFolder</entry>
 <entry key="DcfXmlUpdatesCreator.InputFolder">IN</entry>
 <entry key="DcfXmlUpdatesCreator.UpdateFolder">UPDATE</entry>
 <entry key="DcfXmlUpdatesCreator.OutputFolder">OUT</entry>

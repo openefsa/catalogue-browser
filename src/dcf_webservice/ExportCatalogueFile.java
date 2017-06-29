@@ -215,6 +215,8 @@ public class ExportCatalogueFile extends SOAPAction {
 			
 			outputStream.close();
 			inputStream.close();
+			handler.close();
+			
 			
 			return file;
 
