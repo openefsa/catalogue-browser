@@ -989,6 +989,9 @@ public class ToolsMenu implements MainMenuItem {
 		
 		User user = User.getInstance();
 		
+		if ( toolsItem.isDisposed() )
+			return;
+		
 		// enable the tools menu only if there is a catalogue open
 		// and if we know that the user is cm or dp
 		toolsItem.setEnabled( mainMenu.getCatalogue() != null &&

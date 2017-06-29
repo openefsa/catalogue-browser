@@ -124,6 +124,10 @@ public class AboutMenu implements MainMenuItem {
 
 	@Override
 	public void refresh() {
+		
+		if ( notesItem.isDisposed() )
+			return;
+		
 		boolean catalogueLoaded = mainMenu.getCatalogue() != null;
 		notesItem.setEnabled( catalogueLoaded );
 	}

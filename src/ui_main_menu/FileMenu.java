@@ -669,6 +669,10 @@ public class FileMenu implements MainMenuItem {
 		// get all the catalogues I have downloaded before and get the size
 		boolean hasCatalogues = catDao.getLocalCatalogues( Dcf.dcfType ).size() > 0;
 
+		// Return if widget disposed
+		if ( openMI.isDisposed() )
+			return;
+		
 		// check if there is at least one catalogue available from the 
 		// catalogue master table. If not => open disabled
 		// can open only if we are not getting updates and we have at least one catalogue downloaded

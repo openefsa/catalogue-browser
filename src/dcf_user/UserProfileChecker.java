@@ -160,7 +160,6 @@ public class UserProfileChecker extends Thread {
 		importCat.start();
 	}
 
-
 	/**
 	 * Get all the editable catalogues codes
 	 * for the current catalogue manager user
@@ -183,6 +182,10 @@ public class UserProfileChecker extends Thread {
 		// get the attribute related to the access levels
 		TermAttribute editCatAttr = getEditCatAttribute( users );
 
+		// if nothing found return empty list
+		if ( editCatAttr == null )
+			return new ArrayList<>();
+		
 		// return all the catalogues codes in a list
 		return editCatAttr.getRepeatableValues();
 	}
@@ -205,6 +208,13 @@ public class UserProfileChecker extends Thread {
 		// get the term related to the current user
 		// using its username
 		Term userTerm = termDao.getByName( user.getUsername() );
+		
+		if ( userTerm == null ) {
+			System.err.println( "USER " + user.getUsername() + ": Found catalogue manager account but the " 
+		+ catalogue.getCode() + " permissions catalogue does not contain it. Please add this account to the "
+				+ "permissions catalogue" );
+			return null;
+		}
 
 		// initialize term attribute dao
 		TermAttributeDAO taDao = new TermAttributeDAO( catalogue );

@@ -273,8 +273,9 @@ public class GetCataloguesList extends SOAPAction {
 	 * @throws SAXException 
 	 * @throws Exception
 	 */
-	public static Document loadXMLFromString( String xml ) throws ParserConfigurationException, SAXException, IOException
-	{
+	public static Document loadXMLFromString( String xml ) 
+			throws ParserConfigurationException, SAXException, IOException {
+
 		// create the factory object to create the document object
 	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	    
@@ -285,6 +286,6 @@ public class GetCataloguesList extends SOAPAction {
 	    InputSource is = new InputSource( new StringReader( xml ) );
 	    
 	    // get the xml document and return it
-	    return builder.parse(is);
+	    return builder.parse( is );
 	}
 }
