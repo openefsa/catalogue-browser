@@ -3,8 +3,11 @@ package sas_remote_procedures;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import catalogue.Catalogue;
+import dcf_pending_action.PendingUploadData;
 import utilities.GlobalUtil;
 
 /**
@@ -87,7 +90,7 @@ public class XmlUpdateFile {
 		
 		String localXmlFilename = xmlUpdateFile.getXmlFilename() + REMOTE_OUT_FORMAT;
 		
-		File endFile = new File ( processEndFilename );
+		File processEndFile = new File ( processEndFilename );
 		File remoteXmlFile = new File ( remoteXmlFilename );
 		File localXmlFile = new File ( localXmlFilename );
 		
@@ -102,7 +105,7 @@ public class XmlUpdateFile {
 		// POLLING
 		// search for the lock file
 		// wait 5 seconds each time
-		while ( !endFile.exists() ) {
+		while ( !processEndFile.exists() ) {
 			
 			try {
 				Thread.sleep( interAttemptsTime );
@@ -110,15 +113,16 @@ public class XmlUpdateFile {
 				e.printStackTrace();
 			}
 		}
-		
+
 		System.out.println( "File " + processEndFilename + " found!" );
 		
 		// here the file exists therefore we can go on
 
 		// copy the file in the local directory
 		GlobalUtil.copyFile( remoteXmlFile, localXmlFile );
-		xmlDao.remove( this );
-		xmlDao.insert( this );
+		
+		// delete the .process.end file from the server
+		Files.delete( Paths.get( processEndFilename ) );
 		
 		System.out.println( "Download xml process finished" );
 		
@@ -127,6 +131,7 @@ public class XmlUpdateFile {
 	
 	/**
 	 * Delete the xml update file from disk and from db.
+	 * This will be called from {@link PendingUploadData#processResponse(dcf_webservice.DcfResponse)}
 	 */
 	public void delete() {
 
