@@ -1,5 +1,10 @@
 package session_manager;
 
+import java.awt.Dimension;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
+
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Shell;
@@ -95,6 +100,50 @@ public class WindowPreference {
 		width = shell.getSize().x;
 		height = shell.getSize().y;
 		maximized = shell.getMaximized();
+
+		// if we are using a single screen
+		// adjust the variables using the
+		// screen bounds
+		if ( isSingleScreen() )
+			adjustToSingleScreen();
+	}
+	
+	/**
+	 * Detect if there is a single screen or if
+	 * two or more screens are used together
+	 * @return
+	 */
+	private boolean isSingleScreen() {
+		
+		// get all the screens
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		GraphicsDevice[] gs = ge.getScreenDevices();
+
+		return gs.length == 1;
+	}
+	
+	/**
+	 * Adjust the coordinates based on the
+	 * main screen dimensions, in order to
+	 * prevent the window to appear outside
+	 * of the screen.
+	 */
+	private void adjustToSingleScreen() {
+		
+		// set the maximum limit of the screen
+		if ( x < 0 )
+			x = 0;
+		
+		if ( y < 0 )
+			y = 0;
+
+		// get the screen dimensions in pixels
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		if ( y + height > dim.getHeight() )
+			y = (int) (dim.getHeight() - height);
+		
+		if ( x + width > dim.getWidth() )
+			x = (int) (dim.getWidth() - width);
 	}
 	
 	/**
@@ -121,6 +170,12 @@ public class WindowPreference {
 			System.out.println ( "No window preference found related to code " + window.getWindowCode() );
 			return;
 		}
+		
+		// if we are using a single screen
+		// adjust the variables using the
+		// screen bounds
+		if ( pref.isSingleScreen() )
+			pref.adjustToSingleScreen();
 		
 		// get the parameters and restore them
 		Shell shell = window.getWindowShell();
