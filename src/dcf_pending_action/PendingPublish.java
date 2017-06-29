@@ -9,7 +9,6 @@ import catalogue.Catalogue;
 import catalogue_object.Status;
 import dcf_log.DcfLog;
 import dcf_manager.Dcf.DcfType;
-import dcf_webservice.BackgroundAction;
 import dcf_webservice.DcfResponse;
 import dcf_webservice.Publish.PublishLevel;
 

@@ -98,8 +98,9 @@ public abstract class PendingAction {
 	}
 
 	/**
-	 * Start the reserve operation for the current catalogue
-	 * with the current reserve level
+	 * Start the pending action for the current catalogue
+	 * @param notifyStart if true the user will be notified
+	 * that the pending action is started
 	 * @throws SOAPException 
 	 */
 	public void start ( boolean notifyStart ) throws SOAPException {
@@ -116,13 +117,9 @@ public abstract class PendingAction {
 	}
 	
 	/**
-	 * Send the pending reserve to the dcf in order to retrieve its log.
+	 * Send the pending action to the dcf in order to retrieve its log.
 	 * Note that this call is a blocking call. We are stuck here until
 	 * we find the log.
-	 * @param retryTime time to wait between each attempt
-	 * @param listener called if the dcf is found busy while
-	 * asking for the log with HIGH priority
-	 * @return the log response
 	 * @throws SOAPException 
 	 */
 	private void send() throws SOAPException {
@@ -224,7 +221,7 @@ public abstract class PendingAction {
 	}
 	
 	/**
-	 * Downgrade the priority of the pending reserve
+	 * Downgrade the priority of the pending action
 	 * and save this change into the database
 	 */
 	private synchronized void downgradePriority() {
@@ -311,7 +308,7 @@ public abstract class PendingAction {
 	}
 	
 	/**
-	 * Download the log using the pending reserve. The speed
+	 * Download the log using the pending action. The speed
 	 * behavior of the process is defined by {@link #priority}
 	 * @return the log related to the reserve operation if it
 	 * was found in the available time, otherwise null
@@ -348,14 +345,14 @@ public abstract class PendingAction {
 	
 	
 	/**
-	 * Set the status of the pending reserve
+	 * Set the status of the pending action
 	 * @param status
 	 */
 	protected void setStatus( PendingActionStatus status ) {
 		
 		this.status = status;
 		
-		// notify that the pending reserve status changed
+		// notify that the pending action status changed
 		listener.statusChanged( this, status );
 	}
 	
@@ -377,10 +374,10 @@ public abstract class PendingAction {
 	}
 	
 	/**
-	 * Check if this pending reserve was made
+	 * Check if this pending action was made
 	 * by the {@code user}
 	 * @param user
-	 * @return true if it was the {@code user} who made the reserve
+	 * @return true if it was the {@code user} who made the pending
 	 * action, false otherwise
 	 */
 	public boolean madeBy ( User user ) {
@@ -394,7 +391,7 @@ public abstract class PendingAction {
 	}
 	
 	/**
-	 * Set the id of the pending reserve object
+	 * Set the id of the pending action object
 	 * @param id
 	 */
 	public void setId(int id) {
@@ -402,7 +399,7 @@ public abstract class PendingAction {
 	}
 	
 	/**
-	 * Get the id in the db of the pending reserve object
+	 * Get the id in the db of the pending action object
 	 * if it was set
 	 * @return
 	 */
@@ -418,7 +415,7 @@ public abstract class PendingAction {
 		
 		this.catalogue = catalogue;
 		
-		// update the pending reserve also in the database
+		// update the pending action also in the database
 		PendingActionDAO prDao = new PendingActionDAO();
 		prDao.update( this );
 	}
@@ -432,7 +429,7 @@ public abstract class PendingAction {
 	}
 	
 	/**
-	 * Get the log code of the pending reserve request
+	 * Get the log code of the pending action request
 	 * @return
 	 */
 	public String getLogCode() {
@@ -449,7 +446,7 @@ public abstract class PendingAction {
 	
 	/**
 	 * Get the username of the user who made 
-	 * the reserve action
+	 * the pending action
 	 * @return
 	 */
 	public String getUsername() {
@@ -465,7 +462,7 @@ public abstract class PendingAction {
 	}
 	
 	/**
-	 * Get the state of the pending reserve
+	 * Get the state of the pending action
 	 * @return
 	 */
 	public Priority getPriority() {
@@ -473,7 +470,7 @@ public abstract class PendingAction {
 	}
 	
 	/**
-	 * Get the dcf response of this pending reserve
+	 * Get the dcf response of this pending action
 	 * Note that you should call {@link #send()} before
 	 * to get a real result.
 	 * @return the dcf response
@@ -484,7 +481,7 @@ public abstract class PendingAction {
 	
 	/**
 	 * Set the listener which is used to listen
-	 * several reserve events
+	 * several pending action events
 	 * @param listener
 	 */
 	public void setListener(PendingActionListener listener) {
@@ -506,7 +503,6 @@ public abstract class PendingAction {
 		LOW
 	}
 	
-	
 	/**
 	 * Set the data which need to be included
 	 * into the pending action
@@ -523,7 +519,6 @@ public abstract class PendingAction {
 	public String getData() {
 		return data;
 	}
-	
 	
 	/**
 	 * Set the progress bar which is used for possible
@@ -550,8 +545,8 @@ public abstract class PendingAction {
 	 * Get the soap action type. This field should
 	 * be a unique code to define which web action
 	 * is this pending action. For example, if we
-	 * have a PendingReserve we could use as constant
-	 * type the string "reserve".
+	 * have a {@link PendingReserve} we could use as constant
+	 * type the string "RESERVE".
 	 * @return
 	 */
 	public abstract String getType();

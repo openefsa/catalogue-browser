@@ -10,9 +10,8 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
 import messages.Messages;
-import term_code_generator.CodeGenerator;
 import ui_licence.FormBrowser;
-import ui_licence.Startup;
+import ui_licence.FormBrowserLicence;
 import ui_main_panel.FormReleaseNotes;
 
 public class AboutMenu implements MainMenuItem {
@@ -94,9 +93,9 @@ public class AboutMenu implements MainMenuItem {
 		aboutItem.addSelectionListener( new SelectionAdapter() {
 			@Override
 			public void widgetSelected ( SelectionEvent e ) {
-				Startup startup = new Startup( shell.getDisplay() );
+				FormBrowserLicence startup = new FormBrowserLicence( shell.getDisplay() );
 				startup.setDialog();
-				startup.Display();
+				startup.display();
 			}
 		} );
 	}

@@ -17,6 +17,12 @@ public class PendingXmlDownload extends PendingAction {
 
 	public static final String TYPE = "DOWNLOAD_XML_UPDATES";
 	
+	/**
+	 * Create a pending xml download action.
+	 * @param catalogue the catalogue related to this action
+	 * @param username the user who made the action
+	 * @param dcfType the dcf on which we made the action
+	 */
 	public PendingXmlDownload( Catalogue catalogue, String username, DcfType dcfType ) {
 		super( catalogue, "", username, "", Priority.HIGH, dcfType );
 	}
@@ -47,7 +53,8 @@ public class PendingXmlDownload extends PendingAction {
 	@Override
 	public void start(boolean notifyStart) throws SOAPException {
 		
-		setStatus( PendingActionStatus.STARTED );
+		if ( notifyStart )
+			setStatus( PendingActionStatus.STARTED );
 		
 		// set that the file does not need the upload
 		// anymore, since it was uploaded (we are only

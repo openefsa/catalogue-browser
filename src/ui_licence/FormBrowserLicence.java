@@ -19,7 +19,12 @@ import org.eclipse.swt.widgets.Shell;
 import messages.Messages;
 import ui_main_panel.CatalogueBrowserMain;
 
-public class Startup {
+/**
+ * Dialog which shows the licence of the catalogue browser.
+ * @author avonva
+ *
+ */
+public class FormBrowserLicence {
 
 	private boolean	_dialog			= false;
 	private Display	_display;
@@ -31,7 +36,10 @@ public class Startup {
 		_dialog = true;
 	}
 
-	public void Display ( ) {
+	/**
+	 * Display the dialog
+	 */
+	public void display ( ) {
 		if ( !_dialog ) {
 			startupWindow = new Shell( _display , SWT.NO_TRIM | SWT.ON_TOP );
 			startupWindow.setSize( 417, 500 );
@@ -42,7 +50,7 @@ public class Startup {
 
 		startupWindow.setLayout( new GridLayout( 1 , false ) );
 
-		_image = new Image( Display.getCurrent() , this.getClass().getClassLoader()
+		_image = new Image( Display.getCurrent(), this.getClass().getClassLoader()
 				.getResourceAsStream( "Catalogue-browser.gif" ) );
 
 		final Canvas canvas = new Canvas( startupWindow , SWT.NONE );
@@ -91,25 +99,6 @@ public class Startup {
 
 			StyledText t1 = new StyledText( startupWindow , SWT.BORDER | SWT.MULTI | SWT.V_SCROLL
 					| SWT.H_SCROLL );
-			
-			String strsmt = Messages.getString("Startup.4") //$NON-NLS-1$
-					+ Messages.getString("Startup.5"); //$NON-NLS-1$
-			strsmt = strsmt + Messages.getString("Startup.6") //$NON-NLS-1$
-					+ Messages.getString("Startup.7"); //$NON-NLS-1$
-			strsmt = strsmt + Messages.getString("Startup.8") //$NON-NLS-1$
-					+ Messages.getString("Startup.9"); //$NON-NLS-1$
-			strsmt = strsmt + Messages.getString("Startup.10") //$NON-NLS-1$
-					+ Messages.getString("Startup.11"); //$NON-NLS-1$
-			strsmt = strsmt + Messages.getString("Startup.12") //$NON-NLS-1$
-					+ Messages.getString("Startup.13"); //$NON-NLS-1$
-			strsmt = strsmt + Messages.getString("Startup.14") //$NON-NLS-1$
-					+ Messages.getString("Startup.15"); //$NON-NLS-1$
-			strsmt = strsmt + Messages.getString("Startup.16") //$NON-NLS-1$
-					+ Messages.getString("Startup.17"); //$NON-NLS-1$
-			strsmt = strsmt + Messages.getString("Startup.18") //$NON-NLS-1$
-					+ Messages.getString("Startup.19"); //$NON-NLS-1$
-			strsmt = strsmt + Messages.getString("Startup.20") //$NON-NLS-1$
-					+ Messages.getString("Startup.21"); //$NON-NLS-1$
 
 			t1.setEditable( false );
 			
@@ -154,7 +143,7 @@ public class Startup {
 	 */
 	private String readLicenceFile ( String filename ) throws IOException {
 
-		InputStream input = Startup.class.getClassLoader().getResourceAsStream( filename );
+		InputStream input = FormBrowserLicence.class.getClassLoader().getResourceAsStream( filename );
 
 		BufferedInputStream bis = new BufferedInputStream( input );
 		ByteArrayOutputStream buf = new ByteArrayOutputStream();
@@ -175,7 +164,7 @@ public class Startup {
 		return output;
 	}
 
-	public Startup( Display display ) {
+	public FormBrowserLicence( Display display ) {
 		_display = display;
 	}
 
