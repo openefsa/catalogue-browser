@@ -34,6 +34,7 @@ import catalogue_object.BaseObject;
 import catalogue_object.Hierarchy;
 import catalogue_object.HierarchyBuilder;
 import catalogue_object.Mappable;
+import catalogue_object.Nameable;
 import catalogue_object.Status.StatusValues;
 import catalogue_object.Term;
 import catalogue_object.TermAttribute;
@@ -866,7 +867,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * @param hierarchy
 	 * @return the new term
 	 */
-	public Term addNewTerm ( Term parent, Hierarchy hierarchy ) {
+	public Term addNewTerm ( Nameable parent, Hierarchy hierarchy ) {
 		
 		// get the a new code for the term using the catalogue term code mask
 		String code = CodeGenerator.getTermCode( termCodeMask );
@@ -905,7 +906,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * @param hierarchy the hierarchy in which the term is added to the parent
 	 * @return the new term
 	 */
-	public Term addNewTerm ( String code, Term parent, Hierarchy hierarchy ) {
+	public Term addNewTerm ( String code, Nameable parent, Hierarchy hierarchy ) {
 		
 		TermDAO termDao = new TermDAO( this );
 		
@@ -940,7 +941,9 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		
 		// update the involved terms in RAM
 		termDao.update( child );
-		termDao.update( parent );
+		
+		if ( parent instanceof Term )
+			termDao.update( (Term) parent );
 		
 		// add the term to the hashmap
 		terms.put( id, child );

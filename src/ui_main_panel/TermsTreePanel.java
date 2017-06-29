@@ -58,7 +58,7 @@ public class TermsTreePanel extends Observable implements Observer {
 	
 	private MenuItem otherHierarchies, deprecateTerm, termMoveDown, termMoveUp, termLevelUp, describe, recentTerms,
 	addTerm, cutTerm, copyNode, copyBranch, copyCode, copyTerm, fullCopyTerm, pasteTerm, 
-	prefSearchTerm, favouritePicklist;
+	prefSearchTerm, favouritePicklist, addRootTerm;
 	
 	private Listener updateListener;
 	private HierarchyChangedListener changeHierarchyListener;
@@ -129,16 +129,29 @@ public class TermsTreePanel extends Observable implements Observer {
 	 * Add the contextual menu to the tree
 	 */
 	public void addContextualMenu( boolean forceCreation ) {
-
+		
+		Menu menu = null;
+		
 		// set the menu if no empty selection
 		if ( tree.isSelectionEmpty() )
-			tree.removeMenu();
-		
+			menu = createEmptyMenu();
 		// if the menu is not set yet, create it
-		else if ( !tree.hasMenu() || forceCreation ) {
+		else
+			menu = createTreeMenu();
+		
+		if ( menu != null )
+			tree.setMenu ( menu );
+		else
+			tree.removeMenu();
 
-			// create the tree contextual menu
-			tree.setMenu( createTreeMenu() );
+		// when the tools menu is showed update the menu items status
+		if ( menu != null ) {
+			menu.addListener( SWT.Show, new Listener() {
+
+				public void handleEvent ( Event event ) {
+					refreshMenu();
+				}
+			} );
 		}
 	}
 
@@ -295,32 +308,61 @@ public class TermsTreePanel extends Observable implements Observer {
 		
 		return tree;
 	}
+
 	
+	/**
+	 * Create an empty menu with only commands which
+	 * can be executed without having data.
+	 * @return
+	 */
+	public Menu createEmptyMenu() {
+		
+		// get an instance of the global manager
+		GlobalManager manager = GlobalManager.getInstance();
+
+		if ( !manager.isReadOnly() ) {
+
+			Menu termMenu = new Menu( shell , SWT.POP_UP );
+			
+			// new term operation
+			addRootTerm = addNewRootTermMI( termMenu );
+			
+			return termMenu;
+		}
+		else
+			return null;
+	}
 	
-	
-	/*===========================================================
-	 * 
-	 *                 TREE CONTEXTUAL MENU 
-	 *                 
-	 *  See in other hierarchies
-	 *  Move up
-	 *  Move down
-	 *  Move one level up
-	 *  Add
-	 *  Remove
-	 *  Cut 
-	 *  Copy
-	 *  Copy code + name
-	 *  Copy full code + name
-	 *  Paste
-	 *  Paste branch
-	 *  Describe
-	 *  Recently Described Terms
-	 *  Picklist
-	 *  Search term in picklist
-	 * 
-	 * 
-	 *===========================================================*/
+	/**
+	 * Refresh the menu content
+	 */
+	public void refreshMenu() {
+		
+		// get an instance of the global manager
+		GlobalManager manager = GlobalManager.getInstance();
+		
+		// if editing mode update edit mode buttons
+		if ( !manager.isReadOnly() ) {
+			
+			ReserveLevel level;
+			
+			// if the editing of the catalogue is forced
+			// we use the forced editing level to refresh
+			// the UI, otherwise we get the standard
+			// reserve level we have on the catalogue
+			String username = User.getInstance().getUsername();
+			
+			if ( catalogue.isForceEdit( username ) )
+				level = catalogue.getForcedEditLevel( username );
+			else
+				level = catalogue.getReserveLevel();
+			
+			updateEditModeMI( level );
+		}
+		
+		// update read only buttons
+		updateReadOnlyMI();
+	}
 	
 	/**
 	 * Create a right click contextual menu for a tree which contains terms
@@ -366,6 +408,9 @@ public class TermsTreePanel extends Observable implements Observer {
 			
 			// new term operation
 			addTerm = addNewTermMI( termMenu );
+			
+			// new term operation
+			addRootTerm = addNewRootTermMI( termMenu );
 
 			deprecateTerm = addDeprecateTermMI( termMenu );
 
@@ -395,39 +440,6 @@ public class TermsTreePanel extends Observable implements Observer {
 
 		// search term in picklist
 		prefSearchTerm = addSearchTermInPicklistMI ( termMenu );
-
-		
-		// when the tools menu is showed update the menu items status
-		termMenu.addListener( SWT.Show, new Listener() {
-
-			public void handleEvent ( Event event ) {
-				
-				// get an instance of the global manager
-				GlobalManager manager = GlobalManager.getInstance();
-				
-				// if editing mode update edit mode buttons
-				if ( !manager.isReadOnly() ) {
-					
-					ReserveLevel level;
-					
-					// if the editing of the catalogue is forced
-					// we use the forced editing level to refresh
-					// the UI, otherwise we get the standard
-					// reserve level we have on the catalogue
-					String username = User.getInstance().getUsername();
-					
-					if ( catalogue.isForceEdit( username ) )
-						level = catalogue.getForcedEditLevel( username );
-					else
-						level = catalogue.getReserveLevel();
-					
-					updateEditModeMI( level );
-				}
-				
-				// update read only buttons
-				updateReadOnlyMI();
-			}
-		} );
 		
 		return termMenu;
 	}
@@ -443,9 +455,11 @@ public class TermsTreePanel extends Observable implements Observer {
 		
 		boolean canEdit = User.getInstance().canEdit( catalogue );
 		boolean canEditMajor = catalogue.isLocal() || ( canEdit && reserveLevel.isMajor() );
-		
+
+		boolean canAddTerm = canEdit && selectedHierarchy.isMaster();
 		// enable add only in master hierarchy
-		addTerm.setEnabled( canEdit && selectedHierarchy.isMaster() );
+		addTerm.setEnabled( canAddTerm );
+		addRootTerm.setEnabled( canAddTerm );
 		
 		if ( isSelectionEmpty() )
 			return;
@@ -717,41 +731,9 @@ public class TermsTreePanel extends Observable implements Observer {
 			@Override
 			public void widgetSelected ( SelectionEvent e ) {
 				
-				Term child;
-
-				TermDAO termDao = new TermDAO( catalogue );
+				Term parent = getFirstSelectedTerm();
 				
-				// if we do not have a term code mask we need to ask to the
-				// user the term code
-				if ( catalogue.getTermCodeMask() == null || 
-						catalogue.getTermCodeMask().isEmpty() ) {
-
-					DialogSingleText dialog = new DialogSingleText( shell, 1 );
-					dialog.setTitle( Messages.getString( "NewTerm.Title" ) );
-					dialog.setMessage( Messages.getString( "NewTerm.Message" ) );
-					String code = dialog.open();
-
-					if ( code == null )
-						return;
-					
-					// check if the selected code is already present or not in the db
-					if ( termDao.getByCode( code ) != null ) {
-						
-						GlobalUtil.showErrorDialog( shell, 
-								Messages.getString( "NewTerm.DoubleCodeTitle" ), 
-								Messages.getString( "NewTerm.DoubleCodeMessage" ) );
-						return;
-					}
-					
-					child = catalogue.addNewTerm( code, getFirstSelectedTerm(), selectedHierarchy );
-
-				}
-				else {
-					
-					// create a new default term with default attributes as child
-					// of the selected term in the selected hierarchy
-					child = catalogue.addNewTerm( getFirstSelectedTerm(), selectedHierarchy );
-				}
+				Term child = addNewTerm( parent, selectedHierarchy );
 				
 				// refresh tree
 				tree.refresh();
@@ -771,6 +753,83 @@ public class TermsTreePanel extends Observable implements Observer {
 		termAdd.setEnabled( false );
 		
 		return termAdd;
+	}
+	
+	/**
+	 * Add a menu item which allows adding a new term as child of the selected term
+	 * @param menu
+	 */
+	private MenuItem addNewRootTermMI ( Menu menu ) {
+		
+		MenuItem termAdd = new MenuItem( menu , SWT.NONE );
+		termAdd.setText( Messages.getString("BrowserTreeMenu.AddNewRootTermCmd") );
+
+		termAdd.addSelectionListener( new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected ( SelectionEvent e ) {
+
+				Term child = addNewTerm( selectedHierarchy, selectedHierarchy );
+				
+				// refresh tree
+				tree.refresh();
+				
+				// if the update listener was set call it
+				if ( updateListener != null ) {
+					
+					// pass as data the new term
+					Event event = new Event();
+					event.data = child;
+					
+					updateListener.handleEvent( event );
+				}
+			}
+		} );
+		
+		termAdd.setEnabled( false );
+		
+		return termAdd;
+	}
+	
+	private Term addNewTerm ( Nameable parent, Hierarchy hierarchy ) {
+
+		Term child;
+
+		TermDAO termDao = new TermDAO( catalogue );
+		
+		// if we do not have a term code mask we need to ask to the
+		// user the term code
+		if ( catalogue.getTermCodeMask() == null || 
+				catalogue.getTermCodeMask().isEmpty() ) {
+
+			DialogSingleText dialog = new DialogSingleText( shell, 1 );
+			dialog.setTitle( Messages.getString( "NewTerm.Title" ) );
+			dialog.setMessage( Messages.getString( "NewTerm.Message" ) );
+			String code = dialog.open();
+
+			if ( code == null )
+				return null;
+			
+			// check if the selected code is already present or not in the db
+			if ( termDao.getByCode( code ) != null ) {
+				
+				GlobalUtil.showErrorDialog( shell, 
+						Messages.getString( "NewTerm.DoubleCodeTitle" ), 
+						Messages.getString( "NewTerm.DoubleCodeMessage" ) );
+				return null;
+			}
+			
+			child = catalogue.addNewTerm( code, parent, selectedHierarchy );
+
+		}
+		else {
+			
+			// create a new default term with default attributes as child
+			// of the selected term in the selected hierarchy
+			child = catalogue.addNewTerm( parent, selectedHierarchy );
+		}
+		
+		return child;
 	}
 	
 	
@@ -901,7 +960,7 @@ public class TermsTreePanel extends Observable implements Observer {
 	private MenuItem addPasteMI ( Menu menu ) {
 		
 		MenuItem pasteTerm = new MenuItem( menu , SWT.NONE );
-		pasteTerm.setText( Messages.getString("BrowserTreeMenu.PasteCmd") ); //$NON-NLS-1$
+		pasteTerm.setText( Messages.getString("BrowserTreeMenu.PasteCmd") );
 		pasteTerm.setEnabled( false );
 
 		pasteTerm.addSelectionListener( new SelectionAdapter() {
@@ -935,7 +994,7 @@ public class TermsTreePanel extends Observable implements Observer {
 		
 		/* setting copy only code in menu item */
 		MenuItem copycode = new MenuItem( menu , SWT.NONE );
-		copycode.setText( Messages.getString("BrowserTreeMenu.CopyCmd") ); //$NON-NLS-1$
+		copycode.setText( Messages.getString("BrowserTreeMenu.CopyCmd") );
 
 		copycode.addSelectionListener( new SelectionAdapter() {
 
@@ -985,7 +1044,7 @@ public class TermsTreePanel extends Observable implements Observer {
 	private MenuItem addCopyTermFullcodeMI ( Menu menu ) {
 		
 		MenuItem fullCopyTerm = new MenuItem( menu , SWT.NONE );
-		fullCopyTerm.setText( Messages.getString("BrowserTreeMenu.CopyFullCodeNameCmd") ); //$NON-NLS-1$
+		fullCopyTerm.setText( Messages.getString("BrowserTreeMenu.CopyFullCodeNameCmd") );
 
 		fullCopyTerm.addSelectionListener( new SelectionAdapter() {
 
