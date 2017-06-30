@@ -1,7 +1,7 @@
 package dcf_pending_action;
 
 import catalogue.Catalogue;
-import dcf_webservice.BackgroundAction.Type;
+import dcf_webservice.UploadCatalogueFileThread.Type;
 import dcf_webservice.DcfResponse;
 
 /**

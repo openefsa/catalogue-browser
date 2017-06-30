@@ -12,7 +12,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 import catalogue.Catalogue;
@@ -28,7 +27,6 @@ import new_local_catalogue.DuplicatedCatalogueException;
 import ui_main_panel.DownloadCatalogueFrom;
 import ui_main_panel.FormCataloguesList;
 import ui_main_panel.FormLocalCatalogueName;
-import ui_main_panel.OldCatalogueReleaseDialog;
 import ui_progress_bar.FormProgressBar;
 import utilities.GlobalUtil;
 
@@ -312,51 +310,13 @@ public class FileMenu implements MainMenuItem {
 						// get the selected catalogue from the listener event
 						final Catalogue selectedCat = ( Catalogue ) event.data;
 						
-						if ( selectedCat.isDeprecated() ) {
-							
-							int val = GlobalUtil.showDialog( shell, 
-									selectedCat.getLabel(), 
-									Messages.getString("BrowserMenu.CatalogueDeprecatedMessage"), 
-									SWT.ICON_WARNING | SWT.YES | SWT.NO );
-							
-							if ( val == SWT.NO )
-								return;
-						}
+						// close previous catalogue
+						closeCatalogue();
 						
-						// if the user is logged in we can check the updates
-						else if ( user.isLogged() ) {
-							
-							// check if there is a catalogue update
-							boolean hasUpdate = selectedCat.hasUpdate();
-							
-							// check if the update was already downloaded
-							boolean alreadyDownloaded = selectedCat.isLastReleaseAlreadyDownloaded();
+						// open catalogue in the ui
+						FileActions.openCatalogue( shell, selectedCat );
 
-							// if there is a new version and we have not downloaded it yet
-							// we warn the user that a new version is available
-							if ( hasUpdate && !alreadyDownloaded ) {
-								
-								OldCatalogueReleaseDialog dialog = 
-										new OldCatalogueReleaseDialog( shell, selectedCat );
-								
-								dialog.open();
-							}
-						}
-						else {
-							
-							// only for official catalogues
-							if ( !selectedCat.isLocal() ) {
-								// if we are not logged in, simply warn the user that we cannot
-								// be sure that this is the last release
-								MessageBox mb = new MessageBox( shell, SWT.ICON_INFORMATION );
-								mb.setText( Messages.getString("BrowserMenu.CatalogueReleaseInfoTitle") );
-								mb.setMessage( Messages.getString("BrowserMenu.CatalogueReleaseInfoMessage") );
-								mb.open();
-							}
-						}
-						
-						// open the catalogue when the dialog is closed
-						openCatalogue ( selectedCat );
+						mainMenu.refresh();
 						
 						if ( listener != null )
 							listener.buttonPressed( openFileItem, 
@@ -392,12 +352,11 @@ public class FileMenu implements MainMenuItem {
 				if ( filename == null || filename.isEmpty() )
 					return;
 
-				
 				// ask for final confirmation
-				MessageBox alertBox = new MessageBox( shell, SWT.OK | SWT.CANCEL | SWT.ICON_QUESTION );
-				alertBox.setText( Messages.getString("EcfImport.WarnTitle") );
-				alertBox.setMessage( Messages.getString( "EcfImport.WarnMessage" ) );
-				int val = alertBox.open();
+				int val = GlobalUtil.showDialog( shell, 
+						Messages.getString("EcfImport.WarnTitle"), 
+						Messages.getString( "EcfImport.WarnMessage" ), 
+						SWT.OK | SWT.CANCEL | SWT.ICON_QUESTION );
 
 				// return if cancel was pressed
 				if ( val == SWT.CANCEL )
@@ -432,19 +391,6 @@ public class FileMenu implements MainMenuItem {
 				});
 				
 				importCat.start();
-				
-				// start the import from the ecf file
-				// we save the db where the excel files says (i.e. in the official folder
-				// we create a folder with the catalogue code and version which are read from
-				// the excel sheet of the catalogue
-				/*importAction.importEcf( null, filename, true, new Listener() {
-					
-					@Override
-					public void handleEvent(Event event) {
-						
-						
-					}
-				} );*/
 			}
 			
 			@Override

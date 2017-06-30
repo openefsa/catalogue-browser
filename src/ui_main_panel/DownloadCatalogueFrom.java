@@ -148,6 +148,7 @@ public class DownloadCatalogueFrom {
 			@Override
 			public void handleEvent(Event arg0) {
 
+				// remove temporary file
 				try {
 					GlobalUtil.deleteFileCascade( new File( catalogueXmlFilename ) );
 				} catch (IOException e) {

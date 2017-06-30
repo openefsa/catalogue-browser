@@ -18,7 +18,7 @@ import dcf_pending_action.PendingActionValidator;
 import dcf_user.User;
 import dcf_user.UserAccessLevel;
 import dcf_user.UserProfileChecker;
-import dcf_webservice.BackgroundAction;
+import dcf_webservice.UploadCatalogueFileThread;
 import dcf_webservice.ExportCatalogue;
 import dcf_webservice.ExportCatalogueFile;
 import dcf_webservice.GetCataloguesList;
@@ -353,7 +353,7 @@ public class Dcf {
 		
 		catalogue.setRequestingAction( true );
 		
-		BackgroundAction reserve = new BackgroundAction( catalogue, 
+		UploadCatalogueFileThread reserve = new UploadCatalogueFileThread( catalogue, 
 				level, description );
 		
 		reserve.setListener( listener );
@@ -373,7 +373,7 @@ public class Dcf {
 		
 		catalogue.setRequestingAction( true );
 		
-		BackgroundAction publish = new BackgroundAction( catalogue, 
+		UploadCatalogueFileThread publish = new UploadCatalogueFileThread( catalogue, 
 				level );
 		
 		publish.setListener( listener );
@@ -390,7 +390,7 @@ public class Dcf {
 		
 		catalogue.setRequestingAction( true );
 		
-		BackgroundAction download = new BackgroundAction( catalogue );
+		UploadCatalogueFileThread download = new UploadCatalogueFileThread( catalogue );
 		download.setListener( listener );
 		download.start();
 	}
@@ -407,7 +407,7 @@ public class Dcf {
 		catalogue.setRequestingAction( true );
 		
 		// start the upload data action with the downloaded xml
-		BackgroundAction upload = new BackgroundAction( catalogue, xmlFile );
+		UploadCatalogueFileThread upload = new UploadCatalogueFileThread( catalogue, xmlFile );
 		upload.setListener( listener );
 		
 		upload.start();

@@ -7,7 +7,7 @@ import org.eclipse.swt.widgets.Display;
 import catalogue.Catalogue;
 import open_xml_reader.ExcelThread;
 
-public class ExportThread extends ExcelThread {
+public class ExportCatalogueThread extends ExcelThread {
 
 	private Catalogue catalogue;
 	
@@ -16,7 +16,7 @@ public class ExportThread extends ExcelThread {
 	 * @param catalogue the catalogue we want to export
 	 * @param filename the .xlsx file which will host the catalogue data
 	 */
-	public ExportThread( Catalogue catalogue, String filename ) {
+	public ExportCatalogueThread( Catalogue catalogue, String filename ) {
 		super(filename);
 		this.catalogue = catalogue;
 	}

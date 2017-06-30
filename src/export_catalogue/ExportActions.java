@@ -33,7 +33,7 @@ public class ExportActions {
 	public boolean exportSync ( Catalogue catalogue, String filename ) {
 		
 		// create an export
-		ExportThread exportThread = new ExportThread( catalogue, filename );
+		ExportCatalogueThread exportThread = new ExportCatalogueThread( catalogue, filename );
 		
 		if ( progressBar != null )
 			exportThread.setProgressBar( progressBar );
@@ -63,7 +63,7 @@ public class ExportActions {
 	public void exportAsync ( Catalogue catalogue, String filename,
 			Listener doneListener ) {
 		// create a thread for the excel export
-		ExportThread exportThread = new ExportThread( catalogue, filename );
+		ExportCatalogueThread exportThread = new ExportCatalogueThread( catalogue, filename );
 		if ( progressBar != null )
 			exportThread.setProgressBar( progressBar );
 		exportThread.addDoneListener( doneListener );

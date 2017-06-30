@@ -12,7 +12,7 @@ import dcf_pending_action.PendingReserve;
 import dcf_pending_action.PendingActionStatus;
 import dcf_pending_action.PendingUploadData;
 import dcf_pending_action.PendingXmlDownload;
-import dcf_webservice.BackgroundAction.Type;
+import dcf_webservice.UploadCatalogueFileThread.Type;
 import dcf_webservice.DcfResponse;
 import dcf_webservice.ReserveLevel;
 import messages.Messages;

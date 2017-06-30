@@ -23,7 +23,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableColumn;
 
 import catalogue.Catalogue;
-import global_manager.GlobalManager;
 import messages.Messages;
 import session_manager.RestoreableWindow;
 import session_manager.WindowPreference;
@@ -45,18 +44,15 @@ public class FormUserPreferences implements RestoreableWindow {
 	
 	private TableViewer table;
 	
-	// constructor
-	public FormUserPreferences( Shell shell ) {
-		
-		_shell = shell;
+	private Catalogue catalogue;
 	
-		// get an instance of the global manager
-		GlobalManager manager = GlobalManager.getInstance();
+	// constructor
+	public FormUserPreferences( Shell shell, Catalogue catalogue ) {
 		
-		// get the current catalogue
-		Catalogue currentCat = manager.getCurrentCatalogue();
+		this.catalogue = catalogue;
+		_shell = shell;
 		
-		CataloguePreferenceDAO prefDao = new CataloguePreferenceDAO( currentCat );
+		CataloguePreferenceDAO prefDao = new CataloguePreferenceDAO( catalogue );
 		
 		// load the catalogue preferences
 		ArrayList<Preference> preferences = prefDao.getAll();
@@ -225,13 +221,7 @@ public class FormUserPreferences implements RestoreableWindow {
 				// set the new value
 				preference.setValue( newValue );
 				
-				// get an instance of the global manager
-				GlobalManager manager = GlobalManager.getInstance();
-				
-				// get the current catalogue
-				Catalogue currentCat = manager.getCurrentCatalogue();
-				
-				CataloguePreferenceDAO prefDao = new CataloguePreferenceDAO( currentCat );
+				CataloguePreferenceDAO prefDao = new CataloguePreferenceDAO( catalogue );
 				
 				// update the preference into the database
 				prefDao.update( preference );

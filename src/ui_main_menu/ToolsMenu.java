@@ -13,7 +13,6 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 import already_described_terms.Picklist;
@@ -30,9 +29,9 @@ import export_catalogue.ExportActions;
 import import_catalogue.ImportCatalogueThread;
 import import_catalogue.ImportCatalogueThread.ImportFileFormat;
 import messages.Messages;
-import sas_remote_procedures.XmlUpdatesFactory;
 import sas_remote_procedures.XmlUpdateFile;
 import sas_remote_procedures.XmlUpdateFileDAO;
+import sas_remote_procedures.XmlUpdatesFactory;
 import ui_general_graphics.DialogSingleText;
 import ui_main_panel.AttributeEditor;
 import ui_main_panel.HierarchyEditor;
@@ -502,12 +501,12 @@ public class ToolsMenu implements MainMenuItem {
 				// return if no filename retrieved
 				if ( filename == null || filename.isEmpty() )
 					return;
-					
+				
 				// ask for final confirmation
-				MessageBox alertBox = new MessageBox( shell, SWT.OK | SWT.CANCEL | SWT.ICON_QUESTION );
-				alertBox.setText( Messages.getString("BrowserMenu.ImportWarningTitle") );
-				alertBox.setMessage( Messages.getString( "BrowserMenu.ImportWarningMessage" ) );
-				int val = alertBox.open();
+				int val = GlobalUtil.showDialog( shell, 
+						Messages.getString("BrowserMenu.ImportWarningTitle"), 
+						Messages.getString( "BrowserMenu.ImportWarningMessage" ), 
+						SWT.OK | SWT.CANCEL | SWT.ICON_QUESTION );
 
 				// return if cancel was pressed
 				if ( val == SWT.CANCEL )
@@ -968,7 +967,8 @@ public class ToolsMenu implements MainMenuItem {
 			@Override
 			public void widgetSelected ( SelectionEvent event ) {
 
-				FormUserPreferences e = new FormUserPreferences( shell );
+				FormUserPreferences e = new FormUserPreferences( shell, 
+						mainMenu.getCatalogue() );
 				e.Display();
 				
 				if ( listener != null )

@@ -21,7 +21,7 @@ import ui_progress_bar.FormProgressBar;
  * @author avonva
  *
  */
-public class BackgroundAction extends Thread {
+public class UploadCatalogueFileThread extends Thread {
 
 	public enum Type {
 		RESERVE,
@@ -53,7 +53,7 @@ public class BackgroundAction extends Thread {
 	 * @param catalogue the catalogue we want to publish
 	 * @param level the publish level required
 	 */
-	public BackgroundAction( Catalogue catalogue, PublishLevel level ) {
+	public UploadCatalogueFileThread( Catalogue catalogue, PublishLevel level ) {
 		this.catalogue = catalogue;
 		this.pLevel = level;
 		this.type = Type.PUBLISH;
@@ -64,7 +64,7 @@ public class BackgroundAction extends Thread {
 	 * @param catalogue the catalogue we want to upload
 	 * @param xmlFile the xml updates file we will upload as attachment
 	 */
-	public BackgroundAction( Catalogue catalogue, File xmlFile ) {
+	public UploadCatalogueFileThread( Catalogue catalogue, File xmlFile ) {
 		this.catalogue = catalogue;
 		this.type = Type.UPLOAD_DATA;
 		this.xmlFile = xmlFile;
@@ -76,7 +76,7 @@ public class BackgroundAction extends Thread {
 	 * @param reserveLevel the reserve level we want
 	 * @param reserveDescription the reserve description
 	 */
-	public BackgroundAction( Catalogue catalogue, ReserveLevel level, 
+	public UploadCatalogueFileThread( Catalogue catalogue, ReserveLevel level, 
 			String rDescription ) {
 
 		this.catalogue = catalogue;
@@ -89,7 +89,7 @@ public class BackgroundAction extends Thread {
 	 * Create a download XML updates pending action
 	 * @param catalogue
 	 */
-	public BackgroundAction ( Catalogue catalogue ) {
+	public UploadCatalogueFileThread ( Catalogue catalogue ) {
 		this.catalogue = catalogue;
 		this.type = Type.DOWNLOAD_XML_UPDATES;
 	}

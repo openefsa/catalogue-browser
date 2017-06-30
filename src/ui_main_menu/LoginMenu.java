@@ -127,7 +127,7 @@ public class LoginMenu implements MainMenuItem {
 										// level we start with the pending reserves
 										// we do this here to avoid concurrence
 										// editing of the database
-										startPendingReserves();
+										startPendingActions();
 										
 										if ( listener != null )
 											listener.buttonPressed( loginMI, LOGIN_MI, null );
@@ -171,13 +171,14 @@ public class LoginMenu implements MainMenuItem {
 	public void refresh() {};
 	
 	/**
-	 * Start all the pending reserves in the database
+	 * Start all the pending actions in the database
 	 * @return
 	 */
-	public void startPendingReserves() {
+	public void startPendingActions() {
 		
 		Dcf dcf = new Dcf();
 		
+		// progress bar for new internal versions
 		FormProgressBar progressBar = new FormProgressBar( shell, 
 				Messages.getString( "Reserve.NewInternalTitle" ), 
 				false, SWT.TITLE );
