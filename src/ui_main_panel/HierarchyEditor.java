@@ -116,6 +116,7 @@ public class HierarchyEditor extends CatalogueObjectEditor<Hierarchy> {
 	@Override
 	public void refresh() {
 		catalogue.refreshHierarchies();
+		catalogue.refreshApplicabities();
 	}
 	
 	@Override

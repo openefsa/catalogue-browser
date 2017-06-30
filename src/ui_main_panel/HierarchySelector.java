@@ -193,6 +193,7 @@ public class HierarchySelector extends Observable implements Observer {
 		}
 
 		hierarchyCombo.refresh();
+		refreshRadioButtons();
 	}
 
 	/**
@@ -219,9 +220,23 @@ public class HierarchySelector extends Observable implements Observer {
 		
 		hierarchyCombo.getCombo().setEnabled( enabled );
 		
-		// enable only if we have facets (it is useless to have radio buttons if
+		if ( enabled )
+			refreshRadioButtons();
+		else {
+			hierarchyBtn.setEnabled( false );
+			facetBtn.setEnabled( false );
+		}
+	}
+	
+	/**
+	 * Refresh the radio buttons
+	 */
+	private void refreshRadioButtons () {
+		
+		// enable only if we have facets 
+		// (it is useless to have radio buttons if
 		// we have only base hierarchies)
-		boolean radioEnabled = enabled && catalogue != null 
+		boolean radioEnabled = catalogue != null 
 				&& catalogue.hasAttributeHierarchies();
 
 		hierarchyBtn.setEnabled( radioEnabled );

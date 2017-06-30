@@ -623,8 +623,13 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 */
 	public void refreshApplicabities() {
 		
+		// remove applicabilities
+		for ( Term term : terms.values() )
+			term.clearApplicabilities();
+		
 		ParentTermDAO parentDao = new ParentTermDAO( this );
 		
+		// add applicabilities
 		for ( Applicability appl : parentDao.getAll() ) {
 			Term term = appl.getChild();
 			term.addApplicability( appl );

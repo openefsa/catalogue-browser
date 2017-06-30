@@ -135,7 +135,7 @@ public class DescribedTerm {
 
 			// get the facet header in order to retrieve the attribute
 			// related to the current facet
-			String facetHeader = facetFullCode.split( "\\." )[0];
+			String facetHeader = getFacetHeader( facetFullCode );
 			
 			// create the term attribute related to the facet descriptor
 			TermAttribute ta = new TermAttribute( baseTermCopy,
@@ -147,6 +147,40 @@ public class DescribedTerm {
 		}
 		
 		return baseTermCopy;
+	}
+	
+	
+	/**
+	 * Get the facet header from full code
+	 * @param facetFullCode
+	 * @return
+	 */
+	private String getFacetHeader( String facetFullCode ) {
+		
+		String[] split = facetFullCode.split( "\\." );
+		
+		if ( split.length < 1 )
+			return null;
+				
+		// get the facet header in order to retrieve the attribute
+		// related to the current facet
+		return split[0];
+	}
+	
+	/**
+	 * Get the facet code from full code
+	 * @param facetFullCode
+	 * @return
+	 */
+	private String getFacetCode( String facetFullCode ) {
+		
+		String[] split = facetFullCode.split( "\\." );
+		
+		if ( split.length < 2 )
+			return null;
+				
+		// get the facet code
+		return split[1];
 	}
 	
 	
@@ -181,15 +215,17 @@ public class DescribedTerm {
 	 * @return
 	 */
 	public boolean isValid () {
-	
+
 		// if invalid base term return false
 		if ( getBaseTerm() == null )
 			return false;
 		
 		// if invalid facets return false
 		Collection<String> facets = getFullFacetCodes();
-		for ( String facet : facets ) {
-			if ( getTerm( facet ) == null )
+		for ( String fullFacetCode : facets ) {
+			
+			String facetCode = getFacetCode ( fullFacetCode );
+			if ( getTerm( facetCode ) == null )
 				return false;
 		}
 		
