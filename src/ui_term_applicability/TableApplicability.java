@@ -19,7 +19,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.MessageBox;
 
 import catalogue.Catalogue;
 import catalogue_browser_dao.ParentTermDAO;
@@ -358,18 +357,6 @@ public class TableApplicability {
 				
 				if ( applicabilityTable.getSelection().isEmpty() )
 					return;
-				
-				// get the selected applicability
-				Applicability appl = (Applicability) ( (IStructuredSelection) applicabilityTable
-						.getSelection() ).getFirstElement();
-				
-				// enable removing only if the hierarchy is not the master and if the term has not children in the
-				// selected hierarchy
-				boolean canRemove = !appl.getHierarchy().isMaster() &&
-						term.hasChildren( appl.getHierarchy(), false, false );
-
-				removeMI.setEnabled( selected && editable && canRemove );
-				
 			}
 		});
 
@@ -442,13 +429,29 @@ public class TableApplicability {
 				// get the selected applicability
 				Applicability appl =(Applicability) ( (IStructuredSelection) ( applicabilityTable
 						.getSelection() ) ).getFirstElement();
+
+				if ( appl.getHierarchy().isMaster() ) {
+					
+					GlobalUtil.showErrorDialog( parent.getShell(), 
+							Messages.getString("TableApplicability.RemoveFromMasterTitle"), 
+							Messages.getString("TableApplicability.RemoveFromMasterMessage") );
+					
+					return;
+				}
 				
-				// remove applicability? you choose
-				MessageBox mb = new MessageBox( parent.getShell() , SWT.YES | SWT.NO | SWT.ICON_WARNING );
-				mb.setText( Messages.getString("TableApplicability.RemoveWarningTitle") );
-				mb.setMessage( Messages.getString("TableApplicability.RemoveWarningMessage") );
+				if ( term.hasChildren( appl.getHierarchy(), false, false ) ) {
+					
+					GlobalUtil.showErrorDialog( parent.getShell(), 
+							Messages.getString("TableApplicability.RemoveParentTermTitle"), 
+							Messages.getString("TableApplicability.RemoveParentTermMessage") );
+					
+					return;
+				}
 				
-				int val = mb.open();
+				int val = GlobalUtil.showDialog( parent.getShell(), 
+						Messages.getString("TableApplicability.RemoveWarningTitle"), 
+						Messages.getString("TableApplicability.RemoveWarningMessage"), 
+						SWT.YES | SWT.NO | SWT.ICON_WARNING );
 
 				if ( val == SWT.YES ) {
 
