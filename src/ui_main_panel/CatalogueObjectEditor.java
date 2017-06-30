@@ -408,8 +408,9 @@ public abstract class CatalogueObjectEditor<T extends SortableCatalogueObject> i
 				
 				// insert or update all the new/updated hierarchies
 				for ( T obj : objs ) {
-
-					// convention, if id = -1 then it is a new hierarchy for the database
+					
+					// convention, if id = -1 then it 
+					// is a new object for the database
 					if ( obj.getId() == -1 )
 						dao.insert( obj );
 					else

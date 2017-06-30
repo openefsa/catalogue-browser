@@ -41,7 +41,13 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 		
 		Collection<Attribute> attrs = new ArrayList<>();
 		attrs.add( attr );
-		return insertAttributes( attrs ).get(0);
+		
+		ArrayList<Integer> ids = insertAttributes( attrs );
+		
+		if ( ids.isEmpty() )
+			return -1;
+		
+		return ids.get(0);
 	}
 
 	/**

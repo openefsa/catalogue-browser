@@ -144,6 +144,7 @@ public class AttributeEditor extends CatalogueObjectEditor<Attribute> {
 	@Override
 	public void refresh() {
 		// update the terms attributes also in RAM
+		catalogue.refreshAttributes();
 		catalogue.refreshTermAttributes();
 	}
 
