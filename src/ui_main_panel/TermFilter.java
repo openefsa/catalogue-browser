@@ -56,12 +56,12 @@ public class TermFilter extends Observable {
 		
 		// label which says to choose view options
 		Label applicabilityTitle = new Label( parent , SWT.NONE );
-		applicabilityTitle.setText( Messages.getString("Browser.ViewTerms") );
+		applicabilityTitle.setText( Messages.getString("TermFilter.Title") );
 
 		// switch between seeing and not seeing deprecated terms
 		hideDeprecated = new Button( parent , SWT.CHECK );
 		hideDeprecated.setEnabled( false );
-		hideDeprecated.setText( Messages.getString("Browser.HideDeprecatedTermsButton") );
+		hideDeprecated.setText( Messages.getString("TermFilter.HideDeprecatedTermsButton") );
 
 		hideDeprecated.addSelectionListener( new SelectionAdapter() {
 			@Override
@@ -82,7 +82,7 @@ public class TermFilter extends Observable {
 		// switch between seeing and not seeing reportable terms
 		hideNotInUse = new Button( parent , SWT.CHECK );
 		hideNotInUse.setEnabled( false );
-		hideNotInUse.setText( Messages.getString("Browser.HideNonReportableTermsButton") );
+		hideNotInUse.setText( Messages.getString("TermFilter.HideNonReportableTermsButton") );
 
 		hideNotInUse.addSelectionListener( new SelectionAdapter() {
 			@Override
@@ -101,7 +101,7 @@ public class TermFilter extends Observable {
 		
 		hideTermCode = new Button( parent, SWT.CHECK );
 		hideTermCode.setEnabled( false );
-		hideTermCode.setText( Messages.getString("Browser.HideTermCodesButton") );
+		hideTermCode.setText( Messages.getString("TermFilter.HideTermCodesButton") );
 
 		hideTermCode.addSelectionListener( new SelectionAdapter() {
 			@Override

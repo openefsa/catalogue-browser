@@ -53,8 +53,8 @@ public class FormCataloguesList implements RestoreableWindow {
 	private static final String CANCEL_KEY = "cancelButton";
 	private static final String WINDOW_CODE = "FormCataloguesList";
 
-	private String okButtonText = Messages.getString("FormCataloguesList.DownloadButton");
-	private String cancelButtonText = Messages.getString("FormCataloguesList.CancelButton");
+	private String okButtonText = Messages.getString("FormCataloguesList.DownloadCmd");
+	private String cancelButtonText = Messages.getString("FormCataloguesList.CancelBCmd");
 
 	private String title;                        // shell title
 	private Shell shell;                         // parent shell

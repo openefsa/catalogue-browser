@@ -162,7 +162,7 @@ public class FrameTermImplicitFacets implements Observer {
 		
 		addImplicitFacet.setImage( new Image( Display.getCurrent(), 
 				ClassLoader.getSystemResourceAsStream( "add-icon.png" ) ) );
-		addImplicitFacet.setText( Messages.getString("Browser.AddCommand") );
+		addImplicitFacet.setText( Messages.getString("TreeImplicitFacets.AddCommand") );
 		
 		addImplicitFacet.addSelectionListener( new SelectionAdapter() {
 			@Override
@@ -261,7 +261,7 @@ public class FrameTermImplicitFacets implements Observer {
 		
 		removeImplicitFacet.setImage( new Image( Display.getCurrent(), 
 				ClassLoader.getSystemResourceAsStream( "remove-icon.png" ) ) );
-		removeImplicitFacet.setText( Messages.getString("Browser.RemoveCommand") );
+		removeImplicitFacet.setText( Messages.getString("TreeImplicitFacets.RemoveCommand") );
 
 		removeImplicitFacet.addSelectionListener( new SelectionAdapter() {
 			@Override

@@ -1079,7 +1079,7 @@ public class TermsTreePanel extends Observable implements Observer {
 
 				// open the describe form
 				FormTermCoder tcf = new FormTermCoder( shell, 
-						Messages.getString("Browser.DescribeWindowTitle"), catalogue );
+						Messages.getString("FormTermCoder.Title"), catalogue );
 
 				tcf.setBaseTerm( getFirstSelectedTerm() );
 

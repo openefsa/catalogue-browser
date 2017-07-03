@@ -284,7 +284,7 @@ public class ToolsMenu implements MainMenuItem {
 				
 				FormProgressBar progressBar = 
 						new FormProgressBar( shell, 
-								Messages.getString("BrowserMenu.CreateXmlBarTitle") );
+								Messages.getString("CreateXml.CreateXmlBarTitle") );
 				
 				// ask for the xml creation to the sas server
 				XmlUpdatesFactory xmlCreator = new XmlUpdatesFactory();
@@ -496,7 +496,7 @@ public class ToolsMenu implements MainMenuItem {
 			public void widgetSelected ( SelectionEvent event ) {
 
 				final String filename = GlobalUtil.showExcelFileDialog( shell, 
-						Messages.getString("BrowserMenu.ImportWindowTitle"), SWT.OPEN );
+						Messages.getString("Import.ImportWindowTitle"), SWT.OPEN );
 				
 				// return if no filename retrieved
 				if ( filename == null || filename.isEmpty() )
@@ -504,8 +504,8 @@ public class ToolsMenu implements MainMenuItem {
 				
 				// ask for final confirmation
 				int val = GlobalUtil.showDialog( shell, 
-						Messages.getString("BrowserMenu.ImportWarningTitle"), 
-						Messages.getString( "BrowserMenu.ImportWarningMessage" ), 
+						Messages.getString("Import.ImportWarningTitle"), 
+						Messages.getString( "Import.ImportWarningMessage" ), 
 						SWT.OK | SWT.CANCEL | SWT.ICON_QUESTION );
 
 				// return if cancel was pressed
@@ -516,7 +516,7 @@ public class ToolsMenu implements MainMenuItem {
 						new ImportCatalogueThread( filename, ImportFileFormat.XLSX );
 				
 				importCat.setProgressBar( new FormProgressBar( shell,
-						Messages.getString( "Browser.ImportXlsxBarTitle" ) ) );
+						Messages.getString( "Import.ImportXlsxBarTitle" ) ) );
 				
 				// set the opened catalogue since we are importing
 				// in an already existing catalogue
@@ -935,7 +935,7 @@ public class ToolsMenu implements MainMenuItem {
 
 				// open the form for choosing the search options
 				FormSearchOptions sof = new FormSearchOptions(shell, 
-						Messages.getString( "BrowserMenu.SearchOptionsWindowTitle"), 
+						Messages.getString( "SearchOption.Title"), 
 						mainMenu.getCatalogue() );
 				
 				// display the form

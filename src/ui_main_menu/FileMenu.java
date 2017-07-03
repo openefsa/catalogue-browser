@@ -220,8 +220,8 @@ public class FileMenu implements MainMenuItem {
 						public void handleEvent(Event event) {
 							
 							GlobalUtil.showDialog(shell, 
-									Messages.getString( "BrowserMenu.DownloadSuccessTitle" ),
-									Messages.getString( "BrowserMenu.DownloadSuccessMessage" ),
+									Messages.getString( "Download.DownloadSuccessTitle" ),
+									Messages.getString( "Download.DownloadSuccessMessage" ),
 									SWT.ICON_INFORMATION );
 						}
 					} );
@@ -284,10 +284,10 @@ public class FileMenu implements MainMenuItem {
 				
 				// open the form for selecting a catalogue (single selection)
 				FormCataloguesList fcl = new FormCataloguesList ( shell,
-						Messages.getString("BrowserMenu.OpenCatalogueListTitle"), myCatalogues, false );
+						Messages.getString("FormCataloguesList.OpenTitle"), myCatalogues, false );
 				
 				// set the ok button text
-				fcl.setOkButtonText( Messages.getString("BrowserMenu.OpenSelectedCatalogueCmd") );
+				fcl.setOkButtonText( Messages.getString("FormCataloguesList.OpenCmd") );
 				
 				String[] columns;
 				
@@ -368,7 +368,7 @@ public class FileMenu implements MainMenuItem {
 				
 				//ImportActions importAction = new ImportActions();
 				importCat.setProgressBar( new FormProgressBar( shell, 
-						Messages.getString("Browser.ImportEcfBarTitle") ) );
+						Messages.getString("EcfImport.ImportEcfBarTitle") ) );
 				
 				importCat.addDoneListener( new Listener() {
 					
@@ -380,8 +380,8 @@ public class FileMenu implements MainMenuItem {
 						mainMenu.refresh();
 						
 						GlobalUtil.showDialog(shell, 
-								Messages.getString("BrowserMenu.ImportSuccessTitle"),
-								Messages.getString( "BrowserMenu.ImportSuccessMessage" ),
+								Messages.getString("EcfImport.ImportSuccessTitle"),
+								Messages.getString( "EcfImport.ImportSuccessMessage" ),
 								SWT.ICON_INFORMATION );
 						
 						if ( listener != null )
@@ -456,10 +456,10 @@ public class FileMenu implements MainMenuItem {
 				Collections.sort( myCatalogues );
 				
 				FormCataloguesList fcl = new FormCataloguesList ( shell, 
-						Messages.getString("BrowserMenu.DeleteCatalogueListTitle"), myCatalogues, true );
+						Messages.getString("FormCatalogueList.DeleteTitle"), myCatalogues, true );
 				
 				// set the ok button text
-				fcl.setOkButtonText( Messages.getString("BrowserMenu.DeleteSelectedCatalogueCmd") );
+				fcl.setOkButtonText( Messages.getString("FormCatalogueList.DeleteCmd") );
 				
 				// display only the columns that we want
 				fcl.display( new String[] {"label", "version", "status"} );

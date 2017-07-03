@@ -81,7 +81,7 @@ public class FrameTermApplicabilities {
 		
 		// group for facets applicabilities
 		Group groupFacet = new Group( parent , SWT.NONE );
-		groupFacet.setText( Messages.getString("Browser.FacetsApplicability") );
+		groupFacet.setText( Messages.getString("TableFacetApplicability.Title") );
 		groupFacet.setLayout( new GridLayout( 1 , true ) );
 		
 		// layout data
@@ -126,7 +126,7 @@ public class FrameTermApplicabilities {
 		Menu menu = new Menu( parent , SWT.POP_UP );
 
 		final MenuItem addTermApplicability = new MenuItem( menu , SWT.PUSH );
-		addTermApplicability.setText( Messages.getString("Browser.AddCommand") ); //$NON-NLS-1$
+		addTermApplicability.setText( Messages.getString("TreeFacetRestrictions.AddCommand") );
 		
 		addTermApplicability.addSelectionListener( new SelectionAdapter() {
 			@Override
@@ -137,7 +137,7 @@ public class FrameTermApplicabilities {
 		
 		
 		final MenuItem removeTermApplicability = new MenuItem( menu , SWT.PUSH );
-		removeTermApplicability.setText( Messages.getString("Browser.RemoveCommand") ); //$NON-NLS-1$
+		removeTermApplicability.setText( Messages.getString("TreeFacetRestrictions.RemoveCommand") );
 
 		removeTermApplicability.addSelectionListener( new SelectionAdapter() {
 			@Override

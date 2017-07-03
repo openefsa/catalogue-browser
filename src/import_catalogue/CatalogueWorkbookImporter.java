@@ -80,7 +80,7 @@ public class CatalogueWorkbookImporter {
 
 		long importTimeStart = System.currentTimeMillis();
 		
-		updateProgressBar( 1, Messages.getString("ImportExcelXLSX.ReadingData") );
+		updateProgressBar( 1, Messages.getString("Import.ReadingData") );
 		
 		// get the excel data
 		WorkbookReader workbookReader = new WorkbookReader( filename );
@@ -147,7 +147,7 @@ public class CatalogueWorkbookImporter {
 			throws InvalidFormatException, IOException, XMLStreamException {
 		
 		System.out.println( "Importing catalogue sheet" );
-		updateProgressBar( 1, Messages.getString("ImportExcelXLSX.ImportCatalogue") );
+		updateProgressBar( 1, Messages.getString("Import.ImportCatalogue") );
 		
 		// get the catalogue sheet and check if the catalogues are compatible
 		// (the open catalogue and the one we want to import)
@@ -177,7 +177,7 @@ public class CatalogueWorkbookImporter {
 			throws XMLStreamException, InvalidFormatException, IOException {
 		
 		System.out.println( "Importing attribute sheet" );
-		updateProgressBar( 2, Messages.getString("ImportExcelXLSX.ImportAttributeLabel") );
+		updateProgressBar( 2, Messages.getString("Import.ImportAttributeLabel") );
 		
 		// get the attribute sheet
 		workbookReader.processSheetName( Headers.ATTR_SHEET_NAME );
@@ -214,7 +214,7 @@ public class CatalogueWorkbookImporter {
 					throws InvalidFormatException, IOException, XMLStreamException {
 		
 		System.out.println( "Importing hierarchy sheet" );
-		updateProgressBar( 2, Messages.getString("ImportExcelXLSX.ImportHierarchyLabel") );
+		updateProgressBar( 2, Messages.getString("Import.ImportHierarchyLabel") );
 		
 		// get the hierarchy sheet
 		workbookReader.processSheetName( Headers.HIER_SHEET_NAME );
@@ -279,7 +279,7 @@ public class CatalogueWorkbookImporter {
 		final int batchSize = 100;
 		
 		System.out.println( "Importing term sheet" );
-		updateProgressBar( 15, Messages.getString("ImportExcelXLSX.ImportTermLabel") );
+		updateProgressBar( 15, Messages.getString("Import.ImportTermLabel") );
 
 		TermSheetImporter termImp = new TermSheetImporter( catalogue );
 
@@ -290,7 +290,7 @@ public class CatalogueWorkbookImporter {
 		// term attributes and parent terms!
 		
 		System.out.println( "Importing term attributes and parent terms" );
-		updateProgressBar( 50, Messages.getString("ImportExcelXLSX.ImportTermAttrLabel") );
+		updateProgressBar( 50, Messages.getString("Import.ImportTermAttrLabel") );
 		
 		// import term attributes and parent terms in a parallel way
 		// since they are independent processes
@@ -310,7 +310,7 @@ public class CatalogueWorkbookImporter {
 	private void importReleaseNotes ( WorkbookReader workbookReader, Catalogue catalogue ) {
 		
 		System.out.println( "Importing release notes sheet" );
-		updateProgressBar( 5, Messages.getString("ImportExcelXLSX.ImportReleaseNotes") );
+		updateProgressBar( 5, Messages.getString("Import.ImportReleaseNotes") );
 		
 		// add the catalogue information
 		ReleaseNotesDAO notesDao = new ReleaseNotesDAO( catalogue );

@@ -647,19 +647,6 @@ public class FrameTermFields {
 				if ( term == null || !user.canEdit( term.getCatalogue() ) )
 					return;
 
-				if ( ( termShortName.getText() == null ) || ( termShortName.getText().isEmpty() ) ) {
-
-					// if the text is null then I have to raise an error,
-					// the old text has to be resumed
-					GlobalUtil.showErrorDialog ( parent.getShell(), 
-							Messages.getString("TermProperties.InputErrorTitle"), 
-							Messages.getString("TermProperties.InputErrorMessage") );
-
-					// restore previous value
-					termShortName.setText( term.getShortName( false ) );
-					return;
-				} 
-
 				// return if the name does not change at all
 				if ( termShortName.getText().equals( term.getShortName( false ) ) )
 					return;
@@ -667,8 +654,6 @@ public class FrameTermFields {
 
 				// if the text already exists in the database it cannot
 				// be used
-	
-				
 				// get the current catalogue
 				TermDAO termDao = new TermDAO( term.getCatalogue() );
 				
@@ -676,7 +661,7 @@ public class FrameTermFields {
 
 					GlobalUtil.showErrorDialog( parent.getShell(), 
 							Messages.getString("TermProperties.InputErrorTitle"), 
-							Messages.getString( "TermProperties.InputErrorMessage2") );
+							Messages.getString( "TermProperties.InputErrorMessage4") );
 
 					termShortName.setText( term.getShortName( false ) );
 

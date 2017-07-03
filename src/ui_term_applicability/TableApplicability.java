@@ -146,7 +146,7 @@ public class TableApplicability {
 		Group groupTermApplicability = new Group( parent , SWT.NONE );
 
 		groupTermApplicability.setText( 
-				Messages.getString("TableApplicability.TableLabel") );
+				Messages.getString("TableApplicability.Title") );
 		groupTermApplicability.setLayout( new FillLayout() );
 
 		// layout data for the applicability table group

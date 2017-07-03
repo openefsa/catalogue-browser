@@ -102,7 +102,7 @@ public class ImportCatalogueThread extends Thread {
 	private String processEcf ( String filename ) {
 
 		addProgress(1);
-		setProgressLabel( Messages.getString( "ImportEcf.Processing" ) );
+		setProgressLabel( Messages.getString( "EcfImport.Processing" ) );
 		
 		String outputFile = null;
 		

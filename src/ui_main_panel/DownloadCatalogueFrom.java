@@ -56,7 +56,7 @@ public class DownloadCatalogueFrom {
 		// Open the catalogue form to visualize the available catalogues and to select
 		// which one has to be downloaded
 		FormCataloguesList catalogueForm = new FormCataloguesList ( shell, 
-				Messages.getString("BrowserMenu.DownloadCatalogueListTitle"),
+				Messages.getString("FormCatalogueList.DownloadTitle"),
 				Dcf.getDownloadableCat(), false );
 
 		// open the catalogue form with the following columns

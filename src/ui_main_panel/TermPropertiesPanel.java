@@ -85,7 +85,7 @@ public class TermPropertiesPanel implements Observer {
 	private void addTermPropertyTab ( TabFolder parent ) {
 
 		TabItem tabNames = new TabItem( parent , SWT.NONE );
-		tabNames.setText( Messages.getString( "Browser.NameDefinitionTab1" ) );
+		tabNames.setText( Messages.getString( "TermProperties.TabName" ) );
 		parent.setLayout( new GridLayout( 1 , false ) );
 
 		Composite compNames = new Composite( parent , SWT.NONE );
@@ -116,7 +116,7 @@ public class TermPropertiesPanel implements Observer {
 
 		// create a new tab and set its name
 		TabItem tabApplicability = new TabItem( parent , SWT.NONE );
-		tabApplicability.setText( Messages.getString("Browser.Applicability") );
+		tabApplicability.setText( Messages.getString("TableApplicability.TabName") );
 
 		Composite compApplicability = new Composite( parent , SWT.NONE );
 		compApplicability.setLayout( new GridLayout( 1 , false ) );
@@ -186,7 +186,7 @@ public class TermPropertiesPanel implements Observer {
 
 		// add a new tab for implicit facets
 		TabItem tabFacets = new TabItem( parent , SWT.NONE );
-		tabFacets.setText( Messages.getString("Browser.ImplicitFacets") );
+		tabFacets.setText( Messages.getString("TreeImplicitFacets.TabName") );
 		tabFacets.setData( "implicitFacets" );
 
 		Composite compImplicitFacets = new Composite( parent , SWT.NONE );

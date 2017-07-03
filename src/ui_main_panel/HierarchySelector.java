@@ -77,7 +77,7 @@ public class HierarchySelector extends Observable implements Observer {
 	public void display() {
 		
 		Label selectionLabel = new Label( parent , SWT.NONE );
-		selectionLabel.setText( Messages.getString("Browser.Choose") );
+		selectionLabel.setText( Messages.getString("HierarchySelector.Title") );
 
 		GridData gridData = new GridData();
 		gridData.verticalAlignment = SWT.CENTER;
@@ -87,7 +87,7 @@ public class HierarchySelector extends Observable implements Observer {
 
 		// radio button for visualizing hierarchies in the combo box
 		hierarchyBtn = new Button( parent , SWT.RADIO );
-		hierarchyBtn.setText( Messages.getString("Browser.Hierarchies") );
+		hierarchyBtn.setText( Messages.getString("HierarchySelector.Hierarchies") );
 		hierarchyBtn.setSelection( true );
 		hierarchyBtn.setEnabled( false );
 
@@ -99,7 +99,7 @@ public class HierarchySelector extends Observable implements Observer {
 
 		// radio button for visualizing facets lists in the combo box
 		facetBtn = new Button( parent , SWT.RADIO );
-		facetBtn.setText( Messages.getString("Browser.Facets") );
+		facetBtn.setText( Messages.getString("HierarchySelector.Facets") );
 		facetBtn.setEnabled( false );
 
 		gridData = new GridData();
