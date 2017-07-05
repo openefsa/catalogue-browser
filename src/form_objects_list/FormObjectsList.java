@@ -1,25 +1,20 @@
-package ui_main_panel;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+package form_objects_list;
+
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.jface.viewers.CheckboxTableViewer;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
@@ -31,38 +26,32 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
-import catalogue.Catalogue;
 import messages.Messages;
 import session_manager.RestoreableWindow;
 import session_manager.WindowPreference;
 import ui_general_graphics.TableResizer;
-import utilities.GlobalUtil;
 
+public abstract class FormObjectsList<T> implements RestoreableWindow {
 
-/**
- * This form displays all the catalogues passed by the input parameter. In particular,
- * it shows several catalogues properties and allows selecting one catalogue to make 
- * further action on it.
- * @author Valentino
- *
- */
-public class FormCataloguesList implements RestoreableWindow {
-
+	public static final String STD_DATE_FORMAT = "yyyy-MM-dd";
+	
 	// strings used to identify the buttons from their parent composite
 	private static final String OK_KEY = "okButton"; 
 	private static final String CANCEL_KEY = "cancelButton";
-	private static final String WINDOW_CODE = "FormCataloguesList";
-
+	
 	private String okButtonText = Messages.getString("FormCataloguesList.DownloadCmd");
-	private String cancelButtonText = Messages.getString("FormCataloguesList.CancelBCmd");
+	private String cancelButtonText = Messages.getString("FormCataloguesList.CancelCmd");
 
 	private String title;                        // shell title
 	private Shell shell;                         // parent shell
 	private Shell dialog;
-	private ArrayList < Catalogue > catalogues;  // input parameter
-	private boolean multiSel;            // multiple selection on or off?
-	private Listener innerListener;              // listener called when a catalogue is selected
-
+	private TableViewer table;
+	
+	private Collection <T> objs;  // input parameter
+	private Collection <T> selectedObjs;
+	private boolean multiSel;      // multiple selection on or off?
+	private Listener innerListener; // listener called when a catalogue is selected
+	
 	/**
 	 * Initialize the form parameters
 	 * @param shell, the parent shell
@@ -70,18 +59,24 @@ public class FormCataloguesList implements RestoreableWindow {
 	 * @param catalogues, the catalogues list from which we can choose
 	 * @multiSel can we perform a multiple selection?
 	 */
-	public FormCataloguesList( Shell shell, String title, 
-			ArrayList < Catalogue > catalogues, boolean multiSel ) {
+	public FormObjectsList( Shell shell, String title, 
+			Collection <T> objs, boolean multiSel ) {
+		this.selectedObjs = new ArrayList<>();
 		this.shell = shell;
 		this.title = title;
-		this.catalogues = catalogues;
+		this.objs = objs;
 		this.multiSel = multiSel;
 	}
 
-	public FormCataloguesList( Shell shell, String title, ArrayList < Catalogue > catalogues ) {
-		this ( shell, title, catalogues, true );
+	public FormObjectsList( Shell shell, String title, Collection <T> objs ) {
+		this ( shell, title, objs, true );
 	}
-
+	
+	@Override
+	public Shell getWindowShell() {
+		return dialog;
+	}
+	
 	/**
 	 * Display the form and initialize graphics
 	 */
@@ -97,13 +92,12 @@ public class FormCataloguesList implements RestoreableWindow {
 		// ### catalogue table ###
 
 		// create the table which displays the catalogue information
-		final TableViewer table = createCatalogueTable ( dialog, columns );
+		table = createTable ( dialog, columns );
 
 		// set the table input
-		table.setInput( catalogues );
+		table.setInput( objs );
 
-		table.addDoubleClickListener( createOkClickListener( dialog, table ) );
-
+		table.addDoubleClickListener( createOkClickListener( dialog ) );
 
 		// ### user buttons ###
 
@@ -120,7 +114,7 @@ public class FormCataloguesList implements RestoreableWindow {
 		// ### buttons listeners ###
 
 		// set the listener for the ok button
-		okButton.addSelectionListener( createOkListener( dialog, table ) );
+		okButton.addSelectionListener( createOkListener( dialog ) );
 
 		// set the listener for the cancel button
 		cancelButton.addSelectionListener( createCancelListener( dialog ) );
@@ -140,18 +134,16 @@ public class FormCataloguesList implements RestoreableWindow {
 		
 		TableResizer resizer = new TableResizer( table.getTable() );
 		resizer.apply();
+		
+		// Event loop
+		while ( !dialog.isDisposed() ) {
+			if ( !dialog.getDisplay().readAndDispatch() )
+				dialog.getDisplay().sleep();
+		}
+		
+		dialog.dispose();
 	}
-
-	@Override
-	public String getWindowCode() {
-		return WINDOW_CODE;
-	}
-
-	@Override
-	public Shell getWindowShell() {
-		return dialog;
-	}
-
+	
 	/**
 	 * Set the cancel button text
 	 * @param cancelButtonText
@@ -167,7 +159,7 @@ public class FormCataloguesList implements RestoreableWindow {
 	public void setOkButtonText(String okButtonText) {
 		this.okButtonText = okButtonText;
 	}
-
+	
 	/**
 	 * Create all the buttons used to make a decision on the selected catalogue
 	 * @param parent
@@ -203,8 +195,7 @@ public class FormCataloguesList implements RestoreableWindow {
 		// return the composite
 		return buttonsComposite;
 	}
-
-
+	
 	/**
 	 * Create the table viewer which contains the catalogues information
 	 * The table contains also several columns to display different fields (customizable
@@ -212,7 +203,7 @@ public class FormCataloguesList implements RestoreableWindow {
 	 * @param parent
 	 * @return
 	 */
-	private TableViewer createCatalogueTable ( Composite parent, String[] columns ) {
+	private TableViewer createTable ( Composite parent, String[] columns ) {
 
 		// create a table to show the catalogues information
 		// SWT.FULL_SELECTION is set to select the entire row of the table, independently of the selected column
@@ -229,7 +220,7 @@ public class FormCataloguesList implements RestoreableWindow {
 					SWT.FULL_SELECTION | SWT.SINGLE );
 
 		// set the content provider of the table
-		table.setContentProvider( new CatalogueContentProvider() );
+		table.setContentProvider( new ObjectContentProvider<T>() );
 
 		// set the layout data for the table (note: these will be used also for the dialog)
 		GridData gridData = new GridData();
@@ -257,307 +248,43 @@ public class FormCataloguesList implements RestoreableWindow {
 		
 		return table;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public T getFirstSelectedElement() {
 
-	/**
-	 * Add columns by key into the table
-	 * TODO IMPLEMENT THE UNIMPLEMENTED COLUMNS IF NECESSARY
-	 * @param table
-	 * @param columnKey
-	 * @param rightFill true if you want the column to be extended if the window
-	 * is stretched
-	 */
-	private TableViewerColumn addColumnByKey ( TableViewer table, String columnKey ) {
-
-		TableViewerColumn col = null;
-
-		switch ( columnKey.toLowerCase() ) {
-		case "code": 
-			break;
-		case "name": 
-			break;
-		case "label": 
-			// Add the "Label" column
-			col = GlobalUtil.addStandardColumn( table, new CatalogueLabelLabelProvider(), 
-					Messages.getString("FormCataloguesList.NameColumn"), 225, true, false ); 
-			break;
-		case "scopenote": 
-			// Add the "Scopenote" column
-			col = GlobalUtil.addStandardColumn( table, new CatalogueScopeNoteLabelProvider(), 
-					Messages.getString("FormCataloguesList.ScopenoteColumn"), 300, true, false ); 
-			break;
-		case "code_mask": 
-			break;
-		case "code_length": 
-			break;
-		case "non_standard_codes": 
-			break;
-		case "gen_missing_codes": 
-			break;
-		case "version": 
-			// Add the "Version" column
-			col = GlobalUtil.addStandardColumn( table, new CatalogueVersionLabelProvider(),
-					Messages.getString("FormCataloguesList.VersionColumn"), 100, true, false, SWT.CENTER ); 
-			break;
-		case "last_update": 
-			break;
-		case "valid_from": 
-			// Add the "Last release" column
-			col = GlobalUtil.addStandardColumn( table, new CatalogueValidFromLabelProvider(), 
-					Messages.getString("FormCataloguesList.LastReleaseColumn"), 90, true, false, SWT.CENTER ); 
-			break;
-		case "valid_to": 
-			break;
-		case "status": 
-			// Add the "Status" column
-			col = GlobalUtil.addStandardColumn( table, new CatalogueStatusLabelProvider(), 
-					Messages.getString("FormCataloguesList.StatusColumn"), 150, true, false, SWT.CENTER ); 
-			break;
-		case "reserve": 
-			// Add the "reserved by" column
-			col = GlobalUtil.addStandardColumn( table, new CatalogueUsernameLabelProvider(), 
-					Messages.getString("FormCataloguesList.ReserveColumn"), 115, true, false, SWT.CENTER );
-			break;
-		}
-
-		return col;
-	}
-
-	/*==========================================
-	 * 
-	 * COLUMN LABEL PROVIDERS
-	 * In the following the label provider of 
-	 * all the table columns are implemented. The
-	 * structure is always the same, the only difference
-	 * among them lies on what is shown in the 
-	 * getText method
-	 * 
-	 * 
-	 ==========================================*/
-
-
-	/**
-	 * Label provider for the catalogue code column
-	 * @author avonva
-	 *
-	 */
-	private class CatalogueLabelLabelProvider extends ColumnLabelProvider {
-
-		@Override
-		public void addListener(ILabelProviderListener arg0) {}
-
-		@Override
-		public void dispose() {}
-
-		@Override
-		public boolean isLabelProperty(Object arg0, String arg1) {
-			return false;
-		}
-
-		@Override
-		public void removeListener(ILabelProviderListener arg0) {}
-
-		@Override
-		public Image getImage(Object arg0) {
+		if ( table.getSelection().isEmpty() )
 			return null;
-		}
-
-		@Override
-		public String getText(Object arg0) {
-
-			Catalogue catalogue = ( Catalogue ) arg0;
-
-			return catalogue.getLabel();
-		}
+		
+		IStructuredSelection sel = (IStructuredSelection) table.getSelection();
+		return (T) sel.getFirstElement();
 	}
-
-
+	
 	/**
-	 * Label provider for the catalogue name column
-	 * @author avonva
-	 *
+	 * Get the selected objects
+	 * @return
 	 */
-	private class CatalogueVersionLabelProvider extends ColumnLabelProvider {
-
-		@Override
-		public void addListener(ILabelProviderListener arg0) {}
-
-		@Override
-		public void dispose() {}
-
-		@Override
-		public boolean isLabelProperty(Object arg0, String arg1) {
-			return false;
-		}
-
-		@Override
-		public void removeListener(ILabelProviderListener arg0) {}
-
-		@Override
-		public Image getImage(Object arg0) {
-			return null;
-		}
-
-		@Override
-		public String getText(Object arg0) {
-
-			Catalogue catalogue = ( Catalogue ) arg0;
-
-			return String.valueOf( catalogue.getVersion() );
-		}	
+	public Collection<T> getSelection() {
+		return selectedObjs;
 	}
-
-
-
+	
 	/**
-	 * Label provider for the catalogue scopenote column
-	 * @author avonva
-	 *
+	 * Get the first selected objects
+	 * @return
 	 */
-	private class CatalogueScopeNoteLabelProvider extends ColumnLabelProvider {
+	public T getFirstSelection() {
 
-		@Override
-		public void addListener(ILabelProviderListener arg0) {}
-
-		@Override
-		public void dispose() {}
-
-		@Override
-		public boolean isLabelProperty(Object arg0, String arg1) {
-			return false;
-		}
-
-		@Override
-		public void removeListener(ILabelProviderListener arg0) {}
-
-		@Override
-		public Image getImage(Object arg0) {
+		if ( selectedObjs.isEmpty() )
 			return null;
-		}
-
-		@Override
-		public String getText(Object arg0) {
-
-			Catalogue catalogue = ( Catalogue ) arg0;
-
-			return catalogue.getScopenotes();
-		}
+		
+		return selectedObjs.iterator().next();
 	}
-
-
-	/**
-	 * Label provider for the catalogue status column
-	 * @author avonva
-	 *
-	 */
-	private class CatalogueStatusLabelProvider extends ColumnLabelProvider {
-
-		@Override
-		public void addListener(ILabelProviderListener arg0) {}
-
-		@Override
-		public void dispose() {}
-
-		@Override
-		public boolean isLabelProperty(Object arg0, String arg1) {
-			return false;
-		}
-
-		@Override
-		public void removeListener(ILabelProviderListener arg0) {}
-
-		@Override
-		public Image getImage(Object arg0) {
-			return null;
-		}
-
-		@Override
-		public String getText(Object arg0) {
-
-			Catalogue catalogue = ( Catalogue ) arg0;
-
-			return catalogue.getStatus();
-		}
-	}
-
-
-	/**
-	 * Label provider for the catalogue valid from
-	 * @author avonva
-	 *
-	 */
-	private class CatalogueValidFromLabelProvider extends ColumnLabelProvider {
-
-		@Override
-		public void addListener(ILabelProviderListener arg0) {}
-
-		@Override
-		public void dispose() {}
-
-		@Override
-		public boolean isLabelProperty(Object arg0, String arg1) {
-			return false;
-		}
-
-		@Override
-		public void removeListener(ILabelProviderListener arg0) {}
-
-		@Override
-		public Image getImage(Object arg0) {
-			return null;
-		}
-
-		@Override
-		public String getText(Object arg0) {
-
-			// get the last release date as year-month-day
-			Catalogue catalogue = ( Catalogue ) arg0;
-			Date date = catalogue.getValidFrom();
-			DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); 
-			return sdf.format( date );
-		}
-	}
-
-	/**
-	 * Label provider for the catalogue reserved by
-	 * @author avonva
-	 *
-	 */
-	private class CatalogueUsernameLabelProvider extends ColumnLabelProvider {
-
-		@Override
-		public void addListener(ILabelProviderListener arg0) {}
-
-		@Override
-		public void dispose() {}
-
-		@Override
-		public boolean isLabelProperty(Object arg0, String arg1) {
-			return false;
-		}
-
-		@Override
-		public void removeListener(ILabelProviderListener arg0) {}
-
-		@Override
-		public Image getImage(Object arg0) {
-			return null;
-		}
-
-		@Override
-		public String getText(Object arg0) {
-
-			Catalogue catalogue = ( Catalogue ) arg0;
-			return catalogue.getReserveUsername();
-		}
-	}
-
-
+	
 	/**
 	 * Content provider for the catalogue table
 	 * @author avonva
 	 *
 	 */
-	private class CatalogueContentProvider implements IStructuredContentProvider {
+	private class ObjectContentProvider<E> implements IStructuredContentProvider {
 
 		@Override
 		public void dispose() {}
@@ -571,12 +298,11 @@ public class FormCataloguesList implements RestoreableWindow {
 
 			if ( arg0 instanceof ArrayList<?> ) {
 
-				return (  ( (ArrayList <Catalogue>) arg0).toArray() );
+				return (  ( (ArrayList <E>) arg0).toArray() );
 			}
 			return null;
 		}
 	}
-
 
 	/**
 	 * Set the selection listener which is called when the ok button is pressed
@@ -599,7 +325,7 @@ public class FormCataloguesList implements RestoreableWindow {
 	 * catalogue as Catalogue if multisel=false
 	 * @param catalogues, the list of selected/checked catalogues
 	 */
-	private void callListener ( ArrayList<Catalogue> catalogues ) {
+	private void callListener ( Collection<T> elements ) {
 
 		// if no listener was set => return
 		if ( innerListener == null )
@@ -612,9 +338,9 @@ public class FormCataloguesList implements RestoreableWindow {
 		// otherwise set the unique selected catalogue
 
 		if ( multiSel )
-			event.data = catalogues;
+			event.data = elements;
 		else
-			event.data = catalogues.get( 0 );
+			event.data = elements.iterator().next();
 
 		// then call the listener with the just created event
 		innerListener.handleEvent( event );
@@ -626,14 +352,14 @@ public class FormCataloguesList implements RestoreableWindow {
 	 * @param selection
 	 * @return
 	 */
-	private ArrayList<Catalogue> getCatalogues ( TableViewer viewer ) {
+	private ArrayList<T> getElements () {
 
 		// If check box table viewer get the checked elements
 		if ( multiSel )
-			return getCheckedCatalogues( (CheckboxTableViewer) viewer );		
+			return getCheckedElem();
 
 		// otherwise, if we have a simple table viewer, get the selected elements
-		return getSelectedCatalogues( viewer );
+		return getSelectedElem();
 	}
 
 
@@ -642,13 +368,14 @@ public class FormCataloguesList implements RestoreableWindow {
 	 * @param viewer
 	 * @return
 	 */
-	private ArrayList<Catalogue> getSelectedCatalogues ( TableViewer viewer ) {
+	@SuppressWarnings("unchecked")
+	private ArrayList<T> getSelectedElem () {
 
 		// output array
-		ArrayList <Catalogue> selectedCats = new ArrayList<>();
+		ArrayList<T> selObj = new ArrayList<>();
 
 		// get the selection
-		ISelection selection = viewer.getSelection();
+		ISelection selection = table.getSelection();
 
 		// return if something is not correct
 		if ( selection.isEmpty() || !( selection instanceof IStructuredSelection ) )
@@ -659,10 +386,10 @@ public class FormCataloguesList implements RestoreableWindow {
 
 		// add all the selected elements
 		while ( iterator.hasNext() ) {
-			selectedCats.add( (Catalogue) iterator.next() );
+			selObj.add( (T) iterator.next() );
 		}
 
-		return selectedCats;
+		return selObj;
 	}
 
 	/**
@@ -670,15 +397,16 @@ public class FormCataloguesList implements RestoreableWindow {
 	 * @param viewer
 	 * @return
 	 */
-	private ArrayList<Catalogue> getCheckedCatalogues ( CheckboxTableViewer viewer ) {
+	@SuppressWarnings("unchecked")
+	private ArrayList<T> getCheckedElem () {
 
-		ArrayList <Catalogue> selectedCats = new ArrayList<>();
+		ArrayList <T> selObj = new ArrayList<>();
 
 		// get all the checked catalogues and return them
-		for ( Object cat : ((CheckboxTableViewer) viewer).getCheckedElements() )
-			selectedCats.add( (Catalogue) cat );
+		for ( Object cat : ((CheckboxTableViewer) table).getCheckedElements() )
+			selObj.add( (T) cat );
 
-		return selectedCats;
+		return selObj;
 	}
 
 	/**
@@ -688,13 +416,13 @@ public class FormCataloguesList implements RestoreableWindow {
 	 * @param dialog
 	 * @param viewer
 	 */
-	private void performOkActions ( Shell dialog, TableViewer viewer ) {
+	private void performOkActions ( Shell dialog ) {
 
 		// get the selected/checked catalogue from the table viewer
-		ArrayList<Catalogue> catalogues = getCatalogues ( viewer );
+		selectedObjs = getElements ();
 
 		// if no catalogue was selected warn the user and stop the operation
-		if ( catalogues == null || catalogues.isEmpty() ) {
+		if ( selectedObjs == null || selectedObjs.isEmpty() ) {
 
 			// warn the user
 			MessageBox mb = new MessageBox ( dialog, SWT.ICON_WARNING );
@@ -709,7 +437,7 @@ public class FormCataloguesList implements RestoreableWindow {
 		dialog.close();
 
 		// call the Class listener to notify the parent of the selected catalogue
-		callListener ( catalogues );
+		callListener ( selectedObjs );
 	}
 
 
@@ -768,7 +496,7 @@ public class FormCataloguesList implements RestoreableWindow {
 	 * @param innerSelectionListener, the general listener of the class
 	 * @return
 	 */
-	private SelectionListener createOkListener ( final Shell dialog, final TableViewer viewer ) {
+	private SelectionListener createOkListener ( final Shell dialog ) {
 
 		// create the selection listener
 		SelectionListener okListener = new SelectionListener() {
@@ -776,7 +504,7 @@ public class FormCataloguesList implements RestoreableWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
-				performOkActions( dialog, viewer );
+				performOkActions( dialog );
 			}
 
 			@Override
@@ -792,7 +520,7 @@ public class FormCataloguesList implements RestoreableWindow {
 	 * @param viewer
 	 * @return
 	 */
-	private IDoubleClickListener createOkClickListener ( final Shell dialog, final TableViewer viewer ) {
+	private IDoubleClickListener createOkClickListener ( final Shell dialog ) {
 
 		IDoubleClickListener listener = new IDoubleClickListener() {
 
@@ -815,10 +543,17 @@ public class FormCataloguesList implements RestoreableWindow {
 					( (CheckboxTableViewer) viewer ).setChecked( element, !isChecked );*/
 				}
 				else  // if single selection => select the catalogue
-					performOkActions( dialog, viewer );
+					performOkActions( dialog );
 			}
 		};
 
 		return listener;
 	}
+	
+	/**
+	 * Add columns to the table using a key-column convention
+	 * @param table
+	 * @param key
+	 */
+	public abstract void addColumnByKey ( TableViewer table, String key );
 }

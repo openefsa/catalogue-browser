@@ -292,6 +292,48 @@ public class HierarchyDAO implements CatalogueEntityDAO<Hierarchy> {
 		return null;
 	}
 	
+	/**
+	 * Get hierarchy by code
+	 * @return
+	 */
+	public Hierarchy getByCode ( String code ) {
+		
+		Connection con = null;
+		
+		// get all the hierarchies
+		String query = "select * from APP.HIERARCHY where HIERARCHY_CODE = ?";
+		
+		try {
+			
+			// get the connection
+			con = catalogue.getConnection();
+			
+			// execute the query
+			PreparedStatement stmt = con.prepareStatement( query );
+			
+			stmt.clearParameters();
+			stmt.setString ( 1, code );
+			
+			ResultSet rs = stmt.executeQuery();
+			
+			Hierarchy hierarchy = null;
+			
+			// get the hierarchy if it was found
+			if ( rs.next() )
+				hierarchy = getByResultSet ( rs );
+			
+			rs.close();
+			stmt.close();
+			con.close();
+			
+			return hierarchy;
+			
+		} catch ( SQLException e ) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
 	
 	/**
 	 * Get a hierarchy from the result set of a query

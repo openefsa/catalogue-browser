@@ -26,11 +26,13 @@ import catalogue.Catalogue;
 import catalogue_object.Hierarchy;
 import catalogue_object.Nameable;
 import catalogue_object.Term;
+import data_collection.DCTableConfig;
 import dcf_webservice.ReserveLevel;
 import global_manager.GlobalManager;
 import messages.Messages;
 import session_manager.RestoreableWindow;
 import session_manager.WindowPreference;
+import ui_main_menu.FileActions;
 import ui_main_menu.FileMenu;
 import ui_main_menu.LoginMenu;
 import ui_main_menu.MainMenu;
@@ -567,6 +569,50 @@ public class MainPanel implements Observer, RestoreableWindow {
 			public void buttonPressed( MenuItem button, int code, Event event ) {
 
 				switch ( code ) {
+				
+				case FileMenu.OPEN_DC_MI:
+
+					// get the selected hierarchy
+					DCTableConfig config = (DCTableConfig) event.data;
+					
+					Catalogue targetCat = config.getCatalogue();
+					Hierarchy hierarchy = config.getHierarchy();
+					
+					if ( targetCat == null ) {
+						GlobalUtil.showErrorDialog(shell, 
+								config.getConfig().getCatalogueCode(),
+								Messages.getString( "FormConfigList.CatNotPresentError" ) );
+						return;
+					}
+					
+					if ( hierarchy == null ) {
+						GlobalUtil.showErrorDialog(shell, 
+								config.getConfig().getCatalogueCode() + " - " +
+								config.getConfig().getHierarchyCode(), 
+								Messages.getString( "FormConfigList.HierNotPresentError" ) );
+						return;
+					}
+					
+					// open the catalogue
+					boolean opened = FileActions.openCatalogue( shell, targetCat );
+					
+					// if the catalogue was not opened
+					// skip
+					if ( !opened )
+						break;
+					
+					// enable the user interface only if 
+					// we have data in the current catalogue
+					if ( !targetCat.isEmpty() ) {
+						enableUI( true );
+						loadData( targetCat );
+					}
+					
+					// change the hierarchy to the target one
+					changeHierarchy( hierarchy );
+					
+					break;
+				
 				case FileMenu.OPEN_CAT_MI:
 					
 					removeData();

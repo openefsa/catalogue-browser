@@ -28,6 +28,10 @@ public class FormProgressBar {
 	private boolean opened;        // if the bar is opened or not
 	private boolean cancelEnabled;
 
+	private int progressLimit = 100;  // set this to limit the bar progress
+	
+	private double progressStep = 1;  // progress gained by a single operation step
+
 	/**
 	 * Constructor, initialize the progress bar
 	 * @param shell the shell where to create the progress bar
@@ -154,6 +158,36 @@ public class FormProgressBar {
 		} );
 	}
 	
+	/**
+	 * Set a maximum limit for the progress
+	 * @param progressLimit
+	 */
+	public void setProgressLimit(int progressLimit) {
+		this.progressLimit = progressLimit;
+	}
+	
+	public void removeProgressLimit() {
+		this.progressLimit = 100;
+	}
+	
+	/**
+	 * Set how much should the progress bar increase its
+	 * value each operation step. Used with operations that
+	 * have several steps to automatize the progress increase
+	 * for each step by calling {@link #nextStep()}
+	 * @param progressStep
+	 */
+	public void setProgressStep(double progressStep) {
+		this.progressStep = progressStep;
+	}
+	
+	/**
+	 * Increase the progress bar according to the
+	 * {@link #progressStep} variable
+	 */
+	public void nextStep() {
+		addProgress( progressStep );
+	}
 
 	/**
 	 * Add a progress to the progress bar. The current progress
@@ -171,7 +205,7 @@ public class FormProgressBar {
 		// we can refresh the progress bar adding
 		// the integer part of the doneFract
 		if ( doneFract >= 1 ) {
-
+			
 			setProgress ( done + (int) doneFract );
 
 			// reset the doneFract double
@@ -184,7 +218,7 @@ public class FormProgressBar {
 	 * @param percent
 	 */
 	public void setProgress ( int percent ) {
-
+		
 		// open if necessary
 		if ( !isOpened() )
 			open();
@@ -197,6 +231,11 @@ public class FormProgressBar {
 		}
 		else {
 			done = percent;
+		}
+		
+		// limit progress if required
+		if ( done > progressLimit ) {
+			done = progressLimit;
 		}
 
 		refreshProgressBar( done );

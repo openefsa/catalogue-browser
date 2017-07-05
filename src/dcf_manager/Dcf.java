@@ -3,6 +3,7 @@ package dcf_manager;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 
 import javax.xml.soap.SOAPException;
@@ -11,6 +12,8 @@ import org.eclipse.swt.widgets.Listener;
 
 import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
+import data_collection.DataCollection;
+import data_collection.DCTable;
 import dcf_pending_action.PendingAction;
 import dcf_pending_action.PendingActionDAO;
 import dcf_pending_action.PendingActionListener;
@@ -18,13 +21,15 @@ import dcf_pending_action.PendingActionValidator;
 import dcf_user.User;
 import dcf_user.UserAccessLevel;
 import dcf_user.UserProfileChecker;
-import dcf_webservice.UploadCatalogueFileThread;
 import dcf_webservice.ExportCatalogue;
 import dcf_webservice.ExportCatalogueFile;
 import dcf_webservice.GetCataloguesList;
+import dcf_webservice.GetDataCollectionsList;
+import dcf_webservice.GetFile;
 import dcf_webservice.Ping;
 import dcf_webservice.Publish.PublishLevel;
 import dcf_webservice.ReserveLevel;
+import dcf_webservice.UploadCatalogueFileThread;
 import ui_progress_bar.FormProgressBar;
 import utilities.GlobalUtil;
 import xml_reader.PropertiesReader;
@@ -41,6 +46,22 @@ public class Dcf {
 	public static final DcfType dcfType = PropertiesReader.getDcfType();
 	
 	/**
+	 * List of downloaded data collections
+	 */
+	private static ArrayList <DataCollection> dataCollections = null;
+	
+	/**
+	 * A list which contains all the published 
+	 * dcf catalogues
+	 */
+	private static ArrayList <Catalogue> catalogues = null;
+
+	/**
+	 *  True if we are currently getting catalogue updates
+	 *  false otherwise
+	 */
+	private static boolean gettingUpdates = false;
+	/**
 	 * Enumerator to identify the dcf
 	 * as test or production type.
 	 * @author avonva
@@ -55,17 +76,7 @@ public class Dcf {
 	// progress bar
 	private FormProgressBar progressBar;
 	
-	/**
-	 * A list which contains all the published 
-	 * dcf catalogues
-	 */
-	private static ArrayList < Catalogue > catalogues = null;
 
-	/**
-	 *  True if we are currently getting catalogue updates
-	 *  false otherwise
-	 */
-	private static boolean gettingUpdates = false;
 
 	/**
 	 * Get all the catalogues which can 
@@ -74,6 +85,29 @@ public class Dcf {
 	 */
 	public static ArrayList<Catalogue> getCatalogues() {
 		return catalogues;
+	}
+	
+	/**
+	 * Get all the dc which were downloaded
+	 * @return
+	 */
+	public static ArrayList<DataCollection> getDataCollections() {
+		return dataCollections;
+	}
+	
+	public static ArrayList<DataCollection> getDownloadableDC() {
+		
+		ArrayList<DataCollection> out = new ArrayList<>();
+		
+		if ( dataCollections == null )
+			return out;
+		
+		for ( DataCollection dc : dataCollections ) {
+			if ( dc.isValid() && !dc.alreadyImported() )
+				out.add( dc );
+		}
+		
+		return out;
 	}
 
 	/**
@@ -191,19 +225,36 @@ public class Dcf {
 		gettingUpdates = true;
 		
 		// get all the dcf catalogues and save them
-		try {
-			
-			catalogues = getCataloguesList();
-			
-			// sort catalogues by label and version
-			Collections.sort( catalogues );
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
+
+		catalogues = getCataloguesList();
+
+		// sort catalogues by label and version
+		Collections.sort( catalogues );
+
 		// we have finished to get updates
 		gettingUpdates = false;
+	}
+	
+	/**
+	 * Refresh the data collections list in background
+	 */
+	public void refreshDataCollections() {
+		
+		Thread t = new Thread(
+			new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				gettingUpdates = true;
+				
+				dataCollections = getDataCollectionsList();
+				
+				gettingUpdates = false;
+			}
+		});
+		
+		t.start();
 	}
 	
 	/**
@@ -277,12 +328,41 @@ public class Dcf {
 		ArrayList<Catalogue> list = new ArrayList<>();
 		
 		try {
-			list = new GetCataloguesList( dcfType ).getCataloguesList();
+			list = new GetCataloguesList( dcfType ).getList();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		return list;
+	}
+	
+	/**
+	 * Get all the data collections related to the current user
+	 * @return
+	 */
+	public ArrayList<DataCollection> getDataCollectionsList() {
+		
+		ArrayList<DataCollection> list = new ArrayList<>();
+		
+		try {
+			list = new GetDataCollectionsList( dcfType ).getList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+	
+	/**
+	 * Get a resource file using its resource id
+	 * @param resourceId
+	 * @return
+	 * @throws SOAPException
+	 */
+	public Collection<DCTable> getFile( String resourceId ) throws SOAPException {
+		GetFile getFile = new GetFile( DcfType.TEST );
+		Collection<DCTable> tables = getFile.getFile( resourceId );
+		return tables;
 	}
 	
 	/**

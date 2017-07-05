@@ -1,62 +1,34 @@
 package dcf_webservice;
 
-import java.io.IOException;
-import java.io.StringReader;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collection;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPConnection;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
-import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 import catalogue.Catalogue;
 import catalogue.CatalogueBuilder;
 import dcf_manager.Dcf.DcfType;
 import utilities.GlobalUtil;
 
-public class GetCataloguesList extends SOAPAction {
+public class GetCataloguesList extends GetList<Catalogue> {
 
 	// web service link of the getCatalogueList service
 	private static final String URL = "https://dcf-cms.efsa.europa.eu/catalogues";
 	private static final String TEST_URL = "https://dcf-01.efsa.test/dc-catalog-public-ws/catalogues/?wsdl";
+	private static final String LIST_NAMESPACE = "http://ws.catalog.dc.efsa.europa.eu/";
 	
-	// namespace used in getting the catalogue list xml message
-	private static final String CATALOGUE_LIST_NAMESPACE = "http://ws.catalog.dc.efsa.europa.eu/";
-
-	/**
-	 * Initialize the get catalogue list request
-	 */
-	public GetCataloguesList( DcfType type ) {
-		super ( type, CATALOGUE_LIST_NAMESPACE );
-	}
-	
-	/**
-	 * Get all the available catalogues meta data from the DCF
-	 * @param soapConnection
-	 * @param username
-	 * @param password
-	 * @return
-	 * @throws DOMException
-	 * @throws Exception
-	 */
-	@SuppressWarnings("unchecked")
-	public ArrayList < Catalogue > getCataloguesList () throws DOMException, Exception {	
-		String url = getType() == DcfType.PRODUCTION ? URL : TEST_URL;
-		return (ArrayList<Catalogue>) makeRequest ( url );
+	public GetCataloguesList(DcfType type) {
+		super( type, URL, TEST_URL, LIST_NAMESPACE );
 	}
 
 	@Override
@@ -97,36 +69,13 @@ public class GetCataloguesList extends SOAPAction {
 	}
 
 	@Override
-	public Object processResponse(SOAPMessage soapResponse) throws SOAPException {
+	public Collection<Catalogue> getList(Document cdata) {
 
 		// output array
 		ArrayList < Catalogue > catalogues = new ArrayList<>();
 
-		// get the children of the body
-		Iterator<?> children = soapResponse.getSOAPPart().getEnvelope().getBody().getChildElements();
-
-		// if the body has not any child => return! Anything has to be parsed
-		if ( !children.hasNext() )
-			return null;
-
-		// get 'getCatalogueListResponse' node
-		Node node = (Node) children.next();
-
-		// go deeper and get 'return' node
-		node = node.getFirstChild();
-
-		// get the CDATA field of the 'return' node (data related to the XML) and parse it
-		Document cdata;
-		try {
-			cdata = loadXMLFromString ( node.getFirstChild().getNodeValue() );
-		} catch (DOMException | ParserConfigurationException | SAXException | IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-
 		// get all the catalogues nodes from the CDATA field (which is text, but XML formatted)
 		NodeList cataloguesNodes = cdata.getElementsByTagName( "catalogue" );
-
 
 		// for each catalogue node get its properties and store it in Catalogue objects
 		for ( int i = 0; i < cataloguesNodes.getLength(); i++ ) {
@@ -147,19 +96,18 @@ public class GetCataloguesList extends SOAPAction {
 
 			// set the catalogue type according to the dcf used
 			cb.setCatalogueType( getType() );
-			
+
 			// create the catalogue with the builder
 			Catalogue currentCatalogue = cb.build();
 
 			// add the catalogue into the output array
 			catalogues.add( currentCatalogue );
-
 		}
 
 		// return all the retrieved catalogues
 		return catalogues;
 	}
-
+	
 	/**
 	 * Given a node searches in its children for the catalogue properties. If a catalogue property node
 	 * is found, then it is added to the catalogue builder, which is then returned as output.
@@ -177,24 +125,24 @@ public class GetCataloguesList extends SOAPAction {
 	 */
 	private static CatalogueBuilder addProperties ( CatalogueBuilder cb, 
 			Node node ) {
-		
+
 		// get the children of the parent node
 		NodeList catalogueProperties = node.getChildNodes();
-		
+
 		// For each child (i.e. each property which is son of the parent node)
 		for ( int j = 0; j < catalogueProperties.getLength(); j++ ) {
-			
+
 			// get the current property (e.g. code, name, validTo... )
 			Node property = catalogueProperties.item( j );
-			
+
 			// get the property name (e.g. "code", "name", ... )
 			String propertyName = property.getNodeName();
-			
+
 			// Note: to get the value it is necessary to get 
 			// the child first, and then we can get the node value
 			// from the child (I don't know why but this is it)
 			Node propertyValueNode = property.getFirstChild();
-			
+
 			// skip if no name or value is found (happen if there are catalogue errors)
 			if ( propertyName == null || propertyValueNode == null )
 				continue;
@@ -202,14 +150,14 @@ public class GetCataloguesList extends SOAPAction {
 			// here we have the property name and the node which contains
 			// the property value => we have to extract the property value
 			// and then add it to the catalogue builder
-			
+
 			// Get the value of the property node
 			String propertyValue = propertyValueNode.getNodeValue();
-			
+
 			// Add the property value to the catalogue builder
 			// according to the property name
 			switch ( propertyName ) {
-			
+
 			case "code":
 				cb.setCode( propertyValue );
 				break;
@@ -237,12 +185,12 @@ public class GetCataloguesList extends SOAPAction {
 			case "version":
 				cb.setVersion( propertyValue );
 				break;
-			// TODO: c'è un errore nei cataloghi scaricati e il valid to in realtà è il valid from!
-			// sistemare appena il bug viene fixato
+				// TODO: c'è un errore nei cataloghi scaricati e il valid to in realtà è il valid from!
+				// sistemare appena il bug viene fixato
 			case "validTo":
-				
+
 				if ( propertyValue != null ) {
-					
+
 					// convert the string to timestamp
 					try {
 						Timestamp validFromTs = GlobalUtil.getTimestampFromString( 
@@ -253,7 +201,7 @@ public class GetCataloguesList extends SOAPAction {
 						e.printStackTrace();
 					}
 				}
-				
+
 				break;
 			case "status":
 				cb.setStatus( propertyValue );
@@ -262,30 +210,5 @@ public class GetCataloguesList extends SOAPAction {
 		}  // end for
 
 		return cb;  // return the catalogue builder
-	}
-	
-	/**
-	 * Get an xml document starting from a string text formatted as xml
-	 * @param xml
-	 * @return
-	 * @throws ParserConfigurationException 
-	 * @throws IOException 
-	 * @throws SAXException 
-	 * @throws Exception
-	 */
-	public static Document loadXMLFromString( String xml ) 
-			throws ParserConfigurationException, SAXException, IOException {
-
-		// create the factory object to create the document object
-	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-	    
-	    // get the builder from the factory
-	    DocumentBuilder builder = factory.newDocumentBuilder();
-	    
-	    // Set the input source (the text string)
-	    InputSource is = new InputSource( new StringReader( xml ) );
-	    
-	    // get the xml document and return it
-	    return builder.parse( is );
 	}
 }

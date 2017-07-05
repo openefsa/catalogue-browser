@@ -12,6 +12,7 @@ import org.w3c.dom.DOMException;
 
 import catalogue.Catalogue;
 import dcf_manager.Dcf;
+import form_objects_list.FormCataloguesList;
 import import_catalogue.ImportCatalogueThread;
 import import_catalogue.ImportCatalogueThread.ImportFileFormat;
 import messages.Messages;
@@ -59,10 +60,6 @@ public class DownloadCatalogueFrom {
 				Messages.getString("FormCatalogueList.DownloadTitle"),
 				Dcf.getDownloadableCat(), false );
 
-		// open the catalogue form with the following columns
-		catalogueForm.display( new String[] { "label", "version", "status", 
-				"valid_from", "scopenote" });
-
 		// set the listener which is called if catalogues are correctly chosen
 		catalogueForm.addListener( new Listener() {
 
@@ -97,6 +94,11 @@ public class DownloadCatalogueFrom {
 				} ).start();
 			}
 		});
+		
+
+		// open the catalogue form with the following columns
+		catalogueForm.display( new String[] { "label", "version", "status", 
+				"valid_from", "scopenote" });
 	}
 
 	/**

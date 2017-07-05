@@ -69,7 +69,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	
 	// date format of the catalogues
 	public static final String ISO_8601_24H_FULL_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
-	
+
 	// version and status of local catalogues
 	public static final String NOT_APPLICABLE_VERSION = "Not applicable";
 	public static final String LOCAL_CATALOGUE_STATUS = "Local catalogue";

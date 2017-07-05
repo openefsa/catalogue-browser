@@ -29,7 +29,8 @@ public class CatalogueObject extends BaseObject {
 	 * @param status
 	 * @param deprecated
 	 */
-	public CatalogueObject( Catalogue catalogue, int id, String code, String name, String label, String scopenotes, 
+	public CatalogueObject( Catalogue catalogue, int id, String code, 
+			String name, String label, String scopenotes, 
 			String version, Timestamp lastUpdate, Timestamp validFrom,
 			Timestamp validTo, String status, boolean deprecated ) {
 

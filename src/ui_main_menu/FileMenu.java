@@ -17,15 +17,18 @@ import org.eclipse.swt.widgets.Shell;
 import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_browser_dao.DatabaseManager;
+import catalogue_object.Hierarchy;
+import data_collection.DCTableConfig;
 import dcf_manager.Dcf;
 import dcf_user.User;
+import form_objects_list.FormCataloguesList;
+import form_objects_list.FormDataCollectionsList;
 import import_catalogue.ImportCatalogueThread;
 import import_catalogue.ImportCatalogueThread.ImportFileFormat;
 import messages.Messages;
 import new_local_catalogue.CatalogueCreationActions;
 import new_local_catalogue.DuplicatedCatalogueException;
 import ui_main_panel.DownloadCatalogueFrom;
-import ui_main_panel.FormCataloguesList;
 import ui_main_panel.FormLocalCatalogueName;
 import ui_progress_bar.FormProgressBar;
 import utilities.GlobalUtil;
@@ -40,8 +43,10 @@ public class FileMenu implements MainMenuItem {
 	// codes to identify the menu items (used for listeners)
 	public static final int NEW_CAT_MI = 0;
 	public static final int OPEN_CAT_MI = 1;
+	public static final int OPEN_DC_MI = 7;
 	public static final int IMPORT_CAT_MI = 2;
 	public static final int DOWNLOAD_CAT_MI = 3;
+	public static final int DOWNLOAD_DC_MI = 8;
 	public static final int CLOSE_CAT_MI = 4;
 	public static final int DELETE_CAT_MI = 5;
 	public static final int EXIT_MI = 6;
@@ -53,6 +58,8 @@ public class FileMenu implements MainMenuItem {
 	
 	private MenuItem newMI;
 	private MenuItem openMI;
+	private MenuItem openDcMI;
+	private MenuItem downloadDcMI;
 	private MenuItem importCatMI;
 	private MenuItem downloadMI;
 	private MenuItem closeMI;
@@ -97,9 +104,13 @@ public class FileMenu implements MainMenuItem {
 
 		openMI = addOpenDBMI ( fileMenu );  // open a catalogue
 		
+		openDcMI = addOpenDcMI ( fileMenu );
+		
 		importCatMI = addImportCatalogueMI ( fileMenu );
 		
 		downloadMI = addDownloadCatalogueMI ( fileMenu );  // download catalogue
+		
+		downloadDcMI = addDownloadDcMI ( fileMenu );
 		
 		closeMI = addCloseCatalogueMI ( fileMenu );
 		
@@ -210,7 +221,7 @@ public class FileMenu implements MainMenuItem {
 					
 					// show a progress bar
 					FormProgressBar progressBar = new FormProgressBar( shell, 
-							Messages.getString( "BrowserMenu.ProgressDownloadTitle" ) );
+							Messages.getString( "Download.ProgressDownloadTitle" ) );
 					
 					action.setProgressBar( progressBar );
 					
@@ -277,29 +288,19 @@ public class FileMenu implements MainMenuItem {
 				
 				CatalogueDAO catDao = new CatalogueDAO();
 				
-				ArrayList < Catalogue > myCatalogues = catDao.getLocalCatalogues( Dcf.dcfType );
+				ArrayList <Catalogue> myCatalogues = catDao.getLocalCatalogues( Dcf.dcfType );
 				
 				// Order the catalogues by label name to make a better visualization
 				Collections.sort( myCatalogues );
 				
 				// open the form for selecting a catalogue (single selection)
 				FormCataloguesList fcl = new FormCataloguesList ( shell,
-						Messages.getString("FormCataloguesList.OpenTitle"), myCatalogues, false );
+						Messages.getString("FormCataloguesList.OpenTitle"), 
+						myCatalogues, false );
 				
 				// set the ok button text
 				fcl.setOkButtonText( Messages.getString("FormCataloguesList.OpenCmd") );
-				
-				String[] columns;
-				
-				final User user = User.getInstance();
-				
-				// display only the columns that we want
-				if ( user.isCatManager() )
-					columns = new String[] {"label", "version", "status", "reserve" };
-				else
-					columns = new String[] {"label", "version", "status" };
-				
-				fcl.display( columns );
+
 				
 				// listener called when a catalogue is selected
 				fcl.addListener( new Listener() {
@@ -323,10 +324,79 @@ public class FileMenu implements MainMenuItem {
 									OPEN_CAT_MI, event );
 					}
 				});
+				
+				String[] columns;
+				
+				final User user = User.getInstance();
+				
+				// display only the columns that we want
+				if ( user.isCatManager() )
+					columns = new String[] {"label", "version", "status", "reserve" };
+				else
+					columns = new String[] {"label", "version", "status" };
+				
+				fcl.display( columns );
 			}
 		} );
 		
 		return openFileItem;
+	}
+	
+	/**
+	 * Open data collection menu item
+	 * @param menu
+	 * @return
+	 */
+	private MenuItem addOpenDcMI ( Menu menu ) {
+		
+		final MenuItem openDc = new MenuItem( menu , SWT.NONE );
+		openDc.setText( Messages.getString("BrowserMenu.OpenDcCmd") );
+
+		openDc.addSelectionListener( new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				
+				// open a data collection and possibly open
+				// a configuration
+				DCTableConfig config = FileActions.openDC( shell );
+				
+				if ( config == null )
+					return;
+				
+				if ( listener != null ) {
+					Event event = new Event();
+					event.data = config;
+					listener.buttonPressed( openDc, 
+							OPEN_DC_MI, event );
+				}
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {}
+		});
+		
+		return openDc;
+	}
+	
+	/**
+	 * 
+	 * @param menu
+	 */
+	private MenuItem addDownloadDcMI ( Menu menu ) {
+		
+		final MenuItem downloadDc = new MenuItem( menu , SWT.NONE );
+		downloadDc.setText( Messages.getString("BrowserMenu.DownloadDcCmd") );
+
+		downloadDc.addSelectionListener( new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected ( SelectionEvent event ) {
+				FileActions.downloadDC( shell );
+			}
+		} );
+		
+		return downloadDc;
 	}
 	
 	/**
@@ -461,9 +531,6 @@ public class FileMenu implements MainMenuItem {
 				// set the ok button text
 				fcl.setOkButtonText( Messages.getString("FormCatalogueList.DeleteCmd") );
 				
-				// display only the columns that we want
-				fcl.display( new String[] {"label", "version", "status"} );
-				
 				fcl.addListener( new Listener() {
 					
 					@Override
@@ -539,6 +606,10 @@ public class FileMenu implements MainMenuItem {
 						}.start();	
 					}
 				});
+				
+				
+				// display only the columns that we want
+				fcl.display( new String[] {"label", "version", "status"} );
 			}
 		} );
 		
@@ -569,26 +640,6 @@ public class FileMenu implements MainMenuItem {
 		} );
 		
 		return exitItem;
-	}
-	
-	/**
-	 * Open the selected catalogue ( the catalogue dao will open the db )
-	 * @param catalogue
-	 */
-	private void openCatalogue ( final Catalogue catalogue ) {
-		
-		GlobalUtil.setShellCursor( shell, SWT.CURSOR_WAIT );
-		
-		// close the previous catalogue
-		closeCatalogue();
-		
-		// open the catalogue
-		catalogue.open();
-
-		// refresh menu items
-		mainMenu.refresh();
-		
-		GlobalUtil.setShellCursor( shell, SWT.CURSOR_ARROW );
 	}
 	
 	/**
@@ -639,6 +690,7 @@ public class FileMenu implements MainMenuItem {
 				Dcf.getDownloadableCat() != null;
 
 		downloadMI.setEnabled ( canDownload );
+		downloadDcMI.setEnabled( canDownload );
 		
 		// enable close only if there is an open catalogue
 		closeMI.setEnabled( mainMenu.getCatalogue() != null );
@@ -651,13 +703,16 @@ public class FileMenu implements MainMenuItem {
 		if ( Dcf.isGettingUpdates() ) {
 			downloadMI.setText( Messages.getString( "BrowserMenu.DownloadingUpdatesCmd" ) );
 			openMI.setText( Messages.getString( "BrowserMenu.DownloadingUpdatesCmd" ) );
+			downloadDcMI.setText( Messages.getString( "BrowserMenu.DownloadingUpdatesCmd" ) );
 		}
 		// if we are getting the user level
 		else if ( user.isGettingUserLevel() ) {
 			downloadMI.setText( Messages.getString( "BrowserMenu.GettingUserLevelCmd" ) );
 			openMI.setText( Messages.getString( "BrowserMenu.OpenCatalogueCmd" ) );
+			downloadDcMI.setText( Messages.getString( "BrowserMenu.GettingUserLevelCmd" ) );
 		}
 		else {
+			downloadDcMI.setText( Messages.getString( "BrowserMenu.DownloadDcCmd" ) );
 			downloadMI.setText( Messages.getString( "BrowserMenu.DownloadCatalogueCmd" ) );
 			openMI.setText( Messages.getString( "BrowserMenu.OpenCatalogueCmd" ) );
 		}

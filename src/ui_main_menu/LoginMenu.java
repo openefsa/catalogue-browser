@@ -99,10 +99,11 @@ public class LoginMenu implements MainMenuItem {
 							
 							@Override
 							public void handleEvent(Event arg0) {
-								
 								refresh();
 							}
 						} );
+						
+						dcf.refreshDataCollections();
 
 						// progress bar for the user level
 						// Note that the progress bar does not block the user interaction

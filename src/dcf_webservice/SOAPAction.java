@@ -1,6 +1,11 @@
 package dcf_webservice;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.StringReader;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 import java.net.URL;
@@ -15,6 +20,9 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConnection;
@@ -23,6 +31,11 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.SOAPPart;
 
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import dcf_manager.AttachmentHandler;
 import dcf_manager.Dcf.DcfType;
 import dcf_user.User;
 import utilities.GlobalUtil;
@@ -202,6 +215,49 @@ public abstract class SOAPAction {
 		
 		return attachment;
 	}
+	
+	/**
+	 * Write an attachment to a file
+	 * @param message
+	 * @param filename
+	 * @param isZipped
+	 * @return
+	 * @throws SOAPException
+	 * @throws IOException
+	 */
+	public File writeAttachment( SOAPMessage message, String filename, boolean isZipped ) 
+			throws SOAPException, IOException {
+		
+		AttachmentPart part = getFirstAttachment( message );
+
+		// if no attachment => errors in processing response, return null
+		if ( part == null ) {
+			System.err.println( "GetFile: no attachment found" );
+			return null;
+		}
+
+		// create an attachment handler to analyze the soap attachment
+		AttachmentHandler handler = new AttachmentHandler( part, isZipped );
+
+		File file = new File( filename );
+
+		InputStream inputStream = handler.readAttachment();
+		OutputStream outputStream = new FileOutputStream( file );
+
+		byte[] buf = new byte[512];
+		int num;
+		
+		// write file
+		while ( (num = inputStream.read(buf) ) != -1) {
+			outputStream.write(buf, 0, num);
+		}
+		
+		outputStream.close();
+		inputStream.close();
+		handler.close();
+		
+		return file;
+	}
 
 	/**
 	 * Print a soap message in the System.out
@@ -229,6 +285,53 @@ public abstract class SOAPAction {
 	 */
 	public DcfType getType() {
 		return type;
+	}
+	
+	
+	/**
+	 * Get an xml document starting from a string text formatted as xml
+	 * @param xml
+	 * @return
+	 * @throws ParserConfigurationException 
+	 * @throws IOException 
+	 * @throws SAXException 
+	 * @throws Exception
+	 */
+	public static Document loadXML ( String xml ) 
+			throws ParserConfigurationException, SAXException, IOException {
+
+		// create the factory object to create the document object
+	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	    
+	    // get the builder from the factory
+	    DocumentBuilder builder = factory.newDocumentBuilder();
+	    
+	    // Set the input source (the text string)
+	    InputSource is = new InputSource( new StringReader( xml ) );
+	    
+	    // get the xml document and return it
+	    return builder.parse( is );
+	}
+	
+	/**
+	 * Load an xml document using a file
+	 * @param file
+	 * @return
+	 * @throws ParserConfigurationException
+	 * @throws SAXException
+	 * @throws IOException
+	 */
+	public static Document loadXml ( File file ) 
+			throws ParserConfigurationException, SAXException, IOException {
+		
+		// create the factory object to create the document object
+	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	    
+	    // get the builder from the factory
+	    DocumentBuilder builder = factory.newDocumentBuilder();
+	    
+	    // get the xml document and return it
+	    return builder.parse( file );
 	}
 	
 	/**

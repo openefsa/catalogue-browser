@@ -86,8 +86,8 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 				else
 					stmt.setNull( 6, java.sql.Types.TIMESTAMP );
 
-				if ( t.getValidTo() != null )
-					stmt.setTimestamp( 7, t.getValidTo() );
+				if ( t.getValidFrom() != null )
+					stmt.setTimestamp( 7, t.getValidFrom() );
 				else
 					stmt.setNull( 7, java.sql.Types.TIMESTAMP );
 

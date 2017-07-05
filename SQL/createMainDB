@@ -53,6 +53,58 @@ create table APP.CATALOGUE(
 alter table APP.CATALOGUE add constraint cat_code_version_type_unique unique ( CAT_CODE, CAT_VERSION, CAT_DCF_TYPE );
 
 
+
+-- Table which contains the downloaded data collections
+create table APP.DATA_COLLECTION (
+	DC_ID integer not null primary key generated always as identity (start with 1, increment by 1),
+	DC_CODE varchar(1000) not null,
+	DC_DESCRIPTION varchar(3000),
+	DC_ACTIVE_FROM timestamp,
+	DC_ACTIVE_TO timestamp,
+	DC_RESOURCE_ID varchar(100) not null
+);
+
+-- add the unique contraint to the code field
+alter table APP.DATA_COLLECTION add constraint dc_code_unique unique ( DC_CODE );
+
+-- Table which contains the fact tables related to each downlaoded data collection
+create table APP.DATA_COLLECTION_TABLE (
+	DC_TABLE_ID integer not null primary key generated always as identity (start with 1, increment by 1),
+	DC_TABLE_NAME varchar(1000) not null
+);
+
+-- add the unique contraint to the name field
+alter table APP.DATA_COLLECTION_TABLE add constraint dc_table_name_unique unique ( DC_TABLE_NAME );
+
+-- Table which contains all the variables configurations related to the fact tables
+create table APP.CATALOGUE_CONFIG (
+	CONFIG_ID integer not null primary key generated always as identity (start with 1, increment by 1),
+	CONFIG_NAME varchar(1000) not null,
+	CONFIG_CAT_CODE varchar(1000) not null,
+	CONFIG_HIERARCHY_CODE varchar(1000) not null
+);
+
+-- Table which specify the relation among DATA_COLLECTION, DATA_COLLECTION_TABLE
+-- and CATALOGUE_CONFIG. In fact, given a data collection and a table we can have
+-- several configurations. Given a data collection and a configuration, we can have
+-- several tables related to them. Given a table and a configuration, we can have
+-- several data collections that share them.
+create table APP.DC_TABLE_CONFIG (
+	DC_ID integer not null,
+	DC_TABLE_ID integer not null,
+	CONFIG_ID integer not null,
+	primary key ( DC_ID, DC_TABLE_ID, CONFIG_ID )
+);
+
+-- set the foreign key for dc id
+alter table APP.DC_TABLE_CONFIG add foreign key ( DC_ID ) references APP.DATA_COLLECTION ( DC_ID );
+-- set the foreign key for dc table id
+alter table APP.DC_TABLE_CONFIG add foreign key ( DC_TABLE_ID ) references APP.DATA_COLLECTION_TABLE ( DC_TABLE_ID );
+
+alter table APP.DC_TABLE_CONFIG add foreign key ( CONFIG_ID ) references APP.CATALOGUE_CONFIG ( CONFIG_ID );
+
+
+
 -- table of corex flags, we assume that these are always the same for all the catalogues
 create table APP.DETAIL_LEVEL(
 
