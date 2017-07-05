@@ -6,6 +6,7 @@ public interface DCDownloadListener {
 		DOWNLOAD_CONFIG,
 		IMPORT_DC,
 		IMPORT_TABLE,
+		DOWNLOAD_CATALOGUES
 	};
 
 	/**

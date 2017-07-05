@@ -249,16 +249,6 @@ public abstract class FormObjectsList<T> implements RestoreableWindow {
 		return table;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public T getFirstSelectedElement() {
-
-		if ( table.getSelection().isEmpty() )
-			return null;
-		
-		IStructuredSelection sel = (IStructuredSelection) table.getSelection();
-		return (T) sel.getFirstElement();
-	}
-	
 	/**
 	 * Get the selected objects
 	 * @return

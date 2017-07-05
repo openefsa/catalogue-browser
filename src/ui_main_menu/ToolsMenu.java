@@ -21,6 +21,7 @@ import already_described_terms.PicklistParser;
 import already_described_terms.PicklistTerm;
 import catalogue.Catalogue;
 import catalogue_browser_dao.DatabaseManager;
+import catalogue_generator.ThreadFinishedListener;
 import dcf_manager.Dcf;
 import dcf_user.User;
 import dcf_webservice.Publish.PublishLevel;
@@ -523,10 +524,10 @@ public class ToolsMenu implements MainMenuItem {
 				importCat.setOpenedCatalogue( mainMenu.getCatalogue() );
 				
 				// set the listener
-				importCat.addDoneListener( new Listener() {
+				importCat.addDoneListener( new ThreadFinishedListener() {
 					
 					@Override
-					public void handleEvent(Event arg0) {
+					public void finished(Thread thread, int code) {
 						
 						// load catalogue data in ram
 						// we do not open it since it is already opened
@@ -535,7 +536,7 @@ public class ToolsMenu implements MainMenuItem {
 						
 						if ( listener != null )
 							listener.buttonPressed( importItem, 
-									IMPORT_CAT_MI, arg0 );
+									IMPORT_CAT_MI, null );
 						
 						GlobalUtil.showDialog( shell, 
 								Messages.getString("Import.ImportSuccessTitle"), 

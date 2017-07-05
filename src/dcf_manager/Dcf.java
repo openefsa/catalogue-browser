@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.Listener;
 
 import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
+import catalogue_generator.ThreadFinishedListener;
 import data_collection.DataCollection;
 import data_collection.DCTable;
 import dcf_pending_action.PendingAction;
@@ -88,6 +89,20 @@ public class Dcf {
 	}
 	
 	/**
+	 * Get a catalogue from the official catalogues list by its code
+	 * @param code
+	 * @return
+	 */
+	public static Catalogue getCatalogueByCode( String code ) {
+		for ( Catalogue cat : catalogues ) {
+			if ( cat.getCode().equals( code ) )
+				return cat;
+		}
+		
+		return null;
+	}
+	
+	/**
 	 * Get all the dc which were downloaded
 	 * @return
 	 */
@@ -95,6 +110,10 @@ public class Dcf {
 		return dataCollections;
 	}
 	
+	/**
+	 * Get the list of downloadable data collections
+	 * @return
+	 */
 	public static ArrayList<DataCollection> getDownloadableDC() {
 		
 		ArrayList<DataCollection> out = new ArrayList<>();
@@ -290,7 +309,7 @@ public class Dcf {
 	 * @param doneListener {@link Listener } called when
 	 * the thread has finished its work.
 	 */
-	public void setUserLevel( Listener doneListener, Listener errorListener ) {
+	public void setUserLevel( ThreadFinishedListener doneListener ) {
 		
 		// set the access level of the user
 		final UserProfileChecker userLevel = new UserProfileChecker();
@@ -321,6 +340,9 @@ public class Dcf {
 	
 	/**
 	 * Get the list of all the dcf catalogues (only published)
+	 * Note that these catalogues has as {@link DcfType}
+	 * the one used in the dcf (either {@link DcfType#TEST}
+	 * or {@link DcfType#PRODUCTION})
 	 * @return array list of dcf published catalogues
 	 */
 	public ArrayList<Catalogue> getCataloguesList() {

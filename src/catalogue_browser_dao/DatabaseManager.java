@@ -152,7 +152,7 @@ public class DatabaseManager {
 
 		} catch ( SQLException e1 ) {
 
-			System.err.println( "Main database not present, trying to create a new one" );
+			System.err.println( "Main database not present, creating it..." );
 			
 			// Create a new database if possible
 			createMainDB ();
@@ -171,6 +171,8 @@ public class DatabaseManager {
 			if ( !GlobalUtil.fileExists( DatabaseManager.TEST_CAT_DB_FOLDER ) ) {
 				new File( DatabaseManager.TEST_CAT_DB_FOLDER ).mkdir();
 			}
+			
+			System.out.println( "Main database created" );
 		}
 	}
 	
@@ -255,8 +257,6 @@ public class DatabaseManager {
 	 * @return
 	 */
 	public static boolean executeSQLStatement ( String dbURL, String sql ) {
-		
-		System.out.println( "Statement to execute: " + sql );
 		
 		try {
 			

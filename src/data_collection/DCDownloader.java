@@ -53,7 +53,7 @@ public class DCDownloader extends Thread {
 					if ( progressBar != null ) {
 						progressBar.setLabel( label );
 						
-						int stepCount = 3;
+						int stepCount = 4;
 						
 						// limit the progress for each step based on the number
 						// of required phases

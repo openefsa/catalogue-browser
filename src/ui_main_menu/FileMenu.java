@@ -1,9 +1,5 @@
 package ui_main_menu;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -16,21 +12,11 @@ import org.eclipse.swt.widgets.Shell;
 
 import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
-import catalogue_browser_dao.DatabaseManager;
-import catalogue_object.Hierarchy;
+import catalogue_generator.ThreadFinishedListener;
 import data_collection.DCTableConfig;
 import dcf_manager.Dcf;
 import dcf_user.User;
-import form_objects_list.FormCataloguesList;
-import form_objects_list.FormDataCollectionsList;
-import import_catalogue.ImportCatalogueThread;
-import import_catalogue.ImportCatalogueThread.ImportFileFormat;
 import messages.Messages;
-import new_local_catalogue.CatalogueCreationActions;
-import new_local_catalogue.DuplicatedCatalogueException;
-import ui_main_panel.DownloadCatalogueFrom;
-import ui_main_panel.FormLocalCatalogueName;
-import ui_progress_bar.FormProgressBar;
 import utilities.GlobalUtil;
 
 /**
@@ -149,45 +135,8 @@ public class FileMenu implements MainMenuItem {
 			@Override
 			public void widgetSelected ( SelectionEvent event ) {
 				
-				FormLocalCatalogueName dialog = new FormLocalCatalogueName ( menu.getShell() );
-
-				String catalogueCode = dialog.open();
-				
-				// if null the cancel button was pressed
-				if ( catalogueCode == null )
-					return;
-				
-				// set the wait cursor
-				GlobalUtil.setShellCursor( menu.getShell() , SWT.CURSOR_WAIT );
-				
-				
-				// create a database for the new catalogue
-				// but if the catalogue already exists show an error dialog
-				try {
-					CatalogueCreationActions.newLocalCatalogue( catalogueCode );
-				}
-				catch ( DuplicatedCatalogueException exception ) {
-					
-					GlobalUtil.showErrorDialog( shell, 
-							Messages.getString( "BrowserMenu.NewLocalCatErrorTitle" ),
-							Messages.getString( "BrowserMenu.NewLocalCatErrorMessage" ) );
-					
-					GlobalUtil.setShellCursor( menu.getShell() , SWT.CURSOR_ARROW );
-					
-					return;
-				}
-
-				// refresh the menu items, we have opened a catalogue
-				// therefore somethings have to be enabled
-				mainMenu.refresh();
-
-				// reset the standard cursor
-				GlobalUtil.setShellCursor( menu.getShell() , SWT.CURSOR_ARROW );
-				
-				GlobalUtil.showDialog(shell, 
-						Messages.getString("NewLocalCat.DoneTitle"),
-						Messages.getString("NewLocalCat.DoneMessage"), 
-						SWT.ICON_INFORMATION );
+				// create a new local catalogue
+				FileActions.createNewLocalCatalogue( mainMenu.getShell() );
 				
 				if ( listener != null )
 					listener.buttonPressed( newFileItem, NEW_CAT_MI, null );
@@ -214,47 +163,7 @@ public class FileMenu implements MainMenuItem {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
-				try {
-					
-					// download the catalogue
-					DownloadCatalogueFrom action = new DownloadCatalogueFrom();
-					
-					// show a progress bar
-					FormProgressBar progressBar = new FormProgressBar( shell, 
-							Messages.getString( "Download.ProgressDownloadTitle" ) );
-					
-					action.setProgressBar( progressBar );
-					
-					action.addDoneListener( new Listener() {
-						
-						@Override
-						public void handleEvent(Event event) {
-							
-							GlobalUtil.showDialog(shell, 
-									Messages.getString( "Download.DownloadSuccessTitle" ),
-									Messages.getString( "Download.DownloadSuccessMessage" ),
-									SWT.ICON_INFORMATION );
-						}
-					} );
-					
-					// open download form and possibly download catalogue
-					action.display ( shell );
-
-				} catch ( Exception e1 ) {
-
-					String message = Messages.getString("BrowserMenu.DownloadCmdErrorMessage1");
-
-					// if we are sure that there are errors in log in
-					// change the message in a more specific one
-					// 401 is the code for unauthorized accesses
-					if ( e1.getMessage().contains( "401" ) )
-						message = Messages.getString("BrowserMenu.DownloadCmdErrorMessage2");
-
-					// call the error listener
-					GlobalUtil.showErrorDialog(shell, 
-							Messages.getString("BrowserMenu.DownloadCmdErrorTitle"),
-							message);
-				}
+				FileActions.downloadCatalogue( shell );
 				
 				if ( listener != null )
 					listener.buttonPressed( loadCatalogueItem, 
@@ -286,56 +195,19 @@ public class FileMenu implements MainMenuItem {
 			@Override
 			public void widgetSelected ( SelectionEvent event ) {
 				
-				CatalogueDAO catDao = new CatalogueDAO();
+				Catalogue catalogue = FileActions.openCatalogue( shell );
 				
-				ArrayList <Catalogue> myCatalogues = catDao.getLocalCatalogues( Dcf.dcfType );
+				if ( catalogue == null )
+					return;
 				
-				// Order the catalogues by label name to make a better visualization
-				Collections.sort( myCatalogues );
+				// refresh main menu
+				mainMenu.refresh();
 				
-				// open the form for selecting a catalogue (single selection)
-				FormCataloguesList fcl = new FormCataloguesList ( shell,
-						Messages.getString("FormCataloguesList.OpenTitle"), 
-						myCatalogues, false );
-				
-				// set the ok button text
-				fcl.setOkButtonText( Messages.getString("FormCataloguesList.OpenCmd") );
-
-				
-				// listener called when a catalogue is selected
-				fcl.addListener( new Listener() {
-					
-					@Override
-					public void handleEvent( Event event ) {
-						
-						// get the selected catalogue from the listener event
-						final Catalogue selectedCat = ( Catalogue ) event.data;
-						
-						// close previous catalogue
-						closeCatalogue();
-						
-						// open catalogue in the ui
-						FileActions.openCatalogue( shell, selectedCat );
-
-						mainMenu.refresh();
-						
-						if ( listener != null )
-							listener.buttonPressed( openFileItem, 
-									OPEN_CAT_MI, event );
-					}
-				});
-				
-				String[] columns;
-				
-				final User user = User.getInstance();
-				
-				// display only the columns that we want
-				if ( user.isCatManager() )
-					columns = new String[] {"label", "version", "status", "reserve" };
-				else
-					columns = new String[] {"label", "version", "status" };
-				
-				fcl.display( columns );
+				if ( listener != null ) {
+					Event e = new Event();
+					e.data = catalogue;
+					listener.buttonPressed( openFileItem, OPEN_CAT_MI, e );
+				}
 			}
 		} );
 		
@@ -367,8 +239,7 @@ public class FileMenu implements MainMenuItem {
 				if ( listener != null ) {
 					Event event = new Event();
 					event.data = config;
-					listener.buttonPressed( openDc, 
-							OPEN_DC_MI, event );
+					listener.buttonPressed( openDc, OPEN_DC_MI, event );
 				}
 			}
 			
@@ -414,36 +285,14 @@ public class FileMenu implements MainMenuItem {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
-				// ask the file to the user
-				String filename = GlobalUtil.showFileDialog( menu.getShell(), 
-						Messages.getString("BrowserMenu.ImportCatalogueCmd"), 
-						new String[] { "*.ecf" }, SWT.OPEN );
-
-				if ( filename == null || filename.isEmpty() )
-					return;
-
-				// ask for final confirmation
-				int val = GlobalUtil.showDialog( shell, 
-						Messages.getString("EcfImport.WarnTitle"), 
-						Messages.getString( "EcfImport.WarnMessage" ), 
-						SWT.OK | SWT.CANCEL | SWT.ICON_QUESTION );
-
-				// return if cancel was pressed
-				if ( val == SWT.CANCEL )
-					return;
+				if ( listener != null )
+					listener.buttonPressed( importCatMI, 
+							IMPORT_CAT_MI, null );
 				
-				ImportCatalogueThread importCat = 
-						new ImportCatalogueThread(
-								filename, ImportFileFormat.ECF );
-				
-				//ImportActions importAction = new ImportActions();
-				importCat.setProgressBar( new FormProgressBar( shell, 
-						Messages.getString("EcfImport.ImportEcfBarTitle") ) );
-				
-				importCat.addDoneListener( new Listener() {
+				FileActions.importCatalogue( shell, new ThreadFinishedListener() {
 					
 					@Override
-					public void handleEvent(Event arg0) {
+					public void finished(Thread thread, int code) {
 						
 						// refresh menu items when the import is 
 						// finished (needed to refresh open and delete buttons)
@@ -453,14 +302,8 @@ public class FileMenu implements MainMenuItem {
 								Messages.getString("EcfImport.ImportSuccessTitle"),
 								Messages.getString( "EcfImport.ImportSuccessMessage" ),
 								SWT.ICON_INFORMATION );
-						
-						if ( listener != null )
-							listener.buttonPressed( importCatMI, 
-									IMPORT_CAT_MI, arg0 );
 					}
 				});
-				
-				importCat.start();
 			}
 			
 			@Override
@@ -491,8 +334,13 @@ public class FileMenu implements MainMenuItem {
 					listener.buttonPressed( closeCatMI, 
 							CLOSE_CAT_MI, null );
 				
-				// close the catalogue
-				closeCatalogue();
+				if ( mainMenu.getCatalogue() == null )
+					return;
+				
+				mainMenu.getCatalogue().close();
+				
+				// refresh UI
+				mainMenu.refresh();
 			}
 			
 			@Override
@@ -518,98 +366,12 @@ public class FileMenu implements MainMenuItem {
 			@Override
 			public void widgetSelected ( SelectionEvent event ) {
 				
-				final CatalogueDAO catDao = new CatalogueDAO();
+				// ask and delete catalogues
+				FileActions.deleteCatalogue( shell );
 				
-				ArrayList < Catalogue > myCatalogues = catDao.getLocalCatalogues( Dcf.dcfType );
-				
-				// Order the catalogues by label name to make a better visualization
-				Collections.sort( myCatalogues );
-				
-				FormCataloguesList fcl = new FormCataloguesList ( shell, 
-						Messages.getString("FormCatalogueList.DeleteTitle"), myCatalogues, true );
-				
-				// set the ok button text
-				fcl.setOkButtonText( Messages.getString("FormCatalogueList.DeleteCmd") );
-				
-				fcl.addListener( new Listener() {
-					
-					@Override
-					public void handleEvent(final Event event) {
-						
-						@SuppressWarnings("unchecked")
-						final ArrayList<Catalogue> selectedCats = (ArrayList<Catalogue>) event.data;
-
-						// progress bar for deleting catalogues
-						final FormProgressBar progressBar = new FormProgressBar( shell, 
-								Messages.getString("FileMenu.DeleteCatalogue") );
-						
-						new Thread () {
-							public void run() {
-								
-								boolean problems = false;
-								
-								// the gained progress for each deleted catalogue
-								double step = 100 / selectedCats.size();
-								
-								// remove the catalogues from the database
-								for ( Catalogue catalogue : selectedCats ) {
-									
-									progressBar.addProgress( step );
-									
-									if ( catalogue.isReserved() || catalogue.isRequestingAction() ) {
-										problems = true;
-										continue; 
-									}
-									
-									System.out.println ( "Deleting catalogue " + catalogue.getCode() );
-									
-									// delete the catalogue database
-									try {
-										DatabaseManager.deleteDb( catalogue );
-										catDao.delete( catalogue );
-									} catch (IOException e) {
-										e.printStackTrace();
-									}
-								}
-								
-								progressBar.close();
-								
-								// make the variable final
-								final boolean prob = problems;
-								
-								shell.getDisplay().syncExec( new Runnable() {
-									
-									@Override
-									public void run() {
-										
-										// if problems occurred
-										if ( prob ) {
-											GlobalUtil.showDialog( shell, 
-													Messages.getString( "Delete.ErrorTitle" ), 
-													Messages.getString( "Delete.ErrorMessage" ), 
-													SWT.ICON_WARNING );
-										}
-										else {  // if all ok
-											GlobalUtil.showDialog( shell, 
-													Messages.getString( "Delete.OkTitle" ), 
-													Messages.getString( "Delete.OkMessage" ), 
-													SWT.ICON_INFORMATION );
-										}
-										
-										
-										if ( listener != null )
-											listener.buttonPressed( deleteCatMI, 
-													DELETE_CAT_MI, event );
-									}
-								});
-							};
-						}.start();	
-					}
-				});
-				
-				
-				// display only the columns that we want
-				fcl.display( new String[] {"label", "version", "status"} );
+				if ( listener != null )
+					listener.buttonPressed( deleteCatMI, 
+							DELETE_CAT_MI, null );
 			}
 		} );
 		
@@ -643,20 +405,6 @@ public class FileMenu implements MainMenuItem {
 	}
 	
 	/**
-	 * Open the currently open catalogue (if there is one)
-	 */
-	private void closeCatalogue () {
-		
-		if ( mainMenu.getCatalogue() == null )
-			return;
-		
-		mainMenu.getCatalogue().close();
-		
-		// refresh UI
-		mainMenu.refresh();
-	}
-	
-	/**
 	 * Refresh all the menu items of the file menu
 	 */
 	public void refresh () {
@@ -664,7 +412,7 @@ public class FileMenu implements MainMenuItem {
 		CatalogueDAO catDao = new CatalogueDAO();
 		
 		// get all the catalogues I have downloaded before and get the size
-		boolean hasCatalogues = catDao.getLocalCatalogues( Dcf.dcfType ).size() > 0;
+		boolean hasCatalogues = catDao.getMyCatalogues( Dcf.dcfType ).size() > 0;
 
 		// Return if widget disposed
 		if ( openMI.isDisposed() )
@@ -674,7 +422,7 @@ public class FileMenu implements MainMenuItem {
 		// catalogue master table. If not => open disabled
 		// can open only if we are not getting updates and we have at least one catalogue downloaded
 		openMI.setEnabled( hasCatalogues && !Dcf.isGettingUpdates() && 
-				catDao.getLocalCatalogues( Dcf.dcfType ).size() > 0 );
+				catDao.getMyCatalogues( Dcf.dcfType ).size() > 0 );
 
 		// allow import only if no catalogue is opened
 		importCatMI.setEnabled( mainMenu.getCatalogue() == null );

@@ -1,25 +1,17 @@
 package dcf_user;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-
-import javax.xml.soap.SOAPException;
-
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 
 import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_browser_dao.TermAttributeDAO;
 import catalogue_browser_dao.TermDAO;
+import catalogue_generator.CatalogueDownloader;
+import catalogue_generator.ThreadFinishedListener;
 import catalogue_object.Term;
 import catalogue_object.TermAttribute;
 import dcf_manager.Dcf;
-import import_catalogue.ImportCatalogueThread;
-import import_catalogue.ImportCatalogueThread.ImportFileFormat;
 import ui_progress_bar.FormProgressBar;
-import utilities.GlobalUtil;
 
 /**
  * Class to ask to the DCF the users access level. In particular:
@@ -32,8 +24,7 @@ import utilities.GlobalUtil;
 public class UserProfileChecker extends Thread {
 
 	private static final String EDITABLE_CATALOGUE_ATTRIBUTE_NAME = "editCat";
-	private Listener doneListener;
-	private Listener errorListener;
+	private ThreadFinishedListener doneListener;
 	
 	private FormProgressBar progressBar;
 
@@ -51,19 +42,10 @@ public class UserProfileChecker extends Thread {
 	}
 
 	/**
-	 * Listener called if no attachment is found for the
-	 * cat users catalogue
-	 * @param errorListener
-	 */
-	public void addErrorListener(Listener errorListener) {
-		this.errorListener = errorListener;
-	}
-
-	/**
 	 * listener called when the thread finished its work
 	 * @param doneListener
 	 */
-	public void addDoneListener ( Listener doneListener ) {
+	public void addDoneListener ( ThreadFinishedListener doneListener ) {
 		this.doneListener = doneListener;
 	}
 	/**
@@ -80,84 +62,55 @@ public class UserProfileChecker extends Thread {
 		if ( progressBar != null )
 			progressBar.addProgress( 10 );
 		
+		Catalogue catUsers = Catalogue.getCatUsersCatalogue();
 		
-		final String filename = GlobalUtil.getTempDir() + "catUsersCatalogue.xml";
-
-		// ask for exporting catalogue to the dcf
-		// download the cat users catalogue to check 
-		// the access level of the user
-		Dcf dcf = new Dcf();
+		// download and import the catusers catalogue
+		CatalogueDownloader downloader = new CatalogueDownloader( catUsers );
 		
-		// set the progress bar for the download action
-		dcf.setProgressBar( progressBar );
+		// set the progress bar for the download process
+		downloader.setProgressBar( progressBar );
 		
-		boolean success;
-		try {
-			success = dcf.exportCatalogue( 
-					Catalogue.getCatUsersCatalogue(), filename );
-		} catch (SOAPException e) {
-			
-			success = false;
-			
-			// call error listener if no catalogue is found
-			if ( errorListener != null )
-				errorListener.handleEvent( null );
-		}
-
-		// if failed to download => return we are a data provider! we were not
-		// able to download this file
-		if ( !success ) {
-
-			System.out.println ( "User access level: data provider" );
-
-			// set the current user as data provider
-			User user = User.getInstance();
-			user.setUserLevel( UserAccessLevel.DATA_PROVIDER );
-			
-			if ( progressBar != null )
-				progressBar.close();
-
-			if ( doneListener != null )
-				doneListener.handleEvent( new Event() );
-
-			return;
-		}
-
-		// import the catusers catalogue
-		ImportCatalogueThread importCat = new ImportCatalogueThread(
-				filename, ImportFileFormat.XML );
-		
-		// set the progress bar for the import
-		importCat.setProgressBar( progressBar );
-		
-		importCat.addDoneListener( new Listener() {
+		// actions performed when downlaod is finished
+		downloader.setDoneListener( new ThreadFinishedListener() {
 			
 			@Override
-			public void handleEvent(Event arg0) {
-
-				System.out.println ( "User access level: catalogue manager" );
-
+			public void finished(Thread thread, int code ) {
+				
 				User user = User.getInstance();
+				
+				switch ( code ) {
 
-				// update the editable catalogues
-				// of the user based on its username
-				user.setEditableCat( getEditableCataloguesCodes() );
+				case OK:
+					// set as catalogue manager
+					System.out.println ( "User access level: catalogue manager" );
 
-				// set the current user as catalogue manager
-				user.setUserLevel( UserAccessLevel.CATALOGUE_MANAGER );
+					// update the editable catalogues
+					// of the user based on its username
+					user.setEditableCat( getEditableCataloguesCodes() );
 
-				try {
-					GlobalUtil.deleteFileCascade( new File( filename ) );
-				} catch (IOException e) {
-					e.printStackTrace();
+					// set the current user as catalogue manager
+					user.setUserLevel( UserAccessLevel.CATALOGUE_MANAGER );
+					
+					break;
+				
+				case ERROR:
+					// set the current user as data provider
+					System.out.println ( "User access level: data provider" );
+					user.setUserLevel( UserAccessLevel.DATA_PROVIDER );
+					break;
+					
+				case EXCEPTION:
+					System.out.println ( "User access level: connection error" );
+					break;
 				}
 				
+				// call the super.doneListener
 				if ( doneListener != null )
-					doneListener.handleEvent( arg0 );
+					doneListener.finished( UserProfileChecker.this, code );
 			}
 		});
 		
-		importCat.start();
+		downloader.start();
 	}
 
 	/**

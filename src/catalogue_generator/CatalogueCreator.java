@@ -1,4 +1,4 @@
-package new_local_catalogue;
+package catalogue_generator;
 
 import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
@@ -7,7 +7,7 @@ import catalogue_object.Hierarchy;
 import dcf_manager.Dcf.DcfType;
 import user_preferences.CataloguePreferenceDAO;
 
-public class CatalogueCreationActions {
+public class CatalogueCreator {
 
 	/**
 	 * Create a new local catalogue in the user pc. This catalogue is not official!

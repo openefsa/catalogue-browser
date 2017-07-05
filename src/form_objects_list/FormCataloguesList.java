@@ -1,7 +1,7 @@
 package form_objects_list;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -27,12 +27,12 @@ public class FormCataloguesList extends FormObjectsList<Catalogue> {
 
 	private static final String WINDOW_CODE = "FormCataloguesList";
 	
-	public FormCataloguesList(Shell shell, String title, ArrayList<Catalogue> objs) {
+	public FormCataloguesList(Shell shell, String title, Collection<Catalogue> objs) {
 		super(shell, title, objs);
 	}
 	
 	public FormCataloguesList(Shell shell, String title, 
-			ArrayList<Catalogue> objs, boolean multisel ) {
+			Collection<Catalogue> objs, boolean multisel ) {
 		super(shell, title, objs, multisel );
 	}
 

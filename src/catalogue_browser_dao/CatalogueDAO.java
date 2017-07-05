@@ -458,9 +458,8 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 	/**
 	 * Check if a catalogue is already inserted into the db or not
 	 * @param catalogue
-	 * @return the db path of the already present catalogue database if found, null otherwise
 	 */
-	public boolean hasCatalogue ( Catalogue catalogue ) {
+	public boolean contains ( Catalogue catalogue ) {
 		
 		boolean found = false;
 		
@@ -468,7 +467,8 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 		
 		// we check the catalogue code and then we check the version if the catalogue is not local
 		// note that if the catalogue is local the version check is automatically eliminated
-		String query = "select * from APP.CATALOGUE where CAT_ID = ?";
+		String query = "select * from APP.CATALOGUE "
+				+ "where CAT_CODE = ? and CAT_VERSION = ? and CAT_DCF_TYPE = ?";
 		
 		try {
 			
@@ -478,8 +478,10 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 			
 			stmt.clearParameters();
 			
-			stmt.setInt( 1, catalogue.getId() );
-			
+			stmt.setString( 1, catalogue.getCode() );
+			stmt.setString( 2, catalogue.getVersion() );
+			stmt.setString( 3, catalogue.getCatalogueType().toString() );
+
 			ResultSet rs = stmt.executeQuery();
 			
 			// get if something was found
@@ -634,7 +636,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 	 * @param catalogueType the type of the catalogues which we want to consider
 	 * @return
 	 */
-	public ArrayList < Catalogue > getLocalCatalogues ( DcfType catalogueType ) {
+	public ArrayList < Catalogue > getMyCatalogues ( DcfType catalogueType ) {
 
 		String query = "select * from APP.CATALOGUE where CAT_DCF_TYPE = ?"
 				+ "or CAT_DCF_TYPE = ?";

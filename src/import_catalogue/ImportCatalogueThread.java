@@ -8,9 +8,9 @@ import javax.xml.transform.TransformerException;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 
 import catalogue.Catalogue;
+import catalogue_generator.ThreadFinishedListener;
 import folder_zipper.FolderZipper;
 import messages.Messages;
 import ui_progress_bar.FormProgressBar;
@@ -35,7 +35,7 @@ public class ImportCatalogueThread extends Thread {
 	private Catalogue openedCat;
 	
 	// called when import is finished
-	private Listener doneListener;
+	private ThreadFinishedListener doneListener;
 	
 	// progress bar used to notify the user
 	private FormProgressBar progressBar;
@@ -68,6 +68,11 @@ public class ImportCatalogueThread extends Thread {
 		this.filename = filename;
 		this.format = format;
 		this.garbage = new ArrayList<>();
+	}
+	
+	public ImportCatalogueThread( File file, 
+			ImportFileFormat format ) {
+		this ( file.getAbsolutePath(), format );
 	}
 	
 	/**
@@ -277,7 +282,7 @@ public class ImportCatalogueThread extends Thread {
 		if ( doneListener != null ) {
 			Event event = new Event();
 			event.data = filename;
-			doneListener.handleEvent( event );
+			doneListener.finished( this, ThreadFinishedListener.OK );
 		}
 	}
 	
@@ -285,7 +290,7 @@ public class ImportCatalogueThread extends Thread {
 	 * Called when all the operations are finished
 	 * @param doneListener
 	 */
-	public void addDoneListener ( Listener doneListener ) {
+	public void addDoneListener ( ThreadFinishedListener doneListener ) {
 		this.doneListener = doneListener;
 	}
 	

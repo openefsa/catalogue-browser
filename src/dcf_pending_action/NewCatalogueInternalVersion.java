@@ -2,11 +2,11 @@ package dcf_pending_action;
 
 import java.io.IOException;
 
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
 import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
+import catalogue_generator.ThreadFinishedListener;
 import dcf_manager.Dcf.DcfType;
 import import_catalogue.ImportCatalogueThread;
 import import_catalogue.ImportCatalogueThread.ImportFileFormat;
@@ -78,10 +78,11 @@ public class NewCatalogueInternalVersion {
 		if ( progressBar != null )
 			importCat.setProgressBar( progressBar );
 		
-		importCat.addDoneListener( new Listener() {
+		importCat.addDoneListener( new ThreadFinishedListener() {
 			
 			@Override
-			public void handleEvent(Event arg0) {
+			public void finished(Thread thread, int code) {
+				
 				// get the new catalogue version
 				CatalogueDAO catDao = new CatalogueDAO();
 				newCatalogue = catDao.getCatalogue( 
@@ -94,7 +95,7 @@ public class NewCatalogueInternalVersion {
 					e.printStackTrace();
 				}
 				
-				doneListener.handleEvent( arg0 );
+				doneListener.handleEvent( null );
 			}
 		});
 		

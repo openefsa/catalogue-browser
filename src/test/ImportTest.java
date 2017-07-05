@@ -23,7 +23,7 @@ public class ImportTest {
 		DatabaseManager.startMainDB();
 
 		CatalogueDAO catDao = new CatalogueDAO();
-		ArrayList<Catalogue> cats = catDao.getLocalCatalogues( DcfType.LOCAL );
+		ArrayList<Catalogue> cats = catDao.getMyCatalogues( DcfType.LOCAL );
 		Catalogue catalogue = null;
 		for ( Catalogue cat : cats ) {
 			if ( cat.getCode().equals( "MTX" ) )

@@ -593,13 +593,19 @@ public class MainPanel implements Observer, RestoreableWindow {
 						return;
 					}
 					
-					// open the catalogue
-					boolean opened = FileActions.openCatalogue( shell, targetCat );
+					// warn user if necessary
+					boolean ok = FileActions.performCatalogueChecks( shell, targetCat );
 					
-					// if the catalogue was not opened
-					// skip
-					if ( !opened )
+					if ( !ok )
 						break;
+					
+					// open the catalogue when the dialog is closed
+					GlobalUtil.setShellCursor( shell, SWT.CURSOR_WAIT );
+
+					// open the catalogue
+					targetCat.open();
+
+					GlobalUtil.setShellCursor( shell, SWT.CURSOR_ARROW );
 					
 					// enable the user interface only if 
 					// we have data in the current catalogue
