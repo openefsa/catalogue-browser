@@ -27,8 +27,8 @@ import dcf_user.User;
 import form_objects_list.FormCataloguesList;
 import form_objects_list.FormDCTableConfigsList;
 import form_objects_list.FormDataCollectionsList;
-import import_catalogue.ImportCatalogueThread;
-import import_catalogue.ImportCatalogueThread.ImportFileFormat;
+import import_catalogue.CatalogueImporter.ImportFileFormat;
+import import_catalogue.CatalogueImporterThread;
 import messages.Messages;
 import ui_main_panel.FormLocalCatalogueName;
 import ui_main_panel.OldCatalogueReleaseDialog;
@@ -340,8 +340,8 @@ public class FileActions {
 		if ( val == SWT.CANCEL )
 			return;
 		
-		ImportCatalogueThread importCat = 
-				new ImportCatalogueThread(
+		CatalogueImporterThread importCat = 
+				new CatalogueImporterThread(
 						filename, ImportFileFormat.ECF );
 		
 		FormProgressBar progressBar = new FormProgressBar( shell, 

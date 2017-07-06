@@ -11,9 +11,10 @@ import javax.xml.soap.SOAPException;
 import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_generator.CatalogueDownloader;
-import catalogue_generator.ThreadFinishedListener;
-import data_collection.DCDownloadListener.DownloadStep;
 import dcf_manager.Dcf;
+import ui_progress_bar.ProgressList;
+import ui_progress_bar.ProgressListener;
+import ui_progress_bar.ProgressStep;
 import utilities.GlobalUtil;
 
 /**
@@ -145,15 +146,12 @@ public class DataCollection {
 	 *   into the db
 	 * @throws SOAPException
 	 */
-	public void download( DCDownloadListener listener ) throws SOAPException {
+	public void download( ProgressListener listener ) throws SOAPException {
 
 		if ( listener == null )
 			throw new InvalidParameterException( "Cannot set listener to null" );
 
 		System.out.println( "Downloading " + this );
-
-		listener.nextStepStarted( DownloadStep.DOWNLOAD_CONFIG, 1 );
-		listener.nextPhaseStarted();
 
 		// download tables
 		Dcf dcf = new Dcf();
@@ -169,7 +167,7 @@ public class DataCollection {
 	 * @param listener call back to be notified of import status
 	 */
 	public void makeImport( Collection<DCTable> tables, 
-			DCDownloadListener listener ) {
+			ProgressListener listener ) {
 
 		if ( listener == null )
 			throw new InvalidParameterException( "Cannot set listener to null" );
@@ -181,23 +179,60 @@ public class DataCollection {
 
 		System.out.println( "Importing " + this );
 
-		listener.nextStepStarted( DownloadStep.IMPORT_DC, 1 );
-		listener.nextPhaseStarted();
+		ProgressList list = new ProgressList ( listener, 30 );
+		
+		// Insert the data collection in the db
+		list.add( new ProgressStep( "dcInsert" ) {
+			
+			@Override
+			public void execute() throws Exception {
+				DCDAO dcDao = new DCDAO();
+				DataCollection.this.id = dcDao.insert( DataCollection.this );
+			}
+		});
 
-		DCDAO dcDao = new DCDAO();
-		this.id = dcDao.insert( this );
-
-		listener.nextStepStarted( DownloadStep.IMPORT_TABLE, tables.size() );
-
-		for ( DCTable table : tables ) {
-			listener.nextPhaseStarted();
-			table.makeImport( this );
+		// create a progress step for each table
+		for ( final DCTable table : tables ) {
+			
+			list.add( new ProgressStep( "import_" + table.getName() ) {
+				
+				@Override
+				public void execute() throws Exception {
+					table.makeImport( DataCollection.this );
+				}
+			});
 		}
+		
+		list.start();
+		
 
-		// download all the catalogues related to the data collection
-		downloadRelatedCatalogues( listener );
+		// second progress block for threads
+		list = new ProgressList ( listener, 70 );
+		
+		// start downloading all the catalogues 
+		// related to the data collection
+		Collection<CatalogueDownloader> down = prepareDownloadThreads();
+		
+		for ( final CatalogueDownloader thread : down ) {
+			
+			// start the thread
+			thread.start();
+			
+			// create a wait progress step for that thread
+			list.add( new ProgressStep( "t_" + thread.getId(), 
+					thread.getCatalogue().toString() ) {
+				
+				@Override
+				public void execute() throws Exception {
+					thread.join();
+				}
+			});
+		}
+		
+		// start the execution of the steps
+		// i.e. wait all the threads
+		list.start();
 	}
-
 
 	/**
 	 * Get all the catalogues related to this data collection
@@ -275,22 +310,17 @@ public class DataCollection {
 	}
 
 	/**
-	 * Download all the catalogues which are related
-	 * to this data collection. Note that if a catalogue
-	 * was already downloaded it will be simply ignored.
+	 * Start all the download processes which download the
+	 * data collections catalogues
+	 * @return a collection of {@link CataglogueDownloader} threads
+	 * which were started
 	 */
-	private void downloadRelatedCatalogues( final DCDownloadListener listener ) {
+	private Collection<CatalogueDownloader> prepareDownloadThreads() {
 
 		// get the catalogues which need to be downloaded
 		Collection<Catalogue> catToDownload = getNewCatalogues();
-		
-		// set the step for the progress
-		listener.nextStepStarted( 
-				DownloadStep.DOWNLOAD_CATALOGUES,
-				catToDownload.size() );
 
 		Collection<CatalogueDownloader> threads = new ArrayList<>();
-
 		
 		// download all the catalogues related to the configurations
 		// if not already present in the db
@@ -298,33 +328,10 @@ public class DataCollection {
 			
 			// download the catalogue in a separate thread
 			CatalogueDownloader downloader = new CatalogueDownloader( catalogue );
-
 			threads.add( downloader );
-
-			// when finished => increase the progress
-			downloader.setDoneListener( new ThreadFinishedListener() {
-
-				@Override
-				public void finished(Thread thread, int code) {
-					
-					System.out.println ( ((CatalogueDownloader)thread).getCatalogue() + " step called " );
-					
-					listener.nextPhaseStarted();
-				}
-			});
-
-			downloader.start();
 		}
 		
-		// wait each thread to finish
-		for ( CatalogueDownloader t : threads ) {
-
-			try {
-				t.join();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+		return threads;
 	}
 
 	@Override

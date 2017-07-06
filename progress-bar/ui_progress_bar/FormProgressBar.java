@@ -23,7 +23,7 @@ public class FormProgressBar {
 
 	private String title;
 
-	private Integer done = 0;
+	private int done = 0;
 	private double doneFract = 0;  // used to manage fractional progresses
 	private boolean opened;        // if the bar is opened or not
 	private boolean cancelEnabled;
@@ -217,7 +217,7 @@ public class FormProgressBar {
 	 * Set the progress of the progress bar
 	 * @param percent
 	 */
-	public void setProgress ( int percent ) {
+	public void setProgress ( double percent ) {
 		
 		// open if necessary
 		if ( !isOpened() )
@@ -230,7 +230,7 @@ public class FormProgressBar {
 			done = 0;
 		}
 		else {
-			done = percent;
+			done = (int) percent;
 		}
 		
 		// limit progress if required

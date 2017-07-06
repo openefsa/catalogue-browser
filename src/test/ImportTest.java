@@ -32,7 +32,7 @@ public class ImportTest {
 
 		CatalogueWorkbookImporter importer = new CatalogueWorkbookImporter();
 		importer.setOpenedCatalogue( catalogue );
-		importer.importWorkbook( 
-				"C:\\Users\\avonva\\Desktop\\MTX_8.7.xlsx");
+		//importer.importWorkbook( 
+		//		"C:\\Users\\avonva\\Desktop\\MTX_8.7.xlsx");
 	}
 }

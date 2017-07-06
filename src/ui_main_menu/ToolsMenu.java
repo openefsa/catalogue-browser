@@ -27,8 +27,8 @@ import dcf_user.User;
 import dcf_webservice.Publish.PublishLevel;
 import dcf_webservice.ReserveLevel;
 import export_catalogue.ExportActions;
-import import_catalogue.ImportCatalogueThread;
-import import_catalogue.ImportCatalogueThread.ImportFileFormat;
+import import_catalogue.CatalogueImporter.ImportFileFormat;
+import import_catalogue.CatalogueImporterThread;
 import messages.Messages;
 import sas_remote_procedures.XmlUpdateFile;
 import sas_remote_procedures.XmlUpdateFileDAO;
@@ -513,8 +513,8 @@ public class ToolsMenu implements MainMenuItem {
 				if ( val == SWT.CANCEL )
 					return;
 	
-				ImportCatalogueThread importCat = 
-						new ImportCatalogueThread( filename, ImportFileFormat.XLSX );
+				CatalogueImporterThread importCat = 
+						new CatalogueImporterThread( filename, ImportFileFormat.XLSX );
 				
 				importCat.setProgressBar( new FormProgressBar( shell,
 						Messages.getString( "Import.ImportXlsxBarTitle" ) ) );
@@ -533,15 +533,21 @@ public class ToolsMenu implements MainMenuItem {
 						// we do not open it since it is already opened
 						mainMenu.getCatalogue().loadData();
 						
-						
-						if ( listener != null )
-							listener.buttonPressed( importItem, 
-									IMPORT_CAT_MI, null );
-						
-						GlobalUtil.showDialog( shell, 
-								Messages.getString("Import.ImportSuccessTitle"), 
-								Messages.getString("Import.ImportSuccessMessage"), 
-								SWT.ICON_INFORMATION );
+						mainMenu.getShell().getDisplay().asyncExec( new Runnable() {
+							
+							@Override
+							public void run() {
+								if ( listener != null )
+									listener.buttonPressed( importItem, 
+											IMPORT_CAT_MI, null );
+								
+								GlobalUtil.showDialog( shell, 
+										Messages.getString("Import.ImportSuccessTitle"), 
+										Messages.getString("Import.ImportSuccessMessage"), 
+										SWT.ICON_INFORMATION );
+							}
+						});
+
 					}
 				});
 				

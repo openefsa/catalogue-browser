@@ -4,15 +4,25 @@ import javax.xml.soap.SOAPException;
 
 import org.eclipse.swt.widgets.Listener;
 
-import messages.Messages;
 import ui_progress_bar.FormProgressBar;
+import ui_progress_bar.ProgressListener;
+import ui_progress_bar.ProgressStep;
 
+/**
+ * Class used to download a {@link DataCollection} in background.
+ * @author avonva
+ *
+ */
 public class DCDownloader extends Thread {
 
 	private Listener doneListener;
 	private FormProgressBar progressBar;
 	private DataCollection dc;
 
+	/**
+	 * Initialize a data collection downloader
+	 * @param dc the data collection we want to download
+	 */
 	public DCDownloader( DataCollection dc ) {
 		this.dc = dc;
 	}
@@ -30,43 +40,31 @@ public class DCDownloader extends Thread {
 
 		try {
 			
-			DCDownloadListener listener = new DCDownloadListener() {
+			// Create the progress listener for the download
+			// process
+			ProgressListener listener = new ProgressListener() {
 				
 				@Override
-				public void nextStepStarted(DownloadStep step, int currentStepPhases) {
-
-					String label = step.toString();
-					switch ( step ) {
-					case DOWNLOAD_CONFIG:
-						label = Messages.getString( "DCDownload.DownStep" );
-						break;
-					case IMPORT_DC:
-						label = Messages.getString( "DCDownload.ImportDCStep" );
-						break;
-					case IMPORT_TABLE:
-						label = Messages.getString( "DCDownload.ImportTablesStep" );
-						break;
-					default:
-						break;
-					}
+				public void progressStepStarted(ProgressStep step) {
 					
-					if ( progressBar != null ) {
-						progressBar.setLabel( label );
-						
-						int stepCount = 4;
-						
-						// limit the progress for each step based on the number
-						// of required phases
-						progressBar.setProgressStep( 100 / (stepCount * currentStepPhases) );
-					}
+					if ( step == null )
+						return;
+
+					if ( progressBar != null && step.getName() != null )
+						progressBar.setLabel( step.getName() );
 				}
 				
 				@Override
-				public void nextPhaseStarted() {
-					progressBar.nextStep();
+				public void progressChanged(ProgressStep step, double addProgress, int maxProgress) {
+
+					if ( progressBar != null )
+						progressBar.addProgress( addProgress );
 				}
+				
+				@Override
+				public void failed(ProgressStep step) {}
 			};
-			
+
 			// download the data collection
 			dc.download( listener );
 			
@@ -81,6 +79,11 @@ public class DCDownloader extends Thread {
 		}
 	}
 	
+	/**
+	 * Set the listener which is called when the thread
+	 * finishes its work
+	 * @param doneListener
+	 */
 	public void setDoneListener(Listener doneListener) {
 		this.doneListener = doneListener;
 	}

@@ -8,8 +8,8 @@ import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_generator.ThreadFinishedListener;
 import dcf_manager.Dcf.DcfType;
-import import_catalogue.ImportCatalogueThread;
-import import_catalogue.ImportCatalogueThread.ImportFileFormat;
+import import_catalogue.CatalogueImporter.ImportFileFormat;
+import import_catalogue.CatalogueImporterThread;
 import ui_progress_bar.FormProgressBar;
 import utilities.GlobalUtil;
 
@@ -69,8 +69,8 @@ public class NewCatalogueInternalVersion {
 	 */
 	public void importNewCatalogueVersion ( final Listener doneListener ) {
 		
-		ImportCatalogueThread importCat = new 
-				ImportCatalogueThread( filename, ImportFileFormat.XML );
+		CatalogueImporterThread importCat = new 
+				CatalogueImporterThread( filename, ImportFileFormat.XML );
 		
 		// download the last internal version
 		// and when the process is finished

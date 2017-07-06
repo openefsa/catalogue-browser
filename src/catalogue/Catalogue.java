@@ -53,8 +53,8 @@ import dcf_webservice.ReserveLevel;
 import detail_level.DetailLevelDAO;
 import detail_level.DetailLevelGraphics;
 import global_manager.GlobalManager;
-import import_catalogue.ImportCatalogueThread;
-import import_catalogue.ImportCatalogueThread.ImportFileFormat;
+import import_catalogue.CatalogueImporter.ImportFileFormat;
+import import_catalogue.CatalogueImporterThread;
 import messages.Messages;
 import property.SorterCatalogueObject;
 import term_code_generator.CodeGenerator;
@@ -2109,8 +2109,8 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	public void makeXmlImport ( final File file, FormProgressBar progressBar, 
 			final ThreadFinishedListener doneListener ) {
 
-		ImportCatalogueThread importCat = 
-				new ImportCatalogueThread( file, 
+		CatalogueImporterThread importCat = 
+				new CatalogueImporterThread( file, 
 						ImportFileFormat.XML );
 
 		if ( progressBar != null )

@@ -20,6 +20,7 @@ public class CatalogueDownloader extends Thread {
 	private ThreadFinishedListener doneListener;
 	private FormProgressBar progressBar;
 	private Catalogue catalogue;
+	private boolean finished;
 	
 	/**
 	 * Download and import in the application database 
@@ -28,6 +29,7 @@ public class CatalogueDownloader extends Thread {
 	 */
 	public CatalogueDownloader( Catalogue catalogue ) {
 		this.catalogue = catalogue;
+		finished = false;
 	}
 	
 	@Override
@@ -36,6 +38,7 @@ public class CatalogueDownloader extends Thread {
 			downloadAndImport();
 		} catch (SOAPException e) {
 			callListener ( ThreadFinishedListener.EXCEPTION );
+			finished = true;
 		}
 	}
 	
@@ -63,12 +66,14 @@ public class CatalogueDownloader extends Thread {
 			@Override
 			public void finished(Thread thread, int code) {
 				callListener ( ThreadFinishedListener.OK );
+				finished = true;
 			}
 		});
 		
 		// if file not found
 		if ( !ok ) {
 			callListener ( ThreadFinishedListener.ERROR );
+			finished = true;
 			return;
 		}
 	}
@@ -96,6 +101,14 @@ public class CatalogueDownloader extends Thread {
 	 */
 	public void setDoneListener(ThreadFinishedListener doneListener) {
 		this.doneListener = doneListener;
+	}
+	
+	/**
+	 * Check if the thread has finished its work or not
+	 * @return
+	 */
+	public boolean isFinished() {
+		return finished;
 	}
 	
 	/**

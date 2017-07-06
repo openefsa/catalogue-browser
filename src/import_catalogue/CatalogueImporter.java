@@ -6,39 +6,20 @@ import java.util.ArrayList;
 
 import javax.xml.transform.TransformerException;
 
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-
 import catalogue.Catalogue;
-import catalogue_generator.ThreadFinishedListener;
 import folder_zipper.FolderZipper;
-import messages.Messages;
-import ui_progress_bar.FormProgressBar;
+import ui_progress_bar.ProgressListener;
 import utilities.GlobalUtil;
 import xml_to_excel.XmlCatalogueToExcel;
 
-/**
- * Thread used to import a catalogue from three different formats:
- * .ecf, .xml and .xlsx. Note that the real import process involves
- * only the .xlsx file. If an .ecf or an .xml file are used, they are
- * first converted to an .xlsx file to import it.
- * Import pipeline:
- * .ecf => .xml => .xlsx => import .xlsx
- * @author avonva
- *
- */
-public class ImportCatalogueThread extends Thread {
-
+public class CatalogueImporter {
+	
 	private String filename;  // path of the file
 	private ImportFileFormat format;  // the format of the file
-
 	private Catalogue openedCat;
-	
-	// called when import is finished
-	private ThreadFinishedListener doneListener;
-	
-	// progress bar used to notify the user
-	private FormProgressBar progressBar;
+	private ProgressListener listener;
+	private int maxProgress;
+	private int preprocProgress;
 	
 	// list of temporary files which need to
 	// be deleted at the end of the process
@@ -56,40 +37,39 @@ public class ImportCatalogueThread extends Thread {
 		XML,
 		XLSX;
 	}
-	
 	/**
 	 * Initialize the import thread
 	 * @param filename path of the file we want to import
 	 * @param format in which format is the file that we want to import
 	 */
-	public ImportCatalogueThread( String filename, 
-			ImportFileFormat format ) {
+	public CatalogueImporter( String filename, 
+			ImportFileFormat format, ProgressListener listener, int maxProgress ) {
 
 		this.filename = filename;
 		this.format = format;
 		this.garbage = new ArrayList<>();
+		this.listener = listener;
+		this.maxProgress = maxProgress;
 	}
 	
-	public ImportCatalogueThread( File file, 
-			ImportFileFormat format ) {
-		this ( file.getAbsolutePath(), format );
-	}
-	
-	/**
-	 * Run the import thread
-	 */
-	public void run () {
+	public void makeImport() {
 
 		switch ( format ) {
 		case ECF:
+			this.preprocProgress = maxProgress / 5;
+			listener.progressChanged(null, preprocProgress, maxProgress);
 			importEcf( filename );
 			break;
 
 		case XML:
+			this.preprocProgress = maxProgress / 6;
+			listener.progressChanged(null, preprocProgress, maxProgress);
 			importXml( filename );
 			break;
 			
 		case XLSX:
+			this.preprocProgress = maxProgress / 80;
+			listener.progressChanged(null, preprocProgress, maxProgress);
 			importXlsx( filename );
 			break;
 
@@ -97,7 +77,7 @@ public class ImportCatalogueThread extends Thread {
 			break;
 		}
 	}
-
+	
 	/**
 	 * Process an ecf file and extract the xml catalogue
 	 * contained in it.
@@ -105,9 +85,6 @@ public class ImportCatalogueThread extends Thread {
 	 * @return the created xml file
 	 */
 	private String processEcf ( String filename ) {
-
-		addProgress(1);
-		setProgressLabel( Messages.getString( "EcfImport.Processing" ) );
 		
 		String outputFile = null;
 		
@@ -153,9 +130,6 @@ public class ImportCatalogueThread extends Thread {
 	 */
 	private String processXml ( String filename ) {
 
-		addProgress(5);
-		setProgressLabel( Messages.getString( "ImportXml.Processing" ) );
-
 		try {
 
 			String outputFilename = filename + ".xlsx";
@@ -166,9 +140,6 @@ public class ImportCatalogueThread extends Thread {
 			
 			// do the conversion
 			converter.convertXmlToExcel();
-			
-			addProgress( 10 );
-			setProgressLabel( Messages.getString( "ImportXml.Importing" ) );
 
 			return outputFilename;
 
@@ -223,14 +194,13 @@ public class ImportCatalogueThread extends Thread {
 			// instantiate the workbook importer and set
 			// some settings
 			CatalogueWorkbookImporter importer = new CatalogueWorkbookImporter();
-			importer.setProgressBar( progressBar );
 
 			if ( openedCat != null )
 				importer.setOpenedCatalogue( openedCat );
 			
 			// import the catalogue contained in the
 			// xlsx file into the specified path (db path)
-			importer.importWorkbook( filename );
+			importer.importWorkbook( listener, filename, maxProgress - preprocProgress );
 
 		} catch ( final Exception e ) {
 			e.printStackTrace();
@@ -247,17 +217,6 @@ public class ImportCatalogueThread extends Thread {
 
 		// delete all the temporary files
 		deleteGarbage();
-		
-		// end the import process
-		Display.getDefault().syncExec( new Runnable() {
-			
-			@Override
-			public void run ( ) {
-
-				// call the UI listener
-				handleDone();
-			}
-		});
 	}
 	
 
@@ -272,67 +231,8 @@ public class ImportCatalogueThread extends Thread {
 			} catch (IOException e) {}
 		}
 	}
-
-	/**
-	 * Call the done listener if it was set
-	 * Pass as data the xlsx filename
-	 */
-	private void handleDone() {
-
-		if ( doneListener != null ) {
-			Event event = new Event();
-			event.data = filename;
-			doneListener.finished( this, ThreadFinishedListener.OK );
-		}
-	}
 	
-	/**
-	 * Called when all the operations are finished
-	 * @param doneListener
-	 */
-	public void addDoneListener ( ThreadFinishedListener doneListener ) {
-		this.doneListener = doneListener;
-	}
-	
-	/**
-	 * Set the progress bar for the thread
-	 * @param progressForm
-	 */
-	public void setProgressBar( FormProgressBar progressBar ) {
-		this.progressBar = progressBar;
-	}
-	
-	/**
-	 * Set the current progress of the progress bar
-	 * @param progress
-	 */
-	private void addProgress ( int progress ) {
-
-		if ( progressBar != null ) {
-			progressBar.addProgress( progress );
-		}
-	}
-	
-	/**
-	 * Set the progress bar label
-	 * @param label
-	 */
-	private void setProgressLabel ( String label ) {
-		
-		if ( progressBar != null ) {
-			progressBar.setLabel( label );
-		}
-	}
-	
-	/**
-	 * If we are importing a workbook into an opened catalogue
-	 * we need to specify which is the catalogue, otherwise
-	 * we will get errors in the import process due to the wrong
-	 * db path of the catalogue (which is determined by the
-	 * catalogue code + version)
-	 * @param localCat
-	 */
-	public void setOpenedCatalogue( Catalogue openedCat ) {
+	public void setOpenedCat(Catalogue openedCat) {
 		this.openedCat = openedCat;
 	}
 }

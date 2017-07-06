@@ -298,10 +298,16 @@ public class FileMenu implements MainMenuItem {
 						// finished (needed to refresh open and delete buttons)
 						mainMenu.refresh();
 						
-						GlobalUtil.showDialog(shell, 
-								Messages.getString("EcfImport.ImportSuccessTitle"),
-								Messages.getString( "EcfImport.ImportSuccessMessage" ),
-								SWT.ICON_INFORMATION );
+						mainMenu.getShell().getDisplay().asyncExec( new Runnable() {
+							
+							@Override
+							public void run() {
+								GlobalUtil.showDialog(shell, 
+										Messages.getString("EcfImport.ImportSuccessTitle"),
+										Messages.getString( "EcfImport.ImportSuccessMessage" ),
+										SWT.ICON_INFORMATION );
+							}
+						});
 					}
 				});
 			}
