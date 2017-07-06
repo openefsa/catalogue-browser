@@ -1,6 +1,7 @@
 package ui_progress_bar;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.ListIterator;
 
 /**
@@ -9,7 +10,7 @@ import java.util.ListIterator;
  * {@link ProgressStep#execute()} method. It is possible to execute all
  * the progress steps in the order they were inserted by using the
  * {@link #start()} command. The advantage of doing so is that we can
- * use the {@link ProgressListener} in order to be notified when each
+ * use the {@link ProgressStepListener} in order to be notified when each
  * piece of code starts and finishes. This allows for example to create
  * in the caller class a {@link FormProgressBar} which is updated
  * each time the listener is invoked, without having to implement
@@ -20,15 +21,17 @@ import java.util.ListIterator;
  */
 public class ProgressList extends ArrayList<ProgressStep> {
 	private static final long serialVersionUID = 1074566667820675565L;
-	
-	private ProgressListener listener;
+
 	private int maxProgress;
 	private long time;
+
+	private Collection<ProgressStepListener> listeners;
 	
-	public ProgressList( ProgressListener listener, int maxProgress ) {
-		this.listener = listener;
+	public ProgressList( int maxProgress ) {
 		this.maxProgress = maxProgress;
+		this.listeners = new ArrayList<>();
 	}
+	
 
 	/**
 	 * Get a progress node by its code
@@ -58,11 +61,17 @@ public class ProgressList extends ArrayList<ProgressStep> {
 			// execute progress step code
 			try {
 				System.out.println( "Starting " + step.getCode() );
-				listener.progressStepStarted( step );
+				
+				for ( ProgressStepListener listener : listeners )
+					listener.progressStepStarted( step );
+				
 				step.start();
 			} catch (Exception e) {
 				e.printStackTrace();
-				listener.failed( step );
+				
+				for ( ProgressStepListener listener : listeners )
+					listener.failed( step );
+				
 				break;
 			}
 			
@@ -72,8 +81,17 @@ public class ProgressList extends ArrayList<ProgressStep> {
 			double singleStepProgress = maxProgress / this.size();
 			
 			// notify that the progress changed
-			listener.progressChanged( step, singleStepProgress, maxProgress );
+			for ( ProgressStepListener listener : listeners )
+				listener.progressChanged( step, singleStepProgress, maxProgress );
 		}
+	}
+	
+	/**
+	 * Add a progress listener
+	 * @param listener
+	 */
+	public void addProgressListener ( ProgressStepListener listener ) {
+		listeners.add( listener );
 	}
 	
 	/**

@@ -60,7 +60,7 @@ import property.SorterCatalogueObject;
 import term_code_generator.CodeGenerator;
 import term_type.TermType;
 import term_type.TermTypeDAO;
-import ui_progress_bar.FormProgressBar;
+import ui_progress_bar.IProgressBar;
 import utilities.GlobalUtil;
 
 /**
@@ -2106,7 +2106,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * @param progressBar
 	 * @param doneListener
 	 */
-	public void makeXmlImport ( final File file, FormProgressBar progressBar, 
+	public void makeXmlImport ( final File file, IProgressBar progressBar, 
 			final ThreadFinishedListener doneListener ) {
 
 		CatalogueImporterThread importCat = 
@@ -2144,7 +2144,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * @return
 	 * @throws SOAPException
 	 */
-	public boolean downloadAndImport ( FormProgressBar progressBar, 
+	public boolean downloadAndImport ( IProgressBar progressBar, 
 			ThreadFinishedListener doneListener ) throws SOAPException {
 		
 		// download the catalogue

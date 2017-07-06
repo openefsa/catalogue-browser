@@ -7,8 +7,8 @@ import org.eclipse.swt.widgets.Event;
 import catalogue.Catalogue;
 import catalogue_generator.ThreadFinishedListener;
 import import_catalogue.CatalogueImporter.ImportFileFormat;
-import ui_progress_bar.FormProgressBar;
-import ui_progress_bar.ProgressListener;
+import ui_progress_bar.IProgressBar;
+import ui_progress_bar.ProgressStepListener;
 import ui_progress_bar.ProgressStep;
 
 /**
@@ -31,7 +31,7 @@ public class CatalogueImporterThread extends Thread {
 	private ThreadFinishedListener doneListener;
 	
 	// progress bar used to notify the user
-	private FormProgressBar progressBar;
+	private IProgressBar progressBar;
 	private int maxProgress = 100;
 	
 	/**
@@ -55,7 +55,7 @@ public class CatalogueImporterThread extends Thread {
 	 */
 	public void run () {
 
-		ProgressListener listener = new ProgressListener() {
+		ProgressStepListener listener = new ProgressStepListener() {
 			
 			@Override
 			public void progressStepStarted(ProgressStep step) {
@@ -118,7 +118,7 @@ public class CatalogueImporterThread extends Thread {
 	 * Set the progress bar for the thread
 	 * @param progressForm
 	 */
-	public void setProgressBar( FormProgressBar progressBar, int maxProgress ) {
+	public void setProgressBar( IProgressBar progressBar, int maxProgress ) {
 		this.progressBar = progressBar;
 		this.maxProgress = maxProgress;
 	}
@@ -127,7 +127,7 @@ public class CatalogueImporterThread extends Thread {
 	 * Set the progress bar for the thread
 	 * @param progressForm
 	 */
-	public void setProgressBar( FormProgressBar progressBar ) {
+	public void setProgressBar( IProgressBar progressBar ) {
 		this.progressBar = progressBar;
 		this.maxProgress = 100;
 	}

@@ -5,6 +5,7 @@ import javax.xml.soap.SOAPException;
 import catalogue.Catalogue;
 import messages.Messages;
 import ui_progress_bar.FormProgressBar;
+import ui_progress_bar.IProgressBar;
 
 /**
  * Thread used to download a catalogue in background. If needed,
@@ -18,7 +19,7 @@ import ui_progress_bar.FormProgressBar;
 public class CatalogueDownloader extends Thread {
 
 	private ThreadFinishedListener doneListener;
-	private FormProgressBar progressBar;
+	private IProgressBar progressBar;
 	private Catalogue catalogue;
 	private boolean finished;
 	
@@ -37,8 +38,7 @@ public class CatalogueDownloader extends Thread {
 		try {
 			downloadAndImport();
 		} catch (SOAPException e) {
-			callListener ( ThreadFinishedListener.EXCEPTION );
-			finished = true;
+			stop ( ThreadFinishedListener.EXCEPTION );
 		}
 	}
 	
@@ -72,10 +72,19 @@ public class CatalogueDownloader extends Thread {
 		
 		// if file not found
 		if ( !ok ) {
-			callListener ( ThreadFinishedListener.ERROR );
-			finished = true;
+			stop ( ThreadFinishedListener.ERROR );
 			return;
 		}
+	}
+	
+	/**
+	 * Stop the process
+	 * @param code
+	 */
+	private void stop( int code ) {
+		progressBar.stop( Messages.getString( "DCDownload.MissingAttachment" ) );
+		callListener ( code );
+		finished = true;
 	}
 	
 	/**
@@ -91,7 +100,7 @@ public class CatalogueDownloader extends Thread {
 	 * Add a progress bar to the process
 	 * @param progressBar
 	 */
-	public void setProgressBar ( FormProgressBar progressBar ) {
+	public void setProgressBar ( IProgressBar progressBar ) {
 		this.progressBar = progressBar;
 	}
 	

@@ -16,6 +16,7 @@ import catalogue_browser_dao.CatalogueDAO;
 import catalogue_generator.CatalogueCreator;
 import catalogue_generator.CatalogueDestroyer;
 import catalogue_generator.CatalogueDownloader;
+import catalogue_generator.CatalogueDownloaderManager;
 import catalogue_generator.DuplicatedCatalogueException;
 import catalogue_generator.ThreadFinishedListener;
 import data_collection.DCDAO;
@@ -32,7 +33,9 @@ import import_catalogue.CatalogueImporterThread;
 import messages.Messages;
 import ui_main_panel.FormLocalCatalogueName;
 import ui_main_panel.OldCatalogueReleaseDialog;
+import ui_progress_bar.FormMultipleProgress;
 import ui_progress_bar.FormProgressBar;
+import ui_progress_bar.TableMultipleProgress.TableRow;
 import utilities.GlobalUtil;
 
 /**
@@ -514,7 +517,7 @@ public class FileActions {
 		// return if null
 		if ( dc == null )
 			return;
-
+		
 		FormProgressBar progressBar = 
 				new FormProgressBar(shell, 
 						Messages.getString( "DCDownload.ProgressBarTitle" ) );
@@ -524,21 +527,71 @@ public class FileActions {
 		// download the data collection
 		DCDownloader downloader = new DCDownloader( dc );
 		downloader.setProgressBar( progressBar );
+		
+		// when finished
 		downloader.setDoneListener( new Listener() {
 
 			@Override
 			public void handleEvent(Event arg0) {
 
-				// warn user in UI thread
+				// start downloading catalogues
 				shell.getDisplay().asyncExec( new Runnable() {
 
 					@Override
 					public void run() {
-						GlobalUtil.showDialog(
-								shell, 
-								dc.getCode(), 
-								Messages.getString( Messages.getString( "DCDownload.Success" ) ), 
-								SWT.ICON_INFORMATION );
+						
+						// download all the dc catalogues
+						final FormMultipleProgress dialog = new FormMultipleProgress( shell );
+
+						CatalogueDownloaderManager manager = 
+								new CatalogueDownloaderManager( 3 );
+						
+						// for each catalogue
+						for ( Catalogue cat : dc.getNewCatalogues() ) {
+							
+							// add a progress row in the table
+							final TableRow row = dialog.addRow( cat.getLabel() );
+							
+							// prepare the download thread
+							CatalogueDownloader downloader = new CatalogueDownloader( cat );
+							
+							// set the table bar as progress bar
+							downloader.setProgressBar( row.getBar() );
+
+							// start the download of the catalogue
+							manager.add( downloader );
+						}
+						
+						// warn user when finished
+						manager.setDoneListener( new Listener() {
+							
+							@Override
+							public void handleEvent(Event arg0) {
+								
+								// warn user in the ui thread
+								// and make the list of progresses closeable
+								shell.getDisplay().asyncExec( new Runnable() {
+									
+									@Override
+									public void run() {
+
+										GlobalUtil.showDialog(
+												shell, 
+												dc.getCode(), 
+												Messages.getString( "DCDownload.Success" ), 
+												SWT.ICON_INFORMATION );
+										
+										dialog.done();
+									}
+								});
+							}
+						});
+						
+						// start thread in a batch way
+						manager.start();
+
+						dialog.open();
+
 					}
 				});
 			}

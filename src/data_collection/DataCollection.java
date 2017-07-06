@@ -12,8 +12,9 @@ import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_generator.CatalogueDownloader;
 import dcf_manager.Dcf;
+import messages.Messages;
 import ui_progress_bar.ProgressList;
-import ui_progress_bar.ProgressListener;
+import ui_progress_bar.ProgressStepListener;
 import ui_progress_bar.ProgressStep;
 import utilities.GlobalUtil;
 
@@ -146,7 +147,7 @@ public class DataCollection {
 	 *   into the db
 	 * @throws SOAPException
 	 */
-	public void download( ProgressListener listener ) throws SOAPException {
+	public void download( ProgressStepListener listener ) throws SOAPException {
 
 		if ( listener == null )
 			throw new InvalidParameterException( "Cannot set listener to null" );
@@ -167,7 +168,7 @@ public class DataCollection {
 	 * @param listener call back to be notified of import status
 	 */
 	public void makeImport( Collection<DCTable> tables, 
-			ProgressListener listener ) {
+			ProgressStepListener listener ) {
 
 		if ( listener == null )
 			throw new InvalidParameterException( "Cannot set listener to null" );
@@ -179,11 +180,13 @@ public class DataCollection {
 
 		System.out.println( "Importing " + this );
 
-		ProgressList list = new ProgressList ( listener, 30 );
-		
+		ProgressList list = new ProgressList ( 100 );
+		list.addProgressListener( listener );
+
 		// Insert the data collection in the db
-		list.add( new ProgressStep( "dcInsert" ) {
-			
+		list.add( new ProgressStep( "dcInsert", 
+				Messages.getString( "DCDownload.ImportDCStep" ) ) {
+
 			@Override
 			public void execute() throws Exception {
 				DCDAO dcDao = new DCDAO();
@@ -193,42 +196,52 @@ public class DataCollection {
 
 		// create a progress step for each table
 		for ( final DCTable table : tables ) {
-			
-			list.add( new ProgressStep( "import_" + table.getName() ) {
-				
+
+			list.add( new ProgressStep( "import_" + table.getName(),
+					Messages.getString( "DCDownload.ImportTablesStep" ) ) {
+
 				@Override
 				public void execute() throws Exception {
 					table.makeImport( DataCollection.this );
 				}
 			});
 		}
-		
+
 		list.start();
-		
+	}
+
+	/**
+	 * Download all the related catalogues
+	 * @param listener
+	 */
+	public void downlaodCatalogues ( ProgressStepListener listener ) {
 
 		// second progress block for threads
-		list = new ProgressList ( listener, 70 );
-		
+		ProgressList list = new ProgressList ( 100 );
+		list.addProgressListener( listener );
+
 		// start downloading all the catalogues 
 		// related to the data collection
 		Collection<CatalogueDownloader> down = prepareDownloadThreads();
-		
+
 		for ( final CatalogueDownloader thread : down ) {
-			
+
 			// start the thread
 			thread.start();
-			
+
 			// create a wait progress step for that thread
 			list.add( new ProgressStep( "t_" + thread.getId(), 
 					thread.getCatalogue().toString() ) {
-				
+
 				@Override
 				public void execute() throws Exception {
-					thread.join();
+					while ( !thread.isFinished() ) {
+						Thread.sleep( 100 );
+					}
 				}
 			});
 		}
-		
+
 		// start the execution of the steps
 		// i.e. wait all the threads
 		list.start();
@@ -283,7 +296,7 @@ public class DataCollection {
 	 * @return
 	 */
 	public Collection<Catalogue> getNewCatalogues() {
-		
+
 		Collection<Catalogue> catToDownload = new ArrayList<>();
 
 		// get all the catalogues related to the dc
@@ -321,16 +334,16 @@ public class DataCollection {
 		Collection<Catalogue> catToDownload = getNewCatalogues();
 
 		Collection<CatalogueDownloader> threads = new ArrayList<>();
-		
+
 		// download all the catalogues related to the configurations
 		// if not already present in the db
 		for ( Catalogue catalogue : catToDownload ) {
-			
+
 			// download the catalogue in a separate thread
 			CatalogueDownloader downloader = new CatalogueDownloader( catalogue );
 			threads.add( downloader );
 		}
-		
+
 		return threads;
 	}
 

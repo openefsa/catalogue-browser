@@ -14,23 +14,16 @@ import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 
 
-public class FormProgressBar {
+public class FormProgressBar implements IProgressBar {
 
 	private Shell shell;
 	private Shell currentShell;
-	private ProgressBar	progressBar;
+	private CustomProgressBar progressBar;
 	private Label label;
-
 	private String title;
 
-	private int done = 0;
-	private double doneFract = 0;  // used to manage fractional progresses
 	private boolean opened;        // if the bar is opened or not
 	private boolean cancelEnabled;
-
-	private int progressLimit = 100;  // set this to limit the bar progress
-	
-	private double progressStep = 1;  // progress gained by a single operation step
 
 	/**
 	 * Constructor, initialize the progress bar
@@ -48,6 +41,11 @@ public class FormProgressBar {
 		this.initializeGraphics( shell, style );
 	}
 
+	@Override
+	public ProgressBar getProgressBar() {
+		return progressBar.getProgressBar();
+	}
+	
 	/**
 	 * Initialize the progress bar without cancel button
 	 * @param shell the shell where to create the progress bar
@@ -71,7 +69,6 @@ public class FormProgressBar {
 		Composite grp = new Group( currentShell , SWT.NONE );
 		grp.setLayout( new GridLayout( 2 , false ) );
 
-
 		// label for the title
 		label = new Label( grp , SWT.NONE);
 		label.setText( title );
@@ -85,15 +82,7 @@ public class FormProgressBar {
 		Label label2 = new Label( grp , SWT.NONE );
 
 		// progress bar
-		progressBar = new ProgressBar( grp , SWT.SMOOTH );
-		progressBar.setMaximum( 100 );
-
-		gridData = new GridData();
-		gridData.verticalAlignment = SWT.CENTER;
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = true;
-		progressBar.setLayoutData( gridData );
+		progressBar = new CustomProgressBar( grp , SWT.SMOOTH );
 
 		Monitor primary = parentShell.getMonitor();
 		Rectangle bounds = primary.getBounds();
@@ -163,11 +152,11 @@ public class FormProgressBar {
 	 * @param progressLimit
 	 */
 	public void setProgressLimit(int progressLimit) {
-		this.progressLimit = progressLimit;
+		progressBar.setProgressLimit(progressLimit);
 	}
 	
 	public void removeProgressLimit() {
-		this.progressLimit = 100;
+		progressBar.removeProgressLimit();
 	}
 	
 	/**
@@ -178,7 +167,7 @@ public class FormProgressBar {
 	 * @param progressStep
 	 */
 	public void setProgressStep(double progressStep) {
-		this.progressStep = progressStep;
+		progressBar.setProgressStep(progressStep);
 	}
 	
 	/**
@@ -186,7 +175,7 @@ public class FormProgressBar {
 	 * {@link #progressStep} variable
 	 */
 	public void nextStep() {
-		addProgress( progressStep );
+		progressBar.nextStep();
 	}
 
 	/**
@@ -197,20 +186,7 @@ public class FormProgressBar {
 	 * @param progress
 	 */
 	public void addProgress ( double progress ) {
-
-		// add to the done fract the double progress
-		doneFract = doneFract + progress;
-
-		// when we reach the 1 with the done progress
-		// we can refresh the progress bar adding
-		// the integer part of the doneFract
-		if ( doneFract >= 1 ) {
-			
-			setProgress ( done + (int) doneFract );
-
-			// reset the doneFract double
-			doneFract = 0;
-		}
+		progressBar.addProgress(progress);
 	}
 
 	/**
@@ -218,34 +194,14 @@ public class FormProgressBar {
 	 * @param percent
 	 */
 	public void setProgress ( double percent ) {
-		
-		// open if necessary
-		if ( !isOpened() )
-			open();
-
-		if ( percent >= 100 ) {
-			done = 100;
-		}
-		else if ( percent < 0 ) {
-			done = 0;
-		}
-		else {
-			done = (int) percent;
-		}
-		
-		// limit progress if required
-		if ( done > progressLimit ) {
-			done = progressLimit;
-		}
-
-		refreshProgressBar( done );
+		progressBar.setProgress(percent);
 	}
 
 	/**
 	 * Set the bar to 100%
 	 */
 	public void fillBar() {
-		setProgress( 100 );
+		progressBar.fillBar();
 	}
 
 	/**
@@ -279,41 +235,6 @@ public class FormProgressBar {
 	}
 
 	/**
-	 * Refresh the progress bar state
-	 */
-	private void refreshProgressBar ( final int done ) {
-
-		if ( progressBar.isDisposed() )
-			return;
-
-		Display disp = progressBar.getDisplay();
-
-		if ( disp.isDisposed() )
-			return;
-
-		disp.asyncExec( new Runnable() {
-			public void run ( ) {
-
-				if ( progressBar.isDisposed() )
-					return;
-
-				progressBar.setSelection( done );
-				progressBar.update();
-			}
-		} );
-
-		try
-		{
-			// set a small value! Otherwise the bar will slow all the Tool if often called
-			Thread.sleep(11);  
-		}
-		catch (InterruptedException e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	/**
 	 * Get if the progress bar is open or not
 	 * @return
 	 */
@@ -326,6 +247,16 @@ public class FormProgressBar {
 	 * @return
 	 */
 	public boolean isCompleted() {
-		return done >= 100;
+		return progressBar.isCompleted();
+	}
+
+	@Override
+	public void addProgressListener(ProgressListener listener) {
+		progressBar.addProgressListener(listener);
+	}
+
+	@Override
+	public void stop( String message ) {
+		progressBar.stop( message );
 	}
 }

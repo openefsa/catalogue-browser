@@ -5,7 +5,7 @@ import javax.xml.soap.SOAPException;
 import org.eclipse.swt.widgets.Listener;
 
 import ui_progress_bar.FormProgressBar;
-import ui_progress_bar.ProgressListener;
+import ui_progress_bar.ProgressStepListener;
 import ui_progress_bar.ProgressStep;
 
 /**
@@ -42,7 +42,7 @@ public class DCDownloader extends Thread {
 			
 			// Create the progress listener for the download
 			// process
-			ProgressListener listener = new ProgressListener() {
+			ProgressStepListener listener = new ProgressStepListener() {
 				
 				@Override
 				public void progressStepStarted(ProgressStep step) {

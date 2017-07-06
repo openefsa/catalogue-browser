@@ -8,7 +8,7 @@ import javax.xml.transform.TransformerException;
 
 import catalogue.Catalogue;
 import folder_zipper.FolderZipper;
-import ui_progress_bar.ProgressListener;
+import ui_progress_bar.ProgressStepListener;
 import utilities.GlobalUtil;
 import xml_to_excel.XmlCatalogueToExcel;
 
@@ -17,7 +17,7 @@ public class CatalogueImporter {
 	private String filename;  // path of the file
 	private ImportFileFormat format;  // the format of the file
 	private Catalogue openedCat;
-	private ProgressListener listener;
+	private ProgressStepListener listener;
 	private int maxProgress;
 	private int preprocProgress;
 	
@@ -43,7 +43,7 @@ public class CatalogueImporter {
 	 * @param format in which format is the file that we want to import
 	 */
 	public CatalogueImporter( String filename, 
-			ImportFileFormat format, ProgressListener listener, int maxProgress ) {
+			ImportFileFormat format, ProgressStepListener listener, int maxProgress ) {
 
 		this.filename = filename;
 		this.format = format;

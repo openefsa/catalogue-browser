@@ -18,7 +18,7 @@ import open_xml_reader.ResultDataSet;
 import open_xml_reader.WorkbookReader;
 import ui_progress_bar.FormProgressBar;
 import ui_progress_bar.ProgressList;
-import ui_progress_bar.ProgressListener;
+import ui_progress_bar.ProgressStepListener;
 import ui_progress_bar.ProgressStep;
 import ui_search_bar.SearchOptionDAO;
 import user_preferences.CataloguePreferenceDAO;
@@ -82,7 +82,7 @@ public class CatalogueWorkbookImporter {
 	 * @throws SQLException 
 	 * @throws Exception
 	 */
-	public void importWorkbook( ProgressListener listener, String filename, int maxProgress ) 
+	public void importWorkbook( ProgressStepListener listener, String filename, int maxProgress ) 
 			throws IOException, XMLStreamException, OpenXML4JException, 
 			SAXException, SQLException {
 		
@@ -90,7 +90,9 @@ public class CatalogueWorkbookImporter {
 		final WorkbookReader workbookReader = new WorkbookReader( filename );
 		
 		// create a list of steps to be executed
-		ProgressList list = new ProgressList( listener, maxProgress );
+		ProgressList list = new ProgressList( maxProgress );
+		
+		list.addProgressListener( listener );
 		
 		list.add( new ProgressStep( "cat", Messages.getString("Import.Catalogue") ) {
 			

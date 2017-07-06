@@ -1,6 +1,6 @@
 package ui_progress_bar;
 
-public interface ProgressListener {
+public interface ProgressStepListener {
 	
 	/**
 	 * Called when a progress step was started

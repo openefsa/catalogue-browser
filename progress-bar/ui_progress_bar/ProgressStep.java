@@ -13,6 +13,7 @@ public abstract class ProgressStep {
 	private String code;
 	private String name;
 	private Object data;
+	
 	private long time;
 	
 	/**
