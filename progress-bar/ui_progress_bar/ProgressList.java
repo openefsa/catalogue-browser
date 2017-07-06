@@ -60,7 +60,6 @@ public class ProgressList extends ArrayList<ProgressStep> {
 			
 			// execute progress step code
 			try {
-				System.out.println( "Starting " + step.getCode() );
 				
 				for ( ProgressStepListener listener : listeners )
 					listener.progressStepStarted( step );

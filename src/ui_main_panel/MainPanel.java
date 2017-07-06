@@ -918,6 +918,8 @@ public class MainPanel implements Observer, RestoreableWindow {
 			public void handleEvent(Event event) {
 				Term term = (Term) event.data;
 				tree.refresh( term );
+				
+				searchPanel.refresh( true );
 			}
 		});
 	}
