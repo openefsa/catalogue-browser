@@ -544,10 +544,21 @@ public class FileActions {
 						final FormMultipleProgress dialog = new FormMultipleProgress( shell );
 
 						CatalogueDownloaderManager manager = 
-								new CatalogueDownloaderManager( 3 );
+								new CatalogueDownloaderManager( 1 );
+						
+						Collection<Catalogue> catToDownload = dc.getNewCatalogues();
+						
+						if ( catToDownload.isEmpty() ) {
+							GlobalUtil.showDialog(
+									shell, 
+									dc.getCode(), 
+									Messages.getString( "DCDownload.EmptyDC" ), 
+									SWT.ICON_INFORMATION );
+							return;
+						}
 						
 						// for each catalogue
-						for ( Catalogue cat : dc.getNewCatalogues() ) {
+						for ( Catalogue cat : catToDownload ) {
 							
 							// add a progress row in the table
 							final TableRow row = dialog.addRow( cat.getLabel() );

@@ -52,6 +52,9 @@ public class CatalogueImporter {
 		this.maxProgress = maxProgress;
 	}
 	
+	/**
+	 * Import the file
+	 */
 	public void makeImport() {
 
 		switch ( format ) {

@@ -382,7 +382,7 @@ public class Dcf {
 	 * @throws SOAPException
 	 */
 	public Collection<DCTable> getFile( String resourceId ) throws SOAPException {
-		GetFile getFile = new GetFile( DcfType.TEST );
+		GetFile getFile = new GetFile( dcfType );
 		Collection<DCTable> tables = getFile.getFile( resourceId );
 		return tables;
 	}

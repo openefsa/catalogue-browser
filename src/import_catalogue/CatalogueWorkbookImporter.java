@@ -94,7 +94,8 @@ public class CatalogueWorkbookImporter {
 		
 		list.addProgressListener( listener );
 		
-		list.add( new ProgressStep( "cat", Messages.getString("Import.Catalogue") ) {
+		list.add( new ProgressStep( "cat", 
+				Messages.getString("Import.Catalogue") ) {
 			
 			@Override
 			public void execute() throws Exception {
@@ -103,7 +104,8 @@ public class CatalogueWorkbookImporter {
 			}
 		});
 
-		list.add( new ProgressStep( "hier", Messages.getString("Import.Hierarchy")) {
+		list.add( new ProgressStep( "hier", 
+				Messages.getString("Import.Hierarchy") ) {
 			
 			@Override
 			public void execute() throws Exception {
@@ -116,7 +118,8 @@ public class CatalogueWorkbookImporter {
 			}
 		});
 
-		list.add( new ProgressStep( "attr", Messages.getString("Import.Attribute")) {
+		list.add( new ProgressStep( "attr", 
+				Messages.getString("Import.Attribute") ) {
 			
 			@Override
 			public void execute() throws Exception {
@@ -128,7 +131,8 @@ public class CatalogueWorkbookImporter {
 			}
 		});
 		
-		list.add( new ProgressStep( "term", Messages.getString("Import.Term")) {
+		list.add( new ProgressStep( "term", 
+				Messages.getString("Import.Term") ) {
 			
 			@Override
 			public void execute() throws Exception {
@@ -140,7 +144,8 @@ public class CatalogueWorkbookImporter {
 			}
 		});
 		
-		list.add( new ProgressStep( "ta_parent", Messages.getString("Import.TermAttrParent")) {
+		list.add( new ProgressStep( "ta_parent", 
+				Messages.getString("Import.TermAttrParent") ) {
 			
 			@Override
 			public void execute() throws Exception {
@@ -149,7 +154,8 @@ public class CatalogueWorkbookImporter {
 			}
 		});
 		
-		list.add( new ProgressStep( "notes", Messages.getString("Import.ReleaseNotes")) {
+		list.add( new ProgressStep( "notes", 
+				Messages.getString("Import.ReleaseNotes") ) {
 			
 			@Override
 			public void execute() throws Exception {
@@ -161,27 +167,35 @@ public class CatalogueWorkbookImporter {
 			}
 		});
 		
+		list.add( new ProgressStep("preferences", 
+				Messages.getString( "Import.Preferences" ) ) {
+			
+			@Override
+			public void execute() throws Exception {
+
+				// after having imported the excel, we can insert the default preferences
+				System.out.println ( "Creating default preferences" );
+				
+				Catalogue importedCat = catImp.getImportedCatalogue();
+				
+				// insert default preferences
+				CataloguePreferenceDAO prefDao = new CataloguePreferenceDAO( importedCat );
+				prefDao.insertDefaultPreferences();
+				
+				// insert the default search options
+				SearchOptionDAO optDao = new SearchOptionDAO ( importedCat );
+				optDao.insertDefaultSearchOpt();
+			}
+		});
+		
 		// start all the nodes
 		list.start();
 		
 		// close the connection with excel reader
 		workbookReader.close();
 
-		// after having imported the excel, we can insert the default preferences
-		System.out.println ( "Creating default preferences" );
-		
 		Catalogue importedCat = catImp.getImportedCatalogue();
-		
-		// insert default preferences
-		CataloguePreferenceDAO prefDao = new CataloguePreferenceDAO( importedCat );
-		prefDao.insertDefaultPreferences();
-		
-		// insert the default search options
-		SearchOptionDAO optDao = new SearchOptionDAO ( importedCat );
-		optDao.insertDefaultSearchOpt();
-		
 		System.out.println( importedCat + " successfully imported in " + importedCat.getDbPath() );
-		
 		System.out.println( "Statistics: " + 
 				"overall time = " + list.getTime()/1000.00 + " seconds" );
 	}

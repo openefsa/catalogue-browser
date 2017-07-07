@@ -232,7 +232,7 @@ public abstract class SOAPAction {
 
 		// if no attachment => errors in processing response, return null
 		if ( part == null ) {
-			System.err.println( "GetFile: no attachment found" );
+			System.err.println( this + ": no attachment found" );
 			return null;
 		}
 
@@ -332,6 +332,11 @@ public abstract class SOAPAction {
 	    
 	    // get the xml document and return it
 	    return builder.parse( file );
+	}
+	
+	@Override
+	public String toString() {
+		return this.getClass().getName();
 	}
 	
 	/**

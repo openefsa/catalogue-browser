@@ -263,7 +263,7 @@ public abstract class FormObjectsList<T> implements RestoreableWindow {
 	 */
 	public T getFirstSelection() {
 
-		if ( selectedObjs.isEmpty() )
+		if ( selectedObjs == null || selectedObjs.isEmpty() )
 			return null;
 		
 		return selectedObjs.iterator().next();
@@ -416,8 +416,8 @@ public abstract class FormObjectsList<T> implements RestoreableWindow {
 
 			// warn the user
 			MessageBox mb = new MessageBox ( dialog, SWT.ICON_WARNING );
-			mb.setText( Messages.getString("FormCataloguesList.WarningTitle") );
-			mb.setMessage( Messages.getString("FormCataloguesList.WarningMessage") );
+			mb.setText( Messages.getString("FormObjList.WarningTitle") );
+			mb.setMessage( Messages.getString("FormObjList.WarningMessage") );
 			mb.open();
 
 			return;
