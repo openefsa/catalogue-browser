@@ -2125,9 +2125,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 				// remove temporary file
 				try {
 					GlobalUtil.deleteFileCascade( file );
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				} catch (IOException e) {}
 
 				if ( doneListener != null )
 					doneListener.finished(thread, code);

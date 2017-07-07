@@ -22,6 +22,7 @@ import ui_progress_bar.ProgressStepListener;
 import ui_progress_bar.ProgressStep;
 import ui_search_bar.SearchOptionDAO;
 import user_preferences.CataloguePreferenceDAO;
+import utilities.GlobalUtil;
 
 /**
  * Import an entire catalogue workbook (xslx) into the database
@@ -198,6 +199,9 @@ public class CatalogueWorkbookImporter {
 		System.out.println( importedCat + " successfully imported in " + importedCat.getDbPath() );
 		System.out.println( "Statistics: " + 
 				"overall time = " + list.getTime()/1000.00 + " seconds" );
+		
+		// clear temporary files
+		GlobalUtil.clearTempDir();
 	}
 	
 	/**

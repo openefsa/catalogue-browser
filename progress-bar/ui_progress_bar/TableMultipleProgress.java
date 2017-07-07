@@ -2,6 +2,7 @@ package ui_progress_bar;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableEditor;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
@@ -32,11 +33,14 @@ public class TableMultipleProgress {
 	private void createTable() {
 		
 		// create table
-		table = new Table( parent, SWT.BORDER );
+		table = new Table( parent, SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL );
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		
-		// add two columns
+		GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
+		table.setLayoutData( data );
+		
+		// add 3 columns
 		for (int i = 0; i < 3; i++) {
 			new TableColumn(table, SWT.NONE);
 		}

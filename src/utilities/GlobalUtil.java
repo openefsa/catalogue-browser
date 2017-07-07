@@ -152,6 +152,16 @@ public class GlobalUtil {
 		return ( workDir + TEMP_DIR_NAME + 
 				System.getProperty( "file.separator" ) );
 	}
+	
+	/**
+	 * Delete all the temporary files in the {@link #getTempDir()}
+	 */
+	public static void clearTempDir() {
+		File directory = new File( getTempDir() );
+		for ( File file : directory.listFiles() ) {
+			file.delete();
+		}
+	}
 
 	
 	/**

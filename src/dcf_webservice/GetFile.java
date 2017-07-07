@@ -1,7 +1,6 @@
 package dcf_webservice;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
 
@@ -14,9 +13,7 @@ import javax.xml.stream.XMLStreamException;
 
 import data_collection.DCResourceParser;
 import data_collection.DCTable;
-import dcf_manager.Dcf;
 import dcf_manager.Dcf.DcfType;
-import dcf_user.User;
 import utilities.GlobalUtil;
 
 public class GetFile extends SOAPAction {
@@ -95,28 +92,5 @@ public class GetFile extends SOAPAction {
 		}
 
 		return null;
-	}
-	
-	public static void main ( String[] args) throws FileNotFoundException, XMLStreamException {
-		System.out.println( "Start" );
-		// login
-		User.getInstance().login( "gibinda", "Milano2017" );
-
-		// get file
-		GetFile getFile = new GetFile( Dcf.dcfType );
-		Collection<DCTable> tables;
-		try {
-			
-			System.out.println( "Get file" );
-			
-			tables = getFile.getFile( "05_162" );
-			
-			for ( DCTable table : tables ) {
-				System.out.println( "TABLES " + table.getName() );
-			}
-
-		} catch (SOAPException e) {
-			e.printStackTrace();
-		}
 	}
 }

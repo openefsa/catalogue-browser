@@ -45,13 +45,10 @@ public class FormMultipleProgress {
 		dialog = new Shell( shell, SWT.SHELL_TRIM | SWT.APPLICATION_MODAL );
 
 		dialog.setLayout( new GridLayout( 1, false ) );
-		
-		GridData gridData = new GridData();
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = true;
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.verticalAlignment = SWT.FILL;
 
+		dialog.setSize( 500, 300 );
+
+		// do not close this window until finished
 		closeListener = new Listener() {
 
 			@Override
@@ -70,7 +67,7 @@ public class FormMultipleProgress {
 		okBtn.setText( Messages.getString( "ProgressTable.CloseBtn" ) );
 		okBtn.setEnabled( false );
 
-		okBtn.setLayoutData( new GridData(SWT.CENTER, SWT.FILL, true, true) );
+		okBtn.setLayoutData( new GridData(SWT.CENTER, SWT.CENTER, true, false) );
 		
 		// close if clicked
 		okBtn.addSelectionListener( new SelectionListener() {
@@ -89,7 +86,6 @@ public class FormMultipleProgress {
 	 * Open and visualize the window
 	 */
 	public void open() {
-		dialog.pack();
 		dialog.open();
 	}
 	
