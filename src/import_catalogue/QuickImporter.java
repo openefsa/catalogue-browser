@@ -22,10 +22,8 @@ public abstract class QuickImporter {
 	protected String sheetName;
 	protected int batchSize;
 	
-	public QuickImporter( WorkbookReader workbookReader,
-			String sheetName, int batchSize ) {
+	public QuickImporter( WorkbookReader workbookReader, int batchSize ) {
 		this.workbookReader = workbookReader;
-		this.sheetName = sheetName;
 		this.batchSize = batchSize;
 	}
 	
@@ -39,10 +37,8 @@ public abstract class QuickImporter {
 	public void importSheet () 
 			throws XMLStreamException, InvalidFormatException, IOException {
 		
-		// get the sheet
-		workbookReader.processSheetName( sheetName );
 		workbookReader.setBatchSize( batchSize );
-		
+
 		if ( !workbookReader.hasNext() )
 			return;
 		

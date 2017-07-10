@@ -11,6 +11,7 @@ import java.util.HashMap;
 import catalogue.Catalogue;
 import catalogue_object.Term;
 import open_xml_reader.ResultDataSet;
+import ui_progress_bar.IProgressBar;
 
 /**
  * Sheet importer. Abstract class to create the skeleton program
@@ -23,6 +24,10 @@ import open_xml_reader.ResultDataSet;
  */
 public abstract class SheetImporter<T> {
 	
+	private IProgressBar progressBar;
+	private int rowCount;
+	private double maxProgress;
+	
 	/**
 	 * Start the import process of the sheet.
 	 */
@@ -31,6 +36,9 @@ public abstract class SheetImporter<T> {
 		// list of all objects which were parsed
 		Collection<T> objs = new ArrayList<>();
 
+		// count the sheet rows
+		int processedSheetRows = 0;
+		
 		while ( data.next() ) {
 
 			// read the current line and get the
@@ -54,17 +62,39 @@ public abstract class SheetImporter<T> {
 				allObjs.clear();
 				allObjs = null;
 			}
+			
+			processedSheetRows++;
 		}
 
 		// insert all the remaining T objects into the db
-		if ( !objs.isEmpty() )
+		if ( !objs.isEmpty() ) {
+
 			insert( objs );
+
+			// notify the progress if enabled
+			if ( progressBar != null ) {
+				double progress = ( processedSheetRows * maxProgress * 1.0000000 ) / rowCount;
+				progressBar.addProgress( progress );
+			}
+		}
 
 		objs.clear();
 		objs = null;
 		
 		// end the process
 		end();
+	}
+	
+	/**
+	 * Set a progress bar for the process
+	 * @param progressBar progress bar which will be notified of the progress
+	 * @param rowCount number of rows contained in the sheet
+	 * @param maxProgress maximum progress achievable with this sheet import
+	 */
+	public void setProgressBar(IProgressBar progressBar, int rowCount, double maxProgress) {
+		this.progressBar = progressBar;
+		this.rowCount = rowCount;
+		this.maxProgress = maxProgress;
 	}
 	
 	/**

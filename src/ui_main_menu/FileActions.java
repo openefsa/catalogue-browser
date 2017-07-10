@@ -419,6 +419,8 @@ public class FileActions {
 		final FormProgressBar progressBar = new FormProgressBar( shell, 
 				Messages.getString("FileMenu.DeleteCatalogue") );
 		
+		progressBar.open();
+		
 		deleter.setProgressBar( progressBar );
 		
 		deleter.start();

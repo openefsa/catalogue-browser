@@ -8,8 +8,6 @@ import catalogue.Catalogue;
 import catalogue_generator.ThreadFinishedListener;
 import import_catalogue.CatalogueImporter.ImportFileFormat;
 import ui_progress_bar.IProgressBar;
-import ui_progress_bar.ProgressStepListener;
-import ui_progress_bar.ProgressStep;
 
 /**
  * Thread used to import a catalogue from three different formats:
@@ -32,7 +30,7 @@ public class CatalogueImporterThread extends Thread {
 	
 	// progress bar used to notify the user
 	private IProgressBar progressBar;
-	private int maxProgress = 100;
+	private double maxProgress = 100;
 	
 	/**
 	 * Initialize the import thread
@@ -54,33 +52,11 @@ public class CatalogueImporterThread extends Thread {
 	 * Run the import thread
 	 */
 	public void run () {
-
-		ProgressStepListener listener = new ProgressStepListener() {
-			
-			@Override
-			public void progressStepStarted(ProgressStep step) {
-				
-				if ( step != null && progressBar != null )
-					progressBar.setLabel( step.getName() );
-			}
-			
-			@Override
-			public void progressChanged( ProgressStep step, 
-					double addProgress, int maxProgress) {
-
-				// update progress bar
-				if ( progressBar != null )
-					progressBar.addProgress( addProgress );
-			}
-
-			@Override
-			public void failed(ProgressStep step) {}
-
-
-		};
+		
+		progressBar.open();
 		
 		CatalogueImporter importer = new CatalogueImporter(filename, format, 
-				listener, maxProgress );
+				progressBar, maxProgress );
 		
 		importer.setOpenedCat( openedCat );
 		importer.makeImport();
@@ -96,8 +72,10 @@ public class CatalogueImporterThread extends Thread {
 	private void handleDone() {
 
 		// end process
-		if ( progressBar != null )
+		if ( progressBar != null ) {
+			progressBar.fillToMax();
 			progressBar.close();
+		}
 		
 		if ( doneListener != null ) {
 			Event event = new Event();
@@ -118,7 +96,7 @@ public class CatalogueImporterThread extends Thread {
 	 * Set the progress bar for the thread
 	 * @param progressForm
 	 */
-	public void setProgressBar( IProgressBar progressBar, int maxProgress ) {
+	public void setProgressBar( IProgressBar progressBar, double maxProgress ) {
 		this.progressBar = progressBar;
 		this.maxProgress = maxProgress;
 	}

@@ -75,13 +75,6 @@ public class CustomProgressBar implements IProgressBar {
 			doneFract = 0;
 		}
 	}
-
-	/**
-	 * Set the bar to 100%
-	 */
-	public void fillBar() {
-		setProgress( 100 );
-	}
 	
 	/**
 	 * Set the progress of the progress bar
@@ -165,7 +158,7 @@ public class CustomProgressBar implements IProgressBar {
 	 * @return
 	 */
 	public boolean isCompleted() {
-		return done >= 100;
+		return done >= progressLimit;
 	}
 	
 	/**
@@ -214,5 +207,10 @@ public class CustomProgressBar implements IProgressBar {
 		for ( ProgressListener listener : listeners ) {
 			listener.progressStopped( message, this );
 		}
+	}
+
+	@Override
+	public void fillToMax() {
+		setProgress( progressLimit );
 	}
 }

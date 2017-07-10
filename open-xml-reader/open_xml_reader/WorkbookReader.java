@@ -24,6 +24,7 @@ import org.xml.sax.SAXException;
  */
 public class WorkbookReader {
 
+	private int rowCount = -1;
 	private BufferedSheetReader sheetParser;
 	private InputStream sheetReader;
 	private XSSFReader reader = null;
@@ -99,6 +100,11 @@ public class WorkbookReader {
 		// create a parser with pull pattern
 		sheetParser = new BufferedSheetReader ( sheetReader, 
 				reader.getSharedStringsTable() );
+		
+		// get the number of rows for the sheet
+		InputStream input = reader.getSheet( sheetRId );
+		rowCount = BufferedSheetReader.getRowCount( input );
+		input.close();
 	}
 
 	/**
@@ -113,6 +119,16 @@ public class WorkbookReader {
 		return sheetParser.hasNext();
 	}
 
+	/**
+	 * Get the number of rows for the current sheet
+	 * Note that you must call {@link #processSheetName(String)}
+	 * to have a consistent result.
+	 * @return
+	 */
+	public int getRowCount() {
+		return rowCount;
+	}
+	
 	/**
 	 * Set the batch size of the current
 	 * {@link #sheetParser}. Using {@link #next()}

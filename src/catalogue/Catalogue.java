@@ -2106,7 +2106,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * @param progressBar
 	 * @param doneListener
 	 */
-	public void makeXmlImport ( final File file, IProgressBar progressBar, 
+	public void makeXmlImport ( final File file, IProgressBar progressBar, double maxProgress,
 			final ThreadFinishedListener doneListener ) {
 
 		CatalogueImporterThread importCat = 
@@ -2114,7 +2114,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 						ImportFileFormat.XML );
 
 		if ( progressBar != null )
-			importCat.setProgressBar( progressBar );
+			importCat.setProgressBar( progressBar, maxProgress );
 
 		// set the listener
 		importCat.addDoneListener( new ThreadFinishedListener() {
@@ -2122,7 +2122,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 			@Override
 			public void finished(Thread thread, int code) {
 
-				// remove temporary file
+				// remove temporary file if needed
 				try {
 					GlobalUtil.deleteFileCascade( file );
 				} catch (IOException e) {}
@@ -2142,7 +2142,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * @return
 	 * @throws SOAPException
 	 */
-	public boolean downloadAndImport ( IProgressBar progressBar, 
+	public boolean downloadAndImport ( IProgressBar progressBar, double maxProgress,
 			ThreadFinishedListener doneListener ) throws SOAPException {
 		
 		// download the catalogue
@@ -2156,7 +2156,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		}
 
 		// import the catalogue
-		makeXmlImport( catalogueXml, progressBar, doneListener );
+		makeXmlImport( catalogueXml, progressBar, maxProgress, doneListener );
 		
 		return true;
 	}

@@ -1,11 +1,18 @@
 package import_catalogue;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 
+import javax.xml.stream.XMLStreamException;
+
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+
 import catalogue.Catalogue;
+import naming_convention.Headers;
 import open_xml_reader.ResultDataSet;
 import open_xml_reader.WorkbookReader;
+import ui_progress_bar.IProgressBar;
 
 /**
  * Import in a parallel way both the parent terms and the term attributes
@@ -26,14 +33,38 @@ public class QuickParentAttributesImporter extends QuickImporter {
 	 * @param batchSize the size of the batches which will be used to import
 	 * the data. See {@link WorkbookReader#setBatchSize(int)}.
 	 * @throws SQLException
+	 * @throws XMLStreamException 
+	 * @throws IOException 
+	 * @throws InvalidFormatException 
 	 */
 	public QuickParentAttributesImporter( Catalogue catalogue, WorkbookReader workbookReader, 
-			String termSheetName, int batchSize ) throws SQLException {
-		super(workbookReader, termSheetName, batchSize );
+			String termSheetName, int batchSize ) throws SQLException, 
+	InvalidFormatException, IOException, XMLStreamException {
+		super(workbookReader, batchSize );
+		
+		workbookReader.processSheetName( Headers.TERM_SHEET_NAME );
 		
 		// create the importers
 		taImp = new TermAttributeImporter( catalogue );
 		parentImp = new ParentImporter( catalogue );
+	}
+	
+	/**
+	 * Set a progress bar for the term attribute importer
+	 * @param progressBar
+	 * @param maxProgress
+	 */
+	public void setAttributeProgressBar( IProgressBar progressBar, double maxProgress ) {
+		taImp.setProgressBar(progressBar, workbookReader.getRowCount(), maxProgress);
+	}
+	
+	/**
+	 * Set a progress bar for the parent terms importer
+	 * @param progressBar
+	 * @param maxProgress
+	 */
+	public void setParentProgressBar( IProgressBar progressBar, double maxProgress ) {
+		parentImp.setProgressBar(progressBar, workbookReader.getRowCount(), maxProgress);
 	}
 	
 	/**

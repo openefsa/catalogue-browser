@@ -42,8 +42,10 @@ public class BufferedSheetReader {
 	private String currentCol;    // current excel column name (as A1, G5, AA4...)
 	private ResultDataSet resultSet;  // object which contains the read data
 	
+	private InputStream input;
+	
 	// xml parser
-	XMLEventReader eventReader;
+	private XMLEventReader eventReader;
 	
 	public BufferedSheetReader( InputStream input, SharedStringsTable sharedStrings ) 
 			throws XMLStreamException {
@@ -53,16 +55,9 @@ public class BufferedSheetReader {
 		this.batchSize = -1;
 		this.currentRow = -1;
 		this.processedBatches = 0;
+		this.input = input;
 		
-		// create the reader if not created yet
-		if ( eventReader == null ) {
-			XMLInputFactory factory = XMLInputFactory.newInstance();
-			
-			// say to the parser to avoid to separate strings
-			// into several pieces
-			factory.setProperty( XMLInputFactory.IS_COALESCING, true );
-			eventReader = factory.createXMLEventReader( input );
-		}
+		initialize();
 	}
 	
 	/**
@@ -93,6 +88,20 @@ public class BufferedSheetReader {
 		System.gc();
 	}
 	
+	/**
+	 * Initialize the parser with the input
+	 * @throws XMLStreamException
+	 */
+	private void initialize() throws XMLStreamException {
+		
+		XMLInputFactory factory = XMLInputFactory.newInstance();
+
+		// say to the parser to avoid to separate strings
+		// into several pieces
+		factory.setProperty( XMLInputFactory.IS_COALESCING, true );
+		eventReader = factory.createXMLEventReader( input );
+	}
+
 	/**
 	 * Close the reader
 	 * @throws XMLStreamException 
@@ -137,6 +146,49 @@ public class BufferedSheetReader {
 		boolean goOn = batchSize == -1 || processedRows < batchSize;
 		
 		return goOn;
+	}
+	
+	/**
+	 * Compute the number of rows contained in the sheet
+	 * @param input the input stream which contains the sheet
+	 * @return
+	 * @throws XMLStreamException 
+	 */
+	public static int getRowCount( InputStream input ) throws XMLStreamException {
+		
+		XMLInputFactory factory = XMLInputFactory.newInstance();
+
+		// say to the parser to avoid to separate strings
+		// into several pieces
+		factory.setProperty( XMLInputFactory.IS_COALESCING, true );
+		
+		XMLEventReader reader = factory.createXMLEventReader( input );
+
+		int rowNum = 0;
+		
+		// for each node of the xml
+		while ( reader.hasNext() ) {
+
+			// read the node
+			XMLEvent event = reader.nextEvent();
+
+			// actions based on the node type
+			switch( event.getEventType() ) {
+
+			// if ending xml node
+			case  XMLStreamConstants.END_ELEMENT:
+				
+				if ( isRowNode ( event.asEndElement() ) )
+					rowNum++;
+
+				break;
+			}
+		}
+		
+		reader.close();
+		
+		// remove the headers count
+		return rowNum - 1;
 	}
 	
 	/**
@@ -267,19 +319,31 @@ public class BufferedSheetReader {
 		
 		// get the xml node
 		EndElement endElement = event.asEndElement();
-		
-		// get the xml node name
-		String qName = endElement.getName().getLocalPart();
 
-		// if end of a row
-		if ( qName.equals( "row" ) ) {
-			
+		if ( isRowNode ( endElement ) ) {
 			// if not header create the row
 			if ( currentRow > 1 )
 				resultSet.setRow();
 
 			processedRows++;
 		}
+	}
+	
+	/**
+	 * Check if the current element is a row
+	 * @param endElement
+	 * @return
+	 */
+	private static boolean isRowNode( EndElement endElement ) {
+		
+		// get the xml node name
+		String qName = endElement.getName().getLocalPart();
+
+		// if end of a row
+		if ( qName.equals( "row" ) )
+			return true;
+		
+		return false;
 	}
 	
 	/**

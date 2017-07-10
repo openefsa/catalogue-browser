@@ -8,7 +8,7 @@ import javax.xml.transform.TransformerException;
 
 import catalogue.Catalogue;
 import folder_zipper.FolderZipper;
-import ui_progress_bar.ProgressStepListener;
+import ui_progress_bar.IProgressBar;
 import utilities.GlobalUtil;
 import xml_to_excel.XmlCatalogueToExcel;
 
@@ -17,9 +17,9 @@ public class CatalogueImporter {
 	private String filename;  // path of the file
 	private ImportFileFormat format;  // the format of the file
 	private Catalogue openedCat;
-	private ProgressStepListener listener;
-	private int maxProgress;
-	private int preprocProgress;
+	private IProgressBar progressBar;
+	private double maxProgress;
+	private double preprocProgress;
 	
 	// list of temporary files which need to
 	// be deleted at the end of the process
@@ -43,12 +43,12 @@ public class CatalogueImporter {
 	 * @param format in which format is the file that we want to import
 	 */
 	public CatalogueImporter( String filename, 
-			ImportFileFormat format, ProgressStepListener listener, int maxProgress ) {
+			ImportFileFormat format, IProgressBar progressBar, double maxProgress ) {
 
 		this.filename = filename;
 		this.format = format;
 		this.garbage = new ArrayList<>();
-		this.listener = listener;
+		this.progressBar = progressBar;
 		this.maxProgress = maxProgress;
 	}
 	
@@ -57,22 +57,20 @@ public class CatalogueImporter {
 	 */
 	public void makeImport() {
 
+		// 5% of progress bar for preprocessing
+		this.preprocProgress = maxProgress * 5 / 100;
+		progressBar.addProgress( preprocProgress );
+		
 		switch ( format ) {
 		case ECF:
-			this.preprocProgress = maxProgress / 5;
-			listener.progressChanged(null, preprocProgress, maxProgress);
 			importEcf( filename );
 			break;
 
 		case XML:
-			this.preprocProgress = maxProgress / 6;
-			listener.progressChanged(null, preprocProgress, maxProgress);
 			importXml( filename );
 			break;
 			
 		case XLSX:
-			this.preprocProgress = maxProgress / 80;
-			listener.progressChanged(null, preprocProgress, maxProgress);
 			importXlsx( filename );
 			break;
 
@@ -200,10 +198,10 @@ public class CatalogueImporter {
 
 			if ( openedCat != null )
 				importer.setOpenedCatalogue( openedCat );
-			
+
 			// import the catalogue contained in the
 			// xlsx file into the specified path (db path)
-			importer.importWorkbook( listener, filename, maxProgress - preprocProgress );
+			importer.importWorkbook( progressBar, filename, maxProgress - preprocProgress );
 
 		} catch ( final Exception e ) {
 			e.printStackTrace();

@@ -112,7 +112,7 @@ public class ExportCatalogueWorkbook {
 
 		// fill progress bar
 		if ( progressBar != null )
-			progressBar.fillBar();
+			progressBar.fillToMax();
 
 		if ( progressBar != null )
 			progressBar.close();

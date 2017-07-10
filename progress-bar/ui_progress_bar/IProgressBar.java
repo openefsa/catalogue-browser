@@ -10,4 +10,5 @@ public interface IProgressBar {
 	public void close();
 	public void open();
 	public void addProgressListener( ProgressListener listener );
+	public void fillToMax();
 }

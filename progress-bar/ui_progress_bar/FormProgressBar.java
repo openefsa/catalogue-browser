@@ -200,8 +200,8 @@ public class FormProgressBar implements IProgressBar {
 	/**
 	 * Set the bar to 100%
 	 */
-	public void fillBar() {
-		progressBar.fillBar();
+	public void fillToMax() {
+		progressBar.fillToMax();
 	}
 
 	/**

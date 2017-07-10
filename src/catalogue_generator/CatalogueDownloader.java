@@ -60,7 +60,7 @@ public class CatalogueDownloader extends Thread {
 		}
 
 		// download and import the catalogue
-		boolean ok = catalogue.downloadAndImport( progressBar, 
+		boolean ok = catalogue.downloadAndImport( progressBar, 90,
 				new ThreadFinishedListener() {
 			
 			@Override
