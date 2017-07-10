@@ -121,10 +121,6 @@ public class SearchPanel implements Observer {
 						// get the current hierarchy
 						final Hierarchy selectedHierarchy = termApplicableHierarchies.get( i );
 
-						// we hide the master hierarchy if we are in read only and the master hierarchy is to be hidden
-						if ( selectedHierarchy.isMaster() && selectedTerm.getCatalogue().isMasterHierarchyHidden() )
-							continue;
-
 						// add a menu item for each applicable hierarchy
 						// if a menu item is clicked an external listener is called passing
 						// as parameter the selected hierarchy and the selected term

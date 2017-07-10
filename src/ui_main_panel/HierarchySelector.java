@@ -1,6 +1,6 @@
 package ui_main_panel;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -181,7 +181,7 @@ public class HierarchySelector extends Observable implements Observer {
 		if ( catalogue == null )
 			return;
 
-		setInput ( catalogue.getHierarchies() );
+		setInput ( catalogue.getInUseHierarchies() );
 
 		// try to select the previous hierarchy
 		if ( currentHierarchy != null ) {
@@ -207,7 +207,7 @@ public class HierarchySelector extends Observable implements Observer {
 	 * Set the combo box input
 	 * @param hierarchies
 	 */
-	public void setInput ( ArrayList<Hierarchy> hierarchies ) {
+	public void setInput ( Collection<Hierarchy> hierarchies ) {
 		hierarchyCombo.setInput( hierarchies );
 		hierarchyCombo.refresh();
 	}
@@ -252,7 +252,7 @@ public class HierarchySelector extends Observable implements Observer {
 	public boolean setSelection ( Hierarchy hierarchy ) {
 
 		// the hierarchy is not in the hierarchies list
-		if ( !( (ArrayList<Hierarchy>) hierarchyCombo.getInput() ).
+		if ( !( (Collection<Hierarchy>) hierarchyCombo.getInput() ).
 				contains ( hierarchy ) ) {
 			System.err.println( "Cannot change hierarchy selector selection with " 
 				+ hierarchy + " since it is not contained in the available hierarchies");
@@ -362,6 +362,10 @@ public class HierarchySelector extends Observable implements Observer {
 
 				Hierarchy hierarchy = (Hierarchy) element;
 				
+				// if not used hierarchy return false
+				if ( catalogue.getNotUsedHierarchies().contains( hierarchy ) )
+					return false;
+				
 				// if we want only facets and the current hierarchy is a facet then return true
 				if ( showFacet && hierarchy.isFacet() )
 					return true;
@@ -371,13 +375,12 @@ public class HierarchySelector extends Observable implements Observer {
 
 					// first check if the hierarchy is the master hierarchy
 					// if so hide master if non edit mode
-					if( hierarchy.isMaster() && catalogue.isMasterHierarchyHidden() )
-						return false;
+					//if( hierarchy.isMaster() && catalogue.isMasterHierarchyHidden() )
+					//	return false;
 					
 					// return true if we have a hierarchy
 					if ( hierarchy.isHierarchy() )
 						return true;
-					
 				}
 				
 				// default return false
@@ -398,8 +401,8 @@ public class HierarchySelector extends Observable implements Observer {
 			this.catalogue = (Catalogue) arg1;
 			
 			// update the selectable hierarchies
-			if ( catalogue != null && catalogue.getHierarchies() != null )
-				setInput( this.catalogue.getHierarchies() );
+			if ( catalogue != null )
+				refresh();
 		}
 	}
 }

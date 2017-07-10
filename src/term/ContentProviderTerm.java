@@ -1,5 +1,6 @@
 package term;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
@@ -98,7 +99,13 @@ public class ContentProviderTerm implements ITreeContentProvider {
 			
 			// show only the hierarchies in which the term is not present
 			Term term = ((AvailableHierarchiesTerm) arg0).getTerm();
-			elem.addAll( term.getNewHierarchies() );
+			
+			ArrayList<Hierarchy> hiers = term.getNewHierarchies();
+
+			// sort by order
+			Collections.sort( hiers );
+			
+			elem.addAll( hiers );
 		}
 		
 		return elem.toArray();

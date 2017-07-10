@@ -7,7 +7,6 @@ import org.eclipse.jface.viewers.Viewer;
 import catalogue.Catalogue;
 import catalogue_object.Attribute;
 import catalogue_object.Term;
-import global_manager.GlobalManager;
 
 /**
  * This class is a using name properties to display the facets.
@@ -67,19 +66,18 @@ public class ContentProviderImplicitFacets implements ITreeContentProvider {
 
 	public Object[] getElements ( Object arg0 ) {
 		
-		// get an instance of the global manager
-		GlobalManager manager = GlobalManager.getInstance();
-		
-		// get the current catalogue
-		Catalogue currentCat = manager.getCurrentCatalogue();
-		
-		// if the current catalogue does not have facets
-		if ( currentCat == null || 
-				currentCat.getFacetCategories() == null )
+		if ( _rootTerm == null )
 			return null;
 		
-		// get all the categories of facets (the dcfattributes)
-		return currentCat.getFacetCategories().toArray();
+		// get the current catalogue
+		Catalogue currentCat = _rootTerm.getCatalogue();
+		
+		// if the current catalogue does not have facets
+		if ( currentCat == null )
+			return null;
+		
+		// get all the categories of facets (the attributes)
+		return currentCat.getInUseFacetCategories().toArray();
 	}
 
 	/**

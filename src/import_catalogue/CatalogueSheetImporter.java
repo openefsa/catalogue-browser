@@ -58,7 +58,8 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 
 			catalogue.setCode( openedCatalogue.getCode() );
 			catalogue.setVersion( openedCatalogue.getVersion() );
-
+			catalogue.setCatalogueType( openedCatalogue.getCatalogueType() );
+			
 			// if a local catalogue was set as code name and
 			// label the local catalogue fields to maintain
 			// the right names. Moreover we also maintain
@@ -72,7 +73,6 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 				catalogue.setStatus( openedCatalogue.getStatus() );
 				catalogue.setLocal( true );
 				catalogue.setBackupDbPath( openedCatalogue.getBackupDbPath() );
-				catalogue.setCatalogueType( openedCatalogue.getCatalogueType() );
 			}
 		}
 
@@ -200,6 +200,11 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 			catalogueId = catDao.getCatalogue( catalogue.getCode(), 
 					catalogue.getVersion(), 
 					catalogue.getCatalogueType() ).getId();
+			
+			// set the catalogue id
+			catalogue.setId( catalogueId );
+			
+			catDao.update( catalogue );
 		}
 		catch ( SQLException e ) {
 
@@ -212,14 +217,14 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 
 			// insert the new catalogue into the main catalogues db
 			catalogueId = catDao.insert( catalogue );
-
+			
+			// set the catalogue id
+			catalogue.setId( catalogueId );
+			
 			// create the standard database structure for
 			// the new catalogue
 			catDao.createDBTables( catalogue.getDbPath() );
 		}
-		
-		// set the catalogue id
-		catalogue.setId( catalogueId );
 	}
 
 	/**

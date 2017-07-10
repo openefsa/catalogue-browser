@@ -1,6 +1,7 @@
 package catalogue_object;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -439,6 +440,24 @@ public class Term extends CatalogueObject implements Mappable {
 	}
 	
 	/**
+	 * Get all the applicabilities which are in use for this
+	 * catalogue. No filter is applied if user is catalogue manager
+	 * @return
+	 */
+	public Collection<Applicability> getInUseApplicabilities() {
+		
+		Collection<Applicability> inUse = new ArrayList<>();
+		Collection<Hierarchy> notUsed = catalogue.getNotUsedHierarchies();
+		
+		for ( Applicability appl : applicabilities ) {
+			if ( !notUsed.contains( appl.getHierarchy() ) )
+				inUse.add( appl );
+		}
+		
+		return inUse;
+	}
+	
+	/**
 	 * Get the term applicability related to the selected hierarchy
 	 * if no applicability is found => return null
 	 * @param hierarchy
@@ -458,29 +477,12 @@ public class Term extends CatalogueObject implements Mappable {
 	}
 	
 	/**
-	 * Check if the term appears only in the master hierarchy.
-	 * @param hierarchy
+	 * Check if the term is used in at least one hierarchy
+	 * @return
 	 */
-	public boolean isOnlyInMaster () {
-		
-		Hierarchy master = catalogue.getMasterHierarchy();
-		
-		boolean appearInMaster = false;
-		boolean onlyInMaster = true;
-		for ( Applicability appl : applicabilities ) {
-			
-			Hierarchy current = appl.getHierarchy();
-			
-			if ( !current.equals( master ) )
-				onlyInMaster = false;
-			
-			if ( current.equals( master ) )
-				appearInMaster = true;
-		}
-		
-		return appearInMaster && onlyInMaster;
+	public boolean isInUse() {
+		return !getInUseApplicabilities().isEmpty();
 	}
-	
 	
 	/**
 	 * Convert the order integer code to a hierarchy code
@@ -1208,12 +1210,14 @@ public class Term extends CatalogueObject implements Mappable {
 		// output array
 		ArrayList< Hierarchy > hierarchies = new ArrayList<>();
 
+		Collection<Applicability> appls = getInUseApplicabilities();
+		
 		// return if no applicability is found
-		if ( applicabilities == null )
+		if ( appls == null )
 			return hierarchies;
 
 		// for each applicability add the hierarchy to the output array
-		for ( Iterator< Applicability > i = applicabilities.iterator() ; i.hasNext() ; )
+		for ( Iterator< Applicability > i = appls.iterator() ; i.hasNext() ; )
 			hierarchies.add( i.next().getHierarchy() );
 		
 		return hierarchies;

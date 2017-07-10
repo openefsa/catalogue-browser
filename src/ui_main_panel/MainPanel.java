@@ -403,7 +403,7 @@ public class MainPanel implements Observer, RestoreableWindow {
 		});		
 
 		// set the hierarchy combo box input and select the first available hierarchy
-		hierarchySelector.setInput( catalogue.getHierarchies() );
+		hierarchySelector.refresh();
 		
 		Hierarchy hierarchy;
 		try {
@@ -417,18 +417,6 @@ public class MainPanel implements Observer, RestoreableWindow {
 			// with the default hierarchy if no preference was found
 			hierarchy = catalogue.getDefaultHierarchy();
 		}
-		
-		// set the first selection of the hierarchy selector
-		// with the default hierarchy if no preference was found
-		Hierarchy defaultHierarchy = catalogue.getDefaultHierarchy();
-		
-		// since a read only user in some cases should not
-		// see the master hierarchy, it the last hierarchy is
-		// the master but the default is not and the user is
-		// a read only user => we do not show the master but
-		// we pass the default hierarchy instead
-		if ( catalogue.isMasterHierarchyHidden() && hierarchy.isMaster() )
-			hierarchy = defaultHierarchy;
 
 		// set the selection
 		hierarchySelector.setSelection( hierarchy );

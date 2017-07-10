@@ -1,5 +1,6 @@
 package ui_term_applicability;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -122,7 +123,7 @@ public class TableApplicability {
 		this.catalogue = term.getCatalogue();
 		
 		// set the input for the table
-		applicabilityTable.setInput( term.getApplicabilities() );
+		applicabilityTable.setInput( term.getInUseApplicabilities() );
 		
 		// refresh the table
 		applicabilityTable.refresh();
@@ -287,21 +288,8 @@ public class TableApplicability {
 
 		public Object[] getElements ( Object applicabilities ) {
 			@SuppressWarnings("unchecked")
-			ArrayList< Applicability > apps = (ArrayList< Applicability >) applicabilities;
-			
-			ArrayList< Applicability > displayedApps = new ArrayList<>();
-			for ( Applicability appl : apps ) {
-				
-				// hide master if required
-				if ( catalogue.isMasterHierarchyHidden() && 
-						appl.relatedToHierarchy( catalogue.getMasterHierarchy() ) ) {
-					continue;
-				}
-				// otherwise add it
-				displayedApps.add( appl );
-			}
-			
-			return displayedApps.toArray();
+			Collection< Applicability > apps = (Collection< Applicability >) applicabilities;
+			return apps.toArray();
 		}
 	}
 	

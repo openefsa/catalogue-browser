@@ -10,7 +10,8 @@ import term.WrongKeyException;
  * @author avonva
  *
  */
-public class SortableCatalogueObject extends CatalogueObject implements Sortable {
+public class SortableCatalogueObject extends CatalogueObject implements Sortable, 
+	Comparable<SortableCatalogueObject> {
 
 	private int order;
 	
@@ -104,5 +105,17 @@ public class SortableCatalogueObject extends CatalogueObject implements Sortable
 			throw new WrongKeyException();
 		
 		return value;
+	}
+
+	@Override
+	public int compareTo(SortableCatalogueObject arg0) {
+
+		if ( order == arg0.getOrder() )
+			return 0;
+		
+		if ( order < arg0.getOrder() )
+			return -1;
+			
+		return 1;
 	}
 }

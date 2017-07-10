@@ -591,11 +591,6 @@ public class TermsTreePanel extends Observable implements Observer {
 					// get the current hierarchy
 					final Hierarchy hierarchy = applHierarchies.get( i );
 
-					// skip if master hierarchy, we do not show master hierarchy to normal users
-					// if it is to be hidden
-					if ( hierarchy.isMaster() && catalogue.isMasterHierarchyHidden() )
-						continue;
-
 					// create the menu item with the hierarchy label name
 					MenuItem mi = new MenuItem( changeHierarchyMenu , SWT.PUSH );
 					mi.setText( hierarchy.getLabel() );

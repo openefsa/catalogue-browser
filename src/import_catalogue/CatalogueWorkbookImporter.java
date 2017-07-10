@@ -154,6 +154,9 @@ public class CatalogueWorkbookImporter {
 		
 		catImp.importData( sheetData );
 		
+		// refresh catalogue in ram
+		openedCat = catImp.getImportedCatalogue();
+		
 		return catImp;
 	}
 	

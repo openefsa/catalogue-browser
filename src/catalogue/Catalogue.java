@@ -831,6 +831,30 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	public ArrayList<Attribute> getFacetCategories() {
 		return facetCategories;
 	}
+	
+	/**
+	 * Get all the in use facet categories
+	 * @return
+	 */
+	public Collection<Attribute> getInUseFacetCategories() {
+		
+		Collection<Attribute> categories = new ArrayList<>();
+		Collection<Hierarchy> notUsed = getNotUsedHierarchies();
+		
+		if ( facetCategories == null )
+			return categories;
+		
+		// for each category
+		for ( Attribute attr : facetCategories ) {
+			
+			// if is not present in the not used hierarchies
+			// add it
+			if ( !notUsed.contains( attr.getHierarchy() ) )
+				categories.add( attr );
+		}
+		
+		return categories;
+	}
 
 
 	/**
@@ -1784,40 +1808,116 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		// set the initial value for the default hierarchy
 		Hierarchy defaultHierarchy = getMasterHierarchy();
 
-		// get an instance of the global manager
-		GlobalManager manager = GlobalManager.getInstance();
-
-		// if we are in editing, the default hierarchy is the master hierarchy
-		if ( !manager.isReadOnly() )
+		String hierarchyCode = getTokenByKey( "defaultHierarchy" );
+		
+		if ( hierarchyCode == null )
 			return defaultHierarchy;
 
-		StringTokenizer st = new StringTokenizer( getScopenotes(), "$" );
+		// get the hierarchy
+		Hierarchy temp = getHierarchyByCode( hierarchyCode );
+
+		if ( temp != null )
+			defaultHierarchy = temp;
+		
+		return defaultHierarchy;
+	}
+
+	/**
+	 * Get a token value from the catalogue scopenotes.
+	 * Syntax of scopenotes tokens:
+	 * scopenotes$[tokenKey=value1,value2,...]
+	 * If multiple tokens are used the syntax is the following:
+	 * scopenotes$[tokenKey1=value1,value2,...][tokenKey2=value1,value2,...]...
+	 * @param key the key of the token we are interested in
+	 * @return the list of token values comma separated
+	 */
+	private String getTokenByKey( String key ) {
+		
+		// split based on $
+		String[] split = getScopenotes().split( "\\$" );
+
+		// if only one element return (we have only the scopenotes)
+		if ( split.length <= 1 )
+			return null;
+
+		// get pattern of not used hierarchies
+		split = split[1].split( "\\[" + key );
+
+		if ( split.length <= 1 )
+			return null;
+
+		// remove ] from pattern and get only the interested part
+		split = split[1].split( "\\]" );
+
+		// if no elements return
+		if ( split.length < 0 )
+			return null;
+
+		// remove equal sign and spaces
+		String codes = split[0];
+		codes = codes.replaceAll("=", "");
+		codes = codes.trim();
+		
+		return codes;
+	}
+
+	/**
+	 * Get all the hierarchies which are currently in use
+	 * @return
+	 */
+	public Collection<Hierarchy> getInUseHierarchies() {
+
+		Collection<Hierarchy> inUse = new ArrayList<>();
+		
+		// get all hierarchies
+		inUse.addAll( hierarchies );
+		
+		// remove the not used
+		for ( Hierarchy notUsed : getNotUsedHierarchies() )
+			inUse.remove( notUsed );
+		
+		return inUse;
+	}
+	
+	/**
+	 * Get the hierarchies which should not be showed to the 
+	 * read only used. Syntax in the catalogue scopenotes:
+	 * scopenotes$[notUsedHierarchies=code1,code2,...]
+	 * @return
+	 */
+	public Collection<Hierarchy> getNotUsedHierarchies () {
+
+		Collection<Hierarchy> notUsed = new ArrayList<>();
+
+		// if catalogue manager show everything
+		if ( User.getInstance().isCatManager() )
+			return notUsed;
+
+		String codes = getTokenByKey("notUsedHierarchies");
+		
+		if ( codes == null )
+			return notUsed;
+
+		// for each hierarchy comma separated
+		StringTokenizer st = new StringTokenizer( codes, "," );
 		while ( st.hasMoreTokens() ) {
 
-			String token = st.nextToken();
-			// remove spaces
-			token = token.trim();
+			String hierarchyCode = st.nextToken();
 
-			if ( token.toLowerCase().contains( "[hideMasterWith".toLowerCase() ) ) {
+			// return the default hierarchy
+			Hierarchy temp = getHierarchyByCode( hierarchyCode );
 
-				String[] split = token.split( "=" );
-
-				// go to the next iteration if wrong split
-				if ( split.length != 2 )
-					continue;
-
-				// remove the "]" character at the end of the token
-				String hierarchyCode = split[1].replace("]", "");
-
-				// return the default hierarchy
-				Hierarchy temp = getHierarchyByCode( hierarchyCode );
-
-				if ( temp != null )
-					defaultHierarchy = temp;
+			if ( temp == null ) {
+				System.err.println( "Catalogue scopenote - "
+						+ "NotUsedHierarchies: Hierarchy with code " + hierarchyCode + " not found!");
+				continue;
 			}
+
+			// add the not used hierarchy
+			notUsed.add( temp );
 		}
 
-		return defaultHierarchy;
+		return notUsed;
 	}
 
 
@@ -2118,7 +2218,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 
 		// set the listener
 		importCat.addDoneListener( new ThreadFinishedListener() {
-			
+
 			@Override
 			public void finished(Thread thread, int code) {
 
@@ -2144,7 +2244,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 */
 	public boolean downloadAndImport ( IProgressBar progressBar, double maxProgress,
 			ThreadFinishedListener doneListener ) throws SOAPException {
-		
+
 		// download the catalogue
 		File catalogueXml;
 
@@ -2157,7 +2257,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 
 		// import the catalogue
 		makeXmlImport( catalogueXml, progressBar, maxProgress, doneListener );
-		
+
 		return true;
 	}
 
@@ -2247,21 +2347,6 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		};
 
 		return alreadyDownloaded;
-	}
-
-	/**
-	 * Check if the master hierarchy should be hidden or not
-	 * @return
-	 */
-	public boolean isMasterHierarchyHidden () {
-
-		User user = User.getInstance();
-
-		// if we are not catalogue managers and the default hierarchy 
-		// is not the master hierarchy
-		// then we have to hide the master hierarchy
-		return !user.isCatManager() && 
-				!getDefaultHierarchy().isMaster();
 	}
 
 	/**
