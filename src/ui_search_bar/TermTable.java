@@ -1,6 +1,7 @@
 package ui_search_bar;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -17,6 +18,7 @@ import org.eclipse.swt.widgets.Menu;
 import catalogue.Catalogue;
 import catalogue_object.Hierarchy;
 import catalogue_object.Term;
+import term.AlphabeticalSorter;
 import term.LabelProviderTerm;
 import ui_main_panel.HierarchySelector;
 
@@ -153,6 +155,10 @@ public class TermTable implements Observer {
 	 * @param input
 	 */
 	public void setInput ( ArrayList<Term> input ) {
+		
+		// sort input by name
+		Collections.sort( input, new AlphabeticalSorter() );
+		
 		table.setInput ( input );
 	}
 	
