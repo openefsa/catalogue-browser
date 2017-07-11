@@ -1,7 +1,5 @@
 package ui_term_applicability;
 
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -50,22 +48,22 @@ public class FrameTermApplicabilities {
 		this.term = term;
 		
 		applTable.setTerm( term );
-		facetApplTable.setTerm( term );
+		/*facetApplTable.setTerm( term );
 		
 		if ( term == null )
 			restrictionTree.setInput( null );
 		else {
 			addRestrictionsMenu(parent.getShell(), restrictionTree.getTreeViewer() );
-		}
+		}*/
 	}
 	
 	/**
 	 * Refresh all the contents
 	 */
 	public void refresh() {
-		applTable.getTable().refresh();
-		facetApplTable.getTable().refresh();
-		restrictionTree.getTreeViewer().refresh();
+		applTable.getTableViewer().refresh();
+		/*facetApplTable.getTable().refresh();
+		restrictionTree.getTreeViewer().refresh();*/
 	}
 	
 	/**
@@ -80,23 +78,21 @@ public class FrameTermApplicabilities {
 		applTable = new TableApplicability ( parent, catalogue );
 		
 		// group for facets applicabilities
-		Group groupFacet = new Group( parent , SWT.NONE );
+		/*Group groupFacet = new Group( parent , SWT.NONE );
 		groupFacet.setText( Messages.getString("TableFacetApplicability.Title") );
-		groupFacet.setLayout( new GridLayout( 1 , true ) );
+		groupFacet.setLayout( new GridLayout( 1 , true ) );*/
 		
 		// layout data
-		GridData gridData = new GridData();
+		/*GridData gridData = new GridData();
 		gridData.verticalAlignment = SWT.FILL;
 		gridData.horizontalAlignment = SWT.FILL;
-		gridData.minimumHeight = 300;
-		gridData.heightHint = 300;
 		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = true;
-		parent.setLayoutData( gridData );
+		gridData.grabExcessVerticalSpace = true;*/
+		//parent.setLayoutData( gridData );
 
 		
 		// create facet applicability table
-		facetApplTable = new TableFacetApplicability ( groupFacet );
+		/*facetApplTable = new TableFacetApplicability ( groupFacet );
 		facetApplTable.getTable().addSelectionChangedListener( new ISelectionChangedListener() {
 			
 			@Override
@@ -106,7 +102,7 @@ public class FrameTermApplicabilities {
 		});
 		
 		// create restriction facet tree
-		restrictionTree = new TreeFacetRestrictions ( groupFacet, catalogue );
+		restrictionTree = new TreeFacetRestrictions ( groupFacet, catalogue );*/
 		
 		// add the menu
 		//addRestrictionsMenu ( parent.getShell(), restrictionTree.getTreeViewer() );

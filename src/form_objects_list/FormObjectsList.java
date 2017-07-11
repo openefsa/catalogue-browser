@@ -174,7 +174,7 @@ public abstract class FormObjectsList<T> implements RestoreableWindow {
 		GridData gridData = new GridData();
 		gridData.horizontalAlignment = SWT.CENTER;
 		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = true;
+		gridData.grabExcessVerticalSpace = false;
 		buttonsComposite.setLayoutData( gridData );
 
 		// add the ok button to the composite

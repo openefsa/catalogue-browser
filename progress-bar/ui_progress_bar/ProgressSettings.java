@@ -2,8 +2,6 @@ package ui_progress_bar;
 
 import java.util.HashMap;
 
-import import_catalogue.CatalogueWorkbookImporter;
-
 /**
  * Settings used for the import process in {@link CatalogueWorkbookImporter}
  * class.

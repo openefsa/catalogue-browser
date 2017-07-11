@@ -53,38 +53,38 @@ public class FileActions {
 	 * @param shell
 	 */
 	public static void createNewLocalCatalogue ( Shell shell ) {
-		
+
 		FormLocalCatalogueName dialog = new FormLocalCatalogueName ( shell );
 
 		String catalogueCode = dialog.open();
-		
+
 		// if null the cancel button was pressed
 		if ( catalogueCode == null )
 			return;
-		
+
 		// set the wait cursor
 		GlobalUtil.setShellCursor( shell, SWT.CURSOR_WAIT );
-		
+
 		// create a database for the new catalogue
 		// but if the catalogue already exists show an error dialog
 		try {
 			CatalogueCreator.newLocalCatalogue( catalogueCode );
 		}
 		catch ( DuplicatedCatalogueException exception ) {
-			
+
 			GlobalUtil.showErrorDialog( shell, 
 					Messages.getString( "BrowserMenu.NewLocalCatErrorTitle" ),
 					Messages.getString( "BrowserMenu.NewLocalCatErrorMessage" ) );
-			
+
 			GlobalUtil.setShellCursor( shell , SWT.CURSOR_ARROW );
-			
+
 			return;
 		}
 
 
 		// reset the standard cursor
 		GlobalUtil.setShellCursor( shell, SWT.CURSOR_ARROW );
-		
+
 		// warn user
 		GlobalUtil.showDialog(shell, 
 				Messages.getString("NewLocalCat.DoneTitle"),
@@ -131,7 +131,7 @@ public class FileActions {
 
 		if ( !ok )
 			return null;
-		
+
 		// open the catalogue when the dialog is closed
 		GlobalUtil.setShellCursor( shell, SWT.CURSOR_WAIT );
 
@@ -153,7 +153,7 @@ public class FileActions {
 	public static boolean performCatalogueChecks( Shell shell, Catalogue catalogue ) {
 
 		User user = User.getInstance();
-		
+
 		// check if the catalogue is deprecated
 		if ( catalogue.isDeprecated() ) {
 
@@ -183,7 +183,7 @@ public class FileActions {
 						new OldCatalogueReleaseDialog( shell, catalogue );
 
 				int val = dialog.open();
-				
+
 				if ( val == SWT.CANCEL )
 					return false;
 			}
@@ -200,7 +200,7 @@ public class FileActions {
 				mb.open();
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -219,13 +219,13 @@ public class FileActions {
 
 		Collection<Catalogue> objs = chooseCatalogues(shell, title, input, 
 				false, columns, okText);
-		
+
 		if ( objs.isEmpty() )
 			return null;
-		
+
 		return objs.iterator().next();
 	}
-	
+
 	/**
 	 * Get a list of chosen catalogues
 	 * @param shell
@@ -252,7 +252,7 @@ public class FileActions {
 	}
 
 	/**
-	 * Ask to the user to select a catalogue and then download it.
+	 * Ask to the user to select one or more catalogues and then download them.
 	 * @param shell
 	 * @throws DOMException
 	 * @throws Exception
@@ -263,21 +263,37 @@ public class FileActions {
 		String[] columns = { "label", "version", "status", "valid_from", "scopenote" };
 
 		// ask a catalogue
-		Catalogue selectedCat = chooseCatalogue ( shell, 
+		Collection<Catalogue> selectedCats = chooseCatalogues ( shell, 
 				Messages.getString("FormCatalogueList.DownloadTitle"),
-				Dcf.getDownloadableCat(), columns,
+				Dcf.getDownloadableCat(), true, columns,
 				Messages.getString("FormCataloguesList.DownloadCmd") );
 
 		// no selection return
-		if ( selectedCat == null )
+		if ( selectedCats == null || selectedCats.isEmpty() )
 			return;
+
+		if ( selectedCats.size() == 1 ) 
+			downloadSingleCat ( shell, selectedCats.iterator().next() );
+		else
+			downloadCatalogues( shell, 
+					Messages.getString( "Download.MultiSuccessTitle" ), 
+					Messages.getString( "Download.MultiSuccessMessage" ), 
+					selectedCats );
+	}
+
+	/**
+	 * Download a single catalogue
+	 * @param shell
+	 * @param catalogue
+	 */
+	private static void downloadSingleCat ( final Shell shell, Catalogue catalogue ) {
 
 		// show a progress bar
 		FormProgressBar progressBar = new FormProgressBar( shell, 
 				Messages.getString( "Download.ProgressDownloadTitle" ) );
 
 		// start downloading the catalogue
-		CatalogueDownloader catDown = new CatalogueDownloader( selectedCat );
+		CatalogueDownloader catDown = new CatalogueDownloader( catalogue );
 
 		catDown.setProgressBar( progressBar );
 
@@ -318,13 +334,77 @@ public class FileActions {
 	}
 
 	/**
+	 * Download a collection of catalogues
+	 * @param shell
+	 * @param title
+	 * @param msg
+	 * @param cats
+	 */
+	private static void downloadCatalogues ( final Shell shell, 
+			final String title, final String msg,
+			final Collection<Catalogue> cats ) {
+
+		CatalogueDownloaderManager manager = 
+				new CatalogueDownloaderManager(1);
+
+		// download all the dc catalogues
+		final FormMultipleProgress dialog = new FormMultipleProgress( shell );
+
+		// for each catalogue
+		for ( Catalogue cat : cats ) {
+
+			// add a progress row in the table
+			final TableRow row = dialog.addRow( cat.getLabel() );
+
+			// prepare the download thread
+			CatalogueDownloader downloader = new CatalogueDownloader( cat );
+
+			// set the table bar as progress bar
+			downloader.setProgressBar( row.getBar() );
+
+			// start the download of the catalogue
+			manager.add( downloader );
+		}
+
+		// warn user when finished
+		manager.setDoneListener( new Listener() {
+
+			@Override
+			public void handleEvent(Event arg0) {
+
+				// warn user in the ui thread
+				// and make the list of progresses closeable
+				shell.getDisplay().asyncExec( new Runnable() {
+
+					@Override
+					public void run() {
+
+						GlobalUtil.showDialog(
+								shell, 
+								title, 
+								Messages.getString( msg ), 
+								SWT.ICON_INFORMATION );
+
+						dialog.done();
+					}
+				});
+			}
+		});
+
+		// start thread in a batch way
+		manager.start();
+
+		dialog.open();
+	}
+
+	/**
 	 * Ask to the user the .ecf to import and import it.
 	 * @param shell
 	 * @param doneListener called when the import is finished
 	 */
 	public static void importCatalogue( Shell shell, 
 			final ThreadFinishedListener doneListener ) {
-		
+
 		// ask the file to the user
 		String filename = GlobalUtil.showFileDialog( shell, 
 				Messages.getString("BrowserMenu.ImportCatalogueCmd"), 
@@ -342,61 +422,61 @@ public class FileActions {
 		// return if cancel was pressed
 		if ( val == SWT.CANCEL )
 			return;
-		
+
 		CatalogueImporterThread importCat = 
 				new CatalogueImporterThread(
 						filename, ImportFileFormat.ECF );
-		
+
 		FormProgressBar progressBar = new FormProgressBar( shell, 
 				Messages.getString("EcfImport.ImportEcfBarTitle") );
 
 		importCat.setProgressBar( progressBar );
-		
+
 		importCat.addDoneListener( doneListener );
-		
+
 		importCat.start();
 	}
-	
+
 	/**
 	 * Ask to the user which catalogues he wants to delete
 	 * and delete them.
 	 * @param shell
 	 */
 	public static void deleteCatalogue( final Shell shell ) {
-		
+
 		final CatalogueDAO catDao = new CatalogueDAO();
-		
+
 		ArrayList <Catalogue> myCatalogues = catDao.getMyCatalogues( Dcf.dcfType );
-		
+
 		// Order the catalogues by label name to make a better visualization
 		Collections.sort( myCatalogues );
-		
+
 		// ask which catalogues to delete
 		Collection<Catalogue> catalogues = chooseCatalogues( shell, 
 				Messages.getString("FormCatalogueList.DeleteTitle"), 
 				myCatalogues, true, new String[] {"label", "version", "status"}, 
 				Messages.getString("FormCatalogueList.DeleteCmd") );
-		
+
 		if ( catalogues.isEmpty() )
 			return;
-		
+
 		// invoke deleter thread for catalogues
 		CatalogueDestroyer deleter = new CatalogueDestroyer ( catalogues );
-		
+
 		// when finished
 		deleter.setDoneListener( new ThreadFinishedListener() {
-			
+
 			@Override
 			public void finished(Thread thread, final int code) {
-				
+
 				shell.getDisplay().asyncExec( new Runnable() {
-					
+
 					@Override
 					public void run() {
-						
+
 						String msg;
 						int icon;
-						
+
 						if ( code == ThreadFinishedListener.OK ) {
 							msg = Messages.getString( "Delete.OkMessage" );
 							icon = SWT.ICON_INFORMATION;
@@ -405,7 +485,7 @@ public class FileActions {
 							msg = Messages.getString( "Delete.ErrorMessage" );
 							icon = SWT.ICON_WARNING;
 						}
-						
+
 						// warn user
 						GlobalUtil.showDialog( shell, 
 								Messages.getString( "Delete.Title" ), 
@@ -414,18 +494,18 @@ public class FileActions {
 				});
 			}
 		});
-		
+
 		// progress bar for deleting catalogues
 		final FormProgressBar progressBar = new FormProgressBar( shell, 
 				Messages.getString("FileMenu.DeleteCatalogue") );
-		
+
 		progressBar.open();
-		
+
 		deleter.setProgressBar( progressBar );
-		
+
 		deleter.start();
 	}
-	
+
 	/**
 	 * Ask to the user to select a data collection among
 	 * the one in the {@code input}
@@ -519,7 +599,7 @@ public class FileActions {
 		// return if null
 		if ( dc == null )
 			return;
-		
+
 		FormProgressBar progressBar = 
 				new FormProgressBar(shell, 
 						Messages.getString( "DCDownload.ProgressBarTitle" ) );
@@ -529,7 +609,7 @@ public class FileActions {
 		// download the data collection
 		DCDownloader downloader = new DCDownloader( dc );
 		downloader.setProgressBar( progressBar );
-		
+
 		// when finished
 		downloader.setDoneListener( new Listener() {
 
@@ -541,15 +621,9 @@ public class FileActions {
 
 					@Override
 					public void run() {
-						
-						// download all the dc catalogues
-						final FormMultipleProgress dialog = new FormMultipleProgress( shell );
 
-						CatalogueDownloaderManager manager = 
-								new CatalogueDownloaderManager( 1 );
-						
 						Collection<Catalogue> catToDownload = dc.getNewCatalogues();
-						
+
 						if ( catToDownload.isEmpty() ) {
 							GlobalUtil.showDialog(
 									shell, 
@@ -558,53 +632,11 @@ public class FileActions {
 									SWT.ICON_INFORMATION );
 							return;
 						}
-						
-						// for each catalogue
-						for ( Catalogue cat : catToDownload ) {
-							
-							// add a progress row in the table
-							final TableRow row = dialog.addRow( cat.getLabel() );
-							
-							// prepare the download thread
-							CatalogueDownloader downloader = new CatalogueDownloader( cat );
-							
-							// set the table bar as progress bar
-							downloader.setProgressBar( row.getBar() );
 
-							// start the download of the catalogue
-							manager.add( downloader );
-						}
-						
-						// warn user when finished
-						manager.setDoneListener( new Listener() {
-							
-							@Override
-							public void handleEvent(Event arg0) {
-								
-								// warn user in the ui thread
-								// and make the list of progresses closeable
-								shell.getDisplay().asyncExec( new Runnable() {
-									
-									@Override
-									public void run() {
-
-										GlobalUtil.showDialog(
-												shell, 
-												dc.getCode(), 
-												Messages.getString( "DCDownload.Success" ), 
-												SWT.ICON_INFORMATION );
-										
-										dialog.done();
-									}
-								});
-							}
-						});
-						
-						// start thread in a batch way
-						manager.start();
-
-						dialog.open();
-
+						// download the batch of catalogues
+						downloadCatalogues ( shell, dc.getCode(), 
+								Messages.getString( "DCDownload.Success" ),
+								catToDownload );
 					}
 				});
 			}

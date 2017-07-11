@@ -12,8 +12,8 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
@@ -62,7 +62,7 @@ public class TableApplicability {
 	 * Get the table viewer of the class
 	 * @return
 	 */
-	public TableViewer getTable() {
+	public TableViewer getTableViewer() {
 		return applicabilityTable;
 	}
 	
@@ -148,19 +148,16 @@ public class TableApplicability {
 
 		groupTermApplicability.setText( 
 				Messages.getString("TableApplicability.Title") );
-		groupTermApplicability.setLayout( new FillLayout() );
+		groupTermApplicability.setLayout( new GridLayout(1,false) );
 
 		// layout data for the applicability table group
 		GridData gridData = new GridData();
 		gridData.verticalAlignment = SWT.FILL;
 		gridData.horizontalAlignment = SWT.FILL;
 		gridData.minimumHeight = 200;
-		gridData.heightHint = 200;
 		gridData.minimumWidth = 100;
-		gridData.widthHint = 100;
 		gridData.grabExcessHorizontalSpace = false;
-		gridData.grabExcessVerticalSpace = false;
-		groupTermApplicability.setLayoutData( gridData );
+		gridData.grabExcessVerticalSpace = true;
 
 		// create an applicability table
 		applicabilityTable = new TableViewer( groupTermApplicability , SWT.BORDER | SWT.SINGLE
