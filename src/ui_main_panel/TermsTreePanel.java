@@ -455,11 +455,14 @@ public class TermsTreePanel extends Observable implements Observer {
 		
 		boolean canEdit = User.getInstance().canEdit( catalogue );
 		boolean canEditMajor = catalogue.isLocal() || ( canEdit && reserveLevel.isMajor() );
-
 		boolean canAddTerm = canEdit && selectedHierarchy.isMaster();
+		
 		// enable add only in master hierarchy
-		addTerm.setEnabled( canAddTerm );
-		addRootTerm.setEnabled( canAddTerm );
+		if ( addTerm != null )
+			addTerm.setEnabled( canAddTerm );
+		
+		if ( addRootTerm != null )
+			addRootTerm.setEnabled( canAddTerm );
 		
 		if ( isSelectionEmpty() )
 			return;
