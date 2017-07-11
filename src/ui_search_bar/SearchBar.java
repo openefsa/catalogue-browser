@@ -27,6 +27,7 @@ import catalogue_object.Term;
 import global_manager.GlobalManager;
 import messages.Messages;
 import ui_main_panel.HierarchySelector;
+import ui_main_panel.TermFilter;
 import user_preferences.CataloguePreference;
 import user_preferences.CataloguePreferenceDAO;
 
@@ -51,11 +52,16 @@ public class SearchBar implements Observer {
 	private Button buttonSearch;
 	private Button localSearch;
 	private Button globalSearch;
+	private boolean hideDeprecated;
+	private boolean hideNotInUse;
 	
 	private SearchListener listener;
 	
-	// we can search terms only in these hierarchies (only if globalSearch is disabled)
-	private ArrayList<Hierarchy> searchableHierarchies = new ArrayList<>();
+	// hierarchy which is currently opened in the browser
+	private Hierarchy currentHierarchy;
+	
+	// hierarchy in which we make the search
+	private Hierarchy searchHierarchy;
 	
 	// Array list which contains the results of the search (terms)
 	private ArrayList < Term > searchResults = new ArrayList<>();
@@ -108,17 +114,17 @@ public class SearchBar implements Observer {
 	/**
 	 * Restrict the search space to a single hierarchy
 	 */
-	public void setSearchHierarchy ( Hierarchy hierarchy ) {
-		searchableHierarchies = new ArrayList<>();
-		searchableHierarchies.add( hierarchy );
+	public void setCurrentHierarchy ( Hierarchy hierarchy ) {
+		this.currentHierarchy = hierarchy;
 	}
 	
 	/**
-	 * Restrict the search space to a multiple hierarchies
-	 * @param 
+	 * Get the hierarchy in which the search was performed
+	 * null if no search was performed yet
+	 * @return
 	 */
-	public void setSearchHierarchies ( ArrayList<Hierarchy> searchableHierarchies ) {
-		this.searchableHierarchies = searchableHierarchies;
+	public Hierarchy getSearchHierarchy() {
+		return searchHierarchy;
 	}
 	
 	/**
@@ -269,7 +275,9 @@ public class SearchBar implements Observer {
 			@Override
 			public void modifyText(ModifyEvent e) {
 				
-				buttonSearch.setEnabled( canSearch( textSearch.getText().trim().length() ) && textSearch.isEnabled() );
+				buttonSearch.setEnabled( 
+						canSearch( textSearch.getText().trim().length() ) 
+						&& textSearch.isEnabled() );
 			}
 		});
 
@@ -440,12 +448,15 @@ public class SearchBar implements Observer {
 
 		SearchDAO searchDao = new SearchDAO( catalogue );
 		
-		// search terms
-		if ( !globalSearchEnabled )
-			searchResults = searchDao.startSearch( keyword, type, searchableHierarchies );
-		else 
-			searchResults = searchDao.startSearch( keyword, type );
-
+		// get the hierarchy in which we have to search
+		searchHierarchy = globalSearchEnabled ? catalogue.getMasterHierarchy() : currentHierarchy;
+		
+		searchResults = searchDao.startSearch( keyword, type, searchHierarchy );
+		
+		// filter deprecated and not in use terms
+		searchResults = TermFilter.filterByFlag( hideDeprecated, 
+				hideNotInUse, searchResults, searchHierarchy );
+		
 		// return the results
 		return searchResults;
 	}
@@ -457,14 +468,16 @@ public class SearchBar implements Observer {
 	public void update ( Observable o, Object data ) {
 		
 		if ( o instanceof HierarchySelector ) {
-			setSearchHierarchy ( (Hierarchy) data );
+			setCurrentHierarchy ( (Hierarchy) data );
 		}
 		
-		// update catalogue if it was changed
-		// with the open catalogue menu item
-		/*if ( o instanceof CatalogueHandler ) {
-			catalogue = ((CatalogueHandler) o).getCatalogue();
-		}*/
+		// if the check boxes for visualizing
+		// terms are changed
+		if ( o instanceof TermFilter ) {
+			
+			hideDeprecated = ( (TermFilter) o ).isHidingDeprecated();
+			hideNotInUse = ( (TermFilter) o ).isHidingNotReportable();
+		}
 		
 		if ( o instanceof GlobalManager && data instanceof Catalogue ) {
 			

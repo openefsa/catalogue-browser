@@ -136,6 +136,7 @@ public class TermTable implements Observer {
 	 * @param hierarchy
 	 */
 	public void setCurrentHierarchy ( Hierarchy hierarchy ) {
+		contentProvider.setCurrentHierarchy( hierarchy );
 		labelProvider.setCurrentHierarchy( hierarchy );
 	}
 	
@@ -222,6 +223,16 @@ public class TermTable implements Observer {
 		return parent;
 	}
 
+	public void setHideDeprecated ( boolean hide ) {
+		// update content provider settings
+		contentProvider.setHideDeprecated( hide );
+	}
+	
+	public void setHideNotInUse ( boolean hide ) {
+		// update content provider settings
+		contentProvider.setHideNotUse( hide );
+	}
+	
 	@Override
 	public void update(Observable arg0, Object arg1) {
 

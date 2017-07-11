@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-Tue Jul 11 14:35:37 CEST 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-015d-31a5-d1e2-000006d2e8b8 
+Tue Jul 11 15:20:28 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-015d-31ce-e0ee-000006d706d8 
 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\MAIN_CATS_DB with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
 Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
 java.vendor=Oracle Corporation
@@ -12,9 +12,9 @@ os.version=6.1
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
 ----------------------------------------------------------------
-Tue Jul 11 14:35:38 CEST 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 80840021-015d-31a5-d1e2-000006d2e8b8 
-on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\PRODUCTION_CATS\CAT_ADDFOOD_DB\ADDFOOD_VERSION_4.1 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Tue Jul 11 15:20:29 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 80840021-015d-31ce-e0ee-000006d706d8 
+on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\LOCAL_CATS\CAT_MTX_DB\MTX with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
 Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.8.0_111-b14
@@ -25,5 +25,5 @@ os.version=6.1
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
 ----------------------------------------------------------------
-Tue Jul 11 14:36:18 CEST 2017:
-Shutting down instance a816c00e-015d-31a5-d1e2-000006d2e8b8 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\MAIN_CATS_DB with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Tue Jul 11 15:20:58 CEST 2017:
+Shutting down instance a816c00e-015d-31ce-e0ee-000006d706d8 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\MAIN_CATS_DB with class loader sun.misc.Launcher$AppClassLoader@73d16e93 

@@ -63,6 +63,8 @@ public class SearchPanel implements Observer {
 				// get the search results from the searchBar
 				ArrayList < Term > terms = event.getResults();
 
+				table.setCurrentHierarchy( searchBar.getSearchHierarchy() );
+				
 				// Update the list search input with the 
 				table.setInput( terms );
 				

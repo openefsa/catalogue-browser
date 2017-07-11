@@ -10,6 +10,7 @@ import catalogue_object.AvailableHierarchiesTerm;
 import catalogue_object.CatalogueObject;
 import catalogue_object.Hierarchy;
 import catalogue_object.Term;
+import ui_main_panel.TermFilter;
 
 /**
  * Class used for fill the tree view, thats implements ITreeContentProvider who
@@ -61,10 +62,13 @@ public class ContentProviderTerm implements ITreeContentProvider {
 		}
 		
 		else if ( ( arg0 instanceof Collection<?> ) ) {
-			
 			Collection<Term> searchTerms = (Collection<Term>) arg0;
+			
+			searchTerms = TermFilter.filterByFlag( hideDeprecated, 
+					hideNotUse, searchTerms, hierarchy );
+			
 			// filter terms and add them
-			elem.addAll( filterByFlag( searchTerms ) );
+			elem.addAll( searchTerms );
 		}
 
 		// if we have a hierarchy we simply get all its terms
@@ -93,29 +97,6 @@ public class ContentProviderTerm implements ITreeContentProvider {
 		}
 
 		return elem.toArray();
-	}
-	
-	/**
-	 * Filter the terms by their deprecated and dismissed flag
-	 * @param objs
-	 * @return
-	 */
-	private Collection<Term> filterByFlag( Collection<Term> objs ) {
-		
-		Collection<Term> out = new ArrayList<>();
-		
-		for ( Term obj : objs ) {
-			
-			if ( hideDeprecated && obj.isDeprecated() )
-				continue;
-			
-			if ( hideNotUse && obj.isDismissed( hierarchy ) )
-				continue;
-			
-			out.add( obj );
-		}
-		
-		return out;
 	}
 	
 	/**

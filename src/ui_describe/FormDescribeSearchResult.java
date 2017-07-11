@@ -35,7 +35,8 @@ public class FormDescribeSearchResult {
 	private ArrayList< Term > searchResults;
 	private Term selectedTerm;
 	private Hierarchy hierarchy;
-
+	private boolean hideDepr;
+	private boolean hideNotInUse;
 
 	/**
 	 * Constructor, display the search results passed in the input.
@@ -51,8 +52,9 @@ public class FormDescribeSearchResult {
 		this.title = title;
 		this.hierarchy = hierarchy;
 		this.searchResults = searchResults;
+		this.hideDepr = false;
+		this.hideNotInUse = false;
 	}
-
 
 	/**
 	 * Display the window
@@ -73,6 +75,10 @@ public class FormDescribeSearchResult {
 
 		// table to show the results
 		table = new TermTable( dialog, catalogue );
+		
+		table.setHideDeprecated( hideDepr );
+		table.setHideNotInUse( hideNotInUse );
+		
 		table.setCurrentHierarchy( hierarchy );
 
 		// Set the results to be displayed in the table
@@ -90,7 +96,6 @@ public class FormDescribeSearchResult {
 				dialog.close();
 			}
 		});
-
 
 		Menu searchMenu = new Menu ( dialog, SWT.POP_UP );
 		MenuItem addItem = new MenuItem ( searchMenu, SWT.PUSH );
@@ -124,7 +129,16 @@ public class FormDescribeSearchResult {
 				dialog.getDisplay().sleep();
 		}
 		dialog.dispose();
-
+	}
+	
+	public void setHideDeprecated ( boolean hide ) {
+		// update content provider settings
+		hideDepr = hide;
+	}
+	
+	public void setHideNotInUse ( boolean hide ) {
+		// update content provider settings
+		hideNotInUse = hide;
 	}
 
 	/**

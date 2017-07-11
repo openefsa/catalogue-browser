@@ -38,13 +38,15 @@ public class SearchDAO {
 	}
 
 	/**
-	 * Search the text as keyword(s) to find terms in the entire database.
+	 * Search the text as keyword(s) to find terms in a single hierarchy
 	 * @param text the entire text we want to search ( as "goat milk", "bovine" ... )
 	 * @param type the search type we want to perform see {@linkplain SearchType}
 	 * @return
 	 */
-	public ArrayList<Term> startSearch ( String text, SearchType type ) {
-		return startSearch(text, type, new ArrayList<Hierarchy>() );
+	public ArrayList<Term> startSearch ( String text, SearchType type, Hierarchy hierarchy ) {
+		ArrayList<Hierarchy> h = new ArrayList<Hierarchy>();
+		h.add( hierarchy );
+		return startSearch(text, type, h );
 	}
 	
 	/**
@@ -158,8 +160,8 @@ public class SearchDAO {
 		
 		// if no searchable hierarchies => we search globally
 		// therefore we return true
-		if ( searchableHierarchies.isEmpty() )
-			return true;
+		//if ( searchableHierarchies.isEmpty() )
+		//	return true;
 		
 		// if no applicable hierarchy => we do not return it
 		if ( term.getApplicableHierarchies().isEmpty() )

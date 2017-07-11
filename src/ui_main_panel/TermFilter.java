@@ -1,5 +1,7 @@
 package ui_main_panel;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Observable;
 
 import org.eclipse.swt.SWT;
@@ -9,6 +11,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
+import catalogue_object.Hierarchy;
+import catalogue_object.Term;
 import messages.Messages;
 import user_preferences.Preference;
 import user_preferences.PreferenceNotFoundException;
@@ -215,5 +219,29 @@ public class TermFilter extends Observable {
 	 */
 	public boolean isHidingTermCode() {
 		return hideTermCode.getSelection();
+	}
+	
+	/**
+	 * Filter the terms by their deprecated and dismissed flag
+	 * @param objs
+	 * @return
+	 */
+	public static ArrayList<Term> filterByFlag( boolean hideDepr, boolean hideNotInUse,
+			Collection<Term> objs, Hierarchy currentHierarchy ) {
+		
+		ArrayList<Term> out = new ArrayList<>();
+
+		for ( Term obj : objs ) {
+			
+			if ( hideDepr && obj.isDeprecated() )
+				continue;
+			
+			if ( hideNotInUse && obj.isDismissed( currentHierarchy ) )
+				continue;
+			
+			out.add( obj );
+		}
+		
+		return out;
 	}
 }

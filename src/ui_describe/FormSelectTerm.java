@@ -68,6 +68,7 @@ public class FormSelectTerm implements Observer, RestoreableWindow {
 	private Shell shell;
 	private Shell dialog;
 	private String title;
+	private TermFilter termFilter;
 	private MultiTermsTreeViewer tree;
 	private TableSelectedDescriptors selectedDescriptors;
 	private FrameTermFields termPropTab = null;
@@ -189,7 +190,7 @@ public class FormSelectTerm implements Observer, RestoreableWindow {
 		// Add a search bar
 		final SearchBar searchBar = new SearchBar( dialog, false );
 		searchBar.setCatalogue( catalogue );
-		searchBar.setSearchHierarchy( rootHierarchy );
+		searchBar.setCurrentHierarchy( rootHierarchy );
 		
 		// set the search listener
 		searchBar.setListener( new SearchListener() {
@@ -214,7 +215,10 @@ public class FormSelectTerm implements Observer, RestoreableWindow {
 				FormDescribeSearchResult resultsForm = new FormDescribeSearchResult(shell, 
 						Messages.getString("FormSelectTerm.SearchResultWindowTitle"), rootHierarchy,
 						searchResults );
-
+				
+				resultsForm.setHideDeprecated( termFilter.isHidingDeprecated() );
+				resultsForm.setHideNotInUse( termFilter.isHidingNotReportable() );
+				
 				resultsForm.display( catalogue );
 				
 				// get selected term
@@ -257,7 +261,7 @@ public class FormSelectTerm implements Observer, RestoreableWindow {
 		Composite filterComp = new Composite( dialog, SWT.NONE );
 		filterComp.setLayout( new GridLayout( 4, false ) );
 		
-		TermFilter termFilter = new TermFilter( filterComp );
+		termFilter = new TermFilter( filterComp );
 		termFilter.display( UIPreference.hideDeprDescribe, 
 				UIPreference.hideNotReprDescribe,
 				UIPreference.hideTermCodeDescribe );
@@ -276,6 +280,7 @@ public class FormSelectTerm implements Observer, RestoreableWindow {
 		// and restore the term filter status to the
 		// previous one
 		termFilter.addObserver( tree );
+		termFilter.addObserver( searchBar );
 		termFilter.restoreStatus();
 		
 		// Layout settings for term properties
