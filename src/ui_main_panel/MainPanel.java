@@ -535,6 +535,7 @@ public class MainPanel implements Observer, RestoreableWindow {
 		// and restore the term filter status to the
 		// previous one
 		termFilter.addObserver( tree );
+		termFilter.addObserver( searchPanel );
 		termFilter.restoreStatus();
 		
 		// set the weights once all the widgets are inserted

@@ -19,8 +19,10 @@ import catalogue.Catalogue;
 import catalogue_object.Hierarchy;
 import catalogue_object.Term;
 import term.AlphabeticalSorter;
+import term.ContentProviderTerm;
 import term.LabelProviderTerm;
 import ui_main_panel.HierarchySelector;
+import ui_main_panel.TermFilter;
 
 /**
  * Table which is used to show a list of terms
@@ -32,6 +34,7 @@ public class TermTable implements Observer {
 	private Composite parent;
 	private TableViewer table;
 	private LabelProviderTerm labelProvider;
+	private ContentProviderTerm contentProvider;
 
 	public TermTable( Composite parent, Catalogue catalogue ) {
 
@@ -42,8 +45,9 @@ public class TermTable implements Observer {
 				| SWT.FULL_SELECTION );
 
 		// set the content and the label provider of the table
-		table.setContentProvider( new ContentProviderTermList() );
-
+		contentProvider = new ContentProviderTerm();
+		
+		table.setContentProvider( contentProvider );
 		labelProvider = new LabelProviderTerm();
 		table.setLabelProvider( labelProvider );
 		
@@ -157,7 +161,8 @@ public class TermTable implements Observer {
 	public void setInput ( ArrayList<Term> input ) {
 		
 		// sort input by name
-		Collections.sort( input, new AlphabeticalSorter() );
+		if ( input != null )
+			Collections.sort( input, new AlphabeticalSorter() );
 		
 		table.setInput ( input );
 	}
@@ -222,7 +227,27 @@ public class TermTable implements Observer {
 
 		// update hierarchy
 		if ( arg0 instanceof HierarchySelector ) {
-			labelProvider.setCurrentHierarchy( ((HierarchySelector) arg0).getSelectedHierarchy() );
+			Hierarchy current = ((HierarchySelector) arg0).getSelectedHierarchy();
+			labelProvider.setCurrentHierarchy( current );
+			contentProvider.setCurrentHierarchy( current );
+		}
+		
+		// if the check boxes for visualizing
+		// terms are changed
+		if ( arg0 instanceof TermFilter ) {
+			
+			boolean hideDeprecated = ( (TermFilter) arg0 ).isHidingDeprecated();
+			boolean hideNotInUse = ( (TermFilter) arg0 ).isHidingNotReportable();
+			boolean hideTermCode = ( (TermFilter) arg0 ).isHidingTermCode();
+			
+			// update content provider settings
+			contentProvider.setHideDeprecated( hideDeprecated );
+			contentProvider.setHideNotUse( hideNotInUse );
+			
+			labelProvider.setHideCode( hideTermCode );
+
+			// refresh contents
+			table.refresh();
 		}
 	}
 }

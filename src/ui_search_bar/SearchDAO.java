@@ -8,8 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -57,7 +55,8 @@ public class SearchDAO {
 	 * will be inserted in the results
 	 * @return list of terms which matched the conditions
 	 */
-	public ArrayList<Term> startSearch ( String text, SearchType type, ArrayList<Hierarchy> hierarchies ) {
+	public ArrayList<Term> startSearch ( String text, 
+			SearchType type, ArrayList<Hierarchy> hierarchies ) {
 		
 		ArrayList< String > keywords;
 		
@@ -88,7 +87,8 @@ public class SearchDAO {
 	 * @param hierarchies subset of hierarchies in which searching terms (empty = global search)
 	 * @return
 	 */
-	private ArrayList<Term> search ( ArrayList<String> keywords, SearchType type, ArrayList<Hierarchy> hierarchies ) {
+	private ArrayList<Term> search ( ArrayList<String> keywords, 
+			SearchType type, ArrayList<Hierarchy> hierarchies ) {
 		
 		ArrayList<Term> terms = new ArrayList<>();
 		
@@ -115,13 +115,6 @@ public class SearchDAO {
 				terms.add( term );
 			}
 		}
-		
-		// Sort the terms by their name
-		Collections.sort( terms, new Comparator<Term>() {
-		    public int compare(Term one, Term other) {
-		        return one.getLabel().compareTo( other.getLabel() );
-		    }
-		}); 
 		
 		return terms;
 	}

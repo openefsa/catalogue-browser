@@ -65,10 +65,6 @@ public class SearchBar implements Observer {
 	boolean addGlobalSearch;  // should global search button be added?
 	boolean globalSearchEnabled = false;
 	
-	// TODO use these settings to show also search results
-	private boolean hideDeprecated;
-	private boolean hideNotInUse;
-	
 	public SearchBar( Composite parent, boolean addGlobalSearch ) {
 		this.parent = parent;
 		this.addGlobalSearch = addGlobalSearch;
@@ -123,22 +119,6 @@ public class SearchBar implements Observer {
 	 */
 	public void setSearchHierarchies ( ArrayList<Hierarchy> searchableHierarchies ) {
 		this.searchableHierarchies = searchableHierarchies;
-	}
-	
-	/**
-	 * Should deprecated terms be hidden?
-	 * @param hideDeprecated
-	 */
-	public void setHideDeprecated(boolean hideDeprecated) {
-		this.hideDeprecated = hideDeprecated;
-	}
-	
-	/**
-	 * Should not in use terms be hidden?
-	 * @param hideNotInUse
-	 */
-	public void setHideNotInUse(boolean hideNotInUse) {
-		this.hideNotInUse = hideNotInUse;
 	}
 	
 	/**
@@ -262,7 +242,7 @@ public class SearchBar implements Observer {
 	/**
 	 * Display the search bar, instantiate the UI
 	 */
-	public void display( ) {
+	public void display() {
 		
 		GridData gridData = new GridData();
 		gridData.horizontalAlignment = SWT.FILL;
@@ -449,7 +429,7 @@ public class SearchBar implements Observer {
 	 * in the system.
 	 * Return an array list of terms (search results), which is empty if no results are found
 	 */
-	private ArrayList< Term > search ( String keyword, SearchType type ) {
+	private ArrayList<Term> search ( String keyword, SearchType type ) {
 		
 		// output array
 		ArrayList< Term > searchResults = new ArrayList<>();
@@ -469,7 +449,6 @@ public class SearchBar implements Observer {
 		// return the results
 		return searchResults;
 	}
-
 	
 	/**
 	 * What to do if the selected hierarchy is changed? Save the selected hierarchy

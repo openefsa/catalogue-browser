@@ -1,13 +1,14 @@
 package term;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 import catalogue_object.AvailableHierarchiesTerm;
+import catalogue_object.CatalogueObject;
 import catalogue_object.Hierarchy;
-import catalogue_object.Nameable;
 import catalogue_object.Term;
 
 /**
@@ -27,33 +28,8 @@ public class ContentProviderTerm implements ITreeContentProvider {
 	// applicability flags of the tree, which terms should be visualized?
 	private boolean hideDeprecated = false;
 	private boolean hideNotUse = false;
-	
-	/**
-	 * Set the current hierarchy for the tree viewer
-	 * @param hierarchy
-	 */
-	public void setCurrentHierarchy ( Hierarchy hierarchy ) {
-		this.hierarchy = hierarchy;
-	}
 
-	/**
-	 * Hide deprecated terms from the visualization
-	 * @param hideDeprecated
-	 */
-	public void setHideDeprecated(boolean hideDeprecated) {
-		this.hideDeprecated = hideDeprecated;
-	}
-
-	/**
-	 * Hide not reportable terms from the
-	 * visualization
-	 * @param hideNotUse
-	 */
-	public void setHideNotUse(boolean hideNotUse) {
-		this.hideNotUse = hideNotUse;
-	}
-
-	public void dispose ( ) {}
+	public void dispose () {}
 
 	public void inputChanged ( Viewer viewer , Object arg1 , Object arg2 ) {}
 
@@ -66,9 +42,10 @@ public class ContentProviderTerm implements ITreeContentProvider {
 	 * @param arg0
 	 *            is the parent element
 	 */
+	@SuppressWarnings("unchecked")
 	public Object[] getChildren ( Object arg0 ) {
 
-		ArrayList<Nameable> elem = new ArrayList<>();
+		ArrayList<CatalogueObject> elem = new ArrayList<>();
 
 		if ( arg0 == null )
 			return elem.toArray();
@@ -79,8 +56,15 @@ public class ContentProviderTerm implements ITreeContentProvider {
 			// get all the children of the term
 			ArrayList<Term> children = 
 					((Term) arg0).getChildren( hierarchy, hideDeprecated, hideNotUse );
-
+			
 			elem.addAll( children );
+		}
+		
+		else if ( ( arg0 instanceof Collection<?> ) ) {
+			
+			Collection<Term> searchTerms = (Collection<Term>) arg0;
+			// filter terms and add them
+			elem.addAll( filterByFlag( searchTerms ) );
 		}
 
 		// if we have a hierarchy we simply get all its terms
@@ -107,10 +91,33 @@ public class ContentProviderTerm implements ITreeContentProvider {
 			
 			elem.addAll( hiers );
 		}
-		
+
 		return elem.toArray();
 	}
-
+	
+	/**
+	 * Filter the terms by their deprecated and dismissed flag
+	 * @param objs
+	 * @return
+	 */
+	private Collection<Term> filterByFlag( Collection<Term> objs ) {
+		
+		Collection<Term> out = new ArrayList<>();
+		
+		for ( Term obj : objs ) {
+			
+			if ( hideDeprecated && obj.isDeprecated() )
+				continue;
+			
+			if ( hideNotUse && obj.isDismissed( hierarchy ) )
+				continue;
+			
+			out.add( obj );
+		}
+		
+		return out;
+	}
+	
 	/**
 	 * This method is used to obtain the root elements for the tree viewer. This
 	 * method is invoked by calling the setInput method on tree viewer, should
@@ -151,7 +158,7 @@ public class ContentProviderTerm implements ITreeContentProvider {
 	 * not a plus or minus should appear on the tree widget.
 	 */
 	public boolean hasChildren ( Object arg0 ) {
-
+		
 		boolean hasChildren = false;
 
 		if ( arg0 instanceof Hierarchy && 
@@ -164,5 +171,31 @@ public class ContentProviderTerm implements ITreeContentProvider {
 		}
 
 		return hasChildren;
+	}
+	
+	
+	/**
+	 * Set the current hierarchy for the tree viewer
+	 * @param hierarchy
+	 */
+	public void setCurrentHierarchy ( Hierarchy hierarchy ) {
+		this.hierarchy = hierarchy;
+	}
+
+	/**
+	 * Hide deprecated terms from the visualization
+	 * @param hideDeprecated
+	 */
+	public void setHideDeprecated(boolean hideDeprecated) {
+		this.hideDeprecated = hideDeprecated;
+	}
+
+	/**
+	 * Hide not reportable terms from the
+	 * visualization
+	 * @param hideNotUse
+	 */
+	public void setHideNotUse(boolean hideNotUse) {
+		this.hideNotUse = hideNotUse;
 	}
 }
