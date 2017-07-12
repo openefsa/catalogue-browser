@@ -12,8 +12,8 @@ import term.WrongKeyException;
 public class Attribute extends SortableCatalogueObject implements Mappable {
 
 	// Set the fixed values of attributes
-	public static final String cardinalitySingle = "S";
-	public static final String cardinalityRepeatable = "R";
+	public static final String cardinalitySingle = "single";
+	public static final String cardinalityRepeatable = "repeatable";
 	
 	public static final String booleanTrue = "true";
 	public static final String booleanFalse = "false";
