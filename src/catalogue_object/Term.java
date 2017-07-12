@@ -1244,7 +1244,7 @@ public class Term extends CatalogueObject implements Mappable {
 		ArrayList<Hierarchy> hierarchies = new ArrayList<>();
 
 		// get the hierarchies where this term is not present
-		for ( Hierarchy hierarchy : catalogue.getHierarchies() ) {
+		for ( Hierarchy hierarchy : catalogue.getInUseHierarchies() ) {
 			if ( !applHierarchies.contains( hierarchy ) )
 				hierarchies.add( hierarchy );
 		}
@@ -1719,7 +1719,7 @@ public class Term extends CatalogueObject implements Mappable {
 		this.removeApplicability( thisAppl, true );
 		
 		// rearrange the siblings order since we have removed the source
-		this.normalizeLevel( sourceSib, hierarchy );
+		normalizeLevel( sourceSib, hierarchy );
 
 		// add the offset for source level in RAM memory
 		// (Used when the source is taken from the same level
@@ -1751,7 +1751,7 @@ public class Term extends CatalogueObject implements Mappable {
 		
 		// normalize the target siblings now that the
 		// source is a target sibling (orders are changed)
-		target.normalizeLevel( targetSib, hierarchy );	
+		normalizeLevel( targetSib, hierarchy );	
 	}
 	
 	/**

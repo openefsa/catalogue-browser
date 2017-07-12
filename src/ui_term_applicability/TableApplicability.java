@@ -444,7 +444,8 @@ public class TableApplicability {
 					term.removeApplicability( appl, true );
 				}
 
-				applicabilityTable.refresh();
+				// refresh table
+				setTerm( term );
 
 				// call the remove listener if it was set
 				if ( removeListener != null )
@@ -580,8 +581,6 @@ public class TableApplicability {
 				else if ( parentTerm instanceof Hierarchy ) {
 					addApplicability ( parentTerm, (Hierarchy) parentTerm );
 				}
-				
-				applicabilityTable.refresh();
 
 				// call the add listener if it is defined
 				if ( addListener != null )
@@ -607,6 +606,9 @@ public class TableApplicability {
 
 		// add the applicability
 		term.addApplicability( appl, true );
+		
+		// refresh
+		setTerm( term );
 	}
 	
 	/**
