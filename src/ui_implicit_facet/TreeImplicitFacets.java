@@ -25,6 +25,7 @@ public class TreeImplicitFacets implements Observer {
 	TreeViewer tree;  // tree which contains the implicit facets
 
 	private LabelProviderImplicitFacets labelProvider;
+	private ContentProviderImplicitFacets contentProvider;
 	
 	/**
 	 * Get the implicit facets tree viewer
@@ -72,8 +73,10 @@ public class TreeImplicitFacets implements Observer {
 		// set the label provider
 		tree.setLabelProvider( labelProvider );
 		
+		contentProvider = new ContentProviderImplicitFacets();
+		
 		// set the content provider
-		tree.setContentProvider( new ContentProviderImplicitFacets() );
+		tree.setContentProvider( contentProvider );
 
 		// set how the terms are sorted
 		tree.setSorter( new SorterImplicitFacets() );

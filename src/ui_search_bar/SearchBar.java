@@ -47,6 +47,7 @@ public class SearchBar implements Observer {
 
 	private Catalogue catalogue;
 	
+	private Term rootTerm;
 	private Text textSearch;
 	private Combo comboOptSearch;
 	private Button buttonSearch;
@@ -448,6 +449,10 @@ public class SearchBar implements Observer {
 
 		SearchDAO searchDao = new SearchDAO( catalogue );
 		
+		// Set root term for the search
+		if ( rootTerm != null )
+			searchDao.setRootTerm( rootTerm );
+		
 		// get the hierarchy in which we have to search
 		searchHierarchy = globalSearchEnabled ? catalogue.getMasterHierarchy() : currentHierarchy;
 		
@@ -459,6 +464,16 @@ public class SearchBar implements Observer {
 		
 		// return the results
 		return searchResults;
+	}
+	
+	/**
+	 * Set a root term for the search. All the terms
+	 * which are not under the sub tree of the the root term
+	 * will be excuded from the results.
+	 * @param rootTerm
+	 */
+	public void setRootTerm(Term rootTerm) {
+		this.rootTerm = rootTerm;
 	}
 	
 	/**

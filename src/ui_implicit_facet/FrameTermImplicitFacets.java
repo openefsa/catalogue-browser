@@ -1,5 +1,6 @@
 package ui_implicit_facet;
 
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -184,15 +185,33 @@ public class FrameTermImplicitFacets implements Observer {
 				else  // if we have selected a descriptor get the category from it
 					facetCategory = ( (DescriptorTreeItem) selectedElem ).getDescriptor().getFacetCategory();
 				
+
 				// open a form to select descriptors. In particular we enable the multiple selection
 				// only if the facet category is repeatable, that is, with cardinality zero or more
 				FormSelectTerm sf = new FormSelectTerm( parent , 
-						Messages.getString("Browser.SelectTermWindowTitle"), term.getCatalogue(),
+						Messages.getString("Browser.SelectTermWindowTitle"), 
+						term.getCatalogue(),
 						facetCategory.isRepeatable() );
 				
 				// set the root term for the form in order to show only
 				// the facet related to the facet category
 				sf.setRootTerm( facetCategory );
+				
+				// if cardinality is single
+				if ( !facetCategory.isRepeatable() ) {
+					
+					// if we have the inherited implicit facet
+					// (it can be only one, cardinality is single)
+					ArrayList<DescriptorTreeItem> inh = term.getInheritedImplicitFacets( facetCategory );
+					if ( !inh.isEmpty() ) {
+						
+						// then we can only specify better the inherited
+						// facet, we set as root term the inherited descriptor!
+						sf.setRootTerm( inh.get(0).getTerm(), 
+								facetCategory.getHierarchy() );
+					}
+				}
+
 				
 				// display the form
 				sf.display();
@@ -328,7 +347,7 @@ public class FrameTermImplicitFacets implements Observer {
 	 * @return boolean array, first => can we add one term?, second => can we remove one term?, 
 	 * third => can we add more than one term?
 	 */
-	public boolean[] isAddableRemovable( Term baseTerm, Object facetCategory ){
+	public boolean[] isAddableRemovable( Term baseTerm, Object facetCategory ) {
 
 		boolean isAddable = false;
 		boolean isRemovable = false;
@@ -394,7 +413,6 @@ public class FrameTermImplicitFacets implements Observer {
 
 		// Return embedded results
 		boolean results[] = {isAddable, isRemovable, isMultipleAddable};
-		
 		
 		return( results );
 	}

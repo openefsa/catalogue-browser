@@ -97,6 +97,11 @@ public class Attribute extends SortableCatalogueObject implements Mappable {
 	}
 	
 	public String getReportable() {
+		
+		// default value
+		if ( reportable == null || reportable.isEmpty() )
+			reportable = reportableDisabled;
+		
 		return reportable;
 	}
 	

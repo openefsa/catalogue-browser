@@ -68,6 +68,7 @@ public class FormSelectTerm implements Observer, RestoreableWindow {
 	private Shell shell;
 	private Shell dialog;
 	private String title;
+	private SearchBar searchBar;
 	private TermFilter termFilter;
 	private MultiTermsTreeViewer tree;
 	private TableSelectedDescriptors selectedDescriptors;
@@ -137,7 +138,6 @@ public class FormSelectTerm implements Observer, RestoreableWindow {
 		
 		this.rootTerm = rootTerm;
 		this.rootHierarchy = hierarchy;
-		
 		this.catalogue = hierarchy.getCatalogue();
 	}
 	
@@ -188,7 +188,13 @@ public class FormSelectTerm implements Observer, RestoreableWindow {
 		
 
 		// Add a search bar
-		final SearchBar searchBar = new SearchBar( dialog, false );
+		searchBar = new SearchBar( dialog, false );
+		
+		// set search root term
+		if ( rootTerm instanceof Term ) {
+			searchBar.setRootTerm( (Term) rootTerm );
+		}
+		
 		searchBar.setCatalogue( catalogue );
 		searchBar.setCurrentHierarchy( rootHierarchy );
 		

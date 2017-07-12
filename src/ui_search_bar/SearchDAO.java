@@ -27,6 +27,7 @@ import user_preferences.SearchOption;
 public class SearchDAO {
 
 	private Catalogue catalogue;
+	private Term rootTerm;
 	
 	/**
 	 * Initialize the search dao with the
@@ -38,15 +39,13 @@ public class SearchDAO {
 	}
 
 	/**
-	 * Search the text as keyword(s) to find terms in a single hierarchy
-	 * @param text the entire text we want to search ( as "goat milk", "bovine" ... )
-	 * @param type the search type we want to perform see {@linkplain SearchType}
-	 * @return
+	 * Set a root term which restricts the search results.
+	 * In particular, only the terms which are children of
+	 * the root term will be maintained in the results.
+	 * @param term
 	 */
-	public ArrayList<Term> startSearch ( String text, SearchType type, Hierarchy hierarchy ) {
-		ArrayList<Hierarchy> h = new ArrayList<Hierarchy>();
-		h.add( hierarchy );
-		return startSearch(text, type, h );
+	public void setRootTerm( Term term ) {
+		this.rootTerm = term;
 	}
 	
 	/**
@@ -58,7 +57,7 @@ public class SearchDAO {
 	 * @return list of terms which matched the conditions
 	 */
 	public ArrayList<Term> startSearch ( String text, 
-			SearchType type, ArrayList<Hierarchy> hierarchies ) {
+			SearchType type, Hierarchy hierarchy ) {
 		
 		ArrayList< String > keywords;
 		
@@ -78,7 +77,7 @@ public class SearchDAO {
 					Arrays.asList( text.split( " " ) ) );
 		}
 		
-		return search ( keywords, type, hierarchies );
+		return search ( keywords, type, hierarchy );
 	}
 	
 	/**
@@ -90,7 +89,7 @@ public class SearchDAO {
 	 * @return
 	 */
 	private ArrayList<Term> search ( ArrayList<String> keywords, 
-			SearchType type, ArrayList<Hierarchy> hierarchies ) {
+			SearchType type, Hierarchy hierarchy ) {
 		
 		ArrayList<Term> terms = new ArrayList<>();
 		
@@ -111,9 +110,17 @@ public class SearchDAO {
 			if ( !term.isInUse() )
 				continue;
 			
+			// Skip elements which are not children of the
+			// root term if it was set
+			if ( rootTerm != null && 
+					!term.hasAncestor( rootTerm, hierarchy) ) {
+				continue;
+			}
+			
 			// if the term type of the term is searchable and also one 
 			// of the hierarchy of the term is searchable, add it
-			if ( isTypeSearchable( term ) && hasHierachySearchable( term, hierarchies ) ) {
+			if ( isTypeSearchable( term ) && 
+					hasHierachySearchable( term, hierarchy ) ) {
 				terms.add( term );
 			}
 		}
@@ -156,7 +163,7 @@ public class SearchDAO {
 	 * @param searchableHierarchies
 	 * @return
 	 */
-	private boolean hasHierachySearchable ( Term term, ArrayList<Hierarchy> searchableHierarchies ) {
+	private boolean hasHierachySearchable ( Term term, Hierarchy hierarchy ) {
 		
 		// if no searchable hierarchies => we search globally
 		// therefore we return true
@@ -167,19 +174,15 @@ public class SearchDAO {
 		if ( term.getApplicableHierarchies().isEmpty() )
 			return false;
 
-		// for each hierarchy in the searchable hierarchies
-		for ( Hierarchy hierarchy : searchableHierarchies ) {
-			
-			// if the hierarchy is contained in the applicable hierarchies of the term
-			// then found
-			for ( Hierarchy termHierarchy : term.getApplicableHierarchies() ) {
-				
-				if ( hierarchy.equals( termHierarchy ) ) {
-					return true;
-				}
+		// if the hierarchy is contained in the applicable hierarchies of the term
+		// then found
+		for ( Hierarchy termHierarchy : term.getApplicableHierarchies() ) {
+
+			if ( hierarchy.equals( termHierarchy ) ) {
+				return true;
 			}
 		}
-		
+
 		return false;
 	}
 	
@@ -190,7 +193,8 @@ public class SearchDAO {
 	 * @param type
 	 * @return
 	 */
-	private ArrayList<Integer> findByCodeOrName ( ArrayList<String> keywords, SearchType type ) {
+	private ArrayList<Integer> findByCodeOrName ( ArrayList<String> keywords, 
+			SearchType type ) {
 		
 		ArrayList<Integer> termIds = new ArrayList<>();
 		
@@ -252,7 +256,8 @@ public class SearchDAO {
 	 * @return list of terms ids which have term attributes which matched
 	 * the keywords with the selected search method
 	 */
-	private ArrayList<Integer> findByAttribute ( ArrayList<String> keywords, SearchType type ) {
+	private ArrayList<Integer> findByAttribute ( ArrayList<String> keywords, 
+			SearchType type ) {
 
 		ArrayList<Integer> termIds = new ArrayList<>();
 		
@@ -352,7 +357,8 @@ public class SearchDAO {
 	 * which matched the keywords with their value using the selected
 	 * search methodology
 	 */
-	private String getTermAttrFilter( ArrayList<String> keywords, SearchType type ) {
+	private String getTermAttrFilter( ArrayList<String> keywords, 
+			SearchType type ) {
 		
 		// output
 		StringBuilder taFilter = new StringBuilder();
