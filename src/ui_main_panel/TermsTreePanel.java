@@ -58,7 +58,7 @@ public class TermsTreePanel extends Observable implements Observer {
 	
 	private MenuItem otherHierarchies, deprecateTerm, termMoveDown, termMoveUp, termLevelUp, describe, recentTerms,
 	addTerm, cutTerm, copyNode, copyBranch, copyCode, copyTerm, fullCopyTerm, pasteTerm, 
-	prefSearchTerm, favouritePicklist, addRootTerm;
+	prefSearchTerm, favouritePicklist, addRootTerm, pasteRootTerm;
 	
 	private Listener updateListener;
 	private HierarchyChangedListener changeHierarchyListener;
@@ -404,6 +404,8 @@ public class TermsTreePanel extends Observable implements Observer {
 			
 			pasteTerm = addPasteMI ( termMenu );
 			
+			pasteRootTerm = addPasteRootMI ( termMenu );
+			
 			new MenuItem( termMenu , SWT.SEPARATOR );
 			
 			// new term operation
@@ -505,6 +507,10 @@ public class TermsTreePanel extends Observable implements Observer {
 		pasteTerm.setEnabled( canEdit 
 				&& termClip.canPaste( 
 						getFirstSelectedTerm(), selectedHierarchy ) );
+		
+		// can paste only if we are cutting/copying and we are pasting in a hierarchy
+		pasteRootTerm.setEnabled( canEdit 
+				&& termClip.canPaste( selectedHierarchy, selectedHierarchy ) );
 	}
 	
 	
@@ -968,6 +974,40 @@ public class TermsTreePanel extends Observable implements Observer {
 				
 				// paste the previous term under the new selected term under the new selected hierarchy
 				termClip.paste( getFirstSelectedTerm(), selectedHierarchy );
+				
+				// refresh tree
+				tree.refresh();
+				
+				// call the update listener if it was set
+				if ( updateListener != null ) {
+					updateListener.handleEvent( new Event() );
+				}
+			}
+		} );
+		
+		pasteTerm.setEnabled( false );
+		
+		return pasteTerm;
+	}
+	
+	/**
+	 * Add a menu item which allows pasting a previously copied term
+	 * @param menu
+	 * @return 
+	 */
+	private MenuItem addPasteRootMI ( Menu menu ) {
+		
+		MenuItem pasteTerm = new MenuItem( menu , SWT.NONE );
+		pasteTerm.setText( Messages.getString("BrowserTreeMenu.PasteRootCmd") );
+		pasteTerm.setEnabled( false );
+
+		pasteTerm.addSelectionListener( new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected ( SelectionEvent e ) {
+				
+				// paste the previous term under the new selected term under the new selected hierarchy
+				termClip.paste( selectedHierarchy, selectedHierarchy );
 				
 				// refresh tree
 				tree.refresh();

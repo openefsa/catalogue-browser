@@ -1759,12 +1759,12 @@ public class Term extends CatalogueObject implements Mappable {
 	 * @param hierarchy
 	 * @return
 	 */
-	public ArrayList<Term> normalizeLevel ( final Hierarchy hierarchy ) {
+	public void normalizeLevel ( final Hierarchy hierarchy ) {
 		
 		ArrayList<Term> terms = this.getSiblings(hierarchy);
 		terms.add( this );
 		
-		return normalizeLevel ( terms, hierarchy );
+		normalizeLevel ( terms, hierarchy );
 	}
 	
 	/**
@@ -1774,7 +1774,7 @@ public class Term extends CatalogueObject implements Mappable {
 	 * @param hierarchy the hierarchy in which the siblings are retrieved
 	 * @return the list of siblings with normalized order
 	 */
-	public ArrayList<Term> normalizeLevel ( ArrayList<Term> termsOnLevel, final Hierarchy hierarchy ) {
+	public static void normalizeLevel ( ArrayList<Term> termsOnLevel, final Hierarchy hierarchy ) {
 
 		// sort terms by order
 		Collections.sort( termsOnLevel, new Comparator<Term>() {
@@ -1796,7 +1796,7 @@ public class Term extends CatalogueObject implements Mappable {
 		// normalize order integer replacing orders
 		// with increasing numbers to cover all the
 		// orders holes
-		ParentTermDAO parentDao = new ParentTermDAO(catalogue);
+		ParentTermDAO parentDao = new ParentTermDAO( hierarchy.getCatalogue() );
 		for ( int i = 0; i < termsOnLevel.size(); i++ ) {
 			
 			// set order for siblings
@@ -1805,8 +1805,6 @@ public class Term extends CatalogueObject implements Mappable {
 			// update also in db
 			parentDao.updateTermOrder( termsOnLevel.get(i), hierarchy, i + 1 );
 		}
-		
-		return termsOnLevel;
 	}
 
 	/**

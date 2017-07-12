@@ -237,6 +237,15 @@ public class Hierarchy extends SortableCatalogueObject implements Mappable {
 		return parentDao.getFirstLevelNodes( this, hideDeprecated, hideNotReportable );
 	}
 	
+	/**
+	 * Normalize order of term in hierarchy
+	 * @param hierarchy
+	 * @return
+	 */
+	public void normalizeLevel() {
+		Term.normalizeLevel ( getFirstLevelNodes( false, false ), this );
+	}
+	
 
 	@Override
 	public boolean equals(Object obj) {

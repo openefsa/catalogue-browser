@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Display;
 import catalogue.Catalogue;
 import catalogue_browser_dao.ParentTermDAO;
 import catalogue_object.Applicability;
+import catalogue_object.CatalogueObject;
 import catalogue_object.Hierarchy;
 import catalogue_object.Term;
 import global_manager.GlobalManager;
@@ -54,7 +55,8 @@ public class TermClipboard {
 	 * @param sourceHierarchy
 	 * @param op
 	 */
-	private void setTermOperation( ArrayList<Term> sources, Hierarchy sourceHierarchy, ClipboardOp op ) {
+	private void setTermOperation( ArrayList<Term> sources, 
+			Hierarchy sourceHierarchy, ClipboardOp op ) {
 		
 		// set the involved terms and hierarchies
 		this.sources = sources;
@@ -191,7 +193,8 @@ public class TermClipboard {
 		Clipboard clipboard = new Clipboard( Display.getCurrent() );
 		
 		// set the clipboard contents
-		clipboard.setContents( new Object[] { strings.toString() }, new Transfer[] { TextTransfer.getInstance() } );
+		clipboard.setContents( new Object[] { strings.toString() }, 
+				new Transfer[] { TextTransfer.getInstance() } );
 		
 		// dispose the clipboard
 		clipboard.dispose();
@@ -266,15 +269,15 @@ public class TermClipboard {
 	 * @param destinationHierarchy
 	 * @return
 	 */
-	public boolean canPaste ( Term destination, Hierarchy destinationHierarchy ) {
+	public boolean canPaste ( CatalogueObject target, Hierarchy destinationHierarchy ) {
 		
 		// if wrong operation
-		if ( destinationHierarchy == null || destination == null )
+		if ( destinationHierarchy == null || target == null )
 			return false;
 		
 		// check if we can paste every source
 		for ( Term source : sources ) {
-			if ( !canPasteSource( source, destination, destinationHierarchy ) )
+			if ( !canPasteSource( source, target, destinationHierarchy ) )
 				return false;
 		}
 		
@@ -287,15 +290,15 @@ public class TermClipboard {
 	 * @param destination
 	 * @param destinationHierarchy
 	 */
-	public void paste( Term destination, Hierarchy destinationHierarchy ) {
+	public void paste( CatalogueObject target, Hierarchy destinationHierarchy ) {
 
 		// return if we cannot paste the sources
-		if ( !canPaste( destination, destinationHierarchy ) )
+		if ( !canPaste( target, destinationHierarchy ) )
 			return;
 		
 		// for each source we make a paste operation
 		for ( Term term : sources ) {
-			pasteSingleSource ( term, destination, destinationHierarchy );
+			pasteSingleSource ( term, target, destinationHierarchy );
 			
 			// if cut operation normalize source level
 			// since we have moved the source
@@ -305,7 +308,11 @@ public class TermClipboard {
 		
 		// normalize the destination level since
 		// we have modified it moving source to target
-		destination.normalizeLevel( destinationHierarchy );
+		if ( target instanceof Term )
+			( (Term) target ).normalizeLevel( destinationHierarchy );
+		else if ( target instanceof Hierarchy ) {
+			( (Hierarchy) target ).normalizeLevel();
+		}
 		
 		// reset operation
 		clipOp = ClipboardOp.WAIT;
@@ -315,7 +322,7 @@ public class TermClipboard {
 	/**
 	 * Paste operation:
 	 * If we have copied a node we paste a node
-	 * If we have cutted a branch we paste the entire branch
+	 * If we have cut a branch we paste the entire branch
 	 * If we have copied a branch we paste the entire branch
 	 * 
 	 * NOTE: cut branch is only usable inside the same hierarchy, since we cannot remove terms from hierarchies
@@ -326,10 +333,11 @@ public class TermClipboard {
 	 *       (otherwise it would result in having equal terms in the same hierarchy)
 	 * 
 	 * @param source, the term which will be the child of the parent
-	 * @param destination, the new parent for the cutted/copied term
-	 * @param destinationHierarchy, the new hierarchy for the cutted/copied term
+	 * @param destination, the new parent for the cut/copied term
+	 * @param destinationHierarchy, the new hierarchy for the cut/copied term
 	 */
-	private void pasteSingleSource ( Term source, Term destination, Hierarchy destinationHierarchy ) {
+	private void pasteSingleSource ( Term source, CatalogueObject target, 
+			Hierarchy destinationHierarchy ) {
 
 		// perform the chosen operation
 		switch ( clipOp ) {
@@ -346,9 +354,9 @@ public class TermClipboard {
 			source.removeApplicability( appl, true );
 
 			// paste it into the new hierarchy under the parent term
-			pasteNode ( destination, source, destinationHierarchy, reportable );
+			pasteNode ( target, source, destinationHierarchy, reportable );
 
-			// NOTE: All the subtree of the cutted term
+			// NOTE: All the subtree of the cut term
 			// is automatically moved since we are in the same hierarchy (the sub tree
 			// terms have already set the applicability for the same hierarchy!)
 
@@ -358,7 +366,7 @@ public class TermClipboard {
 
 			// here we create the new applicability in the new hierarchy
 			// set the copied term as child of the selected parent term in the selected hierarchy
-			pasteNode ( destination, source, destinationHierarchy,
+			pasteNode ( target, source, destinationHierarchy,
 					source.isReportable( sourceHierarchy ) );
 
 			break;
@@ -366,11 +374,11 @@ public class TermClipboard {
 		case COPY_BRANCH:
 
 			// paste the root
-			pasteNode ( destination, source, destinationHierarchy, 
+			pasteNode ( target, source, destinationHierarchy, 
 					source.isReportable( sourceHierarchy ) );
 
 			// paste the root subtree
-			pasteSubtree ( destination, source, destinationHierarchy );
+			pasteSubtree ( target, source, destinationHierarchy );
 
 			break;
 
@@ -385,7 +393,7 @@ public class TermClipboard {
 	 * in the selected hierarchy
 	 * @return the child with the new applicability added
 	 */
-	private Term pasteNode ( Term parent, Term child, 
+	private Term pasteNode ( CatalogueObject parent, Term child, 
 			Hierarchy hierarchy, boolean reportable ) {
 		
 		// get an instance of the global manager
@@ -416,7 +424,7 @@ public class TermClipboard {
 	 * @param child
 	 * @param hierarchy
 	 */
-	private void pasteSubtree( Term parent, Term child, 
+	private void pasteSubtree( CatalogueObject parent, Term child, 
 			Hierarchy hierarchy ) {
 
 		// Paste the child term as child of the parent
@@ -443,11 +451,13 @@ public class TermClipboard {
 	 * Can we paste the term under the selected parent?
 	 * @return
 	 */
-	private boolean canPasteSource ( Term source, Term destination, Hierarchy destinationHierarchy ) {
+	private boolean canPasteSource ( Term source, CatalogueObject target, 
+			Hierarchy destinationHierarchy ) {
 		
 		// we can paste only if the term is not already present
 		// and if we have chosen a correct hierarchy to paste
-		return termCheck( source, destination, destinationHierarchy ) && hierarchyCheck ( destinationHierarchy );
+		return termCheck( source, target, destinationHierarchy ) 
+				&& hierarchyCheck ( destinationHierarchy );
 	}
 	
 	
@@ -456,7 +466,8 @@ public class TermClipboard {
 	 * @param destinationHierarchy
 	 * @return
 	 */
-	private boolean termCheck ( Term source, Term destination, Hierarchy destinationHierarchy ) {
+	private boolean termCheck ( Term source, CatalogueObject target, 
+			Hierarchy destinationHierarchy ) {
 		
 		boolean termCheck;
 		
@@ -464,9 +475,9 @@ public class TermClipboard {
 		
 		// if wait => we have no source we cannot check
 		
-		// if cut => we check that the term is not cutted under itself
+		// if cut => we check that the term is not cut under itself
 		case CUT_BRANCH:
-			termCheck = !source.equals( destination );
+			termCheck = !source.equals( target );
 			break;
 			
 			// if copy we check that the term is not already present into the hierarchy
