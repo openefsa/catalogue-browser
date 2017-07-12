@@ -10,12 +10,12 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
 import catalogue.Catalogue;
-import catalogue_browser_dao.CatalogueDAO;
-import dcf_manager.Dcf.DcfType;
+import catalogue_generator.ThreadFinishedListener;
 import dcf_webservice.UploadData;
 import export_catalogue.ExportActions;
 import messages.Messages;
 import ui_progress_bar.FormProgressBar;
+import ui_progress_bar.IProgressBar;
 import utilities.GlobalUtil;
 
 /**
@@ -32,7 +32,7 @@ import utilities.GlobalUtil;
  */
 public class XmlUpdatesFactory {
 	
-	private FormProgressBar progressBar;
+	private IProgressBar progressBar;
 	private Listener abortListener;
 	private Listener doneListener;
 
@@ -61,11 +61,16 @@ public class XmlUpdatesFactory {
 		// and make actions when it has finished
 		ExportActions export = new ExportActions();
 		export.setProgressBar( progressBar );
-		export.exportAsync( catalogue, startFilename, new Listener() {
+		export.exportAsync( catalogue, startFilename, new ThreadFinishedListener() {
 			
 			@Override
-			public void handleEvent(Event arg0) {
+			public void finished(Thread thread, int code) {
 
+				if ( code != ThreadFinishedListener.OK ) {
+					abort( Messages.getString( "XmlChangesCreator.ExportAbort" ) );
+					return;
+				}
+				
 				// base remote path of the sas procedure
 				String inputFolder = SasRemotePaths.XML_UPDATES_CREATOR_INPUT_FOLDER;
 
@@ -118,7 +123,7 @@ public class XmlUpdatesFactory {
 					doneListener.handleEvent( null );
 				}
 			}
-		} );
+		});
 	}
 
 	/**
@@ -299,7 +304,7 @@ public class XmlUpdatesFactory {
 		this.doneListener = doneListener;
 	}
 	
-	public static void main ( String args[] ) {
+	/*public static void main ( String args[] ) {
 
 		CatalogueDAO catDao = new CatalogueDAO();
 		Catalogue cat = catDao.getCatalogue( "ABUNDANCE", "4.5", DcfType.TEST );
@@ -320,5 +325,5 @@ public class XmlUpdatesFactory {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 }

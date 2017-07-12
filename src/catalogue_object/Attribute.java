@@ -12,8 +12,8 @@ import term.WrongKeyException;
 public class Attribute extends SortableCatalogueObject implements Mappable {
 
 	// Set the fixed values of attributes
-	public static final String cardinalitySingle = "single";
-	public static final String cardinalityRepeatable = "repeatable";
+	public static final String cardinalitySingle = "S";
+	public static final String cardinalityRepeatable = "R";
 	
 	public static final String booleanTrue = "true";
 	public static final String booleanFalse = "false";
@@ -64,9 +64,9 @@ public class Attribute extends SortableCatalogueObject implements Mappable {
 		}
 		
 		return new Attribute( currentCat, -1, 
-				"Change", "Change", "", "", "D", true, false, 
-				newOrder, "xs:string", -1, -1, -1, "", cardinalitySingle,
-				"D", false, false, "", "", null, null, null, false );
+				"Change", "Change", "", "", reportableDisabled, true, false, 
+				newOrder, stringTypeName, -1, -1, -1, "", cardinalitySingle,
+				inheritanceDisabled, false, false, "", "", null, null, null, false );
 	}
 	
 	public Attribute( Catalogue catalogue, int id, String code, String name, String label, String scopenotes,
@@ -91,6 +91,9 @@ public class Attribute extends SortableCatalogueObject implements Mappable {
 		this.uniqueness = uniqueness;
 		this.termCodeAlias = termCodeAlias;
 		
+		// default value
+		if ( reportable == null || reportable.isEmpty() )
+			reportable = reportableDisabled;
 	}
 	
 	public String getReportable() {

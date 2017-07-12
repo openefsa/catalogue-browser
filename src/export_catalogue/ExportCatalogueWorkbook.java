@@ -8,7 +8,7 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import catalogue.Catalogue;
 import messages.Messages;
 import naming_convention.Headers;
-import ui_progress_bar.FormProgressBar;
+import ui_progress_bar.IProgressBar;
 
 
 /**
@@ -18,13 +18,13 @@ import ui_progress_bar.FormProgressBar;
  */
 public class ExportCatalogueWorkbook {
 
-	private FormProgressBar progressBar;  // progress bar to show the export process to the user
+	private IProgressBar progressBar;  // progress bar to show the export process to the user
 	
 	/**
 	 * Set the progress bar if needed
 	 * @param progressBar
 	 */
-	public void setProgressBar(FormProgressBar progressBar) {
+	public void setProgressBar(IProgressBar progressBar) {
 		this.progressBar = progressBar;
 	}
 	

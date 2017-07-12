@@ -251,9 +251,10 @@ public class HierarchySelector extends Observable implements Observer {
 	@SuppressWarnings("unchecked")
 	public boolean setSelection ( Hierarchy hierarchy ) {
 
+		Collection<Hierarchy> input = ( (Collection<Hierarchy>) hierarchyCombo.getInput() );
+		
 		// the hierarchy is not in the hierarchies list
-		if ( !( (Collection<Hierarchy>) hierarchyCombo.getInput() ).
-				contains ( hierarchy ) ) {
+		if ( !input.isEmpty() && !input.contains ( hierarchy ) ) {
 			System.err.println( "Cannot change hierarchy selector selection with " 
 				+ hierarchy + " since it is not contained in the available hierarchies");
 			return false;

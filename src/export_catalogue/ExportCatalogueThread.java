@@ -2,14 +2,22 @@ package export_catalogue;
 
 import java.io.IOException;
 
-import org.eclipse.swt.widgets.Display;
-
 import catalogue.Catalogue;
-import open_xml_reader.ExcelThread;
+import catalogue_generator.ThreadFinishedListener;
+import ui_progress_bar.IProgressBar;
 
-public class ExportCatalogueThread extends ExcelThread {
+/**
+ * Thread used to export a calogue in .xlsx format in background
+ * while the progress bar uses the UI thread.
+ * @author avonva
+ *
+ */
+public class ExportCatalogueThread extends Thread {
 
+	private String filename;
 	private Catalogue catalogue;
+	private ThreadFinishedListener listener;
+	private IProgressBar progressForm;
 	
 	/**
 	 * Start an export process.
@@ -17,8 +25,8 @@ public class ExportCatalogueThread extends ExcelThread {
 	 * @param filename the .xlsx file which will host the catalogue data
 	 */
 	public ExportCatalogueThread( Catalogue catalogue, String filename ) {
-		super(filename);
 		this.catalogue = catalogue;
+		this.filename = filename;
 	}
 	
 	@Override
@@ -27,26 +35,47 @@ public class ExportCatalogueThread extends ExcelThread {
 		// prepare the import procedure
 		final ExportCatalogueWorkbook exportCat = new ExportCatalogueWorkbook();
 		
-		if ( getProgressForm() != null )
-			exportCat.setProgressBar( getProgressForm() );
+		if ( progressForm != null )
+			exportCat.setProgressBar( progressForm );
 		
 		// export the catalogue
 		try {
-			exportCat.exportCatalogue( catalogue, getFilename() );
+			exportCat.exportCatalogue( catalogue, filename );
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		
-		
-		Display.getDefault().syncExec( new Runnable() {
-			
-			@Override
-			public void run ( ) {
-				
-				// finish the operations
-				handleDone();
-			}
-		});
-	}
 
+			// exception
+			if ( listener != null )
+				listener.finished( ExportCatalogueThread.this, 
+						ThreadFinishedListener.EXCEPTION );
+
+			finish();
+			
+			return;
+		}
+
+
+		// finished
+		if ( listener != null )
+			listener.finished( ExportCatalogueThread.this, 
+					ThreadFinishedListener.OK );
+
+		finish();
+	}
+	
+	private void finish() {
+		progressForm.close();
+	}
+	
+	public void setListener(ThreadFinishedListener listener) {
+		this.listener = listener;
+	}
+	
+	/**
+	 * Set the progress bar for the thread
+	 * @param progressForm
+	 */
+	public void setProgressBar( IProgressBar progressForm ) {
+		this.progressForm = progressForm;
+	}
 }

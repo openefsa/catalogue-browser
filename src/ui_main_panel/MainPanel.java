@@ -214,6 +214,12 @@ public class MainPanel implements Observer, RestoreableWindow {
 		
 		Catalogue current = GlobalManager.getInstance().getCurrentCatalogue();
 
+		// do not save the cat users catalogue, otherwise
+		// we can open and see it also if we have not
+		// the permissions
+		if ( current.isCatUsersCatalogue() )
+			return;
+		
 		// save main panel state
 		UIPreferenceDAO prefDao = new UIPreferenceDAO ();
 		prefDao.saveOpenedCatalogue( current );

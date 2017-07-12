@@ -1,9 +1,8 @@
 package export_catalogue;
 
-import org.eclipse.swt.widgets.Listener;
-
 import catalogue.Catalogue;
-import ui_progress_bar.FormProgressBar;
+import catalogue_generator.ThreadFinishedListener;
+import ui_progress_bar.IProgressBar;
 
 /**
  * Class used to export a catalogue to an excel file
@@ -12,13 +11,13 @@ import ui_progress_bar.FormProgressBar;
  */
 public class ExportActions {
 
-	private FormProgressBar progressBar;
+	private IProgressBar progressBar;
 	
 	/**
 	 * Set the progress bar for the process
 	 * @param progressBar
 	 */
-	public void setProgressBar ( FormProgressBar progressBar ) {
+	public void setProgressBar ( IProgressBar progressBar ) {
 		this.progressBar = progressBar;
 	}
 	
@@ -61,12 +60,15 @@ public class ExportActions {
 	 * @param doneListener listener to be called when the export is finished
 	 */
 	public void exportAsync ( Catalogue catalogue, String filename,
-			Listener doneListener ) {
+			ThreadFinishedListener doneListener ) {
+		
 		// create a thread for the excel export
 		ExportCatalogueThread exportThread = new ExportCatalogueThread( catalogue, filename );
+		
 		if ( progressBar != null )
 			exportThread.setProgressBar( progressBar );
-		exportThread.addDoneListener( doneListener );
+		
+		exportThread.setListener( doneListener );
 		exportThread.start();
 	}
 }

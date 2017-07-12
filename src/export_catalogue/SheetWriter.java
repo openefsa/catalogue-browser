@@ -10,7 +10,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 import catalogue_object.Mappable;
 import sheet_header.SheetHeader;
-import ui_progress_bar.FormProgressBar;
+import ui_progress_bar.IProgressBar;
 
 /**
  * This class handle the writing procedure of an excel sheet. Extend this class and provide the
@@ -23,10 +23,10 @@ public abstract class SheetWriter {
 	// progress bar which has to be updated while processing terms
 	// if it is set, it is updated
 	// see setProgressBar method
-	FormProgressBar progressBar;
+	private IProgressBar progressBar;
 	
 	// the maximum part of the progress bar which can be filled by processing this sheet
-	int maxFill = 0;
+	private int maxFill = 0;
 	
 	// the considered fields of the xml which will be the sheet columns
 	public HashMap<String, SheetHeader> headers;
@@ -133,7 +133,7 @@ public abstract class SheetWriter {
 	 * @param maxFill, the maximum relative amount that this sheet can be add to the progress bar
 	 * @param label, the label which will be displayed
 	 */
-	public void setProgressBar ( FormProgressBar progressBar, int maxFill, String label ) {
+	public void setProgressBar ( IProgressBar progressBar, int maxFill, String label ) {
 		this.progressBar = progressBar;
 		this.maxFill = maxFill;
 		this.progressBar.setLabel( label );
@@ -145,7 +145,7 @@ public abstract class SheetWriter {
 	 * @param progressBar, the progress bar which is displayed in the main UI
 	 * @param maxFill, the maximum relative amount that this sheet can be add to the progress bar
 	 */
-	public void setProgressBar ( FormProgressBar progressBar, int maxFill ) {
+	public void setProgressBar ( IProgressBar progressBar, int maxFill ) {
 		this.setProgressBar( progressBar, maxFill, "" );
 	}
 	

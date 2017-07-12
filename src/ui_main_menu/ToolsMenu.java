@@ -596,20 +596,38 @@ public class ToolsMenu implements MainMenuItem {
 				
 				// export the opened catalogue
 				export.exportAsync( mainMenu.getCatalogue(), 
-						filename, new Listener() {
+						filename, new ThreadFinishedListener() {
 
 					@Override
-					public void handleEvent(Event arg0) {
+					public void finished(Thread thread, final int code) {
 						
-						// warn the user that everything went ok
-						GlobalUtil.showDialog( shell, 
-								Messages.getString( "Export.DoneTitle" ), 
-								Messages.getString( "Export.DoneMessage" ),
-								SWT.ICON_INFORMATION );
-						
-						if ( listener != null )
-							listener.buttonPressed( exportItem, 
-									EXPORT_CAT_MI, null );
+						shell.getDisplay().asyncExec( new Runnable() {
+							
+							@Override
+							public void run() {
+								
+								String title = filename;
+								String msg;
+								int icon;
+								
+								if ( code == ThreadFinishedListener.OK ) {
+									msg = Messages.getString( "Export.DoneMessage" );
+									icon = SWT.ICON_INFORMATION;
+								}
+								else {
+									msg = Messages.getString( "Export.ErrorMessage" );
+									icon = SWT.ICON_ERROR;
+								}
+								
+								// warn the user that everything went ok
+								GlobalUtil.showDialog( shell, 
+										title, msg, icon );
+								
+								if ( listener != null )
+									listener.buttonPressed( exportItem, 
+											EXPORT_CAT_MI, null );
+							}
+						});
 					}
 				});
 			}
