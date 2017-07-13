@@ -102,7 +102,7 @@ public class HierarchyEditor extends CatalogueObjectEditor<Hierarchy> {
 		
 		// if master but facet hierarchy => error
 		if ( obj.isMaster() ) {
-			if ( obj.isFacet() ) {
+			if ( !obj.isBoth() ) {
 				GlobalUtil.showErrorDialog( getWindowShell(), 
 						Messages.getString("HierarchyEditor.FacetErrorTitle"), 
 						Messages.getString("HierarchyEditor.FacetErrorMessage"));
