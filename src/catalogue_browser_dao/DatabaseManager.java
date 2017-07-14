@@ -249,6 +249,9 @@ public class DatabaseManager {
 		return path;
 	}
 	
+	public static boolean renameDB( File oldDb, File newDb ) {
+		return oldDb.renameTo( newDb );
+	}
 
 	/**
 	 * Used with SQLScriptExec.java to run an sql script file

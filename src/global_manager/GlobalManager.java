@@ -44,6 +44,13 @@ public class GlobalManager extends Observable {
 	 */
 	public void setCurrentCatalogue( final Catalogue currentCatalogue ) {
 		GlobalManager.currentCatalogue = currentCatalogue;
+		refresh();
+	}
+	
+	/**
+	 * Refresh the UI
+	 */
+	public void refresh() {
 		
 		// guarantee that we are running in the 
 		// display thread
@@ -55,7 +62,6 @@ public class GlobalManager extends Observable {
 				notifyObservers( currentCatalogue );
 			}
 		});
-
 	}
 	
 	/**

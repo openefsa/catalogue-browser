@@ -53,7 +53,8 @@ public class CatalogueImporterThread extends Thread {
 	 */
 	public void run () {
 		
-		progressBar.open();
+		if ( progressBar != null )
+			progressBar.open();
 		
 		CatalogueImporter importer = new CatalogueImporter(filename, format, 
 				progressBar, maxProgress );

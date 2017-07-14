@@ -1242,6 +1242,10 @@ public class TermsTreePanel extends Observable implements Observer {
 		return prefSearchTerm;
 	}
 
+	public void setCatalogue(Catalogue catalogue) {
+		this.catalogue = catalogue;
+	}
+	
 	/**
 	 * Called by the observable
 	 */

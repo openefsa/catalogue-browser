@@ -11,6 +11,7 @@ import dcf_log.DcfLog;
 import dcf_manager.Dcf.DcfType;
 import dcf_webservice.DcfResponse;
 import dcf_webservice.ReserveLevel;
+import import_catalogue.CatalogueImporterThread;
 
 /**
  * A pending reserve operation. If a catalogue has a pending reserve
@@ -195,8 +196,8 @@ public class PendingReserve extends PendingAction {
 	public void processLog(DcfLog log) {
 		
 		// get if we need a new version
-		this.needNewVersion = log.getCatalogueVersion().compareTo( 
-				getCatalogue().getCatalogueVersion() ) < 0;
+		this.needNewVersion = getCatalogue().
+				getCatalogueVersion().isOlder( log.getCatalogueVersion() );
 	}
 	
 	/**
@@ -266,6 +267,36 @@ public class PendingReserve extends PendingAction {
 	@Override
 	public void manageBusyStatus() {
 		
+		try {
+			
+			// import and wait to finish
+			CatalogueImporterThread thread = importLastVersion( new Listener() {
+				
+				@Override
+				public void handleEvent(Event arg0) {
+					
+					// force editing of the new last internal version
+					forceCatalogueEditing();
+				}
+			});
+			
+			if ( thread != null )
+				thread.join();
+			
+		} catch (SOAPException | InterruptedException e) {
+			e.printStackTrace();
+			
+			// force the editing of the current catalogue
+			forceCatalogueEditing();
+		}
+	}
+	
+	/**
+	 * Force the catalogue editing of the pending action
+	 * catalogue
+	 */
+	private void forceCatalogueEditing() {
+		
 		Catalogue catalogue = getCatalogue();
 		
 		// force editing of the catalogue since we have waited
@@ -273,7 +304,7 @@ public class PendingReserve extends PendingAction {
 		// force the edit only if the editing was not already
 		// forced and if we are reserving (not unreserving)
 		if ( !catalogue.isForceEdit( getUsername() ) 
-				&& reserveLevel.greaterThan( ReserveLevel.NONE ) ) {
+				&& reserveLevel.greaterThan( ReserveLevel.NONE ) ) {			
 			
 			setStatus( PendingActionStatus.FORCING_EDITING );
 			

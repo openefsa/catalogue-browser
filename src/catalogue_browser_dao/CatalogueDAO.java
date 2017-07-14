@@ -14,6 +14,7 @@ import java.util.Comparator;
 
 import catalogue.Catalogue;
 import catalogue.CatalogueBuilder;
+import catalogue.ReleaseNotes;
 import dcf_manager.Dcf.DcfType;
 import dcf_user.User;
 import sas_remote_procedures.XmlUpdateFileDAO;
@@ -27,7 +28,7 @@ import utilities.GlobalUtil;
  *
  */
 public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
-	
+
 	/**
 	 * Insert a new catalogue into the main catalogues database. Moreover,
 	 * the catalogue database is also created.
@@ -36,7 +37,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 	public synchronized int insert ( Catalogue catalogue ) {
 
 		int id = -1;
-		
+
 		try {
 
 			// open the connection
@@ -95,11 +96,11 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 
 			// set if the catalogue is local or not
 			stmt.setBoolean( 18, catalogue.isLocal() );  
-			
+
 			stmt.setString( 19, catalogue.getDbPath() );
-			
+
 			stmt.setString( 20, catalogue.getBackupDbPath() );
-			
+
 			stmt.setInt( 21, catalogue.getForcedCount() );
 
 			// execute the query
@@ -131,7 +132,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 
 		return id;
 	}
-	
+
 
 	/**
 	 * Add the meta data of the catalogue to the meta data table
@@ -142,7 +143,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 	 * @return the db path where the catalogue data are stored
 	 */
 	public boolean update ( Catalogue catalogue ) {
-		
+
 		try {
 
 			// open the connection
@@ -187,28 +188,28 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 			stmt.setBoolean( 11,  catalogue.isGenerateMissingCodes() );
 			stmt.setString ( 12, catalogue.getStatus() );
 			stmt.setString ( 13, catalogue.getCatalogueGroups() );
-			
+
 			stmt.setNull ( 14, java.sql.Types.TIMESTAMP );  // last update, we do not know this value
-			
+
 			if ( catalogue.getValidFrom() != null )
 				stmt.setTimestamp ( 15, GlobalUtil.toSQLTimestamp( catalogue.getValidFrom() ) );
 			else
 				stmt.setNull ( 15, java.sql.Types.TIMESTAMP );
-			
+
 			stmt.setNull ( 16, java.sql.Types.TIMESTAMP );  // validTo, we do not know this value
 
 			stmt.setBoolean( 17, catalogue.isDeprecated() );
-			
+
 			// set if the catalogue is local or not
 			stmt.setBoolean( 18, catalogue.isLocal() );  
-			
+
 			stmt.setString( 19, catalogue.getDbPath() );
 			stmt.setString( 20, catalogue.getBackupDbPath() );  
 
 			stmt.setInt( 21, catalogue.getForcedCount() );
-			
+
 			stmt.setInt ( 22, catalogue.getId() );
-			
+
 			// execute the query
 			stmt.executeUpdate();
 
@@ -217,16 +218,16 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 
 			// close the connection
 			con.close();
-			
+
 			return true;
 		}
 		catch ( SQLException e ) {
 			e.printStackTrace();
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Delete a catalogue from the local database (both metadata and data)
 	 * @param catalogue
@@ -234,18 +235,18 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 	public boolean delete ( Catalogue catalogue ) {
 
 		try {
-			
+
 			// remove dependencies first
 			XmlUpdateFileDAO xmlDao = new XmlUpdateFileDAO();
 			xmlDao.removeById( catalogue.getId() );
 
 			ForceCatEditDAO forcedDao = new ForceCatEditDAO();
 			forcedDao.remove ( catalogue );
-			
+
 			// open the connection of the general DB to remove the catalogue entry
 			// from the local master database
 			Connection con = DatabaseManager.getMainDBConnection();
-			
+
 			// select the catalogue by code
 			PreparedStatement stmt = con.prepareStatement( "delete from APP.CATALOGUE where CAT_ID = ?" );
 
@@ -257,13 +258,13 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 			stmt.close();
 
 			con.close();
-			
+
 			return true;
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return false;
 	}
 
@@ -299,7 +300,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 
 		// set the dates with the adequate checks
 		java.sql.Timestamp ts = rs.getTimestamp( "CAT_LAST_UPDATE" );
-		
+
 		if ( ts != null )
 			builder.setLastUpdate( ts );
 
@@ -312,17 +313,25 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 			builder.setValidTo( ts );
 
 		builder.setDeprecated( rs.getBoolean( "CAT_DEPRECATED" ) );
-
+		builder.setDbPath( rs.getString( "CAT_DB_PATH" ) );
 		builder.setBackupDbPath( rs.getString( "CAT_DB_BACKUP_PATH" ) );
 
 		builder.setLocal( rs.getBoolean( "CAT_IS_LOCAL" ) );
-		
+
 		builder.setForcedCount( rs.getInt( "CAT_FORCED_COUNT" ) );
 
+		// build to retrieve the release notes
+		Catalogue catalogue = builder.build();
+		
+		ReleaseNotesDAO rnDao = new ReleaseNotesDAO( catalogue );
+		ReleaseNotes rn = rnDao.getByResultSet( rs );
+		
+		builder.setReleaseNotes( rn );
+		
 		// return the catalogue
 		return builder.build();
 	}
-	
+
 	/**
 	 * Create a generic catalogue db in the db path directory
 	 * @param dbPath
@@ -370,8 +379,8 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
+
 	/**
 	 * Remove all the records of the catalogue database
 	 * 
@@ -380,9 +389,9 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 	 * @throws NoCatalogueOpenException 
 	 */
 	public void deleteDBRecords ( Catalogue catalogue ) throws SQLException {
-		
+
 		Connection con = catalogue.getConnection();
-		
+
 		// we first remove the relationships then the entities
 		Statement stmt = con.createStatement();
 		stmt.execute( "DELETE FROM APP.PICKLIST_TERM" );
@@ -397,16 +406,16 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 		stmt.execute( "DELETE FROM APP.ATTRIBUTE" );
 		stmt.execute( "DELETE FROM APP.HIERARCHY" );
 		stmt.execute( "DELETE FROM APP.TERM" );
-				
+
 		stmt.close();
 		con.close();
 	}
-	
+
 	/**
 	 * Compress the database to avoid fragmentation
 	 */
 	public void compressDatabase( Catalogue catalogue ) {
-		
+
 		Connection con = null;
 
 		// This will fail, if there are dependencies
@@ -421,7 +430,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 			cs.setString( 1, "APP" );
 
 			cs.setShort( 3, (short) 1 );
-			
+
 			cs.setString( 2, "PARENT_TERM" );
 			cs.execute();
 			cs.setString( 2, "TERM_ATTRIBUTE" );
@@ -449,52 +458,52 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 
 			cs.close();
 			con.close();
-			
+
 		} catch ( SQLException e ) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Check if a catalogue is already inserted into the db or not
 	 * @param catalogue
 	 */
 	public boolean contains ( Catalogue catalogue ) {
-		
+
 		boolean found = false;
-		
+
 		Connection con;
-		
+
 		// we check the catalogue code and then we check the version if the catalogue is not local
 		// note that if the catalogue is local the version check is automatically eliminated
 		String query = "select * from APP.CATALOGUE "
 				+ "where CAT_CODE = ? and CAT_VERSION = ? and CAT_DCF_TYPE = ?";
-		
+
 		try {
-			
+
 			con = DatabaseManager.getMainDBConnection();
-			
+
 			PreparedStatement stmt = con.prepareStatement( query );
-			
+
 			stmt.clearParameters();
-			
+
 			stmt.setString( 1, catalogue.getCode() );
 			stmt.setString( 2, catalogue.getVersion() );
 			stmt.setString( 3, catalogue.getCatalogueType().toString() );
 
 			ResultSet rs = stmt.executeQuery();
-			
+
 			// get if something was found
 			found = rs.next();
-			
+
 			rs.close();
 			stmt.close();
 			con.close();
-			
+
 		} catch (SQLException exception ) {
 			exception.printStackTrace();
 		}
-		
+
 		return found;
 	}
 
@@ -508,9 +517,9 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 
 		// output
 		Catalogue lastVersion = null;
-		
+
 		try {
-			
+
 			// open the connection
 			Connection con = DatabaseManager.getMainDBConnection();
 
@@ -521,7 +530,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 			// we get also the information related to the reserved catalogues using a LEFT join
 			PreparedStatement stmt = con.prepareStatement( 
 					"select * from APP.CATALOGUE "
-					+ "where CAT_CODE = ? and CAT_DCF_TYPE = ?");
+							+ "where CAT_CODE = ? and CAT_DCF_TYPE = ?");
 
 			stmt.setString( 1, code );
 			stmt.setString( 2, catType.toString() );
@@ -530,7 +539,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 			ResultSet rs = stmt.executeQuery();
 
 			ArrayList<Catalogue> catalogues = new ArrayList<>();
-			
+
 			// get the catalogues data and add them to the output array list
 			while ( rs.next() )
 				catalogues.add( getByResultSet ( rs ) );
@@ -542,20 +551,20 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 			// sort the catalogues according to their version
 			catalogues.sort( new Comparator<Catalogue>() {
 				public int compare( Catalogue o1, Catalogue o2 ) {
-					
+
 					boolean inv1 = o1.getCatalogueVersion().isInvalid();
 					boolean inv2 = o2.getCatalogueVersion().isInvalid();
-					
+
 					boolean older = o1.isOlder( o2 );
-					
+
 					// if first invalid => second before
 					if ( inv1 && !inv2 )
 						return 1;
-					
+
 					// if second invalid => first before
 					if ( !inv1 && inv2 )
 						return -1;
-					
+
 					if ( older )
 						return 1;
 					else
@@ -565,7 +574,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 
 			// get the most recent catalogue
 			lastVersion = catalogues.get(0);
-			
+
 			rs.close();
 			stmt.close();
 			con.close();
@@ -598,7 +607,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 				+ "group by CAT_CODE) TEMP "
 				+ "on C.CAT_CODE = TEMP.CAT_CODE and C.CAT_VALID_FROM = TEMP.MAX_VF "
 				+ "where C.CAT_DCF_TYPE = ?";
-		
+
 		try {
 			// open the connection
 			Connection con = DatabaseManager.getMainDBConnection();
@@ -609,7 +618,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 			// last release of the catalogue using a self join on cat code and max_version
 			PreparedStatement stmt = con.prepareStatement( query );
 			stmt.setString(1, catalogueType.toString() );
-			
+
 			// here we have a table which contains only the rows related to the
 			// last version of the catalogue!
 
@@ -619,7 +628,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 			// get the catalogues data and add them to the output array list
 			while ( rs.next() )
 				catalogues.add( getByResultSet ( rs ) );
-			
+
 			rs.close();
 			stmt.close();
 			con.close();
@@ -640,7 +649,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 
 		String query = "select * from APP.CATALOGUE where CAT_DCF_TYPE = ?"
 				+ "or CAT_DCF_TYPE = ?";
-		
+
 		try {
 
 			// output array
@@ -658,19 +667,19 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 			ResultSet rs = stmt.executeQuery();
 
 			User user = User.getInstance();
-			
+
 			// get the catalogues data and add them to the output array list
 			while ( rs.next() ) {
-				
+
 				Catalogue catalogue = getByResultSet( rs );
-				
+
 				// do not consider the cat user catalogue if we are not a cm
 				if ( catalogue.isCatUsersCatalogue() && !user.isCatManager() )
 					continue;
-				
+
 				catalogues.add( getByResultSet ( rs ) );
 			}
-			
+
 			rs.close();
 			stmt.close();
 			con.close();
@@ -683,8 +692,8 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 		}
 	}
 
-	
-	
+
+
 	/**
 	 * Get the catalogue metadata starting from the catalogue code and version
 	 * @param catalogueCode
@@ -696,7 +705,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 		String query = "select * from APP.CATALOGUE t1 "
 				+ "where t1.CAT_CODE = ? and t1.CAT_VERSION = ?"
 				+ "and t1.CAT_DCF_TYPE = ?";
-		
+
 		try {
 
 			// open the connection
@@ -709,7 +718,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 			stmt.setString( 1, catalogueCode );
 			stmt.setString( 2, catalogueVersion );
 			stmt.setString( 3, catType.toString() );
-			
+
 			// get the results
 			ResultSet rs = stmt.executeQuery();
 
@@ -719,11 +728,11 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 
 			// get the catalogue data and add them to the output array list
 			Catalogue cat = getByResultSet ( rs );
-			
+
 			rs.close();
 			stmt.close();
 			con.close();
-			
+
 			return cat;
 		}
 		catch ( SQLException e ) {
@@ -735,8 +744,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 
 	@Override
 	public boolean remove(Catalogue object) {
-		// TODO Auto-generated method stub
-		return false;
+		return delete(object);
 	}
 
 	@Override
@@ -744,7 +752,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 
 		String query = "select * from APP.CATALOGUE t1 "
 				+ "where t1.CAT_ID = ?";
-		
+
 		try {
 
 			// open the connection
@@ -765,11 +773,11 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 
 			// get the catalogue data and add them to the output array list
 			Catalogue cat = getByResultSet ( rs );
-			
+
 			rs.close();
 			stmt.close();
 			con.close();
-			
+
 			return cat;
 		}
 		catch ( SQLException e ) {

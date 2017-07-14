@@ -7,14 +7,14 @@ import catalogue.Catalogue;
 import dcf_log.LogNodesForm;
 import dcf_pending_action.PendingAction;
 import dcf_pending_action.PendingActionListener;
+import dcf_pending_action.PendingActionStatus;
 import dcf_pending_action.PendingPublish;
 import dcf_pending_action.PendingReserve;
-import dcf_pending_action.PendingActionStatus;
 import dcf_pending_action.PendingUploadData;
 import dcf_pending_action.PendingXmlDownload;
-import dcf_webservice.UploadCatalogueFileThread.Type;
 import dcf_webservice.DcfResponse;
 import dcf_webservice.ReserveLevel;
+import dcf_webservice.UploadCatalogueFileThread.Type;
 import messages.Messages;
 import ui_main_panel.ShellLocker;
 import ui_main_panel.UpdateableUI;
@@ -336,13 +336,21 @@ public class DefaultListeners {
 					// process completed, remove lock
 					ShellLocker.removeLock( ui.getShell() );
 					
+					// only if the pr catalogue is opened
+					// refresh label (we have confirmed it
+					// if it was forced)
+					if ( pr.getCatalogue().isOpened() )
+						ui.updateUI( pr.getCatalogue() );
 					break;
 				
 				case INVALID_RESPONSE:
 				case INVALID_VERSION:
+
 					// update the label of the catalogue since
 					// we have invalidated the catalogue
-					ui.updateUI( pr.getCatalogue() );
+					// only if the pr catalogue is opened
+					if ( pr.getCatalogue().isOpened() )
+						ui.updateUI( pr.getCatalogue() );
 					break;
 				default:
 					break;

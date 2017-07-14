@@ -67,7 +67,7 @@ public class NewCatalogueInternalVersion {
 	 * Import the new catalogue version into the database
 	 * @param doneListener
 	 */
-	public void importNewCatalogueVersion ( final Listener doneListener ) {
+	public CatalogueImporterThread importNewCatalogueVersion ( final Listener doneListener ) {
 		
 		CatalogueImporterThread importCat = new 
 				CatalogueImporterThread( filename, ImportFileFormat.XML );
@@ -92,7 +92,6 @@ public class NewCatalogueInternalVersion {
 				try {
 					GlobalUtil.deleteFileCascade( filename );
 				} catch (IOException e) {
-					e.printStackTrace();
 				}
 				
 				doneListener.handleEvent( null );
@@ -100,6 +99,8 @@ public class NewCatalogueInternalVersion {
 		});
 		
 		importCat.start();
+		
+		return importCat;
 	}
 	
 	/**

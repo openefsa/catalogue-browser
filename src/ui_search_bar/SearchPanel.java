@@ -244,6 +244,10 @@ public class SearchPanel implements Observer {
 		shell.setDefaultButton( searchBar.getButton() );
 	}
 	
+	public void setCatalogue ( Catalogue catalogue ) {
+		searchBar.setCatalogue(catalogue);
+	}
+	
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		

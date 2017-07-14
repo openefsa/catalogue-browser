@@ -35,6 +35,7 @@ import ui_main_panel.FormLocalCatalogueName;
 import ui_main_panel.OldCatalogueReleaseDialog;
 import ui_progress_bar.FormMultipleProgress;
 import ui_progress_bar.FormProgressBar;
+import ui_progress_bar.IProgressBar;
 import ui_progress_bar.TableMultipleProgress.TableRow;
 import utilities.GlobalUtil;
 
@@ -289,7 +290,7 @@ public class FileActions {
 	private static void downloadSingleCat ( final Shell shell, Catalogue catalogue ) {
 
 		// show a progress bar
-		FormProgressBar progressBar = new FormProgressBar( shell, 
+		final IProgressBar progressBar = new FormProgressBar( shell, 
 				Messages.getString( "Download.ProgressDownloadTitle" ) );
 
 		// start downloading the catalogue
@@ -318,6 +319,7 @@ public class FileActions {
 						else {
 							message = Messages.getString("ExportCatalogue.ErrorMessage");
 							icon = SWT.ICON_ERROR;
+							progressBar.close();
 						}
 
 						// title with catalogue label

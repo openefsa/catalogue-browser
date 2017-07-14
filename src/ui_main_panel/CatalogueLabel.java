@@ -56,7 +56,7 @@ public class CatalogueLabel implements Observer {
 	 * @param catalogue
 	 */
 	public void setText( Catalogue catalogue ) {
-		
+
 		this.catalogue = catalogue;
 		
 		String text = "";
@@ -74,7 +74,6 @@ public class CatalogueLabel implements Observer {
 	 * Refresh the label
 	 */
 	public void refresh() {
-		
 		if ( catalogue != null )
 			setText ( catalogue );
 		else

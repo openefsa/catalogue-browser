@@ -55,6 +55,9 @@ public class MainMenu extends Observable implements Observer {
 	 */
 	public Menu createMainMenu () {
 		
+		if ( shell.isDisposed() )
+			return null;
+		
 		// Add a menu bar => MAIN MENU
 		mainMenu = new Menu( shell , SWT.BAR );
 
@@ -115,6 +118,14 @@ public class MainMenu extends Observable implements Observer {
 	public Catalogue getCatalogue() {
 		return catalogue;
 	}
+	
+	/**
+	 * Refresh the catalogue for the main menu
+	 * @param catalogue
+	 */
+	public void setCatalogue(Catalogue catalogue) {
+		this.catalogue = catalogue;
+	}
 
 	@Override
 	public void update(Observable o, Object arg) {
@@ -122,6 +133,9 @@ public class MainMenu extends Observable implements Observer {
 		// update the selected catalogue if it was changed
 		if ( o instanceof GlobalManager )
 			this.catalogue = ((GlobalManager) o).getCurrentCatalogue();
+		
+		if ( arg instanceof Catalogue )
+			this.catalogue = (Catalogue) arg;
 	}
 	
 	/**
@@ -130,11 +144,6 @@ public class MainMenu extends Observable implements Observer {
 	 * @param data data to be passed to observers
 	 */
 	public void update ( Object data ) {
-		
-		// update catalogue if needed
-		if ( data instanceof Catalogue )
-			this.catalogue = (Catalogue) data;
-		
 		setChanged();
 		notifyObservers( data );
 	}

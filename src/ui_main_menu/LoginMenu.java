@@ -174,17 +174,15 @@ public class LoginMenu implements MainMenuItem {
 
 		Dcf dcf = new Dcf();
 
-		// progress bar for new internal versions
-		FormProgressBar progressBar = new FormProgressBar( shell, 
-				Messages.getString( "Reserve.NewInternalTitle" ), 
-				false, SWT.TITLE );
-
-		dcf.setProgressBar( progressBar );
-
-		// move down the location of the progress bar
-		progressBar.setLocation( progressBar.getLocation().x, 
-				progressBar.getLocation().y + 170 );
-
+		FormProgressBar bar = new FormProgressBar( shell, 
+				Messages.getString("Reserve.NewInternalTitle") );
+		
+		bar.setLocation( bar.getLocation().x, bar.getLocation().y + 170 );
+		
+		dcf.setProgressBar( bar );
+		
+		
+		
 		// start reserve actions
 		dcf.startPendingActions( PendingReserve.TYPE, 
 				mainMenu.getListener() );

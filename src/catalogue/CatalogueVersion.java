@@ -121,10 +121,8 @@ public class CatalogueVersion extends Version {
 		
 		forced = true;
 		
-		// add the internal version number if
-		// not present
-		if ( !isInternalVersion() )
-			incrementInternal();
+		// add the internal version number
+		incrementInternal();
 		
 		this.forcedCount = forcedCount;
 	}
@@ -155,6 +153,20 @@ public class CatalogueVersion extends Version {
 	 */
 	public int compareTo( CatalogueVersion version ) { 
 		return compareTo ( version.getVersion() );
+	}
+	
+	/**
+	 * Check if a version is older than another
+	 * @param version
+	 * @return
+	 */
+	public boolean isOlder ( CatalogueVersion version ) {
+
+		// get the base class differences
+		int comp = super.compareTo( version );
+		
+		// return true if the other has the priority
+		return comp > 0;
 	}
 	
 	@Override

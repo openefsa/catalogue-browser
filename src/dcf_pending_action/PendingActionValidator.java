@@ -16,9 +16,8 @@ import ui_progress_bar.FormProgressBar;
 public class PendingActionValidator extends Thread {
 
 	private PendingAction pendingAction;
-	
-	private FormProgressBar progressBar;
 	private PendingActionListener listener;
+	private FormProgressBar bar;
 	
 	/**
 	 * Initialize the reserve validator.
@@ -35,7 +34,7 @@ public class PendingActionValidator extends Thread {
 	public void run() {
 		
 		pendingAction.setListener( listener );
-		pendingAction.setProgressBar( progressBar );
+		pendingAction.setProgressBar( bar );
 		
 		boolean notify = true;
 		boolean started = false;
@@ -66,19 +65,10 @@ public class PendingActionValidator extends Thread {
 					e1.printStackTrace();
 				}
 			}
-			
-			// update catalogue status
-			pendingAction.getCatalogue().setRequestingAction( false );
 		}
 	}
 	
-	/**
-	 * Set the progress bar if we want to show it
-	 * in the possible import process of new versions
-	 * of the catalogue
-	 * @return
-	 */
-	public void setProgressBar( FormProgressBar progressBar ) {
-		this.progressBar = progressBar;
+	public void setProgressBar(FormProgressBar bar) {
+		this.bar = bar;
 	}
 }

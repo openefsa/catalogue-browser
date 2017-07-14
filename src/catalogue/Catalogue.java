@@ -91,6 +91,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	private String catalogueGroups;
 	private DcfType catalogueType;  // is the catalogue a test or production catalogue?
 
+	private String dbPath;
 	private String backupDbPath;  // path where it is located the backup of the catalogue db
 
 	private boolean local;  // if the catalogue is a new local catalogue or not
@@ -165,7 +166,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 			String termMinCode, boolean acceptNonStandardCodes, 
 			boolean generateMissingCodes, String version,
 			Timestamp lastUpdate, Timestamp validFrom, Timestamp validTo, 
-			String status, String catalogueGroups, boolean deprecated, 
+			String status, String catalogueGroups, boolean deprecated, String dbPath,
 			String backupDbPath, boolean local, int forcedCount, 
 			ReleaseNotes releaseNotes ) {
 
@@ -192,6 +193,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		this.acceptNonStandardCodes = acceptNonStandardCodes;
 		this.generateMissingCodes = generateMissingCodes;
 		this.catalogueGroups = catalogueGroups;
+		this.dbPath = dbPath;
 		this.backupDbPath = backupDbPath;
 		this.local = local;
 		this.forcedCount = forcedCount;
@@ -204,6 +206,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		facetCategories = new ArrayList<>();
 		detailLevels = new ArrayList<>();
 		termTypes = new ArrayList<>();
+		termsIds = new HashMap<>();
 	}
 
 
@@ -300,22 +303,24 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		detailLevels.clear();
 		termTypes.clear();
 		termsIds.clear();
-		releaseNotes.clear();
+		
+		if ( releaseNotes != null )
+			releaseNotes.clear();
 	}
 
 
 	/**
 	 * Clone the catalogue and return it
 	 */
-	public Catalogue clone () {
+	public Catalogue cloneNewVersion ( String newVersion ) {
 
 		// create the catalogue object and return it
 		Catalogue catalogue = new Catalogue ( getId(), catalogueType, getCode(), getName(), 
 				getLabel(), getScopenotes(), termCodeMask, 
 				String.valueOf( termCodeLength ), termMinCode,
-				acceptNonStandardCodes, generateMissingCodes, getVersion(), 
+				acceptNonStandardCodes, generateMissingCodes, newVersion, 
 				getLastUpdate(), getValidFrom(), 
-				getValidTo(), getStatus(), catalogueGroups, isDeprecated(), 
+				getValidTo(), getStatus(), catalogueGroups, isDeprecated(), null,
 				backupDbPath, local, 0, releaseNotes );
 
 		return catalogue;
@@ -346,20 +351,20 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * refreshed.
 	 */
 	public void open() {
-
-		System.out.println ( "Opening " + this + " at " + getDbPath() );
-
-		// load the catalogue data into RAM
-		loadData();
-
+		
 		GlobalManager manager = GlobalManager.getInstance();
 
 		// close the opened catalogue if there is one
 		if ( manager.getCurrentCatalogue() != null )
 			manager.getCurrentCatalogue().close();
+		
+		System.out.println ( "Opening " + this + " at " + getDbPath() );
+
+		// load the catalogue data into RAM
+		loadData();
 
 		manager.setCurrentCatalogue( this );
-
+		
 		// refresh logging state
 		GlobalUtil.refreshLogging();
 	}
@@ -371,7 +376,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	public String getShutdownDBURL() {
 		return "jdbc:derby:" + getDbPath() + ";user=dbuser;password=dbuserpwd;shutdown=true";
 	}
-
+	
 	/**
 	 * Close the connection with the catalogue db
 	 */
@@ -391,7 +396,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * Close the catalogue
 	 */
 	public void close() {
-
+		
 		System.out.println ( "Closing " + this + " at " + getDbPath() );
 
 		// clear data in ram
@@ -418,8 +423,14 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	public boolean isOpened () {
 		GlobalManager manager = GlobalManager.getInstance();
 
-		// if same of current return true
-		return ( manager.getCurrentCatalogue().sameAs( this ) );
+		Catalogue current = manager.getCurrentCatalogue();
+		
+		// if the opened catalogue is not this one => return
+		if ( current != null && current.getId() == this.getId() ) {
+			return true;
+		}
+		
+		return false;
 	}
 
 	/**
@@ -1091,10 +1102,10 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	public void confirmVersion () {
 
 		System.out.println ( "Version confirmed for " + this );
-
+		
 		// remove forced flag
 		version.confirm();
-
+		
 		System.out.println( "New version " + version.getVersion() );
 
 		// remove the force editing since now
@@ -1114,10 +1125,10 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	public synchronized void invalidate() {
 
 		System.out.println( "Invalid version for " + this );
-
+		
 		// add the NULL flag
 		version.invalidate();
-
+		
 		System.out.println( "New version " + version.getVersion() );
 
 		// update version in the db
@@ -1231,9 +1242,6 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		else if ( reserveLevel.isMinor() )
 			newCatalogue.setStatus( StatusValues.DRAFT_MINOR_RESERVED );
 
-		// the reserve operation is finished
-		setRequestingAction( false );
-
 		return newCatalogue;
 	}
 
@@ -1260,9 +1268,6 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		// update the catalogue status
 		CatalogueDAO catDao = new CatalogueDAO();
 		catDao.update( this );
-
-		// the unreserve operation is finished
-		setRequestingAction( false );
 	}
 
 	/**
@@ -1719,10 +1724,31 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	}
 
 	/**
-	 * Get the complete database path of the catalogue
+	 * Get the db folder with a file object
+	 * @return
+	 */
+	public File getDbFolder() {
+		File file = new File ( getDbPath() );
+		return file;
+	}
+	
+	/**
+	 * Get the catalogue db path 
 	 * @return
 	 */
 	public String getDbPath() {
+
+		if ( dbPath == null )
+			dbPath = computeDbPath();
+		
+		return dbPath;
+	}
+	
+	/**
+	 * Get the complete database path of the catalogue
+	 * @return
+	 */
+	private String computeDbPath() {
 
 		String path = getDbMainDir() + System.getProperty("file.separator") + 
 				"CAT_" + getCode() + "_DB" + System.getProperty( "file.separator" );
@@ -2289,7 +2315,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * @throws SQLException
 	 */
 	public Connection getConnection () throws SQLException {
-
+		
 		Connection con = DriverManager.getConnection( getDbUrl() );
 
 		return con;

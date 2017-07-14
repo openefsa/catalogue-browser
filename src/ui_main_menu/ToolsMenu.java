@@ -1260,16 +1260,13 @@ public class ToolsMenu implements MainMenuItem {
 
 		// reserve the catalogue
 		Dcf dcf = new Dcf();
-
-		// create a progress bar for the possible import process
-		final FormProgressBar progressBar = new FormProgressBar( shell, 
-				Messages.getString( "Reserve.NewInternalTitle" ), false, SWT.TITLE );
-
-		// move down the location of the progress bar
-		progressBar.setLocation( progressBar.getLocation().x, 
-				progressBar.getLocation().y + 170 );
-
-		dcf.setProgressBar( progressBar );
+		
+		FormProgressBar bar = new FormProgressBar( shell, 
+				Messages.getString("Reserve.NewInternalTitle") );
+		
+		bar.setLocation( bar.getLocation().x, bar.getLocation().y + 170 );
+		
+		dcf.setProgressBar( bar );
 		
 		dcf.reserveBG( catalogue, level, description, mainMenu.getListener() );
 	}

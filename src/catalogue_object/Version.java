@@ -182,7 +182,7 @@ public class Version {
 		int majorCheck = compareInteger( this.getMajor(), other.getMajor() );
 		int minorCheck = compareInteger( this.getMinor(), other.getMinor() );
 		int internalCheck = compareInteger( this.getInternal(), other.getInternal() );
-		
+
 		// if difference in major return it
 		if ( majorCheck != 0 )
 			return majorCheck;

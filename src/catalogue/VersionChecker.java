@@ -99,9 +99,8 @@ public class VersionChecker {
 			return catalogue;
 		
 		// clone the catalogue and set the new version
-		Catalogue newVersionCat = catalogue.clone();
-		newVersionCat.setCatalogueVersion( version );
-		
+		Catalogue newVersionCat = catalogue.cloneNewVersion( version.getVersion() );
+
 		// set the backup db path with the old catalogue version db
 		// if the old was dummy, we get as backup path its backup path
 		// since the database of the dummy catalogue could be not consistent
@@ -116,19 +115,21 @@ public class VersionChecker {
 		// here!
 		CatalogueDAO catDao = new CatalogueDAO();
 		int id = catDao.insert( newVersionCat );
-		
-		// refresh information (we get the db dir!)
-		newVersionCat = catDao.getById( id );
 
+		// refresh information
+		newVersionCat = catDao.getById( id );
+		
 		// note that we don't create the standard
 		// structure of the database since we create
 		// a copy of the old catalogue!
-		
+
 		try {
-			DatabaseManager.backupCatalogue( catalogue, newVersionCat.getDbPath() );
+			DatabaseManager.backupCatalogue( catalogue, 
+					newVersionCat.getDbPath() );
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+
 		
 		// return the new catalogue
 		return newVersionCat;

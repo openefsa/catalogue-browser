@@ -144,7 +144,6 @@ public class ViewMenu implements MainMenuItem {
 			return;
 		
 		// enable the edit menu only if there is a catalogue open and it is not empty
-		viewItem.setEnabled( mainMenu.getCatalogue() != null 
-				&& !mainMenu.getCatalogue().isEmpty() );
+		viewItem.setEnabled( mainMenu.getCatalogue() != null );
 	}
 }

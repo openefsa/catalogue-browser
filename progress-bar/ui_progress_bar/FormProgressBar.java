@@ -18,6 +18,7 @@ public class FormProgressBar implements IProgressBar {
 
 	private Shell shell;
 	private Shell currentShell;
+	private int style;
 	private CustomProgressBar progressBar;
 	private Label label;
 	private String title;
@@ -38,6 +39,7 @@ public class FormProgressBar implements IProgressBar {
 		this.shell = shell;
 		this.title = title;
 		this.cancelEnabled = cancelEnabled;
+		this.style = style;
 		this.initializeGraphics( shell, style );
 	}
 
@@ -56,11 +58,26 @@ public class FormProgressBar implements IProgressBar {
 	}
 	
 	/**
+	 * Reset the progress bar graphics content
+	 */
+	public void reset() {
+
+		shell.getDisplay().asyncExec( new Runnable() {
+			
+			@Override
+			public void run() {
+				initializeGraphics ( shell, style );
+			}
+		});
+
+	}
+	
+	/**
 	 * Creates all the graphics for the progress bar
 	 * @param parentShell
 	 */
 	public void initializeGraphics ( Shell parentShell, int style ) {
-
+		
 		currentShell = new Shell( parentShell, style );
 		currentShell.setText( title );
 		currentShell.setSize( 300, 130 );

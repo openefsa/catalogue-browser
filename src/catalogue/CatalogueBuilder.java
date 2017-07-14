@@ -17,6 +17,7 @@ public class CatalogueBuilder extends BaseObjectBuilder {
 	boolean generateMissingCodes = false;   // default value
 	String catalogueGroups = null;
 	String backupDbPath = null;
+	String dbPath = null;
 	boolean local = false;                  // default value
 	int forcedCount = 0;
 	DcfType catalogueType;
@@ -119,6 +120,10 @@ public class CatalogueBuilder extends BaseObjectBuilder {
 		this.backupDbPath = backupDbPath;
 		return this;
 	}
+	
+	public void setDbPath(String dbPath) {
+		this.dbPath = dbPath;
+	}
 
 	/**
 	 * Set the release notes of the catalogue
@@ -140,7 +145,7 @@ public class CatalogueBuilder extends BaseObjectBuilder {
 		return new Catalogue ( id, catalogueType, code, name, label, scopenotes, 
 				termCodeMask, termCodeLength, termMinCode,
 				acceptNonStandardCodes, generateMissingCodes, version, lastUpdate, validFrom, 
-				validTo, status, catalogueGroups, deprecated, backupDbPath, local, forcedCount, 
+				validTo, status, catalogueGroups, deprecated, dbPath, backupDbPath, local, forcedCount, 
 				releaseNotes );
 	}
 }

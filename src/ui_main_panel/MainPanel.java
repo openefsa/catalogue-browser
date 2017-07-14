@@ -134,7 +134,7 @@ public class MainPanel implements Observer, RestoreableWindow {
 	}
 	
 	/**
-	 * Refresh the catalogue label and the other components
+	 * Refresh the catalogue of the objects
 	 * @param catalogue
 	 */
 	public void refresh ( final Catalogue catalogue ) {
@@ -147,7 +147,8 @@ public class MainPanel implements Observer, RestoreableWindow {
 			public void run() {
 
 				catalogueLabel.setText( catalogue );
-
+				menu.setCatalogue( catalogue );
+				
 				refresh();
 				
 				Display.getDefault().update();
@@ -217,7 +218,7 @@ public class MainPanel implements Observer, RestoreableWindow {
 		// do not save the cat users catalogue, otherwise
 		// we can open and see it also if we have not
 		// the permissions
-		if ( current.isCatUsersCatalogue() )
+		if ( current != null && current.isCatUsersCatalogue() )
 			return;
 		
 		// save main panel state

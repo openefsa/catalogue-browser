@@ -86,17 +86,7 @@ public class ReleaseNotesDAO {
 			ResultSet rs = stmt.executeQuery();
 			
 			if ( rs.next() ) {
-			
-				String desc = rs.getString( "CAT_RN_DESCRIPTION" );
-				Timestamp date = rs.getTimestamp( "CAT_RN_VERSION_DATE" );
-				String intVersion = rs.getString( "CAT_RN_INTERNAL_VERSION" );
-				String note = rs.getString( "CAT_RN_INTERNAL_VERSION_NOTE" );
-				
-				ReleaseNotesOperationDAO opDao = new ReleaseNotesOperationDAO( catalogue );
-				Collection<ReleaseNotesOperation> ops = opDao.getAll();
-				
-				// create the release note
-				rn = new ReleaseNotes( desc, date, intVersion, note, ops );
+				rn = getByResultSet( rs );
 			}
 			
 			rs.close();
@@ -105,6 +95,28 @@ public class ReleaseNotesDAO {
 		} catch ( SQLException e ) {
 			e.printStackTrace();
 		}
+		
+		return rn;
+	}
+	
+	/**
+	 * Get the release notes from the result set
+	 * @param rs
+	 * @return
+	 * @throws SQLException
+	 */
+	public ReleaseNotes getByResultSet( ResultSet rs ) throws SQLException {
+		
+		String desc = rs.getString( "CAT_RN_DESCRIPTION" );
+		Timestamp date = rs.getTimestamp( "CAT_RN_VERSION_DATE" );
+		String intVersion = rs.getString( "CAT_RN_INTERNAL_VERSION" );
+		String note = rs.getString( "CAT_RN_INTERNAL_VERSION_NOTE" );
+		
+		ReleaseNotesOperationDAO opDao = new ReleaseNotesOperationDAO( catalogue );
+		Collection<ReleaseNotesOperation> ops = opDao.getAll();
+		
+		// create the release note
+		ReleaseNotes rn = new ReleaseNotes( desc, date, intVersion, note, ops );
 		
 		return rn;
 	}

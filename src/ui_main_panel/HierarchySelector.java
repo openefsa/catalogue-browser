@@ -391,6 +391,9 @@ public class HierarchySelector extends Observable implements Observer {
 		return filter;
 	}
 
+	public void setCatalogue(Catalogue catalogue) {
+		this.catalogue = catalogue;
+	}
 
 	@Override
 	public void update(Observable arg0, Object arg1) {

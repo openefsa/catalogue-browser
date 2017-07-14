@@ -20,6 +20,8 @@ import dcf_user.User;
 import dcf_webservice.DcfResponse;
 import dcf_webservice.Publish.PublishLevel;
 import dcf_webservice.ReserveLevel;
+import import_catalogue.CatalogueImporterThread;
+import test.ForcedReserve;
 import ui_progress_bar.FormProgressBar;
 import utilities.GlobalUtil;
 
@@ -127,7 +129,9 @@ public abstract class PendingAction {
 		// update the status
 		setStatus( PendingActionStatus.SENDING );
 
-		File log = getLog();
+		//File log = getLog();
+		
+		File log = null;
 		
 		// if no log in high priority => the available time is finished
 		if ( log == null && priority == Priority.HIGH ) {
@@ -145,7 +149,13 @@ public abstract class PendingAction {
 			
 			// downgrade the pending reserve priority
 			downgradePriority();
-
+try {
+	while ( !ForcedReserve.GO_ON )
+		Thread.sleep( 1000 );
+} catch (InterruptedException e) {
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+}
 			// restart the process with low priority
 			log = getLog();
 		}
@@ -215,9 +225,7 @@ public abstract class PendingAction {
 		try {
 			if ( parsedLog != null && parsedLog.getLogFile() != null )
 				GlobalUtil.deleteFileCascade( parsedLog.getLogFile() );
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		} catch (IOException e) {}
 	}
 	
 	/**
@@ -254,7 +262,7 @@ public abstract class PendingAction {
 	 * false otherwise
 	 * @throws SOAPException 
 	 */
-	public boolean importLastVersion ( final Listener doneListener ) 
+	public CatalogueImporterThread importLastVersion ( final Listener doneListener ) 
 			throws SOAPException {
 		
 		try {
@@ -269,7 +277,7 @@ public abstract class PendingAction {
 				
 				// call the listener since we have finished
 				doneListener.handleEvent( new Event() );
-				return true;
+				return null;
 			}
 			
 			// update the status of the pending reserve
@@ -278,13 +286,20 @@ public abstract class PendingAction {
 			System.out.println ( this + ": This is not the last version "
 					+ "of the catalogue, importing " + lastVersion );
 
+			
+			// reset progress bar to avoid disposed shell
+			progressBar.reset();
+			
 			// and import the last internal version
 			// and when the process is finished
 			// reserve the new version of the catalogue
-			lastVersion.setProgressBar( getProgressBar() );
+			lastVersion.setProgressBar( progressBar );
+			
+			progressBar.open();
 			
 			// import the new version
-			lastVersion.importNewCatalogueVersion( new Listener() {
+			CatalogueImporterThread thread = 
+					lastVersion.importNewCatalogueVersion( new Listener() {
 
 				@Override
 				public void handleEvent(Event arg0) {
@@ -296,15 +311,15 @@ public abstract class PendingAction {
 				}
 			} );
 			
-			return false;
+			return thread;
 			
 		} catch (IOException | TransformerException | 
 				ParserConfigurationException | SAXException e) {
 			e.printStackTrace();
 			
 			setStatus( PendingActionStatus.ERROR );
+			return null;
 		}
-		return true;
 	}
 	
 	/**
@@ -412,6 +427,10 @@ public abstract class PendingAction {
 	 * @param newVersion
 	 */
 	protected synchronized void setCatalogue( Catalogue catalogue ) {
+		
+		// update flag
+		this.catalogue.setRequestingAction( false );
+		catalogue.setRequestingAction( true );
 		
 		this.catalogue = catalogue;
 		
@@ -554,6 +573,8 @@ public abstract class PendingAction {
 	/**
 	 * Actions performed if the dcf is busy and
 	 * the pending action was put in queue.
+	 * Note that this method is called only once
+	 * in the life cycle of the pending action!
 	 */
 	public abstract void manageBusyStatus ();
 	
