@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.ListIterator;
 import java.util.Queue;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.eclipse.swt.SWT;
@@ -22,6 +25,7 @@ import data_transformation.DateTrimmer;
 import data_transformation.ValuesGrouper;
 import global_manager.GlobalManager;
 import messages.Messages;
+import naming_convention.SpecialValues;
 import term.TermSubtreeIterator;
 import ui_implicit_facet.ComparatorFacetDescriptor;
 import ui_implicit_facet.DescriptorTreeItem;
@@ -102,68 +106,21 @@ public class Term extends CatalogueObject implements Mappable {
 	 * If includeImplicit = true, the code will contain also the implicit facets codes
 	 * If baseTerm = true, the code will contain also the base term code
 	 * @param t
-	 * @param includeImplicit
+	 * @param includeInherited
+	 * @param baseTerm include the base term or not
 	 * @return
 	 */
-	public String getFullCode ( boolean includeImplicit, boolean baseTerm ) {
+	public String getFullCode ( boolean allFacets, boolean baseTerm ) {
 
-		// get all the facet categories
-		ArrayList< Attribute > facetCategories = catalogue.getFacetCategories();
-
-		String result = "";
 		String descriptorCodes = "";
+		ArrayList< FacetDescriptor > descriptors = getFacets( allFacets );
 		
-		// Now I decide whether to insert also implicit attributes or only the
-		// one defined in the node
-
-		Collections.sort( facetCategories, new Comparator< Object >() {
-
-			public int compare ( Object arg0 , Object arg1 ) {
-
-				int retval = 0;
-
-				if ( ( arg0 instanceof Attribute ) && ( arg1 instanceof Attribute ) ) {
-
-					Attribute ta0 = (Attribute) arg0;
-					Attribute ta1 = (Attribute) arg1;
-
-					retval = ta0.getCode().compareTo( ta1.getCode() );
-
-				}
-
-				return retval;
-			}
-
-		} );
-
-		// for each facet category we analyze the implicit facets and the explicit facets
-		for ( Attribute facetCategory : facetCategories ) {
-			
-			ArrayList< FacetDescriptor > descriptors = new ArrayList<>();
-			
-			// get the implicit facets descriptors from the term if needed
-			if ( includeImplicit ) {
-
-				for ( DescriptorTreeItem item : this.getInheritedImplicitFacets( facetCategory ) ) {
-					
-					descriptors.add( item.getDescriptor() );
-				}
-				
-			} else {
-				
-				// get the descriptors of the term related to the facet category
-				descriptors = getDescriptorsByCategory( facetCategory, includeImplicit );
-			}
-
-			// In case it is needed I add the $ separator between facets
-
-			Collections.sort( descriptors, new ComparatorFacetDescriptor() );
-			
-			// add the descriptor full codes into the term full code
-			for ( FacetDescriptor descriptor : descriptors ) {
-				descriptorCodes = descriptorCodes + descriptor.getFullFacetCode() + "$";
-			}
+		// add the descriptor full codes into the term full code
+		for ( FacetDescriptor descriptor : descriptors ) {
+			descriptorCodes = descriptorCodes + descriptor.getFullFacetCode() + "$";
 		}
+		
+		String result = "";
 		
 		// Add the base term code if required
 		if ( baseTerm ) {
@@ -185,44 +142,65 @@ public class Term extends CatalogueObject implements Mappable {
 	}
 	
 	/**
-	 * Get the implicit facets code (without base term)
+	 * Get the facet descriptors related to this term
+	 * @param allFacets true to get all the facets (also the inherited),
+	 * false to get only the facets related to the term (implicit facets).
 	 * @return
 	 */
-	public String getImplicitFacetsCode () {
+	public ArrayList<FacetDescriptor> getFacets( boolean allFacets ) {
 
-		// get all the facet categories
-		ArrayList< Attribute > facetCategories = catalogue.getFacetCategories();
+		ArrayList< FacetDescriptor > descriptors = new ArrayList<>();
+		
+		ArrayList<Attribute> categories = catalogue.getFacetCategories();
+		
+		// Order categories
+		Collections.sort( categories, new Comparator< Object >() {
 
-		String descriptorCodes = "";
+			public int compare ( Object arg0 , Object arg1 ) {
 
-		// for each facet category we analyze the implicit facets and the explicit facets
-		for ( Attribute facetCategory : facetCategories ) {
+				int retval = 0;
 
-			ArrayList< FacetDescriptor > descriptors = new ArrayList<>();
+				if ( ( arg0 instanceof Attribute ) && ( arg1 instanceof Attribute ) ) {
 
-			for ( DescriptorTreeItem item : this.getInheritedImplicitFacets( facetCategory ) ) {
+					Attribute ta0 = (Attribute) arg0;
+					Attribute ta1 = (Attribute) arg1;
+					retval = ta0.getCode().compareTo( ta1.getCode() );
 
-				descriptors.add( item.getDescriptor() );
+				}
+				return retval;
 			}
+		} );
+		
+		// for each facet category we analyze the implicit facets and the explicit facets
+		ListIterator<Attribute> iter = categories.listIterator();
+		
+		// for each category
+		while ( iter.hasNext() ) {
 
+			Attribute facetCategory = iter.next();
+			
+			// get the implicit facets descriptors from the term if needed
+			if ( allFacets ) {
+
+				for ( DescriptorTreeItem item : this.getInheritedImplicitFacets( facetCategory ) ) {
+
+					descriptors.add( item.getDescriptor() );
+				}
+
+			} else {
+
+				// get the descriptors of the term related to the facet category
+				descriptors.addAll( getDescriptorsByCategory( 
+						facetCategory, allFacets ) );
+			}
 
 			// In case it is needed I add the $ separator between facets
 
 			Collections.sort( descriptors, new ComparatorFacetDescriptor() );
-
-			// add the descriptor full codes into the term full code
-			for ( int i = 0; i < descriptors.size(); i++ ) {
-				
-				descriptorCodes = descriptorCodes + descriptors.get(i).getFullFacetCode();
-				
-				if ( i < descriptors.size() - 1 )
-					descriptorCodes = descriptorCodes + "$";
-			}
 		}
 		
-		return descriptorCodes;
+		return descriptors;
 	}
-	
 
 	/**
 	 * Get all the implicit facets related to a term for a specific facet category
@@ -591,9 +569,15 @@ public class Term extends CatalogueObject implements Mappable {
 			// get the attribute name (convention attribute_ + attribute name)
 			String attrName = key.split("_")[1];
 
-			// get the term attribute value related to the attribute name
-			// note that repeatable attributes are compacted $ separated
-			value = this.getAttributeValueByName( attrName );
+			// if all facets, compute them
+			if ( attrName.equals( SpecialValues.ALL_FACETS_NAME ) ) {
+				value = getFullCode( true, true );
+			}
+			else {
+				// get the term attribute value related to the attribute name
+				// note that repeatable attributes are compacted $ separated
+				value = this.getAttributeValueByName( attrName );
+			}
 		}
 		
 		// if we have a parametrized hierarchy flag
@@ -1990,7 +1974,35 @@ public class Term extends CatalogueObject implements Mappable {
 			termDao.updateTermInRAM( ancestor );
 	}
 	
-	
+	/**
+	 * Check if the content of the term
+	 * are correct and follows the catalogue rules
+	 * @return
+	 */
+	public boolean isDataCorrect() {
+		
+		boolean correct = true;
+		
+		ArrayList<FacetDescriptor> allFacets = getFacets( true );
+		
+		Set<String> checks = new HashSet<>();
+		
+		for ( FacetDescriptor fd : allFacets ) {
+			
+			// if facet already present for single cardinality
+			// facet => error
+			if ( checks.contains( fd.getFacetHeader() ) &&
+					!fd.getFacetCategory().isRepeatable() ) {
+				correct = false;
+				break;
+			}
+			
+			checks.add( fd.getFacetHeader() );
+		}
+
+		return correct;
+	}
+
 	/**
 	 * To print terms directly
 	 */

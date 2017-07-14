@@ -1,6 +1,56 @@
+Fri Jul 14 16:39:30 CEST 2017 Thread[main,5,main] Cleanup action starting
+java.sql.SQLException: Database 'Database\MAIN_CATS_DB' not found.
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.handleDBNotFound(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.<init>(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.apache.derby.jdbc.InternalDriver.getNewEmbedConnection(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
+	at org.apache.derby.jdbc.AutoloadedDriver.connect(Unknown Source)
+	at java.sql.DriverManager.getConnection(Unknown Source)
+	at java.sql.DriverManager.getConnection(Unknown Source)
+	at catalogue_browser_dao.DatabaseManager.getMainDBConnection(DatabaseManager.java:97)
+	at catalogue_browser_dao.DatabaseManager.startMainDB(DatabaseManager.java:146)
+	at ui_main_panel.CatalogueBrowserMain.main(CatalogueBrowserMain.java:47)
+Caused by: ERROR XJ004: Database 'Database\MAIN_CATS_DB' not found.
+	at org.apache.derby.iapi.error.StandardException.newException(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.wrapArgsForTransportAcrossDRDA(Unknown Source)
+	... 19 more
+============= begin nested exception, level (1) ===========
+ERROR XJ004: Database 'Database\MAIN_CATS_DB' not found.
+	at org.apache.derby.iapi.error.StandardException.newException(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.wrapArgsForTransportAcrossDRDA(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.handleDBNotFound(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.<init>(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.apache.derby.jdbc.InternalDriver.getNewEmbedConnection(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
+	at org.apache.derby.jdbc.AutoloadedDriver.connect(Unknown Source)
+	at java.sql.DriverManager.getConnection(Unknown Source)
+	at java.sql.DriverManager.getConnection(Unknown Source)
+	at catalogue_browser_dao.DatabaseManager.getMainDBConnection(DatabaseManager.java:97)
+	at catalogue_browser_dao.DatabaseManager.startMainDB(DatabaseManager.java:146)
+	at ui_main_panel.CatalogueBrowserMain.main(CatalogueBrowserMain.java:47)
+============= end nested exception, level (1) ===========
+Cleanup action completed
 ----------------------------------------------------------------
-Fri Jul 14 10:53:17 CEST 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-015d-404d-57da-000006d6aaf0 
+Fri Jul 14 16:39:30 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-015d-418a-50d6-000006d6ab28 
 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\MAIN_CATS_DB with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
 Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
 java.vendor=Oracle Corporation
@@ -11,59 +61,7 @@ os.arch=amd64
 os.version=6.1
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
-----------------------------------------------------------------
-Fri Jul 14 10:53:18 CEST 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 80840021-015d-404d-57da-000006d6aaf0 
-on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_MTX_DB\MTX_VERSION_9.4.9 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
-Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
-java.vendor=Oracle Corporation
-java.runtime.version=1.8.0_111-b14
-user.dir=C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser
-os.name=Windows 7
-os.arch=amd64
-os.version=6.1
-derby.system.home=null
-Database Class Loader started - derby.database.classpath=''
-----------------------------------------------------------------
-Fri Jul 14 10:53:21 CEST 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 560740aa-015d-404d-57da-000006d6aaf0 
-on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_MTX_DB\MTX_VERSION_9.4.6 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
-Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
-java.vendor=Oracle Corporation
-java.runtime.version=1.8.0_111-b14
-user.dir=C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser
-os.name=Windows 7
-os.arch=amd64
-os.version=6.1
-derby.system.home=null
-Database Class Loader started - derby.database.classpath=''
-----------------------------------------------------------------
-Fri Jul 14 10:53:21 CEST 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 6ede40af-015d-404d-57da-000006d6aaf0 
-on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_MTX_DB\MTX_VERSION_9.4.7.1.TEMP with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
-Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
-java.vendor=Oracle Corporation
-java.runtime.version=1.8.0_111-b14
-user.dir=C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser
-os.name=Windows 7
-os.arch=amd64
-os.version=6.1
-derby.system.home=null
-Database Class Loader started - derby.database.classpath=''
-----------------------------------------------------------------
-Fri Jul 14 10:53:22 CEST 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 67bb80b4-015d-404d-57da-000006d6aaf0 
-on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_MTX_DB\MTX_VERSION_9.4.8 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
-Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
-java.vendor=Oracle Corporation
-java.runtime.version=1.8.0_111-b14
-user.dir=C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser
-os.name=Windows 7
-os.arch=amd64
-os.version=6.1
-derby.system.home=null
-Database Class Loader started - derby.database.classpath=''
-Fri Jul 14 10:53:41 CEST 2017 Thread[Thread-11,5,main] Cleanup action starting
+Fri Jul 14 16:39:44 CEST 2017 Thread[Thread-7,5,main] Cleanup action starting
 java.sql.SQLException: Database 'Database\TEST_CATS\CAT_CATUSERS_DB\CATUSERS_VERSION_1.0' not found.
 	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
 	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
@@ -81,7 +79,7 @@ java.sql.SQLException: Database 'Database\TEST_CATS\CAT_CATUSERS_DB\CATUSERS_VER
 	at org.apache.derby.jdbc.AutoloadedDriver.connect(Unknown Source)
 	at java.sql.DriverManager.getConnection(Unknown Source)
 	at java.sql.DriverManager.getConnection(Unknown Source)
-	at catalogue.Catalogue.getConnection(Catalogue.java:2319)
+	at catalogue.Catalogue.getConnection(Catalogue.java:2336)
 	at import_catalogue.CatalogueSheetImporter.createDatabase(CatalogueSheetImporter.java:186)
 	at import_catalogue.CatalogueSheetImporter.insert(CatalogueSheetImporter.java:169)
 	at import_catalogue.SheetImporter.importData(SheetImporter.java:72)
@@ -115,7 +113,7 @@ ERROR XJ004: Database 'Database\TEST_CATS\CAT_CATUSERS_DB\CATUSERS_VERSION_1.0' 
 	at org.apache.derby.jdbc.AutoloadedDriver.connect(Unknown Source)
 	at java.sql.DriverManager.getConnection(Unknown Source)
 	at java.sql.DriverManager.getConnection(Unknown Source)
-	at catalogue.Catalogue.getConnection(Catalogue.java:2319)
+	at catalogue.Catalogue.getConnection(Catalogue.java:2336)
 	at import_catalogue.CatalogueSheetImporter.createDatabase(CatalogueSheetImporter.java:186)
 	at import_catalogue.CatalogueSheetImporter.insert(CatalogueSheetImporter.java:169)
 	at import_catalogue.SheetImporter.importData(SheetImporter.java:72)
@@ -128,8 +126,8 @@ ERROR XJ004: Database 'Database\TEST_CATS\CAT_CATUSERS_DB\CATUSERS_VERSION_1.0' 
 ============= end nested exception, level (1) ===========
 Cleanup action completed
 ----------------------------------------------------------------
-Fri Jul 14 10:53:41 CEST 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 3ad9c0eb-015d-404d-57da-000006d6aaf0 
+Fri Jul 14 16:39:44 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 0d95417a-015d-418a-50d6-000006d6ab28 
 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_CATUSERS_DB\CATUSERS_VERSION_1.0 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
 Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
 java.vendor=Oracle Corporation
@@ -141,11 +139,11 @@ os.version=6.1
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
 ----------------------------------------------------------------
-Fri Jul 14 10:53:43 CEST 2017:
-Shutting down instance 3ad9c0eb-015d-404d-57da-000006d6aaf0 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_CATUSERS_DB\CATUSERS_VERSION_1.0 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Fri Jul 14 16:39:47 CEST 2017:
+Shutting down instance 0d95417a-015d-418a-50d6-000006d6ab28 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_CATUSERS_DB\CATUSERS_VERSION_1.0 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
 ----------------------------------------------------------------
-Fri Jul 14 10:53:44 CEST 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 8c8b0219-015d-404d-57da-000006d6aaf0 
+Fri Jul 14 16:39:47 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 197302a8-015d-418a-50d6-000006d6ab28 
 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_CATUSERS_DB\CATUSERS_VERSION_1.0 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
 Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
 java.vendor=Oracle Corporation
@@ -156,13 +154,74 @@ os.arch=amd64
 os.version=6.1
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
+Fri Jul 14 16:40:05 CEST 2017 Thread[Thread-16,5,main] Cleanup action starting
+java.sql.SQLException: Database 'Database\TEST_CATS\CAT_ANLYMD_DB\ANLYMD_VERSION_4.14' not found.
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.handleDBNotFound(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.<init>(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.apache.derby.jdbc.InternalDriver.getNewEmbedConnection(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
+	at org.apache.derby.jdbc.AutoloadedDriver.connect(Unknown Source)
+	at java.sql.DriverManager.getConnection(Unknown Source)
+	at java.sql.DriverManager.getConnection(Unknown Source)
+	at catalogue.Catalogue.getConnection(Catalogue.java:2336)
+	at import_catalogue.CatalogueSheetImporter.createDatabase(CatalogueSheetImporter.java:186)
+	at import_catalogue.CatalogueSheetImporter.insert(CatalogueSheetImporter.java:169)
+	at import_catalogue.SheetImporter.importData(SheetImporter.java:72)
+	at import_catalogue.CatalogueWorkbookImporter.importCatalogueSheet(CatalogueWorkbookImporter.java:155)
+	at import_catalogue.CatalogueWorkbookImporter.importWorkbook(CatalogueWorkbookImporter.java:72)
+	at import_catalogue.CatalogueImporter.importXlsx(CatalogueImporter.java:204)
+	at import_catalogue.CatalogueImporter.importXml(CatalogueImporter.java:184)
+	at import_catalogue.CatalogueImporter.makeImport(CatalogueImporter.java:70)
+	at import_catalogue.CatalogueImporterThread.run(CatalogueImporterThread.java:63)
+Caused by: ERROR XJ004: Database 'Database\TEST_CATS\CAT_ANLYMD_DB\ANLYMD_VERSION_4.14' not found.
+	at org.apache.derby.iapi.error.StandardException.newException(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.wrapArgsForTransportAcrossDRDA(Unknown Source)
+	... 26 more
+============= begin nested exception, level (1) ===========
+ERROR XJ004: Database 'Database\TEST_CATS\CAT_ANLYMD_DB\ANLYMD_VERSION_4.14' not found.
+	at org.apache.derby.iapi.error.StandardException.newException(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.wrapArgsForTransportAcrossDRDA(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.handleDBNotFound(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.<init>(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.apache.derby.jdbc.InternalDriver.getNewEmbedConnection(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
+	at org.apache.derby.jdbc.AutoloadedDriver.connect(Unknown Source)
+	at java.sql.DriverManager.getConnection(Unknown Source)
+	at java.sql.DriverManager.getConnection(Unknown Source)
+	at catalogue.Catalogue.getConnection(Catalogue.java:2336)
+	at import_catalogue.CatalogueSheetImporter.createDatabase(CatalogueSheetImporter.java:186)
+	at import_catalogue.CatalogueSheetImporter.insert(CatalogueSheetImporter.java:169)
+	at import_catalogue.SheetImporter.importData(SheetImporter.java:72)
+	at import_catalogue.CatalogueWorkbookImporter.importCatalogueSheet(CatalogueWorkbookImporter.java:155)
+	at import_catalogue.CatalogueWorkbookImporter.importWorkbook(CatalogueWorkbookImporter.java:72)
+	at import_catalogue.CatalogueImporter.importXlsx(CatalogueImporter.java:204)
+	at import_catalogue.CatalogueImporter.importXml(CatalogueImporter.java:184)
+	at import_catalogue.CatalogueImporter.makeImport(CatalogueImporter.java:70)
+	at import_catalogue.CatalogueImporterThread.run(CatalogueImporterThread.java:63)
+============= end nested exception, level (1) ===========
+Cleanup action completed
 ----------------------------------------------------------------
-Fri Jul 14 10:53:54 CEST 2017:
-Shutting down instance 80840021-015d-404d-57da-000006d6aaf0 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_MTX_DB\MTX_VERSION_9.4.9 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
-----------------------------------------------------------------
-Fri Jul 14 10:53:56 CEST 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance f88703f9-015d-404d-57da-000006d6aaf0 
-on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_MTX_DB\MTX_VERSION_9.4.9 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Fri Jul 14 16:40:05 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a3ee432f-015d-418a-50d6-000006d6ab28 
+on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_ANLYMD_DB\ANLYMD_VERSION_4.14 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
 Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.8.0_111-b14
@@ -173,12 +232,89 @@ os.version=6.1
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
 ----------------------------------------------------------------
-Fri Jul 14 10:54:02 CEST 2017:
-Shutting down instance 67bb80b4-015d-404d-57da-000006d6aaf0 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_MTX_DB\MTX_VERSION_9.4.8 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Fri Jul 14 16:40:08 CEST 2017:
+Shutting down instance a3ee432f-015d-418a-50d6-000006d6ab28 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_ANLYMD_DB\ANLYMD_VERSION_4.14 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
 ----------------------------------------------------------------
-Fri Jul 14 10:54:04 CEST 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance d3b90589-015d-404d-57da-000006d6aaf0 
-on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_MTX_DB\MTX_VERSION_9.4.8 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Fri Jul 14 16:40:08 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 20ad845d-015d-418a-50d6-000006d6ab28 
+on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_ANLYMD_DB\ANLYMD_VERSION_4.14 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_111-b14
+user.dir=C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser
+os.name=Windows 7
+os.arch=amd64
+os.version=6.1
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+Fri Jul 14 16:40:45 CEST 2017 Thread[Thread-40,5,main] Cleanup action starting
+java.sql.SQLException: Database 'Database\TEST_CATS\CAT_COUNTRY_DB\COUNTRY_VERSION_2.11' not found.
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.handleDBNotFound(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.<init>(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.apache.derby.jdbc.InternalDriver.getNewEmbedConnection(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
+	at org.apache.derby.jdbc.AutoloadedDriver.connect(Unknown Source)
+	at java.sql.DriverManager.getConnection(Unknown Source)
+	at java.sql.DriverManager.getConnection(Unknown Source)
+	at catalogue.Catalogue.getConnection(Catalogue.java:2336)
+	at import_catalogue.CatalogueSheetImporter.createDatabase(CatalogueSheetImporter.java:186)
+	at import_catalogue.CatalogueSheetImporter.insert(CatalogueSheetImporter.java:169)
+	at import_catalogue.SheetImporter.importData(SheetImporter.java:72)
+	at import_catalogue.CatalogueWorkbookImporter.importCatalogueSheet(CatalogueWorkbookImporter.java:155)
+	at import_catalogue.CatalogueWorkbookImporter.importWorkbook(CatalogueWorkbookImporter.java:72)
+	at import_catalogue.CatalogueImporter.importXlsx(CatalogueImporter.java:204)
+	at import_catalogue.CatalogueImporter.importXml(CatalogueImporter.java:184)
+	at import_catalogue.CatalogueImporter.makeImport(CatalogueImporter.java:70)
+	at import_catalogue.CatalogueImporterThread.run(CatalogueImporterThread.java:63)
+Caused by: ERROR XJ004: Database 'Database\TEST_CATS\CAT_COUNTRY_DB\COUNTRY_VERSION_2.11' not found.
+	at org.apache.derby.iapi.error.StandardException.newException(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.wrapArgsForTransportAcrossDRDA(Unknown Source)
+	... 26 more
+============= begin nested exception, level (1) ===========
+ERROR XJ004: Database 'Database\TEST_CATS\CAT_COUNTRY_DB\COUNTRY_VERSION_2.11' not found.
+	at org.apache.derby.iapi.error.StandardException.newException(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.wrapArgsForTransportAcrossDRDA(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.handleDBNotFound(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.<init>(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.apache.derby.jdbc.InternalDriver.getNewEmbedConnection(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
+	at org.apache.derby.jdbc.AutoloadedDriver.connect(Unknown Source)
+	at java.sql.DriverManager.getConnection(Unknown Source)
+	at java.sql.DriverManager.getConnection(Unknown Source)
+	at catalogue.Catalogue.getConnection(Catalogue.java:2336)
+	at import_catalogue.CatalogueSheetImporter.createDatabase(CatalogueSheetImporter.java:186)
+	at import_catalogue.CatalogueSheetImporter.insert(CatalogueSheetImporter.java:169)
+	at import_catalogue.SheetImporter.importData(SheetImporter.java:72)
+	at import_catalogue.CatalogueWorkbookImporter.importCatalogueSheet(CatalogueWorkbookImporter.java:155)
+	at import_catalogue.CatalogueWorkbookImporter.importWorkbook(CatalogueWorkbookImporter.java:72)
+	at import_catalogue.CatalogueImporter.importXlsx(CatalogueImporter.java:204)
+	at import_catalogue.CatalogueImporter.importXml(CatalogueImporter.java:184)
+	at import_catalogue.CatalogueImporter.makeImport(CatalogueImporter.java:70)
+	at import_catalogue.CatalogueImporterThread.run(CatalogueImporterThread.java:63)
+============= end nested exception, level (1) ===========
+Cleanup action completed
+----------------------------------------------------------------
+Fri Jul 14 16:40:45 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance bbd4d223-015d-418a-50d6-000006d6ab28 
+on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_COUNTRY_DB\COUNTRY_VERSION_2.11 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
 Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.8.0_111-b14
@@ -189,5 +325,144 @@ os.version=6.1
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
 ----------------------------------------------------------------
-Fri Jul 14 10:54:09 CEST 2017:
-Shutting down instance a816c00e-015d-404d-57da-000006d6aaf0 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\MAIN_CATS_DB with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Fri Jul 14 16:40:47 CEST 2017:
+Shutting down instance bbd4d223-015d-418a-50d6-000006d6ab28 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_COUNTRY_DB\COUNTRY_VERSION_2.11 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+----------------------------------------------------------------
+Fri Jul 14 16:40:47 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 218a1351-015d-418a-50d6-000006d6ab28 
+on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_COUNTRY_DB\COUNTRY_VERSION_2.11 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_111-b14
+user.dir=C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser
+os.name=Windows 7
+os.arch=amd64
+os.version=6.1
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Fri Jul 14 16:41:31 CEST 2017:
+Shutting down instance 20ad845d-015d-418a-50d6-000006d6ab28 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_ANLYMD_DB\ANLYMD_VERSION_4.14 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+----------------------------------------------------------------
+Fri Jul 14 16:41:34 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance e533aef4-015d-418a-50d6-000006d6ab28 
+on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_ANLYMD_DB\ANLYMD_VERSION_4.14 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_111-b14
+user.dir=C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser
+os.name=Windows 7
+os.arch=amd64
+os.version=6.1
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+Fri Jul 14 16:41:47 CEST 2017 Thread[Thread-55,5,main] Cleanup action starting
+java.sql.SQLException: Database 'Database\TEST_CATS\CAT_COUNTRY_DB\COUNTRY_VERSION_2.11.1' not found.
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.handleDBNotFound(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.<init>(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.apache.derby.jdbc.InternalDriver.getNewEmbedConnection(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
+	at org.apache.derby.jdbc.AutoloadedDriver.connect(Unknown Source)
+	at java.sql.DriverManager.getConnection(Unknown Source)
+	at java.sql.DriverManager.getConnection(Unknown Source)
+	at catalogue.Catalogue.getConnection(Catalogue.java:2336)
+	at catalogue_browser_dao.ReleaseNotesOperationDAO.getAll(ReleaseNotesOperationDAO.java:135)
+	at catalogue_browser_dao.ReleaseNotesDAO.getByResultSet(ReleaseNotesDAO.java:116)
+	at catalogue_browser_dao.CatalogueDAO.getByResultSet(CatalogueDAO.java:327)
+	at catalogue_browser_dao.CatalogueDAO.getById(CatalogueDAO.java:775)
+	at catalogue.VersionChecker.apply(VersionChecker.java:120)
+	at catalogue.VersionChecker.newInternalVersion(VersionChecker.java:71)
+	at catalogue.Catalogue.newInternalVersion(Catalogue.java:1317)
+	at catalogue.Catalogue.reserve(Catalogue.java:1230)
+	at dcf_pending_action.PendingReserve.reserve(PendingReserve.java:155)
+	at dcf_pending_action.PendingReserve.access$0(PendingReserve.java:147)
+	at dcf_pending_action.PendingReserve$1.handleEvent(PendingReserve.java:125)
+	at dcf_pending_action.PendingAction.importLastVersion(PendingAction.java:271)
+	at dcf_pending_action.PendingReserve.processResponse(PendingReserve.java:121)
+	at dcf_pending_action.PendingAction.send(PendingAction.java:176)
+	at dcf_pending_action.PendingAction.start(PendingAction.java:118)
+	at dcf_pending_action.PendingActionValidator.run(PendingActionValidator.java:48)
+Caused by: ERROR XJ004: Database 'Database\TEST_CATS\CAT_COUNTRY_DB\COUNTRY_VERSION_2.11.1' not found.
+	at org.apache.derby.iapi.error.StandardException.newException(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.wrapArgsForTransportAcrossDRDA(Unknown Source)
+	... 33 more
+============= begin nested exception, level (1) ===========
+ERROR XJ004: Database 'Database\TEST_CATS\CAT_COUNTRY_DB\COUNTRY_VERSION_2.11.1' not found.
+	at org.apache.derby.iapi.error.StandardException.newException(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.wrapArgsForTransportAcrossDRDA(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.newSQLException(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.handleDBNotFound(Unknown Source)
+	at org.apache.derby.impl.jdbc.EmbedConnection.<init>(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver$1.run(Unknown Source)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.apache.derby.jdbc.InternalDriver.getNewEmbedConnection(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
+	at org.apache.derby.jdbc.InternalDriver.connect(Unknown Source)
+	at org.apache.derby.jdbc.AutoloadedDriver.connect(Unknown Source)
+	at java.sql.DriverManager.getConnection(Unknown Source)
+	at java.sql.DriverManager.getConnection(Unknown Source)
+	at catalogue.Catalogue.getConnection(Catalogue.java:2336)
+	at catalogue_browser_dao.ReleaseNotesOperationDAO.getAll(ReleaseNotesOperationDAO.java:135)
+	at catalogue_browser_dao.ReleaseNotesDAO.getByResultSet(ReleaseNotesDAO.java:116)
+	at catalogue_browser_dao.CatalogueDAO.getByResultSet(CatalogueDAO.java:327)
+	at catalogue_browser_dao.CatalogueDAO.getById(CatalogueDAO.java:775)
+	at catalogue.VersionChecker.apply(VersionChecker.java:120)
+	at catalogue.VersionChecker.newInternalVersion(VersionChecker.java:71)
+	at catalogue.Catalogue.newInternalVersion(Catalogue.java:1317)
+	at catalogue.Catalogue.reserve(Catalogue.java:1230)
+	at dcf_pending_action.PendingReserve.reserve(PendingReserve.java:155)
+	at dcf_pending_action.PendingReserve.access$0(PendingReserve.java:147)
+	at dcf_pending_action.PendingReserve$1.handleEvent(PendingReserve.java:125)
+	at dcf_pending_action.PendingAction.importLastVersion(PendingAction.java:271)
+	at dcf_pending_action.PendingReserve.processResponse(PendingReserve.java:121)
+	at dcf_pending_action.PendingAction.send(PendingAction.java:176)
+	at dcf_pending_action.PendingAction.start(PendingAction.java:118)
+	at dcf_pending_action.PendingActionValidator.run(PendingActionValidator.java:48)
+============= end nested exception, level (1) ===========
+Cleanup action completed
+----------------------------------------------------------------
+Fri Jul 14 16:41:49 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance fb3435a1-015d-418a-50d6-000006d6ab28 
+on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_COUNTRY_DB\COUNTRY_VERSION_2.11.1 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_111-b14
+user.dir=C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser
+os.name=Windows 7
+os.arch=amd64
+os.version=6.1
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Fri Jul 14 16:41:52 CEST 2017:
+Shutting down instance 218a1351-015d-418a-50d6-000006d6ab28 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_COUNTRY_DB\COUNTRY_VERSION_2.11 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+----------------------------------------------------------------
+Fri Jul 14 16:41:54 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 3ee1d104-015d-418a-50d6-000006d6ab28 
+on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\TEST_CATS\CAT_COUNTRY_DB\COUNTRY_VERSION_2.11 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_111-b14
+user.dir=C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser
+os.name=Windows 7
+os.arch=amd64
+os.version=6.1
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Fri Jul 14 16:42:48 CEST 2017:
+Shutting down instance a816c00e-015d-418a-50d6-000006d6ab28 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\MAIN_CATS_DB with class loader sun.misc.Launcher$AppClassLoader@73d16e93 

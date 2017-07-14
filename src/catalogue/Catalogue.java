@@ -2286,6 +2286,23 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 
 		return true;
 	}
+	
+	/**
+	 * Check if the contents of the catalogue are correct
+	 * and follows the catalogue rules
+	 * @return
+	 */
+	public boolean isDataCorrect() {
+		
+		boolean correct = true;
+		
+		for ( Term term : terms.values() ) {
+			if ( !term.isDataCorrect() )
+				correct = false;
+		}
+		
+		return correct;
+	}
 
 	/**
 	 * Check if this catalogue is an older version

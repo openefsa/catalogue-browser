@@ -14,7 +14,6 @@ import java.util.Comparator;
 
 import catalogue.Catalogue;
 import catalogue.CatalogueBuilder;
-import catalogue.ReleaseNotes;
 import dcf_manager.Dcf.DcfType;
 import dcf_user.User;
 import sas_remote_procedures.XmlUpdateFileDAO;
@@ -319,14 +318,6 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 		builder.setLocal( rs.getBoolean( "CAT_IS_LOCAL" ) );
 
 		builder.setForcedCount( rs.getInt( "CAT_FORCED_COUNT" ) );
-
-		// build to retrieve the release notes
-		Catalogue catalogue = builder.build();
-		
-		ReleaseNotesDAO rnDao = new ReleaseNotesDAO( catalogue );
-		ReleaseNotes rn = rnDao.getByResultSet( rs );
-		
-		builder.setReleaseNotes( rn );
 		
 		// return the catalogue
 		return builder.build();

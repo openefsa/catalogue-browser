@@ -16,12 +16,12 @@ import dcf_log.DcfLog;
 import dcf_log.DcfLogParser;
 import dcf_log.LogDownloader;
 import dcf_manager.Dcf.DcfType;
+import dcf_pending_action.PendingAction.Priority;
 import dcf_user.User;
 import dcf_webservice.DcfResponse;
 import dcf_webservice.Publish.PublishLevel;
 import dcf_webservice.ReserveLevel;
 import import_catalogue.CatalogueImporterThread;
-import test.ForcedReserve;
 import ui_progress_bar.FormProgressBar;
 import utilities.GlobalUtil;
 
@@ -129,9 +129,7 @@ public abstract class PendingAction {
 		// update the status
 		setStatus( PendingActionStatus.SENDING );
 
-		//File log = getLog();
-		
-		File log = null;
+		File log = getLog();
 		
 		// if no log in high priority => the available time is finished
 		if ( log == null && priority == Priority.HIGH ) {
@@ -149,13 +147,7 @@ public abstract class PendingAction {
 			
 			// downgrade the pending reserve priority
 			downgradePriority();
-try {
-	while ( !ForcedReserve.GO_ON )
-		Thread.sleep( 1000 );
-} catch (InterruptedException e) {
-	// TODO Auto-generated catch block
-	e.printStackTrace();
-}
+
 			// restart the process with low priority
 			log = getLog();
 		}

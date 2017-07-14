@@ -283,6 +283,17 @@ public class ToolsMenu implements MainMenuItem {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				
+				if ( !mainMenu.getCatalogue().isDataCorrect() ) {
+					
+					// warn the user that everything went ok
+					GlobalUtil.showErrorDialog( shell, 
+							mainMenu.getCatalogue().getCode() + "_" 
+									+ mainMenu.getCatalogue().getVersion(),
+									Messages.getString( "Export.DataErrorMessage") );
+					
+					return;
+				}
+				
 				FormProgressBar progressBar = 
 						new FormProgressBar( shell, 
 								Messages.getString("CreateXml.CreateXmlBarTitle") );
@@ -495,7 +506,7 @@ public class ToolsMenu implements MainMenuItem {
 		importItem.addSelectionListener( new SelectionAdapter() {
 			@Override
 			public void widgetSelected ( SelectionEvent event ) {
-
+				
 				final String filename = GlobalUtil.showExcelFileDialog( shell, 
 						Messages.getString("Import.ImportWindowTitle"), SWT.OPEN );
 				
@@ -575,6 +586,15 @@ public class ToolsMenu implements MainMenuItem {
 		exportItem.addSelectionListener( new SelectionAdapter() {
 			@Override
 			public void widgetSelected ( SelectionEvent event ) {
+				
+				if ( !mainMenu.getCatalogue().isDataCorrect() ) {
+					
+					// warn the user that everything went ok
+					GlobalUtil.showErrorDialog( shell, 
+							mainMenu.getCatalogue().getCode() + "_" 
+									+ mainMenu.getCatalogue().getVersion(),
+									Messages.getString( "Export.DataErrorMessage") );
+				}
 				
 				String defaultFilename = mainMenu.getCatalogue().getCode() + "_" 
 				+ mainMenu.getCatalogue().getVersion() + ".xlsx";
