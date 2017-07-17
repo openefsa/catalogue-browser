@@ -18,7 +18,6 @@ public class PendingReserveMessages implements PendingActionMessages {
 		
 		switch ( response ) {
 		case OK:
-			msg = Messages.getString( "Reserve.OkMessage" );
 			break;
 		case ERROR:
 			msg = Messages.getString( "Reserve.ErrorMessage" );
@@ -67,6 +66,9 @@ public class PendingReserveMessages implements PendingActionMessages {
 			
 		case STARTED:
 			msg = Messages.getString( "Reserve.StartedMessage" );
+			break;
+		case COMPLETED:
+			msg = Messages.getString( "Reserve.OkMessage" );
 			break;
 			
 		default:

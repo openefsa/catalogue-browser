@@ -16,7 +16,6 @@ import dcf_log.DcfLog;
 import dcf_log.DcfLogParser;
 import dcf_log.LogDownloader;
 import dcf_manager.Dcf.DcfType;
-import dcf_pending_action.PendingAction.Priority;
 import dcf_user.User;
 import dcf_webservice.DcfResponse;
 import dcf_webservice.Publish.PublishLevel;

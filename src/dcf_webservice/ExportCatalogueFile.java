@@ -201,7 +201,10 @@ public class ExportCatalogueFile extends SOAPAction {
 			AttachmentHandler handler = new AttachmentHandler( part, isZipped );
 
 			File file = new File( filename );
-
+			
+			// create the file if it does not exist
+			file.createNewFile();
+			
 			InputStream inputStream = handler.readAttachment();
 			OutputStream outputStream = new FileOutputStream( file );
 
