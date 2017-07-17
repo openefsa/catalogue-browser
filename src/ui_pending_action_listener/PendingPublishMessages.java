@@ -21,9 +21,6 @@ public class PendingPublishMessages implements PendingActionMessages {
 		case FORBIDDEN:
 			msg = Messages.getString( "Publish.MinorErrorMessage" );
 			break;
-		case OK:
-			msg = Messages.getString( "Publish.OkMessage" );
-			break;
 		default:
 			break;
 		}
@@ -41,8 +38,10 @@ public class PendingPublishMessages implements PendingActionMessages {
 		
 		switch ( status ) {
 		case STARTED:
-			msg = Messages.getString( "Reserve.StartedMessage" );
+			msg = Messages.getString( "Publish.StartedMessage" );
 			break;
+		case COMPLETED:
+			msg = Messages.getString( "Publish.OkMessage" );
 		default:
 			break;
 		}

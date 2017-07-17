@@ -18,9 +18,6 @@ public class PendingUploadDataMessages implements PendingActionMessages {
 		case AP:
 			msg = Messages.getString( "UpData.ApMessage" );
 			break;
-		case OK:
-			msg = Messages.getString( "UpData.OkMessage" );
-			break;
 		default:
 			break;
 		}
@@ -36,6 +33,9 @@ public class PendingUploadDataMessages implements PendingActionMessages {
 		switch ( status ) {
 		case STARTED:
 			msg = Messages.getString( "UpData.StartedMessage" );
+			break;
+		case COMPLETED:
+			msg = Messages.getString( "UpData.OkMessage" );
 			break;
 		default:
 			break;
