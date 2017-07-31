@@ -439,7 +439,6 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 		attrTypes.add( attrType );
 		
 		return fetchAttributes( attrTypes, exclude );
-
 	}
 	
 	/**
@@ -516,7 +515,6 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 
 		return attrs;
 	}
-	
 	
 	/**
 	 * Create an Attribute object starting from the DB result set

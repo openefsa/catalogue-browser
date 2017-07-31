@@ -479,6 +479,7 @@ public class Dcf {
 				level );
 		
 		publish.setListener( listener );
+		publish.setProgressBar( progressBar );
 		publish.start();
 	}
 	

@@ -1,7 +1,6 @@
 package import_catalogue;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -93,7 +92,7 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 	 * @return
 	 * @throws SQLException
 	 */
-	public static Catalogue getCatalogueFromExcel ( ResultSet rs ) throws SQLException {
+	public static Catalogue getCatalogueFromExcel ( ResultDataSet rs ) throws SQLException {
 
 		// create a catalogue using a builder
 		CatalogueBuilder builder = new CatalogueBuilder();
@@ -107,8 +106,8 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 		builder.setTermCodeMask( rs.getString( Headers.CAT_CODE_MASK ) );
 		builder.setTermCodeLength( rs.getString( Headers.CAT_CODE_LENGTH ) );
 		builder.setTermMinCode( rs.getString( Headers.CAT_MIN_CODE ) );
-		builder.setAcceptNonStandardCodes( rs.getBoolean( Headers.CAT_ACCEPT_NOT_STD ) );
-		builder.setGenerateMissingCodes( rs.getBoolean( Headers.CAT_GEN_MISSING ) );
+		builder.setAcceptNonStandardCodes( rs.getBoolean( Headers.CAT_ACCEPT_NOT_STD, true ) );
+		builder.setGenerateMissingCodes( rs.getBoolean( Headers.CAT_GEN_MISSING, false ) );
 		builder.setStatus( rs.getString( Headers.STATUS ) );
 		builder.setCatalogueGroups( rs.getString( Headers.CAT_GROUPS ) );
 

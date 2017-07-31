@@ -129,7 +129,7 @@ public abstract class PendingAction {
 		setStatus( PendingActionStatus.SENDING );
 
 		File log = getLog();
-		
+
 		// if no log in high priority => the available time is finished
 		if ( log == null && priority == Priority.HIGH ) {
 			

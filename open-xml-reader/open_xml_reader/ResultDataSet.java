@@ -247,7 +247,7 @@ public class ResultDataSet implements ResultSet, Cloneable {
 		String value = currentDataRow.get( key.toUpperCase() );
 		
 		// if no value found, return the default
-		if ( value == null || value.isEmpty() )
+		if ( value == null || value.trim().isEmpty() )
 			return defaultVal;
 		
 		// if integer values for booleans

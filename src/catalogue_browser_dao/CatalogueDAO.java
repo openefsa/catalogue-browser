@@ -538,34 +538,39 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 			// if no catalogues return
 			if ( catalogues.isEmpty() )
 				return null;
-
-			// sort the catalogues according to their version
-			catalogues.sort( new Comparator<Catalogue>() {
-				public int compare( Catalogue o1, Catalogue o2 ) {
-
-					boolean inv1 = o1.getCatalogueVersion().isInvalid();
-					boolean inv2 = o2.getCatalogueVersion().isInvalid();
-
-					boolean older = o1.isOlder( o2 );
-
-					// if first invalid => second before
-					if ( inv1 && !inv2 )
-						return 1;
-
-					// if second invalid => first before
-					if ( !inv1 && inv2 )
-						return -1;
-
-					if ( older )
-						return 1;
-					else
-						return -1;
-				};
-			});
-
-			// get the most recent catalogue
-			lastVersion = catalogues.get(0);
-
+			
+			// avoid computation for unique catalogues
+			if ( catalogues.size() == 1 )
+				lastVersion = catalogues.get(0);
+			else {
+				// sort the catalogues according to their version
+				catalogues.sort( new Comparator<Catalogue>() {
+					public int compare( Catalogue o1, Catalogue o2 ) {
+	
+						boolean inv1 = o1.getCatalogueVersion().isInvalid();
+						boolean inv2 = o2.getCatalogueVersion().isInvalid();
+	
+						boolean older = o1.isOlder( o2 );
+	
+						// if first invalid => second before
+						if ( inv1 && !inv2 )
+							return 1;
+	
+						// if second invalid => first before
+						if ( !inv1 && inv2 )
+							return -1;
+	
+						if ( older )
+							return 1;
+						else
+							return -1;
+					};
+				});
+	
+				// get the most recent catalogue
+				lastVersion = catalogues.get(0);
+			}
+			
 			rs.close();
 			stmt.close();
 			con.close();

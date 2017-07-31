@@ -6,9 +6,13 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
 import catalogue.Catalogue;
+import catalogue_generator.CatalogueDownloader;
+import catalogue_generator.ThreadFinishedListener;
 import catalogue_object.Status;
 import dcf_log.DcfLog;
+import dcf_manager.Dcf;
 import dcf_manager.Dcf.DcfType;
+import dcf_manager.UpdatesChecker;
 import dcf_webservice.DcfResponse;
 import dcf_webservice.Publish.PublishLevel;
 
@@ -115,40 +119,58 @@ public class PendingPublish extends PendingAction {
 			return;
 		}
 		
-		// import the last version if there is one
-		// and publish the catalogue
-		importLastVersion( new Listener() {
+		// Refresh the dcf catalogue list, 
+		// a new published version is available
+		UpdatesChecker checker = new UpdatesChecker();
+		checker.setUpdatesListener( new Listener() {
 			
 			@Override
 			public void handleEvent(Event arg0) {
-				publish();
-				terminate();
+				
+				// download the published version
+				download();
 			}
 		});
+		
+		checker.start();
 	}
 	
 	/**
-	 * Publish the catalogue
+	 * Download the published catalogue
 	 */
-	private void publish() {
+	private void download() {
 		
-		Catalogue newVersion = null;
+		// get published catalogue from the list
+		// of official catalogues
+		Catalogue publishedVersion = Dcf.getCatalogueByCode( 
+				getCatalogue().getCode() );
 		
-		Catalogue catalogue = getCatalogue();
+		// prepare downloader for the catalogue
+		CatalogueDownloader downloader = 
+				new CatalogueDownloader( publishedVersion );
 		
-		switch ( publishLevel ) {
-		case MAJOR:
-			newVersion = catalogue.publishMajor();
-			break;
-		case MINOR:
-			newVersion = catalogue.publishMinor();
-			break;
-		default:
-			break;
+		// reset and set the progress bar
+		
+		if ( getProgressBar() != null ) {
+			getProgressBar().reset();
+			downloader.setProgressBar( getProgressBar() );
 		}
 		
-		// update the catalogue of the pending action
-		setCatalogue( newVersion );
+		// start downloading the catalogue
+		downloader.setDoneListener( new ThreadFinishedListener() {
+			
+			@Override
+			public void finished(Thread thread, int code) {
+				
+				if ( code != ThreadFinishedListener.OK )
+					setStatus( PendingActionStatus.ERROR );
+				
+				// terminate pending action if correct
+				terminate();
+			}
+		});
+		
+		downloader.start();
 	}
 
 

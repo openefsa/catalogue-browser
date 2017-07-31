@@ -1312,6 +1312,14 @@ public class ToolsMenu implements MainMenuItem {
 		
 		// publish the catalogue (only for drafts)
 		Dcf dcf = new Dcf();
+		
+		FormProgressBar bar = new FormProgressBar( shell, 
+				Messages.getString("Publish.DownloadPublished") );
+		
+		bar.setLocation( bar.getLocation().x, bar.getLocation().y + 170 );
+		
+		dcf.setProgressBar( bar );
+		
 		dcf.publishBG( catalogue, level, mainMenu.getListener() );
 		
 		// restore cursor

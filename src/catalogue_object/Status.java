@@ -14,7 +14,10 @@ public class Status {
 		DRAFT_MINOR_UNRESERVED,
 		PUBLISHED_MAJOR,
 		PUBLISHED_MINOR,
-		DEPRECATED
+		DEPRECATED,
+		TEMPORARY,
+		INTERNAL_VERSION,
+		INVALID
 	}
 	
 	private static final String DRAFT = "DRAFT";
@@ -25,6 +28,10 @@ public class Status {
 	private static final String PUBLISHED = "PUBLISHED";
 	private static final String DEPRECATED = "DEPRECATED";
 
+	private static final String TEMPORARY = "TEMPORARY";
+	private static final String INVALID = "INVALID";
+	private static final String INTERNAL_VERSION = "INTERNAL VERSION";
+	
 	private String status;
 	
 	public Status( String status ) {
@@ -67,6 +74,15 @@ public class Status {
 			break;
 		case DEPRECATED:
 			status = DEPRECATED;
+			break;
+		case TEMPORARY:
+			status = TEMPORARY;
+			break;
+		case INVALID:
+			status = INVALID;
+			break;
+		case INTERNAL_VERSION:
+			status = INTERNAL_VERSION;
 			break;
 		default:
 			break;

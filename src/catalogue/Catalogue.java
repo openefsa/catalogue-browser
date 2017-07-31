@@ -1085,6 +1085,8 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		VersionChecker versionChecker = new VersionChecker( this );
 
 		Catalogue forcedCatalogue = versionChecker.force();
+		
+		forcedCatalogue.setStatus( StatusValues.TEMPORARY );
 
 		System.out.println( "Editing forced by " 
 				+ username + " for " + this );
@@ -1106,7 +1108,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		// remove forced flag
 		version.confirm();
 		
-		System.out.println( "New version " + version.getVersion() );
+		setStatus( StatusValues.INTERNAL_VERSION );
 
 		// remove the force editing since now
 		// it is correctly enabled
@@ -1129,7 +1131,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		// add the NULL flag
 		version.invalidate();
 		
-		System.out.println( "New version " + version.getVersion() );
+		setStatus( StatusValues.INVALID );
 
 		// update version in the db
 		CatalogueDAO catDao = new CatalogueDAO();
@@ -1969,7 +1971,11 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		case "CAT_TERM_CODE_MASK":
 			value = termCodeMask; break;
 		case "CAT_TERM_CODE_LENGTH":
-			value = String.valueOf( termCodeLength ); break;
+			if ( termCodeLength == 0 )
+				value = "";
+			else
+				value = String.valueOf( termCodeLength );
+			break;
 		case "CAT_TERM_MIN_CODE":
 			value = termMinCode; break;
 		case "CAT_ACCEPT_NON_STANDARD_CODES":

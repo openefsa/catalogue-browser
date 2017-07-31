@@ -40,6 +40,9 @@ public class PendingPublishMessages implements PendingActionMessages {
 		case STARTED:
 			msg = Messages.getString( "Publish.StartedMessage" );
 			break;
+		case ERROR:
+			msg = Messages.getString( "Publish.NoAttMessage" );
+			break;
 		case COMPLETED:
 			msg = Messages.getString( "Publish.OkMessage" );
 		default:

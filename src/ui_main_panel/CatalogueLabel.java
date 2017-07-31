@@ -6,7 +6,7 @@ import java.util.Observer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -26,12 +26,11 @@ public class CatalogueLabel implements Observer {
 	 */
 	public CatalogueLabel( Composite parent ) {
 		
-		GridData data = new GridData();
-		data.widthHint = 250;
+		Composite composite = new Composite( parent, SWT.NONE );
+		composite.setLayout( new FillLayout() );
 		
 		// label which shows the label of the current opened catalogue
-		label = new Label( parent, SWT.NONE );
-		label.setLayoutData( data );
+		label = new Label( composite, SWT.NONE );
 		
 		// set the label font to italic and bold
 		FontData fontData = Display.getCurrent().getSystemFont().getFontData()[0];

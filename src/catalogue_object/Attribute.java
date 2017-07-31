@@ -463,6 +463,35 @@ public class Attribute extends SortableCatalogueObject implements Mappable {
 		return value;
 	}
 	
+	private String[] splitCatalogueCode() {
+		
+		// Return if the attribute is not a catalogue attribute
+		if ( !isCatalogue() ) {
+			System.err.println ( "Cannot get the catalogue code of a non-catalogue attribute" );
+			return null; 
+		}
+		
+		String[] codes = this.getCatalogueCode().split( "\\." );
+		
+		// Skip if wrong format
+		if ( codes.length != 2 ) {
+			System.err.println ( "Wrong attributeCatalogueCode format! Found " + this.getCatalogueCode()
+			+ " The code format should be: catalogueCode.HierarchyCode" );
+			return null;
+		}
+
+		return codes;
+	}
+	
+	/*public String getSplittedCatalogueCode() {
+		String[] codes = splitCatalogueCode();
+		
+		if ( codes == null ) 
+			return null;
+		
+		
+	}*/
+	
 	/**
 	 * Retrieve the hierarchy of a catalogue attribute
 	 * @return Hierarchy if it is found, otherwise null.

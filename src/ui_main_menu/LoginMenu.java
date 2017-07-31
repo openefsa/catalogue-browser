@@ -174,6 +174,7 @@ public class LoginMenu implements MainMenuItem {
 
 		Dcf dcf = new Dcf();
 
+		// progress bar for pending reserve
 		FormProgressBar bar = new FormProgressBar( shell, 
 				Messages.getString("Reserve.NewInternalTitle") );
 		
@@ -181,16 +182,25 @@ public class LoginMenu implements MainMenuItem {
 		
 		dcf.setProgressBar( bar );
 		
-		
-		
 		// start reserve actions
 		dcf.startPendingActions( PendingReserve.TYPE, 
 				mainMenu.getListener() );
 
+		
+		// progress bar for pending publish
+		FormProgressBar bar2 = new FormProgressBar( shell, 
+				Messages.getString("Publish.DownloadPublished") );
+		
+		bar.setLocation( bar2.getLocation().x, bar2.getLocation().y + 170 );
+		
+		dcf.setProgressBar( bar2 );
+		
 		// start publish actions
 		dcf.startPendingActions( PendingPublish.TYPE, 
 				mainMenu.getListener() );
 
+		
+		
 		// start upload data actions
 		dcf.startPendingActions( PendingUploadData.TYPE, 
 				mainMenu.getListener() );

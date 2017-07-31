@@ -31,6 +31,7 @@ import catalogue_browser_dao.CatalogueDAO;
 import catalogue_browser_dao.TermDAO;
 import catalogue_object.Hierarchy;
 import catalogue_object.Term;
+import data_transformation.BooleanConverter;
 import dcf_manager.Dcf.DcfType;
 import global_manager.GlobalManager;
 import instance_checker.InstanceChecker;
@@ -117,12 +118,19 @@ public class WarningUtil {
 			InstanceChecker.closeIfAlreadyRunning();
 
 			// argument checks
-			if ( args.length != 3 ) {
+			if ( args.length != 5 ) {
 				System.err.println( "Wrong number of arguments, please check! "
-						+ "You have to provide 3 parameters,\n"
+						+ "You have to provide 5 parameters,\n"
 						+ "that is, the input file path (collection of codes to be analysed)"
 						+ ", the output file path, and the working directory, which is"
-						+ "the directory where the catalogue browser files are present");
+						+ "the directory where the catalogue browser files are present."
+						+ "Then the code of the FoodEx2 catalogue and if the FoodEx2 catalogue"
+						+ "should be searched in the local catalogues or not");
+				
+				Shell shell = new Shell(SWT.ON_TOP);
+				
+				GlobalUtil.showErrorDialog( shell, "ERROR", 
+						"Wrong number of parameters passed to app.jar. Expected 5, found " + args.length );
 				return;
 			}
 
@@ -137,21 +145,28 @@ public class WarningUtil {
 			return;
 		}
 		catch ( Exception e ) {
-			GlobalUtil.showDialog( new Shell(), 
-					"Error", e.getMessage(), SWT.ICON_ERROR);
+			
+			e.printStackTrace();
+			
+			Shell shell = new Shell(SWT.ON_TOP);
+
+			GlobalUtil.showDialog( shell, 
+					"Error in Main", e.getMessage(), SWT.ICON_ERROR);
 		}
 	}
 
 	/**
 	 * Initialize the warning util with the MTX catalogue
 	 */
-	public WarningUtil() throws MtxNotFoundException {
+	public WarningUtil( String mtxCode, boolean local ) throws MtxNotFoundException {
 
 		CatalogueDAO catDao = new CatalogueDAO();
-		Catalogue mtx = catDao.getLastVersionByCode( "MTX", DcfType.PRODUCTION );
+		DcfType type = local ? DcfType.LOCAL : DcfType.PRODUCTION;
+		
+		Catalogue mtx = catDao.getLastVersionByCode( mtxCode, type );
 
 		if ( mtx == null )
-			throw new MtxNotFoundException();
+			throw new MtxNotFoundException( mtxCode, type );
 
 		this.currentCat = mtx;
 
@@ -164,8 +179,9 @@ public class WarningUtil {
 
 	public class MtxNotFoundException extends FileNotFoundException {
 		private static final long serialVersionUID = 6689235462817235011L;
-		public MtxNotFoundException() {
-			super ( "The MTX catalogue was not found in the catalogues metadata database, please download it." );
+		public MtxNotFoundException(String mtxCode, DcfType type) {
+			super ( "The " + mtxCode + " catalogue was not found in the " + type + " catalogues metadata database, "
+					+ "please download it." );
 		}
 	}
 
@@ -1982,8 +1998,11 @@ public class WarningUtil {
 
 		}
 		catch (Exception e) {
-
-			GlobalUtil.showErrorDialog( new Shell(), "Error", e.getMessage() );
+			
+			e.printStackTrace();
+			
+			Shell shell = new Shell(SWT.ON_TOP);
+			GlobalUtil.showErrorDialog( shell, "Error", e.getMessage() );
 
 			System.err.println(filename + " not found or parsing errors.");
 			return null;
@@ -2254,7 +2273,7 @@ public class WarningUtil {
 	 * @param args
 	 */
 	public static void performWarningChecksOnly( String[] args ) {
-
+		
 		// set the working directory to find files
 		// with the absolute path
 		String workingDir = args[2];
@@ -2262,6 +2281,9 @@ public class WarningUtil {
 
 		File input = new File( args[0] );
 		FileReader reader;
+		
+		String mtxCode = args[3];
+		boolean local = BooleanConverter.getBoolean( args[4] );
 
 		try {
 
@@ -2270,13 +2292,13 @@ public class WarningUtil {
 			// catalogue is not found in the catalogues database
 			WarningUtil warnUtils;
 			try {
-				warnUtils = new WarningUtil();
+				warnUtils = new WarningUtil( mtxCode, local );
 			} catch (MtxNotFoundException e) {
 				e.printStackTrace();
 
-				GlobalUtil.showErrorDialog( new Shell(), 
-						"Error", "The MTX catalogue could not be found in the catalogues database. Please "
-								+ "download it using the Catalogue Browser and then restart this program" );
+				Shell shell = new Shell(SWT.ON_TOP);
+				GlobalUtil.showErrorDialog( shell, 
+						"Error", e.getMessage() );
 				return;
 			}
 
@@ -2315,16 +2337,20 @@ public class WarningUtil {
 			// close the output file
 			out.close();
 
-			GlobalUtil.showDialog( new Shell(), 
+			Shell shell = new Shell(SWT.ON_TOP);
+			GlobalUtil.showDialog( shell, 
 					"Success", "The checks were successfully completed!",
 					SWT.ICON_INFORMATION);
 
 		} catch ( Exception e) {
 			e.printStackTrace();
 
-			GlobalUtil.showDialog( new Shell(), 
-					"Error", e.getMessage(), SWT.ICON_ERROR);
-
+			Shell shell = new Shell(SWT.ON_TOP);
+			
+			
+			GlobalUtil.showDialog( shell, 
+					"General Error", e.getMessage(), SWT.ICON_ERROR);
+			
 			return; 
 		}
 	}

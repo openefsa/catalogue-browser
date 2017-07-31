@@ -101,7 +101,7 @@ public class ParentImporter extends SheetImporter<Applicability> {
 			
 			// if temp code we need to get the real code
 			// of the term
-			if ( CodeGenerator.isTempCode( parentCode ) ) {
+			if ( newCodes != null && CodeGenerator.isTempCode( parentCode ) ) {
 				parentCode = newCodes.get( parentCode );
 			}
 			
