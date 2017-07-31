@@ -829,7 +829,7 @@ public class Term extends CatalogueObject implements Mappable {
 		// then we add all the implicit facets codes comma separated
 		// FACET_HIERARCHY = FacetName, ...
 		for ( FacetDescriptor fd : implicitFacets ) {
-			
+
 			// skip if we have an implicit facet and copy implicit is set to false
 			if ( !copyImplicit && fd.getFacetType() == FacetType.IMPLICIT )
 				continue;
@@ -837,7 +837,7 @@ public class Term extends CatalogueObject implements Mappable {
 			interpCode.append( ", " );
 			interpCode.append( fd.getFacetCategory().getHierarchy().getLabel().toUpperCase() );
 			interpCode.append( " = " );
-			interpCode.append( fd.getDescriptor().getName() );
+			interpCode.append( fd.getDescriptor().getShortName(true) );
 		}
 		
 		return interpCode.toString();

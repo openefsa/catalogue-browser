@@ -142,8 +142,13 @@ public class DescribedTerm {
 					attrDao.getByCode( facetHeader ), 
 					facetFullCode );
 			
+			String facetCode = getFacetCode ( facetFullCode );
+
+			// get the descriptor term
+			Term descriptor = getTerm( facetCode );
+			
 			// add the descriptor to the term facet as explicit facet
-			baseTermCopy.addImplicitFacet( new FacetDescriptor( baseTermCopy, ta, FacetType.EXPLICIT) );
+			baseTermCopy.addImplicitFacet( new FacetDescriptor( descriptor, ta, FacetType.EXPLICIT) );
 		}
 		
 		return baseTermCopy;

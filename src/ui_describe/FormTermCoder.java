@@ -120,7 +120,7 @@ public class FormTermCoder implements RestoreableWindow {
 		
 		_baseTerm = describedTerm.getBaseTerm();
 		_tempTerm = describedTerm.getTerm();
-		
+
 		// to be working the tempTerm is added as child of baseTerm only in memory
 		Applicability app = new Applicability( _tempTerm, _baseTerm, 
 				catalogue.getMasterHierarchy(), 1, true );
