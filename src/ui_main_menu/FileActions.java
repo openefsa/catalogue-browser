@@ -384,7 +384,7 @@ public class FileActions {
 						GlobalUtil.showDialog(
 								shell, 
 								title, 
-								Messages.getString( msg ), 
+								msg, 
 								SWT.ICON_INFORMATION );
 
 						dialog.done();

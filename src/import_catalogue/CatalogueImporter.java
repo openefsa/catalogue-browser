@@ -54,8 +54,9 @@ public class CatalogueImporter {
 	
 	/**
 	 * Import the file
+	 * @throws TransformerException 
 	 */
-	public void makeImport() {
+	public void makeImport() throws TransformerException {
 
 		// 5% of progress bar for preprocessing
 		this.preprocProgress = maxProgress * 5 / 100;
@@ -128,35 +129,29 @@ public class CatalogueImporter {
 	 * Process an .xml file to create a .xlsx catalogue file
 	 * @param filename xml filename
 	 * @return the created xlsx file
+	 * @throws TransformerException 
 	 */
-	private String processXml ( String filename ) {
+	private String processXml ( String filename ) throws TransformerException {
+		
+		String outputFilename = filename + ".xlsx";
 
-		try {
+		// convert the xml into an excel
+		XmlCatalogueToExcel converter = 
+				new XmlCatalogueToExcel( filename, outputFilename );
+		
+		// do the conversion
+		converter.convertXmlToExcel();
 
-			String outputFilename = filename + ".xlsx";
-
-			// convert the xml into an excel
-			XmlCatalogueToExcel converter = 
-					new XmlCatalogueToExcel( filename, outputFilename );
-			
-			// do the conversion
-			converter.convertXmlToExcel();
-
-			return outputFilename;
-
-		} catch (TransformerException e) {
-			e.printStackTrace();
-		}
-
-		return null;
+		return outputFilename;
 	}
 	
 	
 	/**
 	 * Import an .ecf catalogue
 	 * @param filename the absolute path of the .ecf file
+	 * @throws TransformerException 
 	 */
-	private void importEcf( String filename ) {
+	private void importEcf( String filename ) throws TransformerException {
 		
 		String xmlFile = processEcf( filename );
 		
@@ -171,8 +166,9 @@ public class CatalogueImporter {
 	/**
 	 * Import a .xml catalogue
 	 * @param filename the absolute path of the .xml catalogue
+	 * @throws TransformerException 
 	 */
-	private void importXml( String filename ) {
+	private void importXml( String filename ) throws TransformerException {
 
 		String xlsxFile = processXml( filename );
 		

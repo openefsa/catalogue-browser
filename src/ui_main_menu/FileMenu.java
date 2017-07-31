@@ -292,7 +292,7 @@ public class FileMenu implements MainMenuItem {
 				FileActions.importCatalogue( shell, new ThreadFinishedListener() {
 					
 					@Override
-					public void finished(Thread thread, int code) {
+					public void finished(Thread thread, final int code) {
 						
 						// refresh menu items when the import is 
 						// finished (needed to refresh open and delete buttons)
@@ -302,10 +302,23 @@ public class FileMenu implements MainMenuItem {
 							
 							@Override
 							public void run() {
-								GlobalUtil.showDialog(shell, 
-										Messages.getString("EcfImport.ImportSuccessTitle"),
-										Messages.getString( "EcfImport.ImportSuccessMessage" ),
-										SWT.ICON_INFORMATION );
+								
+								String title;
+								String msg;
+								int icon;
+								
+								if ( code == ThreadFinishedListener.OK ) {
+									title = Messages.getString("EcfImport.ImportSuccessTitle");
+									msg = Messages.getString( "EcfImport.ImportSuccessMessage" );
+									icon = SWT.ICON_INFORMATION;
+								}
+								else {
+									title = Messages.getString("EcfImport.ImportErrorTitle");
+									msg = Messages.getString( "EcfImport.ImportErrorMessage" );
+									icon = SWT.ICON_ERROR;
+								}
+								
+								GlobalUtil.showDialog(shell, title, msg, icon );
 							}
 						});
 					}

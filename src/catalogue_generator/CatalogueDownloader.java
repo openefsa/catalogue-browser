@@ -65,7 +65,7 @@ public class CatalogueDownloader extends Thread {
 			
 			@Override
 			public void finished(Thread thread, int code) {
-				callListener ( ThreadFinishedListener.OK );
+				callListener ( code );
 				finished = true;
 			}
 		});

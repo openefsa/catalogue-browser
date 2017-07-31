@@ -2,11 +2,14 @@ package import_catalogue;
 
 import java.io.File;
 
+import javax.xml.transform.TransformerException;
+
 import org.eclipse.swt.widgets.Event;
 
 import catalogue.Catalogue;
 import catalogue_generator.ThreadFinishedListener;
 import import_catalogue.CatalogueImporter.ImportFileFormat;
+import messages.Messages;
 import ui_progress_bar.IProgressBar;
 
 /**
@@ -60,7 +63,16 @@ public class CatalogueImporterThread extends Thread {
 				progressBar, maxProgress );
 		
 		importer.setOpenedCat( openedCat );
-		importer.makeImport();
+		try {
+			importer.makeImport();
+		} catch (TransformerException e) {
+			doneListener.finished(this, ThreadFinishedListener.EXCEPTION);
+			
+			if ( progressBar != null )
+				progressBar.stop( Messages.getString("DCDownload.WrongXmlStructure") );
+			
+			return;
+		}
 		
 		handleDone();
 	}
