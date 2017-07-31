@@ -71,6 +71,8 @@ public class CatalogueImporterThread extends Thread {
 			if ( progressBar != null )
 				progressBar.stop( Messages.getString("DCDownload.WrongXmlStructure") );
 			
+			progressBar.close();
+			
 			return;
 		}
 		

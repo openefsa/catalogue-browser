@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-Mon Jul 31 14:37:00 CEST 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-015d-98a6-48b6-000006d70a28 
+Mon Jul 31 14:40:31 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-015d-98a9-8088-000006d70a20 
 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\MAIN_CATS_DB with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
 Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
 java.vendor=Oracle Corporation
@@ -12,8 +12,8 @@ os.version=6.1
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
 ----------------------------------------------------------------
-Mon Jul 31 14:37:12 CEST 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance e0b94027-015d-98a6-48b6-000006d70a28 
+Mon Jul 31 14:40:48 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance c0f7802d-015d-98a9-8088-000006d70a20 
 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\PRODUCTION_CATS\CAT_CATUSERS_DB\CATUSERS_VERSION_1.0 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
 Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
 java.vendor=Oracle Corporation
@@ -24,8 +24,8 @@ os.arch=amd64
 os.version=6.1
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
-Mon Jul 31 14:37:22 CEST 2017 Thread[Thread-18,5,main] Cleanup action starting
-java.sql.SQLException: Database 'Database\PRODUCTION_CATS\CAT_ZOO_CAT_UNITDS_DB\ZOO_CAT_UNITDS_VERSION_1.3' not found.
+Mon Jul 31 14:40:58 CEST 2017 Thread[Thread-19,5,main] Cleanup action starting
+java.sql.SQLException: Database 'Database\PRODUCTION_CATS\CAT_ZOO_CAT_SMPTYP_DB\ZOO_CAT_SMPTYP_VERSION_1.1' not found.
 	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
 	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
 	at org.apache.derby.impl.jdbc.Util.generateCsSQLException(Unknown Source)
@@ -52,12 +52,12 @@ java.sql.SQLException: Database 'Database\PRODUCTION_CATS\CAT_ZOO_CAT_UNITDS_DB\
 	at import_catalogue.CatalogueImporter.importXml(CatalogueImporter.java:180)
 	at import_catalogue.CatalogueImporter.makeImport(CatalogueImporter.java:71)
 	at import_catalogue.CatalogueImporterThread.run(CatalogueImporterThread.java:67)
-Caused by: ERROR XJ004: Database 'Database\PRODUCTION_CATS\CAT_ZOO_CAT_UNITDS_DB\ZOO_CAT_UNITDS_VERSION_1.3' not found.
+Caused by: ERROR XJ004: Database 'Database\PRODUCTION_CATS\CAT_ZOO_CAT_SMPTYP_DB\ZOO_CAT_SMPTYP_VERSION_1.1' not found.
 	at org.apache.derby.iapi.error.StandardException.newException(Unknown Source)
 	at org.apache.derby.impl.jdbc.SQLExceptionFactory.wrapArgsForTransportAcrossDRDA(Unknown Source)
 	... 26 more
 ============= begin nested exception, level (1) ===========
-ERROR XJ004: Database 'Database\PRODUCTION_CATS\CAT_ZOO_CAT_UNITDS_DB\ZOO_CAT_UNITDS_VERSION_1.3' not found.
+ERROR XJ004: Database 'Database\PRODUCTION_CATS\CAT_ZOO_CAT_SMPTYP_DB\ZOO_CAT_SMPTYP_VERSION_1.1' not found.
 	at org.apache.derby.iapi.error.StandardException.newException(Unknown Source)
 	at org.apache.derby.impl.jdbc.SQLExceptionFactory.wrapArgsForTransportAcrossDRDA(Unknown Source)
 	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
@@ -89,9 +89,9 @@ ERROR XJ004: Database 'Database\PRODUCTION_CATS\CAT_ZOO_CAT_UNITDS_DB\ZOO_CAT_UN
 ============= end nested exception, level (1) ===========
 Cleanup action completed
 ----------------------------------------------------------------
-Mon Jul 31 14:37:23 CEST 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 3ff4c0de-015d-98a6-48b6-000006d70a28 
-on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\PRODUCTION_CATS\CAT_ZOO_CAT_UNITDS_DB\ZOO_CAT_UNITDS_VERSION_1.3 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Mon Jul 31 14:40:58 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a0d440e2-015d-98a9-8088-000006d70a20 
+on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\PRODUCTION_CATS\CAT_ZOO_CAT_SMPTYP_DB\ZOO_CAT_SMPTYP_VERSION_1.1 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
 Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.8.0_111-b14
@@ -102,12 +102,12 @@ os.version=6.1
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
 ----------------------------------------------------------------
-Mon Jul 31 14:37:24 CEST 2017:
-Shutting down instance 3ff4c0de-015d-98a6-48b6-000006d70a28 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\PRODUCTION_CATS\CAT_ZOO_CAT_UNITDS_DB\ZOO_CAT_UNITDS_VERSION_1.3 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Mon Jul 31 14:41:00 CEST 2017:
+Shutting down instance a0d440e2-015d-98a9-8088-000006d70a20 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\PRODUCTION_CATS\CAT_ZOO_CAT_SMPTYP_DB\ZOO_CAT_SMPTYP_VERSION_1.1 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
 ----------------------------------------------------------------
-Mon Jul 31 14:37:25 CEST 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 1dd0820c-015d-98a6-48b6-000006d70a28 
-on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\PRODUCTION_CATS\CAT_ZOO_CAT_UNITDS_DB\ZOO_CAT_UNITDS_VERSION_1.3 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Mon Jul 31 14:41:01 CEST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance 7fde0210-015d-98a9-8088-000006d70a20 
+on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\PRODUCTION_CATS\CAT_ZOO_CAT_SMPTYP_DB\ZOO_CAT_SMPTYP_VERSION_1.1 with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
 Loaded from file:/C:/Users/avonva/Desktop/CatalogueBrowser/CatalogueBrowser/lib/derby.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.8.0_111-b14
@@ -118,5 +118,5 @@ os.version=6.1
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
 ----------------------------------------------------------------
-Mon Jul 31 14:37:49 CEST 2017:
-Shutting down instance a816c00e-015d-98a6-48b6-000006d70a28 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\MAIN_CATS_DB with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Mon Jul 31 14:41:07 CEST 2017:
+Shutting down instance a816c00e-015d-98a9-8088-000006d70a20 on database directory C:\Users\avonva\Desktop\CatalogueBrowser\CatalogueBrowser\Database\MAIN_CATS_DB with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
