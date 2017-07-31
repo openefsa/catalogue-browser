@@ -209,7 +209,35 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		termsIds = new HashMap<>();
 	}
 
-
+	/**
+	 * Refresh the catalogue metadata contents
+	 */
+	public void refresh() {
+		CatalogueDAO catDao = new CatalogueDAO();
+		Catalogue recent = catDao.getById( getId() );
+		
+		this.setCode( recent.getCode() );
+		this.setCatalogueVersion( recent.getCatalogueVersion() );
+		this.setName( recent.getName() );
+		this.setLabel( recent.getLabel() );
+		this.setScopenotes( recent.getScopenotes() );
+		this.termCodeMask = recent.getTermCodeMask();
+		this.termCodeLength = recent.getTermCodeLength();
+		this.termMinCode = recent.getTermMinCode();
+		this.acceptNonStandardCodes = recent.isAcceptNonStandardCodes();
+		this.generateMissingCodes = recent.isGenerateMissingCodes();
+		this.setLastUpdate( recent.getLastUpdate() );
+		this.setValidFrom( recent.getValidFrom() );
+		this.setValidTo( recent.getValidTo() );
+		this.setStatus( recent.getStatus() );
+		this.catalogueGroups = recent.getCatalogueGroups();
+		this.setDeprecated( recent.isDeprecated() );
+		this.forcedCount = recent.getForcedCount();
+		this.local = recent.isLocal();
+		this.backupDbPath = recent.getBackupDbPath();
+		this.releaseNotes = recent.getReleaseNotes();
+	}
+	
 	/**
 	 * Load all the data related to the catalogue
 	 * that is, hierarchies, terms, attributes,
@@ -917,28 +945,6 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		String code = CodeGenerator.getTermCode( termCodeMask );
 
 		return addNewTerm ( code, parent, hierarchy );
-	}
-
-	/**
-	 * Create a new term using a custom code
-	 * @param code
-	 * @return
-	 */
-	public Term createNewTerm( String code ) {
-
-		// get a new default term with the custom code
-		Term newTerm = Term.getDefaultTerm( code );
-		return newTerm;
-	}
-
-	/**
-	 * Create a new term using the catalogue term code mask
-	 * @return
-	 */
-	public Term createNewTerm() {
-		// get a new code following the term code mask of the catalogue
-		String code = CodeGenerator.getTermCode( termCodeMask );
-		return createNewTerm ( code );
 	}
 
 	/**

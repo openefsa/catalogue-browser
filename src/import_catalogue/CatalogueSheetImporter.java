@@ -48,7 +48,7 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 		// code will be overridden (and we need it
 		// for the import)
 		excelCatCode = catalogue.getCode();
-
+		
 		// if we have an opened catalogue we need to maintain
 		// its code and version during the import otherwise
 		// it will result in a different db path for storing
@@ -202,7 +202,7 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 			
 			// set the catalogue id
 			catalogue.setId( catalogueId );
-			
+
 			catDao.update( catalogue );
 		}
 		catch ( SQLException e ) {

@@ -540,14 +540,16 @@ public class ToolsMenu implements MainMenuItem {
 					@Override
 					public void finished(Thread thread, int code) {
 						
-						// load catalogue data in ram
-						// we do not open it since it is already opened
-						mainMenu.getCatalogue().loadData();
-						
 						mainMenu.getShell().getDisplay().asyncExec( new Runnable() {
 							
 							@Override
 							public void run() {
+								
+								// load catalogue data in ram
+								// we do not open it since it is already opened
+								mainMenu.getCatalogue().refresh();
+								mainMenu.getCatalogue().open();
+								
 								if ( listener != null )
 									listener.buttonPressed( importItem, 
 											IMPORT_CAT_MI, null );
