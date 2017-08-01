@@ -252,6 +252,9 @@ public class WarningUtil {
 		// check if an non specific base term is selected
 		nonSpecificTermCheck ( baseTerm, stdOut );
 
+		// check if an exceptional term is selected as base term
+		exceptionTermCheck( baseTerm, stdOut );
+		
 		// if there is only the base term name (length == 1)
 		// return, there is nothing else to parse (i.e. no facets)
 		if ( splits.length < 2 )
@@ -468,21 +471,18 @@ public class WarningUtil {
 	 */
 	private Term getWarnGroup ( Term baseTerm, boolean stdOut ) {
 
-		// load exceptions terms and their forbidden processes (these elements have priority over the standard forbidden processes)
-		ArrayList< ForbiddenProcess > exceptionForbiddenProcesses = 
-				loadForbiddenProcesses( GlobalUtil.getBRExceptions() );
-
-		// Warn Group Exceptions, if the base term is an exception then it is itself the warn group
-		if ( isWarnGroup( baseTerm.getCode(), exceptionForbiddenProcesses ) ) {
+		// for exceptional terms get exceptions business rules
+		if ( isExceptionalTerm( baseTerm ) ) {
+			
+			// load exceptions terms and their forbidden processes 
+			// (these elements have priority over the standard forbidden processes)
+			ArrayList< ForbiddenProcess > exceptionForbiddenProcesses = 
+					loadForbiddenProcesses( GlobalUtil.getBRExceptions() );
+			
 			forbiddenProcesses = exceptionForbiddenProcesses;  // update the forbidden processes
-
-			// print warning message, ambiguous element selected
-			printWarning( WarningEvent.ExceptionTermSelected, baseTerm.getCode(), false, stdOut );
-
-			// return the baseTerm itself as warn group
-			return( baseTerm );
+			
+			return baseTerm;
 		}
-
 
 		// set the start element for the parent search
 		Term parent = baseTerm;
@@ -789,6 +789,16 @@ public class WarningUtil {
 		return ( facetIndex.equals("F01") );
 	}
 
+	private boolean isExceptionalTerm ( Term term ) {
+		// load exceptions terms and their forbidden processes 
+		// (these elements have priority over the standard forbidden processes)
+		ArrayList< ForbiddenProcess > exceptionForbiddenProcesses = 
+				loadForbiddenProcesses( GlobalUtil.getBRExceptions() );
+		
+		// Warn Group Exceptions, if the base term is an exception then it is itself the warn group
+		return ( isWarnGroup( term.getCode(), exceptionForbiddenProcesses ) );
+	}
+	
 	/**
 	 * Check if the process facet is the generic "processed" or one of its children
 	 * @param facetCode
@@ -799,7 +809,18 @@ public class WarningUtil {
 				facet.getCode().equals("A0CHS") );
 	}
 
-
+	/**
+	 * Check if the base term is an exceptional term
+	 * @param baseTerm
+	 * @param stdOut
+	 */
+	private void exceptionTermCheck ( Term baseTerm, boolean stdOut ) {
+		// Warn Group Exceptions, if the base term is an exception
+		if ( isExceptionalTerm( baseTerm ) ) {
+			// print warning message, ambiguous element selected
+			printWarning( WarningEvent.ExceptionTermSelected, baseTerm.getCode(), false, stdOut );
+		}
+	}
 
 	/** FIRST WARNING CHECK
 	 *  Check if the base term is a hierarchy. If it is, rise a warning (discourage its use)

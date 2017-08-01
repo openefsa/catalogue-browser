@@ -305,7 +305,6 @@ A031E;Eggs and egg products;A07GR;Frying;3
 A031E;Eggs and egg products;A07GS;Pan frying / shallow frying;3
 A031E;Eggs and egg products;A07GT;Stir frying;3
 A031E;Eggs and egg products;A07GV;Deep frying;3
-A031E;Eggs and egg products;A07GH;Poaching;3
 A031E;Eggs and egg products;A07LF;Extrusion/extrusion-cooking;3
 A031E;Eggs and egg products;A0BA1;Cooking and similar thermal preparation processes;3
 A031E;Eggs and egg products;A07GF;Blanching;3
@@ -434,3 +433,15 @@ A00HY;Cherry tomatoes;A07KH;Freeze-drying (lyophilisation);3
 A00HY;Cherry tomatoes;A07KJ;Air / heat drying;3
 A00HY;Cherry tomatoes;A0C0C;Spray drying;3
 A00HY;Cherry tomatoes;A07KK;Sun drying;3
+A04MB;Processed tomato products;A07LN;Juicing;1.1
+A04MB;Processed tomato products;A07KF;Concentration / evaporation;1.2
+A04MB;Processed tomato products;A0C6N;Pulping / mashing;1.1
+A04MB;Processed tomato products;A0BYN;Aseptic filling;4
+A04MB;Processed tomato products;A0BYP;Canning / jarring;4
+A04MB;Processed tomato products;A07KL;Semi-drying (e.g. Fruits);3
+A04MB;Processed tomato products;A07KG;Drying (dehydration);3
+A04MB;Processed tomato products;A07KH;Freeze-drying (lyophilisation);3
+A04MB;Processed tomato products;A07KJ;Air / heat drying;3
+A04MB;Processed tomato products;A0C0C;Spray drying;3
+A04MB;Processed tomato products;A07KK;Sun drying;3
+A04MB;Processed tomato products;A07JT;Marinating;5
