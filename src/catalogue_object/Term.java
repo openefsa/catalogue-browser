@@ -567,7 +567,7 @@ public class Term extends CatalogueObject implements Mappable {
 		if ( key.contains( "attribute_" ) ) {
 			
 			// get the attribute name (convention attribute_ + attribute name)
-			String attrName = key.split("_")[1];
+			String attrName = key.split("_", 2)[1];
 
 			// if all facets, compute them
 			if ( attrName.equals( SpecialValues.ALL_FACETS_NAME ) ) {
@@ -616,7 +616,7 @@ public class Term extends CatalogueObject implements Mappable {
 		String value = "";
 		
 		// get the hierarchy code from the key
-		String hierarchyCode = key.split("_")[1];
+		String hierarchyCode = key.split("_", 2)[1];
 		
 		Hierarchy hierarchy;
 		
