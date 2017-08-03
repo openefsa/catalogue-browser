@@ -108,7 +108,7 @@ public class LoginMenu implements MainMenuItem {
 
 				// progress bar for the user level
 				// Note that the progress bar does not block the user interaction
-				FormProgressBar progressBar = new FormProgressBar(shell, 
+				final FormProgressBar progressBar = new FormProgressBar(shell, 
 						Messages.getString( "Login.UserLevelProgressBarTitle" ),
 						false, SWT.TITLE );
 
@@ -117,16 +117,18 @@ public class LoginMenu implements MainMenuItem {
 				dcf.setUserLevel( new ThreadFinishedListener() {
 
 					@Override
-					public void finished(Thread thread, int code) {
+					public void finished(Thread thread, final int code) {
 
-						// if correct
-						if ( code == ThreadFinishedListener.OK ) {
+						shell.getDisplay().asyncExec( new Runnable() {
 
-							shell.getDisplay().asyncExec( new Runnable() {
+							@Override
+							public void run() {
 
-								@Override
-								public void run() {
-
+								progressBar.close();
+								
+								// if correct
+								if ( code == ThreadFinishedListener.OK ) {
+									
 									// once we have finished checking the user
 									// level we start with the pending reserves
 									// we do this here to avoid concurrence
@@ -145,14 +147,15 @@ public class LoginMenu implements MainMenuItem {
 										msg = Messages.getString("Login.DataProviderMessage");
 
 									GlobalUtil.showDialog(shell, title, msg, SWT.ICON_INFORMATION );
+				
 								}
-							});
-						}
-						else { // errors
-							GlobalUtil.showErrorDialog(shell, 
-									Messages.getString("ExportCatalogue.ErrorTitle"), 
-									Messages.getString("ExportCatUsers.ErrorMessage"));
-						}
+								else { // errors
+									GlobalUtil.showErrorDialog(shell, 
+											Messages.getString("ExportCatalogue.ErrorTitle"), 
+											Messages.getString("ExportCatUsers.ErrorMessage"));
+								}
+							}
+						});
 					}
 				});
 			}

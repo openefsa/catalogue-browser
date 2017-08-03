@@ -94,13 +94,10 @@ public class UserProfileChecker extends Thread {
 					break;
 				
 				case ERROR:
+				case EXCEPTION:
 					// set the current user as data provider
 					System.out.println ( "User access level: data provider" );
 					user.setUserLevel( UserAccessLevel.DATA_PROVIDER );
-					break;
-					
-				case EXCEPTION:
-					System.out.println ( "User access level: connection error" );
 					break;
 				}
 				
