@@ -22,6 +22,7 @@ import already_described_terms.PicklistTerm;
 import catalogue.Catalogue;
 import catalogue_browser_dao.DatabaseManager;
 import catalogue_generator.ThreadFinishedListener;
+import catalogue_object.Term;
 import dcf_manager.Dcf;
 import dcf_user.User;
 import dcf_webservice.Publish.PublishLevel;
@@ -283,12 +284,12 @@ public class ToolsMenu implements MainMenuItem {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				
-				if ( !mainMenu.getCatalogue().isDataCorrect() ) {
+				Term incorrectTerm = mainMenu.getCatalogue().isDataCorrect();
+				if ( incorrectTerm != null ) {
 					
 					// warn the user that everything went ok
 					GlobalUtil.showErrorDialog( shell, 
-							mainMenu.getCatalogue().getCode() + "_" 
-									+ mainMenu.getCatalogue().getVersion(),
+							incorrectTerm.getCode() + "; " + incorrectTerm.getShortName(true),
 									Messages.getString( "Export.DataErrorMessage") );
 					
 					return;
@@ -601,13 +602,14 @@ public class ToolsMenu implements MainMenuItem {
 			@Override
 			public void widgetSelected ( SelectionEvent event ) {
 				
-				if ( !mainMenu.getCatalogue().isDataCorrect() ) {
+				Term incorrectTerm = mainMenu.getCatalogue().isDataCorrect();
+				if ( incorrectTerm != null ) {
 					
 					// warn the user that everything went ok
 					GlobalUtil.showErrorDialog( shell, 
-							mainMenu.getCatalogue().getCode() + "_" 
-									+ mainMenu.getCatalogue().getVersion(),
+							incorrectTerm.getCode() + "; " + incorrectTerm.getShortName(true),
 									Messages.getString( "Export.DataErrorMessage") );
+					
 				}
 				
 				String defaultFilename = mainMenu.getCatalogue().getCode() + "_" 

@@ -483,6 +483,9 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 			}
 		}
 
+		// order
+		query = query + " order by ATTR_ORDER";
+		
 		try {
 
 			// execute the query

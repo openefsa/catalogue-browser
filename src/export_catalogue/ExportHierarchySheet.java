@@ -47,7 +47,7 @@ public class ExportHierarchySheet extends SheetWriter {
 	public ArrayList< ? extends Mappable > getData() {
 
 		HierarchyDAO hierDao = new HierarchyDAO( catalogue );
-		
+
 		// get all the hierarchies as data
 		return hierDao.getAll();
 	}

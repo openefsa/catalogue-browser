@@ -127,7 +127,8 @@ public class LoginMenu implements MainMenuItem {
 								progressBar.close();
 								
 								// if correct
-								if ( code == ThreadFinishedListener.OK ) {
+								if ( code == ThreadFinishedListener.OK || 
+										code == ThreadFinishedListener.ERROR ) {
 									
 									// once we have finished checking the user
 									// level we start with the pending reserves

@@ -1,7 +1,10 @@
 package export_catalogue;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.poi.ss.usermodel.Workbook;
 
@@ -11,8 +14,10 @@ import catalogue_browser_dao.HierarchyDAO;
 import catalogue_object.Attribute;
 import catalogue_object.Hierarchy;
 import catalogue_object.Mappable;
+import catalogue_object.Term;
 import naming_convention.Headers;
 import sheet_header.SheetHeader;
+import term.CodeSorter;
 
 /**
  * Export the terms, attribute values for each term and the term applicabilities
@@ -92,6 +97,11 @@ public class ExportTermSheet extends SheetWriter {
 
 	@Override
 	public Collection<? extends Mappable> getData() {
-		return catalogue.getTerms();
+		
+		List< Term > terms = new ArrayList<>( catalogue.getTerms() );
+		
+		Collections.sort( terms, new CodeSorter() );
+		
+		return terms;
 	}
 }

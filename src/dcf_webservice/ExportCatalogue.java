@@ -102,7 +102,7 @@ public class ExportCatalogue extends SOAPAction {
 		
 		// if no attachment => error
 		if ( attachment == null )
-			throw new SOAPException( "ExportCatalogueFile: Attachment not found for " + catalogue );
+			return null;
 		
 		// write the attachment to the file
 		try {
@@ -116,6 +116,6 @@ public class ExportCatalogue extends SOAPAction {
 			e.printStackTrace();
 		}
 
-		return null;
+		return attachment;
 	}
 }

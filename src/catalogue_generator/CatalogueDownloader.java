@@ -3,6 +3,7 @@ package catalogue_generator;
 import javax.xml.soap.SOAPException;
 
 import catalogue.Catalogue;
+import dcf_webservice.AttachmentNotFoundException;
 import messages.Messages;
 import ui_progress_bar.FormProgressBar;
 import ui_progress_bar.IProgressBar;
@@ -38,7 +39,10 @@ public class CatalogueDownloader extends Thread {
 		try {
 			downloadAndImport();
 		} catch (SOAPException e) {
+			e.printStackTrace();
 			stop ( ThreadFinishedListener.EXCEPTION );
+		} catch (AttachmentNotFoundException e) {
+			stop ( ThreadFinishedListener.ERROR );
 		}
 	}
 	
@@ -50,8 +54,9 @@ public class CatalogueDownloader extends Thread {
 	 * it will be converted into xlsx format to be imported
 	 * @param catalogue
 	 * @throws SOAPException 
+	 * @throws AttachmentNotFoundException 
 	 */
-	private void downloadAndImport () throws SOAPException {
+	private void downloadAndImport () throws SOAPException, AttachmentNotFoundException {
 
 		// show the progress bar
 		if ( progressBar != null ) {

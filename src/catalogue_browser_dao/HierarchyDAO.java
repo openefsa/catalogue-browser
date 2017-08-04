@@ -378,7 +378,7 @@ public class HierarchyDAO implements CatalogueEntityDAO<Hierarchy> {
 		Connection con = null;
 		
 		// get all the hierarchies
-		String query = "select * from APP.HIERARCHY";
+		String query = "select * from APP.HIERARCHY order by HIERARCHY_ORDER";
 		
 		try {
 			

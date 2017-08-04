@@ -49,6 +49,7 @@ import dcf_pending_action.NewCatalogueInternalVersion;
 import dcf_pending_action.PendingAction;
 import dcf_pending_action.PendingActionDAO;
 import dcf_user.User;
+import dcf_webservice.AttachmentNotFoundException;
 import dcf_webservice.ReserveLevel;
 import detail_level.DetailLevelDAO;
 import detail_level.DetailLevelGraphics;
@@ -2219,7 +2220,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * @throws SOAPException
 	 * @return the file where the downloaded file is placed
 	 */
-	public File download() throws SOAPException {
+	public File download() throws SOAPException, AttachmentNotFoundException {
 
 		System.out.println ( "Downloading " + this );
 
@@ -2230,8 +2231,12 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		// export the catalogue and save its attachment into an xml file
 		Dcf dcf = new Dcf();
 
-		dcf.exportCatalogue( this, catalogueXmlFilename );
+		boolean downloaded = dcf.exportCatalogue( this, catalogueXmlFilename );
 
+		if ( !downloaded ) {
+			throw new AttachmentNotFoundException();
+		}
+		
 		// set the catalogue type according to the dcf one
 		catalogueType = Dcf.dcfType;
 
@@ -2279,9 +2284,10 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * @param doneListener
 	 * @return
 	 * @throws SOAPException
+	 * @throws AttachmentNotFoundException 
 	 */
 	public boolean downloadAndImport ( IProgressBar progressBar, double maxProgress,
-			ThreadFinishedListener doneListener ) throws SOAPException {
+			ThreadFinishedListener doneListener ) throws SOAPException, AttachmentNotFoundException {
 
 		// download the catalogue
 		File catalogueXml;
@@ -2304,16 +2310,16 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * and follows the catalogue rules
 	 * @return
 	 */
-	public boolean isDataCorrect() {
+	public Term isDataCorrect() {
 		
-		boolean correct = true;
+		Term incorrectTerm = null;
 		
 		for ( Term term : terms.values() ) {
 			if ( !term.isDataCorrect() )
-				correct = false;
+				incorrectTerm = term;
 		}
 		
-		return correct;
+		return incorrectTerm;
 	}
 
 	/**
