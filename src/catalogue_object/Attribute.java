@@ -493,6 +493,14 @@ public class Attribute extends SortableCatalogueObject implements Mappable {
 	}*/
 	
 	/**
+	 * Check if the attribute is a facet category or not.
+	 * @return
+	 */
+	public boolean isFacetCategory() {
+		return getHierarchy() != null;
+	}
+	
+	/**
 	 * Retrieve the hierarchy of a catalogue attribute
 	 * @return Hierarchy if it is found, otherwise null.
 	 */
@@ -500,7 +508,6 @@ public class Attribute extends SortableCatalogueObject implements Mappable {
 		
 		// Return if the attribute is not a catalogue attribute
 		if ( !isCatalogue() ) {
-			System.err.println ( "Cannot get the hierarchy of a non-catalogue attribute" );
 			return null; 
 		}
 

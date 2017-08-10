@@ -418,6 +418,25 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 	}
 	
 	/**
+	 * Get all the facet categories of the catalogue
+	 * @return
+	 */
+	public ArrayList<Attribute> getFacetCategories() {
+		
+		ArrayList<Attribute> facetCategories = new ArrayList<>();
+		
+		ArrayList<Attribute> catAttrs = fetchAttributes( "catalogue", false );
+		
+		for ( Attribute attr : catAttrs ) {
+			
+			if ( attr.isFacetCategory() )
+				facetCategories.add( attr );
+		}
+		
+		return facetCategories;
+	}
+	
+	/**
 	 * Get all the non catalogue attributes
 	 */
 	public ArrayList<Attribute> fetchNonCatalogueAttributes() {

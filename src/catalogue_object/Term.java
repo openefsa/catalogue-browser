@@ -986,7 +986,7 @@ public class Term extends CatalogueObject implements Mappable {
 		ArrayList<TermAttribute> nonCatAttrs = new ArrayList<>();
 		
 		for ( TermAttribute attr : termAttributes )
-			if ( !attr.getAttribute().isCatalogue() && !attr.getAttribute().isDetailLevel() 
+			if ( !attr.getAttribute().isFacetCategory() && !attr.getAttribute().isDetailLevel() 
 					&& !attr.getAttribute().isTermType() && !attr.getAttribute().isImplicitFacet()
 					&& !attr.getAttribute().isAllFacet() )
 				nonCatAttrs.add( attr );

@@ -501,7 +501,7 @@ public class FrameTermFields {
 		Group groupTermCode = new Group( parent , SWT.NONE );
 
 		// set its name and layout
-		groupTermCode.setText( Messages.getString("TermProperties.TermCodeTitle") ); //$NON-NLS-1$
+		groupTermCode.setText( Messages.getString("TermProperties.TermCodeTitle") );
 
 		groupTermCode.setLayout( new FillLayout() );
 
@@ -529,7 +529,7 @@ public class FrameTermFields {
 
 		Group groupTermName = new Group( parent , SWT.NONE );
 
-		groupTermName.setText( Messages.getString("TermProperties.TermNameTitle") ); //$NON-NLS-1$
+		groupTermName.setText( Messages.getString("TermProperties.TermNameTitle") );
 
 		groupTermName.setLayout( new FillLayout() );
 
@@ -696,7 +696,7 @@ public class FrameTermFields {
 
 		Group groupScopeNotes = new Group( parent , SWT.NONE );
 
-		groupScopeNotes.setText( Messages.getString("TermProperties.ScopenotesTitle") ); //$NON-NLS-1$
+		groupScopeNotes.setText( Messages.getString("TermProperties.ScopenotesTitle") );
 		groupScopeNotes.setLayout( new GridLayout(1, false) );
 
 		GridData gridData7 = new GridData();
@@ -731,19 +731,6 @@ public class FrameTermFields {
 				if ( term == null || !user.canEdit( term.getCatalogue() ) )
 					return;
 
-				if ( ( textScopenotes.getText() == null ) && ( textScopenotes.getText().length() == 0 ) ) {
-
-					GlobalUtil.showErrorDialog( parent.getShell(), 
-							Messages.getString("TermProperties.InputErrorTitle"), 
-							Messages.getString("TermProperties.InputErrorMessage3") );
-
-					// restore the correct values for the scopenotes
-					textScopenotes.setText( term.getScopenotes() );
-
-					return;
-				} 
-
-
 				// return if no changes were made
 				if ( term.getScopenotes().equals( textScopenotes.getText() ) )
 					return;
@@ -762,11 +749,9 @@ public class FrameTermFields {
 				// call the listener
 				callUpdateListener( term );
 			}
-
 		} );
 
 		return scopenotesLink;
-
 	}
 
 

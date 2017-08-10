@@ -93,7 +93,7 @@ public class TermAttributeImporter extends SheetImporter<TermAttribute> {
 			// continue only if there is indeed a value
 			if ( attrValue == null || attrValue.isEmpty() )
 				continue;
-			
+
 			// if repeatable we insert a record for each single value
 			if ( attr.isRepeatable() ) {
 				

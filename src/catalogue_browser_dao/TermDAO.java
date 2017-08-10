@@ -408,6 +408,10 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 	 */
 	public boolean isTermNameUnique ( String termCode, String termName, boolean extended ) {
 		
+		// true if empty name
+		if ( termName.isEmpty() )
+			return true;
+		
 		Connection con = null;
 		PreparedStatement stmt=null;
 		ResultSet rs = null;

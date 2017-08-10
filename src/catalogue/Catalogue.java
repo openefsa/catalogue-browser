@@ -602,7 +602,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		attributes = attrDao.getAll();
 
 		// refresh also the cache of implicit facets
-		facetCategories = attrDao.fetchAttributes( "catalogue", false );
+		facetCategories = attrDao.getFacetCategories();
 	}
 
 	/**
