@@ -153,24 +153,6 @@ public class Term extends CatalogueObject implements Mappable {
 		
 		ArrayList<Attribute> categories = catalogue.getFacetCategories();
 		
-		// Order categories
-		Collections.sort( categories, new Comparator< Object >() {
-
-			public int compare ( Object arg0 , Object arg1 ) {
-
-				int retval = 0;
-
-				if ( ( arg0 instanceof Attribute ) && ( arg1 instanceof Attribute ) ) {
-
-					Attribute ta0 = (Attribute) arg0;
-					Attribute ta1 = (Attribute) arg1;
-					retval = ta0.getCode().compareTo( ta1.getCode() );
-
-				}
-				return retval;
-			}
-		} );
-		
 		// for each facet category we analyze the implicit facets and the explicit facets
 		ListIterator<Attribute> iter = categories.listIterator();
 		
@@ -193,9 +175,6 @@ public class Term extends CatalogueObject implements Mappable {
 				descriptors.addAll( getDescriptorsByCategory( 
 						facetCategory, allFacets ) );
 			}
-
-			// In case it is needed I add the $ separator between facets
-
 			Collections.sort( descriptors, new ComparatorFacetDescriptor() );
 		}
 		
@@ -826,6 +805,9 @@ public class Term extends CatalogueObject implements Mappable {
 		
 		interpCode.append( this.getName() );
 
+		// order the facets
+		Collections.sort( implicitFacets, new ComparatorFacetDescriptor() );
+		
 		// then we add all the implicit facets codes comma separated
 		// FACET_HIERARCHY = FacetName, ...
 		for ( FacetDescriptor fd : implicitFacets ) {

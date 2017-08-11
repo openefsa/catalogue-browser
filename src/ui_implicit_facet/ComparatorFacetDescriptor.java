@@ -12,6 +12,17 @@ public class ComparatorFacetDescriptor implements Comparator<FacetDescriptor> {
 	@Override
 	public int compare(FacetDescriptor o1, FacetDescriptor o2) {
 		
-		return o1.getTerm().getCode().compareTo( o2.getTerm().getCode() );
+		int comp = 0;
+		
+		// check order of attributes
+		int orderComp = o1.getFacetCategory().compareTo( o2.getFacetCategory() );
+		
+		// if same order, order by code
+		if ( orderComp == 0 )
+			comp = o1.getTerm().getCode().compareTo( o2.getTerm().getCode() );
+		else
+			comp = orderComp;
+		
+		return comp;
 	}
 }
