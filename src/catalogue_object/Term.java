@@ -33,12 +33,7 @@ import ui_implicit_facet.FacetDescriptor;
 import ui_implicit_facet.FacetType;
 
 /**
- * The class represent Term in the our vision. One term can have 3 state:
- * INITIAL: after the creation; Partial: when the element of the Table TERM(in
- * DB) are loaded; COMPLETE : when is complete loaded
- * 
- * @author thomm
- * 
+ * Term of a catalogue
  */
 public class Term extends CatalogueObject implements Mappable {
 

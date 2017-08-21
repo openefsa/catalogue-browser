@@ -57,7 +57,7 @@ public class ExportTermSheet extends SheetWriter {
 		AttributeDAO attrDao = new AttributeDAO( catalogue );
 
 		// for each attribute add the header with the attribute name
-		for ( Attribute attr : attrDao.fetchNonCatalogueAttributes() ) {
+		for ( Attribute attr : attrDao.getNonFacetAttributes() ) {
 			headers.put( "attribute_" + attr.getName(), 
 					new SheetHeader( i++, attr.getName() ) );
 		}

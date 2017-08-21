@@ -185,10 +185,8 @@ public class GetCataloguesList extends GetList<Catalogue> {
 			case "version":
 				cb.setVersion( propertyValue );
 				break;
-				// TODO: c'è un errore nei cataloghi scaricati e il valid to in realtà è il valid from!
-				// sistemare appena il bug viene fixato
-			case "validTo":
-
+			case "validFrom":
+				
 				if ( propertyValue != null ) {
 
 					// convert the string to timestamp
@@ -196,6 +194,23 @@ public class GetCataloguesList extends GetList<Catalogue> {
 						Timestamp validFromTs = GlobalUtil.getTimestampFromString( 
 								propertyValue, Catalogue.ISO_8601_24H_FULL_FORMAT );
 						cb.setValidFrom( validFromTs );
+					}
+					catch ( ParseException e ) {
+						e.printStackTrace();
+					}
+				}
+				
+				break;
+
+			case "validTo":
+
+				if ( propertyValue != null ) {
+
+					// convert the string to timestamp
+					try {
+						Timestamp validToTs = GlobalUtil.getTimestampFromString( 
+								propertyValue, Catalogue.ISO_8601_24H_FULL_FORMAT );
+						cb.setValidTo( validToTs );
 					}
 					catch ( ParseException e ) {
 						e.printStackTrace();
