@@ -2102,7 +2102,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * @return
 	 */
 	public boolean isMTXCatalogue() {
-		return getCode().equals( "MTX" );
+		return getCode().equals( "MTX" ) || ( isLocal() && getCode().contains("MTX_") );
 	}
 
 	/**
