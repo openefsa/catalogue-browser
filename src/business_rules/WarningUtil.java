@@ -1425,14 +1425,13 @@ public class WarningUtil {
 			printWarning(WarningEvent.NonGenericDerivativeUsed, termsInvolved, false, stdOut);
 		}
 		
-		// if one explicit source commodity is selected => you cannot use only 1 SC! At least two are required
-		if ( explicitRestrictedSourceCommCount + implicitSourceCommCount == 1 && sourceFacetCount > 0 ) {
-			printWarning(WarningEvent.SourceToDerivative, termsInvolved, false, stdOut);
-		}
-		
 		// if more than two source commodities and one source are present => warning
-		if ( explicitRestrictedSourceCommCount + implicitSourceCommCount >= 2 && sourceFacetCount > 0 ) {
+		if ( explicitSourceCommCount >= 2 && sourceFacetCount > 0 ) {
 			printWarning(WarningEvent.MixedDerivative, termsInvolved, false, stdOut);
+		}
+		// if one explicit source commodity is selected => you cannot use only 1 SC! At least two are required
+		else if ( explicitRestrictedSourceCommCount + implicitSourceCommCount == 1 && sourceFacetCount > 0 ) {
+			printWarning(WarningEvent.SourceToDerivative, termsInvolved, false, stdOut);
 		}
 	}
 
