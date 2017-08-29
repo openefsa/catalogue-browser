@@ -16,4 +16,5 @@ Message ID;Trigger Event Description;Text;SemaphoreWarningLevel;TextWarningLevel
 15;if a base term not valid in the exposure hierarchy is chosen;Not valid for human exposure calculation;NONE;HIGH
 16;if a source is selected for composite (c or s);Source is not applicable for composite food;HIGH;HIGH
 17;if a source commodity is selected for composite (c or s);Source commodity is not applicable for composite food;HIGH;HIGH
-18;if two processes (implicit or explicit) with decimal ordcode and same integer part are applied (at least one explicit);You are trying to generate an already existing derivative!;HIGH;HIGH
+18;if two processes (implicit or explicit) with decimal ordcode and same integer part are applied (at least one explicit);Use the existing derivative instead of adding the facet;HIGH;HIGH
+19;if one or more source commodities are added to a derivative already having an implicit source commodity (not parent of the added);Use the generic derivative as base term for describing a mixed derivative;HIGH;HIGH

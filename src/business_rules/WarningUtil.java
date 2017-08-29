@@ -31,11 +31,14 @@ import catalogue_browser_dao.CatalogueDAO;
 import catalogue_browser_dao.TermDAO;
 import catalogue_object.Hierarchy;
 import catalogue_object.Term;
+import catalogue_object.TermAttribute;
 import data_transformation.BooleanConverter;
 import dcf_manager.Dcf.DcfType;
 import global_manager.GlobalManager;
 import instance_checker.InstanceChecker;
 import naming_convention.Headers;
+import ui_implicit_facet.FacetDescriptor;
+import ui_implicit_facet.FacetType;
 import utilities.GlobalUtil;
 
 
@@ -86,7 +89,8 @@ public class WarningUtil {
 		NoExposureTerm,             // when a non exposure base term is selected
 		SourceInComposite,          // when a source is added to a composite term
 		SourceCommodityInComposite, // when a source commodity is added to a composite term
-		DecimalForbiddenProcess     // when more than 1 proc with decimal ord code is present (at least one explicit should be present)
+		DecimalForbiddenProcess,    // when more than 1 proc with decimal ord code is present (at least one explicit should be present)
+		NonGenericDerivativeUsed    // when a derivative with an implicit facet is used to describe mixed derivative
 	}
 
 	// Enum type for identifing the level of warnings
@@ -401,7 +405,7 @@ public class WarningUtil {
 			mutuallyExclusiveCheck ( baseTerm, explicit, implicit, stdOut );
 		}
 	}
-
+	
 	/**
 	 * Refresh the warning table, that is, remove all the warnings and recompute them starting from the fullCode
 	 * of the term. Examples of full code: A0DPP or  A0DPP#F01.A0FGM or A0DPP#F01.A0FGM$F04.A000J
@@ -1305,80 +1309,130 @@ public class WarningUtil {
 		// if the base term is not a derivative no checks have to be done
 		if ( !isDerivativeTerm( baseTerm ) )
 			return;
-
-		// get the full code with the implicit facet
-		String implFacetCodes = baseTerm.getFullCode( true, true );
-
-		// all facets contains all the facet in the usual format facetHead.facet$...
-		String allFacetsCodes = fullFacetCode;
-
-		// if there are some implicit facets => add them to the string to parse
-		// and retrieve implicit source and source commodity 
-		if ( implFacetCodes.split( "#" ).length > 1 ) {
-
-			// remove the base term
-			implFacetCodes = implFacetCodes.split( "#" )[1]; 
-
-			// concat the implicit with the explicit (it is important to add the $ 
-			// separator to maintain the format)
-			allFacetsCodes = implFacetCodes.concat( "$" + fullFacetCode );
-		}
-
-		// tokenize the all facets (we use the entire code to count the number of facets)
-		StringTokenizer st = new StringTokenizer( allFacetsCodes, "$" );
+		
+		ArrayList<FacetDescriptor> implicitFacets = baseTerm.getImplicitFacets();
+		ArrayList<Term> implicitTerms = new ArrayList<>();
 
 		// counter for counting the number of specific facets
-		int sourceCommodityFacetCount = -1;  // start from -1 to ignore implicit source commodity of derivatives
+		int implicitSourceCommCount = 0;
+		int explicitSourceCommCount = 0;
+		int explicitRestrictedSourceCommCount = 0;
 		int sourceFacetCount = 0;
-
+		
 		// string builder for generating the diagnostic string
 		StringBuilder sb = new StringBuilder();
+		
+		TermDAO termDao = new TermDAO( currentCat );
+		
+		// check implicit facets
+		for ( FacetDescriptor fd : implicitFacets ) {
+			
+			implicitTerms.add( termDao.getByCode(fd.getFacetCode() ) );
+			
+			boolean append = false;
+			
+			if ( isSourceCommodityFacet( fd.getFacetHeader() ) ) {
+				implicitSourceCommCount++;
+				append = true;
+			}
+			
+			if ( isSourceFacet( fd.getFacetHeader() ) ) {
+				sourceFacetCount++;
+				append = true;
+			}
+
+			if ( append ) {
+				// append for diagnostic 
+				sb.append( fd.getFacetCode() );
+				sb.append(" - ");
+			}
+		}
+		
+		// check explicit facets
+		StringTokenizer st = new StringTokenizer( fullFacetCode, "$" );
+
+		ArrayList<FacetDescriptor> explicitFacets = new ArrayList<>();
+		
 
 		// for each facet
 		while ( st.hasMoreTokens() ) {
 
+			String code = st.nextToken();
+			
 			// split the facet in facet header and facet code
-			String[] split = splitFacetFullCode( st.nextToken() );
+			String[] split = splitFacetFullCode( code );
 
+			Term term = termDao.getByCode(split[1]);
+			
+			FacetDescriptor fd = new FacetDescriptor( term, 
+					new TermAttribute(term, null, code), FacetType.EXPLICIT );
+			
+			explicitFacets.add( fd );
+		}
+		
+		// count for explicit facets
+		for ( FacetDescriptor fd : explicitFacets ) {
+			
+			boolean skip = false;
+			
+			Hierarchy hierarchy = currentCat.getHierarchyByCode("racsource");
+			for ( Term implicit: implicitTerms ) {
+				if ( fd.getDescriptor().hasAncestor(implicit, hierarchy) )
+					skip = true;
+			}
+			
 			// count the number of source commodities facets
-			if ( isSourceCommodityFacet(split[0]) ) {
+			if ( isSourceCommodityFacet(fd.getFacetHeader()) ) {
 
 				// source commodity facet found
-				sourceCommodityFacetCount++;
+				if ( skip ) {
+					explicitSourceCommCount++;
+				}
+				else {
+					explicitSourceCommCount++;
+					explicitRestrictedSourceCommCount++;
+				}
 
 				// append for diagnostic 
-				sb.append( split[1] );
+				sb.append( fd.getFacetCode() );
 				sb.append(" - ");
 			}
 
 			// count the number of source facets
-			if ( isSourceFacet(split[0]) ) {
+			if ( isSourceFacet(fd.getFacetHeader()) ) {
 
 				// source facet found
 				sourceFacetCount++;
 
 				// append for diagnostic 
-				sb.append( split[1] );
+				sb.append( fd.getFacetCode() );
 				sb.append(" - ");
 			}
 		}
-
+		
+		int totalSourceCommCount = explicitSourceCommCount + implicitSourceCommCount;
 
 		// get all the involved terms
 		String termsInvolved = sb.toString();
 
 		// remove the last " - " if present (i.e. at least one element between source and source c. was added)
-		if ( sourceFacetCount > 0 || sourceCommodityFacetCount > 0 )
+		if ( sourceFacetCount > 0 || totalSourceCommCount > 0 )
 			termsInvolved = termsInvolved.substring(0, termsInvolved.length() - " - ".length() );
 
-		// if only one source commodity is selected => you cannot use only 1 SC! At least two are required
-		if ( sourceCommodityFacetCount == 1 && sourceFacetCount > 0 ) {
-			printWarning(WarningEvent.SourceToDerivative, termsInvolved, false, stdOut );
+		
+		// if we have an implicit sc, an explicit sc and a source
+		if ( explicitRestrictedSourceCommCount > 0 && implicitSourceCommCount > 0 ) {
+			printWarning(WarningEvent.NonGenericDerivativeUsed, termsInvolved, false, stdOut);
 		}
-
-		// if more than two source commodities and one source were added => warning
-		else if ( sourceCommodityFacetCount >= 2 && sourceFacetCount > 0 ) {
-			printWarning(WarningEvent.MixedDerivative, termsInvolved, false, stdOut );
+		
+		// if one explicit source commodity is selected => you cannot use only 1 SC! At least two are required
+		if ( explicitRestrictedSourceCommCount + implicitSourceCommCount == 1 && sourceFacetCount > 0 ) {
+			printWarning(WarningEvent.SourceToDerivative, termsInvolved, false, stdOut);
+		}
+		
+		// if more than two source commodities and one source are present => warning
+		if ( explicitRestrictedSourceCommCount + implicitSourceCommCount >= 2 && sourceFacetCount > 0 ) {
+			printWarning(WarningEvent.MixedDerivative, termsInvolved, false, stdOut);
 		}
 	}
 
@@ -1939,6 +1993,11 @@ public class WarningUtil {
 			// 18 message
 			sb.append("18;if two processes (implicit or explicit) with decimal ordcode and same integer part are applied (at least one explicit);"
 					+ "You are trying to generate an already existing derivative!;HIGH;HIGH");
+			sb.append("\r\n");
+			
+			// 19 message
+			sb.append("19;if one or more source commodities are added to a derivative already having an implicit source commodity (not parent of the added);"
+					+ "Use the generic derivative as base term for describing a mixed derivative;HIGH;HIGH");
 			sb.append("\r\n");
 
 			out.write( sb.toString() );
