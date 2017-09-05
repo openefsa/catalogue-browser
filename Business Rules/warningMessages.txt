@@ -18,3 +18,4 @@ Message ID;Trigger Event Description;Text;SemaphoreWarningLevel;TextWarningLevel
 17;if a source commodity is selected for composite (c or s);Source commodity is not applicable for composite food;HIGH;HIGH
 18;if two processes (implicit or explicit) with decimal ordcode and same integer part are applied (at least one explicit);Use the existing derivative instead of adding the facet;HIGH;HIGH
 19;if one or more source commodities are added to a derivative already having an implicit source commodity (not parent of the added);Use the generic derivative as base term for describing a mixed derivative;HIGH;HIGH
+20;if a source is selected for a generic derivative without F27 (neither explicit nor implicit);Forbidden to use the Source without the (single) source commodity;HIGH;HIGH

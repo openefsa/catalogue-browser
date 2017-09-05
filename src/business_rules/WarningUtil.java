@@ -90,7 +90,8 @@ public class WarningUtil {
 		SourceInComposite,          // when a source is added to a composite term
 		SourceCommodityInComposite, // when a source commodity is added to a composite term
 		DecimalForbiddenProcess,    // when more than 1 proc with decimal ord code is present (at least one explicit should be present)
-		NonGenericDerivativeUsed    // when a derivative with an implicit facet is used to describe mixed derivative
+		NonGenericDerivativeUsed,   // when a derivative with an implicit facet is used to describe mixed derivative
+		SourceInDerivative          // if a source is added to a derivative without sourcecommodities
 	}
 
 	// Enum type for identifing the level of warnings
@@ -316,10 +317,6 @@ public class WarningUtil {
 			// check if the order of processes is violated for derivatives
 			if ( warnGroup != null )
 				forbiddenProcessesOrderForDerivativesCheck ( baseTerm, facetIndex, facetCode, stdOut );
-
-
-			// check if a non-specific facet is selected
-			nonSpecificTermCheck ( facet, stdOut );
 
 			// check if the generic process facet is selected
 			genericProcessedFacetCheck ( facet, stdOut );
@@ -1269,16 +1266,53 @@ public class WarningUtil {
 		// diagnostic string builder
 		StringBuilder sb = new StringBuilder();
 
-		// for each facet
+		ArrayList<FacetDescriptor> implicitFacets = baseTerm.getFacets(true);
+		ArrayList<Term> implicitTerms = new ArrayList<>();
+		
+		TermDAO termDao = new TermDAO( currentCat );
+		
+		// check implicit facets
+		for ( FacetDescriptor fd : implicitFacets ) {
+			implicitTerms.add( termDao.getByCode(fd.getFacetCode() ) );
+		}
+		
+		ArrayList<FacetDescriptor> explicitFacets = new ArrayList<>();
+
+		// for each explicit facet
 		while ( st.hasMoreTokens() ) {
 
-			// split the facet code
-			String[] split = splitFacetFullCode( st.nextToken() );
+			String code = st.nextToken();
+			
+			// split the facet in facet header and facet code
+			String[] split = splitFacetFullCode( code );
 
+			Term term = termDao.getByCode(split[1]);
+			
+			FacetDescriptor fd = new FacetDescriptor( term, 
+					new TermAttribute(term, null, code), FacetType.EXPLICIT );
+			
+			explicitFacets.add( fd );
+		}
+		
+		// restrict if explicit is child of an implicit
+		Hierarchy hierarchy = currentCat.getHierarchyByCode("racsource");
+		for ( FacetDescriptor fd : explicitFacets ) {
+			
+			boolean skip = false;
+			
+			for ( Term implicit: implicitTerms ) {
+				if ( fd.getDescriptor().hasAncestor(implicit, hierarchy) )
+					skip = true;
+			}
+			
+			if ( skip ) {
+				continue;
+			}
+			
 			// count the number of source commodities facets
-			if ( isSourceCommodityFacet(split[0]) ) {
+			if ( isSourceCommodityFacet(fd.getFacetHeader()) ) {
 				sourceCommodityFacetCount++;
-				sb.append( split[1] );
+				sb.append( fd.getFacetCode() );
 				sb.append(" - ");
 			}
 		}
@@ -1310,7 +1344,7 @@ public class WarningUtil {
 		if ( !isDerivativeTerm( baseTerm ) )
 			return;
 		
-		ArrayList<FacetDescriptor> implicitFacets = baseTerm.getImplicitFacets();
+		ArrayList<FacetDescriptor> implicitFacets = baseTerm.getFacets(true);
 		ArrayList<Term> implicitTerms = new ArrayList<>();
 
 		// counter for counting the number of specific facets
@@ -1425,8 +1459,12 @@ public class WarningUtil {
 			printWarning(WarningEvent.NonGenericDerivativeUsed, termsInvolved, false, stdOut);
 		}
 		
+		// if source without source commodities
+		if ( totalSourceCommCount == 0 && sourceFacetCount > 0 ) {
+			printWarning(WarningEvent.SourceInDerivative, termsInvolved, false, stdOut);
+		}
 		// if more than two source commodities and one source are present => warning
-		if ( explicitSourceCommCount >= 2 && sourceFacetCount > 0 ) {
+		else if ( explicitSourceCommCount >= 2 && sourceFacetCount > 0 ) {
 			printWarning(WarningEvent.MixedDerivative, termsInvolved, false, stdOut);
 		}
 		// if one explicit source commodity is selected => you cannot use only 1 SC! At least two are required
@@ -1997,6 +2035,9 @@ public class WarningUtil {
 			// 19 message
 			sb.append("19;if one or more source commodities are added to a derivative already having an implicit source commodity (not parent of the added);"
 					+ "Use the generic derivative as base term for describing a mixed derivative;HIGH;HIGH");
+			sb.append("\r\n");
+			
+			sb.append("20;if a source is selected for a generic derivative without F27 (neither explicit nor implicit);Forbidden to use the Source without the (single) source commodity;HIGH;HIGH");
 			sb.append("\r\n");
 
 			out.write( sb.toString() );
