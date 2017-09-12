@@ -25,7 +25,13 @@ public class LogNodeBuilder {
 		return this;
 	}
 	public LogNodeBuilder setResult(String result) {
-		this.result = DcfResponse.valueOf( result );
+		
+	    try {
+	    	this.result = DcfResponse.valueOf( result );
+	    } catch (IllegalArgumentException e) {
+	    	this.result = DcfResponse.ERR;
+	    }
+
 		return this;
 	}
 	public LogNodeBuilder setResult(DcfResponse result) {

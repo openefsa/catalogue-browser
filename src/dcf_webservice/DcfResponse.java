@@ -6,7 +6,7 @@ package dcf_webservice;
  *
  */
 public enum DcfResponse {
-	ERR,
+	ERR,    // generic error
 	
 	OK,     // all ok
 

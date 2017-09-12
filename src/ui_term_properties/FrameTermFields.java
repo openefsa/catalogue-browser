@@ -193,15 +193,19 @@ public class FrameTermFields {
 				// get the index of the current term type
 				int index;
 
-				if ( term.getTermType() != null )
+				if ( term.getTermType() != null ) {
 					// get the index of the current term type
 					index = currentCat.getTermTypes().indexOf( term.getTermType() );
+				}
 				else
 					// get the default term type
 					index = currentCat.getTermTypes().indexOf( currentCat.getDefaultTermType() );
-				
+
 				// set the selection accordingly
-				if ( currentCat.getTermTypes().size() > index && index >= 0 ) {
+				if ( index == -1 && term.getTermType() != null ) {
+					termType.setText( "INVALID CODE: " + term.getTermType().getValue() );
+				}
+				else if ( currentCat.getTermTypes().size() > index && index >= 0 ) {
 
 					termType.setSelection( new StructuredSelection( currentCat.getTermTypes().get( index ) ) );
 

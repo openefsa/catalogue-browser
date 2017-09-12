@@ -120,10 +120,12 @@ public class TermSheetImporter extends SheetImporter<Term> {
 	@Override
 	public void end() {
 
-		if ( catalogue.getTermCodeMask() == null || catalogue.getTermCodeMask().isEmpty() ) {
-			System.err.println("No term code mask is defined for " 
-					+ catalogue + ", cannot perform append operation");
-			return;
+		if ( !tempTerms.isEmpty() ) {
+			if ( catalogue.getTermCodeMask() == null || catalogue.getTermCodeMask().isEmpty() ) {
+				System.err.println("No term code mask is defined for " 
+						+ catalogue + ", cannot perform append operation");
+				return;
+			}
 		}
 		
 		// for each temp term

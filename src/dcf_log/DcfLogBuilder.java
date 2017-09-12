@@ -82,7 +82,11 @@ public class DcfLogBuilder {
 		this.macroOpName = macroOpName;
 	}
 	public void setMacroOpResult(String macroOpResult) {
-		this.macroOpResult = DcfResponse.valueOf( macroOpResult );
+	    try {
+	    	this.macroOpResult = DcfResponse.valueOf( macroOpResult );
+	    } catch (IllegalArgumentException e) {
+	    	this.macroOpResult = DcfResponse.ERR;
+	    }
 	}
 	public void setMacroOpLogs(Collection<String> macroOpLogs) {
 		this.macroOpLogs = macroOpLogs;

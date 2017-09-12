@@ -1,11 +1,13 @@
 package export_catalogue;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
 import org.apache.poi.ss.usermodel.Workbook;
 
 import catalogue.Catalogue;
+import catalogue.ReleaseNotesOperation;
 import catalogue_object.Mappable;
 import naming_convention.Headers;
 import sheet_header.SheetHeader;
@@ -40,6 +42,12 @@ public class ExportReleaseNotesSheet extends SheetWriter {
 
 	@Override
 	public Collection<? extends Mappable> getData() {
-		return catalogue.getReleaseNotes().getOperations();
+		
+		Collection<ReleaseNotesOperation> out = new ArrayList<>();
+		
+		if ( catalogue.getReleaseNotes() != null )
+			out = catalogue.getReleaseNotes().getOperations();
+
+		return out;
 	}
 }

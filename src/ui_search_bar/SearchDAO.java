@@ -105,18 +105,18 @@ public class SearchDAO {
 		for ( Integer id : uniqueIds ) {
 			
 			Term term = catalogue.getTermById( id );
-			
+
 			// Hide the term if not in use
 			if ( !term.isInUse() )
 				continue;
-			
+
 			// Skip elements which are not children of the
 			// root term if it was set
 			if ( rootTerm != null && 
 					!term.hasAncestor( rootTerm, hierarchy) ) {
 				continue;
 			}
-			
+
 			// if the term type of the term is searchable and also one 
 			// of the hierarchy of the term is searchable, add it
 			if ( isTypeSearchable( term ) && 

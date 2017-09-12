@@ -27,6 +27,7 @@ import global_manager.GlobalManager;
 import messages.Messages;
 import naming_convention.SpecialValues;
 import term.TermSubtreeIterator;
+import ui_implicit_facet.ComparatorAlphaFacetDescriptor;
 import ui_implicit_facet.ComparatorFacetDescriptor;
 import ui_implicit_facet.DescriptorTreeItem;
 import ui_implicit_facet.FacetDescriptor;
@@ -96,6 +97,10 @@ public class Term extends CatalogueObject implements Mappable {
 		applicabilities.clear();
 	}
 	
+	public String getFullCode ( boolean allFacets, boolean baseTerm ) {
+		return getFullCode( allFacets, baseTerm, new ComparatorFacetDescriptor() );
+	}
+	
 	/**
 	 * Get the full code of a term (base code plus all the term facets)
 	 * If includeImplicit = true, the code will contain also the implicit facets codes
@@ -105,10 +110,10 @@ public class Term extends CatalogueObject implements Mappable {
 	 * @param baseTerm include the base term or not
 	 * @return
 	 */
-	public String getFullCode ( boolean allFacets, boolean baseTerm ) {
+	public String getFullCode ( boolean allFacets, boolean baseTerm, Comparator<FacetDescriptor> sorter ) {
 
 		String descriptorCodes = "";
-		ArrayList< FacetDescriptor > descriptors = getFacets( allFacets );
+		ArrayList< FacetDescriptor > descriptors = getFacets( allFacets, sorter );
 		
 		// add the descriptor full codes into the term full code
 		for ( FacetDescriptor descriptor : descriptors ) {
@@ -130,8 +135,6 @@ public class Term extends CatalogueObject implements Mappable {
 		// facets)
 		if ( descriptorCodes.length() > 0 )
 			result = result + descriptorCodes.substring( 0, descriptorCodes.length() - 1 );
-		else
-			result = getCode();
 
 		return result;
 	}
@@ -143,35 +146,42 @@ public class Term extends CatalogueObject implements Mappable {
 	 * @return
 	 */
 	public ArrayList<FacetDescriptor> getFacets( boolean allFacets ) {
+		return getFacets(allFacets, new ComparatorFacetDescriptor() );
+	}
+	
+	/**
+	 * Get the facet descriptors related to this term
+	 * @param allFacets true to get all the facets (also the inherited),
+	 * false to get only the facets related to the term (implicit facets).
+	 * @return
+	 */
+	public ArrayList<FacetDescriptor> getFacets( boolean allFacets, Comparator<FacetDescriptor> sorter ) {
 
 		ArrayList< FacetDescriptor > descriptors = new ArrayList<>();
 		
-		ArrayList<Attribute> categories = catalogue.getFacetCategories();
-		
-		// for each facet category we analyze the implicit facets and the explicit facets
-		ListIterator<Attribute> iter = categories.listIterator();
-		
-		// for each category
-		while ( iter.hasNext() ) {
-
-			Attribute facetCategory = iter.next();
+		if ( allFacets ) {
 			
-			// get the implicit facets descriptors from the term if needed
-			if ( allFacets ) {
+			ArrayList<Attribute> categories = catalogue.getFacetCategories();
+			
+			// for each facet category we analyze the implicit facets and the explicit facets
+			ListIterator<Attribute> iter = categories.listIterator();
+			
+			// for each category
+			while ( iter.hasNext() ) {
+
+				Attribute facetCategory = iter.next();
 
 				for ( DescriptorTreeItem item : this.getInheritedImplicitFacets( facetCategory ) ) {
 
 					descriptors.add( item.getDescriptor() );
 				}
-
-			} else {
-
-				// get the descriptors of the term related to the facet category
-				descriptors.addAll( getDescriptorsByCategory( 
-						facetCategory, allFacets ) );
 			}
-			Collections.sort( descriptors, new ComparatorFacetDescriptor() );
 		}
+		else {
+			descriptors.addAll(implicitFacets);
+		}
+		
+		Collections.sort( descriptors, sorter );
 		
 		return descriptors;
 	}
@@ -545,7 +555,10 @@ public class Term extends CatalogueObject implements Mappable {
 
 			// if all facets, compute them
 			if ( attrName.equals( SpecialValues.ALL_FACETS_NAME ) ) {
-				value = getFullCode( true, true );
+				value = getFullCode( true, true, new ComparatorAlphaFacetDescriptor() );
+			}
+			else if ( attrName.equals( SpecialValues.IMPLICIT_FACETS_NAME ) ) {
+				value = getFullCode( false, false, new ComparatorAlphaFacetDescriptor() );
 			}
 			else {
 				// get the term attribute value related to the attribute name

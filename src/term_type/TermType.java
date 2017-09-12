@@ -1,5 +1,7 @@
 package term_type;
 
+import catalogue_object.TermAttribute;
+
 /**
  * This class model the type of term object of the database (if present). The old state flag
  * The term type code represents the term attribute value related to a term type attribute
@@ -31,9 +33,17 @@ public class TermType {
 	@Override
 	public boolean equals(Object obj) {
 
-		TermType tt = (TermType) obj;
+		if (obj instanceof TermType ) {
+			TermType tt = (TermType) obj;
+			
+			return code.equals( tt.getCode() );
+		}
+		else if ( obj instanceof TermAttribute ) {
+			TermAttribute ta = (TermAttribute) obj;
+			return code.equals(ta.getValue());
+		}
 		
-		return code.equals( tt.getCode() );
+		return super.equals(obj);
 	}
 	
 	@Override
