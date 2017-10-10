@@ -1536,7 +1536,8 @@ public class Term extends CatalogueObject implements Mappable {
 
 			String token = st.nextToken();
 
-			if ( i != 0 ){ // Avoid the first token (it is the standard scopenote, not the links)
+			// Avoid the first token (it is the standard scopenote, not the links)
+			if ( i != 0 || token.startsWith("http")) {
 				links.add( token );
 			}
 

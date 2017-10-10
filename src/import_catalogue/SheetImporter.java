@@ -30,8 +30,9 @@ public abstract class SheetImporter<T> {
 	
 	/**
 	 * Start the import process of the sheet.
+	 * @throws ImportException 
 	 */
-	public void importData( ResultDataSet data ) {
+	public void importData( ResultDataSet data ) throws ImportException {
 		
 		// list of all objects which were parsed
 		Collection<T> objs = new ArrayList<>();
@@ -150,7 +151,7 @@ public abstract class SheetImporter<T> {
 	 * records will be created.
 	 * @return the object we want to import or null (null will be ignored)
 	 */
-	public abstract T getByResultSet( ResultDataSet rs );
+	public abstract T getByResultSet( ResultDataSet rs ) throws ImportException ;
 	
 	/**
 	 * Get the objects related to the current sheet row data. Note
@@ -164,7 +165,7 @@ public abstract class SheetImporter<T> {
 	 * @return a collection of T objects created starting from
 	 * a single row of the sheet
 	 */
-	public abstract Collection<T> getAllByResultSet ( ResultDataSet rs );
+	public abstract Collection<T> getAllByResultSet ( ResultDataSet rs ) throws ImportException ;
 	
 	/**
 	 * Insert all the retrieved T objects into the database.

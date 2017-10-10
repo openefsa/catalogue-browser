@@ -47,6 +47,8 @@ public class ExportCatalogueWorkbook {
 		// set that we want to maintain the temp files smaller
 		workbook.setCompressTempFiles( true );
 		
+		System.out.println ( "Exporting catalogue" );
+		
 		// write the catalogue sheet
 		ExportCatalogueSheet catSheet = new ExportCatalogueSheet( catalogue, 
 				workbook, Headers.CAT_SHEET_NAME );
@@ -57,6 +59,8 @@ public class ExportCatalogueWorkbook {
 		
 		catSheet.write();
 
+		System.out.println ( "Exporting hierarchies" );
+		
 		// write the hierarchy sheet
 		ExportHierarchySheet hierarchySheet = new ExportHierarchySheet( catalogue, 
 				workbook, Headers.HIER_SHEET_NAME );
@@ -67,6 +71,8 @@ public class ExportCatalogueWorkbook {
 		
 		hierarchySheet.write();
 		
+		System.out.println ( "Exporting attributes" );
+		
 		// write the attribute sheet
 		ExportAttributeSheet attrSheet = new ExportAttributeSheet( catalogue, 
 				workbook, Headers.ATTR_SHEET_NAME );
@@ -76,6 +82,8 @@ public class ExportCatalogueWorkbook {
 					Messages.getString( "Export.AttributeSheet" ) );
 		
 		attrSheet.write();
+		
+		System.out.println ( "Exporting terms" );
 
 		// write the term sheet
 		ExportTermSheet termSheet = new ExportTermSheet( catalogue, 
@@ -86,6 +94,8 @@ public class ExportCatalogueWorkbook {
 					Messages.getString( "Export.TermSheet" ) );
 		
 		termSheet.write();
+		
+		System.out.println ( "Exporting release notes" );
 		
 		// write the term sheet
 		ExportReleaseNotesSheet noteSheet = new ExportReleaseNotesSheet( 
@@ -101,6 +111,8 @@ public class ExportCatalogueWorkbook {
 		if ( progressBar != null )
 			progressBar.setLabel( Messages.getString( "Export.WriteSheet" ) );
 
+		System.out.println ( "Creating excel file" );
+		
 		// write in the workbook
 		OutputStream out = new FileOutputStream( filename );
 		workbook.write( out );
@@ -120,4 +132,13 @@ public class ExportCatalogueWorkbook {
 		System.out.println( "Export finished, statistics: overall time = " 
 				+ (System.currentTimeMillis()-startTime)/1000.00 + " seconds" );
 	}
+	
+	/*public static void main(String[] args) throws IOException {
+		
+		ExportCatalogueWorkbook export = new ExportCatalogueWorkbook();
+		CatalogueDAO dao = new CatalogueDAO();
+		Catalogue landuse = dao.getLastVersionByCode("LANDUSE", DcfType.LOCAL);
+		landuse.loadData();
+		export.exportCatalogue(landuse, "landuse_export.xlsx");
+	}*/
 }

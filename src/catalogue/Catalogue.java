@@ -1927,7 +1927,14 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		// if catalogue manager show everything
 		if ( User.getInstance().isCatManager() )
 			return notUsed;
-
+		
+		// not used also for deprecated hierarchies
+		for (Hierarchy h : hierarchies) {
+			if (h.isDeprecated()) {
+				notUsed.add(h);
+			}
+		}
+		
 		String codes = getTokenByKey("notUsedHierarchies");
 		
 		if ( codes == null )
@@ -1949,7 +1956,8 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 			}
 
 			// add the not used hierarchy
-			notUsed.add( temp );
+			if ( !notUsed.contains(temp) )
+				notUsed.add( temp );
 		}
 
 		return notUsed;

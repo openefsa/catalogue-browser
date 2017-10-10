@@ -1,10 +1,15 @@
 package import_catalogue;
 
 import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
 
+import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.TransformerException;
 
+import org.apache.poi.openxml4j.exceptions.OpenXML4JException;
 import org.eclipse.swt.widgets.Event;
+import org.xml.sax.SAXException;
 
 import catalogue.Catalogue;
 import catalogue_generator.ThreadFinishedListener;
@@ -65,13 +70,15 @@ public class CatalogueImporterThread extends Thread {
 		importer.setOpenedCat( openedCat );
 		try {
 			importer.makeImport();
-		} catch (TransformerException e) {
+		} catch (TransformerException | IOException | 
+				XMLStreamException | OpenXML4JException | SAXException | SQLException e) {
+			
 			doneListener.finished(this, ThreadFinishedListener.EXCEPTION);
 			
-			if ( progressBar != null )
+			if ( progressBar != null ) {
 				progressBar.stop( Messages.getString("DCDownload.WrongXmlStructure") );
-			
-			progressBar.close();
+				progressBar.close();
+			}
 			
 			return;
 		}

@@ -46,7 +46,11 @@ public class LabelProviderProperty implements ILabelProvider {
 
 		if ( arg0 instanceof Hierarchy ) {
 			Hierarchy t = (Hierarchy) arg0;
-			return t.getLabel();
+			String label = t.getLabel();
+			if (t.isDeprecated()) {
+				label = label + " [DEPRECATED]";
+			}
+			return label;
 		}
 		else {
 			Nameable t = (Nameable) arg0;

@@ -78,7 +78,7 @@ public class QuickParentAttributesImporter extends QuickImporter {
 	}
 	
 	@Override
-	public void importData( final ResultDataSet rs ) {
+	public void importData( final ResultDataSet rs ) throws ImportException {
 
 		// import the term attribute sheet in parallel
 		Thread thread = new Thread( new Runnable() {
@@ -97,7 +97,11 @@ public class QuickParentAttributesImporter extends QuickImporter {
 				}
 				
 				// import the dataset
-				taImp.importData( clonedRs );
+				try {
+					taImp.importData( clonedRs );
+				} catch (ImportException e) {
+					e.printStackTrace();
+				}
 				
 				// close the dataset
 				clonedRs.close();

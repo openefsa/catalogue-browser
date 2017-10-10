@@ -94,5 +94,5 @@ public abstract class QuickImporter {
 	 * in parallel with the data reading.
 	 * @param rs
 	 */
-	public abstract void importData ( ResultDataSet rs );
+	public abstract void importData ( ResultDataSet rs ) throws ImportException;
 }

@@ -70,7 +70,7 @@ public class ParentImporter extends SheetImporter<Applicability> {
 	}
 
 	@Override
-	public Collection<Applicability> getAllByResultSet(ResultDataSet rs) {
+	public Collection<Applicability> getAllByResultSet(ResultDataSet rs) throws ImportException {
 
 		Collection<Applicability> appls = new ArrayList<>();
 		boolean addParent = true;
@@ -108,6 +108,11 @@ public class ParentImporter extends SheetImporter<Applicability> {
 			// next if no parent term is found
 			if ( parentCode == null || parentCode.isEmpty() )
 				continue;
+			
+			// ERROR! cannot set a term parent of itself
+			if ( parentCode.equals( termCode ) ) {
+				throw new ImportException("ERROR: A TERM CANNOT BE PARENT OF ITSELF: term code " + termCode);
+			}
 			
 			// check if we have the root term or not
 			boolean isRoot = parentCode.equalsIgnoreCase( SpecialValues.NO_PARENT );

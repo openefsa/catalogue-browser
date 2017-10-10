@@ -114,7 +114,7 @@ public abstract class SheetWriter {
 	private void insertDataRow ( Mappable record ) {
 		
 		Row row = createRow( sheet );
-
+		
 		// for each header we set the cell value related to it
 		for ( String dbColumnName : headers.keySet() ) {
 

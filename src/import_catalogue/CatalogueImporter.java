@@ -2,9 +2,14 @@ package import_catalogue;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.TransformerException;
+
+import org.apache.poi.openxml4j.exceptions.OpenXML4JException;
+import org.xml.sax.SAXException;
 
 import catalogue.Catalogue;
 import folder_zipper.FolderZipper;
@@ -55,8 +60,14 @@ public class CatalogueImporter {
 	/**
 	 * Import the file
 	 * @throws TransformerException 
+	 * @throws SQLException 
+	 * @throws SAXException 
+	 * @throws OpenXML4JException 
+	 * @throws XMLStreamException 
+	 * @throws IOException 
 	 */
-	public void makeImport() throws TransformerException {
+	public void makeImport() throws TransformerException, 
+		IOException, XMLStreamException, OpenXML4JException, SAXException, SQLException {
 
 		// 5% of progress bar for preprocessing
 		this.preprocProgress = maxProgress * 5 / 100;
@@ -150,8 +161,14 @@ public class CatalogueImporter {
 	 * Import an .ecf catalogue
 	 * @param filename the absolute path of the .ecf file
 	 * @throws TransformerException 
+	 * @throws SQLException 
+	 * @throws SAXException 
+	 * @throws OpenXML4JException 
+	 * @throws XMLStreamException 
+	 * @throws IOException 
 	 */
-	private void importEcf( String filename ) throws TransformerException {
+	private void importEcf( String filename ) throws TransformerException, 
+		IOException, XMLStreamException, OpenXML4JException, SAXException, SQLException {
 		
 		String xmlFile = processEcf( filename );
 		
@@ -167,8 +184,14 @@ public class CatalogueImporter {
 	 * Import a .xml catalogue
 	 * @param filename the absolute path of the .xml catalogue
 	 * @throws TransformerException 
+	 * @throws SQLException 
+	 * @throws SAXException 
+	 * @throws OpenXML4JException 
+	 * @throws XMLStreamException 
+	 * @throws IOException 
 	 */
-	private void importXml( String filename ) throws TransformerException {
+	private void importXml( String filename ) throws TransformerException, 
+		IOException, XMLStreamException, OpenXML4JException, SAXException, SQLException {
 
 		String xlsxFile = processXml( filename );
 		
@@ -183,26 +206,26 @@ public class CatalogueImporter {
 	/**
 	 * Import a .xlsx catalogue
 	 * @param filename the absolute path of the .xlsx catalogue
+	 * @throws SQLException 
+	 * @throws SAXException 
+	 * @throws OpenXML4JException 
+	 * @throws XMLStreamException 
+	 * @throws IOException 
 	 */
-	private void importXlsx( final String filename ) {
-		
-		try {
+	private void importXlsx( final String filename ) throws IOException, 
+		XMLStreamException, OpenXML4JException, SAXException, SQLException {
 
-			// instantiate the workbook importer and set
-			// some settings
-			CatalogueWorkbookImporter importer = new CatalogueWorkbookImporter();
+		// instantiate the workbook importer and set
+		// some settings
+		CatalogueWorkbookImporter importer = new CatalogueWorkbookImporter();
 
-			if ( openedCat != null )
-				importer.setOpenedCatalogue( openedCat );
+		if ( openedCat != null )
+			importer.setOpenedCatalogue( openedCat );
 
-			// import the catalogue contained in the
-			// xlsx file into the specified path (db path)
-			importer.importWorkbook( progressBar, filename, maxProgress - preprocProgress );
+		// import the catalogue contained in the
+		// xlsx file into the specified path (db path)
+		importer.importWorkbook( progressBar, filename, maxProgress - preprocProgress );
 
-		} catch ( final Exception e ) {
-			e.printStackTrace();
-		}
-		
 		// end the import process
 		endProcess();
 	}

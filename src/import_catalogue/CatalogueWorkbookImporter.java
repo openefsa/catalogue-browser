@@ -251,7 +251,7 @@ public class CatalogueWorkbookImporter {
 		QuickImporter quickImp = new QuickImporter( workbookReader, batchSize ) {
 			
 			@Override
-			public void importData(ResultDataSet rs) {
+			public void importData(ResultDataSet rs) throws ImportException {
 				importer.importData( rs );
 			}
 		};

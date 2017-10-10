@@ -307,10 +307,16 @@ public class ToolsMenu implements MainMenuItem {
 				xmlCreator.setAbortListener( new Listener() {
 					
 					@Override
-					public void handleEvent(Event arg0) {
-						GlobalUtil.showErrorDialog( shell, 
-								Messages.getString( "CreateXml.ErrorTitle" ), 
-								(String) arg0.data );
+					public void handleEvent(final Event arg0) {
+						
+						shell.getDisplay().asyncExec(new Runnable() {
+							@Override
+							public void run() {
+								GlobalUtil.showErrorDialog( shell, 
+										Messages.getString( "CreateXml.ErrorTitle" ), 
+										(String) arg0.data );
+							}
+						});
 					}
 				});
 				
@@ -319,10 +325,18 @@ public class ToolsMenu implements MainMenuItem {
 					
 					@Override
 					public void handleEvent(Event arg0) {
-						GlobalUtil.showDialog( shell, 
-								Messages.getString("CreateXml.SuccessTitle"), 
-								Messages.getString("CreateXml.SuccessMessage"), 
-								SWT.ICON_INFORMATION );
+						
+						shell.getDisplay().asyncExec(new Runnable() {
+							
+							@Override
+							public void run() {
+								
+								GlobalUtil.showDialog( shell, 
+										Messages.getString("CreateXml.SuccessTitle"), 
+										Messages.getString("CreateXml.SuccessMessage"), 
+										SWT.ICON_INFORMATION );
+							}
+						});
 					}
 				});
 				

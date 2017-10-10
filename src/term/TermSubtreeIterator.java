@@ -1,5 +1,6 @@
 package term;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -60,8 +61,16 @@ public class TermSubtreeIterator {
 		// get the current child
 		Term child = children.poll();
 		
+		if (child == null)
+			return null;
+		
+		Collection<Term> list = child.getChildren(hierarchy, false, false);
+		
+		if ( list == null || list.isEmpty() )
+			return null;
+		
 		// add the child children to the queue to go deeper in the tree
-		children.addAll( child.getChildren(hierarchy, false, false) );
+		children.addAll( list );
 		
 		return child;
 	}
