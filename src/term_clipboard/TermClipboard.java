@@ -44,6 +44,10 @@ public class TermClipboard {
 	// the hierarchy in which the term was cutted/copied
 	private Hierarchy sourceHierarchy;
 	
+	public ArrayList<Term> getSources() {
+		return sources;
+	}
+	
 	/**
 	 * Set an operation to be performed for multiple terms
 	 * allowed clipboard operations for this method:
@@ -299,19 +303,6 @@ public class TermClipboard {
 		// for each source we make a paste operation
 		for ( Term term : sources ) {
 			pasteSingleSource ( term, target, destinationHierarchy );
-			
-			// if cut operation normalize source level
-			// since we have moved the source
-			if ( clipOp == ClipboardOp.CUT_BRANCH )
-				term.normalizeLevel( destinationHierarchy );
-		}
-		
-		// normalize the destination level since
-		// we have modified it moving source to target
-		if ( target instanceof Term )
-			( (Term) target ).normalizeLevel( destinationHierarchy );
-		else if ( target instanceof Hierarchy ) {
-			( (Hierarchy) target ).normalizeLevel();
 		}
 		
 		// reset operation
@@ -346,15 +337,11 @@ public class TermClipboard {
 			break;
 
 		case CUT_BRANCH:
-
-			boolean reportable = source.isReportable( sourceHierarchy );
 			
-			// cut the applicability of the child term
-			Applicability appl = source.getApplicability( sourceHierarchy );
-			source.removeApplicability( appl, true );
+			// here source hierarchy = destination hierarchy (otherwise cannot cut)
 
-			// paste it into the new hierarchy under the parent term
-			pasteNode ( target, source, destinationHierarchy, reportable );
+			// move the term under the target
+			source.moveAsChild( target, sourceHierarchy );
 
 			// NOTE: All the subtree of the cut term
 			// is automatically moved since we are in the same hierarchy (the sub tree
@@ -363,10 +350,11 @@ public class TermClipboard {
 			break;
 
 		case COPY_NODE:
-
+			
 			// here we create the new applicability in the new hierarchy
 			// set the copied term as child of the selected parent term in the selected hierarchy
-			pasteNode ( target, source, destinationHierarchy,
+			pasteNode ( target, source, destinationHierarchy, 
+					Term.getFirstAvailableChildrenOrder(target, destinationHierarchy ),
 					source.isReportable( sourceHierarchy ) );
 
 			break;
@@ -375,6 +363,7 @@ public class TermClipboard {
 
 			// paste the root
 			pasteNode ( target, source, destinationHierarchy, 
+					Term.getFirstAvailableChildrenOrder(target, destinationHierarchy ),
 					source.isReportable( sourceHierarchy ) );
 
 			// paste the root subtree
@@ -394,19 +383,8 @@ public class TermClipboard {
 	 * @return the child with the new applicability added
 	 */
 	private Term pasteNode ( CatalogueObject parent, Term child, 
-			Hierarchy hierarchy, boolean reportable ) {
+			Hierarchy hierarchy, int order, boolean reportable ) {
 		
-		// get an instance of the global manager
-		GlobalManager manager = GlobalManager.getInstance();
-		
-		// get the current catalogue
-		Catalogue currentCat = manager.getCurrentCatalogue();
-		
-		ParentTermDAO parentDao = new ParentTermDAO( currentCat );
-		
-		// get the first available order in the new hierarchy under the parent term we selected
-		int order = parentDao.getNextAvailableOrder( parent, hierarchy );
-
 		// create a new applicability in the new hierarchy
 		Applicability appl = new Applicability( child, parent, hierarchy, order, reportable );
 
@@ -427,10 +405,6 @@ public class TermClipboard {
 	private void pasteSubtree( CatalogueObject parent, Term child, 
 			Hierarchy hierarchy ) {
 
-		// Paste the child term as child of the parent
-		pasteNode ( parent, child, hierarchy, 
-				child.isReportable( hierarchy ) );
-
 		// iterate all the clip term subtree in the old hierarchy
 		TermSubtreeIterator iterator = new TermSubtreeIterator( child, sourceHierarchy );
 
@@ -441,8 +415,10 @@ public class TermClipboard {
 			Term subtreeParent = subtreeTerm.getParent( sourceHierarchy );
 
 			// link the subtree parent and the child the new hierarchy
+			// for subtree elements, just maintain the original order
 			pasteNode ( subtreeParent, subtreeTerm, hierarchy, 
-					subtreeTerm.isReportable( hierarchy ) );
+					subtreeTerm.getOrder(sourceHierarchy),
+					subtreeTerm.isReportable( sourceHierarchy ) );
 		}
 	}
 	

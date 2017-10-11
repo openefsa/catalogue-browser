@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.Queue;
 import java.util.Set;
@@ -739,8 +740,10 @@ public class Term extends CatalogueObject implements Mappable {
 		
 		Applicability appl = getApplicability(hierarchy);
 		
-		if ( appl != null )
+		if ( appl != null ) {
 			appl.setOrder( order );
+			appl.update();
+		}
 	}
 	
 	/**
@@ -1093,6 +1096,12 @@ public class Term extends CatalogueObject implements Mappable {
 		
 		// null if no parent was found
 		return null;
+	}
+	
+	public void setParent ( Hierarchy hierarchy, Nameable parent ) {
+		Applicability appl = getApplicability( hierarchy );
+		appl.setParentTerm( parent );
+		appl.update();
 	}
 	
 	/**
@@ -1614,35 +1623,6 @@ public class Term extends CatalogueObject implements Mappable {
 		
 		return siblings;
 	}
-	
-	/**
-	 * Get all the siblings above me or below me
-	 * @param hierarchy
-	 * @param above
-	 * @return
-	 */
-	private ArrayList<Term> getSiblings ( Hierarchy hierarchy, boolean above ) {
-		
-		/// output list
-		ArrayList<Term> siblings = new ArrayList<>();
-		
-		// for each sibling
-		for ( Term sibling : getSiblings( hierarchy ) ) {
-			
-			// if ABOVE and the sibling has an order integer greater than mine, save it into the output list
-			if ( above ) {
-				if ( sibling.getOrder( hierarchy ) > this.getOrder( hierarchy ) )
-					siblings.add( sibling );
-				
-			}  // if NOT ABOVE and the sibling has an order integer less than mine, save it into the output list
-			else {
-				if ( sibling.getOrder( hierarchy ) < this.getOrder( hierarchy ) )
-					siblings.add( sibling );
-			}
-		}
-		
-		return siblings;
-	}
 
 	public enum Position {
 		BEFORE,
@@ -1656,13 +1636,15 @@ public class Term extends CatalogueObject implements Mappable {
 	 * @param hierarchy the hierarchy in which we move the term
 	 * @param pos before or after the target
 	 */
-	public void move ( Term target, Hierarchy hierarchy, Position pos ) {
+	public void moveAsSibling ( Term target, Hierarchy hierarchy, Position pos ) {
 		
-		Nameable parent = target.getParent( hierarchy );
+		// get the parent of the target (since we will set it as the new
+		// parent of the current term)
+		Nameable targetParent = target.getParent( hierarchy );
 		
 		// if no parent, then we have the hierarchy as parent
-		if ( parent == null ) {
-			parent = hierarchy;
+		if ( targetParent == null ) {
+			targetParent = hierarchy;
 		}
 
 		// cannot move parent under its children
@@ -1670,68 +1652,128 @@ public class Term extends CatalogueObject implements Mappable {
 			System.err.println( "Cannot move parent as child of its children" );
 			return;
 		}
+		
+		ArrayList<Term> termsToNormalize = this.getSiblings(hierarchy);
+		
+		// change the source parent with the target parent
+		this.setParent( hierarchy, targetParent );
 
 		// save the target order
 		int targetOrder = target.getOrder( hierarchy );
-		int thisOrder = this.getOrder( hierarchy );
-		int offset = 1;
 
-		
-		// get siblings below target
-		ArrayList<Term> termsToShift = target.getSiblings( hierarchy, true );
-		
-		// move also target down if moving before it
-		if ( pos == Position.BEFORE ) {
-			termsToShift.add( target );
+		// get all the target siblings
+		Collection<Term> targetSiblings = target.getSiblings( hierarchy );
+		for ( Term sibling : targetSiblings ) {
 			
-			// replace target place
-			thisOrder = targetOrder;
-		}
-		else  // place after target
-			thisOrder = targetOrder + 1;
-
-		ArrayList<Term> sourceSib = this.getSiblings( hierarchy );
-		
-		Applicability thisAppl = this.getApplicability( hierarchy );
-		
-		// remove the applicability of the term related to this hierarchy (we need to 
-		// change it, so we remove it and then we will re add it )
-		this.removeApplicability( thisAppl, true );
-		
-		// rearrange the siblings order since we have removed the source
-		normalizeLevel( sourceSib, hierarchy );
-
-		// add the offset for source level in RAM memory
-		// (Used when the source is taken from the same level
-		// of the target, since we create an additional hole)
-		for ( Term t : sourceSib ) {
-			t.setOrder( hierarchy, t.getOrder( hierarchy ) + offset );
-		}
-
-		thisAppl.setOrder( thisOrder );
-		thisAppl.setParentTerm( parent );
-		
-		// add the applicability to the term (permanent)
-		this.addApplicability( thisAppl, true );
-		
-		ParentTermDAO parentDao = new ParentTermDAO( catalogue );
-		
-		// shift all the siblings of the target term by 1 in the selected hierarchy
-		parentDao.shiftTerms( termsToShift, hierarchy, offset );
-		
-		// add offset to target level in RAM
-		for ( Term t : termsToShift ) {
-			t.setOrder( hierarchy, t.getOrder( hierarchy ) + offset );
+			int siblingOrder = sibling.getOrder( hierarchy );
+			
+			// if below target, then move down to free one space
+			if ( siblingOrder > targetOrder ) {
+				sibling.setOrder( hierarchy, siblingOrder + 1 );
+			}
 		}
 		
-		// normalize target siblings and target
-		// since we have added the source
-		ArrayList<Term> targetSib = target.getSiblings( hierarchy );
-		targetSib.add( target );
+		// if the source was placed before the target, 
+		// then move also the target to free one space
+		if ( pos == Position.BEFORE ) {
+			
+			// put the source in the target position
+			this.setOrder( hierarchy, targetOrder );
+			
+			// move the target down to free space
+			target.setOrder( hierarchy, targetOrder + 1 );
+		}
+		else {
+			// if after the target, do not touch target order
+			// and place the source under the target
+			this.setOrder( hierarchy, targetOrder + 1 );
+		}
 		
-		// normalize the target siblings now that the
-		// source is a target sibling (orders are changed)
-		normalizeLevel( targetSib, hierarchy );	
+		if ( !termsToNormalize.isEmpty() ) {
+			
+			Nameable parent = termsToNormalize.get(0).getParent(hierarchy);
+			
+			if ( parent == null ) {
+				parent = hierarchy;
+			}
+			
+			// if same parent, then add also the source to the
+			// list of terms to normalize
+			if ( targetParent.equals( parent ) ) {
+				termsToNormalize.add( this );
+			}
+			
+			normalizeLevel(termsToNormalize, hierarchy);
+		}
+	}
+	
+	public void moveAsChild(Nameable target, Hierarchy hierarchy) {
+		
+		ArrayList<Term> termsToNormalize = new ArrayList<>(this.getSiblings(hierarchy));
+
+		int newOrder = getFirstAvailableChildrenOrder(target, hierarchy);
+		
+		// change the order with the first available
+		this.setOrder(hierarchy, newOrder);
+		
+		// change the source parent with the target parent
+		this.setParent( hierarchy, target );
+		
+		// normalize source level
+		if ( !termsToNormalize.isEmpty() ) {
+			normalizeLevel(termsToNormalize, hierarchy);
+		}
+	}
+
+	public boolean isRootTerm(Hierarchy hierarchy) {
+		
+		Applicability appl = this.getApplicability(hierarchy);
+		return appl != null && appl.getParentTerm() instanceof Hierarchy;
+	}
+
+	/**
+	 * Get the next available order for the terms in a specific branch
+	 * in a hierarchy
+	 * @param hierarchy
+	 * @return
+	 */
+	public int getFirstAvailableOrder(Hierarchy hierarchy) {
+
+		// get all the target siblings
+		List<Term> termsOnLevel = this.getSiblings( hierarchy );
+		termsOnLevel.add( this );
+
+		return getNextOrder(termsOnLevel, hierarchy);
+	}
+	
+	public static int getFirstAvailableChildrenOrder(Nameable parent, Hierarchy hierarchy) {
+		
+		List<Term> termsOnLevel;
+		
+		if (parent instanceof Term) {
+			termsOnLevel = ((Term)parent).getAllChildren( hierarchy );
+		}
+		else {
+			termsOnLevel = ((Hierarchy) parent).getFirstLevelNodes(false, false);
+		}
+
+		return getNextOrder(termsOnLevel, hierarchy);
+	}
+	
+	private static int getNextOrder(List<Term> terms, Hierarchy hierarchy) {
+		
+		int maxOrder = -1;
+		for ( Term sibling : terms ) {
+			
+			int siblingOrder = sibling.getOrder( hierarchy );
+			
+			if (siblingOrder > maxOrder) {
+				maxOrder = siblingOrder;
+			}
+		}
+		
+		int available = terms.isEmpty() ? 1 : maxOrder + 1;
+		return available;
 	}
 	
 	/**
@@ -1742,9 +1784,31 @@ public class Term extends CatalogueObject implements Mappable {
 	public void normalizeLevel ( final Hierarchy hierarchy ) {
 		
 		ArrayList<Term> terms = this.getSiblings(hierarchy);
-		terms.add( this );
+		//terms.add( this );
 		
 		normalizeLevel ( terms, hierarchy );
+	}
+	
+	public static List<Term> orderLevel( List<Term> termsOnLevel, final Hierarchy hierarchy ) {
+		
+		// sort terms by order
+		Collections.sort( termsOnLevel, new Comparator<Term>() {
+			public int compare(Term t1, Term t2) {
+				
+				int o1 = t1.getOrder( hierarchy );
+				int o2 = t2.getOrder( hierarchy );
+				
+				if ( o1 == o2 )
+					return 0;
+				
+				else if ( o1 < o2 )
+					return -1;
+				
+				return 1;
+			};
+		});
+		
+		return termsOnLevel;
 	}
 	
 	/**
@@ -1776,14 +1840,10 @@ public class Term extends CatalogueObject implements Mappable {
 		// normalize order integer replacing orders
 		// with increasing numbers to cover all the
 		// orders holes
-		ParentTermDAO parentDao = new ParentTermDAO( hierarchy.getCatalogue() );
+
 		for ( int i = 0; i < termsOnLevel.size(); i++ ) {
-			
 			// set order for siblings
 			termsOnLevel.get(i).setOrder( hierarchy, i + 1 );
-			
-			// update also in db
-			parentDao.updateTermOrder( termsOnLevel.get(i), hierarchy, i + 1 );
 		}
 	}
 
@@ -1939,40 +1999,8 @@ public class Term extends CatalogueObject implements Mappable {
 		if ( !( parent instanceof Term ) )
 			return;
 		
-		// we get the further ancestor of the base term
-		Nameable ancestor = ( (Term) parent).getParent( hierarchy );
-		
-		// if no parent, then we set the hierarchy
-		if ( ancestor == null ) {
-			ancestor = hierarchy;
-		}
-		
-		ParentTermDAO parentDao = new ParentTermDAO( catalogue );
-		
-		// get the last available order for the new applicability
-		int order = parentDao.getNextAvailableOrder( ancestor, hierarchy );
-		
-		// get if the term is reportable or not
-		boolean reportable = this.isReportable( hierarchy );
-		
-		// remove permanently the old applicability (important to do this before adding the new
-		// applicability since an applicability is identified only by the term and the hierarchy,
-		// not by the parent! If we first add we would get an error saying that the applicability
-		// is already present)
-		this.removeApplicability( this.getApplicability( hierarchy ), true );
-
-		// add permanently the new applicability
-		this.addApplicability( new Applicability(this, ancestor, hierarchy, order, reportable ), true );
-		
-		TermDAO termDao = new TermDAO( catalogue );
-		
-		// update the involved terms
-		termDao.updateTermInRAM( this );
-		termDao.updateTermInRAM( (Term) parent );
-		
-		// if we have an ancestor which is not the hierarchy itself
-		if ( ancestor != null && ancestor instanceof Term )
-			termDao.updateTermInRAM( (Term) ancestor );
+		// move after the parent under the grandparent
+		this.moveAsSibling((Term) parent, hierarchy, Position.AFTER);
 	}
 	
 	/**

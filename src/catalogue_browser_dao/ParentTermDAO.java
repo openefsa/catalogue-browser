@@ -179,7 +179,7 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 	 * @return
 	 */
 	public boolean update ( Applicability appl ) {
-		return update( appl.getHierarchy(), appl.getChild(), appl.isReportable() );
+		return update( appl.getHierarchy(), appl.getParentTerm(), appl.getChild(), appl.getOrder(), appl.isReportable() );
 	}
 	
 	/**
@@ -189,11 +189,12 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 	 * @param reportable
 	 * @return
 	 */
-	public boolean update ( Hierarchy hierarchy, Term term, boolean reportable ) {
+	public boolean update ( Hierarchy hierarchy, Nameable parentTerm, Term term, int order, boolean reportable ) {
 		
 		Connection con;
 		
-		String query = "update APP.PARENT_TERM P set TERM_REPORTABLE = ? where HIERARCHY_ID = ? and TERM_ID = ?";
+		String query = "update APP.PARENT_TERM P set TERM_REPORTABLE = ?, "
+				+ "PARENT_TERM_ID = ?, TERM_ORDER = ? where HIERARCHY_ID = ? and TERM_ID = ?";
 		
 		try {
 
@@ -207,8 +208,17 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 
 			// set if the term is reportable in the selected hierarchy
 			stmt.setBoolean ( 1, reportable );
-			stmt.setInt ( 2, hierarchy.getId() );
-			stmt.setInt ( 3, term.getId() );
+			
+			if ( parentTerm instanceof Hierarchy ) {
+				stmt.setNull( 2, java.sql.Types.INTEGER );
+			}
+			else {
+				Term parent = (Term) parentTerm;
+				stmt.setInt( 2, parent.getId() );
+			}
+			stmt.setInt( 3, order );
+			stmt.setInt ( 4, hierarchy.getId() );
+			stmt.setInt ( 5, term.getId() );
 			
 			stmt.executeUpdate();
 

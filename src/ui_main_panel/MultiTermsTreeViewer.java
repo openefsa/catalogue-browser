@@ -597,7 +597,7 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 				//System.out.println( "Drop before " + target );
 				
 				for ( Term source : getSelectedTerms() ) {
-					source.move( target, hierarchy, Position.BEFORE );
+					source.moveAsSibling( target, hierarchy, Position.BEFORE );
 				}
 
 				break;
@@ -614,7 +614,7 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 				for ( int i = selectedTerms.size() - 1; i >= 0; i-- ) {
 					
 					Term source = selectedTerms.get(i);
-					source.move( target, hierarchy, Position.AFTER );
+					source.moveAsSibling( target, hierarchy, Position.AFTER );
 				}
 
 				break;

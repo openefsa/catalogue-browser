@@ -43,9 +43,8 @@ public class TermSubtreeIterator {
 	 * Initialize the queue using the first level children of the parent term
 	 */
 	private void initializeQueue () {
-
 		// get the term children in the current hierarchy as starting point
-		children.addAll( parent.getChildren( hierarchy, false, false ) );
+		children.addAll( parent.getAllChildren( hierarchy ) );
 	}
 	
 	/**
@@ -64,10 +63,10 @@ public class TermSubtreeIterator {
 		if (child == null)
 			return null;
 		
-		Collection<Term> list = child.getChildren(hierarchy, false, false);
+		Collection<Term> list = child.getAllChildren(hierarchy);
 		
 		if ( list == null || list.isEmpty() )
-			return null;
+			return child;
 		
 		// add the child children to the queue to go deeper in the tree
 		children.addAll( list );

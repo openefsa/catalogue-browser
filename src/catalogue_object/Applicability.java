@@ -1,5 +1,7 @@
 package catalogue_object;
 
+import catalogue_browser_dao.ParentTermDAO;
+
 /**
  * Link terms with their parents in each hierarchy
  * @author avonva
@@ -66,7 +68,10 @@ public class Applicability {
 		return hierarchy.getId() == h.getId();
 	}
 	
-	
+	public void update() {
+		ParentTermDAO dao = new ParentTermDAO(child.getCatalogue());
+		dao.update(this);
+	}
 	
 	@Override
 	public boolean equals(Object obj) {

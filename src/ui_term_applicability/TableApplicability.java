@@ -25,12 +25,14 @@ import catalogue.Catalogue;
 import catalogue_browser_dao.ParentTermDAO;
 import catalogue_object.Applicability;
 import catalogue_object.AvailableHierarchiesTerm;
+import catalogue_object.CatalogueObject;
 import catalogue_object.Hierarchy;
 import catalogue_object.Nameable;
 import catalogue_object.Term;
 import dcf_user.User;
 import messages.Messages;
 import term.LabelProviderTerm;
+import term_clipboard.TermClipboard;
 import ui_describe.FormSelectTerm;
 import ui_search_bar.HierarchyChangedListener;
 import ui_search_bar.HierarchyEvent;
@@ -596,16 +598,12 @@ public class TableApplicability {
 	 */
 	private void addApplicability ( Nameable parentTerm, Hierarchy hierarchy ) {
 
-		ParentTermDAO parentDao = new ParentTermDAO( term.getCatalogue() );
+		TermClipboard termClip = new TermClipboard();
+		ArrayList<Term> source = new ArrayList<>();
+		source.add(term);
 		
-		// create the applicability for the term (note that we create it since the 
-		// term in the ram is not updated. We update in this way the term in order
-		// to save time
-		Applicability appl = new Applicability( term, parentTerm, hierarchy, 
-				parentDao.getNextAvailableOrder( term, hierarchy ), true );
-
-		// add the applicability
-		term.addApplicability( appl, true );
+		termClip.copyNode(source, term.getCatalogue().getMasterHierarchy());
+		termClip.paste( (CatalogueObject) parentTerm, hierarchy);
 		
 		// refresh
 		setTerm( term );
@@ -692,7 +690,7 @@ public class TableApplicability {
 		
 		ParentTermDAO parentDao = new ParentTermDAO( term.getCatalogue() );
 		
-		parentDao.update ( appl.getHierarchy(), term, reportable );
+		parentDao.update ( appl.getHierarchy(), appl.getParentTerm(), term, appl.getOrder(), reportable );
 		
 		HierarchyEvent event = new HierarchyEvent();
 		event.setHierarchy( appl.getHierarchy() );

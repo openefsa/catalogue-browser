@@ -2,6 +2,7 @@ package catalogue_object;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import catalogue.Catalogue;
 import catalogue_browser_dao.ParentTermDAO;

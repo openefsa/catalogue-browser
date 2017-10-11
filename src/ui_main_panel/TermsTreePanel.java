@@ -466,6 +466,28 @@ public class TermsTreePanel extends Observable implements Observer {
 		if ( addTerm != null )
 			addTerm.setEnabled( !isSelectionEmpty() && canAddTerm );
 		
+		
+		// can paste only if we are cutting/copying and we are pasting under a single term
+		pasteTerm.setEnabled( canEdit 
+				&& !termClip.getSources().isEmpty()
+				&& termClip.canPaste( getFirstSelectedTerm(), selectedHierarchy ) );
+		
+		boolean canPasteAsRoot = true;
+		for ( Term source : termClip.getSources() ) {
+			if (source.isRootTerm(selectedHierarchy)) {
+				canPasteAsRoot = false;
+				break;
+			}
+		}
+		
+		// can paste only if we are cutting/copying and we are pasting in a hierarchy
+		pasteRootTerm.setEnabled( canEdit 
+				&& canPasteAsRoot 
+				&& !termClip.getSources().isEmpty()
+				&& termClip.canPaste( selectedHierarchy, selectedHierarchy ) );
+		
+		
+		// the others need a selected term
 		if ( isSelectionEmpty() )
 			return;
 		
@@ -502,15 +524,6 @@ public class TermsTreePanel extends Observable implements Observer {
 		copyNode.setEnabled( canEdit );
 		
 		copyBranch.setEnabled( canEdit );
-		
-		// can paste only if we are cutting/copying and we are pasting under a single term
-		pasteTerm.setEnabled( canEdit 
-				&& termClip.canPaste( 
-						getFirstSelectedTerm(), selectedHierarchy ) );
-		
-		// can paste only if we are cutting/copying and we are pasting in a hierarchy
-		pasteRootTerm.setEnabled( canEdit 
-				&& termClip.canPaste( selectedHierarchy, selectedHierarchy ) );
 	}
 	
 	
