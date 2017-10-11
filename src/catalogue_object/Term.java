@@ -1659,6 +1659,11 @@ public class Term extends CatalogueObject implements Mappable {
 	public void move ( Term target, Hierarchy hierarchy, Position pos ) {
 		
 		Nameable parent = target.getParent( hierarchy );
+		
+		// if no parent, then we have the hierarchy as parent
+		if ( parent == null ) {
+			parent = hierarchy;
+		}
 
 		// cannot move parent under its children
 		if ( target.hasAncestor( this, hierarchy ) ) {
@@ -1935,7 +1940,12 @@ public class Term extends CatalogueObject implements Mappable {
 			return;
 		
 		// we get the further ancestor of the base term
-		Term ancestor = ( (Term) parent).getParent( hierarchy );
+		Nameable ancestor = ( (Term) parent).getParent( hierarchy );
+		
+		// if no parent, then we set the hierarchy
+		if ( ancestor == null ) {
+			ancestor = hierarchy;
+		}
 		
 		ParentTermDAO parentDao = new ParentTermDAO( catalogue );
 		
@@ -1961,8 +1971,8 @@ public class Term extends CatalogueObject implements Mappable {
 		termDao.updateTermInRAM( (Term) parent );
 		
 		// if we have an ancestor which is not the hierarchy itself
-		if ( ancestor != null )
-			termDao.updateTermInRAM( ancestor );
+		if ( ancestor != null && ancestor instanceof Term )
+			termDao.updateTermInRAM( (Term) ancestor );
 	}
 	
 	/**
