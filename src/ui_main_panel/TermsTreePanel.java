@@ -279,7 +279,7 @@ public class TermsTreePanel extends Observable implements Observer {
 	public MultiTermsTreeViewer createTreeViewer( Composite parent ) {
 
 		MultiTermsTreeViewer tree = new MultiTermsTreeViewer( parent, false, 
-				SWT.MULTI | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL, catalogue );
+				SWT.MULTI | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.VIRTUAL, catalogue );
 		
 		// allow drag n drop
 		tree.addDragAndDrop();
@@ -468,9 +468,10 @@ public class TermsTreePanel extends Observable implements Observer {
 		
 		
 		// can paste only if we are cutting/copying and we are pasting under a single term
-		pasteTerm.setEnabled( canEdit 
-				&& !termClip.getSources().isEmpty()
-				&& termClip.canPaste( getFirstSelectedTerm(), selectedHierarchy ) );
+		if ( pasteTerm != null )
+			pasteTerm.setEnabled( canEdit 
+					&& !termClip.getSources().isEmpty()
+					&& termClip.canPaste( getFirstSelectedTerm(), selectedHierarchy ) );
 		
 		boolean canPasteAsRoot = true;
 		for ( Term source : termClip.getSources() ) {
@@ -481,11 +482,12 @@ public class TermsTreePanel extends Observable implements Observer {
 		}
 		
 		// can paste only if we are cutting/copying and we are pasting in a hierarchy
-		pasteRootTerm.setEnabled( canEdit 
-				&& canPasteAsRoot 
-				&& !termClip.getSources().isEmpty()
-				&& termClip.canPaste( selectedHierarchy, selectedHierarchy ) );
-		
+		if ( pasteRootTerm != null )
+			pasteRootTerm.setEnabled( canEdit 
+					&& canPasteAsRoot 
+					&& !termClip.getSources().isEmpty()
+					&& termClip.canPaste( selectedHierarchy, selectedHierarchy ) );
+			
 		
 		// the others need a selected term
 		if ( isSelectionEmpty() )
