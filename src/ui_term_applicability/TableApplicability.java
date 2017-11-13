@@ -32,6 +32,7 @@ import catalogue_object.Term;
 import dcf_user.User;
 import messages.Messages;
 import term.LabelProviderTerm;
+import term.TermSubtreeIterator;
 import term_clipboard.TermClipboard;
 import ui_describe.FormSelectTerm;
 import ui_search_bar.HierarchyChangedListener;
@@ -426,14 +427,14 @@ public class TableApplicability {
 					return;
 				}
 				
-				if ( term.hasChildren( appl.getHierarchy(), false, false ) ) {
+				/*if ( term.hasChildren( appl.getHierarchy(), false, false ) ) {
 					
 					GlobalUtil.showErrorDialog( parent.getShell(), 
 							Messages.getString("TableApplicability.RemoveParentTermTitle"), 
 							Messages.getString("TableApplicability.RemoveParentTermMessage") );
 					
 					return;
-				}
+				}*/
 				
 				int val = GlobalUtil.showDialog( parent.getShell(), 
 						Messages.getString("TableApplicability.RemoveWarningTitle"), 
@@ -442,6 +443,18 @@ public class TableApplicability {
 
 				if ( val == SWT.YES ) {
 
+					Collection<Term> subtree = new ArrayList<>();
+					TermSubtreeIterator iterator = new TermSubtreeIterator(term, appl.getHierarchy());
+					Term child;
+					while ((child = iterator.next()) != null) {
+						subtree.add(child);
+					}
+					
+					// remove all the children applicabilities
+					for (Term currentChild : subtree) {
+						currentChild.removeApplicability(appl.getHierarchy(), true);
+					}
+					
 					// remove the applicability from the term permanently
 					term.removeApplicability( appl, true );
 				}

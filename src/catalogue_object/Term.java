@@ -1068,7 +1068,17 @@ public class Term extends CatalogueObject implements Mappable {
 			parentDao.remove( appl );
 	}
 	
-	
+	/**
+	 * Remove an applicability from the term
+	 * @param appl
+	 * @param permanent, should the db be updated?
+	 */
+	public void removeApplicability ( Hierarchy hierarchy, boolean permanent ) {
+		
+		Applicability appl = getApplicability(hierarchy);
+		
+		removeApplicability(appl, permanent);
+	}
 	
 	/**
 	 * Get the parent of the term
