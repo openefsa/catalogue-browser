@@ -59,6 +59,7 @@ import import_catalogue.CatalogueImporterThread;
 import messages.Messages;
 import property.SorterCatalogueObject;
 import term_code_generator.CodeGenerator;
+import term_code_generator.TermCodeException;
 import term_type.TermType;
 import term_type.TermTypeDAO;
 import ui_progress_bar.IProgressBar;
@@ -939,8 +940,9 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * @param parent
 	 * @param hierarchy
 	 * @return the new term
+	 * @throws TermCodeException 
 	 */
-	public Term addNewTerm ( Nameable parent, Hierarchy hierarchy ) {
+	public Term addNewTerm ( Nameable parent, Hierarchy hierarchy ) throws TermCodeException {
 
 		// get the a new code for the term using the catalogue term code mask
 		String code = CodeGenerator.getTermCode( termCodeMask );
@@ -2271,7 +2273,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		importCat.addDoneListener( new ThreadFinishedListener() {
 
 			@Override
-			public void finished(Thread thread, int code) {
+			public void finished(Thread thread, int code, Exception exception) {
 
 				// remove temporary file if needed
 				try {
@@ -2279,7 +2281,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 				} catch (IOException e) {}
 
 				if ( doneListener != null )
-					doneListener.finished(thread, code);
+					doneListener.finished(thread, code, null);
 			}
 		});
 

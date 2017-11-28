@@ -71,9 +71,10 @@ public class CatalogueImporterThread extends Thread {
 		try {
 			importer.makeImport();
 		} catch (TransformerException | IOException | 
-				XMLStreamException | OpenXML4JException | SAXException | SQLException e) {
+				XMLStreamException | OpenXML4JException | 
+				SAXException | SQLException | ImportException e) {
 			
-			doneListener.finished(this, ThreadFinishedListener.EXCEPTION);
+			doneListener.finished(this, ThreadFinishedListener.EXCEPTION, e);
 			
 			if ( progressBar != null ) {
 				progressBar.stop( Messages.getString("DCDownload.WrongXmlStructure") );
@@ -102,7 +103,7 @@ public class CatalogueImporterThread extends Thread {
 		if ( doneListener != null ) {
 			Event event = new Event();
 			event.data = filename;
-			doneListener.finished( this, ThreadFinishedListener.OK );
+			doneListener.finished( this, ThreadFinishedListener.OK, null );
 		}
 	}
 	

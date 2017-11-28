@@ -178,5 +178,5 @@ public abstract class SheetImporter<T> {
 	/**
 	 * Called when the parsing is finished.
 	 */
-	public abstract void end ();
+	public abstract void end () throws ImportException;
 }

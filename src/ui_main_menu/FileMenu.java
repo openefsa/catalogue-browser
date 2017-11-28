@@ -292,7 +292,7 @@ public class FileMenu implements MainMenuItem {
 				FileActions.importCatalogue( shell, new ThreadFinishedListener() {
 					
 					@Override
-					public void finished(Thread thread, final int code) {
+					public void finished(Thread thread, final int code, Exception e) {
 						
 						// refresh menu items when the import is 
 						// finished (needed to refresh open and delete buttons)

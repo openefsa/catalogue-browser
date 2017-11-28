@@ -54,11 +54,12 @@ public class CatalogueWorkbookImporter {
 	 * @throws SAXException 
 	 * @throws OpenXML4JException 
 	 * @throws SQLException 
+	 * @throws ImportException 
 	 * @throws Exception
 	 */
 	public void importWorkbook( IProgressBar progressBar, String filename, double maxProgress ) 
 			throws IOException, XMLStreamException, OpenXML4JException, 
-			SAXException, SQLException {
+			SAXException, SQLException, ImportException {
 		
 		this.progressBar = progressBar;
 		this.maxProgress = maxProgress;
@@ -133,9 +134,10 @@ public class CatalogueWorkbookImporter {
 	 * @throws InvalidFormatException
 	 * @throws IOException
 	 * @throws XMLStreamException
+	 * @throws ImportException 
 	 */
 	private CatalogueSheetImporter importCatalogueSheet ( WorkbookReader workbookReader ) 
-			throws InvalidFormatException, IOException, XMLStreamException {
+			throws InvalidFormatException, IOException, XMLStreamException, ImportException {
 		
 		// get the catalogue sheet and check if the catalogues are compatible
 		// (the open catalogue and the one we want to import)
@@ -167,9 +169,10 @@ public class CatalogueWorkbookImporter {
 	 * @throws XMLStreamException
 	 * @throws InvalidFormatException
 	 * @throws IOException
+	 * @throws ImportException 
 	 */
 	private void importAttributeSheet( WorkbookReader workbookReader, Catalogue catalogue ) 
-			throws XMLStreamException, InvalidFormatException, IOException {
+			throws XMLStreamException, InvalidFormatException, IOException, ImportException {
 
 		// get the attribute sheet
 		workbookReader.processSheetName( Headers.ATTR_SHEET_NAME );
@@ -205,10 +208,11 @@ public class CatalogueWorkbookImporter {
 	 * @throws InvalidFormatException
 	 * @throws IOException
 	 * @throws XMLStreamException
+	 * @throws ImportException 
 	 */
 	private void importHierarchySheet ( WorkbookReader workbookReader, 
 			Catalogue catalogue, String catExcelCode ) 
-					throws InvalidFormatException, IOException, XMLStreamException {
+					throws InvalidFormatException, IOException, XMLStreamException, ImportException {
 
 		// get the hierarchy sheet
 		workbookReader.processSheetName( Headers.HIER_SHEET_NAME );
@@ -243,10 +247,11 @@ public class CatalogueWorkbookImporter {
 	 * @throws CloneNotSupportedException
 	 * @throws IOException 
 	 * @throws InvalidFormatException 
+	 * @throws ImportException 
 	 */
 	private void importQuickly ( WorkbookReader workbookReader, String sheetName,
 			int batchSize, final SheetImporter<?> importer ) throws XMLStreamException, 
-			InvalidFormatException, IOException {
+			InvalidFormatException, IOException, ImportException {
 		
 		QuickImporter quickImp = new QuickImporter( workbookReader, batchSize ) {
 			
@@ -270,9 +275,10 @@ public class CatalogueWorkbookImporter {
 	 * @throws IOException
 	 * @throws XMLStreamException
 	 * @throws SQLException 
+	 * @throws ImportException 
 	 */
 	private TermSheetImporter importTermSheet ( WorkbookReader workbookReader, Catalogue catalogue ) 
-			throws InvalidFormatException, IOException, XMLStreamException, SQLException {
+			throws InvalidFormatException, IOException, XMLStreamException, SQLException, ImportException {
 
 		final int batchSize = 100;
 
@@ -300,10 +306,11 @@ public class CatalogueWorkbookImporter {
 	 * @throws InvalidFormatException
 	 * @throws XMLStreamException
 	 * @throws IOException
+	 * @throws ImportException 
 	 */
 	private void importTermRelations ( WorkbookReader workbookReader,
 			Catalogue catalogue, HashMap<String,String> newCodes ) 
-					throws SQLException, InvalidFormatException, XMLStreamException, IOException {
+					throws SQLException, InvalidFormatException, XMLStreamException, IOException, ImportException {
 
 		final int batchSize = 100;
 		

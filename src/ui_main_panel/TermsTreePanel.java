@@ -33,6 +33,7 @@ import global_manager.GlobalManager;
 import messages.Messages;
 import term_clipboard.TermClipboard;
 import term_clipboard.TermOrderChanger;
+import term_code_generator.TermCodeException;
 import ui_describe.FormDescribedTerms;
 import ui_describe.FormTermCoder;
 import ui_general_graphics.DialogSingleText;
@@ -793,6 +794,9 @@ public class TermsTreePanel extends Observable implements Observer {
 
 				Term child = addNewTerm( selectedHierarchy, selectedHierarchy );
 				
+				if (child == null)
+					return;
+				
 				// refresh tree
 				tree.refresh();
 				
@@ -817,29 +821,15 @@ public class TermsTreePanel extends Observable implements Observer {
 
 		Term child;
 
-		TermDAO termDao = new TermDAO( catalogue );
-		
 		// if we do not have a term code mask we need to ask to the
 		// user the term code
 		if ( catalogue.getTermCodeMask() == null || 
 				catalogue.getTermCodeMask().isEmpty() ) {
 
-			DialogSingleText dialog = new DialogSingleText( shell, 1 );
-			dialog.setTitle( Messages.getString( "NewTerm.Title" ) );
-			dialog.setMessage( Messages.getString( "NewTerm.Message" ) );
-			String code = dialog.open();
-
-			if ( code == null )
-				return null;
+			String code = askTermCode();
 			
-			// check if the selected code is already present or not in the db
-			if ( termDao.getByCode( code ) != null ) {
-				
-				GlobalUtil.showErrorDialog( shell, 
-						Messages.getString( "NewTerm.DoubleCodeTitle" ), 
-						Messages.getString( "NewTerm.DoubleCodeMessage" ) );
+			if (code == null)
 				return null;
-			}
 			
 			child = catalogue.addNewTerm( code, parent, selectedHierarchy );
 
@@ -848,10 +838,49 @@ public class TermsTreePanel extends Observable implements Observer {
 			
 			// create a new default term with default attributes as child
 			// of the selected term in the selected hierarchy
-			child = catalogue.addNewTerm( parent, selectedHierarchy );
+			try {
+				child = catalogue.addNewTerm( parent, selectedHierarchy );
+				
+			} catch (TermCodeException e) {
+				e.printStackTrace();
+				
+				GlobalUtil.showErrorDialog(shell, Messages.getString("NewTerm.MaxCodeReachedTitle"), 
+						Messages.getString("NewTerm.MaxCodeReachedMessage"));
+				
+				String code = askTermCode();
+				
+				if (code == null)
+					return null;
+				
+				child = catalogue.addNewTerm( code, parent, selectedHierarchy );
+			}
 		}
 		
 		return child;
+	}
+	
+	private String askTermCode() {
+		
+		TermDAO termDao = new TermDAO( catalogue );
+		
+		DialogSingleText dialog = new DialogSingleText( shell, 1 );
+		dialog.setTitle( Messages.getString( "NewTerm.Title" ) );
+		dialog.setMessage( Messages.getString( "NewTerm.Message" ) );
+		String code = dialog.open();
+
+		if ( code == null )
+			return null;
+		
+		// check if the selected code is already present or not in the db
+		if ( termDao.getByCode( code ) != null ) {
+			
+			GlobalUtil.showErrorDialog( shell, 
+					Messages.getString( "NewTerm.DoubleCodeTitle" ), 
+					Messages.getString( "NewTerm.DoubleCodeMessage" ) );
+			return null;
+		}
+		
+		return code;
 	}
 	
 	

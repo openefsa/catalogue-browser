@@ -74,7 +74,7 @@ public class UserProfileChecker extends Thread {
 		downloader.setDoneListener( new ThreadFinishedListener() {
 			
 			@Override
-			public void finished(Thread thread, int code ) {
+			public void finished(Thread thread, int code, Exception e ) {
 				
 				User user = User.getInstance();
 				
@@ -103,7 +103,7 @@ public class UserProfileChecker extends Thread {
 				
 				// call the super.doneListener
 				if ( doneListener != null )
-					doneListener.finished( UserProfileChecker.this, code );
+					doneListener.finished( UserProfileChecker.this, code, e );
 			}
 		});
 		

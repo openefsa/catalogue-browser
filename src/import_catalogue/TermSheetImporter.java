@@ -11,6 +11,7 @@ import catalogue_object.TermBuilder;
 import naming_convention.Headers;
 import open_xml_reader.ResultDataSet;
 import term_code_generator.CodeGenerator;
+import term_code_generator.TermCodeException;
 
 /**
  * Importer of the term sheet. This class can be also used to
@@ -118,7 +119,7 @@ public class TermSheetImporter extends SheetImporter<Term> {
 	}
 
 	@Override
-	public void end() {
+	public void end() throws ImportException {
 
 		if ( !tempTerms.isEmpty() ) {
 			if ( catalogue.getTermCodeMask() == null || catalogue.getTermCodeMask().isEmpty() ) {
@@ -135,7 +136,14 @@ public class TermSheetImporter extends SheetImporter<Term> {
 			// term code mask (since we are creating terms
 			// automatically, a term code mask needs to be
 			// defined! Otherwise we cannot do the append)
-			String newCode = CodeGenerator.getTermCode( catalogue.getTermCodeMask() );
+			String newCode;
+			try {
+				newCode = CodeGenerator.getTermCode( catalogue.getTermCodeMask() );
+			} catch (TermCodeException e) {
+				e.printStackTrace();
+				throw new ImportException(e.getMessage(), "X100");
+			}
+			
 			String tempCode = newTerm.getCode();
 			
 			// add the new code to the hash map to maintain

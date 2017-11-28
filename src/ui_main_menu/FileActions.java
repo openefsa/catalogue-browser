@@ -302,7 +302,7 @@ public class FileActions {
 		catDown.setDoneListener( new ThreadFinishedListener() {
 
 			@Override
-			public void finished(final Thread thread, final int value) {
+			public void finished(final Thread thread, final int value, Exception e) {
 
 				shell.getDisplay().asyncExec( new Runnable() {
 
@@ -469,7 +469,7 @@ public class FileActions {
 		deleter.setDoneListener( new ThreadFinishedListener() {
 
 			@Override
-			public void finished(Thread thread, final int code) {
+			public void finished(Thread thread, final int code, Exception e) {
 
 				shell.getDisplay().asyncExec( new Runnable() {
 

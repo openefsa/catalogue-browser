@@ -71,7 +71,7 @@ public class CatalogueDestroyer extends Thread {
 			progressBar.close();
 		
 		// finished
-		doneListener.finished( this, code );
+		doneListener.finished( this, code, null );
 	};
 	
 	/**

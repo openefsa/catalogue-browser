@@ -30,66 +30,6 @@ public class CodeGenerator {
 		
 		return false;
 	}
-	
-	public static int convertAlphaNumToInt32 ( String alphacode ) {
-
-		char[] figures = alphacode.toCharArray();
-
-		int val = 0;
-
-		for ( int j = 0 ; j < figures.length ; j++ ) {
-			int c = (int) figures[figures.length - j - 1];
-
-			if ( ( c >= 48 ) && ( c <= 58 ) ) /* Allowed number are 0 to 9 */
-				val = val + (int) ( Math.pow( 32, j ) * ( c - 48 ) );
-			else {
-				int offset = 0;
-				if ( c >= 65 )
-					offset = 0;
-				if ( c >= 73/* I */)
-					offset = -1;
-				if ( c >= 79/* O */)
-					offset = -2;
-				if ( c >= 85/* U */)
-					offset = -3;
-				if ( c >= 87/* W */)
-					offset = -4;
-				val = val + (int) ( Math.pow( 32, j ) * ( c - 65 + 10 + offset ) );
-			}
-		}
-
-		return val;
-	}
-
-	public static String convertIntToAlphaNum32 ( int intCode , int numFigures ) {
-
-		String alphaNum = "";
-		int val;
-
-		while ( intCode > 0 ) {
-
-			val = intCode % 32;
-			intCode = intCode / 32;
-
-			if ( val < 10 ) { /* all numbers */
-				val = val + 48;
-				alphaNum = (char) val + alphaNum;
-			} else {
-				val = val - 10 + 65;
-				if ( val >= 73 ) /* i */
-					val++;
-				if ( val >= 79 ) /* o */
-					val++;
-				if ( val >= 85 ) /* u */
-					val++;
-				if ( val >= 87 ) /* w */
-					val++;
-				alphaNum = (char) val + alphaNum;
-			}
-		}
-
-		return alphaNum;
-	}
 
 	/*
 	 * Possible increments
@@ -135,8 +75,13 @@ public class CodeGenerator {
 		return retpos;
 	}
 
-	private static char[] incrementCodeRec ( char[] alphaNumCode , char[] mask , int i ) {
-
+	private static char[] incrementCodeRec ( char[] alphaNumCode , char[] mask , int i ) throws TermCodeException {
+		
+		// if overflow, that is, the maximum code is reached
+		if (i == -1) {
+			throw new TermCodeException("Maximum term code reached for the current term code mask. Cannot create new code!");
+		}
+		
 		int index;
 
 		if ( mask[i] == '#' ) {
@@ -171,7 +116,7 @@ public class CodeGenerator {
 		return alphaNumCode;
 	}
 
-	private static String incrementCode ( String alphaNumCode , String mask ) {
+	private static String incrementCode ( String alphaNumCode , String mask ) throws TermCodeException {
 
 		return String.valueOf( incrementCodeRec( alphaNumCode.toCharArray(), mask.toCharArray(),
 				mask.length() - 1 ) );
@@ -231,8 +176,9 @@ public class CodeGenerator {
 	 * Get the code of a new term given the code mask
 	 * @param codeMask
 	 * @return
+	 * @throws TermCodeException 
 	 */
-	public static String getTermCode ( String codeMask ) {
+	public static String getTermCode ( String codeMask ) throws TermCodeException {
 
 		// I am preparing the selection mask
 

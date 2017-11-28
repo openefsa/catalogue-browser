@@ -160,7 +160,7 @@ public class PendingPublish extends PendingAction {
 		downloader.setDoneListener( new ThreadFinishedListener() {
 			
 			@Override
-			public void finished(Thread thread, int code) {
+			public void finished(Thread thread, int code, Exception e) {
 				
 				if ( code != ThreadFinishedListener.OK )
 					setStatus( PendingActionStatus.ERROR );

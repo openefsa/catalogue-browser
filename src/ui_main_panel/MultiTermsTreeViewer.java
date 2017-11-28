@@ -317,6 +317,9 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 	 */
 	public void selectTerm ( Nameable term, int level ) {
 		
+		if (term == null)
+			return;
+		
 		// get the focus
 		tree.getControl().setFocus();
 		

@@ -65,9 +65,10 @@ public class CatalogueImporter {
 	 * @throws OpenXML4JException 
 	 * @throws XMLStreamException 
 	 * @throws IOException 
+	 * @throws ImportException 
 	 */
 	public void makeImport() throws TransformerException, 
-		IOException, XMLStreamException, OpenXML4JException, SAXException, SQLException {
+		IOException, XMLStreamException, OpenXML4JException, SAXException, SQLException, ImportException {
 
 		// 5% of progress bar for preprocessing
 		this.preprocProgress = maxProgress * 5 / 100;
@@ -166,9 +167,10 @@ public class CatalogueImporter {
 	 * @throws OpenXML4JException 
 	 * @throws XMLStreamException 
 	 * @throws IOException 
+	 * @throws ImportException 
 	 */
 	private void importEcf( String filename ) throws TransformerException, 
-		IOException, XMLStreamException, OpenXML4JException, SAXException, SQLException {
+		IOException, XMLStreamException, OpenXML4JException, SAXException, SQLException, ImportException {
 		
 		String xmlFile = processEcf( filename );
 		
@@ -189,9 +191,10 @@ public class CatalogueImporter {
 	 * @throws OpenXML4JException 
 	 * @throws XMLStreamException 
 	 * @throws IOException 
+	 * @throws ImportException 
 	 */
 	private void importXml( String filename ) throws TransformerException, 
-		IOException, XMLStreamException, OpenXML4JException, SAXException, SQLException {
+		IOException, XMLStreamException, OpenXML4JException, SAXException, SQLException, ImportException {
 
 		String xlsxFile = processXml( filename );
 		
@@ -211,9 +214,10 @@ public class CatalogueImporter {
 	 * @throws OpenXML4JException 
 	 * @throws XMLStreamException 
 	 * @throws IOException 
+	 * @throws ImportException 
 	 */
 	private void importXlsx( final String filename ) throws IOException, 
-		XMLStreamException, OpenXML4JException, SAXException, SQLException {
+		XMLStreamException, OpenXML4JException, SAXException, SQLException, ImportException {
 
 		// instantiate the workbook importer and set
 		// some settings

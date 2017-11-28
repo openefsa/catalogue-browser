@@ -14,5 +14,5 @@ public interface ThreadFinishedListener {
 	 * general error is {@value #ERROR})
 	 * otherwise
 	 */
-	public void finished( Thread thread, int code );
+	public void finished( Thread thread, int code, Exception e );
 }

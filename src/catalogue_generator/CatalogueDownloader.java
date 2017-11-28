@@ -69,7 +69,7 @@ public class CatalogueDownloader extends Thread {
 				new ThreadFinishedListener() {
 			
 			@Override
-			public void finished(Thread thread, int code) {
+			public void finished(Thread thread, int code, Exception e) {
 				callListener ( code );
 				finished = true;
 			}
@@ -98,7 +98,7 @@ public class CatalogueDownloader extends Thread {
 	 */
 	private void callListener ( int code ) {
 		if ( doneListener != null )
-			doneListener.finished( this, code );
+			doneListener.finished( this, code, null );
 	}
 	
 	/**

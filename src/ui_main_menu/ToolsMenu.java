@@ -30,6 +30,7 @@ import dcf_webservice.ReserveLevel;
 import export_catalogue.ExportActions;
 import import_catalogue.CatalogueImporter.ImportFileFormat;
 import import_catalogue.CatalogueImporterThread;
+import import_catalogue.ImportException;
 import messages.Messages;
 import sas_remote_procedures.XmlUpdateFile;
 import sas_remote_procedures.XmlUpdateFileDAO;
@@ -553,38 +554,59 @@ public class ToolsMenu implements MainMenuItem {
 				importCat.addDoneListener( new ThreadFinishedListener() {
 					
 					@Override
-					public void finished(Thread thread, final int code) {
+					public void finished(Thread thread, final int code, final Exception e) {
 						
 						mainMenu.getShell().getDisplay().asyncExec( new Runnable() {
 							
 							@Override
 							public void run() {
 								
-								String title;
-								String msg;
-								int icon;
+								String title = null;
+								String msg = null;
+								int icon = SWT.ICON_ERROR;
 								
 								if ( code == ThreadFinishedListener.OK ) {
 									title = Messages.getString("Import.ImportSuccessTitle");
 									msg = Messages.getString( "Import.ImportSuccessMessage" );
 									icon = SWT.ICON_INFORMATION;
-									
-									// load catalogue data in ram
-									// we do not open it since it is already opened
-									mainMenu.getCatalogue().refresh();
-									mainMenu.getCatalogue().open();
 								}
 								else {
-									title = Messages.getString("Import.ImportErrorTitle");
-									msg = Messages.getString( "Import.ImportErrorMessage" );
-									icon = SWT.ICON_ERROR;
+									
+									if (e instanceof ImportException) {
+									
+										ImportException impEx = (ImportException) e;
+										
+										switch(impEx.getCode()) {
+										case "X100":
+											title = Messages.getString("Import.ImportErrorTitle");
+											msg = Messages.getString( "Import.ImportAppendErrorMessage" );
+											icon = SWT.ICON_ERROR;
+											break;
+										case "X101":
+											title = impEx.getData();
+											msg = Messages.getString( "Import.ImportStructureErrorMessage" );
+											icon = SWT.ICON_ERROR;
+											break;
+										}
+									}
+									else {
+										title = Messages.getString("Import.ImportErrorTitle");
+										msg = Messages.getString( "Import.ImportGenericErrorMessage" );
+										icon = SWT.ICON_ERROR;
+									}
 								}
+
+								// load catalogue data in ram
+								// we do not open it since it is already opened
+								mainMenu.getCatalogue().refresh();
+								mainMenu.getCatalogue().open();
 								
 								if ( listener != null )
 									listener.buttonPressed( importItem, 
 											IMPORT_CAT_MI, null );
 								
-								GlobalUtil.showDialog(shell, title, msg, icon );
+								if (title != null && msg != null)
+									GlobalUtil.showDialog(shell, title, msg, icon );
 							}
 						});
 
@@ -649,7 +671,7 @@ public class ToolsMenu implements MainMenuItem {
 						filename, new ThreadFinishedListener() {
 
 					@Override
-					public void finished(Thread thread, final int code) {
+					public void finished(Thread thread, final int code, Exception e) {
 						
 						shell.getDisplay().asyncExec( new Runnable() {
 							

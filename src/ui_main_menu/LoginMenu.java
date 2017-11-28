@@ -117,7 +117,7 @@ public class LoginMenu implements MainMenuItem {
 				dcf.setUserLevel( new ThreadFinishedListener() {
 
 					@Override
-					public void finished(Thread thread, final int code) {
+					public void finished(Thread thread, final int code, Exception e) {
 
 						shell.getDisplay().asyncExec( new Runnable() {
 

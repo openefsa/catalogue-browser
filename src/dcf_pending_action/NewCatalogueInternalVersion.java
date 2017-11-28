@@ -81,7 +81,7 @@ public class NewCatalogueInternalVersion {
 		importCat.addDoneListener( new ThreadFinishedListener() {
 			
 			@Override
-			public void finished(Thread thread, int code) {
+			public void finished(Thread thread, int code, Exception exception) {
 				
 				// get the new catalogue version
 				CatalogueDAO catDao = new CatalogueDAO();

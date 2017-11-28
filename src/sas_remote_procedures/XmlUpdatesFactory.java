@@ -64,7 +64,7 @@ public class XmlUpdatesFactory {
 		export.exportAsync( catalogue, startFilename, new ThreadFinishedListener() {
 			
 			@Override
-			public void finished(Thread thread, int code) {
+			public void finished(Thread thread, int code, Exception exception) {
 
 				if ( code != ThreadFinishedListener.OK ) {
 					abort( Messages.getString( "XmlChangesCreator.ExportAbort" ) );

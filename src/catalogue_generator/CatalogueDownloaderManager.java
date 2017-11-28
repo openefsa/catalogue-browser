@@ -70,7 +70,7 @@ public class CatalogueDownloaderManager extends Thread {
 				thread.setDoneListener( new ThreadFinishedListener() {
 
 					@Override
-					public void finished(Thread thread, int code) {
+					public void finished(Thread thread, int code, Exception e) {
 						startedCount--;
 					}
 				});

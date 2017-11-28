@@ -24,6 +24,7 @@ public class QuickParentAttributesImporter extends QuickImporter {
 	
 	private TermAttributeImporter taImp;
 	private ParentImporter parentImp;
+	private ImportException occurredEx;
 	
 	/**
 	 * Initialize the importer.
@@ -79,7 +80,7 @@ public class QuickParentAttributesImporter extends QuickImporter {
 	
 	@Override
 	public void importData( final ResultDataSet rs ) throws ImportException {
-
+		
 		// import the term attribute sheet in parallel
 		Thread thread = new Thread( new Runnable() {
 			
@@ -101,6 +102,7 @@ public class QuickParentAttributesImporter extends QuickImporter {
 					taImp.importData( clonedRs );
 				} catch (ImportException e) {
 					e.printStackTrace();
+					occurredEx = e;
 				}
 				
 				// close the dataset
@@ -122,6 +124,11 @@ public class QuickParentAttributesImporter extends QuickImporter {
 			thread.join();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+		}
+		
+		// if an exception occurred in the thread throw it
+		if (occurredEx != null) {
+			throw occurredEx;
 		}
 	}
 }

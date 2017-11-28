@@ -47,7 +47,7 @@ public class ExportCatalogueThread extends Thread {
 			// exception
 			if ( listener != null )
 				listener.finished( ExportCatalogueThread.this, 
-						ThreadFinishedListener.EXCEPTION );
+						ThreadFinishedListener.EXCEPTION, e );
 
 			finish();
 			
@@ -58,7 +58,7 @@ public class ExportCatalogueThread extends Thread {
 		// finished
 		if ( listener != null )
 			listener.finished( ExportCatalogueThread.this, 
-					ThreadFinishedListener.OK );
+					ThreadFinishedListener.OK, null );
 
 		finish();
 	}

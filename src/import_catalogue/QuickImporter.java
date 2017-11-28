@@ -33,9 +33,10 @@ public abstract class QuickImporter {
 	 * @throws XMLStreamException
 	 * @throws IOException 
 	 * @throws InvalidFormatException 
+	 * @throws ImportException 
 	 */
 	public void importSheet () 
-			throws XMLStreamException, InvalidFormatException, IOException {
+			throws XMLStreamException, InvalidFormatException, IOException, ImportException {
 		
 		workbookReader.setBatchSize( batchSize );
 
