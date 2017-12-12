@@ -221,7 +221,7 @@ public class FileActions {
 		Collection<Catalogue> objs = chooseCatalogues(shell, title, input, 
 				false, columns, okText);
 
-		if ( objs.isEmpty() )
+		if ( objs == null || objs.isEmpty() )
 			return null;
 
 		return objs.iterator().next();

@@ -5,7 +5,6 @@ import java.io.File;
 import javax.xml.soap.SOAPException;
 
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Shell;
 
 import catalogue.Catalogue;
 import dcf_manager.Dcf;

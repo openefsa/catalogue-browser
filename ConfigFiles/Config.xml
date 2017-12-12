@@ -3,7 +3,7 @@
 <properties>
 <comment>Default Properties</comment>
 <entry key="Application.Name">EFSA Catalogues Browser</entry>
-<entry key="Application.Version">1.0.0</entry>
+<entry key="Application.Version">1.0.3</entry>
 <entry key="Dcf.EnableTest">NO</entry>
 <entry key="DcfXmlUpdatesCreator.RemotePath">\\efsa.eu.int\fileserver\SASOperational\DataShare\Data\DATA\SSD\METADATA\CAT_BROWSER</entry>
 <entry key="DcfXmlUpdatesCreator.InputFolder">IN</entry>
