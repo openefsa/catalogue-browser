@@ -2,6 +2,8 @@ package test;
 
 import java.util.ArrayList;
 
+import javax.xml.soap.SOAPException;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
@@ -9,7 +11,6 @@ import org.eclipse.swt.widgets.Shell;
 
 import catalogue.Catalogue;
 import catalogue_browser_dao.DatabaseManager;
-import catalogue_generator.CatalogueDownloader;
 import dcf_manager.Dcf;
 import dcf_pending_action.PendingActionListener;
 import dcf_user.User;
@@ -23,7 +24,7 @@ public class ForcedReserve {
 
 	public static boolean GO_ON = false;
 	
-	public static void main( String[] args ) throws InterruptedException {
+	public static void main( String[] args ) throws InterruptedException, SOAPException {
 		
 		Display display = new Display();
 		final Shell shell = new Shell ( display );
@@ -35,7 +36,7 @@ public class ForcedReserve {
 		
 		shell.open();
 		
-		User.getInstance().login( "gibinda", "Ab123456");
+		User.getInstance().login( "gibinda", "Ab123456", false);
 
 		Dcf dcf = new Dcf();
 		

@@ -297,8 +297,9 @@ public class Dcf {
 	/**
 	 * Make a ping to the dcf
 	 * @return true if the dcf is responding correctly
+	 * @throws SOAPException 
 	 */
-	public boolean ping() {
+	public boolean ping() throws SOAPException {
 		Ping ping = new Ping( dcfType );
 		return ping.ping();
 	}

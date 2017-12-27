@@ -95,6 +95,10 @@ public class MainPanel implements Observer, RestoreableWindow {
 		this.shell = shell;
 	}
 	
+	public MainMenu getMenu() {
+		return menu;
+	}
+	
 	@Override
 	public String getWindowCode() {
 		return WINDOW_CODE;
@@ -119,7 +123,9 @@ public class MainPanel implements Observer, RestoreableWindow {
 		// shell name, image, window dimensions (based on
 		// widget! Need to call it after addWidgets)
 		setShellGraphics();
-		
+	}
+	
+	public void openLastCatalogue() {
 		// open the last catalogue if present
 		try {
 			Catalogue catalogue = getLastOpenedCatalogue();
@@ -590,9 +596,9 @@ public class MainPanel implements Observer, RestoreableWindow {
 					}
 					
 					// warn user if necessary
-					boolean ok = FileActions.performCatalogueChecks( shell, targetCat );
+					int ok = FileActions.performCatalogueChecks( shell, targetCat );
 					
-					if ( !ok )
+					if ( ok != SWT.OK )
 						break;
 					
 					// open the catalogue when the dialog is closed

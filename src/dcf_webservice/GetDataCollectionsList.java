@@ -14,10 +14,7 @@ import org.w3c.dom.NodeList;
 
 import data_collection.DataCollection;
 import data_collection.DataCollectionBuilder;
-import data_collection.DCTable;
-import dcf_manager.Dcf;
 import dcf_manager.Dcf.DcfType;
-import dcf_user.User;
 
 public class GetDataCollectionsList extends GetList<DataCollection> {
 
@@ -140,19 +137,5 @@ public class GetDataCollectionsList extends GetList<DataCollection> {
 		soapMsg.saveChanges();
 
 		return soapMsg;
-	}
-	
-	public static void main( String[] args ) throws SOAPException {
-		User.getInstance().login( "gibinda", "Ab123456" );
-		
-		Dcf dcf = new Dcf();
-		for ( DataCollection dc : dcf.getDataCollectionsList() ) {
-			System.out.println( dc );
-		}
-		
-		GetFile getFile = new GetFile( DcfType.TEST );
-		Collection<DCTable> tables = getFile.getFile( "05_172" );
-		
-		System.out.println( tables );
 	}
 }

@@ -40,16 +40,13 @@ public class Ping extends SOAPAction {
 	/**
 	 * Make a ping
 	 * @return
+	 * @throws SOAPException 
 	 */
-	public boolean ping () {
+	public boolean ping () throws SOAPException {
 		boolean check;
-		
-		try {
-			String url = getType() == DcfType.PRODUCTION ? URL : TEST_URL;
-			check = (boolean) makeRequest( url );
-		} catch (SOAPException e) {
-			check = false;
-		}
+
+		String url = getType() == DcfType.PRODUCTION ? URL : TEST_URL;
+		check = (boolean) makeRequest( url );
 
 		return check;
 	}

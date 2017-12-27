@@ -9,17 +9,10 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
-import catalogue_generator.ThreadFinishedListener;
-import dcf_manager.Dcf;
-import dcf_pending_action.PendingPublish;
-import dcf_pending_action.PendingReserve;
-import dcf_pending_action.PendingUploadData;
-import dcf_pending_action.PendingXmlDownload;
 import dcf_user.User;
 import messages.Messages;
+import ui_main_panel.CatalogueBrowserMain;
 import ui_main_panel.FormDCFLogin;
-import ui_progress_bar.FormProgressBar;
-import utilities.GlobalUtil;
 
 /**
  * Login button of the main panel
@@ -33,7 +26,9 @@ public class LoginMenu implements MainMenuItem {
 	private MenuListener listener;
 
 	private MainMenu mainMenu;
+	private MenuItem loginMI;
 	private Shell shell;
+	private boolean forceEnabled;
 
 	/**
 	 * Login button in the main menu
@@ -54,6 +49,11 @@ public class LoginMenu implements MainMenuItem {
 		this.listener = listener;
 	}
 
+	public void setEnabled(boolean enabled) {
+		this.forceEnabled = enabled;
+		this.loginMI.setEnabled(enabled);
+	}
+	
 	/**
 	 * Create the dcf login button
 	 * @param menu
@@ -61,13 +61,12 @@ public class LoginMenu implements MainMenuItem {
 	 */
 	public MenuItem create ( Menu menu ) {
 
-		final MenuItem loginMI = new MenuItem ( menu, SWT.NONE );
+		loginMI = new MenuItem ( menu, SWT.NONE );
 		loginMI.setText( Messages.getString( "BrowserMenu.LoginMenuName" ) );
 
-		User user = User.getInstance();
-
 		// enable button only if the user is not logged in
-		loginMI.setEnabled( !user.isLogged() );
+		loginMI.setEnabled( forceEnabled || (!User.getInstance().areCredentialsStored()
+				&& !User.getInstance().isLogged()));
 
 		loginMI.addSelectionListener( new SelectionListener() {
 
@@ -82,81 +81,25 @@ public class LoginMenu implements MainMenuItem {
 				// if wrong credentials return
 				if ( !login.isValid() )
 					return;
-
+				
 				// disable the login button
-				loginMI.setEnabled( false );
+				forceEnabled = false;
+				loginMI.setEnabled(false);
 
 				// disable tools menu until we have
 				// obtained the user access level
 				// (avoid concurrence editing in db)
 				mainMenu.tools.setEnabled( false );
-
-				// Check catalogues updates and 
-				// user access level
-				Dcf dcf = new Dcf();
-
-				// start checking updates for the catalogues
-				dcf.checkUpdates( new Listener() {
+				
+				// start processes after the user is authenticated
+				LoginActions.startLoggedThreads(shell, mainMenu.getListener(),
+						new Listener() {
 
 					@Override
 					public void handleEvent(Event arg0) {
-						refresh();
-					}
-				} );
-
-				dcf.refreshDataCollections();
-
-				// progress bar for the user level
-				// Note that the progress bar does not block the user interaction
-				final FormProgressBar progressBar = new FormProgressBar(shell, 
-						Messages.getString( "Login.UserLevelProgressBarTitle" ),
-						false, SWT.TITLE );
-
-				dcf.setProgressBar( progressBar );
-
-				dcf.setUserLevel( new ThreadFinishedListener() {
-
-					@Override
-					public void finished(Thread thread, final int code, Exception e) {
-
-						shell.getDisplay().asyncExec( new Runnable() {
-
-							@Override
-							public void run() {
-
-								progressBar.close();
-								
-								// if correct
-								if ( code == ThreadFinishedListener.OK || 
-										code == ThreadFinishedListener.ERROR ) {
-									
-									// once we have finished checking the user
-									// level we start with the pending reserves
-									// we do this here to avoid concurrence
-									// editing of the database
-									startPendingActions();
-
-									if ( listener != null )
-										listener.buttonPressed( loginMI, LOGIN_MI, null );
-
-									String title = Messages.getString( "Login.PermissionTitle" );
-									String msg;
-
-									if ( User.getInstance().isCatManager() )
-										msg = Messages.getString("Login.CatalogueManagerMessage");
-									else
-										msg = Messages.getString("Login.DataProviderMessage");
-
-									GlobalUtil.showDialog(shell, title, msg, SWT.ICON_INFORMATION );
-				
-								}
-								else { // errors
-									GlobalUtil.showErrorDialog(shell, 
-											Messages.getString("ExportCatalogue.ErrorTitle"), 
-											Messages.getString("ExportCatUsers.ErrorMessage"));
-								}
-							}
-						});
+						shell.setText(CatalogueBrowserMain.APP_TITLE + " " + Messages.getString("App.Connected"));
+						
+						listener.buttonPressed(loginMI, LoginMenu.LOGIN_MI, arg0);
 					}
 				});
 			}
@@ -169,48 +112,4 @@ public class LoginMenu implements MainMenuItem {
 	}
 
 	public void refresh() {};
-
-	/**
-	 * Start all the pending actions in the database
-	 * @return
-	 */
-	public void startPendingActions() {
-
-		Dcf dcf = new Dcf();
-
-		// progress bar for pending reserve
-		FormProgressBar bar = new FormProgressBar( shell, 
-				Messages.getString("Reserve.NewInternalTitle") );
-		
-		bar.setLocation( bar.getLocation().x, bar.getLocation().y + 170 );
-		
-		dcf.setProgressBar( bar );
-		
-		// start reserve actions
-		dcf.startPendingActions( PendingReserve.TYPE, 
-				mainMenu.getListener() );
-
-		
-		// progress bar for pending publish
-		FormProgressBar bar2 = new FormProgressBar( shell, 
-				Messages.getString("Publish.DownloadPublished") );
-		
-		bar.setLocation( bar2.getLocation().x, bar2.getLocation().y + 170 );
-		
-		dcf.setProgressBar( bar2 );
-		
-		// start publish actions
-		dcf.startPendingActions( PendingPublish.TYPE, 
-				mainMenu.getListener() );
-
-		
-		
-		// start upload data actions
-		dcf.startPendingActions( PendingUploadData.TYPE, 
-				mainMenu.getListener() );
-
-		// start upload data actions
-		dcf.startPendingActions( PendingXmlDownload.TYPE, 
-				mainMenu.getListener() );
-	}
 }

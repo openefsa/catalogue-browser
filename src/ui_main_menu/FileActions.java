@@ -99,7 +99,7 @@ public class FileActions {
 	 * @param catalogue
 	 * @return true if the catalogue was opened
 	 */
-	public static Catalogue openCatalogue( Shell shell ) {
+	public static void openCatalogue( final Shell shell, final Listener listener ) {
 
 		// get all the catalogues downloaded in the pc
 		CatalogueDAO catDao = new CatalogueDAO();
@@ -126,24 +126,114 @@ public class FileActions {
 
 		// return if no catalogue selected
 		if ( catalogue == null )
-			return null;
+			return;
 
-		boolean ok = performCatalogueChecks ( shell, catalogue );
+		int val1 = warnDeprecatedCatalogue(shell, catalogue);
+		
+		if (val1 == SWT.CANCEL)
+			return;
+		
+		warnPossibleOldCatalogue(shell, catalogue);
+		
+		int val2 = warnOldRelease(shell, catalogue);
+		
+		if (val2 == SWT.OK) {
+		
+			final Catalogue lastRelease = catalogue.getLastRelease();
+			
+			downloadSingleCat(shell, lastRelease, new Listener() {
+				
+				@Override
+				public void handleEvent(Event arg0) {
+					// open the catalogue when the dialog is closed
+					GlobalUtil.setShellCursor( shell, SWT.CURSOR_WAIT );
 
-		if ( !ok )
-			return null;
+					// open the new catalogue
+					lastRelease.open();
 
-		// open the catalogue when the dialog is closed
-		GlobalUtil.setShellCursor( shell, SWT.CURSOR_WAIT );
+					GlobalUtil.setShellCursor( shell, SWT.CURSOR_ARROW );
+					
+					listener.handleEvent(arg0);
+				}
+			});
+		}
+		else {
+			// open the catalogue when the dialog is closed
+			GlobalUtil.setShellCursor( shell, SWT.CURSOR_WAIT );
 
-		// open the catalogue
-		catalogue.open();
+			// open the catalogue
+			catalogue.open();
 
-		GlobalUtil.setShellCursor( shell, SWT.CURSOR_ARROW );
+			GlobalUtil.setShellCursor( shell, SWT.CURSOR_ARROW );
 
-		return catalogue;
+			Event e = new Event();
+			e.data = catalogue;
+			listener.handleEvent(e);
+		}
 	}
 
+	public static int warnDeprecatedCatalogue( Shell shell, Catalogue catalogue ) {
+		
+		// check if the catalogue is deprecated
+		if ( catalogue.isDeprecated() ) {
+
+			int val = GlobalUtil.showDialog( shell, 
+					catalogue.getLabel(), 
+					Messages.getString("BrowserMenu.CatalogueDeprecatedMessage"), 
+					SWT.ICON_WARNING | SWT.YES | SWT.NO );
+
+			return val;
+		}
+		
+		return SWT.OK;
+	}
+	
+	public static int warnOldRelease( Shell shell, Catalogue catalogue ) {
+		
+		User user = User.getInstance();
+		
+		// cannot check if not logged in
+		if ( !user.isLogged() )
+			return SWT.CANCEL;
+		
+		// check if there is a catalogue update
+		boolean hasUpdate = catalogue.hasUpdate();
+
+		// check if the update was already downloaded
+		boolean alreadyDownloaded = catalogue.isLastReleaseAlreadyDownloaded();
+
+		// if there is a new version and we have not downloaded it yet
+		// we warn the user that a new version is available
+		if ( hasUpdate && !alreadyDownloaded ) {
+
+			OldCatalogueReleaseDialog dialog = 
+					new OldCatalogueReleaseDialog( shell, catalogue );
+
+			dialog.open();
+			
+			int val = dialog.getButtonPressed();
+			
+			return val;
+		}
+		
+		return SWT.CANCEL;
+	}
+	
+	
+	public static void warnPossibleOldCatalogue( Shell shell, Catalogue catalogue ) {
+		
+		User user = User.getInstance();
+		if (user.isLogged() || catalogue.isLocal() || catalogue.isDeprecated())
+			return;
+
+		// if we are not logged in, simply warn the user that we cannot
+		// be sure that this is the last release
+		MessageBox mb = new MessageBox( shell, SWT.ICON_INFORMATION );
+		mb.setText( Messages.getString("BrowserMenu.CatalogueReleaseInfoTitle") );
+		mb.setMessage( Messages.getString("BrowserMenu.CatalogueReleaseInfoMessage") );
+		mb.open();
+	}
+	
 	/**
 	 * Make opening checks on the catalogue and warn
 	 * the user accordingly
@@ -151,7 +241,7 @@ public class FileActions {
 	 * @param catalogue
 	 * @return
 	 */
-	public static boolean performCatalogueChecks( Shell shell, Catalogue catalogue ) {
+	public static int performCatalogueChecks( Shell shell, Catalogue catalogue ) {
 
 		User user = User.getInstance();
 
@@ -163,8 +253,7 @@ public class FileActions {
 					Messages.getString("BrowserMenu.CatalogueDeprecatedMessage"), 
 					SWT.ICON_WARNING | SWT.YES | SWT.NO );
 
-			if ( val == SWT.NO )
-				return false;
+			return val;
 		}
 
 		// if the user is logged in we can check the updates
@@ -184,9 +273,8 @@ public class FileActions {
 						new OldCatalogueReleaseDialog( shell, catalogue );
 
 				int val = dialog.open();
-
-				if ( val == SWT.CANCEL )
-					return false;
+				
+				return val;
 			}
 		}
 		else {
@@ -202,7 +290,7 @@ public class FileActions {
 			}
 		}
 
-		return true;
+		return SWT.OK;
 	}
 
 	/**
@@ -274,7 +362,7 @@ public class FileActions {
 			return;
 
 		if ( selectedCats.size() == 1 ) 
-			downloadSingleCat ( shell, selectedCats.iterator().next() );
+			downloadSingleCat ( shell, selectedCats.iterator().next(), null );
 		else
 			downloadCatalogues( shell, 
 					Messages.getString( "Download.MultiSuccessTitle" ), 
@@ -287,7 +375,8 @@ public class FileActions {
 	 * @param shell
 	 * @param catalogue
 	 */
-	private static void downloadSingleCat ( final Shell shell, Catalogue catalogue ) {
+	private static void downloadSingleCat ( final Shell shell, 
+			final Catalogue catalogue, final Listener listener ) {
 
 		// show a progress bar
 		final IProgressBar progressBar = new FormProgressBar( shell, 
@@ -327,6 +416,12 @@ public class FileActions {
 
 						// warn user
 						GlobalUtil.showDialog( shell, title, message, icon );
+						
+						if (listener != null) {
+							Event event = new Event();
+							event.data = catalogue;
+							listener.handleEvent(event);
+						}
 					}
 				});
 			}

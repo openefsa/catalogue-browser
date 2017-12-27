@@ -1,5 +1,7 @@
 package ui_main_panel;
 
+import javax.xml.soap.SOAPException;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -41,6 +43,7 @@ public class FormDCFLogin implements RestoreableWindow {
 	private Text usernameText;
 	private Text passwdText;
 	private Button loginBtn;
+	private Button saveBtn;
 	
 	// if the credentials are valid or not
 	private boolean valid;
@@ -80,23 +83,29 @@ public class FormDCFLogin implements RestoreableWindow {
 		
 		dialog.setLayoutData( gridData );
 		
-		Label dcfTypeLabel = new Label ( dialog, SWT.CENTER );
-		
-		String dcfTypeText = Dcf.dcfType == DcfType.PRODUCTION ?
-				Messages.getString( "BrowserMenu.DCFLoginProduction" ) :
-					Messages.getString( "BrowserMenu.DCFLoginTest" );
-		dcfTypeLabel.setText( dcfTypeText );
-		
-		// set the label font to italic and bold
-		FontData fontData = Display.getCurrent().getSystemFont().getFontData()[0];
+		if (Dcf.dcfType != DcfType.PRODUCTION) {
+			
+			Label dcfTypeLabel = new Label ( dialog, SWT.CENTER );
+			
+			String dcfTypeText = Messages.getString( "BrowserMenu.DCFLoginTest" );
+			dcfTypeLabel.setText( dcfTypeText );
+			
+			// set the label font to italic and bold
+			FontData fontData = Display.getCurrent().getSystemFont().getFontData()[0];
 
-		Font font = new Font( Display.getCurrent(), 
-				new FontData( fontData.getName(), fontData.getHeight() + 3, SWT.NONE ) );
+			Font font = new Font( Display.getCurrent(), 
+					new FontData( fontData.getName(), fontData.getHeight() + 3, SWT.NONE ) );
 
-		dcfTypeLabel.setFont ( font );
+			dcfTypeLabel.setFont ( font );
+		}
+
 		
 		// add username password text box
 		addCredential ( dialog );
+		
+		saveBtn = new Button(dialog, SWT.CHECK);
+		saveBtn.setText(Messages.getString("Remember.me"));
+		saveBtn.setSelection(true);
 		
 		// add button to make login
 		addLoginButton( dialog );
@@ -217,7 +226,19 @@ public class FormDCFLogin implements RestoreableWindow {
 				System.out.println( "Checking credentials" );
 				
 				// check the correctness of credentials
-				valid = checkCredentials( username, password );
+				try {
+					valid = checkCredentials( username, password );
+				} catch (SOAPException e1) {
+					e1.printStackTrace();
+					
+					// reset the original cursor
+					GlobalUtil.setShellCursor( parent, SWT.CURSOR_ARROW );
+					GlobalUtil.showErrorDialog(shell, 
+							Messages.getString("Reauth.title.error"), 
+							Messages.getString("Reauth.BadConnection"));
+
+					return;
+				}
 
 				// reset the original cursor
 				GlobalUtil.setShellCursor( parent, SWT.CURSOR_ARROW );
@@ -250,12 +271,13 @@ public class FormDCFLogin implements RestoreableWindow {
 	/**
 	 * Check the credentials
 	 * @return true if the credentials are correct
+	 * @throws SOAPException 
 	 */
-	private boolean checkCredentials ( String username, String password ) {
+	private boolean checkCredentials ( String username, String password ) throws SOAPException {
 		
 		User user = User.getInstance();
 		boolean correctCredentials = user.login( usernameText.getText(), 
-				passwdText.getText() );
+				passwdText.getText(), saveBtn.getSelection() );
 		
 		return correctCredentials;
 	}

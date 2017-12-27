@@ -128,6 +128,8 @@ public class AboutMenu implements MainMenuItem {
 		if ( notesItem.isDisposed() )
 			return;
 
+		notesItem.setEnabled(false);
+		
 		if ( mainMenu.getCatalogue() == null )
 			return;
 		

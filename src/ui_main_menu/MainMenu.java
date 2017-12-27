@@ -48,6 +48,10 @@ public class MainMenu extends Observable implements Observer {
 		this.shell = shell;
 	}
 	
+	public LoginMenu getLogin() {
+		return login;
+	}
+	
 	/**
 	 * Create the main menu
 	 * @param shell
@@ -163,7 +167,7 @@ public class MainMenu extends Observable implements Observer {
 	 * status and response
 	 * @return
 	 */
-	protected PendingActionListener getListener() {
+	public PendingActionListener getListener() {
 		
 		PendingActionListener listener = 
 				DefaultListeners.getDefaultPendingListener( 

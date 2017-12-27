@@ -72,7 +72,8 @@ public class CatalogueImporter {
 
 		// 5% of progress bar for preprocessing
 		this.preprocProgress = maxProgress * 5 / 100;
-		progressBar.addProgress( preprocProgress );
+		if (progressBar != null)
+			progressBar.addProgress( preprocProgress );
 		
 		switch ( format ) {
 		case ECF:

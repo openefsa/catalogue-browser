@@ -10,7 +10,6 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
-import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_generator.ThreadFinishedListener;
 import data_collection.DCTableConfig;
@@ -195,19 +194,18 @@ public class FileMenu implements MainMenuItem {
 			@Override
 			public void widgetSelected ( SelectionEvent event ) {
 				
-				Catalogue catalogue = FileActions.openCatalogue( shell );
-				
-				if ( catalogue == null )
-					return;
-				
-				// refresh main menu
-				mainMenu.refresh();
-				
-				if ( listener != null ) {
-					Event e = new Event();
-					e.data = catalogue;
-					listener.buttonPressed( openFileItem, OPEN_CAT_MI, e );
-				}
+				FileActions.openCatalogue( shell, new Listener() {
+					
+					@Override
+					public void handleEvent(Event arg0) {
+						// refresh main menu
+						mainMenu.refresh();
+						
+						if ( listener != null ) {
+							listener.buttonPressed( openFileItem, OPEN_CAT_MI, arg0 );
+						}
+					}
+				} );
 			}
 		} );
 		
