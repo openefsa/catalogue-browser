@@ -29,6 +29,7 @@ import dcf_webservice.GetDataCollectionsList;
 import dcf_webservice.GetFile;
 import dcf_webservice.Ping;
 import dcf_webservice.Publish.PublishLevel;
+import ui_main_panel.ShellLocker;
 import dcf_webservice.ReserveLevel;
 import dcf_webservice.UploadCatalogueFileThread;
 import ui_progress_bar.FormProgressBar;

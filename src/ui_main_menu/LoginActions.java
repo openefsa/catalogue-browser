@@ -14,6 +14,7 @@ import dcf_pending_action.PendingUploadData;
 import dcf_pending_action.PendingXmlDownload;
 import dcf_user.User;
 import messages.Messages;
+import ui_main_panel.ShellLocker;
 import ui_progress_bar.FormProgressBar;
 import utilities.GlobalUtil;
 
@@ -51,16 +52,24 @@ public class LoginActions {
 
 		dcf.setProgressBar( progressBar );
 
+		ShellLocker.setLock(shell, Messages.getString("MainPanel.CannotCloseTitle"), 
+				Messages.getString("MainPanel.CannotCloseMessage"));
+		
 		dcf.setUserLevel( new ThreadFinishedListener() {
 
 			@Override
 			public void finished(Thread thread, final int code, Exception e) {
-
+				
+				if (shell.isDisposed())
+					return;
+				
 				shell.getDisplay().asyncExec( new Runnable() {
 
 					@Override
 					public void run() {
 
+						ShellLocker.removeLock(shell);
+						
 						progressBar.close();
 
 						// if correct

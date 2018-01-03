@@ -182,6 +182,9 @@ public class MainPanel implements Observer, RestoreableWindow {
 			@Override
 			public void run() {
 				
+				if (shell.isDisposed())
+					return;
+				
 				// redraw the main menu to refresh buttons
 				shell.setMenuBar( menu.createMainMenu() );
 				menu.refresh();

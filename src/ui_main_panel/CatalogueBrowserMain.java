@@ -37,6 +37,27 @@ public class CatalogueBrowserMain {
 	 */
 	public static void main ( String[] args ) {
 		
+		try {
+			launch();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			
+			StringBuilder trace = new StringBuilder();
+			trace.append("\n");
+			
+			for (StackTraceElement ste : e.getStackTrace()) {
+				trace.append("\n\tat ");
+		        trace.append(ste);
+			}
+			
+			GlobalUtil.showErrorDialog(new Shell(), 
+					Messages.getString("Generic.ErrorTitle"), 
+					Messages.getString("Generic.ErrorMessage") + trace.toString());
+		}
+	}
+	
+	private static void launch() {
 		InstanceChecker.closeIfAlreadyRunning();
 		
 		// application start-up message. Usage of System.err used for red chars
@@ -92,6 +113,9 @@ public class CatalogueBrowserMain {
 				
 				@Override
 				public void finished(Thread thread, final int code, Exception e) {
+					
+					if (shell.isDisposed())
+						return;
 					
 					shell.getDisplay().asyncExec(new Runnable() {
 						
@@ -150,7 +174,8 @@ public class CatalogueBrowserMain {
 				display.sleep();
 		}
 
-		display.dispose();
+		if (!display.isDisposed())
+			display.dispose();
 
 		// stop the database
 		DatabaseManager.stopMainDB();

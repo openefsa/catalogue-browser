@@ -47,7 +47,7 @@ public class FormProgressBar implements IProgressBar {
 	public ProgressBar getProgressBar() {
 		return progressBar.getProgressBar();
 	}
-	
+
 	/**
 	 * Initialize the progress bar without cancel button
 	 * @param shell the shell where to create the progress bar
@@ -56,14 +56,14 @@ public class FormProgressBar implements IProgressBar {
 	public FormProgressBar( Shell shell, String title ) {
 		this( shell, title, false, SWT.TITLE | SWT.APPLICATION_MODAL );
 	}
-	
+
 	/**
 	 * Reset the progress bar graphics content
 	 */
 	public void reset() {
 
 		shell.getDisplay().asyncExec( new Runnable() {
-			
+
 			@Override
 			public void run() {
 				initializeGraphics ( shell, style );
@@ -71,13 +71,13 @@ public class FormProgressBar implements IProgressBar {
 		});
 
 	}
-	
+
 	/**
 	 * Creates all the graphics for the progress bar
 	 * @param parentShell
 	 */
 	public void initializeGraphics ( Shell parentShell, int style ) {
-		
+
 		currentShell = new Shell( parentShell, style );
 		currentShell.setText( title );
 		currentShell.setSize( 300, 130 );
@@ -117,30 +117,32 @@ public class FormProgressBar implements IProgressBar {
 	public void setLocation ( int x, int y ) {
 		currentShell.setLocation(x, y);
 	}
-	
+
 	/**
 	 * Get the location of the progress bar
 	 */
 	public Point getLocation () {
 		return currentShell.getLocation();
 	}
-	
+
 	/**
 	 * Show the progress bar
 	 */
 	public void open ( ) {
 		opened = true;
 
-		shell.getDisplay().asyncExec( new Runnable() {
+		if (!shell.isDisposed()) {
+			shell.getDisplay().asyncExec( new Runnable() {
 
-			@Override
-			public void run() {
-				currentShell.open();
-			}
-		});
+				@Override
+				public void run() {
+					currentShell.open();
+				}
+			});
+		}
 	}
 
-	
+
 	/**
 	 * Close the progress bar
 	 */
@@ -163,7 +165,7 @@ public class FormProgressBar implements IProgressBar {
 			}
 		} );
 	}
-	
+
 	/**
 	 * Set a maximum limit for the progress
 	 * @param progressLimit
@@ -171,11 +173,11 @@ public class FormProgressBar implements IProgressBar {
 	public void setProgressLimit(int progressLimit) {
 		progressBar.setProgressLimit(progressLimit);
 	}
-	
+
 	public void removeProgressLimit() {
 		progressBar.removeProgressLimit();
 	}
-	
+
 	/**
 	 * Set how much should the progress bar increase its
 	 * value each operation step. Used with operations that
@@ -186,7 +188,7 @@ public class FormProgressBar implements IProgressBar {
 	public void setProgressStep(double progressStep) {
 		progressBar.setProgressStep(progressStep);
 	}
-	
+
 	/**
 	 * Increase the progress bar according to the
 	 * {@link #progressStep} variable
