@@ -4,6 +4,11 @@ import javax.xml.soap.SOAPException;
 
 import catalogue_generator.ThreadFinishedListener;
 
+/**
+ * Thread to re-authenticate the user using previous credentials stored in the database.
+ * @author avonva
+ *
+ */
 public class ReauthThread extends Thread {
 
 	private ThreadFinishedListener doneListener;

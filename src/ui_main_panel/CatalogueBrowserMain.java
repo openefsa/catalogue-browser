@@ -21,7 +21,7 @@ import xml_reader.PropertiesReader;
 
 /**
  * Entry point for the Catalogue Browser application.
- * The user interfaces and the database are started here.
+ * The user interface and the database are started here.
  * @author avonva
  *
  */

@@ -280,7 +280,7 @@ public class User {
 	 * @throws Exception
 	 */
 	public boolean login ( String username, String password, boolean save ) throws SOAPException {
-		
+
 		logged = tryPing(username, password);
 
 		// if wrong credential => remove them 

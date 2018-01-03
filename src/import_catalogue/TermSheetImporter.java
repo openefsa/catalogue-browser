@@ -69,11 +69,12 @@ public class TermSheetImporter extends SheetImporter<Term> {
 		builder.setLabel( rs.getString ( Headers.TERM_SHORT_NAME ) );
 		builder.setScopenotes( rs.getString ( Headers.TERM_SCOPENOTE ) );
 		builder.setDeprecated( rs.getBoolean ( Headers.DEPRECATED, false ) );
+		builder.setVersion( rs.getString ( Headers.VERSION ) );
 		builder.setLastUpdate( rs.getTimestamp ( Headers.LAST_UPDATE, true ) );
 		builder.setValidFrom( rs.getTimestamp ( Headers.VALID_FROM, true ) );
 		builder.setValidTo( rs.getTimestamp( Headers.VALID_TO, true ) );
 		builder.setStatus( rs.getString( Headers.STATUS ) );
-
+		
 		Term term = builder.build();
 		
 		// if we have a temp term we save it but we 

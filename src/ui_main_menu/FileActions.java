@@ -661,7 +661,7 @@ public class FileActions {
 	public static DCTableConfig openDC ( Shell shell ) {
 
 		DCDAO dcDao = new DCDAO();
-
+		
 		// ask for selecting a data collection
 		final DataCollection dc = chooseDC ( shell, 
 				Messages.getString( "FormDCList.OpenTitle" ),

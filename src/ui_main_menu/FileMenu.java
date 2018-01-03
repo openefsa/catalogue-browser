@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_generator.ThreadFinishedListener;
+import data_collection.DCDAO;
 import data_collection.DCTableConfig;
 import dcf_manager.Dcf;
 import dcf_user.User;
@@ -460,6 +461,9 @@ public class FileMenu implements MainMenuItem {
 		// enable close only if there is an open catalogue
 		closeMI.setEnabled( mainMenu.getCatalogue() != null );
 
+		DCDAO dcDao = new DCDAO();
+		openDcMI.setEnabled(!dcDao.getAll().isEmpty());
+		
 		// enable delete only if we have at least one catalogue downloaded and we
 		// have not an open catalogue (to avoid deleting the open catalogue)
 		deleteMI.setEnabled( hasCatalogues && mainMenu.getCatalogue() == null );

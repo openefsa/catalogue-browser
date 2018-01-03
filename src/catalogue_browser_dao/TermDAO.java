@@ -62,7 +62,7 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 		
 		String query = "insert into APP.TERM (TERM_CODE, TERM_EXTENDED_NAME, "
 				+ "TERM_SHORT_NAME, TERM_SCOPENOTE, TERM_DEPRECATED, TERM_LAST_UPDATE, "
-				+ "TERM_VALID_FROM, TERM_VALID_TO, TERM_STATUS ) values (?, ?, ?, ?, ?, ?, ?, ?, ? )";
+				+ "TERM_VALID_FROM, TERM_VALID_TO, TERM_STATUS, TERM_VERSION ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
 		
 		try {
 			
@@ -97,6 +97,7 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 					stmt.setNull( 8, java.sql.Types.TIMESTAMP );
 
 				stmt.setString( 9, t.getStatus() );
+				stmt.setString( 10, t.getVersion() );
 
 				stmt.addBatch();
 			}
@@ -155,7 +156,7 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 			
 			PreparedStatement stmt = con.prepareStatement( "update APP.TERM set TERM_CODE = ?, TERM_EXTENDED_NAME = ?, "
 							+ "TERM_SHORT_NAME = ?, TERM_SCOPENOTE = ?, TERM_DEPRECATED = ?, TERM_LAST_UPDATE = ?,"
-							+ "TERM_VALID_FROM = ?, TERM_VALID_TO = ?, TERM_STATUS = ? where TERM_ID = ?" );
+							+ "TERM_VALID_FROM = ?, TERM_VALID_TO = ?, TERM_STATUS = ?, TERM_VERSION = ? where TERM_ID = ?" );
 			
 			stmt.clearParameters();
 			
@@ -184,7 +185,9 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 
 			stmt.setString( 9, t.getStatus() );
 			
-			stmt.setInt( 10, t.getId() );
+			stmt.setString( 10, t.getVersion() );
+			
+			stmt.setInt( 11, t.getId() );
 			
 			// execute the statement
 			stmt.executeUpdate();
@@ -395,6 +398,9 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 		
 		// set status
 		t.setStatus( rs.getString( "TERM_STATUS" ) );
+		
+		// set version
+		t.setVersion( rs.getString( "TERM_VERSION" ) );
 
 		return t;
 	}
