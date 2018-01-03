@@ -1,6 +1,7 @@
 package ui_main_panel;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -51,7 +52,15 @@ public class CatalogueBrowserMain {
 		GlobalUtil.createApplicationFolders();
 
 		// connect to the main database and start it
-		DatabaseManager.startMainDB();
+		try {
+			DatabaseManager.startMainDB();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			GlobalUtil.showErrorDialog(new Shell(), 
+					Messages.getString("DBOpened.ErrorTitle"), 
+					Messages.getString("DBOpened.ErrorMessage"));
+			return;
+		}
 		
 		// create the display and shell
 		Display display = new Display();
@@ -74,6 +83,8 @@ public class CatalogueBrowserMain {
 		browser.shell.open();
 		
 		if (User.getInstance().areCredentialsStored()) {
+			
+			shell.setText(APP_TITLE + " " + Messages.getString("App.Connecting"));
 			
 			// reauthenticate the user in background if needed
 			ReauthThread reauth = new ReauthThread();
@@ -105,14 +116,15 @@ public class CatalogueBrowserMain {
 								// stored credentials are not valid
 								
 								// enable manual login
-								browser.getMenu().getLogin().setEnabled(true);
-								
+								browser.refresh();
+								shell.setText( APP_TITLE + " " + Messages.getString("App.Disconnected") );
 								GlobalUtil.showErrorDialog(shell, 
 										Messages.getString("Reauth.title.error"), 
 										Messages.getString("Reauth.message.error"));
 								break;
 							case EXCEPTION:
-								browser.getMenu().getLogin().setEnabled(true);
+								browser.refresh();
+								shell.setText( APP_TITLE + " " + Messages.getString("App.Disconnected") );
 								GlobalUtil.showErrorDialog(shell, 
 										Messages.getString("Reauth.title.error"), 
 										Messages.getString("Reauth.BadConnection"));
@@ -124,10 +136,13 @@ public class CatalogueBrowserMain {
 					});
 				}
 			});
+			
 			reauth.start();
 		}
 		
 		browser.openLastCatalogue();
+		
+		browser.getMenu().refresh();
 
 		// Event loop
 		while ( !shell.isDisposed() ) {

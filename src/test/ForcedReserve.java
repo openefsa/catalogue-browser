@@ -1,5 +1,6 @@
 package test;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.xml.soap.SOAPException;
@@ -24,7 +25,7 @@ public class ForcedReserve {
 
 	public static boolean GO_ON = false;
 	
-	public static void main( String[] args ) throws InterruptedException, SOAPException {
+	public static void main( String[] args ) throws InterruptedException, SOAPException, SQLException {
 		
 		Display display = new Display();
 		final Shell shell = new Shell ( display );

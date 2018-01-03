@@ -88,6 +88,8 @@ public class LoginActions {
 
 						}
 						else { // errors
+							if (userLevelListener != null)
+								userLevelListener.handleEvent(null);
 							GlobalUtil.showErrorDialog(shell, 
 									Messages.getString("ExportCatalogue.ErrorTitle"), 
 									Messages.getString("ExportCatUsers.ErrorMessage"));

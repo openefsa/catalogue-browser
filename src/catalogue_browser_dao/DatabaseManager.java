@@ -101,7 +101,7 @@ public class DatabaseManager {
 	 * Create the main database (the one which contains the catalogues metadata)
 	 * @throws SQLException 
 	 */
-	private static void createMainDB () {
+	private static void createMainDB () throws SQLException {
 
 		// create the database
 		try {
@@ -120,9 +120,8 @@ public class DatabaseManager {
 			UIPreferenceDAO prefDao = new UIPreferenceDAO();
 			prefDao.insertDefaultPreferences();
 
-		} catch ( IOException | SQLException e ) {
+		} catch ( IOException e ) {
 			e.printStackTrace();
-			return;
 		}
 	}
 
@@ -130,9 +129,10 @@ public class DatabaseManager {
 	/**
 	 * Connect to the main catalogues database if present, otherwise create it and then connect
 	 * @param DBString
+	 * @throws SQLException 
 	 * @throws Exception
 	 */
-	public static void startMainDB () {
+	public static void startMainDB () throws SQLException {
 
 		try {
 

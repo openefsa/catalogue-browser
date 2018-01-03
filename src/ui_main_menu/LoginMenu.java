@@ -28,7 +28,6 @@ public class LoginMenu implements MainMenuItem {
 	private MainMenu mainMenu;
 	private MenuItem loginMI;
 	private Shell shell;
-	private boolean forceEnabled;
 
 	/**
 	 * Login button in the main menu
@@ -48,11 +47,6 @@ public class LoginMenu implements MainMenuItem {
 	public void setListener(MenuListener listener) {
 		this.listener = listener;
 	}
-
-	public void setEnabled(boolean enabled) {
-		this.forceEnabled = enabled;
-		this.loginMI.setEnabled(enabled);
-	}
 	
 	/**
 	 * Create the dcf login button
@@ -65,8 +59,10 @@ public class LoginMenu implements MainMenuItem {
 		loginMI.setText( Messages.getString( "BrowserMenu.LoginMenuName" ) );
 
 		// enable button only if the user is not logged in
-		loginMI.setEnabled( forceEnabled || (!User.getInstance().areCredentialsStored()
-				&& !User.getInstance().isLogged()));
+		//loginMI.setEnabled( forceEnabled || (!User.getInstance().areCredentialsStored()
+			//	&& !User.getInstance().isLogged()));
+		
+		loginMI.setEnabled(false);
 
 		loginMI.addSelectionListener( new SelectionListener() {
 
@@ -83,7 +79,6 @@ public class LoginMenu implements MainMenuItem {
 					return;
 				
 				// disable the login button
-				forceEnabled = false;
 				loginMI.setEnabled(false);
 
 				// disable tools menu until we have
@@ -111,5 +106,7 @@ public class LoginMenu implements MainMenuItem {
 		return loginMI;
 	}
 
-	public void refresh() {};
+	public void refresh() {
+		loginMI.setEnabled(!User.getInstance().isReauth() && !User.getInstance().isLogged());
+	};
 }

@@ -263,7 +263,7 @@ public class User {
 			this.isReauth = false;
 			throw e;
 		}
-		
+
 		// delete not valid credentials
 		if (!logged)
 			this.logout();
@@ -280,16 +280,18 @@ public class User {
 	 * @throws Exception
 	 */
 	public boolean login ( String username, String password, boolean save ) throws SOAPException {
-
-		// delete information on the old account
-		if (areCredentialsStored())
-			logout();
 		
 		logged = tryPing(username, password);
 
 		// if wrong credential => remove them 
 		if ( logged ) {
+			
 			System.out.println( username + " successfully logged in to dcf");
+			
+			// delete information on the old account
+			if (areCredentialsStored())
+				logout();
+			
 			if (save)
 				saveCredentials(username, password);
 		}
@@ -313,7 +315,6 @@ public class User {
 			logged = dcf.ping();
 		} catch (SOAPException e) {
 			e.printStackTrace();
-			
 			// check if wrong credentials
 			if (e.getMessage().contains("401")
 					|| e.getMessage().contains("403"))

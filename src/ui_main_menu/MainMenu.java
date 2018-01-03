@@ -102,6 +102,7 @@ public class MainMenu extends Observable implements Observer {
 				view.refresh();
 				tools.refresh();
 				about.refresh();
+				login.refresh();
 			}
 		});
 	}
