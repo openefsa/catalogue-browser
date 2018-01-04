@@ -32,6 +32,7 @@ public class CatalogueLabel implements Observer {
 	private Label label;
 	private Catalogue catalogue;
 	private ToolTip toolTip;
+	private boolean toolTipShown;
 	
 	/**
 	 * Initialize and display the label in the parent composite
@@ -68,6 +69,7 @@ public class CatalogueLabel implements Observer {
 	private void addUpdatePanel() {
 		
 		toolTip = new ToolTip(composite.getShell(), SWT.ICON_INFORMATION | SWT.BALLOON);
+		toolTipShown = false;
 		
 		buttonComp = new Composite(composite, SWT.NONE);
 		buttonComp.setLayout( new GridLayout(2, false) );
@@ -179,8 +181,10 @@ public class CatalogueLabel implements Observer {
 					if (!current.equals(catalogue.getCode()))
 						return;
 					
-					if (toolTip.isDisposed())
+					if (toolTip.isDisposed() || toolTipShown)
 						return;
+					
+					toolTipShown = true;
 					
 					toolTip.setText(Messages.getString("CatalogueLabel.ToolTipTitle"));
 					toolTip.setMessage(Messages.getString("CatalogueLabel.ToolTipMessage"));
@@ -252,6 +256,8 @@ public class CatalogueLabel implements Observer {
 				this.catalogue = null;
 			
 			this.toolTip.setVisible(false);
+			
+			toolTipShown = false;
 			
 			// update the catalogue label
 			refresh();
