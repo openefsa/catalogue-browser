@@ -135,29 +135,13 @@ public class FileActions {
 		
 		warnPossibleOldCatalogue(shell, catalogue);
 		
-		int val2 = warnOldRelease(shell, catalogue);
+		/*int val2 = warnOldRelease(shell, catalogue);
 		
 		if (val2 == SWT.OK) {
 		
-			final Catalogue lastRelease = catalogue.getLastRelease();
-			
-			downloadSingleCat(shell, lastRelease, new Listener() {
-				
-				@Override
-				public void handleEvent(Event arg0) {
-					// open the catalogue when the dialog is closed
-					GlobalUtil.setShellCursor( shell, SWT.CURSOR_WAIT );
-
-					// open the new catalogue
-					lastRelease.open();
-
-					GlobalUtil.setShellCursor( shell, SWT.CURSOR_ARROW );
-					
-					listener.handleEvent(arg0);
-				}
-			});
+			downloadLastVersion(shell, catalogue, listener);
 		}
-		else {
+		else {*/
 			// open the catalogue when the dialog is closed
 			GlobalUtil.setShellCursor( shell, SWT.CURSOR_WAIT );
 
@@ -169,7 +153,39 @@ public class FileActions {
 			Event e = new Event();
 			e.data = catalogue;
 			listener.handleEvent(e);
-		}
+		//}
+	}
+	
+	/**
+	 * Download the last version of a catalogue and open it
+	 * @param shell
+	 * @param catalogue
+	 * @param listener
+	 */
+	public static void downloadLastVersion(final Shell shell, Catalogue catalogue, 
+			final Listener listener) {
+		
+		final Catalogue lastRelease = catalogue.getLastRelease();
+		
+		downloadSingleCat(shell, lastRelease, new Listener() {
+			
+			@Override
+			public void handleEvent(Event arg0) {
+				
+				// open the catalogue when the dialog is closed
+				GlobalUtil.setShellCursor( shell, SWT.CURSOR_WAIT );
+
+				Catalogue lastReleaseImported = (Catalogue) arg0.data;
+				
+				// open the new catalogue
+				lastReleaseImported.open();
+
+				GlobalUtil.setShellCursor( shell, SWT.CURSOR_ARROW );
+				
+				if (listener != null)
+					listener.handleEvent(arg0);
+			}
+		});
 	}
 
 	public static int warnDeprecatedCatalogue( Shell shell, Catalogue catalogue ) {
@@ -417,9 +433,14 @@ public class FileActions {
 						// warn user
 						GlobalUtil.showDialog( shell, title, message, icon );
 						
+						CatalogueDAO dao = new CatalogueDAO();
+						Catalogue catalogueWithId = dao.getCatalogue(catalogue.getCode(), 
+								catalogue.getVersion(), 
+								catalogue.getCatalogueType());
+						
 						if (listener != null) {
 							Event event = new Event();
-							event.data = catalogue;
+							event.data = catalogueWithId;
 							listener.handleEvent(event);
 						}
 					}

@@ -70,4 +70,9 @@ public class Preference {
 	public void setValue(Object value) {
 		this.value = String.valueOf( value );
 	}
+	
+	@Override
+	public String toString() {
+		return key + " => " + value;
+	}
 }

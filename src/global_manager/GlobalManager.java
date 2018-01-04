@@ -6,6 +6,7 @@ import org.eclipse.swt.widgets.Display;
 
 import catalogue.Catalogue;
 import dcf_user.User;
+import user_preferences.UIPreferenceDAO;
 
 /**
  * Class used to store all the global variables of the
@@ -43,8 +44,20 @@ public class GlobalManager extends Observable {
 	 * @param currentCatalogue
 	 */
 	public void setCurrentCatalogue( final Catalogue currentCatalogue ) {
+		
 		GlobalManager.currentCatalogue = currentCatalogue;
+		
 		refresh();
+		
+		// do not save the cat users catalogue, otherwise
+		// we can open and see it also if we have not
+		// the permissions
+		if ( currentCatalogue != null && currentCatalogue.isCatUsersCatalogue() )
+			return;
+
+		// save main panel state
+		UIPreferenceDAO prefDao = new UIPreferenceDAO ();
+		prefDao.saveOpenedCatalogue( currentCatalogue );
 	}
 	
 	/**

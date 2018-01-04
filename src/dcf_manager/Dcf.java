@@ -219,7 +219,6 @@ public class Dcf {
 	public static Catalogue getLastPublishedRelease ( Catalogue catalogue ) {
 
 		if ( catalogues == null ) {
-			System.err.println( "No dcf catalogues found in the cache" );
 			return null; 
 		}
 

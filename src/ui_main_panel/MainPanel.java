@@ -129,6 +129,10 @@ public class MainPanel implements Observer, RestoreableWindow {
 		// open the last catalogue if present
 		try {
 			Catalogue catalogue = getLastOpenedCatalogue();
+			
+			if (catalogue == null)
+				return;
+			
 			catalogue.open();
 			
 			// enable the user interface only if we have data in the current catalogue
@@ -174,7 +178,7 @@ public class MainPanel implements Observer, RestoreableWindow {
 	 * update and layout
 	 */
 	public void refresh () {
-		
+
 		// redraw menus in the ui thread ( we use async exec since
 		// this method is potentially called by threads not in the UI )
 		Display.getDefault().asyncExec( new Runnable() {
@@ -215,24 +219,6 @@ public class MainPanel implements Observer, RestoreableWindow {
 				}
 			}
 		});
-	}
-	
-	/**
-	 * Save the last opened catalogue
-	 */
-	private void saveOpenedCatalogue() {
-		
-		Catalogue current = GlobalManager.getInstance().getCurrentCatalogue();
-
-		// do not save the cat users catalogue, otherwise
-		// we can open and see it also if we have not
-		// the permissions
-		if ( current != null && current.isCatUsersCatalogue() )
-			return;
-		
-		// save main panel state
-		UIPreferenceDAO prefDao = new UIPreferenceDAO ();
-		prefDao.saveOpenedCatalogue( current );
 	}
 	
 	/**
@@ -329,7 +315,6 @@ public class MainPanel implements Observer, RestoreableWindow {
 			@Override
 			public void widgetDisposed(DisposeEvent arg0) {
 				saveState();
-				saveOpenedCatalogue();
 			}
 		});
 		

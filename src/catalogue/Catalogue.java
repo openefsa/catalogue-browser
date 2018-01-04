@@ -386,7 +386,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 
 		// close the opened catalogue if there is one
 		if ( manager.getCurrentCatalogue() != null )
-			manager.getCurrentCatalogue().close();
+			manager.getCurrentCatalogue().closeQuitely();
 		
 		System.out.println ( "Opening " + this + " at " + getDbPath() );
 
@@ -428,10 +428,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	public void close() {
 		
 		System.out.println ( "Closing " + this + " at " + getDbPath() );
-
-		// clear data in ram
-		clearData();
-
+		
 		// remove current catalogue
 		GlobalManager manager = GlobalManager.getInstance();
 
@@ -442,6 +439,16 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		if ( current != null && current.sameAs( this ) )
 			manager.setCurrentCatalogue( null );
 
+		closeQuitely();
+	}
+	
+	/**
+	 * Close the catalogue without notifying the observers
+	 * of the global manager
+	 */
+	public void closeQuitely() {
+		// clear data in ram
+		clearData();
 		closeConnection();
 	}
 

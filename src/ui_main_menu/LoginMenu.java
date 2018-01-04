@@ -58,10 +58,6 @@ public class LoginMenu implements MainMenuItem {
 		loginMI = new MenuItem ( menu, SWT.NONE );
 		loginMI.setText( Messages.getString( "BrowserMenu.LoginMenuName" ) );
 
-		// enable button only if the user is not logged in
-		//loginMI.setEnabled( forceEnabled || (!User.getInstance().areCredentialsStored()
-			//	&& !User.getInstance().isLogged()));
-		
 		loginMI.setEnabled(false);
 
 		loginMI.addSelectionListener( new SelectionListener() {
@@ -107,7 +103,27 @@ public class LoginMenu implements MainMenuItem {
 	}
 
 	public void refresh() {
+		
 		if (!loginMI.isDisposed())
 			loginMI.setEnabled(!User.getInstance().isReauth() && !User.getInstance().isLogged());
+		
+		// TODO put this in the application title after (Connected)
+		// metti Connected as Catalogue Manager,.... usando i %s
+		if (User.getInstance().isUserLevelDefined()) {
+			
+			String text = null;
+			
+			switch(User.getInstance().getUserLevel()) {
+			case CATALOGUE_MANAGER:
+				text = Messages.getString("BrowserMenu.LoggedAsCM");
+				break;
+			case DATA_PROVIDER:
+				text = Messages.getString("BrowserMenu.LoggedAsDP");
+				break;
+			}
+			
+			if (text != null && !loginMI.isDisposed())
+				loginMI.setText(text);
+		}
 	};
 }

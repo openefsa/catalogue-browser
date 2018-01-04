@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.xml.soap.SOAPException;
 
@@ -30,6 +31,8 @@ public class User {
 	private String password;
 	private ArrayList<String> editableCat;
 	private UserAccessLevel userLevel;
+	
+	private Collection<UserLevelChangedListener> userLevelListeners;
 
 	/**
 	 * Is the user logged into the application?
@@ -44,6 +47,7 @@ public class User {
 		this.logged = false;
 		this.isReauth = false;
 		editableCat = new ArrayList<>();
+		userLevelListeners = new ArrayList<>();
 	}
 
 	/**
@@ -171,6 +175,9 @@ public class User {
 	 */
 	public void setUserLevel(UserAccessLevel userLevel) {
 		this.userLevel = userLevel;
+		
+		for (UserLevelChangedListener l : userLevelListeners)
+			l.userLevelChanged(userLevel);
 	}
 
 	/**
@@ -388,6 +395,15 @@ public class User {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Add a listener which will be called each time the user access level
+	 * changes
+	 * @param listener
+	 */
+	public void addUserLevelChangedListener(UserLevelChangedListener listener) {
+		userLevelListeners.add(listener);
 	}
 
 	@Override
