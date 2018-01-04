@@ -13,6 +13,8 @@ import catalogue_browser_dao.DatabaseManager;
 import catalogue_generator.ThreadFinishedListener;
 import dcf_user.ReauthThread;
 import dcf_user.User;
+import dcf_user.UserAccessLevel;
+import dcf_user.UserListener;
 import instance_checker.InstanceChecker;
 import messages.Messages;
 import ui_main_menu.LoginActions;
@@ -57,6 +59,36 @@ public class CatalogueBrowserMain {
 		}
 	}
 	
+	private static void startShellTextUpdate(final Shell shell) {
+		
+		// default
+		shell.setText( APP_TITLE + " " + Messages.getString("App.Disconnected") );
+		
+		User.getInstance().addUserListener(new UserListener() {
+			
+			@Override
+			public void userLevelChanged(UserAccessLevel newLevel) {
+				
+				final String connectedAs = newLevel == UserAccessLevel.CATALOGUE_MANAGER ? 
+						Messages.getString("App.ConnectedCM") :
+							Messages.getString("App.ConnectedDP");
+
+				shell.getDisplay().asyncExec(new Runnable() {
+
+					@Override
+					public void run() {
+						shell.setText(APP_TITLE + " " + connectedAs);
+					}
+				});
+			}
+			
+			@Override
+			public void connectionChanged(boolean connected) {
+				
+			}
+		});
+	}
+	
 	private static void launch() {
 		InstanceChecker.closeIfAlreadyRunning();
 		
@@ -94,6 +126,8 @@ public class CatalogueBrowserMain {
 		shell.setImage( new Image( Display.getCurrent(), 
 				ClassLoader.getSystemResourceAsStream( "Foodex2.ico" ) ) );
 		
+		startShellTextUpdate(shell);
+		
 		// initialize the browser user interface
 		final MainPanel browser = new MainPanel( shell );
 
@@ -104,8 +138,6 @@ public class CatalogueBrowserMain {
 		browser.shell.open();
 		
 		if (User.getInstance().areCredentialsStored()) {
-			
-			shell.setText(APP_TITLE + " " + Messages.getString("App.Connecting"));
 			
 			// reauthenticate the user in background if needed
 			ReauthThread reauth = new ReauthThread();
@@ -132,7 +164,7 @@ public class CatalogueBrowserMain {
 									@Override
 									public void handleEvent(Event arg0) {
 										browser.refresh();
-										shell.setText(APP_TITLE + " " + Messages.getString("App.Connected"));
+										//shell.setText(APP_TITLE + " " + Messages.getString("App.Connected"));
 									}
 								});
 								break;
@@ -141,14 +173,14 @@ public class CatalogueBrowserMain {
 								
 								// enable manual login
 								browser.refresh();
-								shell.setText( APP_TITLE + " " + Messages.getString("App.Disconnected") );
+								//shell.setText( APP_TITLE + " " + Messages.getString("App.Disconnected") );
 								GlobalUtil.showErrorDialog(shell, 
 										Messages.getString("Reauth.title.error"), 
 										Messages.getString("Reauth.message.error"));
 								break;
 							case EXCEPTION:
 								browser.refresh();
-								shell.setText( APP_TITLE + " " + Messages.getString("App.Disconnected") );
+								//shell.setText( APP_TITLE + " " + Messages.getString("App.Disconnected") );
 								GlobalUtil.showErrorDialog(shell, 
 										Messages.getString("Reauth.title.error"), 
 										Messages.getString("Reauth.BadConnection"));

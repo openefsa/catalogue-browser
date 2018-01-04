@@ -32,7 +32,7 @@ public class User {
 	private ArrayList<String> editableCat;
 	private UserAccessLevel userLevel;
 	
-	private Collection<UserLevelChangedListener> userLevelListeners;
+	private Collection<UserListener> userLevelListeners;
 
 	/**
 	 * Is the user logged into the application?
@@ -176,7 +176,7 @@ public class User {
 	public void setUserLevel(UserAccessLevel userLevel) {
 		this.userLevel = userLevel;
 		
-		for (UserLevelChangedListener l : userLevelListeners)
+		for (UserListener l : userLevelListeners)
 			l.userLevelChanged(userLevel);
 	}
 
@@ -206,6 +206,9 @@ public class User {
 	 */
 	public void setLogged(boolean logged) {
 		this.logged = logged;
+		
+		for (UserListener l : userLevelListeners)
+			l.connectionChanged(logged);
 	}
 
 	/**
@@ -264,7 +267,7 @@ public class User {
 		this.isReauth = true;
 		
 		try {
-			logged = this.tryPing(credentials[0], credentials[1]);
+			setLogged(this.tryPing(credentials[0], credentials[1]));
 		}
 		catch(SOAPException e) {
 			this.isReauth = false;
@@ -273,7 +276,7 @@ public class User {
 
 		// delete not valid credentials
 		if (!logged)
-			this.logout();
+			this.deleteCredentials();
 		
 		this.isReauth = false;
 		
@@ -288,7 +291,7 @@ public class User {
 	 */
 	public boolean login ( String username, String password, boolean save ) throws SOAPException {
 
-		logged = tryPing(username, password);
+		setLogged(tryPing(username, password));
 
 		// if wrong credential => remove them 
 		if ( logged ) {
@@ -297,7 +300,7 @@ public class User {
 			
 			// delete information on the old account
 			if (areCredentialsStored())
-				logout();
+				deleteCredentials();
 			
 			if (save)
 				saveCredentials(username, password);
@@ -361,10 +364,7 @@ public class User {
 		return out;
 	}
 
-	public void logout() {
-
-		this.username = null;
-		this.password = null;
+	public void deleteCredentials() {
 
 		String query = "delete from APP.USERS where DCF_TYPE = ?";
 
@@ -385,7 +385,7 @@ public class User {
 
 		try(Connection con = DatabaseManager.getMainDBConnection();
 				PreparedStatement stmt = con.prepareStatement(query);) {
-
+System.out.println(Dcf.dcfType);
 			stmt.setString(1, Dcf.dcfType.toString());
 			stmt.setString(2, username);
 			stmt.setString(3, password);
@@ -398,11 +398,10 @@ public class User {
 	}
 	
 	/**
-	 * Add a listener which will be called each time the user access level
-	 * changes
+	 * Add an user listener
 	 * @param listener
 	 */
-	public void addUserLevelChangedListener(UserLevelChangedListener listener) {
+	public void addUserListener(UserListener listener) {
 		userLevelListeners.add(listener);
 	}
 

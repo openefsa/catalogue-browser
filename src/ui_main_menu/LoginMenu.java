@@ -11,7 +11,6 @@ import org.eclipse.swt.widgets.Shell;
 
 import dcf_user.User;
 import messages.Messages;
-import ui_main_panel.CatalogueBrowserMain;
 import ui_main_panel.FormDCFLogin;
 
 /**
@@ -88,8 +87,6 @@ public class LoginMenu implements MainMenuItem {
 
 					@Override
 					public void handleEvent(Event arg0) {
-						shell.setText(CatalogueBrowserMain.APP_TITLE + " " + Messages.getString("App.Connected"));
-						
 						listener.buttonPressed(loginMI, LoginMenu.LOGIN_MI, arg0);
 					}
 				});
@@ -106,24 +103,5 @@ public class LoginMenu implements MainMenuItem {
 		
 		if (!loginMI.isDisposed())
 			loginMI.setEnabled(!User.getInstance().isReauth() && !User.getInstance().isLogged());
-		
-		// TODO put this in the application title after (Connected)
-		// metti Connected as Catalogue Manager,.... usando i %s
-		if (User.getInstance().isUserLevelDefined()) {
-			
-			String text = null;
-			
-			switch(User.getInstance().getUserLevel()) {
-			case CATALOGUE_MANAGER:
-				text = Messages.getString("BrowserMenu.LoggedAsCM");
-				break;
-			case DATA_PROVIDER:
-				text = Messages.getString("BrowserMenu.LoggedAsDP");
-				break;
-			}
-			
-			if (text != null && !loginMI.isDisposed())
-				loginMI.setText(text);
-		}
 	};
 }

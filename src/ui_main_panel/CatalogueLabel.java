@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.ToolTip;
 import catalogue.Catalogue;
 import dcf_user.User;
 import dcf_user.UserAccessLevel;
-import dcf_user.UserLevelChangedListener;
+import dcf_user.UserListener;
 import global_manager.GlobalManager;
 import messages.Messages;
 import ui_main_menu.FileActions;
@@ -110,7 +110,10 @@ public class CatalogueLabel implements Observer {
 	 */
 	private void registerForUserLevel() {
 		
-		User.getInstance().addUserLevelChangedListener(new UserLevelChangedListener() {
+		User.getInstance().addUserListener(new UserListener() {
+			
+			@Override
+			public void connectionChanged(boolean connected) {}
 			
 			@Override
 			public void userLevelChanged(UserAccessLevel newLevel) {

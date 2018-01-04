@@ -246,6 +246,9 @@ public class Dcf {
 
 		catalogues = getCataloguesList();
 
+		if (catalogues == null)
+			return;
+		
 		// sort catalogues by label and version
 		Collections.sort( catalogues );
 
