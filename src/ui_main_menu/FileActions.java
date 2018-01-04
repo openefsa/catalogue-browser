@@ -130,7 +130,7 @@ public class FileActions {
 
 		int val1 = warnDeprecatedCatalogue(shell, catalogue);
 		
-		if (val1 == SWT.CANCEL)
+		if (val1 == SWT.NO)
 			return;
 		
 		warnPossibleOldCatalogue(shell, catalogue);
