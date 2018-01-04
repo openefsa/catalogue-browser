@@ -229,6 +229,6 @@ alter table APP.CAT_UPDATES_XML add foreign key ( CAT_ID ) references APP.CATALO
 -- save user credentials
 create table APP.USERS (
 	DCF_TYPE varchar(100) not null primary key,
-	USERNAME varchar(100) not null unique,
+	USERNAME varchar(100) not null,
 	PASSWORD varchar(100) not null
 )
