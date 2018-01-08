@@ -13,7 +13,7 @@ import dcf_pending_action.PendingActionListener;
 import dcf_pending_action.PendingXmlDownload;
 import dcf_user.User;
 import dcf_webservice.Publish.PublishLevel;
-import ui_progress_bar.FormProgressBar;
+import progress_bar.FormProgressBar;
 
 /**
  * Perform an {@link UploadCatalogueFile} webservice call

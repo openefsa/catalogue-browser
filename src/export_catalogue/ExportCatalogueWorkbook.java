@@ -8,7 +8,7 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import catalogue.Catalogue;
 import messages.Messages;
 import naming_convention.Headers;
-import ui_progress_bar.IProgressBar;
+import progress_bar.IProgressBar;
 
 
 /**

@@ -1,9 +1,9 @@
-package open_xml_reader;
+package ooxml;
 
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
-import ui_progress_bar.FormProgressBar;
+import progress_bar.FormProgressBar;
 
 public class ExcelThread extends Thread {
 

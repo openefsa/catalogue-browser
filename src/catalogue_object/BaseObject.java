@@ -21,9 +21,7 @@ public class BaseObject implements Nameable {
 	private Status status;
 	private boolean deprecated;
 	
-	public BaseObject () {
-		
-	}
+	public BaseObject () {}
 	
 	/**
 	 * Initialize a base object

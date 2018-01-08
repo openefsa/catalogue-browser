@@ -12,10 +12,10 @@ import org.apache.poi.openxml4j.exceptions.OpenXML4JException;
 import org.xml.sax.SAXException;
 
 import catalogue.Catalogue;
-import folder_zipper.FolderZipper;
-import ui_progress_bar.IProgressBar;
+import progress_bar.IProgressBar;
 import utilities.GlobalUtil;
 import xml_to_excel.XmlCatalogueToExcel;
+import zip_manager.ZipManager;
 
 public class CatalogueImporter {
 	
@@ -110,7 +110,7 @@ public class CatalogueImporter {
 			String outputFolder = GlobalUtil.getTempDir() + inputFile.getName() + "_unzip";
 
 			// unzip the ecf file into the xml
-			FolderZipper.extractFolder( filename, outputFolder );
+			ZipManager.extractFolder( filename, outputFolder );
 
 			final File unzippedFolder = new File( outputFolder );
 

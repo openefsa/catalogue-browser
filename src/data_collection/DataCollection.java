@@ -13,9 +13,9 @@ import catalogue_browser_dao.CatalogueDAO;
 import catalogue_generator.CatalogueDownloader;
 import dcf_manager.Dcf;
 import messages.Messages;
-import ui_progress_bar.ProgressList;
-import ui_progress_bar.ProgressStepListener;
-import ui_progress_bar.ProgressStep;
+import progress_bar.ProgressList;
+import progress_bar.ProgressStep;
+import progress_bar.ProgressStepListener;
 import utilities.GlobalUtil;
 
 /**

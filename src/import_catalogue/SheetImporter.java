@@ -11,7 +11,7 @@ import java.util.HashMap;
 import catalogue.Catalogue;
 import catalogue_object.Term;
 import open_xml_reader.ResultDataSet;
-import ui_progress_bar.IProgressBar;
+import progress_bar.IProgressBar;
 
 /**
  * Sheet importer. Abstract class to create the skeleton program

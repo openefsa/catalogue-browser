@@ -4,9 +4,9 @@ import javax.xml.soap.SOAPException;
 
 import org.eclipse.swt.widgets.Listener;
 
-import ui_progress_bar.FormProgressBar;
-import ui_progress_bar.ProgressStepListener;
-import ui_progress_bar.ProgressStep;
+import progress_bar.FormProgressBar;
+import progress_bar.ProgressStep;
+import progress_bar.ProgressStepListener;
 
 /**
  * Class used to download a {@link DataCollection} in background.

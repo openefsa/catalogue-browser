@@ -9,8 +9,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import catalogue_object.Mappable;
+import progress_bar.IProgressBar;
 import sheet_header.SheetHeader;
-import ui_progress_bar.IProgressBar;
 
 /**
  * This class handle the writing procedure of an excel sheet. Extend this class and provide the

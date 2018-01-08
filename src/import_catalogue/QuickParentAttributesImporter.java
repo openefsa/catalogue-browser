@@ -12,7 +12,7 @@ import catalogue.Catalogue;
 import naming_convention.Headers;
 import open_xml_reader.ResultDataSet;
 import open_xml_reader.WorkbookReader;
-import ui_progress_bar.IProgressBar;
+import progress_bar.IProgressBar;
 
 /**
  * Import in a parallel way both the parent terms and the term attributes

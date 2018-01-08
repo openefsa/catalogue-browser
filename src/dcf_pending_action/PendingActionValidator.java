@@ -2,7 +2,7 @@ package dcf_pending_action;
 
 import javax.xml.soap.SOAPException;
 
-import ui_progress_bar.FormProgressBar;
+import progress_bar.FormProgressBar;
 
 /**
  * This thread starts in background a

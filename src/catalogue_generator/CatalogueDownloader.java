@@ -1,12 +1,14 @@
 package catalogue_generator;
 
+import java.io.FileNotFoundException;
+
 import javax.xml.soap.SOAPException;
 
 import catalogue.Catalogue;
 import dcf_webservice.AttachmentNotFoundException;
 import messages.Messages;
-import ui_progress_bar.FormProgressBar;
-import ui_progress_bar.IProgressBar;
+import progress_bar.FormProgressBar;
+import progress_bar.IProgressBar;
 
 /**
  * Thread used to download a catalogue in background. If needed,
@@ -40,9 +42,9 @@ public class CatalogueDownloader extends Thread {
 			downloadAndImport();
 		} catch (SOAPException e) {
 			e.printStackTrace();
-			stop ( ThreadFinishedListener.EXCEPTION );
+			stop ( ThreadFinishedListener.EXCEPTION, e );
 		} catch (AttachmentNotFoundException e) {
-			stop ( ThreadFinishedListener.ERROR );
+			stop ( ThreadFinishedListener.ERROR, e );
 		}
 	}
 	
@@ -77,7 +79,7 @@ public class CatalogueDownloader extends Thread {
 		
 		// if file not found
 		if ( !ok ) {
-			stop ( ThreadFinishedListener.ERROR );
+			stop ( ThreadFinishedListener.ERROR, new FileNotFoundException() );
 			return;
 		}
 	}
@@ -86,8 +88,8 @@ public class CatalogueDownloader extends Thread {
 	 * Stop the process
 	 * @param code
 	 */
-	private void stop( int code ) {
-		progressBar.stop( Messages.getString( "DCDownload.MissingAttachment" ) );
+	private void stop( int code, Exception e ) {
+		progressBar.stop( e );
 		callListener ( code );
 		finished = true;
 	}

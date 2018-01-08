@@ -21,7 +21,7 @@ import dcf_webservice.DcfResponse;
 import dcf_webservice.Publish.PublishLevel;
 import dcf_webservice.ReserveLevel;
 import import_catalogue.CatalogueImporterThread;
-import ui_progress_bar.FormProgressBar;
+import progress_bar.FormProgressBar;
 import utilities.GlobalUtil;
 
 /**

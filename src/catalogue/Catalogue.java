@@ -57,12 +57,12 @@ import global_manager.GlobalManager;
 import import_catalogue.CatalogueImporter.ImportFileFormat;
 import import_catalogue.CatalogueImporterThread;
 import messages.Messages;
+import progress_bar.IProgressBar;
 import property.SorterCatalogueObject;
 import term_code_generator.CodeGenerator;
 import term_code_generator.TermCodeException;
 import term_type.TermType;
 import term_type.TermTypeDAO;
-import ui_progress_bar.IProgressBar;
 import utilities.GlobalUtil;
 
 /**

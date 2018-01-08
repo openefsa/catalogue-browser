@@ -9,8 +9,8 @@ import catalogue_browser_dao.CatalogueDAO;
 import catalogue_generator.ThreadFinishedListener;
 import dcf_manager.Dcf.DcfType;
 import import_catalogue.CatalogueImporter.ImportFileFormat;
+import progress_bar.FormProgressBar;
 import import_catalogue.CatalogueImporterThread;
-import ui_progress_bar.FormProgressBar;
 import utilities.GlobalUtil;
 
 /**

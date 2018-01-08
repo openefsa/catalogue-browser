@@ -67,7 +67,7 @@ public class FormBrowserLicence {
 
 		if ( _dialog ) {
 			Label l = new Label( startupWindow , SWT.NONE );
-			l.setText( Messages.getString( "Startup.AppVersion" ) + CatalogueBrowserMain.APP_VERSION );
+			l.setText( Messages.getString( "Startup.AppVersion" ) + " " + CatalogueBrowserMain.APP_VERSION );
 
 			shellGridData = new GridData();
 			shellGridData.horizontalAlignment = SWT.FILL;

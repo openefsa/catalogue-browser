@@ -1,4 +1,4 @@
-package ui_progress_bar;
+package import_catalogue;
 
 import java.util.HashMap;
 

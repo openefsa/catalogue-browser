@@ -31,12 +31,12 @@ import form_objects_list.FormDataCollectionsList;
 import import_catalogue.CatalogueImporter.ImportFileFormat;
 import import_catalogue.CatalogueImporterThread;
 import messages.Messages;
+import progress_bar.FormMultipleProgress;
+import progress_bar.FormProgressBar;
+import progress_bar.IProgressBar;
+import progress_bar.TableMultipleProgress.TableRow;
 import ui_main_panel.FormLocalCatalogueName;
 import ui_main_panel.OldCatalogueReleaseDialog;
-import ui_progress_bar.FormMultipleProgress;
-import ui_progress_bar.FormProgressBar;
-import ui_progress_bar.IProgressBar;
-import ui_progress_bar.TableMultipleProgress.TableRow;
 import utilities.GlobalUtil;
 
 /**

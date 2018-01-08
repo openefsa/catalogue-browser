@@ -16,10 +16,10 @@ import dcf_manager.Dcf;
 import dcf_pending_action.PendingActionListener;
 import dcf_user.User;
 import dcf_webservice.ReserveLevel;
+import progress_bar.FormProgressBar;
 import ui_main_panel.MainPanel;
 import ui_main_panel.UpdateableUI;
 import ui_pending_action_listener.DefaultListeners;
-import ui_progress_bar.FormProgressBar;
 
 public class ForcedReserve {
 

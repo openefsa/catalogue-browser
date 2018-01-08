@@ -14,8 +14,8 @@ import dcf_pending_action.PendingUploadData;
 import dcf_pending_action.PendingXmlDownload;
 import dcf_user.User;
 import messages.Messages;
+import progress_bar.FormProgressBar;
 import ui_main_panel.ShellLocker;
-import ui_progress_bar.FormProgressBar;
 import utilities.GlobalUtil;
 
 public class LoginActions {

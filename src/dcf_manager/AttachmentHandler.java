@@ -12,7 +12,7 @@ import java.util.zip.ZipInputStream;
 import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.SOAPException;
 
-import folder_zipper.FolderZipper;
+import zip_manager.ZipManager;
 
 /**
  * Class to manage soap attachments
@@ -99,7 +99,7 @@ public class AttachmentHandler implements Closeable {
 	private void writeZippedAttachment ( String filename ) throws SOAPException, IOException {
 
 		// unzip the stream into the file
-		FolderZipper.unzipStream( readAttachment(), filename );
+		ZipManager.unzipStream( readAttachment(), new File(filename) );
 		
 		// close zip stream and nested stream
 		close();

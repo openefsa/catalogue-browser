@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import catalogue.Catalogue;
 import catalogue_generator.ThreadFinishedListener;
-import ui_progress_bar.IProgressBar;
+import progress_bar.IProgressBar;
 
 /**
  * Thread used to export a calogue in .xlsx format in background

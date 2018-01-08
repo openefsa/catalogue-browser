@@ -11,7 +11,7 @@ import catalogue_generator.ThreadFinishedListener;
 import catalogue_object.Term;
 import catalogue_object.TermAttribute;
 import dcf_manager.Dcf;
-import ui_progress_bar.FormProgressBar;
+import progress_bar.FormProgressBar;
 
 /**
  * Class to ask to the DCF the users access level. In particular:

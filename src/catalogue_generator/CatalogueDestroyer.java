@@ -6,7 +6,7 @@ import java.util.Collection;
 import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_browser_dao.DatabaseManager;
-import ui_progress_bar.FormProgressBar;
+import progress_bar.FormProgressBar;
 
 /**
  * Thread used to remove in background a catalogue database

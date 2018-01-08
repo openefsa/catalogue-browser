@@ -14,8 +14,7 @@ import org.xml.sax.SAXException;
 import catalogue.Catalogue;
 import catalogue_generator.ThreadFinishedListener;
 import import_catalogue.CatalogueImporter.ImportFileFormat;
-import messages.Messages;
-import ui_progress_bar.IProgressBar;
+import progress_bar.IProgressBar;
 
 /**
  * Thread used to import a catalogue from three different formats:
@@ -77,7 +76,7 @@ public class CatalogueImporterThread extends Thread {
 			doneListener.finished(this, ThreadFinishedListener.EXCEPTION, e);
 			
 			if ( progressBar != null ) {
-				progressBar.stop( Messages.getString("DCDownload.WrongXmlStructure") );
+				progressBar.stop(e);
 				progressBar.close();
 			}
 			

@@ -2,7 +2,7 @@ package export_catalogue;
 
 import catalogue.Catalogue;
 import catalogue_generator.ThreadFinishedListener;
-import ui_progress_bar.IProgressBar;
+import progress_bar.IProgressBar;
 
 /**
  * Class used to export a catalogue to an excel file

@@ -29,9 +29,9 @@ import dcf_webservice.GetDataCollectionsList;
 import dcf_webservice.GetFile;
 import dcf_webservice.Ping;
 import dcf_webservice.Publish.PublishLevel;
+import progress_bar.FormProgressBar;
 import dcf_webservice.ReserveLevel;
 import dcf_webservice.UploadCatalogueFileThread;
-import ui_progress_bar.FormProgressBar;
 import utilities.GlobalUtil;
 import xml_reader.PropertiesReader;
 

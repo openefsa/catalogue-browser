@@ -14,8 +14,8 @@ import catalogue_generator.ThreadFinishedListener;
 import dcf_webservice.UploadData;
 import export_catalogue.ExportActions;
 import messages.Messages;
-import ui_progress_bar.FormProgressBar;
-import ui_progress_bar.IProgressBar;
+import progress_bar.FormProgressBar;
+import progress_bar.IProgressBar;
 import utilities.GlobalUtil;
 
 /**
