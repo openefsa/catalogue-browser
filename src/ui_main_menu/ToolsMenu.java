@@ -25,7 +25,7 @@ import catalogue_generator.ThreadFinishedListener;
 import catalogue_object.Term;
 import dcf_manager.Dcf;
 import dcf_user.User;
-import dcf_webservice.Publish.PublishLevel;
+import dcf_webservice.PublishLevel;
 import dcf_webservice.ReserveLevel;
 import export_catalogue.ExportActions;
 import import_catalogue.CatalogueImporter.ImportFileFormat;

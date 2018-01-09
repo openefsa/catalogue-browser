@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<message xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:///D:/cat_xsd/UploadCatalogue.xsd">
+       <updateCatalogue>
+			<%op catalogueCode="%code"></%op>
+       </updateCatalogue>
+</message>

@@ -2246,7 +2246,7 @@ public class Catalogue extends BaseObject
 
 		File file = dcf.exportCatalogue(this);
 
-		if ( !file.exists() ) {
+		if ( file == null || !file.exists() ) {
 			throw new AttachmentNotFoundException();
 		}
 		

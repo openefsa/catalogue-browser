@@ -1,4 +1,4 @@
-package dcf_webservice;
+package dcf_log;
 
 /**
  * Enumerator to track the dcf response to web service requests.

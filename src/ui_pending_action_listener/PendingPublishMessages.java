@@ -1,7 +1,7 @@
 package ui_pending_action_listener;
 
+import dcf_log.DcfResponse;
 import dcf_pending_action.PendingActionStatus;
-import dcf_webservice.DcfResponse;
 import messages.Messages;
 
 public class PendingPublishMessages implements PendingActionMessages {

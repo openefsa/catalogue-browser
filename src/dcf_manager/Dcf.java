@@ -26,7 +26,7 @@ import dcf_pending_action.PendingActionValidator;
 import dcf_user.User;
 import dcf_user.UserAccessLevel;
 import dcf_user.UserProfileChecker;
-import dcf_webservice.Publish.PublishLevel;
+import dcf_webservice.PublishLevel;
 import dcf_webservice.ReserveLevel;
 import dcf_webservice.UploadCatalogueFileThread;
 import progress_bar.FormProgressBar;

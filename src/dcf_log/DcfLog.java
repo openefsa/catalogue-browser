@@ -7,7 +7,6 @@ import java.util.Collection;
 
 import catalogue.CatalogueVersion;
 import catalogue_object.Status;
-import dcf_webservice.DcfResponse;
 
 /**
  * Class which models a dcf log (the log which is downloadable by the

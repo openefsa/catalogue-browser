@@ -52,6 +52,8 @@ public class GlobalUtil {
 	final static public String CONFIG_FILES_DIR_PATH = getConfigDir();
 	final static public String CONFIG_FILE = getConfigDir() + "appConfig.xml";
 	
+	final static public String RESERVE_SCHEMA = getConfigDir() + "reserveSchema.xml";
+	final static public String PUBLISH_SCHEMA = getConfigDir() + "publishSchema.xml";
 	
 	// directory which contains all the pick lists
 	final static public String PICKLISTS_DIR_NAME = "picklists";

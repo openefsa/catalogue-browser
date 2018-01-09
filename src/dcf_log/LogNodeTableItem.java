@@ -1,7 +1,5 @@
 package dcf_log;
 
-import dcf_webservice.DcfResponse;
-
 public class LogNodeTableItem {
 
 	private String name;

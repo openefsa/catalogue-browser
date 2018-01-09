@@ -4,6 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
 import catalogue.Catalogue;
+import dcf_log.DcfResponse;
 import dcf_log.LogNodesForm;
 import dcf_pending_action.PendingAction;
 import dcf_pending_action.PendingActionListener;
@@ -12,7 +13,6 @@ import dcf_pending_action.PendingPublish;
 import dcf_pending_action.PendingReserve;
 import dcf_pending_action.PendingUploadData;
 import dcf_pending_action.PendingXmlDownload;
-import dcf_webservice.DcfResponse;
 import dcf_webservice.ReserveLevel;
 import dcf_webservice.UploadCatalogueFileThread.Type;
 import messages.Messages;

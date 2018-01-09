@@ -4,8 +4,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import dcf_webservice.DcfResponse;
-
 /**
  * Handler used to parse a dcf log document.
  * @author avonva

@@ -2,8 +2,8 @@ package dcf_pending_action;
 
 import catalogue.Catalogue;
 import dcf_log.DcfLog;
+import dcf_log.DcfResponse;
 import dcf_manager.Dcf.DcfType;
-import dcf_webservice.DcfResponse;
 import sas_remote_procedures.XmlUpdateFile;
 import sas_remote_procedures.XmlUpdateFileDAO;
 

@@ -5,7 +5,8 @@ import javax.xml.soap.SOAPException;
 import catalogue.Catalogue;
 import dcf_manager.Dcf.DcfType;
 import dcf_pending_action.PendingReserve;
-import dcf_user.User;
+import soap.UploadCatalogueFile;
+import user.IDcfUser;
 
 /**
  * Class used to reserve/unreserve catalogues through the dcf web service.
@@ -13,23 +14,19 @@ import dcf_user.User;
  *
  */
 public class Reserve extends UploadCatalogueFile {
-
-	// the catalogue we want to reserve/unreserve
-	private Catalogue catalogue;
 	
-	// the reserve level we want to apply to the catalogue
-	private ReserveLevel reserveLevel;
-	
-	// the description of why we are reserving/unreserving
-	private String reserveDescription;
+	private DcfType type;
+	private IDcfUser user;
 
 	/**
 	 * Initialize the reserve with the DcfType we want
 	 * to work with
 	 * @param type
 	 */
-	public Reserve( DcfType type ) {
-		super( type );
+	public Reserve(IDcfUser user, DcfType type) {
+		super(user);
+		this.user = user;
+		this.type = type;
 	}
 	
 	/**
@@ -39,56 +36,26 @@ public class Reserve extends UploadCatalogueFile {
 	 * @param catalogue the catalogue we want to (un)reserve
 	 * @param reserveLevel the reserve level we want to set (none, minor, major)
 	 * @param reserveDescription a description of why we are (un)reserving
-	 * @return the pending reserve which containes all the information related
+	 * @return the pending reserve which contains all the information related
 	 * to this reserve request
 	 * @throws SOAPException 
 	 */
-	public PendingReserve reserve( Catalogue catalogue, ReserveLevel reserveLevel, 
-			String reserveDescription ) throws SOAPException {
+	public PendingReserve reserve(Catalogue catalogue, ReserveLevel reserveLevel, 
+			String reserveDescription) throws SOAPException {
 		
-		this.catalogue = catalogue;
-		this.reserveLevel = reserveLevel;
-		this.reserveDescription = reserveDescription;
-
-		System.out.println ( reserveLevel.getOp() + ": " + catalogue );
-
-		PendingReserve pr = (PendingReserve) upload();
+		System.out.println (reserveLevel.getOp() + ": " + catalogue);
 		
-		return pr;
-	}
+		String attachment = UploadMessages.getReserveMessage(
+				catalogue.getCode(), reserveLevel, reserveDescription);
 
-	@Override
-	public CatalogueAttachment getAttachment() {
-
-		// add attachment to the request into the node <rowData>
-		// using the right message for the related reserve operation
-		String content = UploadMessages.getReserveMessage(
-				catalogue.getCode(), reserveLevel, reserveDescription );
-		
-		CatalogueAttachment att = new CatalogueAttachment( 
-				AttachmentType.ATTACHMENT, content );
-		
-		return att;
-	}
-
-	/**
-	 * Once the process is finished and we have retrieved
-	 * the log code of the upload catalogue file request,
-	 * we create a pending reserve related to this request and
-	 * we return it.
-	 * @return the pending reserve related to this request,
-	 * please cast it to use it
-	 */
-	@Override
-	public Object processResponse(String logCode) {
-
-		String username = User.getInstance().getUsername();
+		// send the request and get back the log code
+		String logCode = this.send(attachment);
 		
 		// add a pending reserve object to the db
 		// to save the request
-		PendingReserve pr = PendingReserve.addPendingReserve( catalogue,
-				logCode, username, reserveDescription, reserveLevel, getType() );
-
+		PendingReserve pr = PendingReserve.addPendingReserve(catalogue,
+				logCode, user.getUsername(), reserveDescription, reserveLevel, type);
+		
 		return pr;
 	}
 }

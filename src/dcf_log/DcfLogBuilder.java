@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import catalogue.Catalogue;
-import dcf_webservice.DcfResponse;
 import utilities.GlobalUtil;
 
 /**

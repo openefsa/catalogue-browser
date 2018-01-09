@@ -2,8 +2,6 @@ package dcf_log;
 
 import java.util.Collection;
 
-import dcf_webservice.DcfResponse;
-
 /**
  * Class modeling an xml node contained in the Dcf log document
  * and representing the result of an upload operation.

@@ -1,6 +1,7 @@
 package dcf_webservice;
 
 import java.io.File;
+import java.io.IOException;
 
 import javax.xml.soap.SOAPException;
 
@@ -12,8 +13,9 @@ import dcf_pending_action.PendingAction;
 import dcf_pending_action.PendingActionListener;
 import dcf_pending_action.PendingXmlDownload;
 import dcf_user.User;
-import dcf_webservice.Publish.PublishLevel;
 import progress_bar.FormProgressBar;
+import soap.UploadCatalogueFile;
+import user.IDcfUser;
 
 /**
  * Perform an {@link UploadCatalogueFile} webservice call
@@ -131,7 +133,7 @@ public class UploadCatalogueFileThread extends Thread {
 				}	
 				
 				// upload the downloaded xml file to the dcf using upload catalogue file
-				pa = ( (UploadData) req ).uploadData( catalogue, xmlFile.getAbsolutePath() );
+				pa = ( (UploadData) req ).uploadData( catalogue, xmlFile );
 				break;
 				
 			case DOWNLOAD_XML_UPDATES:
@@ -147,7 +149,7 @@ public class UploadCatalogueFileThread extends Thread {
 				return;
 			}
 		}
-		catch ( SOAPException e ) {
+		catch ( SOAPException | IOException e ) {
 			
 			catalogue.setRequestingAction( false );
 			
@@ -186,16 +188,18 @@ public class UploadCatalogueFileThread extends Thread {
 
 		UploadCatalogueFile req = null;
 
+		IDcfUser user = User.getInstance();
+		
 		// initialize the required service
 		switch ( actionType ) {
 		case RESERVE:
-			req = new Reserve( Dcf.dcfType );
+			req = new Reserve(user, Dcf.dcfType);
 			break;
 		case PUBLISH:
-			req = new Publish( Dcf.dcfType );
+			req = new Publish(user, Dcf.dcfType);
 			break;
 		case UPLOAD_DATA:
-			req = new UploadData( Dcf.dcfType );
+			req = new UploadData(user, Dcf.dcfType);
 			break;	
 		default:
 			break;

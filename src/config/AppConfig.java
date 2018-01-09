@@ -1,10 +1,9 @@
-package xml_reader;
+package config;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import dcf_manager.Dcf.DcfType;
 import utilities.GlobalUtil;
 
 /**
@@ -12,12 +11,10 @@ import utilities.GlobalUtil;
  * @author avonva
  *
  */
-public class PropertiesReader {
+public class AppConfig {
 
 	private static final String APP_NAME_PROPERTY = "Application.Name";
 	private static final String APP_VERSION_PROPERTY = "Application.Version";
-	private static final String DCF_PROPERTY = "Dcf.EnableTest";
-	private static final String YES = "YES";
 	private static final String DCF_XML_CREATOR = "DcfXmlUpdatesCreator.RemotePath";
 	private static final String DCF_XML_CREATOR_IN = "DcfXmlUpdatesCreator.InputFolder";
 	private static final String DCF_XML_CREATOR_UPDATE = "DcfXmlUpdatesCreator.UpdateFolder";
@@ -44,21 +41,6 @@ public class PropertiesReader {
 		}
 		
 		return properties;
-	}
-
-	/**
-	 * Get the dcf type from the preference file
-	 * @return
-	 */
-	public static DcfType getDcfType () {
-		
-		// by default we go to test
-		String value = getValue ( DCF_PROPERTY, YES );
-		
-		if ( value.equalsIgnoreCase( YES ) )
-			return DcfType.TEST;
-		else
-			return DcfType.PRODUCTION;
 	}
 	
 	/**
@@ -107,7 +89,7 @@ public class PropertiesReader {
 	 */
 	private static String getValue ( String property, String defaultValue ) {
 		
-		Properties prop = PropertiesReader.getProperties( 
+		Properties prop = AppConfig.getProperties( 
 				GlobalUtil.CONFIG_FILE );
 		
 		if ( prop == null )

@@ -1,8 +1,8 @@
 package dcf_pending_action;
 
 import catalogue.Catalogue;
+import dcf_log.DcfResponse;
 import dcf_webservice.UploadCatalogueFileThread.Type;
-import dcf_webservice.DcfResponse;
 
 /**
  * Listener used for web service operations related to

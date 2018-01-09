@@ -10,11 +10,11 @@ import catalogue_generator.CatalogueDownloader;
 import catalogue_generator.ThreadFinishedListener;
 import catalogue_object.Status;
 import dcf_log.DcfLog;
+import dcf_log.DcfResponse;
 import dcf_manager.Dcf;
 import dcf_manager.Dcf.DcfType;
 import dcf_manager.UpdatesChecker;
-import dcf_webservice.DcfResponse;
-import dcf_webservice.Publish.PublishLevel;
+import dcf_webservice.PublishLevel;
 
 /**
  * Pending actions for publish operations.

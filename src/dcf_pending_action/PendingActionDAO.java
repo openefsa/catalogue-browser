@@ -14,7 +14,7 @@ import catalogue_browser_dao.CatalogueEntityDAO;
 import catalogue_browser_dao.DatabaseManager;
 import dcf_manager.Dcf.DcfType;
 import dcf_pending_action.PendingAction.Priority;
-import dcf_webservice.Publish.PublishLevel;
+import dcf_webservice.PublishLevel;
 import dcf_webservice.ReserveLevel;
 
 /**

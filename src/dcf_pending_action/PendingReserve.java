@@ -8,8 +8,8 @@ import org.eclipse.swt.widgets.Listener;
 import catalogue.Catalogue;
 import catalogue_object.Status;
 import dcf_log.DcfLog;
+import dcf_log.DcfResponse;
 import dcf_manager.Dcf.DcfType;
-import dcf_webservice.DcfResponse;
 import dcf_webservice.ReserveLevel;
 import import_catalogue.CatalogueImporterThread;
 

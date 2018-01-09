@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import catalogue_browser_dao.DatabaseManager;
 import catalogue_generator.ThreadFinishedListener;
+import config.AppConfig;
 import dcf_user.ReauthThread;
 import dcf_user.User;
 import dcf_user.UserAccessLevel;
@@ -19,7 +20,6 @@ import instance_checker.InstanceChecker;
 import messages.Messages;
 import ui_main_menu.LoginActions;
 import utilities.GlobalUtil;
-import xml_reader.PropertiesReader;
 
 /**
  * Entry point for the Catalogue Browser application.
@@ -29,8 +29,8 @@ import xml_reader.PropertiesReader;
  */
 public class CatalogueBrowserMain {
 
-	public static final String APP_NAME = PropertiesReader.getAppName();
-	public static final String APP_VERSION = PropertiesReader.getAppVersion();
+	public static final String APP_NAME = AppConfig.getAppName();
+	public static final String APP_VERSION = AppConfig.getAppVersion();
 	public static final String APP_TITLE = APP_NAME + " " + APP_VERSION;
 	/**
 	 * Main, catalogue browser entry point

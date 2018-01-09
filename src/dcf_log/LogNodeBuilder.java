@@ -3,8 +3,6 @@ package dcf_log;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import dcf_webservice.DcfResponse;
-
 /**
  * Builder to create a single LogNode step by step.
  * @author avonva

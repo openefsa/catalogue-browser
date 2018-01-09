@@ -1,7 +1,5 @@
 package dcf_webservice;
 
-import dcf_webservice.Publish.PublishLevel;
-
 /**
  * This class contains all the xml messages which need to be
  * attached to the uploadCatalogueFile message to make the
