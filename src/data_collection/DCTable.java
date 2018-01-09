@@ -1,50 +1,16 @@
 package data_collection;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 /**
  * A table related to a data collection
  * @author avonva
  *
  */
-public class DCTable {
+public class DCTable extends DcfDCTable {
 
-	private int id = -1;
-	private String name;
-	private Collection<CatalogueConfiguration> configs;
+	public DCTable() {}
 	
-	/**
-	 * Create a data collection table
-	 * @param name name of the table
-	 */
-	public DCTable( String name ) {
-		this.name = name;
-		this.configs = new ArrayList<>();
-	}
-	
-	public void setId(int id) {
-		this.id = id;
-	}
-	public int getId() {
-		return id;
-	}
-	public String getName() {
-		return name;
-	}
-	public Collection<CatalogueConfiguration> getConfigs() {
-		return configs;
-	}
-	/**
-	 * Set the data collection configurations
-	 * @param config
-	 */
-	public void setConfigs(Collection<CatalogueConfiguration> configs) {
-		this.configs = configs;
-	}
-	
-	public void addConfig ( CatalogueConfiguration config ) {
-		this.configs.add( config );
+	public DCTable(String name) {
+		setName(name);
 	}
 	
 	/**
@@ -55,24 +21,24 @@ public class DCTable {
 		DCTableDAO tableDao = new DCTableDAO();
 		
 		// insert the table if not present
-		if ( !tableDao.contains( this ) )
-			this.id = tableDao.insert( this );
+		if ( !tableDao.contains( this ) ) {
+			int id = tableDao.insert( this );
+			this.setId(id);
+		}
 		else {  // else refresh the table id since we need it to insert DCTableConfig records
-			DCTable table = tableDao.getByName( name );
-			if ( table != null )
-				this.id = table.getId();
+			DCTable table = tableDao.getByName( getName() );
+			if ( table != null ) {
+				int id = table.getId();
+				this.setId(id);
+			}
 		}
 		
 		// insert all the table configs
-		for ( CatalogueConfiguration config : configs ) {
-			config.makeImport( dc, this );
+		for ( IDcfCatalogueConfig config : getConfigs() ) {
+			
+			CatalogueConfiguration catConfig = (CatalogueConfiguration) config;
+			
+			catConfig.makeImport( dc, this );
 		}
-	}
-	
-	@Override
-	public String toString() {
-		return "DC TABLE: id=" + (id == -1 ? "not defined yet" : id )
-				+ ";name=" + name
-				+ ";configs=" + configs;
 	}
 }

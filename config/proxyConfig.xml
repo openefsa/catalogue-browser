@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>Proxy configuration</comment>
+<entry key="Proxy.Mode">MANUAL</entry> <!-- NO_PROXY to ignore any proxy setting, AUTO to automatically detect the proxy, MANUAL to use below address and port as proxy setting -->
+
+<!-- MANUAL PROXY CONFIGURATION -->
+<entry key="Proxy.ManualHostName">tmgproxy.efsa.eu.int</entry> <!-- hostname or ip of the proxy, example tmgproxy.efsa.eu.int or 192.168.1.1 -->
+<entry key="Proxy.ManualPort">8080</entry> <!-- port of the proxy, example 8080 -->
+</properties>

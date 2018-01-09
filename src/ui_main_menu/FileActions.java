@@ -128,32 +128,34 @@ public class FileActions {
 		if ( catalogue == null )
 			return;
 
-		int val1 = warnDeprecatedCatalogue(shell, catalogue);
+		int val1 = openCatalogue(shell, catalogue);
 		
 		if (val1 == SWT.NO)
 			return;
+	
+		Event e = new Event();
+		e.data = catalogue;
+		listener.handleEvent(e);
+	}
+	
+	public static int openCatalogue(Shell shell, Catalogue catalogue) {
 		
+		int val1 = warnDeprecatedCatalogue(shell, catalogue);
+
+		if (val1 == SWT.NO)
+			return SWT.NO;
+
 		warnPossibleOldCatalogue(shell, catalogue);
-		
-		/*int val2 = warnOldRelease(shell, catalogue);
-		
-		if (val2 == SWT.OK) {
-		
-			downloadLastVersion(shell, catalogue, listener);
-		}
-		else {*/
-			// open the catalogue when the dialog is closed
-			GlobalUtil.setShellCursor( shell, SWT.CURSOR_WAIT );
 
-			// open the catalogue
-			catalogue.open();
+		// open the catalogue when the dialog is closed
+		GlobalUtil.setShellCursor( shell, SWT.CURSOR_WAIT );
 
-			GlobalUtil.setShellCursor( shell, SWT.CURSOR_ARROW );
+		// open the catalogue
+		catalogue.open();
 
-			Event e = new Event();
-			e.data = catalogue;
-			listener.handleEvent(e);
-		//}
+		GlobalUtil.setShellCursor( shell, SWT.CURSOR_ARROW );
+		
+		return SWT.YES;
 	}
 	
 	/**
@@ -209,7 +211,7 @@ public class FileActions {
 		User user = User.getInstance();
 		
 		// cannot check if not logged in
-		if ( !user.isLogged() )
+		if ( !user.isLoggedIn() )
 			return SWT.CANCEL;
 		
 		// check if there is a catalogue update
@@ -239,7 +241,7 @@ public class FileActions {
 	public static void warnPossibleOldCatalogue( Shell shell, Catalogue catalogue ) {
 		
 		User user = User.getInstance();
-		if (user.isLogged() || catalogue.isLocal() || catalogue.isDeprecated())
+		if (user.isLoggedIn() || catalogue.isLocal() || catalogue.isDeprecated())
 			return;
 
 		// if we are not logged in, simply warn the user that we cannot
@@ -273,7 +275,7 @@ public class FileActions {
 		}
 
 		// if the user is logged in we can check the updates
-		else if ( user.isLogged() ) {
+		else if ( user.isLoggedIn() ) {
 
 			// check if there is a catalogue update
 			boolean hasUpdate = catalogue.hasUpdate();

@@ -460,7 +460,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 	 * @param catalogue
 	 */
 	public boolean contains ( Catalogue catalogue ) {
-
+System.out.println(catalogue);
 		boolean found = false;
 
 		Connection con;

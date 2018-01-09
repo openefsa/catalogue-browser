@@ -7,50 +7,15 @@ package data_collection;
  * @author avonva
  *
  */
-public class CatalogueConfiguration {
+public class CatalogueConfiguration extends DcfCatalogueConfig {
 
-	private int id = -1;
-	private String dataElementName;
-	private String catalogueCode;
-	private String hierarchyCode;
-	
-	public CatalogueConfiguration( String dataElementName, 
-			String catalogueCode, String hierarchyCode ) {
-		this.dataElementName = dataElementName;
-		this.catalogueCode = catalogueCode;
-		this.hierarchyCode = hierarchyCode;
+	public CatalogueConfiguration() {
+		super();
 	}
 	
-	public void setId(int id) {
-		this.id = id;
-	}
-	public int getId() {
-		return id;
-	}
-	/**
-	 * Get the name of the data collection variable
-	 * @return
-	 */
-	public String getDataElementName() {
-		return dataElementName;
-	}
-	
-	/**
-	 * Get the code of the catalogue which contains
-	 * the data collection variable
-	 * @return
-	 */
-	public String getCatalogueCode() {
-		return catalogueCode;
-	}
-	
-	/**
-	 * Get the code of the hierarchy which contains
-	 * the data collection variable
-	 * @return
-	 */
-	public String getHierarchyCode() {
-		return hierarchyCode;
+	public CatalogueConfiguration(String dataElementName, 
+			String catalogueCode, String hierarchyCode) {
+		super(dataElementName, catalogueCode, hierarchyCode);
 	}
 	
 	/**
@@ -59,20 +24,14 @@ public class CatalogueConfiguration {
 	public void makeImport( DataCollection dc, DCTable table ) {
 
 		CatalogueConfigDAO configDao = new CatalogueConfigDAO();
-		this.id = configDao.insert( this );
+		int id = configDao.insert( this );
+		
+		this.setId(id);
 
 		// insert also the relationship among dc, table and config
 		DCTableConfig tableConfig = new DCTableConfig( dc, table, this );
 		
 		DCTableConfigDAO tableConfigDao = new DCTableConfigDAO();
 		tableConfigDao.insert( tableConfig );
-	}
-	
-	@Override
-	public String toString() {
-		return "CAT CONFIG: id= " + (id == -1 ? "not defined yet" : id ) 
-				+ "dataElemName=" + dataElementName
-				+ ";catCode=" + catalogueCode
-				+ ";hierCode=" + hierarchyCode;
 	}
 }

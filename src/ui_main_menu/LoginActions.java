@@ -28,7 +28,7 @@ public class LoginActions {
 	public static void startLoggedThreads(final Shell shell, 
 			final PendingActionListener listener, final Listener userLevelListener) {
 		
-		if(!User.getInstance().isLogged())
+		if(!User.getInstance().isLoggedIn())
 			return;
 		
 		// Check catalogues updates and 

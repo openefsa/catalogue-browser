@@ -11,10 +11,14 @@ import javax.xml.soap.SOAPException;
 import org.eclipse.swt.widgets.Listener;
 
 import catalogue.Catalogue;
+import catalogue.CatalogueList;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_generator.ThreadFinishedListener;
+import config.Config;
 import data_collection.DCTable;
+import data_collection.DCTableList;
 import data_collection.DataCollection;
+import data_collection.DataCollectionList;
 import dcf_pending_action.PendingAction;
 import dcf_pending_action.PendingActionDAO;
 import dcf_pending_action.PendingActionListener;
@@ -22,18 +26,15 @@ import dcf_pending_action.PendingActionValidator;
 import dcf_user.User;
 import dcf_user.UserAccessLevel;
 import dcf_user.UserProfileChecker;
-import dcf_webservice.ExportCatalogue;
-import dcf_webservice.ExportCatalogueFile;
-import dcf_webservice.GetCataloguesList;
-import dcf_webservice.GetDataCollectionsList;
-import dcf_webservice.GetFile;
-import dcf_webservice.Ping;
 import dcf_webservice.Publish.PublishLevel;
-import progress_bar.FormProgressBar;
 import dcf_webservice.ReserveLevel;
 import dcf_webservice.UploadCatalogueFileThread;
-import utilities.GlobalUtil;
-import xml_reader.PropertiesReader;
+import progress_bar.FormProgressBar;
+import soap.ExportCatalogueFile;
+import soap.GetCataloguesList;
+import soap.GetDataCollectionTables;
+import soap.GetDataCollectionsList;
+import soap.Ping;
 
 /**
  * Class to model the DCF. Here we can download
@@ -44,7 +45,8 @@ import xml_reader.PropertiesReader;
 public class Dcf {
 	
 	// get the dcf type and store it for the whole program
-	public static final DcfType dcfType = PropertiesReader.getDcfType();
+	public static final DcfType dcfType = new Config().isProductionEnvironment() ? 
+			DcfType.PRODUCTION : DcfType.TEST;
 	
 	/**
 	 * List of downloaded data collections
@@ -76,8 +78,6 @@ public class Dcf {
 	
 	// progress bar
 	private FormProgressBar progressBar;
-	
-
 
 	/**
 	 * Get all the catalogues which can 
@@ -122,7 +122,7 @@ public class Dcf {
 			return out;
 		
 		for ( DataCollection dc : dataCollections ) {
-			if ( dc.isValid() && !dc.alreadyImported() )
+			if ( dc.isActive() && !dc.alreadyImported() )
 				out.add( dc );
 		}
 		
@@ -302,7 +302,7 @@ public class Dcf {
 	 * @throws SOAPException 
 	 */
 	public boolean ping() throws SOAPException {
-		Ping ping = new Ping( dcfType );
+		Ping ping = new Ping(User.getInstance());
 		return ping.ping();
 	}
 	
@@ -350,10 +350,11 @@ public class Dcf {
 	 */
 	public ArrayList<Catalogue> getCataloguesList() {
 		
-		ArrayList<Catalogue> list = new ArrayList<>();
+		CatalogueList list = new CatalogueList();
 		
 		try {
-			list = new GetCataloguesList( dcfType ).getList();
+			GetCataloguesList req = new GetCataloguesList(User.getInstance(), list);
+			req.getList();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -367,10 +368,11 @@ public class Dcf {
 	 */
 	public ArrayList<DataCollection> getDataCollectionsList() {
 		
-		ArrayList<DataCollection> list = new ArrayList<>();
+		DataCollectionList list = new DataCollectionList();
 		
 		try {
-			list = new GetDataCollectionsList( dcfType ).getList();
+			GetDataCollectionsList req = new GetDataCollectionsList(User.getInstance(), list);
+			req.getList();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -385,9 +387,15 @@ public class Dcf {
 	 * @throws SOAPException
 	 */
 	public Collection<DCTable> getFile( String resourceId ) throws SOAPException {
-		GetFile getFile = new GetFile( dcfType );
-		Collection<DCTable> tables = getFile.getFile( resourceId );
-		return tables;
+		
+		DCTableList output = new DCTableList();
+		
+		GetDataCollectionTables req = new GetDataCollectionTables(User.getInstance(), 
+				output, resourceId);
+		
+		req.getTables();
+		
+		return output;
 	}
 	
 	/**
@@ -398,11 +406,11 @@ public class Dcf {
 	 * @return true if the export was successful
 	 * @throws SOAPException 
 	 */
-	public boolean exportCatalogue( Catalogue catalogue, String filename ) throws SOAPException {
+	public File exportCatalogue(Catalogue catalogue) throws SOAPException {
 		
 		// export the catalogue and save its attachment into an xml file
-		ExportCatalogue export = new ExportCatalogue ( dcfType, catalogue, filename );
-		return export.exportCatalogue();
+		ExportCatalogueFile export = new ExportCatalogueFile(User.getInstance());
+		return export.exportCatalogue(catalogue.getCode());
 	}
 	
 	/**
@@ -415,10 +423,10 @@ public class Dcf {
 	public File exportLog ( String logCode ) throws SOAPException {
 		
 		// ask for the log to the dcf
-		ExportCatalogueFile export = new ExportCatalogueFile( dcfType );
+		ExportCatalogueFile export = new ExportCatalogueFile(User.getInstance());
 
 		// write the log document in xml format
-		return export.exportLog( logCode, GlobalUtil.getTempDir() + logCode + ".xml" );
+		return export.exportLog(logCode);
 	}
 
 	/**
@@ -433,14 +441,14 @@ public class Dcf {
 	 * @throws IOException
 	 * @throws SOAPException 
 	 */
-	public File exportCatalogueInternalVersion ( String catalogueCode, 
-			String filename ) throws IOException, SOAPException {
+	public File exportCatalogueInternalVersion (String catalogueCode) 
+			throws IOException, SOAPException {
 		
 		// ask for the log to the dcf
-		ExportCatalogueFile export = new ExportCatalogueFile( dcfType );
+		ExportCatalogueFile export = new ExportCatalogueFile(User.getInstance());
 
 		// get the catalogue xml as input stream
-		File file = export.exportLastInternalVersion( catalogueCode, filename );
+		File file = export.exportLastInternalVersion(catalogueCode);
 		
 		return file;
 	}

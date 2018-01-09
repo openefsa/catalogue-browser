@@ -71,7 +71,8 @@ import utilities.GlobalUtil;
  * @author avonva
  *
  */
-public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mappable, Cloneable {
+public class Catalogue extends BaseObject 
+	implements Comparable<Catalogue>, Mappable, Cloneable, IDcfCatalogue {
 
 	// date format of the catalogues
 	public static final String ISO_8601_24H_FULL_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
@@ -138,6 +139,8 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 
 	private int forcedCount;
 
+	public Catalogue() {}
+	
 	/**
 	 * Constructor to create a catalogue object with all its variables
 	 * 
@@ -2192,13 +2195,9 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	public NewCatalogueInternalVersion getLastInternalVersion() throws IOException, 
 	TransformerException, ParserConfigurationException, SAXException, SOAPException {
 
-		String filename = GlobalUtil.getTempDir() + "temp_" + getCode();
-		String format = ".xml";
-		String output = filename + format;
-
 		Dcf dcf = new Dcf();
 
-		File file = dcf.exportCatalogueInternalVersion( getCode(), output );
+		File file = dcf.exportCatalogueInternalVersion( getCode() );
 
 		// export the internal version in the file
 		boolean written = file != null;
@@ -2208,7 +2207,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		if ( !written )
 			return null;
 
-		VersionFinder finder = new VersionFinder( output );
+		VersionFinder finder = new VersionFinder( file.getName() );
 
 		// compare the catalogues versions
 		CatalogueVersion intVersion = new CatalogueVersion ( finder.getVersion() );
@@ -2220,13 +2219,13 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 			// save the new version of the catalogue
 			NewCatalogueInternalVersion newVersion = 
 					new NewCatalogueInternalVersion( getCode(), 
-							finder.getVersion(), output, catalogueType );
+							finder.getVersion(), file.getName(), catalogueType );
 
 			return newVersion;
 		}
 		else {
 			// delete useless files
-			GlobalUtil.deleteFileCascade( output );
+			GlobalUtil.deleteFileCascade( file.getName() );
 		}
 
 		return null;
@@ -2241,23 +2240,20 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 
 		System.out.println ( "Downloading " + this );
 
-		// filename of the xml catalogue
-		final String catalogueXmlFilename = GlobalUtil.getTempDir() + getCode() + ".xml";
-
 		// ask for exporting catalogue to the dcf
 		// export the catalogue and save its attachment into an xml file
 		Dcf dcf = new Dcf();
 
-		boolean downloaded = dcf.exportCatalogue( this, catalogueXmlFilename );
+		File file = dcf.exportCatalogue(this);
 
-		if ( !downloaded ) {
+		if ( !file.exists() ) {
 			throw new AttachmentNotFoundException();
 		}
 		
 		// set the catalogue type according to the dcf one
 		catalogueType = Dcf.dcfType;
 
-		return new File ( catalogueXmlFilename );
+		return file;
 	}
 
 	/**
@@ -2496,6 +2492,36 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	public boolean equals( Object cat ) {
 		boolean sameCode = getCode().equals( ( (Catalogue) cat ).getCode() );
 		return sameCode;
+	}
+
+	@Override
+	public void setTermCodeMask(String termCodeMask) {
+		this.termCodeMask = termCodeMask;
+	}
+
+	@Override
+	public void setTermCodeLength(int termCodeLength) {
+		this.termCodeLength = termCodeLength;
+	}
+
+	@Override
+	public void setTermMinCode(String termMinCode) {
+		this.termMinCode = termMinCode;
+	}
+
+	@Override
+	public void setAcceptNonStandardCodes(boolean acceptNonStandardCodes) {
+		this.acceptNonStandardCodes = acceptNonStandardCodes;
+	}
+
+	@Override
+	public void setGenerateMissingCodes(boolean generateMissingCodes) {
+		this.generateMissingCodes = generateMissingCodes;
+	}
+
+	@Override
+	public void setCatalogueGroups(String catalogueGroups) {
+		this.catalogueGroups = catalogueGroups;
 	}
 }
 

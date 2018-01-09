@@ -12,6 +12,7 @@ import javax.xml.soap.SOAPException;
 import catalogue.Catalogue;
 import catalogue_browser_dao.DatabaseManager;
 import dcf_manager.Dcf;
+import user.DcfUser;
 
 /**
  * Class to model the application user. Note that this
@@ -22,13 +23,11 @@ import dcf_manager.Dcf;
  * @author avonva
  *
  */
-public class User {
+public class User extends DcfUser {
 
 	// inner instance
 	private static User user;
 
-	private String username;
-	private String password;
 	private ArrayList<String> editableCat;
 	private UserAccessLevel userLevel;
 	
@@ -61,38 +60,6 @@ public class User {
 			user = new User();
 
 		return user;
-	}
-
-	/**
-	 * Save the dcf username
-	 * @param username
-	 */
-	public void setUsername( String username ) {
-		this.username = username;
-	}
-
-	/**
-	 * Get the saved dcf username
-	 * @return
-	 */
-	public String getUsername() {
-		return username;
-	}
-
-	/**
-	 * Save the dcf password
-	 * @param password the dcf password
-	 */
-	public void setPassword( String password ) {
-		this.password = password;
-	}
-
-	/**
-	 * Get the saved dcf password
-	 * @return
-	 */
-	public String getPassword() {
-		return password;
 	}
 
 	/**
@@ -145,7 +112,7 @@ public class User {
 		boolean isCM = isCatManagerOf( catalogue );
 
 		// is editing forced to be enabled?
-		boolean editingForced = catalogue.isForceEdit( username );
+		boolean editingForced = catalogue.isForceEdit( super.getUsername() );
 
 		boolean isLocal = catalogue.isLocal();
 
@@ -196,7 +163,7 @@ public class User {
 
 		// true if we don't know the user level but we
 		// already know the username
-		return !isUserLevelDefined() && username != null;
+		return !isUserLevelDefined() && super.getUsername() != null;
 	}
 
 	/**
@@ -219,7 +186,7 @@ public class User {
 	 * user level is not defined yet.
 	 * @return
 	 */
-	public boolean isLogged() {
+	public boolean isLoggedIn() {
 		return logged;
 	}
 	
@@ -267,7 +234,7 @@ public class User {
 		this.isReauth = true;
 		
 		try {
-			setLogged(this.tryPing(credentials[0], credentials[1]));
+			setLogged(super.verifiedLogin(credentials[0], credentials[1]));
 		}
 		catch(SOAPException e) {
 			this.isReauth = false;
@@ -289,9 +256,10 @@ public class User {
 	 * @throws SOAPException 
 	 * @throws Exception
 	 */
-	public boolean login ( String username, String password, boolean save ) throws SOAPException {
-
-		setLogged(tryPing(username, password));
+	public boolean login ( String username, String password, boolean save ) 
+			throws SOAPException {
+		
+		setLogged(super.verifiedLogin(username, password));
 
 		// if wrong credential => remove them 
 		if ( logged ) {
@@ -304,39 +272,6 @@ public class User {
 			
 			if (save)
 				saveCredentials(username, password);
-		}
-
-		return logged;
-	}
-
-	private boolean tryPing(String username, String password) throws SOAPException {
-		
-		// save the credentials for future uses if the check was ok
-		// we set the credential before the ping, otherwise the ping
-		// has not the credential to connect to the dcf!
-		this.username = username;
-		this.password = password;
-
-		// make a ping and check if the credential are ok
-		Dcf dcf = new Dcf();
-		
-		boolean logged;
-		try {
-			logged = dcf.ping();
-		} catch (SOAPException e) {
-			e.printStackTrace();
-			// check if wrong credentials
-			if (e.getMessage().contains("401")
-					|| e.getMessage().contains("403"))
-				logged = false;
-			else
-				throw e;
-		}
-
-		// if wrong credential => remove them 
-		if ( !logged ) {
-			this.username = null;
-			this.password = null;
 		}
 
 		return logged;
@@ -385,7 +320,7 @@ public class User {
 
 		try(Connection con = DatabaseManager.getMainDBConnection();
 				PreparedStatement stmt = con.prepareStatement(query);) {
-System.out.println(Dcf.dcfType);
+
 			stmt.setString(1, Dcf.dcfType.toString());
 			stmt.setString(2, username);
 			stmt.setString(3, password);
@@ -407,6 +342,6 @@ System.out.println(Dcf.dcfType);
 
 	@Override
 	public String toString() {
-		return "USER: " + username;
+		return "USER: " + getUsername();
 	}
 }

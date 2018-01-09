@@ -346,7 +346,6 @@ public class MainPanel implements Observer, RestoreableWindow {
 	 * @param hierarchy the new hierarchy to be visualized
 	 */
 	public void changeHierarchy ( Hierarchy hierarchy ) {
-		
 		// update the combo box selection
 		hierarchySelector.setSelection( hierarchy );
 	}
@@ -584,18 +583,10 @@ public class MainPanel implements Observer, RestoreableWindow {
 					}
 					
 					// warn user if necessary
-					int ok = FileActions.performCatalogueChecks( shell, targetCat );
+					int ok = FileActions.openCatalogue( shell, targetCat );
 					
-					if ( ok != SWT.OK )
+					if ( ok != SWT.YES )
 						break;
-					
-					// open the catalogue when the dialog is closed
-					GlobalUtil.setShellCursor( shell, SWT.CURSOR_WAIT );
-
-					// open the catalogue
-					targetCat.open();
-
-					GlobalUtil.setShellCursor( shell, SWT.CURSOR_ARROW );
 					
 					// enable the user interface only if 
 					// we have data in the current catalogue

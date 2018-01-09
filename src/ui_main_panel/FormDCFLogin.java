@@ -17,8 +17,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import dcf_manager.Dcf;
-import dcf_manager.Dcf.DcfType;
+import config.Config;
 import dcf_user.User;
 import messages.Messages;
 import session_manager.RestoreableWindow;
@@ -83,7 +82,8 @@ public class FormDCFLogin implements RestoreableWindow {
 		
 		dialog.setLayoutData( gridData );
 		
-		if (Dcf.dcfType != DcfType.PRODUCTION) {
+		Config config = new Config();
+		if (!config.isProductionEnvironment()) {
 			
 			Label dcfTypeLabel = new Label ( dialog, SWT.CENTER );
 			

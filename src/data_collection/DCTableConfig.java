@@ -8,7 +8,7 @@ import dcf_manager.Dcf;
 
 /**
  * Relation object among {@link DataCollection}, {@link DCTable}
- * and {@link CatalogueConfiguration} in the db.
+ * and {@link DcfCatalogueConfig} in the db.
  * @author avonva
  *
  */
@@ -18,9 +18,9 @@ public class DCTableConfig {
 	
 	private DataCollection dc;
 	private DCTable table;
-	private CatalogueConfiguration config;
+	private DcfCatalogueConfig config;
 	
-	public DCTableConfig( DataCollection dc, DCTable table, CatalogueConfiguration config ) {
+	public DCTableConfig( DataCollection dc, DCTable table, DcfCatalogueConfig config ) {
 		this.dc = dc;
 		this.table = table;
 		this.config = config;
@@ -46,7 +46,7 @@ public class DCTableConfig {
 	 * Get the configuration object
 	 * @return
 	 */
-	public CatalogueConfiguration getConfig() {
+	public DcfCatalogueConfig getConfig() {
 		return config;
 	}
 	

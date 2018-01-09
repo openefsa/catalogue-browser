@@ -102,6 +102,6 @@ public class LoginMenu implements MainMenuItem {
 	public void refresh() {
 		
 		if (!loginMI.isDisposed())
-			loginMI.setEnabled(!User.getInstance().isReauth() && !User.getInstance().isLogged());
+			loginMI.setEnabled(!User.getInstance().isReauth() && !User.getInstance().isLoggedIn());
 	};
 }

@@ -16,8 +16,8 @@ public class CatalogueConfigurationBuilder {
 		this.hierarchyCode = hierarchyCode;
 	}
 	
-	public CatalogueConfiguration build() {
-		return new CatalogueConfiguration ( dataElementName, 
+	public DcfCatalogueConfig build() {
+		return new DcfCatalogueConfig ( dataElementName, 
 				catalogueCode, hierarchyCode );
 	}
 }

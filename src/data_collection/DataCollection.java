@@ -23,7 +23,7 @@ import utilities.GlobalUtil;
  * @author avonva
  *
  */
-public class DataCollection {
+public class DataCollection implements IDcfDataCollection {
 
 	public static final String DATE_FORMAT = "yyyy-MM-ddX";
 
@@ -35,6 +35,8 @@ public class DataCollection {
 	private Timestamp activeTo;
 	private String resourceId;
 
+	public DataCollection() {}
+	
 	/**
 	 * Initialize a data collection (i.e. dc) object
 	 * @param code the dc code
@@ -87,7 +89,7 @@ public class DataCollection {
 	 * in terms of time validity
 	 * @return
 	 */
-	public boolean isValid() {
+	public boolean isActive() {
 
 		Timestamp today = new Timestamp( System.currentTimeMillis() );
 
@@ -214,7 +216,7 @@ public class DataCollection {
 	 * Download all the related catalogues
 	 * @param listener
 	 */
-	public void downlaodCatalogues ( ProgressStepListener listener ) {
+	public void downloadCatalogues ( ProgressStepListener listener ) {
 
 		// second progress block for threads
 		ProgressList list = new ProgressList ( 100 );
@@ -234,7 +236,7 @@ public class DataCollection {
 					thread.getCatalogue().toString() ) {
 
 				@Override
-				public void execute() throws Exception {
+				public void execute() throws InterruptedException {
 					while ( !thread.isFinished() ) {
 						Thread.sleep( 100 );
 					}
@@ -356,5 +358,35 @@ public class DataCollection {
 				+ ";activeFrom=" + activeFrom
 				+ ";activeTo=" + activeTo
 				+ ";resourceId=" + resourceId;
+	}
+
+	@Override
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	@Override
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	@Override
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	@Override
+	public void setActiveFrom(Timestamp activeFrom) {
+		this.activeFrom = activeFrom;
+	}
+
+	@Override
+	public void setActiveTo(Timestamp activeTo) {
+		this.activeTo = activeTo;
+	}
+
+	@Override
+	public void setResourceId(String resourceId) {
+		this.resourceId = resourceId;
 	}
 }

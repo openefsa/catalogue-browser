@@ -48,17 +48,17 @@ public class GlobalUtil {
 	private static String workDir = "";
 	
 	// directory for the user files as the settings 
-	final static public String CONFIG_FILES_DIR_NAME = "ConfigFiles";
+	final static public String CONFIG_FILES_DIR_NAME = "config";
 	final static public String CONFIG_FILES_DIR_PATH = getConfigDir();
-	final static public String CONFIG_FILE = getConfigDir() + "Config.xml";
+	final static public String CONFIG_FILE = getConfigDir() + "appConfig.xml";
 	
 	
 	// directory which contains all the pick lists
-	final static public String PICKLISTS_DIR_NAME = "Picklists";
+	final static public String PICKLISTS_DIR_NAME = "picklists";
 	final static public String PICKLISTS_DIR_PATH = getPicklistDir();
 
 	// directory which contains all the pick lists
-	final static public String BUSINESS_RULES_DIR_NAME = "Business Rules";
+	final static public String BUSINESS_RULES_DIR_NAME = "business-rules";
 	final static public String BUSINESS_RULES_DIR_PATH = getBusinessRulesDir();
 
 	// the filename of the warning messages and colors
