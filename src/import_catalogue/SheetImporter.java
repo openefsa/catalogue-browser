@@ -173,7 +173,7 @@ public abstract class SheetImporter<T> {
 	 * @return hashmap which contains the pairs (code, id) of the
 	 * objects. This hashmap is used to get the T objects database ids.
 	 */
-	public abstract void insert ( Collection<T> data );
+	public abstract void insert ( Collection<T> data ) throws ImportException;
 	
 	/**
 	 * Called when the parsing is finished.

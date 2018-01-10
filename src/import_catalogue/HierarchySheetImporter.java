@@ -92,12 +92,30 @@ public class HierarchySheetImporter extends SheetImporter<Hierarchy> {
 
 		return builder.build();
 	}
+	
+	private boolean isMasterDefined(Collection<Hierarchy> hierarchies) {
+		
+		boolean isMasterDefined = false;
+		for (Hierarchy h : hierarchies) {
+			if (h.isMaster()) {
+				isMasterDefined = true;
+				break;
+			}
+		}
+		
+		return isMasterDefined;
+	}
 
 	@Override
-	public void insert( Collection<Hierarchy> hierarchies ) {
+	public void insert( Collection<Hierarchy> hierarchies ) throws ImportException {
+		
+
+		if (!isMasterDefined(hierarchies)) {
+			throw new ImportException("No master hierarchy was defined!", "X102");
+		}
 		
 		HierarchyDAO hierDao = new HierarchyDAO( catalogue );
-
+		
 		// insert all the hierarchies into the database
 		hierDao.insertHierarchies( hierarchies );
 	}

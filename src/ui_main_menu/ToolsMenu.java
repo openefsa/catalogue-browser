@@ -587,6 +587,11 @@ public class ToolsMenu implements MainMenuItem {
 											msg = Messages.getString( "Import.ImportStructureErrorMessage" );
 											icon = SWT.ICON_ERROR;
 											break;
+										case "X102":
+											title = Messages.getString("Import.ImportErrorTitle");
+											msg = Messages.getString( "Import.ImportNoMasterErrorMessage" );
+											icon = SWT.ICON_ERROR;
+											break;
 										}
 									}
 									else {

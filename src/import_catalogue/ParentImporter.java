@@ -111,7 +111,8 @@ public class ParentImporter extends SheetImporter<Applicability> {
 			
 			// ERROR! cannot set a term parent of itself
 			if ( parentCode.equals( termCode ) ) {
-				ImportException e = new ImportException("ERROR: A TERM CANNOT BE PARENT OF ITSELF: term code " + termCode, 
+				ImportException e = new ImportException(
+						"ERROR: A TERM CANNOT BE PARENT OF ITSELF: term code " + termCode, 
 						"X101");
 				e.setData(termCode);
 				throw e;

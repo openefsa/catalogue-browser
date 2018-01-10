@@ -11,7 +11,6 @@ import org.apache.poi.openxml4j.exceptions.OpenXML4JException;
 import org.xml.sax.SAXException;
 
 import catalogue.Catalogue;
-import catalogue_browser_dao.ReleaseNotesDAO;
 import messages.Messages;
 import naming_convention.Headers;
 import open_xml_reader.ResultDataSet;
@@ -64,65 +63,66 @@ public class CatalogueWorkbookImporter {
 		this.maxProgress = maxProgress;
 		
 		// get the excel data
-		final WorkbookReader workbookReader = new WorkbookReader( filename );
-		
-		// import catalogue
-		System.out.println( "Import catalogue sheet" );
-		progressBar.setLabel( Messages.getString("Import.Catalogue") );
-		catImp = importCatalogueSheet( workbookReader );
-		
-		Catalogue importedCat = catImp.getImportedCatalogue();
-		String catExcelCode = catImp.getExcelCode();
-		
-		// import hierarchies
-		System.out.println( "Import hierarchy sheet" );
-		progressBar.setLabel( Messages.getString("Import.Hierarchy") );
-		importHierarchySheet ( workbookReader, importedCat, catExcelCode );
+		try(WorkbookReader workbookReader = new WorkbookReader( filename );) {
+			
+			// import catalogue
+			System.out.println( "Import catalogue sheet" );
+			progressBar.setLabel( Messages.getString("Import.Catalogue") );
+			catImp = importCatalogueSheet( workbookReader );
+			
+			Catalogue importedCat = catImp.getImportedCatalogue();
+			String catExcelCode = catImp.getExcelCode();
+			
+			// import hierarchies
+			System.out.println( "Import hierarchy sheet" );
+			progressBar.setLabel( Messages.getString("Import.Hierarchy") );
+			importHierarchySheet ( workbookReader, importedCat, catExcelCode );
 
-		// import attributes
-		System.out.println( "Import attribute sheet" );
-		progressBar.setLabel( Messages.getString("Import.Attribute") );
-		importAttributeSheet ( workbookReader, importedCat );
-		
-		// import terms
-		System.out.println( "Import term sheet" );
-		progressBar.setLabel( Messages.getString("Import.Term") );
-		termImp = importTermSheet ( workbookReader, importedCat );
-		
-		// import term attributes and parent
-		System.out.println( "Import term attributes and parents sheet" );
-		progressBar.setLabel( Messages.getString("Import.TermAttrParent") );
-		importTermRelations ( workbookReader, importedCat, termImp.getNewCodes() );
+			// import attributes
+			System.out.println( "Import attribute sheet" );
+			progressBar.setLabel( Messages.getString("Import.Attribute") );
+			importAttributeSheet ( workbookReader, importedCat );
+			
+			// import terms
+			System.out.println( "Import term sheet" );
+			progressBar.setLabel( Messages.getString("Import.Term") );
+			termImp = importTermSheet ( workbookReader, importedCat );
+			
+			// import term attributes and parent
+			System.out.println( "Import term attributes and parents sheet" );
+			progressBar.setLabel( Messages.getString("Import.TermAttrParent") );
+			importTermRelations ( workbookReader, importedCat, termImp.getNewCodes() );
 
-		// import the release note sheet
-		System.out.println( "Import release notes sheet" );
-		progressBar.setLabel( Messages.getString("Import.ReleaseNotes") );
-		importReleaseNotes ( workbookReader, importedCat );
-		
-		// close the connection with excel reader
-		workbookReader.close();
-		
-		// insert default preferences
-		// after having imported the excel, we can insert the default preferences
-		System.out.println ( "Creating default preferences" );
-		progressBar.setLabel( Messages.getString("Import.Preferences") );
-		
-		CataloguePreferenceDAO prefDao = new CataloguePreferenceDAO( importedCat );
-		prefDao.insertDefaultPreferences();
-		
-		// insert the default search options
-		SearchOptionDAO optDao = new SearchOptionDAO ( importedCat );
-		optDao.insertDefaultSearchOpt();
+			// import the release note sheet
+			System.out.println( "Import release notes sheet" );
+			progressBar.setLabel( Messages.getString("Import.ReleaseNotes") );
+			importReleaseNotes ( workbookReader, importedCat );
+			
+			// close the connection with excel reader
+			workbookReader.close();
+			
+			// insert default preferences
+			// after having imported the excel, we can insert the default preferences
+			System.out.println ( "Creating default preferences" );
+			progressBar.setLabel( Messages.getString("Import.Preferences") );
+			
+			CataloguePreferenceDAO prefDao = new CataloguePreferenceDAO( importedCat );
+			prefDao.insertDefaultPreferences();
+			
+			// insert the default search options
+			SearchOptionDAO optDao = new SearchOptionDAO ( importedCat );
+			optDao.insertDefaultSearchOpt();
 
-		// add progress
-		double prog = ProgressSettings.getProgress( 
-				ProgressSettings.DEFAULT_PREF, maxProgress );
-		progressBar.addProgress( prog );
+			// add progress
+			double prog = ProgressSettings.getProgress( 
+					ProgressSettings.DEFAULT_PREF, maxProgress );
+			progressBar.addProgress( prog );
 
-		System.out.println( importedCat + " successfully imported in " + importedCat.getDbPath() );
-		
-		// clear temporary files
-		GlobalUtil.clearTempDir();
+			System.out.println( importedCat + " successfully imported in " + importedCat.getDbPath() );
+			
+			// clear temporary files
+			GlobalUtil.clearTempDir();
+		}
 	}
 	
 	/**
@@ -341,10 +341,10 @@ public class CatalogueWorkbookImporter {
 	 */
 	private void importReleaseNotes ( WorkbookReader workbookReader, Catalogue catalogue ) {
 
-		// add the catalogue information
-		ReleaseNotesDAO notesDao = new ReleaseNotesDAO( catalogue );
-		if ( catalogue.getReleaseNotes() != null )
-			notesDao.insert( catalogue.getReleaseNotes() );
+		// add the catalogue information TODO remove
+		//ReleaseNotesDAO notesDao = new ReleaseNotesDAO( catalogue );
+		//if ( catalogue.getReleaseNotes() != null )
+			//notesDao.insert( catalogue.getReleaseNotes() );
 		
 		// import the release notes operations
 		try {
