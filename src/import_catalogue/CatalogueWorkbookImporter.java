@@ -340,11 +340,6 @@ public class CatalogueWorkbookImporter {
 	 * @param catalogue
 	 */
 	private void importReleaseNotes ( WorkbookReader workbookReader, Catalogue catalogue ) {
-
-		// add the catalogue information TODO remove
-		//ReleaseNotesDAO notesDao = new ReleaseNotesDAO( catalogue );
-		//if ( catalogue.getReleaseNotes() != null )
-			//notesDao.insert( catalogue.getReleaseNotes() );
 		
 		// import the release notes operations
 		try {
