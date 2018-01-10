@@ -348,7 +348,6 @@ public class CatalogueWorkbookImporter {
 			
 			ResultDataSet sheetData = workbookReader.next();
 			
-			
 			NotesSheetImporter notesImp = new 
 					NotesSheetImporter( catalogue );
 			

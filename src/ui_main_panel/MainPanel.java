@@ -674,7 +674,11 @@ public class MainPanel implements Observer, RestoreableWindow {
 
 					// enable user interface if the catalogue is not empty
 					if ( catalogue != null && !catalogue.isEmpty() ) {
+						
 						enableUI( true );
+						
+						// open the master hierarchy of the catalogue
+						changeHierarchy(catalogue.getMasterHierarchy());
 					}
 					
 					break;
