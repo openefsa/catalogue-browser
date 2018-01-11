@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.sql.SQLException;
 
 import catalogue_browser_dao.DatabaseManager;
 
@@ -71,6 +72,10 @@ public class SQLScriptExec {
 	}
 
 	public void exec ( ) throws IOException {
+		
+		
+		System.out.println("Reading");
+		
 		Reader reader = new InputStreamReader( _inputStream );
 		/* SQL statement can be maximum 2000 characters */
 
@@ -95,17 +100,17 @@ public class SQLScriptExec {
 			 */
 
 			if ( data == ';' ) {
-				/* it is indeed the end of a statement which I will now execute */
-				if ( !DatabaseManager.executeSQLStatement( dbURL, bufSQL ) ) {
-					System.err.println( "Error in the statement execution, script execution cancelled" );
-					dataAvailable = false;
-					continue;
-				} else {
-					dataAvailable = true;
-					bufSQL = "";
-					data = reader.read();
-					continue;
+				
+				try {
+					DatabaseManager.executeSQLStatement( dbURL, bufSQL );
+				} catch (SQLException e) {
+					e.printStackTrace();
 				}
+				
+				dataAvailable = true;
+				bufSQL = "";
+				data = reader.read();
+				continue;
 
 			}
 

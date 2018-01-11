@@ -9,7 +9,9 @@ import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -101,7 +103,7 @@ public class DatabaseManager {
 	 * Create the main database (the one which contains the catalogues metadata)
 	 * @throws SQLException 
 	 */
-	private static void createMainDB () throws SQLException {
+	public static void createMainDB () throws SQLException {
 
 		// create the database
 		try {
@@ -125,9 +127,9 @@ public class DatabaseManager {
 		}
 	}
 
-
 	/**
-	 * Connect to the main catalogues database if present, otherwise create it and then connect
+	 * Connect to the main catalogues database if present, 
+	 * otherwise create it and then connect
 	 * @param DBString
 	 * @throws SQLException 
 	 * @throws Exception
@@ -155,7 +157,7 @@ public class DatabaseManager {
 			System.err.println( "Main database not present, creating it..." );
 			
 			// Create a new database if possible
-			createMainDB ();
+			createMainDB();
 			
 			// create official cat directory
 			if ( !GlobalUtil.fileExists( DatabaseManager.OFFICIAL_CAT_DB_FOLDER ) ) {
@@ -176,7 +178,26 @@ public class DatabaseManager {
 		}
 	}
 	
-
+	/**
+	 * Add all the tables which were not release with the
+	 * first version of the browser (if they are not present)
+	 * @throws SQLException 
+	 * @throws IOException 
+	 */
+	public static void addNotExistingTables() throws SQLException, IOException {
+		
+		DatabaseMetaData dbm = getMainDBConnection().getMetaData();
+		ResultSet rs = dbm.getTables(null, null, "USERS", null);
+		
+		if(!rs.next()) {
+			
+			// create the users table
+			SQLScriptExec executor = new SQLScriptExec( getMainDBURL(), 
+					ClassLoader.getSystemResourceAsStream( "Users" ) );
+			
+			executor.exec();
+		}
+	}
 
 	/**
 	 * Compress the database to avoid fragmentation
@@ -258,28 +279,19 @@ public class DatabaseManager {
 	 * @param dbURL
 	 * @param sql
 	 * @return
+	 * @throws SQLException 
 	 */
-	public static boolean executeSQLStatement ( String dbURL, String sql ) {
-		
-		try {
-			
-			Connection con = DriverManager.getConnection( dbURL );
-			Statement stmt = con.createStatement();
-			
-			stmt.execute( sql );
-			
-			stmt.close();
-			con.close();
-			
-			return true;
-			
-		} catch ( SQLException sqle ) {
-			sqle.printStackTrace();
-		}
-		
-		return false;
+	public static void executeSQLStatement ( String dbURL, String sql ) throws SQLException {
+
+		Connection con = DriverManager.getConnection( dbURL );
+		Statement stmt = con.createStatement();
+System.out.println("Executing " + sql);
+		stmt.execute( sql );
+
+		stmt.close();
+		con.close();
 	}
-	
+
 	/**
 	 * Backup a catalogue database into the backup dir
 	 * @param catalogue the catalogue we want to backup

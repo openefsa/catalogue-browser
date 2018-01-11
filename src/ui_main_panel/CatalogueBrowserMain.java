@@ -16,6 +16,7 @@ import dcf_user.ReauthThread;
 import dcf_user.User;
 import dcf_user.UserAccessLevel;
 import dcf_user.UserListener;
+import exception_manager.ExceptionConverter;
 import instance_checker.InstanceChecker;
 import messages.Messages;
 import ui_main_menu.LoginActions;
@@ -43,19 +44,14 @@ public class CatalogueBrowserMain {
 			launch();
 		}
 		catch(Exception e) {
+			
 			e.printStackTrace();
 			
-			StringBuilder trace = new StringBuilder();
-			trace.append("\n");
-			
-			for (StackTraceElement ste : e.getStackTrace()) {
-				trace.append("\n\tat ");
-		        trace.append(ste);
-			}
+			String trace = ExceptionConverter.getStackTrace(e);
 			
 			GlobalUtil.showErrorDialog(new Shell(), 
 					Messages.getString("Generic.ErrorTitle"), 
-					Messages.getString("Generic.ErrorMessage") + trace.toString());
+					Messages.getString("Generic.ErrorMessage") + trace);
 		}
 	}
 	
@@ -108,14 +104,24 @@ public class CatalogueBrowserMain {
 		GlobalUtil.clearTempDir();
 		
 		// connect to the main database and start it
+		boolean started = false;
 		try {
 			DatabaseManager.startMainDB();
+			started = true;
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 			GlobalUtil.showErrorDialog(new Shell(), 
 					Messages.getString("DBOpened.ErrorTitle"), 
 					Messages.getString("DBOpened.ErrorMessage"));
 			return;
+		}
+		
+		if (started) {
+			try {
+				DatabaseManager.addNotExistingTables();
+			} catch (SQLException | IOException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		// create the display and shell

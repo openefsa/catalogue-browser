@@ -2443,25 +2443,6 @@ public class Catalogue extends BaseObject
 	 */
 	@Override
 	public int compareTo( Catalogue cat ) {
-		
-		if ( this.isLocal() && cat.isDeprecated() )
-			return 1;
-		
-		if ( cat.isLocal() && this.isDeprecated() )
-			return -1;
-		
-		// deprecated catalogues goes to the end
-		if ( this.isDeprecated() )
-			return 1;
-
-		if ( cat.isDeprecated() )
-			return -1;
-		
-		if ( this.isLocal() )
-			return 1;
-
-		if ( cat.isLocal() )
-			return -1;
 
 		if ( getLabel().equalsIgnoreCase( cat.getLabel() ) ) {
 
