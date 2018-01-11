@@ -2,7 +2,7 @@ package data_collection;
 
 import java.util.ArrayList;
 
-public class DCTableList extends ArrayList<DCTable> implements IDcfDCTableList {
+public class DCTableList extends ArrayList<DCTable> implements IDcfDCTableLists {
 	private static final long serialVersionUID = 5513941494969774696L;
 
 	@Override

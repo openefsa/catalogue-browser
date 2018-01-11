@@ -11,14 +11,14 @@ import javax.xml.soap.SOAPException;
 import org.eclipse.swt.widgets.Listener;
 
 import catalogue.Catalogue;
-import catalogue.CatalogueList;
+import catalogue.CataloguesList;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_generator.ThreadFinishedListener;
 import config.Config;
 import data_collection.DCTable;
 import data_collection.DCTableList;
 import data_collection.DataCollection;
-import data_collection.DataCollectionList;
+import data_collection.DataCollectionsList;
 import dcf_pending_action.PendingAction;
 import dcf_pending_action.PendingActionDAO;
 import dcf_pending_action.PendingActionListener;
@@ -350,7 +350,7 @@ public class Dcf {
 	 */
 	public ArrayList<Catalogue> getCataloguesList() {
 		
-		CatalogueList list = new CatalogueList();
+		CataloguesList list = new CataloguesList();
 		
 		try {
 			GetCataloguesList req = new GetCataloguesList(User.getInstance(), list);
@@ -368,7 +368,7 @@ public class Dcf {
 	 */
 	public ArrayList<DataCollection> getDataCollectionsList() {
 		
-		DataCollectionList list = new DataCollectionList();
+		DataCollectionsList list = new DataCollectionsList();
 		
 		try {
 			GetDataCollectionsList req = new GetDataCollectionsList(User.getInstance(), list);

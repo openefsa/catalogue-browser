@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import dcf_manager.Dcf;
 
-public class CatalogueList extends ArrayList<Catalogue> implements IDcfCatalogueList {
+public class CataloguesList extends ArrayList<Catalogue> implements IDcfCataloguesList {
 
 	private static final long serialVersionUID = -8229407671007640454L;
 

@@ -2,7 +2,7 @@ package data_collection;
 
 import java.util.ArrayList;
 
-public class DataCollectionList extends ArrayList<DataCollection> implements IDcfDataCollectionList {
+public class DataCollectionsList extends ArrayList<DataCollection> implements IDcfDataCollectionsList {
 
 	private static final long serialVersionUID = 6500446530133655903L;
 

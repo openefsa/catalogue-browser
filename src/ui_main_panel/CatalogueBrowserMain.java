@@ -104,6 +104,9 @@ public class CatalogueBrowserMain {
 		// create the directories of the application
 		GlobalUtil.createApplicationFolders();
 
+		// clear the temporary directory
+		GlobalUtil.clearTempDir();
+		
 		// connect to the main database and start it
 		try {
 			DatabaseManager.startMainDB();
