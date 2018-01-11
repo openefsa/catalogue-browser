@@ -7,3 +7,11 @@ The data provider user manual can be found [here](https://dms.efsa.europa.eu/otc
 
 ### Notes for developers
 Do NOT change the business_rules package name, since the Batch checking tool uses it to make the checks.
+
+# Dependencies
+The project needs the following projects to work properly:
+* https://github.com/openefsa/zip-manager
+* https://github.com/openefsa/Dcf-webservice-framework
+* https://github.com/openefsa/Open-xml-reader
+* https://github.com/openefsa/CatalogueXmlToXlsx
+* https://github.com/openefsa/Progress-bar
