@@ -45,9 +45,9 @@ import ui_search_bar.SearchEvent;
 import ui_search_bar.SearchListener;
 import ui_search_bar.SearchPanel;
 import user_preferences.CataloguePreferenceDAO;
+import user_preferences.GlobalPreference;
+import user_preferences.GlobalPreferenceDAO;
 import user_preferences.PreferenceNotFoundException;
-import user_preferences.UIPreference;
-import user_preferences.UIPreferenceDAO;
 import utilities.GlobalUtil;
 
 /**
@@ -228,7 +228,7 @@ public class MainPanel implements Observer, RestoreableWindow {
 	 */
 	private Catalogue getLastOpenedCatalogue() throws PreferenceNotFoundException {
 		// save main panel state
-		UIPreferenceDAO prefDao = new UIPreferenceDAO ();
+		GlobalPreferenceDAO prefDao = new GlobalPreferenceDAO();
 		return prefDao.getLastCatalogue();
 	}
 
@@ -800,9 +800,9 @@ public class MainPanel implements Observer, RestoreableWindow {
 		// create a filter to filter the tree terms
 		// based on their state (deprecated, not reportable)
 		termFilter = new TermFilter( selectionGroup );
-		termFilter.display( UIPreference.hideDeprMain, 
-				UIPreference.hideNotReprMain, 
-				UIPreference.hideTermCodeMain );
+		termFilter.display( GlobalPreference.HIDE_DEPR_MAIN, 
+				GlobalPreference.HIDE_NOT_REP_MAIN, 
+				GlobalPreference.HIDE_TERM_CODE_MAIN );
 	}
 
 	/**

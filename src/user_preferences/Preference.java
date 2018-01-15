@@ -75,4 +75,23 @@ public class Preference {
 	public String toString() {
 		return key + " => " + value;
 	}
+	
+	@Override
+	public boolean equals(Object arg0) {
+		
+		String other = null;
+		if (arg0 instanceof Preference) {
+			
+			Preference pref = (Preference) arg0;
+			other = pref.getKey();
+		}
+		else if (arg0 instanceof String) {
+			other = (String) arg0;
+		}
+		
+		if (other != null)
+			return this.key.equalsIgnoreCase(other);
+		
+		return super.equals(arg0);
+	}
 }

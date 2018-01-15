@@ -1,18 +1,12 @@
 package utilities;
 import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.text.DateFormat;
-import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 import javax.xml.soap.SOAPConnection;
@@ -30,9 +24,6 @@ import org.eclipse.swt.widgets.Shell;
 
 import catalogue.Catalogue;
 import catalogue_browser_dao.DatabaseManager;
-import global_manager.GlobalManager;
-import user_preferences.CataloguePreference;
-import user_preferences.CataloguePreferenceDAO;
 
 
 /**
@@ -43,7 +34,7 @@ import user_preferences.CataloguePreferenceDAO;
 
 public class GlobalUtil {
 	
-	private static final String TEMP_DIR_NAME = "TempFiles";
+	private static final String TEMP_DIR_NAME = "temp";
 	
 	private static String workDir = "";
 	
@@ -54,6 +45,9 @@ public class GlobalUtil {
 	
 	final static public String RESERVE_SCHEMA = getConfigDir() + "reserveSchema.xml";
 	final static public String PUBLISH_SCHEMA = getConfigDir() + "publishSchema.xml";
+	
+	final static public String LOG_FILES_DIR_NAME = "log";
+	final static public String LOG_FILES_DIR_PATH = getLogDir();
 	
 	// directory which contains all the pick lists
 	final static public String PICKLISTS_DIR_NAME = "picklists";
@@ -87,6 +81,11 @@ public class GlobalUtil {
 		return workDir;
 	}
 
+	public static String getLogDir() {
+		return ( workDir + LOG_FILES_DIR_NAME + 
+				System.getProperty( "file.separator" ) );
+	}
+	
 	/**
 	 * Get the user file directory path
 	 * @return
@@ -189,6 +188,11 @@ public class GlobalUtil {
 		// create the business rules directory
 		if ( !fileExists( BUSINESS_RULES_DIR_PATH ) ) {
 			new File( BUSINESS_RULES_DIR_PATH ).mkdir();
+		}
+		
+		// create the business rules directory
+		if ( !fileExists( LOG_FILES_DIR_PATH ) ) {
+			new File( LOG_FILES_DIR_PATH ).mkdir();
 		}
 		
 		// create the temp directory 
@@ -554,54 +558,5 @@ public class GlobalUtil {
 	 */
 	public static String showFileDialog ( Shell shell, String text, String[] extensions, int buttonType ) {
 		return showFileDialog( shell, text, extensions, "", buttonType );
-	}
-	
-	
-	/**
-	 * Refresh logging state if the user set the preference
-	 */
-	public static void refreshLogging () {
-		
-		// get an instance of the global manager
-		GlobalManager manager = GlobalManager.getInstance();
-		
-		// get the current catalogue
-		Catalogue currentCat = manager.getCurrentCatalogue();
-		
-		// return if no catalogue is open
-		if ( currentCat == null )
-			return;
-		
-		CataloguePreferenceDAO prefDao = new CataloguePreferenceDAO( currentCat );
-		
-		boolean active = prefDao.getPreferenceBoolValue( CataloguePreference.logging, false );
-		
-		// start logging if it was enabled
-		if ( active ) {
-
-			// create a logging file
-			Calendar dCal = Calendar.getInstance();
-			Format formatter;
-			formatter = new SimpleDateFormat( "yyyyMMddhhmmss" );
-
-			String code = currentCat.getCode();
-			String dbDir = currentCat.getDbPath();
-			
-			FileOutputStream os = null;
-			try {
-				os = new FileOutputStream( dbDir + code + "_LOG" + formatter.format( dCal.getTime() )
-				+ ".txt" );
-			} catch ( FileNotFoundException e ) {
-				e.printStackTrace();
-			}
-
-			// set the logging file as output for the standard error messages
-			PrintStream ps = new PrintStream( os );
-			System.setErr( ps );
-		}
-		else {
-			// reset the standard error output
-			System.setErr( new PrintStream(new FileOutputStream( FileDescriptor.err ) ) );
-		}
 	}
 }

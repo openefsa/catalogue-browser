@@ -6,7 +6,7 @@ import org.eclipse.swt.widgets.Display;
 
 import catalogue.Catalogue;
 import dcf_user.User;
-import user_preferences.UIPreferenceDAO;
+import user_preferences.GlobalPreferenceDAO;
 
 /**
  * Class used to store all the global variables of the
@@ -56,7 +56,7 @@ public class GlobalManager extends Observable {
 			return;
 
 		// save main panel state
-		UIPreferenceDAO prefDao = new UIPreferenceDAO ();
+		GlobalPreferenceDAO prefDao = new GlobalPreferenceDAO();
 		prefDao.saveOpenedCatalogue( currentCatalogue );
 	}
 	

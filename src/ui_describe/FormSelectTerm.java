@@ -41,7 +41,7 @@ import ui_search_bar.SearchBar;
 import ui_search_bar.SearchEvent;
 import ui_search_bar.SearchListener;
 import ui_term_properties.FrameTermFields;
-import user_preferences.UIPreference;
+import user_preferences.GlobalPreference;
 
 /**
  * This class is used to display a list of nameable 
@@ -268,9 +268,9 @@ public class FormSelectTerm implements Observer, RestoreableWindow {
 		filterComp.setLayout( new GridLayout( 4, false ) );
 		
 		termFilter = new TermFilter( filterComp );
-		termFilter.display( UIPreference.hideDeprDescribe, 
-				UIPreference.hideNotReprDescribe,
-				UIPreference.hideTermCodeDescribe );
+		termFilter.display( GlobalPreference.HIDE_DEPR_DESCRIBE, 
+				GlobalPreference.HIDE_NOT_REP_DESCRIBE,
+				GlobalPreference.HIDE_TERM_CODE_DESCRIBE );
 		termFilter.setEnabled( true );
 		
 		// open tree viewer with multi selection enabled if required

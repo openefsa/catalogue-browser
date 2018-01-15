@@ -397,9 +397,6 @@ public class Catalogue extends BaseObject
 		loadData();
 
 		manager.setCurrentCatalogue( this );
-		
-		// refresh logging state
-		GlobalUtil.refreshLogging();
 	}
 
 	/**
@@ -717,9 +714,6 @@ public class Catalogue extends BaseObject
 	 * Refresh the catalogue release notes
 	 */
 	public void refreshReleaseNotes() {
-		
-		System.out.println(this.getId());
-		
 		ReleaseNotesDAO rnDao = new ReleaseNotesDAO( this );
 		releaseNotes = rnDao.getReleaseNotes();
 	}

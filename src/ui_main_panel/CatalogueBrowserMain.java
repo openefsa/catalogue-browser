@@ -21,6 +21,7 @@ import instance_checker.InstanceChecker;
 import messages.Messages;
 import ui_main_menu.LoginActions;
 import utilities.GlobalUtil;
+import utilities.Log;
 
 /**
  * Entry point for the Catalogue Browser application.
@@ -33,6 +34,9 @@ public class CatalogueBrowserMain {
 	public static final String APP_NAME = AppConfig.getAppName();
 	public static final String APP_VERSION = AppConfig.getAppVersion();
 	public static final String APP_TITLE = APP_NAME + " " + APP_VERSION;
+	
+	public static long sessionId = System.currentTimeMillis();
+	
 	/**
 	 * Main, catalogue browser entry point
 	 * 
@@ -40,12 +44,16 @@ public class CatalogueBrowserMain {
 	 */
 	public static void main ( String[] args ) {
 
+		Log log = new Log();
+		log.refreshLogging();
+		
 		try {
 			launch();
 		}
 		catch(Exception e) {
 			
 			e.printStackTrace();
+			log.close();
 			
 			String trace = ExceptionConverter.getStackTrace(e);
 			
@@ -86,6 +94,7 @@ public class CatalogueBrowserMain {
 	}
 	
 	private static void launch() {
+		
 		InstanceChecker.closeIfAlreadyRunning();
 		
 		// application start-up message. Usage of System.err used for red chars
@@ -165,7 +174,7 @@ public class CatalogueBrowserMain {
 							
 							switch(code) {
 							case OK:
-
+								
 								LoginActions.startLoggedThreads(shell, 
 										browser.getMenu().getListener(),
 										new Listener() {

@@ -14,9 +14,9 @@ import org.eclipse.swt.widgets.Label;
 import catalogue_object.Hierarchy;
 import catalogue_object.Term;
 import messages.Messages;
+import user_preferences.GlobalPreferenceDAO;
 import user_preferences.Preference;
 import user_preferences.PreferenceNotFoundException;
-import user_preferences.UIPreferenceDAO;
 
 /**
  * Class used to create the UI for a visualization filter.
@@ -139,7 +139,7 @@ public class TermFilter extends Observable {
 		// load the last ui preferences from
 		// the ui table
 		
-		UIPreferenceDAO prefDao = new UIPreferenceDAO();
+		GlobalPreferenceDAO prefDao = new GlobalPreferenceDAO();
 		boolean hideDepr = prefDao.getPreferenceBoolValue( 
 				deprCode, false );
 
@@ -179,7 +179,7 @@ public class TermFilter extends Observable {
 	private void saveStatus( String key, boolean value ) throws PreferenceNotFoundException {
 		
 		// save the checkboxes status
-		UIPreferenceDAO prefDao = new UIPreferenceDAO();
+		GlobalPreferenceDAO prefDao = new GlobalPreferenceDAO();
 		
 		Preference pref = prefDao.getPreference( key );
 		

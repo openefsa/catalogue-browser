@@ -26,7 +26,6 @@ import catalogue.Catalogue;
 import messages.Messages;
 import session_manager.RestoreableWindow;
 import session_manager.WindowPreference;
-import utilities.GlobalUtil;
 
 /**
  * Form which allows modifying the user preferences
@@ -58,7 +57,8 @@ public class FormUserPreferences implements RestoreableWindow {
 		ArrayList<Preference> preferences = prefDao.getAll();
 		
 		for ( Preference pref : preferences ) {
-			if ( pref.isEditable() )
+			
+			if ( pref.isEditable() && !pref.equals(GlobalPreference.LOGGING)) // logging DEPRECATED here!
 				this.preferences.add( pref );
 		}
 	}
@@ -345,9 +345,6 @@ public class FormUserPreferences implements RestoreableWindow {
 			
 			@Override
 			public void widgetDisposed(DisposeEvent e) {
-				
-				// refresh logging state
-				GlobalUtil.refreshLogging();
 			}
 		});
 		

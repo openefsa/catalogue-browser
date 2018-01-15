@@ -50,10 +50,6 @@ public class CataloguePreferenceDAO extends PreferenceDAO {
 		// create the favourite picklist preference
 		insert( new CataloguePreference( CataloguePreference.currentPicklistKey, 
 				PreferenceType.STRING, null, false) );
-
-		// create the logging preference
-		insert( new CataloguePreference( CataloguePreference.logging, 
-				PreferenceType.BOOLEAN, false, true) );
 	}
 
 	/**

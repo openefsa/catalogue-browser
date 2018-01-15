@@ -204,17 +204,12 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference>{
 	 * @return
 	 */
 	public boolean update ( Preference pref ) {
-
-		Connection con;
-
+		
 		String query = "update APP.PREFERENCE set PREFERENCE_TYPE = ?, "
 				+ "PREFERENCE_VALUE = ?, PREFERENCE_EDITABLE = ? where PREFERENCE_KEY = ?";
 
-		try {
-
-			con = getConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = getConnection(); 
+				PreparedStatement stmt = con.prepareStatement( query );) {
 
 			stmt.clearParameters();
 
@@ -223,8 +218,13 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference>{
 			stmt.setBoolean( 3, pref.isEditable() );
 			stmt.setString( 4, pref.getKey() );
 
-			stmt.executeUpdate();
+			int affectedRows = stmt.executeUpdate();
 
+			// if no preference was found, insert it!
+			if (affectedRows == 0) {
+				insert(pref);
+			}
+			
 			stmt.close();
 			con.close();
 
@@ -287,7 +287,7 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference>{
 	}
 
 	public Preference getById(int id) {
-		// TODO Auto-generated method stub
+		System.err.println("PreferenceDAO: getById not supported!");
 		return null;
 	}
 	

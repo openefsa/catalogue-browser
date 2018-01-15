@@ -18,7 +18,7 @@ import java.sql.Statement;
 import catalogue.Catalogue;
 import global_manager.GlobalManager;
 import sql.SQLScriptExec;
-import user_preferences.UIPreferenceDAO;
+import user_preferences.GlobalPreferenceDAO;
 import utilities.GlobalUtil;
 
 /**
@@ -119,7 +119,7 @@ public class DatabaseManager {
 			
 			// insert the default preferences into the main
 			// catalogues database
-			UIPreferenceDAO prefDao = new UIPreferenceDAO();
+			GlobalPreferenceDAO prefDao = new GlobalPreferenceDAO();
 			prefDao.insertDefaultPreferences();
 
 		} catch ( IOException e ) {
@@ -285,7 +285,9 @@ public class DatabaseManager {
 
 		Connection con = DriverManager.getConnection( dbURL );
 		Statement stmt = con.createStatement();
-System.out.println("Executing " + sql);
+		
+		System.out.println("Executing " + sql);
+		
 		stmt.execute( sql );
 
 		stmt.close();

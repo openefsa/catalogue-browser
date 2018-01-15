@@ -13,7 +13,6 @@ public class CataloguePreference extends Preference {
 	public final static String minSearchChar = "minSearchChar";
 	public final static String copyImplicitFacets = "copyImplicitFacets";
 	public final static String enableBusinessRules = "enableBusinessRules";
-	public final static String logging = "logging";
 	
 	// last graphical objects which were opened
 	public final static String LAST_TERM_PREF = "lastTermId";

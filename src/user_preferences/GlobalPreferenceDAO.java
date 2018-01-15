@@ -9,7 +9,7 @@ import catalogue_browser_dao.DatabaseManager;
 import dcf_manager.Dcf;
 import dcf_manager.Dcf.DcfType;
 
-public class UIPreferenceDAO extends PreferenceDAO {
+public class GlobalPreferenceDAO extends PreferenceDAO {
 
 	/**
 	 * Insert the default preferences for user interface
@@ -19,22 +19,25 @@ public class UIPreferenceDAO extends PreferenceDAO {
 		// first we remove all the preferences (avoid errors of duplicated keys)
 		removeAll();
 
-		insert( new UIPreference( UIPreference.hideDeprMain, 
+		insert( new GlobalPreference( GlobalPreference.HIDE_DEPR_MAIN, 
 				PreferenceType.BOOLEAN, false, true ) );
 
-		insert( new UIPreference( UIPreference.hideNotReprMain, 
+		insert( new GlobalPreference( GlobalPreference.HIDE_NOT_REP_MAIN, 
 				PreferenceType.BOOLEAN, false, true ) );
 
-		insert( new UIPreference( UIPreference.hideTermCodeMain, 
+		insert( new GlobalPreference( GlobalPreference.HIDE_TERM_CODE_MAIN, 
 				PreferenceType.BOOLEAN, false, true ) );
 
-		insert( new UIPreference( UIPreference.hideDeprDescribe, 
+		insert( new GlobalPreference( GlobalPreference.HIDE_DEPR_DESCRIBE, 
 				PreferenceType.BOOLEAN, false, true ) );
 
-		insert( new UIPreference( UIPreference.hideNotReprDescribe, 
+		insert( new GlobalPreference( GlobalPreference.HIDE_NOT_REP_DESCRIBE, 
 				PreferenceType.BOOLEAN, false, true ) );
 
-		insert( new UIPreference( UIPreference.hideTermCodeDescribe, 
+		insert( new GlobalPreference( GlobalPreference.HIDE_TERM_CODE_DESCRIBE, 
+				PreferenceType.BOOLEAN, false, true ) );
+		
+		insert( new GlobalPreference( GlobalPreference.LOGGING, 
 				PreferenceType.BOOLEAN, false, true ) );
 	}
 	
@@ -47,8 +50,8 @@ public class UIPreferenceDAO extends PreferenceDAO {
 		int id = catalogue == null ? -1 : catalogue.getId();
 		
 		String key = Dcf.dcfType == DcfType.PRODUCTION ? 
-				UIPreference.LAST_OPENED_CAT_PROD : 
-					UIPreference.LAST_OPENED_CAT_TEST;
+				GlobalPreference.LAST_OPENED_CAT_PROD : 
+					GlobalPreference.LAST_OPENED_CAT_TEST;
 		
 		Preference pref = new Preference( key, 
 				PreferenceType.INTEGER, id, false);
@@ -68,8 +71,8 @@ public class UIPreferenceDAO extends PreferenceDAO {
 	public Catalogue getLastCatalogue() throws PreferenceNotFoundException {
 		
 		String key = Dcf.dcfType == DcfType.PRODUCTION ? 
-				UIPreference.LAST_OPENED_CAT_PROD : 
-					UIPreference.LAST_OPENED_CAT_TEST;
+				GlobalPreference.LAST_OPENED_CAT_PROD : 
+					GlobalPreference.LAST_OPENED_CAT_TEST;
 		
 		Preference pref = getPreference( key );
 		
