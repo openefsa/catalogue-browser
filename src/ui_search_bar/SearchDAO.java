@@ -225,13 +225,10 @@ public class SearchDAO {
 		}
 
 		// execute the query
-		try {
 
-			Connection con = catalogue.getConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
-
-			ResultSet rs = stmt.executeQuery();
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );
+				ResultSet rs = stmt.executeQuery();) {
 
 			// get all the terms ids
 			while ( rs.next() )
@@ -289,13 +286,9 @@ public class SearchDAO {
 				+ attrIds + ") and TERM_ATTR_ID in ( " + taIds + " )";
 
 		// execute the query
-		try {
-
-			Connection con = catalogue.getConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
-
-			ResultSet rs = stmt.executeQuery();
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );
+				ResultSet rs = stmt.executeQuery();) {
 			
 			// get all the terms ids
 			while ( rs.next() )
@@ -392,13 +385,9 @@ public class SearchDAO {
 		}
 		
 		// execute the query to retrieve the term attributes
-		try {
-			
-			Connection con = catalogue.getConnection();
-			
-			Statement stmt = con.createStatement();
-			
-			ResultSet rs = stmt.executeQuery( query.toString() );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query.toString() );
+				ResultSet rs = stmt.executeQuery();) {
 
 			// add ids to array list
 			ArrayList<Integer> ids = new ArrayList<>();

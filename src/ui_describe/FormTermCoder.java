@@ -41,13 +41,13 @@ import catalogue.Catalogue;
 import catalogue_object.Applicability;
 import catalogue_object.Term;
 import messages.Messages;
-import session_manager.RestoreableWindow;
-import session_manager.WindowPreference;
+import session_manager.BrowserWindowPreferenceDao;
 import term_clipboard.TermClipboard;
 import ui_implicit_facet.FacetType;
 import ui_implicit_facet.FrameTermImplicitFacets;
 import user_preferences.CataloguePreference;
 import user_preferences.CataloguePreferenceDAO;
+import window_restorer.RestoreableWindow;
 
 
 /**
@@ -57,9 +57,10 @@ import user_preferences.CataloguePreferenceDAO;
  * @author
  * 
  */
-public class FormTermCoder implements RestoreableWindow {
+public class FormTermCoder {
 
 	private static final String WINDOW_CODE = "FormTermCoder";
+	private RestoreableWindow window;
 	
 	// the catalogue we want to use
 	private Catalogue catalogue;
@@ -90,7 +91,7 @@ public class FormTermCoder implements RestoreableWindow {
 	
 	// start the form
 	public FormTermCoder( Shell shell, String title, Catalogue catalogue ) {
-		
+
 		_shell = shell;
 		_title = title;
 		
@@ -148,16 +149,6 @@ public class FormTermCoder implements RestoreableWindow {
 		_tempTerm.addApplicability( app, false );
 	}
 	
-	@Override
-	public String getWindowCode() {
-		return WINDOW_CODE;
-	}
-
-	@Override
-	public Shell getWindowShell() {
-		return _dialog;
-	}
-	
 	// Show the window and display all the graphical elements
 	public void display ( final Catalogue catalogue ) {
 
@@ -169,6 +160,7 @@ public class FormTermCoder implements RestoreableWindow {
 		_dialog.setText( _title );
 		_dialog.setLayout( new GridLayout( 2 , false ) );
 		
+		window = new RestoreableWindow(_dialog, WINDOW_CODE);
 		
 		// if the dialog is closed => save the described term in the recently used terms file
 		_dialog.addDisposeListener( new DisposeListener() {
@@ -554,8 +546,8 @@ public class FormTermCoder implements RestoreableWindow {
 		_dialog.pack();
 		
 		// restore previous dimensions of the window
-		WindowPreference.restore( this );
-		WindowPreference.saveOnClosure( this );
+		window.restore( BrowserWindowPreferenceDao.class );
+		window.saveOnClosure( BrowserWindowPreferenceDao.class );
 		
 		// show the window
 		_dialog.open();

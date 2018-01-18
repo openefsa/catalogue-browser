@@ -136,7 +136,7 @@ public class DatabaseManager {
 	 */
 	public static void startMainDB () throws SQLException {
 
-		try {
+		try (Connection con = getMainDBConnection();) {
 
 			// load the jdbc driver
 			System.out.println( "Starting embedded database..." );
@@ -145,7 +145,6 @@ public class DatabaseManager {
 			// check if the database is present or not
 			System.out.println( "Testing database connection..." );
 
-			Connection con = getMainDBConnection();
 			con.close();
 
 		} catch ( ClassNotFoundException e ) {
@@ -187,15 +186,19 @@ public class DatabaseManager {
 	public static void addNotExistingTables() throws SQLException, IOException {
 		
 		DatabaseMetaData dbm = getMainDBConnection().getMetaData();
-		ResultSet rs = dbm.getTables(null, null, "USERS", null);
 		
-		if(!rs.next()) {
+		try(ResultSet rs = dbm.getTables(null, null, "USERS", null);) {
 			
-			// create the users table
-			SQLScriptExec executor = new SQLScriptExec( getMainDBURL(), 
-					ClassLoader.getSystemResourceAsStream( "Users" ) );
+			if(!rs.next()) {
+				
+				// create the users table
+				SQLScriptExec executor = new SQLScriptExec( getMainDBURL(), 
+						ClassLoader.getSystemResourceAsStream( "Users" ) );
+				
+				executor.exec();
+			}
 			
-			executor.exec();
+			rs.close();
 		}
 	}
 
@@ -205,17 +208,11 @@ public class DatabaseManager {
 	 */
 	public static void compressDatabase () {
 		
-		Connection con = null;
-
 		// This will fail, if there are dependencies
-
-		try {
-			
-			GlobalManager manager = GlobalManager.getInstance();
-			con = manager.getCurrentCatalogue().getConnection();
-
-			// compact the db table by table
-			CallableStatement cs = con.prepareCall( "CALL SYSCS_UTIL.SYSCS_COMPRESS_TABLE(?, ?, ?)" );
+		GlobalManager manager = GlobalManager.getInstance();
+		
+		try (Connection con = manager.getCurrentCatalogue().getConnection();
+				CallableStatement cs = con.prepareCall( "CALL SYSCS_UTIL.SYSCS_COMPRESS_TABLE(?, ?, ?)" );) {
 
 			cs.setString( 1, "APP" );
 
@@ -283,15 +280,16 @@ public class DatabaseManager {
 	 */
 	public static void executeSQLStatement ( String dbURL, String sql ) throws SQLException {
 
-		Connection con = DriverManager.getConnection( dbURL );
-		Statement stmt = con.createStatement();
-		
-		System.out.println("Executing " + sql);
-		
-		stmt.execute( sql );
-
-		stmt.close();
-		con.close();
+		try(Connection con = DriverManager.getConnection( dbURL );
+				Statement stmt = con.createStatement();) {
+			
+			System.out.println("Executing " + sql);
+			
+			stmt.execute( sql );
+	
+			stmt.close();
+			con.close();
+		}
 	}
 
 	/**
@@ -302,13 +300,13 @@ public class DatabaseManager {
 	 */
 	public static void backupCatalogue( Catalogue catalogue, String backupDir ) throws SQLException {
 		
-		Connection con = catalogue.getConnection();
-		CallableStatement cs = con.prepareCall( "CALL SYSCS_UTIL.SYSCS_BACKUP_DATABASE(?)" );
-		
-		cs.setString( 1, backupDir );
-		cs.execute();
-		cs.close();
-		con.close();
+		try(Connection con = catalogue.getConnection();
+				CallableStatement cs = con.prepareCall( "CALL SYSCS_UTIL.SYSCS_BACKUP_DATABASE(?)" );) {
+			cs.setString( 1, backupDir );
+			cs.execute();
+			cs.close();
+			con.close();
+		}
 		
 		System.out.println( "Database of " + catalogue + " copied in " + backupDir );
 		

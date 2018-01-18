@@ -39,18 +39,12 @@ public class RecentTermDAO implements CatalogueEntityDAO<DescribedTerm> {
 		
 		ArrayList<DescribedTerm> recentTerms = new ArrayList<>();
 		
-		Connection con;
-		
 		String query = "select * from APP.RECENT_TERM order by RECENT_TERM_ID DESC";
 		
-		try {
-			
-			con = catalogue.getConnection();
-			
-			PreparedStatement stmt = con.prepareStatement( query );
-			
-			ResultSet rs = stmt.executeQuery();
-			
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );
+				ResultSet rs = stmt.executeQuery();) {
+
 			while ( rs.next() ) {
 				
 				// add a new recent term
@@ -78,17 +72,10 @@ public class RecentTermDAO implements CatalogueEntityDAO<DescribedTerm> {
 		
 		int id = -1;
 		
-		Connection con;
-		
 		String query = "insert into APP.RECENT_TERM (RECENT_TERM_CODE, RECENT_TERM_LABEL) values (?, ?)";
 		
-		try {
-			
-			// connect to the db
-			con = catalogue.getConnection();
-			
-			// prepare the query
-			PreparedStatement stmt = con.prepareStatement( query, Statement.RETURN_GENERATED_KEYS );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query, Statement.RETURN_GENERATED_KEYS );) {
 			
 			stmt.clearParameters();
 			
@@ -100,12 +87,14 @@ public class RecentTermDAO implements CatalogueEntityDAO<DescribedTerm> {
 			stmt.executeUpdate();
 			
 			// update the terms ids with the ones given by the database
-			ResultSet rs = stmt.getGeneratedKeys();
+			try(ResultSet rs = stmt.getGeneratedKeys();) {
 			
-			if ( rs.next() )
-				id = rs.getInt(1);
+				if ( rs.next() )
+					id = rs.getInt(1);
+				
+				rs.close();
+			}
 			
-			rs.close();
 			stmt.close();
 			con.close();
 
@@ -122,8 +111,6 @@ public class RecentTermDAO implements CatalogueEntityDAO<DescribedTerm> {
 	 * the database is a user preference
 	 */
 	public void removeOldTerms() {
-		
-		Connection con;
 
 		// complex query, explanation step by step:
 		//
@@ -150,13 +137,8 @@ public class RecentTermDAO implements CatalogueEntityDAO<DescribedTerm> {
 				+ "order by RECENT_TERM_ID desc "
 				+ "fetch first ? rows only) )";
 
-		try {
-			
-			// connect to the db
-			con = catalogue.getConnection();
-			
-			// prepare the query
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 			
 			stmt.clearParameters();
 			

@@ -10,7 +10,7 @@ import ui_general_graphics.DialogSingleText;
  * @author avonva
  *
  */
-public class FormLocalCatalogueName{
+public class FormLocalCatalogueName {
 
 	private static final String WINDOW_CODE = "FormLocalCatalogueName";
 	private DialogSingleText dialog;

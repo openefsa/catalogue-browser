@@ -59,8 +59,6 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 
 		ArrayList<Integer> ids = new ArrayList<>();
 		
-		Connection con = null;
-
 		// set the query to insert a new attribtue
 		String query = "insert into APP.ATTRIBUTE (ATTR_CODE, ATTR_NAME , " 
 				+ "ATTR_LABEL, ATTR_SCOPENOTE, ATTR_REPORTABLE, ATTR_VISIBLE, ATTR_SEARCHABLE,"
@@ -70,13 +68,8 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 				+ "ATTR_VALID_TO, ATTR_STATUS, ATTR_DEPRECATED, ATTR_VERSION ) values ("
 				+ "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
 
-		try {
-
-			// get the connection
-			con = catalogue.getConnection();
-
-			// execute the query
-			PreparedStatement stmt = con.prepareStatement( query, Statement.RETURN_GENERATED_KEYS );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query, Statement.RETURN_GENERATED_KEYS );) {
 
 			stmt.clearParameters();
 
@@ -128,13 +121,14 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 			
 			
 			// update the terms ids with the ones given by the database
-			ResultSet rs = stmt.getGeneratedKeys();
+			try(ResultSet rs = stmt.getGeneratedKeys();) {
 
-			if ( rs != null ) {
-				while ( rs.next() )
-					ids.add( rs.getInt(1) );
+				if ( rs != null ) {
+					while ( rs.next() )
+						ids.add( rs.getInt(1) );
 
-				rs.close();
+					rs.close();
+				}
 			}
 			
 			stmt.close();
@@ -160,19 +154,14 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 		// remove all the dependencies
 		taDao.removeByA2 ( attr );
 		
-		Connection con = null;
-
 		// set the query to insert a new attribute
 		String query = "delete from APP.ATTRIBUTE where ATTR_ID = ?";
 
-		try {
-
-			// get the connection
-			con = catalogue.getConnection();
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 
 			// execute the query
-			PreparedStatement stmt = con.prepareStatement( query );
-
+			
 			stmt.clearParameters();
 
 			stmt.setInt ( 1,  attr.getId() );
@@ -198,8 +187,6 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 	 */
 	public boolean update ( Attribute attr ) {
 
-		Connection con = null;
-
 		// get all the hierarchies
 		String query = "update APP.ATTRIBUTE set ATTR_CODE = ?, ATTR_NAME = ?, ATTR_LABEL = ?,"
 				+ "ATTR_SCOPENOTE = ?, ATTR_REPORTABLE = ?, ATTR_VISIBLE = ?, ATTR_SEARCHABLE = ?,"
@@ -208,13 +195,8 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 				+ "ATTR_TERM_CODE_ALIAS = ?, ATTR_LAST_UPDATE = ?, ATTR_VALID_FROM = ?,"
 				+ "ATTR_VALID_TO = ?, ATTR_STATUS = ?, ATTR_DEPRECATED = ?, ATTR_VERSION = ? where ATTR_ID = ?";
 
-		try {
-
-			// get the connection
-			con = catalogue.getConnection();
-
-			// execute the query
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 			
 			stmt.clearParameters();
 			
@@ -281,18 +263,12 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 
 		// output attribute
 		Attribute attr = null;
-		
-		Connection con = null;
 
 		// get all the catalogue attributes and add to the implicit facets list
 		String query = "select * from APP.ATTRIBUTE where ATTR_ID = ?";
 
-		try {
-
-			// execute the query
-			con = catalogue.getConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 
 			stmt.setInt( 1, id );
 			
@@ -327,35 +303,29 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 
 		// output attribute
 		Attribute attr = null;
-		
-		Connection con = null;
 
 		// get all the catalogue attributes and add to the implicit facets list
 		String query = "select * from APP.ATTRIBUTE where ATTR_CODE = ?";
 
-		try {
-
-			// execute the query
-			con = catalogue.getConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 
 			stmt.setString( 1, attrCode );
 			
 			// add the results to the output array
-			ResultSet rs = stmt.executeQuery();
-
-			// create an attribute from the result set
-			// if attribute found
-			if ( rs.next() )
-				attr = getByResultSet ( rs );
-
-			// close connections
-			rs.close();
+			try(ResultSet rs = stmt.executeQuery();) {
+	
+				// create an attribute from the result set
+				// if attribute found
+				if ( rs.next() )
+					attr = getByResultSet ( rs );
+	
+				// close connections
+				rs.close();
+			}
+			
 			stmt.close();
 			con.close();
-
-
 		} catch ( SQLException e ) {
 			e.printStackTrace();
 		}
@@ -372,31 +342,27 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 
 		// output attribute
 		Attribute attr = null;
-		
-		Connection con = null;
 
 		// get all the catalogue attributes and add to the implicit facets list
 		String query = "select * from APP.ATTRIBUTE where ATTR_NAME = ?";
 
-		try {
-
-			// execute the query
-			con = catalogue.getConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 
 			stmt.setString( 1, attrName );
 			
 			// add the results to the output array
-			ResultSet rs = stmt.executeQuery();
-
-			// create an attribute from the result set
-			// if attribute found
-			if ( rs.next() )
-				attr = getByResultSet ( rs );
-
-			// close connections
-			rs.close();
+			try(ResultSet rs = stmt.executeQuery();) {
+	
+				// create an attribute from the result set
+				// if attribute found
+				if ( rs.next() )
+					attr = getByResultSet ( rs );
+	
+				// close connections
+				rs.close();
+			}
+			
 			stmt.close();
 			con.close();
 
@@ -499,8 +465,6 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 		// output array
 		ArrayList<Attribute> attrs = new ArrayList<>();
 
-		Connection con = null;
-
 		// get all the catalogue attributes and add to the implicit facets list
 		String query = "select * from APP.ATTRIBUTE";
 
@@ -524,31 +488,28 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 		// order
 		query = query + " order by ATTR_ORDER";
 		
-		try {
-
-			// execute the query
-			con = catalogue.getConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 
 			// add the results to the output array
-			ResultSet rs = stmt.executeQuery();
+			try(ResultSet rs = stmt.executeQuery();) {
 
-			while ( rs.next() ) { 
-
-				// create an attribute from the result set
-				Attribute attr = getByResultSet ( rs );
-
-				// add the attribute to the output array
-				attrs.add( attr );
-
+				while ( rs.next() ) { 
+	
+					// create an attribute from the result set
+					Attribute attr = getByResultSet ( rs );
+	
+					// add the attribute to the output array
+					attrs.add( attr );
+	
+				}
+	
+				// close connections
+				rs.close();
 			}
-
-			// close connections
-			rs.close();
+			
 			stmt.close();
 			con.close();
-
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
@@ -609,18 +570,12 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 		// output array
 		ArrayList<Attribute> attrs = new ArrayList<>();
 
-		Connection con = null;
-
 		// get all the generic attributes
 		String query = "select * from APP.ATTRIBUTE where ATTR_NAME <> ? "
 				+ "and ATTR_NAME <> ? and ATTR_NAME <> ? and ATTR_NAME <> ? and ATTR_TYPE <> ?";
 
-		try {
-
-			// execute the query
-			con = catalogue.getConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 
 			stmt.clearParameters();
 			
@@ -631,23 +586,24 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 			stmt.setString( 5, Attribute.catalogueTypeName );
 			
 			// add the results to the output array
-			ResultSet rs = stmt.executeQuery();
-
-			while ( rs.next() ) { 
-
-				// create an attribute from the result set
-				Attribute attr = getByResultSet ( rs );
-
-				// add the attribute to the output array
-				attrs.add( attr );
-
+			try(ResultSet rs = stmt.executeQuery();) {
+	
+				while ( rs.next() ) { 
+	
+					// create an attribute from the result set
+					Attribute attr = getByResultSet ( rs );
+	
+					// add the attribute to the output array
+					attrs.add( attr );
+	
+				}
+	
+				// close connections
+				rs.close();
 			}
-
-			// close connections
-			rs.close();
+			
 			stmt.close();
 			con.close();
-
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();

@@ -61,16 +61,11 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 		
 		int id = -1;
 		
-		Connection con;
-		
 		String query = "insert into APP.PICKLIST (PICKLIST_CODE) values (?)";
 		
-		try {
-			
-			con = catalogue.getConnection();
-			
-			PreparedStatement stmt = con.prepareStatement( query, Statement.RETURN_GENERATED_KEYS );
-			
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query, Statement.RETURN_GENERATED_KEYS );) {
+
 			stmt.clearParameters();
 			
 			stmt.setString( 1, picklist.getCode() );
@@ -78,12 +73,14 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 			stmt.executeUpdate();
 			
 			// update the terms ids with the ones given by the database
-			ResultSet rs = stmt.getGeneratedKeys();
+			try(ResultSet rs = stmt.getGeneratedKeys();) {
+				
+				if ( rs.next() )
+					id = rs.getInt(1);
+				
+				rs.close();
+			}
 			
-			if ( rs.next() )
-				id = rs.getInt(1);
-			
-			rs.close();
 			stmt.close();
 			con.close();
 			
@@ -100,20 +97,15 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 	 * @param picklist
 	 */
 	private void insertPicklistTerms ( Picklist picklist ) {
-
-		Connection con;
 		
 		String query = "insert into APP.PICKLIST_TERM (PICKLIST_TERM_LEVEL, "
 				+ "PICKLIST_TERM_CODE, "
 				+ "PICKLIST_BASETERM_CODE, "
 				+ "PICKLIST_TERM_LABEL, "
 				+ "PICKLIST_ID) values (?, ?, ?, ?, ?)";
-
-		try {
-
-			con = catalogue.getConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
+		
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 
 			// for each picklist term add it into the database
 			for ( PicklistTerm term :picklist.getTerms() ) {
@@ -149,29 +141,26 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 		
 		// number of picklist with same id or code in the database
 		int count = 0;
-		
-		Connection con;
 
 		String query = "select count(*) from APP.PICKLIST where PICKLIST_ID = ? or PICKLIST_CODE = ?";
 
-		try {
-
-			con = catalogue.getConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 
 			stmt.clearParameters();
 
 			stmt.setInt( 1, picklist.getId() );
 			stmt.setString( 2, picklist.getCode() );
 
-			ResultSet rs = stmt.executeQuery();
+			try(ResultSet rs = stmt.executeQuery();) {
 			
-			// get the count of the picklist
-			if ( rs.next() )
-				count = rs.getInt( 1 );
-
-			rs.close();
+				// get the count of the picklist
+				if ( rs.next() )
+					count = rs.getInt( 1 );
+	
+				rs.close();
+			}
+			
 			stmt.close();
 			con.close();
 
@@ -190,17 +179,12 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 	 */
 	public boolean update ( Picklist picklist ) {
 		
-		Connection con;
-		
 		String query = "update APP.PICKLIST_TERM set PICKLIST_TERM_LEVEL = ?, PICKLIST_BASETERM_CODE = ?, "
 				+ "PICKLIST_TERM_CODE = ?,"
 				+ "PICKLIST_TERM_LABEL = ? where PICKLIST_ID = ? and PICKLIST_TERM_ID = ?";
 		
-		try {
-			
-			con = catalogue.getConnection();
-			
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 			
 			// for each picklist term
 			for ( PicklistTerm term : picklist.getTerms() ) {
@@ -241,29 +225,26 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 	public Picklist getPicklistFromCode ( String code ) {
 
 		Picklist picklist = null;
-		
-		Connection con;
 
 		String query = "select * from APP.PICKLIST where PICKLIST_CODE = ?";
 
-		try {
-
-			con = catalogue.getConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 
 			stmt.clearParameters();
 
 			stmt.setString( 1, code );
 
-			ResultSet rs = stmt.executeQuery();
+			try(ResultSet rs = stmt.executeQuery();) {
 			
-			if ( rs.next() ) {
-				// create the picklist
-				picklist = getByResultSet( rs );
+				if ( rs.next() ) {
+					// create the picklist
+					picklist = getByResultSet( rs );
+				}
+	
+				rs.close();
 			}
-
-			rs.close();
+			
 			stmt.close();
 			con.close();
 
@@ -280,16 +261,11 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 	 * @return
 	 */
 	private void deletePicklistTerms ( Picklist picklist ) {
-		
-		Connection con;
 
 		String query = "delete from APP.PICKLIST_TERM where PICKLIST_ID = ?";
-
-		try {
-
-			con = catalogue.getConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
+		
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 
 			stmt.clearParameters();
 
@@ -314,17 +290,12 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 		// output array
 		ArrayList<Picklist> picklists = new ArrayList<>();
 		
-		Connection con;
-		
 		String query = "select * from APP.PICKLIST";
 		
-		try {
-
-			con = catalogue.getConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );
+				ResultSet rs = stmt.executeQuery();) {
 			
-			ResultSet rs = stmt.executeQuery();
 			
 			// for each picklist
 			while ( rs.next() ) {
@@ -360,17 +331,11 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 		// output integer
 		int count = 0;
 		
-		Connection con;
-		
 		String query = "select count(*) from APP.PICKLIST";
 		
-		try {
-
-			con = catalogue.getConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
-			
-			ResultSet rs = stmt.executeQuery();
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );
+				ResultSet rs = stmt.executeQuery();) {
 			
 			// get the count
 			if ( rs.next() )
@@ -397,35 +362,32 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 		// output array
 		ArrayList<PicklistTerm> terms = new ArrayList<>();
 		
-		Connection con;
-
 		String query = "select * from APP.PICKLIST_TERM where PICKLIST_ID = ?";
 		
-		try {
-
-			con = catalogue.getConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 
 			stmt.clearParameters();
 
 			stmt.setInt( 1, picklist.getId() );
 
-			ResultSet rs = stmt.executeQuery();
+			try(ResultSet rs = stmt.executeQuery();) {
 			
-			// for each picklist term
-			while ( rs.next() ) {
+				// for each picklist term
+				while ( rs.next() ) {
+					
+					int level = rs.getInt ( "PICKLIST_TERM_LEVEL" );
+					String code = rs.getString( "PICKLIST_TERM_CODE" );
+					String label = rs.getString( "PICKLIST_TERM_LABEL" );
+					
+					// add the current term to the output list
+					PicklistTerm term = new PicklistTerm( catalogue, level, code, label );
+					terms.add( term );
+				}
 				
-				int level = rs.getInt ( "PICKLIST_TERM_LEVEL" );
-				String code = rs.getString( "PICKLIST_TERM_CODE" );
-				String label = rs.getString( "PICKLIST_TERM_LABEL" );
-				
-				// add the current term to the output list
-				PicklistTerm term = new PicklistTerm( catalogue, level, code, label );
-				terms.add( term );
+				rs.close();
 			}
 			
-			rs.close();
 			stmt.close();
 			con.close();
 
@@ -447,8 +409,6 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 		// output array
 		ArrayList<PicklistTerm> terms = new ArrayList<>();
 
-		Connection con;
-
 		// first get the base term information using the base term codes
 		// then get the implicit facets string related to the base term
 		// then select all the terms which contains in their implicit facets or explicit facets the
@@ -462,11 +422,8 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 				+ "inner join APP.ATTRIBUTE as A on A.ATTR_ID = TA.ATTR_ID "
 				+ "where PT.PICKLIST_ID = ? and A.ATTR_NAME = ? and ( TA.ATTR_VALUE like ? or PT.PICKLIST_TERM_CODE like ? )";
 
-		try {
-
-			con = catalogue.getConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 
 			stmt.clearParameters();
 
@@ -477,22 +434,24 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 			stmt.setString( 3, "%" + term.getCode() + "%" );
 			stmt.setString( 4, "%" + term.getCode() + "%" );
 
-			ResultSet rs = stmt.executeQuery();
+			try(ResultSet rs = stmt.executeQuery();) {
 
-
-			// for each picklist term
-			while ( rs.next() ) {
-
-				int level = rs.getInt ( "PICKLIST_TERM_LEVEL" );
-				String code = rs.getString( "PICKLIST_TERM_CODE" );
-				String label = rs.getString( "PICKLIST_TERM_LABEL" );
-
-				// add the current term to the output list
-				PicklistTerm picklistTerm = new PicklistTerm( catalogue, level, code, label );
-				terms.add( picklistTerm );
+				// for each picklist term
+				while ( rs.next() ) {
+	
+					int level = rs.getInt ( "PICKLIST_TERM_LEVEL" );
+					String code = rs.getString( "PICKLIST_TERM_CODE" );
+					String label = rs.getString( "PICKLIST_TERM_LABEL" );
+	
+					// add the current term to the output list
+					PicklistTerm picklistTerm = new PicklistTerm( catalogue, level, code, label );
+					terms.add( picklistTerm );
+				}
+				
+				rs.close();
+			
 			}
 			
-			rs.close();
 			stmt.close();
 			con.close();
 			
@@ -512,10 +471,9 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 
 		String query = "delete from APP.PICKLIST where PICKLIST_ID = ?";
 		
-		try {
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 			
-			Connection con = catalogue.getConnection();
-			PreparedStatement stmt = con.prepareStatement( query );
 			stmt.setInt( 1, picklist.getId() );
 			stmt.executeUpdate();
 			

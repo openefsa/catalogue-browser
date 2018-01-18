@@ -27,12 +27,7 @@ public class FormDCTableConfigsList extends FormObjectsList<DCTableConfig> {
 	private static final String WINDOW_CODE = "FormDCTableConfigsList";
 	
 	public FormDCTableConfigsList(Shell shell, String title, Collection<DCTableConfig> objs) {
-		super(shell, title, objs, false);
-	}
-
-	@Override
-	public String getWindowCode() {
-		return WINDOW_CODE;
+		super(shell, WINDOW_CODE, title, objs, false);
 	}
 
 	@Override

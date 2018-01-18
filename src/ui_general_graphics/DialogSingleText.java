@@ -15,11 +15,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import messages.Messages;
-import session_manager.RestoreableWindow;
-import session_manager.WindowPreference;
+import session_manager.BrowserWindowPreferenceDao;
+import window_restorer.RestoreableWindow;
 
-public class DialogSingleText extends Dialog implements RestoreableWindow {
+public class DialogSingleText extends Dialog {
 
+	private RestoreableWindow window;
 	private String windowCode;
 	private Shell shell;
 	private String message;
@@ -91,6 +92,7 @@ public class DialogSingleText extends Dialog implements RestoreableWindow {
 	 */
 	public void setWindowCode( String windowCode ) {
 		this.windowCode = windowCode;
+		this.window = new RestoreableWindow(shell, windowCode);
 	}
 
 	/**
@@ -107,8 +109,8 @@ public class DialogSingleText extends Dialog implements RestoreableWindow {
 
 		// restore dimensions if we have set a window code
 		if ( windowCode != null ) {
-			WindowPreference.restore( this );
-			WindowPreference.saveOnClosure( this );
+			window.restore( BrowserWindowPreferenceDao.class );
+			window.saveOnClosure( BrowserWindowPreferenceDao.class );
 		}
 		
 		shell.open();
@@ -180,15 +182,5 @@ public class DialogSingleText extends Dialog implements RestoreableWindow {
 		});
 		
 		shell.setDefaultButton(ok);
-	}
-
-	@Override
-	public String getWindowCode() {
-		return windowCode;
-	}
-
-	@Override
-	public Shell getWindowShell() {
-		return shell;
 	}
 }

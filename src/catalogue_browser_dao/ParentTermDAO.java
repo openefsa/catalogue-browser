@@ -56,54 +56,53 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 		
 		ArrayList<Integer> ids = new ArrayList<>();
 		
-		Connection con;
-		
 		String query = "insert into APP.PARENT_TERM (TERM_ID, HIERARCHY_ID, "
 				+ "PARENT_TERM_ID, TERM_ORDER, TERM_REPORTABLE, TERM_FLAG)"
 				+ "values (?, ?, ?, ?, ?, ?)";
 		
-		try {
+		try (Connection con = catalogue.getConnection();) {
 
 			// get the connection
-			con = catalogue.getConnection();
 			con.setAutoCommit( false );
 
 			// prepare the query
-			PreparedStatement stmt = con.prepareStatement( query, Statement.RETURN_GENERATED_KEYS );
+			try(PreparedStatement stmt = con.prepareStatement( query, Statement.RETURN_GENERATED_KEYS );) {
 
-			for ( Applicability appl : appls ) {
+				for ( Applicability appl : appls ) {
+					
+					stmt.clearParameters();
+	
+					// Create a new record with the term and its parent in the selected hierarchy
+					stmt.setInt ( 1, appl.getChild().getId() );
+					stmt.setInt ( 2, appl.getHierarchy().getId() );
+	
+					// set the parent (the term if term, otherwise null if hierarchy)
+					if ( appl.getParentTerm() instanceof Term )
+						stmt.setInt ( 3, ( (Term) appl.getParentTerm() ).getId() );
+					else
+						stmt.setNull (3, java.sql.Types.INTEGER );
+	
+					stmt.setInt     ( 4, appl.getOrder() );
+					stmt.setBoolean ( 5, appl.isReportable() );
+	
+					// flag is true since the applicability exists
+					stmt.setBoolean( 6, true );
+	
+					stmt.addBatch();
+				}
 				
-				stmt.clearParameters();
-
-				// Create a new record with the term and its parent in the selected hierarchy
-				stmt.setInt ( 1, appl.getChild().getId() );
-				stmt.setInt ( 2, appl.getHierarchy().getId() );
-
-				// set the parent (the term if term, otherwise null if hierarchy)
-				if ( appl.getParentTerm() instanceof Term )
-					stmt.setInt ( 3, ( (Term) appl.getParentTerm() ).getId() );
-				else
-					stmt.setNull (3, java.sql.Types.INTEGER );
-
-				stmt.setInt     ( 4, appl.getOrder() );
-				stmt.setBoolean ( 5, appl.isReportable() );
-
-				// flag is true since the applicability exists
-				stmt.setBoolean( 6, true );
-
-				stmt.addBatch();
+				stmt.executeBatch();
+	
+				try(ResultSet rs = stmt.getGeneratedKeys();) {
+					if ( rs != null ) {
+						while ( rs.next() )
+							ids.add( rs.getInt( 1 ) );
+						rs.close();
+					}
+				}
+				
+				stmt.close();
 			}
-			
-			stmt.executeBatch();
-
-			ResultSet rs = stmt.getGeneratedKeys();
-			if ( rs != null ) {
-				while ( rs.next() )
-					ids.add( rs.getInt( 1 ) );
-				rs.close();
-			}
-			
-			stmt.close();
 			
 			con.commit();
 			con.close();
@@ -133,7 +132,6 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 	 */
 	public boolean remove ( Hierarchy hierarchy, Nameable parent, Term child ) {
 
-		Connection con = null;
 		String query = null;
 		
 		// remove the relationships between the parent term in the hierarchy
@@ -142,13 +140,8 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 		else // if we have a hierarchy as parent we search where id = null
 			query = "delete from APP.PARENT_TERM where HIERARCHY_ID = ? and TERM_ID = ? and PARENT_TERM_ID is null";
 		
-		try {
-
-			// get the connection
-			con = catalogue.getConnection();
-
-			// execute the query
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 			
 			stmt.clearParameters();
 			
@@ -190,19 +183,12 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 	 * @return
 	 */
 	public boolean update ( Hierarchy hierarchy, Nameable parentTerm, Term term, int order, boolean reportable ) {
-		
-		Connection con;
-		
+	
 		String query = "update APP.PARENT_TERM P set TERM_REPORTABLE = ?, "
 				+ "PARENT_TERM_ID = ?, TERM_ORDER = ? where HIERARCHY_ID = ? and TERM_ID = ?";
 		
-		try {
-
-			// get the connection
-			con = catalogue.getConnection();
-
-			// prepare the query
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 
 			stmt.clearParameters();
 
@@ -281,8 +267,6 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 	public Collection<Applicability> getAll() {
 		
 		ArrayList<Applicability> appls = new ArrayList<>();
-		
-		Connection con = null;
 
 		// get all the parent terms and hierarchies ( we join with term to retrieve the parent
 		// term information )
@@ -291,21 +275,20 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 		// These terms will refer directly to the hierarchy they belong to (as parent)
 		String query = "select * from APP.PARENT_TERM P left join APP.TERM T on P.PARENT_TERM_ID = T.TERM_ID";
 
-		try {
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 			
-			con = catalogue.getConnection();
-			
-			PreparedStatement stmt = con.prepareStatement( query );
-			
-			ResultSet rs = stmt.executeQuery();
+			try(ResultSet rs = stmt.executeQuery();) {
 
-			// analyze results
-			while ( rs.next() ) {
-				Applicability appl = getByResultSet( rs );
-				appls.add( appl );
+				// analyze results
+				while ( rs.next() ) {
+					Applicability appl = getByResultSet( rs );
+					appls.add( appl );
+				}
+				
+				rs.close();
 			}
 			
-			rs.close();
 			stmt.close();
 			con.close();
 			
@@ -323,19 +306,12 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 	 * @return
 	 */
 	public boolean removeByA2 ( Hierarchy hierarchy ) {
-
-		Connection con = null;
 		
 		// remove the relationships between the terms and the hierarchy
 		String query = "delete from APP.PARENT_TERM where HIERARCHY_ID = ?";
 		
-		try {
-
-			// get the connection
-			con = catalogue.getConnection();
-
-			// execute the query
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 			
 			stmt.clearParameters();
 			
@@ -377,8 +353,6 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 		
 		// output list
 		ArrayList< Term > children = new ArrayList< Term >();
-		
-		Connection con = null;
 
 		String query = "select T.TERM_ID "
 				+ " from APP.PARENT_TERM as P inner join APP.TERM as T on (P.TERM_ID = T.TERM_ID) "
@@ -399,10 +373,9 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 		// order results
 		query = query + "order by P2.TERM_ORDER, T.TERM_EXTENDED_NAME";
 
-		try {
-			con = catalogue.getConnection();
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 			
-			PreparedStatement stmt = con.prepareStatement( query );
 			stmt.clearParameters();
 
 			stmt.setInt( 1, hierarchy.getId() );
@@ -412,33 +385,35 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 			if ( t != null && t instanceof Term )
 				stmt.setInt( 3, ( (Term) t ).getId() );
 			
-			ResultSet rs = stmt.executeQuery();
-			
-			Term child;
-			
-			// for each child
-			while ( rs.next() ) {
+			try(ResultSet rs = stmt.executeQuery();) {
 				
-				// get the term from the hash map
-				child = catalogue.getTermById ( rs.getInt( "TERM_ID" ) );
-
-				// add the child to the output list
+				Term child;
 				
-				boolean canAdd = true;
+				// for each child
+				while ( rs.next() ) {
+					
+					// get the term from the hash map
+					child = catalogue.getTermById ( rs.getInt( "TERM_ID" ) );
+	
+					// add the child to the output list
+					
+					boolean canAdd = true;
+					
+					// if we want to hide non reportable terms, we check if the term has reportable children in the current hierarchy
+					// and if it is reportable. If it has not reportable children and it is not reportable
+					// we hide it!
+					if ( hideDismissed )
+						canAdd = !child.isDismissed(hierarchy);
+					
+					// if we can add, then add the child
+					if ( canAdd )
+						children.add( child );
+					
+				}
 				
-				// if we want to hide non reportable terms, we check if the term has reportable children in the current hierarchy
-				// and if it is reportable. If it has not reportable children and it is not reportable
-				// we hide it!
-				if ( hideDismissed )
-					canAdd = !child.isDismissed(hierarchy);
-				
-				// if we can add, then add the child
-				if ( canAdd )
-					children.add( child );
-				
+				rs.close();
 			}
 			
-			rs.close();
 			stmt.close();
 			con.close();
 			
@@ -463,8 +438,6 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 		
 		// output, default is zero
 		int maxOrder = 0;
-		
-		Connection con;
 
 		String query = " select max(TERM_ORDER) as MAX_ORDER from APP.PARENT_TERM "
 				+ "where HIERARCHY_ID = ? and ";
@@ -475,13 +448,8 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 		else  // otherwise it is null
 			query = query + "PARENT_TERM_ID is null";
 
-		try {
-
-			// get the connection
-			con = catalogue.getConnection();
-
-			// prepare the query
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 
 			stmt.clearParameters();
 
@@ -492,13 +460,15 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 			if ( parent instanceof Term )
 				stmt.setInt ( 2, ( (Term) parent ).getId() );
 			
-			ResultSet rs = stmt.executeQuery();
+			try(ResultSet rs = stmt.executeQuery();) {
 			
-			// Get the max order
-			if ( rs.next() )
-				maxOrder = rs.getInt( "MAX_ORDER" );
-
-			rs.close();
+				// Get the max order
+				if ( rs.next() )
+					maxOrder = rs.getInt( "MAX_ORDER" );
+	
+				rs.close();
+			}
+			
 			stmt.close();
 			con.close();
 
@@ -531,16 +501,11 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 	 */
 	public void shiftTerms ( ArrayList<Term> sources, Hierarchy hierarchy, int offset ) {
 		
-		Connection con;
-		
 		String query = "update APP.PARENT_TERM P set P.TERM_ORDER = P.TERM_ORDER + ? "
 				+ "where P.TERM_ID = ? and P.HIERARCHY_ID = ?";
 		
-		try {
-			
-			con = catalogue.getConnection();
-			
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 			
 			// for each source term we add an offset to their order
 			for ( Term source : sources ) {
@@ -576,15 +541,10 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 	 */
 	public void updateTermOrder ( Term term, Hierarchy hierarchy, int order ) {
 		
-		Connection con;
-		
 		String query = "UPDATE APP.PARENT_TERM set TERM_ORDER = ? where TERM_ID = ? and HIERARCHY_ID = ? ";
 
-		try {
-
-			con = catalogue.getConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 
 			stmt.clearParameters();
 
@@ -612,20 +572,14 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 	 */
 	public void addOrderOffset ( Term parent, Hierarchy hierarchy, String operator, int childOrder, int offset ) {
 		
-		Connection con;
-		
 		String query = "UPDATE APP.PARENT_TERM "
 				+ "set TERM_ORDER = TERM_ORDER + ? "
 				+ "where PARENT_TERM_ID = ? and HIERARCHY_ID = ? ";
 	
 		query = query + "and TERM_ORDER " + operator + " ? ";
 		
-		
-		try {
-
-			con = catalogue.getConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 
 			stmt.clearParameters();
 
@@ -660,16 +614,12 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 	 */
 	public void swapTermOrder ( Term source, Term target, Hierarchy hierarchy ) {
 		
-		Connection con;
-		
 		String query = "update APP.PARENT_TERM P set P.TERM_ORDER = ? "
 				+ "where P.TERM_ID = ? and P.HIERARCHY_ID = ?";
 		
-		try {
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 			
-			con = catalogue.getConnection();
-			
-			PreparedStatement stmt = con.prepareStatement( query );
 			stmt.clearParameters();
 			
 			// set the target order as the source order

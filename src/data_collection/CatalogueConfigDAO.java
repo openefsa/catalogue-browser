@@ -23,15 +23,11 @@ public class CatalogueConfigDAO implements CatalogueEntityDAO<CatalogueConfigura
 
 		int id = -1;
 
-		Connection con;
 		String query = "insert into APP.CATALOGUE_CONFIG ("
 				+ "CONFIG_NAME, CONFIG_CAT_CODE, CONFIG_HIERARCHY_CODE) values (?,?,?)";
 
-		try {
-			con = DatabaseManager.getMainDBConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query,
-					Statement.RETURN_GENERATED_KEYS );
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);) {
 
 			stmt.setString( 1, config.getDataElementName() );
 			stmt.setString( 2, config.getCatalogueCode() );
@@ -39,11 +35,12 @@ public class CatalogueConfigDAO implements CatalogueEntityDAO<CatalogueConfigura
 
 			stmt.executeUpdate();
 
-			ResultSet rs = stmt.getGeneratedKeys();
-
-			if ( rs != null && rs.next() ) {
-				id = rs.getInt(1);
-				rs.close();
+			try(ResultSet rs = stmt.getGeneratedKeys();) {
+	
+				if ( rs != null && rs.next() ) {
+					id = rs.getInt(1);
+					rs.close();
+				}
 			}
 
 			stmt.close();
@@ -59,13 +56,10 @@ public class CatalogueConfigDAO implements CatalogueEntityDAO<CatalogueConfigura
 	@Override
 	public boolean remove(CatalogueConfiguration config) {
 
-		Connection con;
 		String query = "delete from APP.CATALOGUE_CONFIG where CONFIG_ID = ?";
 
-		try {
-			con = DatabaseManager.getMainDBConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement(query);) {
 
 			stmt.setInt( 1, config.getId() );
 
@@ -93,22 +87,21 @@ public class CatalogueConfigDAO implements CatalogueEntityDAO<CatalogueConfigura
 
 		CatalogueConfiguration out = null;
 
-		Connection con;
 		String query = "select * from APP.CATALOGUE_CONFIG where CONFIG_ID = ?";
-
-		try {
-			con = DatabaseManager.getMainDBConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
+		
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement(query);) {
 
 			stmt.setInt( 1, id );
 
-			ResultSet rs = stmt.executeQuery();
+			try(ResultSet rs = stmt.executeQuery();) {
 
-			if ( rs.next() )
-				out = getByResultSet( rs );
-
-			rs.close();
+				if ( rs.next() )
+					out = getByResultSet( rs );
+	
+				rs.close();
+			}
+			
 			stmt.close();
 			con.close();
 		} catch (SQLException e) {
@@ -137,15 +130,11 @@ public class CatalogueConfigDAO implements CatalogueEntityDAO<CatalogueConfigura
 
 		Collection<CatalogueConfiguration> out = new ArrayList<>();
 
-		Connection con;
 		String query = "select * from APP.CATALOGUE_CONFIG";
 
-		try {
-			con = DatabaseManager.getMainDBConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
-
-			ResultSet rs = stmt.executeQuery();
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement(query);
+				ResultSet rs = stmt.executeQuery();) {
 
 			while ( rs.next() )
 				out.add( getByResultSet( rs ) );
@@ -169,22 +158,20 @@ public class CatalogueConfigDAO implements CatalogueEntityDAO<CatalogueConfigura
 		
 		boolean contains = false;
 		
-		Connection con;
 		String query = "select * from APP.CATALOGUE_CONFIG where CONFIG_ID = ?";
 
-		try {
-
-			con = DatabaseManager.getMainDBConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement(query);) {
 			
 			stmt.setInt( 1, config.getId() );
 
-			ResultSet rs = stmt.executeQuery();
+			try(ResultSet rs = stmt.executeQuery();) {
 			
-			contains = rs.next();
+				contains = rs.next();
+				
+				rs.close();
+			}
 			
-			rs.close();
 			stmt.close();
 			con.close();
 

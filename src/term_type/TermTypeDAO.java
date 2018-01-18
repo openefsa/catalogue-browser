@@ -36,31 +36,27 @@ public class TermTypeDAO implements CatalogueEntityDAO<TermType> {
 
 		ArrayList< TermType >  values = new ArrayList<>();
 
-		Connection con = null;
-
 		// get all the distinct values of the attribute and return them
 		// we get the term type in the order they were inserted in
 		String query = "select * from APP.TERM_TYPE";
 
-		try {
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement(query);) {
 
-			// open the db connection to the main db
-			con = catalogue.getConnection();
-
-			// prepare the statement and its parameters
-			PreparedStatement stmt = con.prepareStatement( query );
 			stmt.clearParameters();
 
 			// get the results
-			ResultSet rs = stmt.executeQuery();
-
-			// get all the detail levels
-			while ( rs.next() ) {
-				TermType tt = getByResultSet( rs );
-				values.add( tt );
+			try(ResultSet rs = stmt.executeQuery();) {
+	
+				// get all the detail levels
+				while ( rs.next() ) {
+					TermType tt = getByResultSet( rs );
+					values.add( tt );
+				}
+	
+				rs.close();
 			}
-
-			rs.close();
+			
 			stmt.close();
 			con.close();
 
@@ -77,15 +73,10 @@ public class TermTypeDAO implements CatalogueEntityDAO<TermType> {
 	 */
 	public synchronized void insert ( Collection<TermType> termTypes ) {
 
-		Connection con;
-
 		String query = "insert into APP.TERM_TYPE (TERM_TYPE_CODE, TERM_TYPE_LABEL) values (?, ?)";
 
-		try {
-
-			con = catalogue.getConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement(query);) {
 
 			// for each term type
 			for ( TermType type : termTypes ) {

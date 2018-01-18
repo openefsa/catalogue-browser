@@ -44,11 +44,8 @@ public class SearchOptionDAO implements CatalogueEntityDAO<SearchOption> {
 		
 		String query = "insert into APP.SEARCH_OPT (OBJ_ID, OBJ_TYPE, SEARCH_OPT_ENABLED) values (?,?,?) ";
 		
-		try {
-			
-			Connection con = catalogue.getConnection();
-			
-			PreparedStatement stmt = con.prepareStatement( query, Statement.RETURN_GENERATED_KEYS );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query, Statement.RETURN_GENERATED_KEYS );) {
 			
 			stmt.setInt( 1, opt.getId() );
 			stmt.setString( 2, opt.getType().toString() );
@@ -84,11 +81,8 @@ public class SearchOptionDAO implements CatalogueEntityDAO<SearchOption> {
 
 		String query = "update APP.SEARCH_OPT set SEARCH_OPT_ENABLED = ? where OBJ_ID = ? and OBJ_TYPE = ?";
 
-		try {
-			
-			Connection con = catalogue.getConnection();
-			
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 			
 			stmt.setBoolean( 1, opt.isEnabled() );
 			stmt.setInt( 2, opt.getId() );
@@ -138,13 +132,9 @@ public class SearchOptionDAO implements CatalogueEntityDAO<SearchOption> {
 		
 		String query = "select * from APP.SEARCH_OPT";
 		
-		try {
-
-			Connection con = catalogue.getConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
-
-			ResultSet rs = stmt.executeQuery();
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );
+				ResultSet rs = stmt.executeQuery();) {
 
 			while ( rs.next() ) {
 				opts.add( getByResultSet( rs ) );
@@ -194,19 +184,19 @@ public class SearchOptionDAO implements CatalogueEntityDAO<SearchOption> {
 
 		String query = "select * from APP.SEARCH_OPT where OBJ_TYPE = ?";
 		
-		try {
-			
-			Connection con = catalogue.getConnection();
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 			
 			stmt.setString( 1, type.toString() );
 			
-			ResultSet rs = stmt.executeQuery();
+			try(ResultSet rs = stmt.executeQuery();) {
 			
-			while ( rs.next() )
-				opts.add( getByResultSet( rs ) );
+				while ( rs.next() )
+					opts.add( getByResultSet( rs ) );
+				
+				rs.close();
+			}
 			
-			rs.close();
 			stmt.close();
 			con.close();
 			

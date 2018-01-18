@@ -32,12 +32,13 @@ import org.eclipse.swt.widgets.Text;
 import already_described_terms.DescribedTerm;
 import catalogue.Catalogue;
 import messages.Messages;
-import session_manager.RestoreableWindow;
-import session_manager.WindowPreference;
+import session_manager.BrowserWindowPreferenceDao;
 import utilities.GlobalUtil;
+import window_restorer.RestoreableWindow;
 
-public class FormDescribedTerms implements RestoreableWindow {
+public class FormDescribedTerms {
 
+	private RestoreableWindow window;
 	private static final String WINDOW_CODE = "FormDescribedTerms";
 	
 	private Shell _shell;
@@ -68,7 +69,7 @@ public class FormDescribedTerms implements RestoreableWindow {
 	 */
 	public FormDescribedTerms( Shell parentShell, String title, 
 			Catalogue catalogue, ArrayList<?> describedTerms ) {
-		
+
 		_shell = parentShell;
 		_title = title;
 		this.catalogue = catalogue;
@@ -111,16 +112,6 @@ public class FormDescribedTerms implements RestoreableWindow {
 			clearSearch.setEnabled( true );
 	}
 	
-	@Override
-	public String getWindowCode() {
-		return WINDOW_CODE;
-	}
-	
-	@Override
-	public Shell getWindowShell() {
-		return _dialog;
-	}
-	
 	/**
 	 * Method called when the form is created
 	 */
@@ -130,6 +121,8 @@ public class FormDescribedTerms implements RestoreableWindow {
 		
 		// Set the layout of the form
 		_dialog = new Shell( _shell , SWT.SHELL_TRIM | SWT.APPLICATION_MODAL );
+		
+		window = new RestoreableWindow(_dialog, WINDOW_CODE);
 
 		// window icon (on the top left)
 		try {
@@ -447,8 +440,8 @@ public class FormDescribedTerms implements RestoreableWindow {
 		
 		
 		// restore previous dimensions
-		WindowPreference.restore( this );
-		WindowPreference.saveOnClosure( this );
+		window.restore( BrowserWindowPreferenceDao.class );
+		window.saveOnClosure( BrowserWindowPreferenceDao.class );
 		
 		// show the dialog
 		_dialog.setVisible(true);  

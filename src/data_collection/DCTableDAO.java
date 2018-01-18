@@ -23,24 +23,21 @@ public class DCTableDAO implements CatalogueEntityDAO<DCTable> {
 
 		int id = -1;
 
-		Connection con;
 		String query = "insert into APP.DATA_COLLECTION_TABLE (DC_TABLE_NAME) values (?)";
 
-		try {
-			con = DatabaseManager.getMainDBConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query,
-					Statement.RETURN_GENERATED_KEYS );
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);) {
 
 			stmt.setString( 1, dc.getName() );
 
 			stmt.executeUpdate();
 
-			ResultSet rs = stmt.getGeneratedKeys();
+			try(ResultSet rs = stmt.getGeneratedKeys();) {
 
-			if ( rs != null && rs.next() ) {
-				id = rs.getInt(1);
-				rs.close();
+				if ( rs != null && rs.next() ) {
+					id = rs.getInt(1);
+					rs.close();
+				}
 			}
 
 			stmt.close();
@@ -56,13 +53,10 @@ public class DCTableDAO implements CatalogueEntityDAO<DCTable> {
 	@Override
 	public boolean remove(DCTable dc) {
 
-		Connection con;
 		String query = "delete from APP.DATA_COLLECTION_TABLE where DC_TABLE_ID = ?";
 
-		try {
-			con = DatabaseManager.getMainDBConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement(query);) {
 
 			stmt.setInt( 1, dc.getId() );
 
@@ -90,22 +84,21 @@ public class DCTableDAO implements CatalogueEntityDAO<DCTable> {
 
 		DCTable out = null;
 
-		Connection con;
 		String query = "select * from APP.DATA_COLLECTION_TABLE where DC_TABLE_ID = ?";
 
-		try {
-			con = DatabaseManager.getMainDBConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement(query);) {
 
 			stmt.setInt( 1, id );
 
-			ResultSet rs = stmt.executeQuery();
+			try(ResultSet rs = stmt.executeQuery();) {
 
-			if ( rs.next() )
-				out = getByResultSet( rs );
-
-			rs.close();
+				if ( rs.next() )
+					out = getByResultSet( rs );
+	
+				rs.close();
+			}
+			
 			stmt.close();
 			con.close();
 		} catch (SQLException e) {
@@ -124,22 +117,21 @@ public class DCTableDAO implements CatalogueEntityDAO<DCTable> {
 
 		DCTable out = null;
 
-		Connection con;
 		String query = "select * from APP.DATA_COLLECTION_TABLE where DC_TABLE_NAME = ?";
 
-		try {
-			con = DatabaseManager.getMainDBConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement(query);) {
 
 			stmt.setString( 1, name );
 
-			ResultSet rs = stmt.executeQuery();
+			try(ResultSet rs = stmt.executeQuery();) {
 
-			if ( rs.next() )
-				out = getByResultSet( rs );
-
-			rs.close();
+				if ( rs.next() )
+					out = getByResultSet( rs );
+	
+				rs.close();
+			}
+			
 			stmt.close();
 			con.close();
 		} catch (SQLException e) {
@@ -169,23 +161,20 @@ public class DCTableDAO implements CatalogueEntityDAO<DCTable> {
 	public boolean contains ( DCTable table ) {
 		
 		boolean contains = false;
-		
-		Connection con;
+
 		String query = "select * from APP.DATA_COLLECTION_TABLE where DC_TABLE_NAME = ?";
 
-		try {
-
-			con = DatabaseManager.getMainDBConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement(query);) {
 			
 			stmt.setString( 1, table.getName() );
 
-			ResultSet rs = stmt.executeQuery();
+			try(ResultSet rs = stmt.executeQuery();) {
 			
-			contains = rs.next();
-			
-			rs.close();
+				contains = rs.next();
+				
+				rs.close();
+			}
 			stmt.close();
 			con.close();
 
@@ -201,15 +190,11 @@ public class DCTableDAO implements CatalogueEntityDAO<DCTable> {
 
 		Collection<DCTable> out = new ArrayList<>();
 
-		Connection con;
 		String query = "select * from APP.DATA_COLLECTION_TABLE";
 
-		try {
-			con = DatabaseManager.getMainDBConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
-
-			ResultSet rs = stmt.executeQuery();
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement(query);
+				ResultSet rs = stmt.executeQuery();) {
 
 			while ( rs.next() )
 				out.add( getByResultSet( rs ) );

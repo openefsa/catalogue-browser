@@ -22,12 +22,14 @@ import messages.Messages;
 import property.ContentProviderProperty;
 import property.LabelProviderProperty;
 import property.SorterDCFProperty;
-import session_manager.RestoreableWindow;
-import session_manager.WindowPreference;
+import session_manager.BrowserWindowPreferenceDao;
 import utilities.GlobalUtil;
+import window_restorer.RestoreableWindow;
 
-public abstract class CatalogueObjectEditor<T extends SortableCatalogueObject> implements RestoreableWindow {
+public abstract class CatalogueObjectEditor<T extends SortableCatalogueObject> {
 
+	private RestoreableWindow window;
+	private String windowCode;
 	private Shell shell;
 	private Shell dialog;
 
@@ -40,9 +42,10 @@ public abstract class CatalogueObjectEditor<T extends SortableCatalogueObject> i
 	 * Initialize the editor variables
 	 * @param shell parent shell
 	 */
-	public CatalogueObjectEditor( Shell shell, ArrayList<T> objects, 
+	public CatalogueObjectEditor( Shell shell, String windowCode, ArrayList<T> objects, 
 			String title ) {
 		this.shell = shell;
+		this.windowCode = windowCode;
 		this.objects = objects;
 		this.title = title;
 		this.objectsToRemove = new ArrayList<>();
@@ -59,6 +62,8 @@ public abstract class CatalogueObjectEditor<T extends SortableCatalogueObject> i
 		dialog.setText( title );
 		dialog.setSize( 600, 400 );
 		dialog.setLayout( new GridLayout( 1 , false ) );
+		
+		window = new RestoreableWindow(dialog, windowCode);
 
 		Group g = new Group( dialog , SWT.NONE );
 		g.setLayout( new GridLayout( 1 , false ) );
@@ -192,8 +197,8 @@ public abstract class CatalogueObjectEditor<T extends SortableCatalogueObject> i
 		dialog.pack();
 
 		// restore window dimensions to previous
-		WindowPreference.restore( this );
-		WindowPreference.saveOnClosure( this );
+		window.restore( BrowserWindowPreferenceDao.class );
+		window.saveOnClosure( BrowserWindowPreferenceDao.class );
 
 		dialog.open();
 
@@ -203,6 +208,10 @@ public abstract class CatalogueObjectEditor<T extends SortableCatalogueObject> i
 		}
 
 		dialog.dispose();
+	}
+	
+	public Shell getShell() {
+		return shell;
 	}
 
 	/**
@@ -437,11 +446,6 @@ public abstract class CatalogueObjectEditor<T extends SortableCatalogueObject> i
 				dialog.close();
 			}
 		} );
-	}
-
-	@Override
-	public Shell getWindowShell() {
-		return dialog;
 	}
 
 	/**

@@ -52,6 +52,9 @@ public class GlobalUtil {
 	// directory which contains all the pick lists
 	final static public String PICKLISTS_DIR_NAME = "picklists";
 	final static public String PICKLISTS_DIR_PATH = getPicklistDir();
+	
+	final static public String PREF_DIR_NAME = "preferences";
+	final static public String PREF_DIR_PATH = getPrefDir();
 
 	// directory which contains all the pick lists
 	final static public String BUSINESS_RULES_DIR_NAME = "business-rules";
@@ -79,6 +82,11 @@ public class GlobalUtil {
 	
 	public static String getWorkingDir() {
 		return workDir;
+	}
+	
+	public static String getPrefDir() {
+		return ( workDir + PREF_DIR_NAME + 
+				System.getProperty( "file.separator" ) );
 	}
 
 	public static String getLogDir() {
@@ -193,6 +201,11 @@ public class GlobalUtil {
 		// create the business rules directory
 		if ( !fileExists( LOG_FILES_DIR_PATH ) ) {
 			new File( LOG_FILES_DIR_PATH ).mkdir();
+		}
+		
+		// create preferences directory
+		if ( !fileExists( PREF_DIR_PATH ) ) {
+			new File( PREF_DIR_PATH ).mkdir();
 		}
 		
 		// create the temp directory 

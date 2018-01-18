@@ -40,10 +40,8 @@ public class ReleaseNotesDAO {
 				+ "CAT_RN_INTERNAL_VERSION_NOTE=? "
 				+ "where CAT_ID = ?";
 		
-		try {
-			
-			Connection con = DatabaseManager.getMainDBConnection();
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 
 			stmt.setString( 1, notes.getDescription() );
 			stmt.setTimestamp( 2, notes.getDate() );
@@ -76,20 +74,20 @@ public class ReleaseNotesDAO {
 		String query = "select CAT_RN_DESCRIPTION, CAT_RN_VERSION_DATE, CAT_RN_INTERNAL_VERSION, "
 				+ "CAT_RN_INTERNAL_VERSION_NOTE from APP.CATALOGUE where CAT_ID = ?";
 		
-		try {
-			
-			Connection con = DatabaseManager.getMainDBConnection();
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 			
 			stmt.setInt( 1, catalogue.getId() );
 			
-			ResultSet rs = stmt.executeQuery();
+			try(ResultSet rs = stmt.executeQuery();) {
 			
-			if ( rs.next() ) {
-				rn = getByResultSet( rs );
+				if ( rs.next() ) {
+					rn = getByResultSet( rs );
+				}
+				
+				rs.close();
 			}
 			
-			rs.close();
 			stmt.close();
 			con.close();
 		} catch ( SQLException e ) {

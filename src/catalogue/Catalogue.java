@@ -2204,7 +2204,7 @@ public class Catalogue extends BaseObject
 		if ( !written )
 			return null;
 
-		VersionFinder finder = new VersionFinder( file.getName() );
+		VersionFinder finder = new VersionFinder( file.getPath() );
 
 		// compare the catalogues versions
 		CatalogueVersion intVersion = new CatalogueVersion ( finder.getVersion() );
@@ -2216,13 +2216,13 @@ public class Catalogue extends BaseObject
 			// save the new version of the catalogue
 			NewCatalogueInternalVersion newVersion = 
 					new NewCatalogueInternalVersion( getCode(), 
-							finder.getVersion(), file.getName(), catalogueType );
+							finder.getVersion(), file.getPath(), catalogueType );
 
 			return newVersion;
 		}
 		else {
 			// delete useless files
-			GlobalUtil.deleteFileCascade( file.getName() );
+			GlobalUtil.deleteFileCascade( file.getPath() );
 		}
 
 		return null;

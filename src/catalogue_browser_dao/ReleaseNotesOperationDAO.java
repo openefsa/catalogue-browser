@@ -54,11 +54,8 @@ public class ReleaseNotesOperationDAO implements CatalogueEntityDAO<ReleaseNotes
 		String query = "insert into APP.RELEASE_NOTES_OP "
 				+ "(OP_NAME, OP_DATE, OP_INFO, OP_GROUP_ID) values (?,?,?,?)";
 
-		try {
-
-			Connection con = catalogue.getConnection();
-			PreparedStatement stmt = con.prepareStatement( query, 
-					Statement.RETURN_GENERATED_KEYS );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query, Statement.RETURN_GENERATED_KEYS );) {
 
 			for ( ReleaseNotesOperation op : ops ) {
 				
@@ -74,11 +71,12 @@ public class ReleaseNotesOperationDAO implements CatalogueEntityDAO<ReleaseNotes
 
 			stmt.executeBatch();
 
-			ResultSet rs = stmt.getGeneratedKeys();
-			if ( rs != null ) {
-				while ( rs.next() )
-					ids.add( rs.getInt( 1 ) );
-				rs.close();
+			try(ResultSet rs = stmt.getGeneratedKeys();) {
+				if ( rs != null ) {
+					while ( rs.next() )
+						ids.add( rs.getInt( 1 ) );
+					rs.close();
+				}
 			}
 			
 			stmt.close();
@@ -129,13 +127,10 @@ public class ReleaseNotesOperationDAO implements CatalogueEntityDAO<ReleaseNotes
 		Collection<ReleaseNotesOperation> ops = new ArrayList<>();
 		
 		String query = "select * from APP.RELEASE_NOTES_OP";
-
-		try {
-
-			Connection con = catalogue.getConnection();
-			PreparedStatement stmt = con.prepareStatement( query );
-
-			ResultSet rs = stmt.executeQuery();
+		
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );
+				ResultSet rs = stmt.executeQuery();) {
 
 			while( rs.next() )
 				ops.add( getByResultSet( rs ) );

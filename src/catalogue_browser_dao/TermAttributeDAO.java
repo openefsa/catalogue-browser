@@ -48,23 +48,16 @@ public class TermAttributeDAO implements CatalogueRelationDAO< TermAttribute, Te
 	public synchronized ArrayList<Integer> insert ( Collection<TermAttribute> tas ) {
 		
 		ArrayList<Integer> ids = new ArrayList<>();
-		
-		Connection con;
 
 		// create the base query for each record
 		String query = "INSERT INTO APP.TERM_ATTRIBUTE (TERM_ID, ATTR_ID, " 
 				+ "ATTR_VALUE ) VALUES ("
 				+ "?, ?, ? )";
 		
-		try {
-
-			// open the DB connection with the catalogue db path which is currently opened
-			con = catalogue.getConnection();
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query, Statement.RETURN_GENERATED_KEYS );) {
+			
 			con.setAutoCommit( false );
-
-			// create the sql base statement
-			PreparedStatement stmt = con.prepareStatement( query, 
-					Statement.RETURN_GENERATED_KEYS );
 
 			// get the records one by one and insert them into the database
 			for ( TermAttribute ta : tas ) {
@@ -86,12 +79,13 @@ public class TermAttributeDAO implements CatalogueRelationDAO< TermAttribute, Te
 			stmt.executeBatch();
 
 			// get all the ids
-			ResultSet rs = stmt.getGeneratedKeys();
+			try(ResultSet rs = stmt.getGeneratedKeys();) {
 			
-			if ( rs != null ) {
-				while ( rs.next() )
-					ids.add( rs.getInt( 1 ) );
-				rs.close();
+				if ( rs != null ) {
+					while ( rs.next() )
+						ids.add( rs.getInt( 1 ) );
+					rs.close();
+				}
 			}
 			
 			stmt.close();
@@ -118,19 +112,12 @@ public class TermAttributeDAO implements CatalogueRelationDAO< TermAttribute, Te
 	 * @return
 	 */
 	public boolean update ( TermAttribute ta ) {
-
-		Connection con = null;
 		
 		// get all the hierarchies
 		String query = "update APP.TERM_ATTRIBUTE set ATTR_VALUE = ? where ATTR_ID = ? and TERM_ID = ?";
 		
-		try {
-
-			// get the connection
-			con = catalogue.getConnection();
-
-			// execute the query
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 			
 			stmt.clearParameters();
 			
@@ -164,17 +151,12 @@ public class TermAttributeDAO implements CatalogueRelationDAO< TermAttribute, Te
 	public ArrayList<TermAttribute> getAll () {
 		
 		ArrayList<TermAttribute> tas = new ArrayList<>();
-		
-		Connection con = null;
 
 		// get all the parent terms and hierarchies
 		String query = "select * from APP.ATTRIBUTE A inner join APP.TERM_ATTRIBUTE TA on A.ATTR_ID = TA.ATTR_ID";
 
-		try {
-
-			con = catalogue.getConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 
 			ResultSet rs = stmt.executeQuery();
 
@@ -206,21 +188,15 @@ public class TermAttributeDAO implements CatalogueRelationDAO< TermAttribute, Te
 
 		ArrayList< TermAttribute > attributes = new ArrayList<>();
 
-		Connection con;
-
 		// get the term with id = the input term id
 		String query = "select A.*, TA.TERM_ATTR_ID, TA.ATTR_VALUE  " +
 				"from APP.TERM_ATTRIBUTE TA " +
 				"inner join APP.ATTRIBUTE A on TA.ATTR_ID = A.ATTR_ID " +
 				"where TA.TERM_ID = ?";
 
-		try {
-
-			// open the db connection
-			con = catalogue.getConnection();
-
-			// prepare the statement and its parameters
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
+			
 			stmt.clearParameters();
 
 			stmt.setInt( 1, term.getId() );
@@ -276,11 +252,8 @@ public class TermAttributeDAO implements CatalogueRelationDAO< TermAttribute, Te
 		// create insert query
 		String query = "delete from APP.TERM_ATTRIBUTE where TERM_ID = ?";
 		
-		try {
-			
-			Connection con = catalogue.getConnection();
-			
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 			
 			stmt.clearParameters();
 			
@@ -311,16 +284,11 @@ public class TermAttributeDAO implements CatalogueRelationDAO< TermAttribute, Te
 	 */
 	public boolean removeByA2 ( Attribute attribute ) {
 		
-		Connection con;
-		
 		// create insert query
 		String query = "delete from APP.TERM_ATTRIBUTE where ATTR_ID = ?";
 		
-		try {
-			
-			con = catalogue.getConnection();
-			
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 			
 			stmt.clearParameters();
 			
@@ -355,15 +323,11 @@ public class TermAttributeDAO implements CatalogueRelationDAO< TermAttribute, Te
 
 		String query = "insert into APP.TERM_ATTRIBUTE (TERM_ID, ATTR_ID, ATTR_VALUE) values (?, ?, ?)";
 
-		try {
-
-			// open the connection
-			Connection con = catalogue.getConnection();
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 
 			// remove all the term attributes to refresh them
 			removeByA1( term );
-
-			PreparedStatement stmt = con.prepareStatement( query );
 
 			// for each attribute create a batch update
 			for ( TermAttribute ta : attrs ) {

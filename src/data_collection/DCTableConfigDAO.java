@@ -18,14 +18,10 @@ public class DCTableConfigDAO implements CatalogueEntityDAO<DCTableConfig> {
 
 		int id = -1;
 
-		Connection con;
 		String query = "insert into APP.DC_TABLE_CONFIG (DC_ID, DC_TABLE_ID, CONFIG_ID) values (?,?,?)";
 
-		try {
-			con = DatabaseManager.getMainDBConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query,
-					Statement.RETURN_GENERATED_KEYS );
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);) {
 
 			stmt.setInt( 1, rel.getDc().getId() );
 			stmt.setInt( 2, rel.getTable().getId() );
@@ -33,11 +29,12 @@ public class DCTableConfigDAO implements CatalogueEntityDAO<DCTableConfig> {
 
 			stmt.executeUpdate();
 
-			ResultSet rs = stmt.getGeneratedKeys();
+			try(ResultSet rs = stmt.getGeneratedKeys();) {
 
-			if ( rs != null && rs.next() ) {
-				id = rs.getInt(1);
-				rs.close();
+				if ( rs != null && rs.next() ) {
+					id = rs.getInt(1);
+					rs.close();
+				}
 			}
 
 			stmt.close();
@@ -53,14 +50,11 @@ public class DCTableConfigDAO implements CatalogueEntityDAO<DCTableConfig> {
 	@Override
 	public boolean remove(DCTableConfig rel) {
 		
-		Connection con;
 		String query = "delete from APP.DC_TABLE_CONFIG where DC_ID = ? "
 				+ "and DC_TABLE_ID = ? and CONFIG_ID = ?";
 
-		try {
-			con = DatabaseManager.getMainDBConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement(query);) {
 
 			stmt.setInt( 1, rel.getDc().getId() );
 			stmt.setInt( 2, rel.getTable().getId() );
@@ -98,22 +92,21 @@ public class DCTableConfigDAO implements CatalogueEntityDAO<DCTableConfig> {
 
 		Collection<DCTableConfig> out = new ArrayList<>();
 
-		Connection con;
 		String query = "select * from APP.DC_TABLE_CONFIG where DC_ID = ?";
 
-		try {
-			con = DatabaseManager.getMainDBConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement(query);) {
 
 			stmt.setInt( 1, dc.getId() );
 
-			ResultSet rs = stmt.executeQuery();
+			try(ResultSet rs = stmt.executeQuery();) {
 
-			while ( rs.next() )
-				out.add( getByResultSet( rs ) );
-
-			rs.close();
+				while ( rs.next() )
+					out.add( getByResultSet( rs ) );
+	
+				rs.close();
+			}
+			
 			stmt.close();
 			con.close();
 		} catch (SQLException e) {

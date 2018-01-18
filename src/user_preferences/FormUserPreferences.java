@@ -24,16 +24,17 @@ import org.eclipse.swt.widgets.TableColumn;
 
 import catalogue.Catalogue;
 import messages.Messages;
-import session_manager.RestoreableWindow;
-import session_manager.WindowPreference;
+import session_manager.BrowserWindowPreferenceDao;
+import window_restorer.RestoreableWindow;
 
 /**
  * Form which allows modifying the user preferences
  * @author avonva
  *
  */
-public class FormUserPreferences implements RestoreableWindow {
+public class FormUserPreferences {
 	
+	private RestoreableWindow window;
 	private static final String WINDOW_CODE = "FormUserPreferences";
 	
 	private Shell _shell;
@@ -47,7 +48,6 @@ public class FormUserPreferences implements RestoreableWindow {
 	
 	// constructor
 	public FormUserPreferences( Shell shell, Catalogue catalogue ) {
-		
 		this.catalogue = catalogue;
 		_shell = shell;
 		
@@ -63,22 +63,14 @@ public class FormUserPreferences implements RestoreableWindow {
 		}
 	}
 	
-	@Override
-	public String getWindowCode() {
-		return WINDOW_CODE;
-	}
-	
-	@Override
-	public Shell getWindowShell() {
-		return dialog;
-	}
-	
 	/**
 	 * Display the form and initialize all the graphics
 	 */
 	public void Display ( ) {
 
 		this.dialog = new Shell( _shell, SWT.SHELL_TRIM | SWT.APPLICATION_MODAL );
+		
+		window = new RestoreableWindow(dialog, WINDOW_CODE);
 		
 		dialog.setText( Messages.getString("FormUserPreferences.OptionsLabel") );
 		dialog.setSize( 400, 350 );
@@ -351,8 +343,8 @@ public class FormUserPreferences implements RestoreableWindow {
 		dialog.pack();
 		
 		// restore old dimensions
-		WindowPreference.restore( this );
-		WindowPreference.saveOnClosure( this );
+		window.restore( BrowserWindowPreferenceDao.class );
+		window.saveOnClosure( BrowserWindowPreferenceDao.class );
 		
 		dialog.open();
 	}

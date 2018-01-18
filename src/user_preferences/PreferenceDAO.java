@@ -75,33 +75,28 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference>{
 		// output
 		Preference pref = null;
 
-		Connection con;
-
 		String query = "select * from APP.PREFERENCE where PREFERENCE_KEY = ?";
 
-		try {
-
-			con = getConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = getConnection();
+				PreparedStatement stmt = con.prepareStatement(query);) {
 
 			stmt.clearParameters();
 
 			stmt.setString( 1, key );
 
-			ResultSet rs = stmt.executeQuery();
-
-			if ( rs.next() ) {
-				pref = getByResultSet( rs );
+			try(ResultSet rs = stmt.executeQuery();) {
+	
+				if ( rs.next() ) {
+					pref = getByResultSet( rs );
+				}
+	
+				rs.close();
 			}
-
-			rs.close();
+			
 			stmt.close();
 			con.close();
 
-		} catch ( SQLException e ) {
-			e.printStackTrace();
-		}
+		} catch ( SQLException e ) {}
 
 		if ( pref == null ) 
 			throw new PreferenceNotFoundException();
@@ -119,17 +114,11 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference>{
 		// output
 		ArrayList<Preference> preferences = new ArrayList<>();
 
-		Connection con;
-
 		String query = "select * from APP.PREFERENCE";
 
-		try {
-
-			con = getConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
-
-			ResultSet rs = stmt.executeQuery();
+		try (Connection con = getConnection();
+				PreparedStatement stmt = con.prepareStatement(query);
+				ResultSet rs = stmt.executeQuery();) {
 
 			while ( rs.next() ) {
 
@@ -158,19 +147,13 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference>{
 	 */
 	public int insert ( Preference pref ) {
 
-		int id = -1;
-
-		Connection con;
+		int id = -1;;
 
 		String query = "insert into APP.PREFERENCE (PREFERENCE_KEY, "
 				+ "PREFERENCE_TYPE, PREFERENCE_VALUE, PREFERENCE_EDITABLE) values (?,?,?,?)";
 
-		try {
-
-			con = getConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query, 
-					Statement.RETURN_GENERATED_KEYS );
+		try (Connection con = getConnection();
+				PreparedStatement stmt = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);) {
 
 			stmt.clearParameters();
 
@@ -181,12 +164,14 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference>{
 
 			stmt.executeUpdate();
 
-			ResultSet rs = stmt.getGeneratedKeys();
+			try(ResultSet rs = stmt.getGeneratedKeys();) {
 
-			if ( rs.next() )
-				id = rs.getInt(1);
-
-			rs.close();
+				if ( rs.next() )
+					id = rs.getInt(1);
+	
+				rs.close();
+			}
+			
 			stmt.close();
 			con.close();
 
@@ -241,15 +226,12 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference>{
 	 * Remove all the preferences from the database
 	 */
 	public void removeAll () {
-		Connection con;
-
+		
 		String query = "delete from APP.PREFERENCE";
 
-		try {
+		try (Connection con = getConnection(); 
+				Statement stmt = con.createStatement();) {
 
-			con = getConnection();
-
-			Statement stmt = con.createStatement();
 			stmt.execute( query );
 
 			stmt.close();
@@ -261,16 +243,12 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference>{
 	}
 
 	public boolean remove(Preference object) {
-		
-		Connection con;
 
 		String query = "delete from APP.PREFERENCE where PREFERENCE_KEY = ?";
-
-		try {
-
-			con = getConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
+		
+		try (Connection con = getConnection(); 
+				PreparedStatement stmt = con.prepareStatement( query );) {
+			
 			stmt.setString( 1, object.getKey() );
 			stmt.executeUpdate();
 
@@ -309,24 +287,21 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference>{
 
 		boolean contained = false;
 
-		Connection con;
-
 		String query = "select * from APP.PREFERENCE where PREFERENCE_KEY = ?";
 
-		try {
-
-			con = getConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = getConnection(); 
+				PreparedStatement stmt = con.prepareStatement( query );) {
 
 			stmt.setString( 1, pref.getKey() );
 			
-			ResultSet rs = stmt.executeQuery();
+			try(ResultSet rs = stmt.executeQuery();) {
 
-			if ( rs.next() )
-				contained = true;
-
-			rs.close();
+				if ( rs.next() )
+					contained = true;
+	
+				rs.close();
+			}
+			
 			stmt.close();
 			con.close();
 

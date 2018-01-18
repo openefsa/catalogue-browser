@@ -27,12 +27,15 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 import messages.Messages;
-import session_manager.RestoreableWindow;
-import session_manager.WindowPreference;
+import session_manager.BrowserWindowPreferenceDao;
 import ui_general_graphics.TableResizer;
+import window_restorer.RestoreableWindow;
 
-public abstract class FormObjectsList<T> implements RestoreableWindow {
+public abstract class FormObjectsList<T> {
 
+	private RestoreableWindow window;
+	private String windowCode;
+	
 	public static final String STD_DATE_FORMAT = "yyyy-MM-dd";
 	
 	// strings used to identify the buttons from their parent composite
@@ -59,22 +62,18 @@ public abstract class FormObjectsList<T> implements RestoreableWindow {
 	 * @param catalogues, the catalogues list from which we can choose
 	 * @multiSel can we perform a multiple selection?
 	 */
-	public FormObjectsList( Shell shell, String title, 
+	public FormObjectsList( Shell shell, String windowCode, String title, 
 			Collection <T> objs, boolean multiSel ) {
 		this.selectedObjs = new ArrayList<>();
 		this.shell = shell;
+		this.windowCode = windowCode;
 		this.title = title;
 		this.objs = objs;
 		this.multiSel = multiSel;
 	}
 
-	public FormObjectsList( Shell shell, String title, Collection <T> objs ) {
-		this ( shell, title, objs, true );
-	}
-	
-	@Override
-	public Shell getWindowShell() {
-		return dialog;
+	public FormObjectsList( Shell shell, String windowCode, String title, Collection <T> objs ) {
+		this ( shell, windowCode, title, objs, true );
 	}
 	
 	/**
@@ -88,6 +87,8 @@ public abstract class FormObjectsList<T> implements RestoreableWindow {
 
 		// set the dialog layout
 		dialog.setLayout( new GridLayout( 1 , false ) );
+		
+		window = new RestoreableWindow(dialog, windowCode);
 
 		// ### catalogue table ###
 
@@ -123,10 +124,10 @@ public abstract class FormObjectsList<T> implements RestoreableWindow {
 		dialog.pack();
 
 		// restore the preferred settings if present
-		WindowPreference.restore( this );
+		window.restore( BrowserWindowPreferenceDao.class );
 
 		// save the window dimensions when close
-		WindowPreference.saveOnClosure( this );
+		window.saveOnClosure( BrowserWindowPreferenceDao.class );
 
 		// show the dialog
 		dialog.setVisible( true );  

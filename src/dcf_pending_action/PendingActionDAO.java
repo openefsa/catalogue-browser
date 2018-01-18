@@ -32,12 +32,8 @@ public class PendingActionDAO implements CatalogueEntityDAO<PendingAction> {
 				+ "ACTION_DATA, CAT_ID, ACTION_USERNAME, ACTION_NOTE, "
 				+ "ACTION_PRIORITY, ACTION_TYPE, ACTION_DCF_TYPE ) values (?,?,?,?,?,?,?,?)";
 		
-		try {
-			
-			Connection con = DatabaseManager.getMainDBConnection();
-			
-			PreparedStatement stmt = con.prepareStatement( query, 
-					Statement.RETURN_GENERATED_KEYS );
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);) {
 			
 			// set the parameters
 			stmt.setString( 1, object.getLogCode() );
@@ -54,11 +50,12 @@ public class PendingActionDAO implements CatalogueEntityDAO<PendingAction> {
 			
 			// get the id of the new object
 			// from the database
-			ResultSet rs = stmt.getGeneratedKeys();
-			if ( rs.next() )
-				id = rs.getInt( 1 );
-			
-			rs.close();
+			try(ResultSet rs = stmt.getGeneratedKeys();) {
+				if ( rs.next() )
+					id = rs.getInt( 1 );
+				
+				rs.close();
+			}
 			stmt.close();
 			con.close();
 			
@@ -74,11 +71,8 @@ public class PendingActionDAO implements CatalogueEntityDAO<PendingAction> {
 
 		String query = "delete from APP.PENDING_ACTION where ACTION_ID = ?";
 		
-		try {
-			
-			Connection con = DatabaseManager.getMainDBConnection();
-			
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement(query);) {
 			
 			stmt.setInt( 1, object.getId() );
 			
@@ -104,10 +98,8 @@ public class PendingActionDAO implements CatalogueEntityDAO<PendingAction> {
 				+ "ACTION_DATA = ?, CAT_ID = ?, ACTION_USERNAME = ?, ACTION_PRIORITY = ?, ACTION_TYPE = ? "
 				+ "where ACTION_ID = ?";
 		
-		try {
-			
-			Connection con = DatabaseManager.getMainDBConnection();
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement(query);) {
 			
 			// set the parameters
 			stmt.setString( 1, pr.getLogCode() );
@@ -205,14 +197,10 @@ public class PendingActionDAO implements CatalogueEntityDAO<PendingAction> {
 		
 		String query = "select * from APP.PENDING_ACTION";
 		
-		try {
-			
-			Connection con = DatabaseManager.getMainDBConnection();
-			
-			PreparedStatement stmt = con.prepareStatement( query );
-			
-			ResultSet rs = stmt.executeQuery();
-			
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement(query);
+				ResultSet rs = stmt.executeQuery();) {
+
 			// get all the pending reserve obj
 			while ( rs.next() ) {
 				out.add( getByResultSet(rs) );
@@ -245,22 +233,21 @@ public class PendingActionDAO implements CatalogueEntityDAO<PendingAction> {
 		
 		String query = "select * from APP.PENDING_ACTION where CAT_ID = ? and ACTION_DCF_TYPE = ?";
 		
-		try {
-			
-			Connection con = DatabaseManager.getMainDBConnection();
-			
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement(query);) {
 			
 			stmt.setInt( 1, catalogue.getId() );
 			stmt.setString( 2, type.toString() );
 			
-			ResultSet rs = stmt.executeQuery();
+			try(ResultSet rs = stmt.executeQuery();) {
 			
-			// get all the pending reserve obj
-			while ( rs.next() )
-				prs.add( getByResultSet(rs) );
+				// get all the pending reserve obj
+				while ( rs.next() )
+					prs.add( getByResultSet(rs) );
+				
+				rs.close();
+			}
 			
-			rs.close();
 			stmt.close();
 			con.close();
 			

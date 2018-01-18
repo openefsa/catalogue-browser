@@ -30,8 +30,7 @@ import data_collection.DCTableConfig;
 import dcf_webservice.ReserveLevel;
 import global_manager.GlobalManager;
 import messages.Messages;
-import session_manager.RestoreableWindow;
-import session_manager.WindowPreference;
+import session_manager.BrowserWindowPreferenceDao;
 import ui_main_menu.FileActions;
 import ui_main_menu.FileMenu;
 import ui_main_menu.LoginMenu;
@@ -49,6 +48,7 @@ import user_preferences.GlobalPreference;
 import user_preferences.GlobalPreferenceDAO;
 import user_preferences.PreferenceNotFoundException;
 import utilities.GlobalUtil;
+import window_restorer.RestoreableWindow;
 
 /**
  * Main UI class, it displays the main page of the browser. Here we have the main tree viewer, the term properties (
@@ -58,9 +58,10 @@ import utilities.GlobalUtil;
  * @author Thomas Milani(documentation), Valentino Avon
  * @version 0.2.1
  */
-public class MainPanel implements Observer, RestoreableWindow {
+public class MainPanel implements Observer {
 	
 	// code for saving window dimensions in db
+	private RestoreableWindow window;
 	private final static String WINDOW_CODE = "MainPanel";
 
 	// the shell which hosts the UI
@@ -97,16 +98,6 @@ public class MainPanel implements Observer, RestoreableWindow {
 	
 	public MainMenu getMenu() {
 		return menu;
-	}
-	
-	@Override
-	public String getWindowCode() {
-		return WINDOW_CODE;
-	}
-	
-	@Override
-	public Shell getWindowShell() {
-		return shell;
 	}
 	
 	/**
@@ -298,6 +289,8 @@ public class MainPanel implements Observer, RestoreableWindow {
 	 */
 	private void setShellGraphics () {
 
+		window = new RestoreableWindow(shell, WINDOW_CODE);
+		
 		/* use layout manager */
 		shell.setLayout( new GridLayout( 1 , false ) );
 		
@@ -319,10 +312,10 @@ public class MainPanel implements Observer, RestoreableWindow {
 		});
 		
 		// restore the old dimensions of the window
-		WindowPreference.restore( this );
+		window.restore( BrowserWindowPreferenceDao.class );
 		
 		// save this window dimensions when it is closed
-		WindowPreference.saveOnClosure( this );
+		window.saveOnClosure( BrowserWindowPreferenceDao.class );
 	}
 
 	/**

@@ -36,12 +36,7 @@ public class FormDataCollectionsList extends FormObjectsList<DataCollection> {
 	 * @param objs the list of data collections to show
 	 */
 	public FormDataCollectionsList(Shell shell, String title, Collection<DataCollection> objs) {
-		super(shell, title, objs, false);
-	}
-
-	@Override
-	public String getWindowCode() {
-		return WINDOW_CODE;
+		super(shell, WINDOW_CODE, title, objs, false);
 	}
 
 	@Override

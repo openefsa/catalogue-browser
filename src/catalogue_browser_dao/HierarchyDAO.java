@@ -58,8 +58,6 @@ public class HierarchyDAO implements CatalogueEntityDAO<Hierarchy> {
 
 		ArrayList<Integer> ids = new ArrayList<>();
 		
-		Connection con = null;
-
 		// get all the hierarchies
 		String query = "insert into APP.HIERARCHY ( HIERARCHY_CODE, HIERARCHY_NAME, HIERARCHY_LABEL,"
 				+ "HIERARCHY_SCOPENOTE, HIERARCHY_APPLICABILITY, HIERARCHY_ORDER, HIERARCHY_STATUS, HIERARCHY_IS_MASTER,"
@@ -67,13 +65,8 @@ public class HierarchyDAO implements CatalogueEntityDAO<Hierarchy> {
 				+ "HIERARCHY_DEPRECATED, HIERARCHY_GROUPS, HIERARCHY_VERSION )"
 				+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-		try {
-
-			// get the connection
-			con = catalogue.getConnection();
-
-			// execute the query
-			PreparedStatement stmt = con.prepareStatement( query, Statement.RETURN_GENERATED_KEYS );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query, Statement.RETURN_GENERATED_KEYS );) {
 			
 			stmt.clearParameters();
 
@@ -115,13 +108,14 @@ public class HierarchyDAO implements CatalogueEntityDAO<Hierarchy> {
 			stmt.executeBatch();
 
 			// update the terms ids with the ones given by the database
-			ResultSet rs = stmt.getGeneratedKeys();
-
-			if ( rs != null ) {
-				while ( rs.next() )
-					ids.add( rs.getInt(1) );
-
-				rs.close();
+			try(ResultSet rs = stmt.getGeneratedKeys();) {
+	
+				if ( rs != null ) {
+					while ( rs.next() )
+						ids.add( rs.getInt(1) );
+	
+					rs.close();
+				}
 			}
 			
 			stmt.close();
@@ -146,18 +140,11 @@ public class HierarchyDAO implements CatalogueEntityDAO<Hierarchy> {
 		// first remove the applicabilities (dependency on the hierarchy we want to delete)
 		parentDao.removeByA2( hierarchy );
 
-		Connection con = null;
-		
 		// remove the relationships between the terms and the hierarchy
 		String query = "delete from APP.HIERARCHY where HIERARCHY_ID = ?";
 		
-		try {
-
-			// get the connection
-			con = catalogue.getConnection();
-
-			// execute the query
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 			
 			stmt.clearParameters();
 			
@@ -183,8 +170,6 @@ public class HierarchyDAO implements CatalogueEntityDAO<Hierarchy> {
 	 */
 	public boolean update ( Hierarchy hierarchy ) {
 
-		Connection con = null;
-
 		// get all the hierarchies
 		String query = "update APP.HIERARCHY set HIERARCHY_CODE = ?, HIERARCHY_NAME = ?, HIERARCHY_LABEL = ?,"
 				+ "HIERARCHY_SCOPENOTE = ?, HIERARCHY_APPLICABILITY = ?, HIERARCHY_ORDER = ?, HIERARCHY_STATUS = ?,"
@@ -192,13 +177,8 @@ public class HierarchyDAO implements CatalogueEntityDAO<Hierarchy> {
 				+ "HIERARCHY_DEPRECATED = ?, HIERARCHY_GROUPS = ?, HIERARCHY_VERSION = ?"
 				+ "where HIERARCHY_ID = ?";
 
-		try {
-
-			// get the connection
-			con = catalogue.getConnection();
-
-			// execute the query
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 			
 			stmt.clearParameters();
 			
@@ -254,32 +234,27 @@ public class HierarchyDAO implements CatalogueEntityDAO<Hierarchy> {
 	 * @return
 	 */
 	public Hierarchy getById ( int id ) {
-		
-		Connection con = null;
-		
+
 		// get all the hierarchies
 		String query = "select * from APP.HIERARCHY where HIERARCHY_ID = ?";
 		
-		try {
-			
-			// get the connection
-			con = catalogue.getConnection();
-			
-			// execute the query
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 			
 			stmt.clearParameters();
 			stmt.setInt ( 1, id );
 			
-			ResultSet rs = stmt.executeQuery();
-			
 			Hierarchy hierarchy = null;
 			
-			// get the hierarchy if it was found
-			if ( rs.next() )
-				hierarchy = getByResultSet ( rs );
+			try(ResultSet rs = stmt.executeQuery();) {
+
+				// get the hierarchy if it was found
+				if ( rs.next() )
+					hierarchy = getByResultSet ( rs );
+				
+				rs.close();
+			}
 			
-			rs.close();
 			stmt.close();
 			con.close();
 			
@@ -298,31 +273,25 @@ public class HierarchyDAO implements CatalogueEntityDAO<Hierarchy> {
 	 */
 	public Hierarchy getByCode ( String code ) {
 		
-		Connection con = null;
-		
 		// get all the hierarchies
 		String query = "select * from APP.HIERARCHY where HIERARCHY_CODE = ?";
 		
-		try {
-			
-			// get the connection
-			con = catalogue.getConnection();
-			
-			// execute the query
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 			
 			stmt.clearParameters();
 			stmt.setString ( 1, code );
 			
-			ResultSet rs = stmt.executeQuery();
-			
 			Hierarchy hierarchy = null;
 			
-			// get the hierarchy if it was found
-			if ( rs.next() )
-				hierarchy = getByResultSet ( rs );
-			
-			rs.close();
+			try(ResultSet rs = stmt.executeQuery();) {
+				// get the hierarchy if it was found
+				if ( rs.next() )
+					hierarchy = getByResultSet ( rs );
+				
+				rs.close();
+			}
+
 			stmt.close();
 			con.close();
 			
@@ -375,20 +344,13 @@ public class HierarchyDAO implements CatalogueEntityDAO<Hierarchy> {
 		// output array
 		ArrayList < Hierarchy > hierarchies = new ArrayList<>();
 		
-		Connection con = null;
-		
 		// get all the hierarchies
 		String query = "select * from APP.HIERARCHY order by HIERARCHY_ORDER";
 		
-		try {
-			
-			// get the connection
-			con = catalogue.getConnection();
-			
-			// execute the query
-			PreparedStatement stmt = con.prepareStatement( query );
-			ResultSet rs = stmt.executeQuery();
-			
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );
+				ResultSet rs = stmt.executeQuery();) {
+
 			// add all the hierarchies
 			while ( rs.next() )
 				hierarchies.add( getByResultSet ( rs ) );

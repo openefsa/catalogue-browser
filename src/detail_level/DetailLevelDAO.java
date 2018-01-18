@@ -37,30 +37,26 @@ public class DetailLevelDAO implements CatalogueEntityDAO<DetailLevelGraphics> {
 	public ArrayList< DetailLevelGraphics > getAll () {
 		
 		ArrayList< DetailLevelGraphics >  values = new ArrayList<>();
-		
-		Connection con = null;
 
 		// get all the distinct values of the attribute and return them
 		String query = "select * from APP.DETAIL_LEVEL";
 
-		try {
-
-			// open the db connection to the main db
-			con = DatabaseManager.getMainDBConnection();
-
-			// prepare the statement and its parameters
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement(query);) {
+			
 			stmt.clearParameters();
 
 			// get the results
-			ResultSet rs = stmt.executeQuery();
-
-			// get all the detail levels
-			while ( rs.next() ) {
-				values.add( getByResultSet( rs ) );
+			try(ResultSet rs = stmt.executeQuery();) {
+	
+				// get all the detail levels
+				while ( rs.next() ) {
+					values.add( getByResultSet( rs ) );
+				}
+	
+				rs.close();
 			}
-
-			rs.close();
+			
 			stmt.close();
 			con.close();
 

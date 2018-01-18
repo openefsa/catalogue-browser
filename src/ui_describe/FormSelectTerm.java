@@ -33,8 +33,7 @@ import catalogue_object.Hierarchy;
 import catalogue_object.Nameable;
 import catalogue_object.Term;
 import messages.Messages;
-import session_manager.RestoreableWindow;
-import session_manager.WindowPreference;
+import session_manager.BrowserWindowPreferenceDao;
 import ui_main_panel.MultiTermsTreeViewer;
 import ui_main_panel.TermFilter;
 import ui_search_bar.SearchBar;
@@ -42,6 +41,7 @@ import ui_search_bar.SearchEvent;
 import ui_search_bar.SearchListener;
 import ui_term_properties.FrameTermFields;
 import user_preferences.GlobalPreference;
+import window_restorer.RestoreableWindow;
 
 /**
  * This class is used to display a list of nameable 
@@ -53,8 +53,9 @@ import user_preferences.GlobalPreference;
  * @author avonva
  *
  */
-public class FormSelectTerm implements Observer, RestoreableWindow {
+public class FormSelectTerm implements Observer {
 
+	private RestoreableWindow window;
 	private static final String WINDOW_CODE = "FormSelectTerm";
 	
 	// output list
@@ -85,7 +86,7 @@ public class FormSelectTerm implements Observer, RestoreableWindow {
 	 */
 	
 	public FormSelectTerm( Shell shell, String title, Catalogue catalogue, boolean enableMultipleSelection ) {
-		
+
 		this.shell = shell;
 		this.catalogue = catalogue;
 		this.multi = enableMultipleSelection;
@@ -162,16 +163,6 @@ public class FormSelectTerm implements Observer, RestoreableWindow {
 		this.rootTerm = rootHierarchy;
 		this.catalogue = hierarchy.getCatalogue();
 	}
-	
-	@Override
-	public String getWindowCode() {
-		return WINDOW_CODE;
-	}
-	
-	@Override
-	public Shell getWindowShell() {
-		return dialog;
-	}
 
 	/**
 	 * This method is called when the form is displayed
@@ -185,6 +176,8 @@ public class FormSelectTerm implements Observer, RestoreableWindow {
 
 		dialog.setText( title );
 		dialog.setLayout( new GridLayout( 2 , false ) );
+		
+		window = new RestoreableWindow(dialog, WINDOW_CODE);
 		
 
 		// Add a search bar
@@ -460,8 +453,8 @@ public class FormSelectTerm implements Observer, RestoreableWindow {
 		dialog.pack();
 
 		// restore previous window dimensions
-		WindowPreference.restore( this );
-		WindowPreference.saveOnClosure( this );
+		window.restore( BrowserWindowPreferenceDao.class );
+		window.saveOnClosure( BrowserWindowPreferenceDao.class );
 
 		dialog.open();
 

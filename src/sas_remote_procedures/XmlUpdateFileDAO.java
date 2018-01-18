@@ -27,9 +27,8 @@ public class XmlUpdateFileDAO implements CatalogueEntityDAO<XmlUpdateFile> {
 		String query = "insert into APP.CAT_UPDATES_XML "
 				+ "(CAT_ID, XML_FILENAME) values (?,?)";
 
-		try {
-			Connection con = DatabaseManager.getMainDBConnection();
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement(query);) {
 
 			stmt.setInt( 1, object.getCatalogue().getId() );
 			stmt.setString( 2, object.getXmlFilename() );
@@ -60,9 +59,8 @@ public class XmlUpdateFileDAO implements CatalogueEntityDAO<XmlUpdateFile> {
 		
 		String query = "delete from APP.CAT_UPDATES_XML where CAT_ID = ?";
 
-		try {
-			Connection con = DatabaseManager.getMainDBConnection();
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement(query);) {
 
 			stmt.setInt( 1, id );
 
@@ -92,19 +90,19 @@ public class XmlUpdateFileDAO implements CatalogueEntityDAO<XmlUpdateFile> {
 		
 		String query = "select * from APP.CAT_UPDATES_XML where CAT_ID = ?";
 
-		try {
-			
-			Connection con = DatabaseManager.getMainDBConnection();
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement(query);) {
 
 			stmt.setInt( 1, id );
 
-			ResultSet rs = stmt.executeQuery();
+			try(ResultSet rs = stmt.executeQuery();) {
 
-			if ( rs.next() )
-				obj = getByResultSet( rs );
+				if ( rs.next() )
+					obj = getByResultSet( rs );
+				
+				rs.close();
+			}
 			
-			rs.close();
 			stmt.close();
 			con.close();
 
@@ -133,12 +131,9 @@ public class XmlUpdateFileDAO implements CatalogueEntityDAO<XmlUpdateFile> {
 		
 		String query = "select * from APP.CAT_UPDATES_XML";
 
-		try {
-			
-			Connection con = DatabaseManager.getMainDBConnection();
-			PreparedStatement stmt = con.prepareStatement( query );
-
-			ResultSet rs = stmt.executeQuery();
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement(query);
+				ResultSet rs = stmt.executeQuery();) {
 
 			while ( rs.next() )
 				objs.add( getByResultSet( rs ) );

@@ -29,12 +29,9 @@ public class ForceCatEditDAO {
 		String query = "insert into APP.FORCED_CATALOGUE (CAT_ID, "
 				+ "FORCED_USERNAME, FORCED_EDIT, FORCED_LEVEL ) values (?,?,?,?)";
 		
-		try {
-			
-			Connection con = DatabaseManager.getMainDBConnection();
-			
-			PreparedStatement stmt = con.prepareStatement( query );
-			
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
+
 			stmt.setInt( 1, catalogue.getId() );
 			stmt.setString( 2, username );
 			stmt.setBoolean( 3, true );
@@ -67,24 +64,23 @@ public class ForceCatEditDAO {
 		
 		String query = "select * from APP.FORCED_CATALOGUE where CAT_ID = ? and FORCED_USERNAME = ?";
 
-		try {
-
-			Connection con = DatabaseManager.getMainDBConnection();
-
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 
 			stmt.setInt( 1, catalogue.getId() );
 			stmt.setString( 2, username );
 
-			ResultSet rs = stmt.executeQuery();
+			try(ResultSet rs = stmt.executeQuery();) {
+				
+				// if the record is present, the user is
+				// forcing the editing
+				if ( rs.next() )
+					reserveLevel = ReserveLevel.valueOf( 
+							rs.getString( "FORCED_LEVEL" ) );
+				
+				rs.close();
+			}
 
-			// if the record is present, the user is
-			// forcing the editing
-			if ( rs.next() )
-				reserveLevel = ReserveLevel.valueOf( 
-						rs.getString( "FORCED_LEVEL" ) );
-			
-			rs.close();
 			stmt.close();
 			con.close();
 
@@ -103,10 +99,8 @@ public class ForceCatEditDAO {
 
 		String query = "delete from APP.FORCED_CATALOGUE where CAT_ID = ?";
 
-		try {
-
-			Connection con = DatabaseManager.getMainDBConnection();
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 
 			stmt.clearParameters();
 
@@ -133,10 +127,8 @@ public class ForceCatEditDAO {
 
 		String query = "delete from APP.FORCED_CATALOGUE where CAT_ID = ?";
 
-		try {
-
-			Connection con = DatabaseManager.getMainDBConnection();
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 
 			stmt.clearParameters();
 

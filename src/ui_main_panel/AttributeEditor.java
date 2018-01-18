@@ -27,13 +27,8 @@ public class AttributeEditor extends CatalogueObjectEditor<Attribute> {
 	private Catalogue catalogue;
 
 	public AttributeEditor(Shell shell, Catalogue catalogue, String title) {
-		super(shell, catalogue.getAttributes(), title);
+		super(shell, WINDOW_CODE, catalogue.getAttributes(), title);
 		this.catalogue = catalogue;
-	}
-
-	@Override
-	public String getWindowCode() {
-		return WINDOW_CODE;
 	}
 
 	@Override

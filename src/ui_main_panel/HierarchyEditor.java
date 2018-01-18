@@ -27,13 +27,8 @@ public class HierarchyEditor extends CatalogueObjectEditor<Hierarchy> {
 	private Catalogue catalogue;
 
 	public HierarchyEditor(Shell shell, Catalogue catalogue, String title) {
-		super(shell, catalogue.getHierarchies(), title);
+		super(shell, WINDOW_CODE, catalogue.getHierarchies(), title);
 		this.catalogue = catalogue;
-	}
-
-	@Override
-	public String getWindowCode() {
-		return WINDOW_CODE;
 	}
 
 	@Override
@@ -88,7 +83,7 @@ public class HierarchyEditor extends CatalogueObjectEditor<Hierarchy> {
 		// check if the selected hierarchy is the master hierarchy
 		// if so, return false we cannot remove master
 		if ( obj.isMaster() ) {
-			GlobalUtil.showErrorDialog( getWindowShell(),
+			GlobalUtil.showErrorDialog( getShell(),
 					Messages.getString("HierarchyEditor.DeleteHierarchyErrorTitle"), 
 					Messages.getString("HierarchyEditor.DeleteHierarchyErrorMessage"));
 			return false;
@@ -103,7 +98,7 @@ public class HierarchyEditor extends CatalogueObjectEditor<Hierarchy> {
 		// if master but facet hierarchy => error
 		if ( obj.isMaster() ) {
 			if ( !obj.isBoth() ) {
-				GlobalUtil.showErrorDialog( getWindowShell(), 
+				GlobalUtil.showErrorDialog( getShell(), 
 						Messages.getString("HierarchyEditor.FacetErrorTitle"), 
 						Messages.getString("HierarchyEditor.FacetErrorMessage"));
 				return false;

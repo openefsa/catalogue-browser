@@ -20,9 +20,9 @@ import org.eclipse.swt.widgets.Text;
 import config.Config;
 import dcf_user.User;
 import messages.Messages;
-import session_manager.RestoreableWindow;
-import session_manager.WindowPreference;
+import session_manager.BrowserWindowPreferenceDao;
 import utilities.GlobalUtil;
+import window_restorer.RestoreableWindow;
 
 /**
  * Form used to login into the DCF using username and
@@ -31,8 +31,9 @@ import utilities.GlobalUtil;
  * @author avonva
  *
  */
-public class FormDCFLogin implements RestoreableWindow {
+public class FormDCFLogin {
 	
+	private RestoreableWindow window;
 	private static final String WINDOW_CODE = "FormDCFLogin";
 	
 	private String title;
@@ -69,6 +70,8 @@ public class FormDCFLogin implements RestoreableWindow {
 		// create a dialog and set its title
 		dialog = new Shell( shell , SWT.TITLE | SWT.APPLICATION_MODAL | SWT.SHELL_TRIM );
 		dialog.setText( title );
+		
+		window = new RestoreableWindow(dialog, WINDOW_CODE);
 		
 		// set the dialog layout
 		dialog.setLayout( new GridLayout( 1 , false ) );
@@ -117,8 +120,8 @@ public class FormDCFLogin implements RestoreableWindow {
 		dialog.setVisible( true );  
 		dialog.open();
 
-		WindowPreference.restore( this );
-		WindowPreference.saveOnClosure( this );
+		window.restore( BrowserWindowPreferenceDao.class );
+		window.saveOnClosure( BrowserWindowPreferenceDao.class );
 		
 		while ( !dialog.isDisposed() ) {
 			if ( !dialog.getDisplay().readAndDispatch() )
@@ -126,17 +129,7 @@ public class FormDCFLogin implements RestoreableWindow {
 		}
 		dialog.dispose();
 	}
-	
-	@Override
-	public String getWindowCode() {
-		return WINDOW_CODE;
-	}
-	
-	@Override
-	public Shell getWindowShell() {
-		return dialog;
-	}
-	
+
 	/**
 	 * Add the credential widgets to the parent
 	 * @param parent

@@ -57,19 +57,14 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 		
 		ArrayList<Integer> ids = new ArrayList<>();
 		
-		Connection con = null;
-		PreparedStatement stmt = null;
-		
 		String query = "insert into APP.TERM (TERM_CODE, TERM_EXTENDED_NAME, "
 				+ "TERM_SHORT_NAME, TERM_SCOPENOTE, TERM_DEPRECATED, TERM_LAST_UPDATE, "
 				+ "TERM_VALID_FROM, TERM_VALID_TO, TERM_STATUS, TERM_VERSION ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
 		
-		try {
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query, Statement.RETURN_GENERATED_KEYS );) {
 			
-			con = catalogue.getConnection();
 			con.setAutoCommit( false );
-			
-			stmt = con.prepareStatement( query, Statement.RETURN_GENERATED_KEYS );
 
 			for ( Term t : terms ) {
 				
@@ -107,34 +102,20 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 			if ( !terms.isEmpty() ) {
 
 				// update the terms ids with the ones given by the database
-				ResultSet rs = stmt.getGeneratedKeys();
-
-				while ( rs.next() ) {
-					ids.add( rs.getInt(1) );
+				try(ResultSet rs = stmt.getGeneratedKeys();) {
+	
+					while ( rs.next() ) {
+						ids.add( rs.getInt(1) );
+					}
+	
+					rs.close();
 				}
-
-				rs.close();
 			}
 			
 			con.commit();
 			
 		} catch ( SQLException e ) {
 			e.printStackTrace();
-		}
-		finally {
-
-			try {
-				
-				if ( stmt != null )
-					stmt.close();
-				
-				if ( con != null )
-					con.close();
-				
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-
 		}
 		
 		return ids;
@@ -147,16 +128,12 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 	 */
 	public boolean update ( Term t ) {
 
-		Connection con = null;
+		String query = "update APP.TERM set TERM_CODE = ?, TERM_EXTENDED_NAME = ?, "
+				+ "TERM_SHORT_NAME = ?, TERM_SCOPENOTE = ?, TERM_DEPRECATED = ?, TERM_LAST_UPDATE = ?,"
+				+ "TERM_VALID_FROM = ?, TERM_VALID_TO = ?, TERM_STATUS = ?, TERM_VERSION = ? where TERM_ID = ?";
 		
-		try {
-			
-			// open the connection
-			con = catalogue.getConnection();
-			
-			PreparedStatement stmt = con.prepareStatement( "update APP.TERM set TERM_CODE = ?, TERM_EXTENDED_NAME = ?, "
-							+ "TERM_SHORT_NAME = ?, TERM_SCOPENOTE = ?, TERM_DEPRECATED = ?, TERM_LAST_UPDATE = ?,"
-							+ "TERM_VALID_FROM = ?, TERM_VALID_TO = ?, TERM_STATUS = ?, TERM_VERSION = ? where TERM_ID = ?" );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 			
 			stmt.clearParameters();
 			
@@ -233,21 +210,12 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 
 		HashMap< Integer, Term > terms = new HashMap<>();
 
-		Connection con = null;
-
 		String query = "select * from APP.TERM";
 
-		try {
-
-			// prepare the connection with the currently open catalogue
-			con = catalogue.getConnection();
-
-			// prepare the statement and its parameters
-			Statement stmt = con.createStatement();
-
-			// get the results
-			ResultSet rs = stmt.executeQuery( query );
-
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );
+				ResultSet rs = stmt.executeQuery( query );) {
+			
 			// save all the terms
 			while ( rs.next() ) {
 
@@ -273,29 +241,25 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 	 * @return
 	 */
 	public Term getByCode ( String code ) {
-		
-		Connection con = null;
 
-		String sqlstr = "select TERM_ID " + " from  APP.TERM " + " where upper( TERM_CODE ) = ? ";
+		String query = "select TERM_ID " + " from  APP.TERM " + " where upper( TERM_CODE ) = ? ";
 
-		try {
-			con = catalogue.getConnection();
-			
-			PreparedStatement stmt = con.prepareStatement( sqlstr );
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 
 			stmt.clearParameters();
 			
 			/* I want to retrieve the first level under the root */
 			stmt.setString( 1, code.toUpperCase() );
 			
-			ResultSet rs = stmt.executeQuery();
-
 			Term term = null;
-
-			if ( rs.next() )
-				term = catalogue.getTermById( rs.getInt( "TERM_ID" ) );
 			
-			rs.close();
+			try(ResultSet rs = stmt.executeQuery();) {
+				if ( rs.next() )
+					term = catalogue.getTermById( rs.getInt( "TERM_ID" ) );
+				
+				rs.close();
+			}
 			stmt.close();
 			con.close();
 			
@@ -314,28 +278,25 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 	 */
 	public Term getByName ( String extendedName ) {
 
-		Connection con = null;
-
-		String sqlstr = "select * from APP.TERM where upper( TERM_EXTENDED_NAME ) = ? ";
-
-		try {
-			con = catalogue.getConnection();
-			
-			PreparedStatement stmt = con.prepareStatement( sqlstr );
+		String query = "select * from APP.TERM where upper( TERM_EXTENDED_NAME ) = ? ";
+		
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 
 			stmt.clearParameters();
 			
 			/* I want to retrieve the first level under the root */
 			stmt.setString( 1, extendedName.toUpperCase() );
 			
-			ResultSet rs = stmt.executeQuery();
-			
 			Term term = null;
+			try(ResultSet rs = stmt.executeQuery();) {
+
+				if ( rs.next() )
+					term = catalogue.getTermById( rs.getInt( "TERM_ID" ) );
+				
+				rs.close();
+			}
 			
-			if ( rs.next() )
-				term = catalogue.getTermById( rs.getInt( "TERM_ID" ) );
-			
-			rs.close();
 			stmt.close();
 			con.close();
 			
@@ -418,30 +379,25 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 		if ( termName.isEmpty() )
 			return true;
 		
-		Connection con = null;
-		PreparedStatement stmt=null;
-		ResultSet rs = null;
-		
-		String sqlstr = "select TERM_ID from APP.TERM where ";
+		String query = "select TERM_ID from APP.TERM where ";
 		
 		// check on the correct field
 		if ( extended )
-			sqlstr = sqlstr + "TERM_EXTENDED_NAME = ? ";
+			query = query + "TERM_EXTENDED_NAME = ? ";
 		else
-			sqlstr = sqlstr + "TERM_SHORT_NAME = ? ";
+			query = query + "TERM_SHORT_NAME = ? ";
 		
-		sqlstr = sqlstr + "and TERM_CODE <> ?";
+		query = query + "and TERM_CODE <> ?";
 
-		try {
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement( query );
+				ResultSet rs = stmt.executeQuery();) {
 			
-			con = catalogue.getConnection();
-			stmt = con.prepareStatement( sqlstr );
 			stmt.clearParameters();
 			
 			stmt.setString( 1, termName );
 			stmt.setString( 2, termCode );
-			rs = stmt.executeQuery();
-			
+
 			boolean noDupl = !rs.next();
 			
 			rs.close();

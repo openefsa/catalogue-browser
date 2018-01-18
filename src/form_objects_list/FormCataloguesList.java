@@ -28,17 +28,12 @@ public class FormCataloguesList extends FormObjectsList<Catalogue> {
 	private static final String WINDOW_CODE = "FormCataloguesList";
 	
 	public FormCataloguesList(Shell shell, String title, Collection<Catalogue> objs) {
-		super(shell, title, objs);
+		super(shell, WINDOW_CODE, title, objs);
 	}
 	
 	public FormCataloguesList(Shell shell, String title, 
 			Collection<Catalogue> objs, boolean multisel ) {
-		super(shell, title, objs, multisel );
-	}
-
-	@Override
-	public String getWindowCode() {
-		return WINDOW_CODE;
+		super(shell, WINDOW_CODE, title, objs, multisel );
 	}
 
 	/**

@@ -25,15 +25,11 @@ public class ReservedCatDAO implements CatalogueEntityDAO<ReservedCatalogue> {
 		
 		int id = rc.getCatalogueId();
 		
-		Connection con;
-		
 		String query = "insert into APP.RESERVED_CATALOGUE (CAT_ID, "
 				+ "RESERVE_USERNAME, RESERVE_NOTE, RESERVE_LEVEL) values (?,?,?,?)";
 		
-		try {
-			
-			con = DatabaseManager.getMainDBConnection();
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 			
 			stmt.clearParameters();
 			
@@ -59,15 +55,11 @@ public class ReservedCatDAO implements CatalogueEntityDAO<ReservedCatalogue> {
 	 */
 	@Override
 	public boolean remove( ReservedCatalogue rc ) {
-		
-		Connection con;
 
 		String query = "delete from APP.RESERVED_CATALOGUE where CAT_ID = ?";
 
-		try {
-
-			con = DatabaseManager.getMainDBConnection();
-			PreparedStatement stmt = con.prepareStatement( query );
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 
 			stmt.clearParameters();
 
@@ -99,18 +91,19 @@ public class ReservedCatDAO implements CatalogueEntityDAO<ReservedCatalogue> {
 		
 		String query = "select * from APP.RESERVED_CATALOGUE where CAT_ID = ?";
 		
-		try {
+		try (Connection con = DatabaseManager.getMainDBConnection();
+				PreparedStatement stmt = con.prepareStatement( query );) {
 			
-			Connection con = DatabaseManager.getMainDBConnection();
-			PreparedStatement stmt = con.prepareStatement( query );
 			stmt.setInt( 1, id );
 			
-			ResultSet rs = stmt.executeQuery();
+			try(ResultSet rs = stmt.executeQuery();) {
+				
+				if ( rs.next() )
+					rc = getByResultSet( rs );
+				
+				rs.close();
+			}
 			
-			if ( rs.next() )
-				rc = getByResultSet( rs );
-			
-			rs.close();
 			stmt.close();
 			con.close();
 			

@@ -21,13 +21,14 @@ import org.eclipse.swt.widgets.Table;
 
 import catalogue.Catalogue;
 import messages.Messages;
-import session_manager.RestoreableWindow;
-import session_manager.WindowPreference;
+import session_manager.BrowserWindowPreferenceDao;
 import ui_search_bar.SearchOptionDAO;
 import utilities.GlobalUtil;
+import window_restorer.RestoreableWindow;
 
-public class FormSearchOptions implements RestoreableWindow {
+public class FormSearchOptions {
 	
+	private RestoreableWindow window;
 	private static final String WINDOW_CODE = "FormSearchOptions";
 	
 	private Catalogue catalogue;
@@ -47,17 +48,7 @@ public class FormSearchOptions implements RestoreableWindow {
 		this.title = title;
 		this.catalogue = catalogue;
 	}
-	
-	@Override
-	public String getWindowCode() {
-		return WINDOW_CODE;
-	}
-	
-	@Override
-	public Shell getWindowShell() {
-		return dialog;
-	}
-	
+
 	/**
 	 * Initialize and display the user interface
 	 */
@@ -69,6 +60,8 @@ public class FormSearchOptions implements RestoreableWindow {
 		
 		// create a new shell
 		dialog = new Shell( shell , SWT.SHELL_TRIM | SWT.APPLICATION_MODAL );
+		
+		window = new RestoreableWindow(dialog, WINDOW_CODE);
 		
 		// window icon (on the top left)
 		dialog.setImage( new Image( Display.getCurrent() , this.getClass().getClassLoader()
@@ -141,8 +134,8 @@ public class FormSearchOptions implements RestoreableWindow {
 		dialog.pack();
 		
 		// restore old dimensions
-		WindowPreference.restore( this );
-		WindowPreference.saveOnClosure( this );
+		window.restore( BrowserWindowPreferenceDao.class );
+		window.saveOnClosure( BrowserWindowPreferenceDao.class );
 		
 		// show the dialog
 		dialog.setVisible( true );

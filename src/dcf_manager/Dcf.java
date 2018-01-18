@@ -449,10 +449,10 @@ public class Dcf {
 
 		// get the catalogue xml as input stream
 		File file = export.exportLastInternalVersion(catalogueCode);
-		
+
 		return file;
 	}
-	
+
 	/**
 	 * Start a reserve operation in background.
 	 * @param catalogue the catalogue we want to reserve
