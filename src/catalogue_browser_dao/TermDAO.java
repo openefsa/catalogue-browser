@@ -214,7 +214,7 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 
 		try (Connection con = catalogue.getConnection();
 				PreparedStatement stmt = con.prepareStatement( query );
-				ResultSet rs = stmt.executeQuery( query );) {
+				ResultSet rs = stmt.executeQuery();) {
 			
 			// save all the terms
 			while ( rs.next() ) {
