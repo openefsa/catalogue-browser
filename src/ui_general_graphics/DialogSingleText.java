@@ -92,7 +92,6 @@ public class DialogSingleText extends Dialog {
 	 */
 	public void setWindowCode( String windowCode ) {
 		this.windowCode = windowCode;
-		this.window = new RestoreableWindow(shell, windowCode);
 	}
 
 	/**
@@ -102,6 +101,7 @@ public class DialogSingleText extends Dialog {
 	public String open() {
 
 		this.shell = new Shell( getParent(), getStyle() );
+		this.window = new RestoreableWindow(shell, windowCode);
 		shell.setText(getText());
 		
 		createContents( shell );
