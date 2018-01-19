@@ -353,7 +353,7 @@ public class Dcf {
 		CataloguesList list = new CataloguesList();
 		
 		try {
-			GetCataloguesList req = new GetCataloguesList(User.getInstance(), list);
+			GetCataloguesList<Catalogue> req = new GetCataloguesList<>(User.getInstance(), list);
 			req.getList();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -371,7 +371,7 @@ public class Dcf {
 		DataCollectionsList list = new DataCollectionsList();
 		
 		try {
-			GetDataCollectionsList req = new GetDataCollectionsList(User.getInstance(), list);
+			GetDataCollectionsList<DataCollection> req = new GetDataCollectionsList<>(User.getInstance(), list);
 			req.getList();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -390,7 +390,7 @@ public class Dcf {
 		
 		DCTableList output = new DCTableList();
 		
-		GetDataCollectionTables req = new GetDataCollectionTables(User.getInstance(), 
+		GetDataCollectionTables<DCTable> req = new GetDataCollectionTables<>(User.getInstance(), 
 				output, resourceId);
 		
 		req.getTables();
