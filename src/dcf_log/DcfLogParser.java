@@ -7,6 +7,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
 /**
@@ -16,6 +18,8 @@ import org.xml.sax.SAXException;
  *
  */
 public class DcfLogParser {
+	
+	private static final Logger LOGGER = LogManager.getLogger(DcfLogParser.class);
 
 	private SAXParser saxParser;
 	private LogParserHandler handler;
@@ -39,6 +43,7 @@ public class DcfLogParser {
 			saxParser = factory.newSAXParser();
 		} catch (ParserConfigurationException | SAXException e) {
 			e.printStackTrace();
+			LOGGER.error("Cannot parse dcf log", e);
 		}
 
 		// create the parser handler

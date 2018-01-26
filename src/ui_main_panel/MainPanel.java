@@ -2,6 +2,8 @@ package ui_main_panel;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -59,6 +61,8 @@ import window_restorer.RestoreableWindow;
  * @version 0.2.1
  */
 public class MainPanel implements Observer {
+	
+	private static final Logger LOGGER = LogManager.getLogger(MainPanel.class);
 	
 	// code for saving window dimensions in db
 	private RestoreableWindow window;
@@ -158,6 +162,7 @@ public class MainPanel implements Observer {
 					Thread.sleep( 100 );
 				} catch ( InterruptedException e ) {
 					e.printStackTrace();
+					LOGGER.error("Cannot stop thread", e);
 				}
 			}
 		});
@@ -207,6 +212,7 @@ public class MainPanel implements Observer {
 					Thread.sleep( 100 );
 				} catch ( InterruptedException e ) {
 					e.printStackTrace();
+					LOGGER.error("Cannot sleep thread", e);
 				}
 			}
 		});

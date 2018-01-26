@@ -2,6 +2,9 @@ package dcf_webservice;
 
 import javax.xml.soap.SOAPException;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import dcf_manager.Dcf.DcfType;
 import dcf_pending_action.PendingReserve;
@@ -14,6 +17,8 @@ import user.IDcfUser;
  *
  */
 public class Reserve extends UploadCatalogueFile {
+	
+	private static final Logger LOGGER = LogManager.getLogger(Reserve.class);
 	
 	private DcfType type;
 	private IDcfUser user;
@@ -43,7 +48,7 @@ public class Reserve extends UploadCatalogueFile {
 	public PendingReserve reserve(Catalogue catalogue, ReserveLevel reserveLevel, 
 			String reserveDescription) throws SOAPException {
 		
-		System.out.println (reserveLevel.getOp() + ": " + catalogue);
+		LOGGER.info (reserveLevel.getOp() + ": " + catalogue);
 		
 		String attachment = UploadMessages.getReserveMessage(
 				catalogue.getCode(), reserveLevel, reserveDescription);

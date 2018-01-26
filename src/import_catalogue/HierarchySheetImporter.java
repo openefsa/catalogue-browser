@@ -2,6 +2,9 @@ package import_catalogue;
 
 import java.util.Collection;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import catalogue_browser_dao.HierarchyDAO;
 import catalogue_object.Hierarchy;
@@ -16,6 +19,8 @@ import open_xml_reader.ResultDataSet;
  */
 public class HierarchySheetImporter extends SheetImporter<Hierarchy> {
 
+	private static final Logger LOGGER = LogManager.getLogger(HierarchySheetImporter.class);
+	
 	private Catalogue catalogue;
 	private String masterCode;
 	
@@ -47,7 +52,7 @@ public class HierarchySheetImporter extends SheetImporter<Hierarchy> {
 
 		// if empty ignore
 		if ( code.isEmpty() ) {
-			System.err.println( "Empty hierarchy code found, skipping..." );
+			LOGGER.error( "Empty hierarchy code found, skipping..." );
 			return null;
 		}
 

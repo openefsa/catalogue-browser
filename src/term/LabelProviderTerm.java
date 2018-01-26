@@ -2,6 +2,8 @@ package term;
 
 import java.util.ArrayList;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -26,6 +28,8 @@ import messages.Messages;
  */
 public class LabelProviderTerm extends LabelProvider implements IFontProvider {
 
+	private static final Logger LOGGER = LogManager.getLogger(LabelProviderTerm.class);
+	
 	private ArrayList < DetailLevelGraphics > detailLevels;
 
 	private static Image facetFolder;
@@ -81,6 +85,7 @@ public class LabelProviderTerm extends LabelProvider implements IFontProvider {
 					this.getClass().getClassLoader().getResourceAsStream( imageName ) );
 			} catch ( Exception e ) {
 				e.printStackTrace();
+				LOGGER.error("Cannot get image", e);
 			}
 		}
 
@@ -138,7 +143,7 @@ public class LabelProviderTerm extends LabelProvider implements IFontProvider {
 				images.add( new ImageCache( dlg.getImageName(), image) );
 				
 			} catch ( Exception e ) {
-				System.err.println( "Cannot find icons" );
+				LOGGER.error( "Cannot find icons", e );
 			}
 			
 			return image;

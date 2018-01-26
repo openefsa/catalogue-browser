@@ -3,6 +3,8 @@ package sas_remote_procedures;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
@@ -13,6 +15,8 @@ import org.eclipse.swt.widgets.Listener;
  *
  */
 public class XmlUpdatesDownloader extends Thread {
+	
+	private static final Logger LOGGER = LogManager.getLogger(XmlUpdatesDownloader.class);
 	
 	private Listener doneListener;
 	
@@ -31,6 +35,7 @@ public class XmlUpdatesDownloader extends Thread {
 			updatesFile = xmlFilename.downloadXml( 5000 );
 		} catch (IOException e) {
 			e.printStackTrace();
+			LOGGER.error("Cannot download xml", e);
 		}
 		
 		// call the doneListener

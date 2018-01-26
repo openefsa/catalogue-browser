@@ -2,6 +2,9 @@ package import_catalogue;
 
 import javax.xml.stream.XMLStreamException;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import open_xml_reader.ResultDataSet;
 import open_xml_reader.WorkbookReader;
 
@@ -12,6 +15,8 @@ import open_xml_reader.WorkbookReader;
  *
  */
 public class SheetReaderThread extends Thread {
+	
+	private static final Logger LOGGER = LogManager.getLogger(SheetReaderThread.class);
 	
 	private ResultDataSet rs;
 	private WorkbookReader reader;
@@ -41,6 +46,7 @@ public class SheetReaderThread extends Thread {
 			rs = reader.next();
 		} catch (XMLStreamException e) {
 			e.printStackTrace();
+			LOGGER.error("Cannot read workbook", e);
 		}
 
 		finished = true;

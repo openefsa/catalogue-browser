@@ -1,9 +1,12 @@
 package ui_main_menu;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -49,6 +52,8 @@ import utilities.GlobalUtil;
  */
 public class FileActions {
 
+	private static final Logger LOGGER = LogManager.getLogger(FileActions.class);
+	
 	/**
 	 * Ask to the user the new catalogue code and create a new local catalogue.
 	 * @param shell
@@ -80,6 +85,14 @@ public class FileActions {
 			GlobalUtil.setShellCursor( shell , SWT.CURSOR_ARROW );
 
 			return;
+		} catch (IOException e) {
+			e.printStackTrace();
+			LOGGER.error("Cannot create new local catalogue with code=" + catalogueCode, e);
+			GlobalUtil.setShellCursor( shell , SWT.CURSOR_ARROW );
+			return;
+		}
+		finally {
+			GlobalUtil.setShellCursor( shell , SWT.CURSOR_ARROW );
 		}
 
 

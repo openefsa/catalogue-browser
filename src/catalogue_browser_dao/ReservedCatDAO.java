@@ -6,6 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import catalogue.ReservedCatalogue;
 import dcf_webservice.ReserveLevel;
@@ -17,6 +20,8 @@ import dcf_webservice.ReserveLevel;
  */
 public class ReservedCatDAO implements CatalogueEntityDAO<ReservedCatalogue> {
 
+	private static final Logger LOGGER = LogManager.getLogger(ReservedCatDAO.class);
+	
 	/**
 	 * Reserve a catalogue inserting a new ReservedCatalogue
 	 */
@@ -45,6 +50,7 @@ public class ReservedCatDAO implements CatalogueEntityDAO<ReservedCatalogue> {
 			
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return id;
@@ -72,6 +78,7 @@ public class ReservedCatDAO implements CatalogueEntityDAO<ReservedCatalogue> {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 			return false;
 		}
 
@@ -109,6 +116,7 @@ public class ReservedCatDAO implements CatalogueEntityDAO<ReservedCatalogue> {
 			
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return rc;

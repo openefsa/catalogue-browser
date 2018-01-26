@@ -5,6 +5,9 @@ import java.io.IOException;
 
 import javax.xml.soap.SOAPException;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import dcf_manager.Dcf.DcfType;
 import dcf_pending_action.PendingUploadData;
@@ -19,6 +22,8 @@ import user.IDcfUser;
  */
 public class UploadData extends UploadCatalogueFile {
 
+	private static final Logger LOGGER = LogManager.getLogger(UploadData.class);
+	
 	private IDcfUser user;
 	private DcfType type;
 	
@@ -45,7 +50,7 @@ public class UploadData extends UploadCatalogueFile {
 	public PendingUploadData uploadData(Catalogue catalogue, File file) 
 			throws SOAPException, IOException {
 		
-		System.out.println("upload data: file=" + file.getAbsolutePath() 
+		LOGGER.info("upload data: file=" + file.getAbsolutePath() 
 			+ ";catalogue=" + catalogue);
 		
 		String logCode = this.send(file);

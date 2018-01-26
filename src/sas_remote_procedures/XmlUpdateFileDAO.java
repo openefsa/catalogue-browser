@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_browser_dao.CatalogueEntityDAO;
@@ -19,6 +22,8 @@ import catalogue_browser_dao.DatabaseManager;
  */
 public class XmlUpdateFileDAO implements CatalogueEntityDAO<XmlUpdateFile> {
 
+	private static final Logger LOGGER = LogManager.getLogger(XmlUpdateFileDAO.class);
+	
 	@Override
 	public int insert(XmlUpdateFile object) {
 
@@ -40,6 +45,7 @@ public class XmlUpdateFileDAO implements CatalogueEntityDAO<XmlUpdateFile> {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return id;
@@ -73,6 +79,7 @@ public class XmlUpdateFileDAO implements CatalogueEntityDAO<XmlUpdateFile> {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return false;
@@ -108,6 +115,7 @@ public class XmlUpdateFileDAO implements CatalogueEntityDAO<XmlUpdateFile> {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return obj;
@@ -144,6 +152,7 @@ public class XmlUpdateFileDAO implements CatalogueEntityDAO<XmlUpdateFile> {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return objs;

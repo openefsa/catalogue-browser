@@ -5,6 +5,9 @@ import java.io.IOException;
 
 import javax.xml.soap.SOAPException;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import dcf_log.DcfLog;
 import dcf_log.DcfResponse;
@@ -15,6 +18,8 @@ import sas_remote_procedures.XmlUpdateFileDAO;
 
 public class PendingXmlDownload extends PendingAction {
 
+	private static final Logger LOGGER = LogManager.getLogger(PendingXmlDownload.class);
+	
 	public static final String TYPE = "DOWNLOAD_XML_UPDATES";
 	
 	/**
@@ -64,7 +69,7 @@ public class PendingXmlDownload extends PendingAction {
 		final XmlUpdateFile file = xmlDao.getById( getCatalogue().getId() );
 		
 		if ( file == null ) {
-			System.err.println ( "No xml filename was found for " + getCatalogue() );
+			LOGGER.error ( "No xml filename was found for " + getCatalogue() );
 			return;
 		}
 		
@@ -75,6 +80,7 @@ public class PendingXmlDownload extends PendingAction {
 			xmlFile = file.downloadXml( 5000 );
 		} catch (IOException e) {
 			e.printStackTrace();
+			LOGGER.error("Cannot download xml file from server, file=" + file, e);
 			return;
 		}
 		

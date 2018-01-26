@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 /**
  * Procedure to test if several jdcb connections are still
  * opened or not.
@@ -12,6 +15,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class CheckConnectionThread extends Thread {
 
+	private static final Logger LOGGER = LogManager.getLogger(CheckConnectionThread.class);
+	
 	private static CopyOnWriteArrayList<Integer> openConnections = new CopyOnWriteArrayList<>();
 	
 	private static int ID = 0;
@@ -25,7 +30,7 @@ public class CheckConnectionThread extends Thread {
 		
 		addValue ( id );
 
-		System.err.println( "Opening connection n° " + id );
+		LOGGER.info( "Opening connection n° " + id );
 		
 		ID++;
 	}
@@ -39,7 +44,7 @@ public class CheckConnectionThread extends Thread {
 	}
 	
 	private synchronized void print () {
-		System.err.println( "Connections still open " + openConnections);
+		LOGGER.info( "Connections still open " + openConnections);
 	}
 
 	@Override

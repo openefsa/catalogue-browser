@@ -5,6 +5,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.graphics.Image;
@@ -15,6 +17,8 @@ import org.eclipse.swt.widgets.Shell;
 
 public class FormBrowser {
 
+	private static final Logger LOGGER = LogManager.getLogger(FormBrowser.class);
+	
 	Shell		_shell;
 	String		_title;
 	String		_url	= null;
@@ -72,6 +76,7 @@ public class FormBrowser {
 			try {
 				r = new InputStreamReader( _inputStream , "UTF-8" );
 			} catch ( UnsupportedEncodingException e ) {
+				LOGGER.error("Cannot read input stream with UTF-8", e);
 				e.printStackTrace();
 				r = null;
 			}
@@ -83,6 +88,7 @@ public class FormBrowser {
 				} catch ( IOException e ) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					LOGGER.error("Cannot read", e);
 				}
 				if ( n < 0 )
 					break;

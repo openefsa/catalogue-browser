@@ -3,6 +3,9 @@ package catalogue_generator;
 import java.io.IOException;
 import java.util.Collection;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_browser_dao.DatabaseManager;
@@ -16,6 +19,8 @@ import progress_bar.FormProgressBar;
  */
 public class CatalogueDestroyer extends Thread {
 
+	private static final Logger LOGGER = LogManager.getLogger(CatalogueDestroyer.class);
+	
 	private ThreadFinishedListener doneListener;
 	private FormProgressBar progressBar;
 	private Collection<Catalogue> catalogues;
@@ -50,7 +55,7 @@ public class CatalogueDestroyer extends Thread {
 				continue; 
 			}
 
-			System.out.println ( "Deleting catalogue " + catalogue.getCode() );
+			LOGGER.info ( "Deleting catalogue " + catalogue.getCode() );
 
 			// delete the catalogue database
 			try {
@@ -64,6 +69,7 @@ public class CatalogueDestroyer extends Thread {
 				
 			} catch (IOException e) {
 				e.printStackTrace();
+				LOGGER.error("Cannot delete catalogue=" + catalogue, e);
 			}
 		}
 

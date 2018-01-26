@@ -6,6 +6,8 @@ import java.util.HashMap;
 
 import javax.xml.stream.XMLStreamException;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import catalogue.Catalogue;
@@ -21,6 +23,8 @@ import progress_bar.IProgressBar;
  *
  */
 public class QuickParentAttributesImporter extends QuickImporter {
+	
+	private static final Logger LOGGER = LogManager.getLogger(QuickParentAttributesImporter.class);
 	
 	private TermAttributeImporter taImp;
 	private ParentImporter parentImp;
@@ -94,6 +98,7 @@ public class QuickParentAttributesImporter extends QuickImporter {
 					clonedRs = (ResultDataSet) rs.clone();
 				} catch (CloneNotSupportedException e) {
 					e.printStackTrace();
+					LOGGER.error("Cannot import result data set batch", e);
 					return;
 				}
 				
@@ -102,6 +107,7 @@ public class QuickParentAttributesImporter extends QuickImporter {
 					taImp.importData( clonedRs );
 				} catch (ImportException e) {
 					e.printStackTrace();
+					LOGGER.error("Cannot import result dataset batch", e);
 					occurredEx = e;
 				}
 				

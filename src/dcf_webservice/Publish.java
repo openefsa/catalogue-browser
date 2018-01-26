@@ -2,6 +2,9 @@ package dcf_webservice;
 
 import javax.xml.soap.SOAPException;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import dcf_manager.Dcf.DcfType;
 import dcf_pending_action.PendingPublish;
@@ -9,6 +12,8 @@ import soap.UploadCatalogueFile;
 import user.IDcfUser;
 
 public class Publish extends UploadCatalogueFile {
+	
+	private static final Logger LOGGER = LogManager.getLogger(Publish.class);
 	
 	private IDcfUser user;
 	private DcfType type;
@@ -33,7 +38,7 @@ public class Publish extends UploadCatalogueFile {
 	 */
 	public PendingPublish publish(Catalogue catalogue, PublishLevel level) throws SOAPException {
 		
-		System.out.println (level.getOp() + ": " + catalogue);
+		LOGGER.info (level.getOp() + ": " + catalogue);
 		
 		String attachment = UploadMessages.getPublishMessage(catalogue.getCode(), level);
 		

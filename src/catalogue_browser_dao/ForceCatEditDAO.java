@@ -5,6 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import dcf_webservice.ReserveLevel;
 
@@ -17,6 +20,8 @@ import dcf_webservice.ReserveLevel;
  *
  */
 public class ForceCatEditDAO {
+	
+	private static final Logger LOGGER = LogManager.getLogger(ForceCatEditDAO.class);
 	
 	/**
 	 * Save into the database that the User with name {@code username} 
@@ -46,6 +51,7 @@ public class ForceCatEditDAO {
 			
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return false;
@@ -86,6 +92,7 @@ public class ForceCatEditDAO {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return reserveLevel;
@@ -113,6 +120,7 @@ public class ForceCatEditDAO {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 			return false;
 		}
 
@@ -141,6 +149,7 @@ public class ForceCatEditDAO {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 			return false;
 		}
 

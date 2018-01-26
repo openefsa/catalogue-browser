@@ -8,6 +8,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue_browser_dao.CatalogueEntityDAO;
 import catalogue_browser_dao.DatabaseManager;
 
@@ -18,6 +21,8 @@ import catalogue_browser_dao.DatabaseManager;
  */
 public class DCTableDAO implements CatalogueEntityDAO<DCTable> {
 
+	private static final Logger LOGGER = LogManager.getLogger(DCTableDAO.class);
+	
 	@Override
 	public int insert(DCTable dc) {
 
@@ -45,6 +50,7 @@ public class DCTableDAO implements CatalogueEntityDAO<DCTable> {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return id;
@@ -68,6 +74,7 @@ public class DCTableDAO implements CatalogueEntityDAO<DCTable> {
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return false;
@@ -103,6 +110,7 @@ public class DCTableDAO implements CatalogueEntityDAO<DCTable> {
 			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return out;
@@ -136,6 +144,7 @@ public class DCTableDAO implements CatalogueEntityDAO<DCTable> {
 			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return out;
@@ -180,6 +189,7 @@ public class DCTableDAO implements CatalogueEntityDAO<DCTable> {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return contains;
@@ -204,6 +214,7 @@ public class DCTableDAO implements CatalogueEntityDAO<DCTable> {
 			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return out;

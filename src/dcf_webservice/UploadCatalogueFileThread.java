@@ -5,6 +5,8 @@ import java.io.IOException;
 
 import javax.xml.soap.SOAPException;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Listener;
 
 import catalogue.Catalogue;
@@ -25,6 +27,8 @@ import user.IDcfUser;
  */
 public class UploadCatalogueFileThread extends Thread {
 
+	private static final Logger LOGGER = LogManager.getLogger(UploadCatalogueFileThread.class);
+	
 	public enum Type {
 		RESERVE,
 		PUBLISH,
@@ -128,7 +132,7 @@ public class UploadCatalogueFileThread extends Thread {
 			case UPLOAD_DATA:
 
 				if ( xmlFile == null ) {
-					System.err.println( "Null upload data file, blocking action" );
+					LOGGER.error( "Null upload data file, blocking action" );
 					break;
 				}	
 				
@@ -145,7 +149,7 @@ public class UploadCatalogueFileThread extends Thread {
 				break;
 
 			default:
-				System.err.println( "Type " + type + " not defined in BackgroundAction#run()" );
+				LOGGER.error( "Type " + type + " not defined in BackgroundAction#run()" );
 				return;
 			}
 		}

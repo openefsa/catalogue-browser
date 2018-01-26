@@ -4,6 +4,9 @@ import java.io.File;
 
 import javax.xml.soap.SOAPException;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import dcf_manager.Dcf;
 import dcf_pending_action.PendingAction.Priority;
 
@@ -18,6 +21,8 @@ import dcf_pending_action.PendingAction.Priority;
  */
 public class LogDownloader {
 
+	private static final Logger LOGGER = LogManager.getLogger(LogDownloader.class);
+	
 	private String logCode;            // the code of the log we want to download
 	private long interAttemptsTime;    // waiting time between attempts
 	private int maxAttempts;           // max number of attempts (only HIGH priority)
@@ -94,22 +99,23 @@ public class LogDownloader {
 				break;
 			}
 
-			System.err.print ( "Log " + logCode + " not found, retrying after " 
+			String diagnostic = ( "Log " + logCode + " not found, retrying after " 
 					+ (interAttemptsTime/1000) + " seconds the attempt n° " 
 					+ (attemptsCount+1) );
 			
 			// add maximum number of attempts if high priority
 			// otherwise add only the new line to the message
 			if ( priority == Priority.HIGH )
-				System.err.println( "/" + maxAttempts );
-			else
-				System.err.println();
+				diagnostic += "/" + maxAttempts;
+			
+			LOGGER.info(diagnostic);
 			
 			// wait inter attempts time
 			try {
 				Thread.sleep( interAttemptsTime );
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+				LOGGER.error("Cannot sleep thread=" + this, e);
 			}
 			
 			// go to the next attempt

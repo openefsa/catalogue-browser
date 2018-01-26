@@ -1,8 +1,11 @@
 package property;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 
 import catalogue_object.SortableCatalogueObject;
+import term.WrongKeyException;
 
 
 /**
@@ -13,6 +16,7 @@ import catalogue_object.SortableCatalogueObject;
  */
 public class LabelProviderDCFProperty extends ColumnLabelProvider {
 	
+	private static final Logger LOGGER = LogManager.getLogger(LabelProviderDCFProperty.class);
 	private String key;
 	
 	public LabelProviderDCFProperty( String key ) {
@@ -29,8 +33,9 @@ public class LabelProviderDCFProperty extends ColumnLabelProvider {
 		try {
 			value = property.getVariableByKey( key );
 		}
-		catch ( Exception e ) {
+		catch ( WrongKeyException e ) {
 			e.printStackTrace();
+			LOGGER.error("Wrong key", e);
 			value = "invalid code for label provider";
 		}
 		

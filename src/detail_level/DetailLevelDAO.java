@@ -6,6 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueEntityDAO;
 import catalogue_browser_dao.DatabaseManager;
@@ -13,6 +16,8 @@ import global_manager.GlobalManager;
 
 public class DetailLevelDAO implements CatalogueEntityDAO<DetailLevelGraphics> {
 
+	private static final Logger LOGGER = LogManager.getLogger(DetailLevelDAO.class);
+	
 	/**
 	 * Check if the catalogue has detail levels or not
 	 * @return
@@ -62,6 +67,7 @@ public class DetailLevelDAO implements CatalogueEntityDAO<DetailLevelGraphics> {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return values;

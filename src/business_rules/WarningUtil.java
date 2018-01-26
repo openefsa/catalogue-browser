@@ -17,6 +17,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -58,6 +60,8 @@ import utilities.GlobalUtil;
 
 public class WarningUtil {
 
+	private static final Logger LOGGER = LogManager.getLogger(WarningUtil.class);
+	
 	private Catalogue currentCat;
 
 	// log console
@@ -124,7 +128,7 @@ public class WarningUtil {
 
 			// argument checks
 			if ( args.length != 5 ) {
-				System.err.println( "Wrong number of arguments, please check! "
+				LOGGER.error( "Wrong number of arguments, please check! "
 						+ "You have to provide 5 parameters,\n"
 						+ "that is, the input file path (collection of codes to be analysed)"
 						+ ", the output file path, and the working directory, which is"
@@ -152,6 +156,7 @@ public class WarningUtil {
 		catch ( Exception e ) {
 			
 			e.printStackTrace();
+			LOGGER.error("Error", e);
 			
 			Shell shell = new Shell(SWT.ON_TOP);
 
@@ -175,7 +180,7 @@ public class WarningUtil {
 
 		this.currentCat = mtx;
 
-		System.err.println( "Loading catalogue data into RAM..." );
+		LOGGER.info( "Loading catalogue data into RAM..." );
 
 		currentCat.loadData();
 
@@ -493,7 +498,6 @@ public class WarningUtil {
 
 			// if the parent is a warn group => break cycle and return the warn group
 			if ( isWarnGroup( parent.getCode(), forbiddenProcesses ) ) {
-				//System.out.println( "The term " + baseTerm.getName() + " is contained in the warn group: " + parent.getName() );
 				return( parent );
 			}
 
@@ -932,8 +936,6 @@ public class WarningUtil {
 			// get the ordCode of the just applied process
 			double currentOrdCode = currentFP.get(index).getOrdCode();
 
-			//System.out.println("OrdCode of the applied process " + currentOrdCode + " min implicit ord code " + minImplicitOrdCode);
-
 			// if the current ord code of the applied process is less than or equal to the min ord code of the implicit processes
 			// raise a warning
 			if ( currentOrdCode < minImplicitOrdCode ) {
@@ -1186,6 +1188,7 @@ public class WarningUtil {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			LOGGER.error("Error", e);
 		}
 	}
 
@@ -1887,7 +1890,7 @@ public class WarningUtil {
 
 		}
 		catch (Exception e) {
-			System.err.println(filename + " not found.");
+			LOGGER.error(filename + " not found.", e);
 			return null;
 		}
 	}
@@ -2105,7 +2108,7 @@ public class WarningUtil {
 					double ordCode = Double.parseDouble( st.nextToken() );
 					forbiddenProcesses.add( new ForbiddenProcess( baseTermGroupCode, forbiddenProcessCode, ordCode ) );
 				}
-				catch (Exception e) { System.err.println(" Error: no double format found in " + filename + "!"); }
+				catch (Exception e) { LOGGER.error(" Error: no double format found in " + filename + "!", e); }
 
 				// next line
 				lineCount++;
@@ -2124,7 +2127,7 @@ public class WarningUtil {
 			Shell shell = new Shell(SWT.ON_TOP);
 			GlobalUtil.showErrorDialog( shell, "Error", e.getMessage() );
 
-			System.err.println(filename + " not found or parsing errors.");
+			LOGGER.error(filename + " not found or parsing errors.", e);
 			return null;
 		}
 	}
@@ -2228,7 +2231,7 @@ public class WarningUtil {
 					try {
 						options.setFontSize( Integer.parseInt( st.nextToken() ) ); }
 					catch( Exception e ) {
-						System.err.println( "Error parsing font size in warningColors options.");
+						LOGGER.error( "Error parsing font size in warningColors options.", e);
 					}
 				}
 			}
@@ -2241,7 +2244,7 @@ public class WarningUtil {
 
 		}
 		catch (Exception e) {
-			System.err.println(filename + " not found.");
+			LOGGER.error(filename + " not found.", e);
 			return null;
 		}
 	}
@@ -2275,7 +2278,7 @@ public class WarningUtil {
 			return ( new int[] {red, green, blue} );
 		}
 		catch( Exception e ) {
-			System.err.println("ERROR IN PARSING RGB VALUES");
+			LOGGER.error("ERROR IN PARSING RGB VALUES", e);
 			return null;
 		}
 	}
@@ -2383,7 +2386,7 @@ public class WarningUtil {
 			out.close();
 		}
 		catch (Exception e) {
-			System.err.println( "Cannot create the file " + filename );
+			LOGGER.error( "Cannot create the file " + filename, e );
 		}	
 	}
 
@@ -2465,6 +2468,8 @@ public class WarningUtil {
 		} catch ( Exception e) {
 			e.printStackTrace();
 
+			LOGGER.error("Error", e);
+			
 			Shell shell = new Shell(SWT.ON_TOP);
 			
 			

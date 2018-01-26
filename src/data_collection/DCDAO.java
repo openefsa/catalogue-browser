@@ -9,6 +9,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue_browser_dao.CatalogueEntityDAO;
 import catalogue_browser_dao.DatabaseManager;
 
@@ -19,6 +22,8 @@ import catalogue_browser_dao.DatabaseManager;
  */
 public class DCDAO implements CatalogueEntityDAO<DataCollection> {
 
+	private static final Logger LOGGER = LogManager.getLogger(CatalogueConfigDAO.class);
+	
 	@Override
 	public int insert(DataCollection dc) {
 
@@ -51,6 +56,7 @@ public class DCDAO implements CatalogueEntityDAO<DataCollection> {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return id;
@@ -74,6 +80,7 @@ public class DCDAO implements CatalogueEntityDAO<DataCollection> {
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return false;
@@ -109,6 +116,7 @@ public class DCDAO implements CatalogueEntityDAO<DataCollection> {
 			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return out;
@@ -149,6 +157,7 @@ public class DCDAO implements CatalogueEntityDAO<DataCollection> {
 			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return out;
@@ -182,6 +191,7 @@ public class DCDAO implements CatalogueEntityDAO<DataCollection> {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return contains;

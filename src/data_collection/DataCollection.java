@@ -8,6 +8,9 @@ import java.util.Collection;
 
 import javax.xml.soap.SOAPException;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_generator.CatalogueDownloader;
@@ -25,6 +28,8 @@ import utilities.GlobalUtil;
  */
 public class DataCollection implements IDcfDataCollection {
 
+	private static final Logger LOGGER = LogManager.getLogger(DataCollection.class);
+	
 	public static final String DATE_FORMAT = "yyyy-MM-ddX";
 
 	private int id = -1;
@@ -127,6 +132,7 @@ public class DataCollection implements IDcfDataCollection {
 		}
 		catch ( ParseException e ) {
 			e.printStackTrace();
+			LOGGER.error("Cannot parse timestamp=" + value + " using format=" + DATE_FORMAT, e);
 		}
 
 		return ts;
@@ -154,7 +160,7 @@ public class DataCollection implements IDcfDataCollection {
 		if ( listener == null )
 			throw new InvalidParameterException( "Cannot set listener to null" );
 
-		System.out.println( "Downloading " + this );
+		LOGGER.info( "Downloading " + this );
 
 		// download tables
 		Dcf dcf = new Dcf();
@@ -176,11 +182,11 @@ public class DataCollection implements IDcfDataCollection {
 			throw new InvalidParameterException( "Cannot set listener to null" );
 
 		if ( alreadyImported() ) {
-			System.err.println( this + " already downloaded!" );
+			LOGGER.warn( this + " already downloaded!" );
 			return;
 		}
 
-		System.out.println( "Importing " + this );
+		LOGGER.info( "Importing " + this );
 
 		ProgressList list = new ProgressList ( 100 );
 		list.addProgressListener( listener );

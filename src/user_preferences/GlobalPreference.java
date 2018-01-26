@@ -16,7 +16,6 @@ public class GlobalPreference extends Preference {
 	public static final String HIDE_TERM_CODE_DESCRIBE = "hideTermCodeDescribe";
 	public static final String LAST_OPENED_CAT_PROD = "lastOpenedCatalogueProduction";
 	public static final String LAST_OPENED_CAT_TEST = "lastOpenedCatalogueTest";
-	public static final String LOGGING = "logging";
 	
 	public GlobalPreference( String key, PreferenceType type, 
 			Object value, boolean editable ) {

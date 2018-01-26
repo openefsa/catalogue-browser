@@ -12,12 +12,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import catalogue.CatalogueBuilder;
 import dcf_manager.Dcf.DcfType;
 import dcf_user.User;
 import sas_remote_procedures.XmlUpdateFileDAO;
-import sql.SQLScriptExec;
+import sql.SQLExecutor;
 import utilities.GlobalUtil;
 
 
@@ -28,6 +31,8 @@ import utilities.GlobalUtil;
  */
 public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 
+	private static final Logger LOGGER = LogManager.getLogger(CatalogueDAO.class);
+	
 	/**
 	 * Insert a new catalogue into the main catalogues database. Moreover,
 	 * the catalogue database is also created.
@@ -123,6 +128,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 		}
 		catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return id;
@@ -215,6 +221,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 		}
 		catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return false;
@@ -251,6 +258,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return false;
@@ -315,47 +323,41 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 	/**
 	 * Create a generic catalogue db in the db path directory
 	 * @param dbPath
+	 * @throws IOException 
 	 */
-	public void createDBTables ( String dbPath ) {
+	public void createDBTables ( String dbPath ) throws IOException {
 		
 		// create the db url path, the create = true variable indicates that if
 		// the db is not present it will be created
 		String dbURL = "jdbc:derby:" + dbPath;
 		
-		try (Connection con = DriverManager.getConnection( dbURL + ";create=true" );) {
-
-			// Set the driver for the connection
-			Class.forName("org.apache.derby.jdbc.EmbeddedDriver").newInstance();
-
+		try (Connection con = DriverManager.getConnection( dbURL + ";create=true" );
+				SQLExecutor executor = new SQLExecutor(con);) {
+			
 			// open the connection to create the database
 			// important! do not remove this line of code since
 			// otherwise the database will not be created
 			
 			// create the catalogue db structure
-			SQLScriptExec script = new SQLScriptExec( dbURL, 
-					ClassLoader.getSystemResourceAsStream( "createCatalogueDB" ) );
-
-			// execute the script
-			script.exec();
-
+			executor.exec(getClass().getClassLoader().getResourceAsStream( "createCatalogueDB" ));
+			
 			// close the connection
 			con.close();
-
 
 			// shutdown the connection, by default this operation throws an exception
 			// but the command is correct! We close the connection since if we try
 			// to delete a database which is just downloaded an error is shown since
 			// the database is in use
 			try {
-				System.out.println ( "Closing connection with " + dbURL );
+				LOGGER.info ( "Closing connection with " + dbURL );
 				try(Connection con2 = DriverManager.getConnection( dbURL + ";shutdown=true");) {}
 			}
 			catch ( Exception e ) {
 			}
 
-		} catch ( InstantiationException | IllegalAccessException | 
-				ClassNotFoundException | IOException | SQLException e ) {
+		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 	}
 
@@ -434,6 +436,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 	}
 
@@ -555,6 +558,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return lastVersion;
@@ -609,6 +613,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return catalogues;
@@ -660,6 +665,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 
 		}catch (Exception e) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 			return null;
 		}
 	}
@@ -708,6 +714,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 		}
 		catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 			return null;
 		}
 	}
@@ -752,6 +759,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 		}
 		catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 			return null;
 		}
 	}

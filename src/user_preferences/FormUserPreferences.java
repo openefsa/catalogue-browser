@@ -54,13 +54,7 @@ public class FormUserPreferences {
 		CataloguePreferenceDAO prefDao = new CataloguePreferenceDAO( catalogue );
 		
 		// load the catalogue preferences
-		ArrayList<Preference> preferences = prefDao.getAll();
-		
-		for ( Preference pref : preferences ) {
-			
-			if ( pref.isEditable() && !pref.equals(GlobalPreference.LOGGING)) // logging DEPRECATED here!
-				this.preferences.add( pref );
-		}
+		preferences = prefDao.getAll();
 	}
 	
 	/**
@@ -362,7 +356,6 @@ public class FormUserPreferences {
 			return true;
 		}
 		catch ( NumberFormatException e ) {
-			System.err.println( "Cannot apply a non numeric value to a numeric field!" ); //$NON-NLS-1$
 			return false;
 		}
 	}

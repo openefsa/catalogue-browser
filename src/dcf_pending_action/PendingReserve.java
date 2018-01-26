@@ -2,6 +2,8 @@ package dcf_pending_action;
 
 import javax.xml.soap.SOAPException;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
@@ -22,6 +24,8 @@ import import_catalogue.CatalogueImporterThread;
  *
  */
 public class PendingReserve extends PendingAction {
+	
+	private static final Logger LOGGER = LogManager.getLogger(PendingReserve.class);
 	
 	public static final String TYPE = "RESERVE";
 	
@@ -229,10 +233,10 @@ public class PendingReserve extends PendingAction {
 		
 		
 		if ( response == DcfResponse.OK )
-			System.out.println ( reserveLevel.getOp() 
+			LOGGER.info ( reserveLevel.getOp() + " of " + log.getCatalogueCode()
 					+ ": successfully completed" );
 		else
-			System.out.println ( reserveLevel.getOp() 
+			LOGGER.info ( reserveLevel.getOp() + " of " + log.getCatalogueCode()
 					+ ": failed - the dcf rejected the operation" );
 		
 		return response;
@@ -285,6 +289,8 @@ public class PendingReserve extends PendingAction {
 			
 		} catch (SOAPException | InterruptedException e) {
 			e.printStackTrace();
+			
+			LOGGER.info("No internal version was found for catalogue=" + getCatalogue());
 			
 			// force the editing of the current catalogue
 			forceCatalogueEditing();

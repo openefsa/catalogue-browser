@@ -4,6 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Image;
@@ -26,6 +28,8 @@ import ui_main_panel.CatalogueBrowserMain;
  */
 public class FormBrowserLicence {
 
+	private static final Logger LOGGER = LogManager.getLogger(FormBrowserLicence.class);
+	
 	private boolean	_dialog			= false;
 	private Display	_display;
 	private Image	_image;
@@ -107,6 +111,7 @@ public class FormBrowserLicence {
 			} catch (IOException e) {
 				t1.setText( "No licence file was found (LICENCE.txt)" );
 				e.printStackTrace();
+				LOGGER.error("Cannot find file LICENCE.txt", e);
 			}
 			
 			shellGridData = new GridData();

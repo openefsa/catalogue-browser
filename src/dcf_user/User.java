@@ -9,6 +9,9 @@ import java.util.Collection;
 
 import javax.xml.soap.SOAPException;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import catalogue_browser_dao.DatabaseManager;
 import dcf_manager.Dcf;
@@ -25,6 +28,8 @@ import user.DcfUser;
  */
 public class User extends DcfUser {
 
+	private static final Logger LOGGER = LogManager.getLogger(User.class);
+	
 	// inner instance
 	private static User user;
 
@@ -229,7 +234,7 @@ public class User extends DcfUser {
 		if (credentials == null)
 			return false;
 		
-		System.out.println("Reauthenticating user " + credentials[0]);
+		LOGGER.info("Reauthenticating user " + credentials[0]);
 
 		this.isReauth = true;
 		
@@ -264,7 +269,7 @@ public class User extends DcfUser {
 		// if wrong credential => remove them 
 		if ( logged ) {
 			
-			System.out.println( username + " successfully logged in to dcf");
+			LOGGER.info( username + " successfully logged in to dcf");
 			
 			// delete information on the old account
 			if (areCredentialsStored())
@@ -294,6 +299,7 @@ public class User extends DcfUser {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			LOGGER.error("Cannot retrieve saved credentials", e);
 		}
 
 		return out;
@@ -311,6 +317,7 @@ public class User extends DcfUser {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			LOGGER.error("Cannot delete user credentials", e);
 		}
 	}
 
@@ -329,6 +336,7 @@ public class User extends DcfUser {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			LOGGER.error("Cannot save user credentials", e);
 		}
 	}
 	

@@ -8,6 +8,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import catalogue_object.Attribute;
 import catalogue_object.AttributeBuilder;
@@ -22,6 +25,8 @@ import naming_convention.SpecialValues;
  */
 public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 
+	private static final Logger LOGGER = LogManager.getLogger(AttributeDAO.class);
+	
 	private Catalogue catalogue;
 	
 	/**
@@ -136,6 +141,7 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return ids;
@@ -175,6 +181,7 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return false;
@@ -249,6 +256,7 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return false;
@@ -288,6 +296,7 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return attr;
@@ -328,6 +337,7 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 			con.close();
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return attr;
@@ -369,6 +379,7 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return attr;
@@ -513,6 +524,7 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return attrs;
@@ -607,6 +619,7 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return attrs;

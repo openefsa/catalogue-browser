@@ -8,6 +8,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_browser_dao.CatalogueEntityDAO;
@@ -24,6 +27,8 @@ import dcf_webservice.ReserveLevel;
  */
 public class PendingActionDAO implements CatalogueEntityDAO<PendingAction> {
 
+	private static final Logger LOGGER = LogManager.getLogger(PendingActionDAO.class);
+	
 	@Override
 	public int insert(PendingAction object) {
 		
@@ -61,6 +66,7 @@ public class PendingActionDAO implements CatalogueEntityDAO<PendingAction> {
 			
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return id;
@@ -86,6 +92,7 @@ public class PendingActionDAO implements CatalogueEntityDAO<PendingAction> {
 			
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return false;
@@ -119,6 +126,7 @@ public class PendingActionDAO implements CatalogueEntityDAO<PendingAction> {
 			
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return false;
@@ -212,6 +220,7 @@ public class PendingActionDAO implements CatalogueEntityDAO<PendingAction> {
 			
 		} catch ( SQLException e) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return out;
@@ -253,6 +262,7 @@ public class PendingActionDAO implements CatalogueEntityDAO<PendingAction> {
 			
 		} catch ( SQLException e) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return prs;

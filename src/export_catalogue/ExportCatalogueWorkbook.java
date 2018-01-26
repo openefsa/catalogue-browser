@@ -3,6 +3,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
 import catalogue.Catalogue;
@@ -18,6 +20,8 @@ import progress_bar.IProgressBar;
  */
 public class ExportCatalogueWorkbook {
 
+	private static final Logger LOGGER = LogManager.getLogger(ExportCatalogueWorkbook.class);
+	
 	private IProgressBar progressBar;  // progress bar to show the export process to the user
 	
 	/**
@@ -39,7 +43,7 @@ public class ExportCatalogueWorkbook {
 		
 		long startTime = System.currentTimeMillis();
 		
-		System.out.println ( "Starting export process..." );
+		LOGGER.info ( "Starting export process..." );
 		
 		// the workbook which will be created with the export
 		SXSSFWorkbook workbook = new SXSSFWorkbook();
@@ -47,7 +51,7 @@ public class ExportCatalogueWorkbook {
 		// set that we want to maintain the temp files smaller
 		workbook.setCompressTempFiles( true );
 		
-		System.out.println ( "Exporting catalogue" );
+		LOGGER.info("Exporting catalogue" + catalogue);
 		
 		// write the catalogue sheet
 		ExportCatalogueSheet catSheet = new ExportCatalogueSheet( catalogue, 
@@ -59,7 +63,7 @@ public class ExportCatalogueWorkbook {
 		
 		catSheet.write();
 
-		System.out.println ( "Exporting hierarchies" );
+		LOGGER.info( "Exporting hierarchies" );
 		
 		// write the hierarchy sheet
 		ExportHierarchySheet hierarchySheet = new ExportHierarchySheet( catalogue, 
@@ -71,7 +75,7 @@ public class ExportCatalogueWorkbook {
 		
 		hierarchySheet.write();
 		
-		System.out.println ( "Exporting attributes" );
+		LOGGER.info ( "Exporting attributes" );
 		
 		// write the attribute sheet
 		ExportAttributeSheet attrSheet = new ExportAttributeSheet( catalogue, 
@@ -83,7 +87,7 @@ public class ExportCatalogueWorkbook {
 		
 		attrSheet.write();
 		
-		System.out.println ( "Exporting terms" );
+		LOGGER.info ( "Exporting terms" );
 
 		// write the term sheet
 		ExportTermSheet termSheet = new ExportTermSheet( catalogue, 
@@ -95,7 +99,7 @@ public class ExportCatalogueWorkbook {
 		
 		termSheet.write();
 		
-		System.out.println ( "Exporting release notes" );
+		LOGGER.info ( "Exporting release notes" );
 		
 		// write the term sheet
 		ExportReleaseNotesSheet noteSheet = new ExportReleaseNotesSheet( 
@@ -111,7 +115,7 @@ public class ExportCatalogueWorkbook {
 		if ( progressBar != null )
 			progressBar.setLabel( Messages.getString( "Export.WriteSheet" ) );
 
-		System.out.println ( "Creating excel file" );
+		LOGGER.info ( "Creating excel file" );
 		
 		// write in the workbook
 		OutputStream out = new FileOutputStream( filename );
@@ -129,7 +133,7 @@ public class ExportCatalogueWorkbook {
 		if ( progressBar != null )
 			progressBar.close();
 
-		System.out.println( "Export finished, statistics: overall time = " 
+		LOGGER.info( "Export finished, statistics: overall time = " 
 				+ (System.currentTimeMillis()-startTime)/1000.00 + " seconds" );
 	}
 	

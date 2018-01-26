@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueEntityDAO;
 
@@ -17,6 +20,8 @@ import catalogue_browser_dao.CatalogueEntityDAO;
  */
 public class TermTypeDAO implements CatalogueEntityDAO<TermType> {
 
+	private static final Logger LOGGER = LogManager.getLogger(TermTypeDAO.class);
+	
 	private Catalogue catalogue;
 
 	/**
@@ -62,6 +67,7 @@ public class TermTypeDAO implements CatalogueEntityDAO<TermType> {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return values;
@@ -103,6 +109,7 @@ public class TermTypeDAO implements CatalogueEntityDAO<TermType> {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 	}
 

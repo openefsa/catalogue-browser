@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
@@ -32,6 +34,8 @@ import utilities.GlobalUtil;
  */
 public class XmlUpdatesFactory {
 	
+	private static final Logger LOGGER = LogManager.getLogger(XmlUpdatesFactory.class);
+	
 	private IProgressBar progressBar;
 	private Listener abortListener;
 	private Listener doneListener;
@@ -47,7 +51,7 @@ public class XmlUpdatesFactory {
 	 */
 	public void createXml( final Catalogue catalogue ) {
 
-		System.out.println( "Starting xml creation procedure for " + catalogue );
+		LOGGER.info( "Starting xml creation procedure for " + catalogue );
 		
 		// delete the old input if present, since it is not more useful
 		// because we are requesting a new xml related to the same catalogue
@@ -96,7 +100,7 @@ public class XmlUpdatesFactory {
 				try {
 					GlobalUtil.copyFile ( startFile, remoteStartFile );
 				} catch (IOException e) {
-					System.err.println( "Cannot copy " + startFile + " into " + remoteStartFile );
+					LOGGER.error( "Cannot copy " + startFile + " into " + remoteStartFile, e );
 					abort( e.getMessage() );
 					return;
 				}
@@ -116,7 +120,7 @@ public class XmlUpdatesFactory {
 				// save the xml filename into the database
 				saveXmlFilename ( catalogue, filename );
 				
-				System.out.println( "Create updates xml process finished" );
+				LOGGER.info( "Create updates xml process finished" );
 				
 				// call the done listener
 				if ( doneListener != null ) {
@@ -168,10 +172,10 @@ public class XmlUpdatesFactory {
 			dataDeleted = remoteXlsxFile.delete();
 
 		if ( lockDeleted )
-			System.out.println( "old " + remoteEndFile + " deleted" );
+			LOGGER.info( "old " + remoteEndFile + " deleted" );
 		
 		if ( dataDeleted )
-			System.out.println( "old " + remoteXlsxFile + " deleted" );
+			LOGGER.info( "old " + remoteXlsxFile + " deleted" );
 		
 		return lockDeleted && dataDeleted;
 	}
@@ -209,7 +213,7 @@ public class XmlUpdatesFactory {
 	 */
 	private boolean rename ( File file, File newFile ) {
 		
-		System.out.println( "Renaming " + file + " into " + newFile );
+		LOGGER.info( "Renaming " + file + " into " + newFile );
 		
 		boolean success = file.renameTo( newFile );
 		
@@ -218,7 +222,7 @@ public class XmlUpdatesFactory {
 			String error = "Cannot rename " + file + 
 					" in " + newFile + ". Aborting operation...";
 			
-			System.out.println( error );
+			LOGGER.error( error );
 			abort( Messages.getString( "XmlChangesCreator.RenameAbort" ) );
 		}
 		
@@ -235,12 +239,12 @@ public class XmlUpdatesFactory {
 
 		// create the .end file to start the
 		// sas application
-		System.out.println( "Creating lock file " + endFile );
+		LOGGER.info( "Creating lock file " + endFile );
 		
 		try {
 			endFile.createNewFile();
 		} catch (IOException e) {
-			System.err.println( "Cannot create " + endFile );
+			LOGGER.error( "Cannot create " + endFile, e );
 			abort( e.getMessage() );
 			return false;
 		}

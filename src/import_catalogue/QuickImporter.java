@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import javax.xml.stream.XMLStreamException;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import open_xml_reader.ResultDataSet;
@@ -17,6 +19,8 @@ import open_xml_reader.WorkbookReader;
  *
  */
 public abstract class QuickImporter {
+	
+	private static final Logger LOGGER = LogManager.getLogger(QuickImporter.class);
 
 	protected WorkbookReader workbookReader;
 	protected String sheetName;
@@ -85,6 +89,7 @@ public abstract class QuickImporter {
 				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+				LOGGER.error("Cannot import sheet", e);
 			}
 		}
 	}

@@ -15,9 +15,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import global_manager.GlobalManager;
-import sql.SQLScriptExec;
+import sql.SQLExecutor;
 import user_preferences.GlobalPreferenceDAO;
 import utilities.GlobalUtil;
 
@@ -28,6 +31,8 @@ import utilities.GlobalUtil;
  *
  */
 public class DatabaseManager {
+	
+	private static final Logger LOGGER = LogManager.getLogger(DatabaseManager.class);
 	
 	// name of the main database (i.e. the one which contains all the catalogues metadata)
 	private static final String MAIN_CAT_DB_FOLDER_NAME = "MAIN_CATS_DB";
@@ -102,29 +107,20 @@ public class DatabaseManager {
 	/**
 	 * Create the main database (the one which contains the catalogues metadata)
 	 * @throws SQLException 
+	 * @throws IOException 
 	 */
-	public static void createMainDB () throws SQLException {
+	public static void createMainDB () throws SQLException, IOException {
 
-		// create the database
-		try {
-
-			// set a "create" connection
-			DriverManager.getConnection( createMainDBURL() );
-
-			// sql script to create the database
-			SQLScriptExec script = new SQLScriptExec( getMainDBURL(), 
-					ClassLoader.getSystemResourceAsStream( "createMainDB" ) );
-
-			script.exec();
-			
-			// insert the default preferences into the main
-			// catalogues database
-			GlobalPreferenceDAO prefDao = new GlobalPreferenceDAO();
-			prefDao.insertDefaultPreferences();
-
-		} catch ( IOException e ) {
-			e.printStackTrace();
+		// set a "create" connection
+		try(Connection con = DriverManager.getConnection( createMainDBURL() );
+				SQLExecutor executor = new SQLExecutor(con);) {
+			executor.exec(ClassLoader.getSystemResourceAsStream( "createMainDB" ));
 		}
+
+		// insert the default preferences into the main
+		// catalogues database
+		GlobalPreferenceDAO prefDao = new GlobalPreferenceDAO();
+		prefDao.insertDefaultPreferences();
 	}
 
 	/**
@@ -132,28 +128,29 @@ public class DatabaseManager {
 	 * otherwise create it and then connect
 	 * @param DBString
 	 * @throws SQLException 
+	 * @throws IOException 
 	 * @throws Exception
 	 */
-	public static void startMainDB () throws SQLException {
+	public static void startMainDB () throws SQLException, IOException {
 
 		try (Connection con = getMainDBConnection();) {
 
 			// load the jdbc driver
-			System.out.println( "Starting embedded database..." );
+			LOGGER.info( "Starting embedded database..." );
 			Class.forName( "org.apache.derby.jdbc.EmbeddedDriver" );
 
 			// check if the database is present or not
-			System.out.println( "Testing database connection..." );
+			LOGGER.info( "Testing database connection..." );
 
 			con.close();
 
 		} catch ( ClassNotFoundException e ) {
 			e.printStackTrace();
-			System.err.println ( "Cannot start embedded database: embedded driver missing" );
+			LOGGER.error ( "Cannot start embedded database: embedded driver missing", e );
 
 		} catch ( SQLException e1 ) {
 
-			System.err.println( "Main database not present, creating it..." );
+			LOGGER.info( "Main database not present, creating it..." );
 			
 			// Create a new database if possible
 			createMainDB();
@@ -173,7 +170,7 @@ public class DatabaseManager {
 				new File( DatabaseManager.TEST_CAT_DB_FOLDER ).mkdir();
 			}
 			
-			System.out.println( "Main database created" );
+			LOGGER.info( "Main database created" );
 		}
 	}
 	
@@ -191,11 +188,11 @@ public class DatabaseManager {
 			
 			if(!rs.next()) {
 				
-				// create the users table
-				SQLScriptExec executor = new SQLScriptExec( getMainDBURL(), 
-						ClassLoader.getSystemResourceAsStream( "Users" ) );
-				
-				executor.exec();
+				// set a "create" connection
+				try(Connection con = DriverManager.getConnection( getMainDBURL() );
+						SQLExecutor executor = new SQLExecutor(con);) {
+					executor.exec(ClassLoader.getSystemResourceAsStream( "Users" ));
+				}
 			}
 			
 			rs.close();
@@ -207,6 +204,8 @@ public class DatabaseManager {
 	 * TODO insert missing tables
 	 */
 	public static void compressDatabase () {
+		
+		LOGGER.info("Compressing database");
 		
 		// This will fail, if there are dependencies
 		GlobalManager manager = GlobalManager.getInstance();
@@ -234,6 +233,7 @@ public class DatabaseManager {
 			
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 	}
 	
@@ -242,10 +242,10 @@ public class DatabaseManager {
 	 */
 	public static void stopMainDB ( ) {
 		try {
-			System.out.print( "Stopping database..." );
+			LOGGER.info( "Stopping database..." );
 			DriverManager.getConnection( stopMainDBURL() );
 		} catch ( SQLException e ) {
-			System.out.println( "Database disconnected" );
+			LOGGER.info( "Database disconnected" );
 		}
 	}
 
@@ -283,7 +283,7 @@ public class DatabaseManager {
 		try(Connection con = DriverManager.getConnection( dbURL );
 				Statement stmt = con.createStatement();) {
 			
-			System.out.println("Executing " + sql);
+			LOGGER.info("Executing " + sql);
 			
 			stmt.execute( sql );
 	
@@ -308,7 +308,7 @@ public class DatabaseManager {
 			con.close();
 		}
 		
-		System.out.println( "Database of " + catalogue + " copied in " + backupDir );
+		LOGGER.info( "Database of " + catalogue + " copied in " + backupDir );
 		
 		// here we have created a backup of the database in the backupDir folder
 		// since the backup copies also the database folder we have to extract
@@ -321,7 +321,7 @@ public class DatabaseManager {
 		File[] list = dir.listFiles();
 		
 		if ( list.length == 0 ) {
-			System.err.println ( "No file was copied" );
+			LOGGER.error ( "No file was copied" );
 			return;
 		}
 		
@@ -425,6 +425,8 @@ public class DatabaseManager {
 	 */
 	public static void copyFolder( File source, File destination ) throws IOException {
 		
+		LOGGER.info( "Copying " + source + " into " + destination );
+		
 		// if the source is a directory, we recursively
 		// copy all its files
 		if ( source.isDirectory() ) {
@@ -482,7 +484,7 @@ public class DatabaseManager {
 		if ( !file.exists() )
 			throw new IOException ( "The backup folder was not found. Cannot proceed." );
 		
-		System.out.println ( "Restoring " + catalogue + " from " + catalogue.getBackupDbPath() );
+		LOGGER.info ( "Restoring " + catalogue + " from " + catalogue.getBackupDbPath() );
 		
 		// close the catalogue (we can restore backups only for
 		// opened catalogues)

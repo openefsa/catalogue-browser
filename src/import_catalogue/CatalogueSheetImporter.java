@@ -1,9 +1,13 @@
 package import_catalogue;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Iterator;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import catalogue.Catalogue;
 import catalogue.CatalogueBuilder;
@@ -15,6 +19,8 @@ import open_xml_reader.ResultDataSet;
 
 public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 
+	private static final Logger LOGGER = LogManager.getLogger(CatalogueSheetImporter.class);
+	
 	// the new catalogue
 	private Catalogue catalogue;
 	private Catalogue openedCatalogue;
@@ -41,6 +47,7 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 			catalogue = getCatalogueFromExcel ( rs );
 		} catch (SQLException e) {
 			e.printStackTrace();
+			LOGGER.error("Cannot extract catalogue from the catalogue sheet", e);
 		}
 
 		// save the excel code in global variable
@@ -155,7 +162,7 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 	}
 
 	@Override
-	public void insert(Collection<Catalogue> data) {
+	public void insert(Collection<Catalogue> data) throws ImportException {
 
 		if ( data.isEmpty() )
 			return;
@@ -165,7 +172,13 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 		Catalogue catalogue = iter.next();
 
 		// create the catalogue database
-		createDatabase( catalogue );
+		try {
+			createDatabase( catalogue );
+		} catch (IOException e) {
+			e.printStackTrace();
+			LOGGER.error("Cannot create database for catalogue=" + catalogue, e);
+			throw new ImportException(e);
+		}
 	}
 
 	/**
@@ -173,8 +186,9 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 	 * If another database is already present it will be deleted
 	 * and a new database will be created.
 	 * @param catalogue
+	 * @throws IOException 
 	 */
-	private static void createDatabase ( Catalogue catalogue ) {
+	private static void createDatabase ( Catalogue catalogue ) throws IOException {
 
 		int catalogueId;
 		
@@ -187,12 +201,12 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 
 			// if no exception was thrown => the database exists and we have to delete it
 			// delete the content of the old catalogue database
-			System.out.println( "Deleting the database located in " + catalogue.getDbPath() );
+			LOGGER.info( "Deleting the database located in " + catalogue.getDbPath() );
 
 			CatalogueDAO catDao = new CatalogueDAO();
 			catDao.deleteDBRecords ( catalogue );
 
-			System.out.println( "Freeing deleted memory..." );
+			LOGGER.info( "Freeing deleted memory..." );
 			catDao.compressDatabase( catalogue );
 
 			// set the id to the catalogue
@@ -209,8 +223,7 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 
 			// otherwise the database does not exist => we create it
 
-			System.out.println ( "Add " + catalogue + 
-					" to the catalogue table. Db location: " + catalogue.getDbPath() );
+			LOGGER.info ( "Add " + catalogue + " to the catalogue table. Db location: " + catalogue.getDbPath() );
 
 			CatalogueDAO catDao = new CatalogueDAO();
 

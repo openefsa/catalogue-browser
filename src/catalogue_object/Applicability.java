@@ -1,5 +1,8 @@
 package catalogue_object;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue_browser_dao.ParentTermDAO;
 
 /**
@@ -9,6 +12,8 @@ import catalogue_browser_dao.ParentTermDAO;
  */
 public class Applicability {
 
+	private static final Logger LOGGER = LogManager.getLogger(Applicability.class);
+	
 	private Term child;
 	private Nameable parentTerm;
 	private Hierarchy hierarchy;
@@ -61,6 +66,7 @@ public class Applicability {
 				throw new Exception( "Null argument for Applicability:hasHierarchy regarding " + this );
 			} catch (Exception e) {
 				e.printStackTrace();
+				LOGGER.error("Null argument for Applicability:hasHierarchy regarding applicability=" + this, e);
 			}
 			return false;
 		}

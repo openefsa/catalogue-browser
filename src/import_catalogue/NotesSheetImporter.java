@@ -5,6 +5,9 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Collection;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import catalogue.ReleaseNotesOperation;
 import catalogue_browser_dao.ReleaseNotesOperationDAO;
@@ -13,6 +16,8 @@ import open_xml_reader.ResultDataSet;
 
 public class NotesSheetImporter extends SheetImporter<ReleaseNotesOperation> {
 
+	private static final Logger LOGGER = LogManager.getLogger(NotesSheetImporter.class);
+	
 	private Catalogue catalogue;
 	
 	public NotesSheetImporter( Catalogue catalogue ) {
@@ -29,6 +34,7 @@ public class NotesSheetImporter extends SheetImporter<ReleaseNotesOperation> {
 			op = getByExcelResultSet( rs );
 		} catch (SQLException e) {
 			e.printStackTrace();
+			LOGGER.error("Cannot get release notes from excel", e);
 		}
 		
 		return op;

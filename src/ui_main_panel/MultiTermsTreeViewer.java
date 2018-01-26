@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -42,6 +44,8 @@ import term_clipboard.TermClipboard;
 
 public class MultiTermsTreeViewer extends Observable implements Observer {
 
+	private static final Logger LOGGER = LogManager.getLogger(MultiTermsTreeViewer.class);
+	
 	private Composite parent;
 	private boolean multi;
 	private Catalogue catalogue;
@@ -597,7 +601,7 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 				// dropped before the target
 			case ViewerDropAdapter.LOCATION_BEFORE:
 				
-				//System.out.println( "Drop before " + target );
+				LOGGER.info( "Drop before " + target );
 				
 				for ( Term source : getSelectedTerms() ) {
 					source.moveAsSibling( target, hierarchy, Position.BEFORE );
@@ -608,7 +612,7 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 				// dropped after the target
 			case ViewerDropAdapter.LOCATION_AFTER:
 				
-				//System.out.println( "Drop after " + target );
+				LOGGER.info( "Drop after " + target );
 				
 				ArrayList<Term> selectedTerms = getSelectedTerms();
 				
@@ -720,7 +724,6 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 				i1 = t1.getOrder( hierarchy );
 			} catch ( Exception e ) {
 				try {
-					// System.out.println("Failed - no code available "+t1.getName());
 					s1 = t1.getName();
 				} finally {
 					i1 = 0;
@@ -729,12 +732,10 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 			int i2 = 0;
 			String s2 = "";
 			try {
-				// System.out.println("getting the sorting code of "+t2.getName());
 				i2 = t2.getOrder( hierarchy );
 			} catch ( Exception e ) {
 				try {
 					s2 = t2.getName();
-					// System.out.println("Failed - no code available "+t2.getName());
 				} finally {
 					s2 = "0";
 				}
@@ -746,6 +747,7 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 				return cmpi;
 			} catch ( NullPointerException e ) {
 				e.printStackTrace();
+				LOGGER.error("Null pointer", e);
 				cmps = s1.compareTo( s2 );
 				cmpi = 0;
 				cmps = 0;

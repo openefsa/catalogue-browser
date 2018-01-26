@@ -2,6 +2,9 @@ package dcf_user;
 
 import java.util.ArrayList;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_browser_dao.TermAttributeDAO;
@@ -23,6 +26,8 @@ import progress_bar.FormProgressBar;
 
 public class UserProfileChecker extends Thread {
 
+	private static final Logger LOGGER = LogManager.getLogger(UserProfileChecker.class);
+	
 	private static final String EDITABLE_CATALOGUE_ATTRIBUTE_NAME = "editCat";
 	private ThreadFinishedListener doneListener;
 	
@@ -56,7 +61,7 @@ public class UserProfileChecker extends Thread {
 	 */
 	public void setAccessLevel() {
 
-		System.out.println( "Checking user access level..." );
+		LOGGER.info( "Checking user access level..." );
 
 		// add progress
 		if ( progressBar != null )
@@ -82,7 +87,7 @@ public class UserProfileChecker extends Thread {
 
 				case OK:
 					// set as catalogue manager
-					System.out.println ( "User access level: catalogue manager" );
+					LOGGER.info ( "User access level: catalogue manager" );
 
 					// update the editable catalogues
 					// of the user based on its username
@@ -96,7 +101,7 @@ public class UserProfileChecker extends Thread {
 				case ERROR:
 				case EXCEPTION:
 					// set the current user as data provider
-					System.out.println ( "User access level: data provider" );
+					LOGGER.info ( "User access level: data provider" );
 					user.setUserLevel( UserAccessLevel.DATA_PROVIDER );
 					break;
 				}
@@ -160,7 +165,7 @@ public class UserProfileChecker extends Thread {
 		Term userTerm = termDao.getByName( user.getUsername() );
 		
 		if ( userTerm == null ) {
-			System.err.println( "USER " + user.getUsername() + ": Found catalogue manager account but the " 
+			LOGGER.error( "USER " + user.getUsername() + ": Found catalogue manager account but the " 
 		+ catalogue.getCode() + " permissions catalogue does not contain it. Please add this account to the "
 				+ "permissions catalogue" );
 			return null;

@@ -7,12 +7,17 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueEntityDAO;
 import catalogue_object.Term;
 
 public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 
+	private static final Logger LOGGER = LogManager.getLogger(PicklistDAO.class);
+	
 	private Catalogue catalogue;
 	
 	/**
@@ -86,6 +91,7 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 			
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return id;
@@ -129,6 +135,7 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 	}
 	
@@ -166,6 +173,7 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		// return true if at least one picklist is found
@@ -211,6 +219,7 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 			
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return false;
@@ -250,6 +259,7 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return picklist;
@@ -278,6 +288,7 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 	}
 	
@@ -316,6 +327,7 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 			
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return picklists;
@@ -347,6 +359,7 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 			
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return count;
@@ -393,6 +406,7 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return terms;
@@ -457,6 +471,7 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 			
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return terms;
@@ -483,6 +498,7 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 			return true;
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return false;

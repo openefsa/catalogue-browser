@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -51,6 +53,8 @@ import utilities.GlobalUtil;
  */
 public class TermsTreePanel extends Observable implements Observer {
 
+	private static final Logger LOGGER = LogManager.getLogger(TermsTreePanel.class);
+	
 	private Catalogue catalogue;
 	
 	private MultiTermsTreeViewer tree;
@@ -843,6 +847,7 @@ public class TermsTreePanel extends Observable implements Observer {
 				
 			} catch (TermCodeException e) {
 				e.printStackTrace();
+				LOGGER.error("Max term code reached", e);
 				
 				GlobalUtil.showErrorDialog(shell, Messages.getString("NewTerm.MaxCodeReachedTitle"), 
 						Messages.getString("NewTerm.MaxCodeReachedMessage"));

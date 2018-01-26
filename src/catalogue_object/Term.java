@@ -13,6 +13,8 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -39,6 +41,8 @@ import ui_implicit_facet.FacetType;
  */
 public class Term extends CatalogueObject implements Mappable {
 
+	private static final Logger LOGGER = LogManager.getLogger(Term.class);
+	
 	// Term attributes caches
 	
 	// corex flag, how much is detailed the term?
@@ -770,7 +774,7 @@ public class Term extends CatalogueObject implements Mappable {
 		}
 		
 		if ( !found ) {
-			System.err.println ( "The hierarchy " + hierarchy.getLabel() + 
+			LOGGER.error ( "The hierarchy " + hierarchy.getLabel() + 
 					" was not found in the applicabilities of the term " + this );
 		}
 	}
@@ -1038,7 +1042,7 @@ public class Term extends CatalogueObject implements Mappable {
 			return true;
 		}
 		
-		System.err.println ( "Applicability " + appl + " is already present" );
+		LOGGER.warn ( "Applicability " + appl + " is already present" );
 		
 		return false;
 	}
@@ -1659,7 +1663,7 @@ public class Term extends CatalogueObject implements Mappable {
 
 		// cannot move parent under its children
 		if ( target.hasAncestor( this, hierarchy ) ) {
-			System.err.println( "Cannot move parent as child of its children" );
+			LOGGER.info( "Cannot move parent as child of its children" );
 			return;
 		}
 		

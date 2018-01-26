@@ -2,6 +2,8 @@ package dcf_pending_action;
 
 import javax.xml.soap.SOAPException;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
@@ -23,6 +25,8 @@ import dcf_webservice.PublishLevel;
  */
 public class PendingPublish extends PendingAction {
 
+	private static final Logger LOGGER = LogManager.getLogger(PendingPublish.class);
+	
 	public static final String TYPE = "PUBLISH";
 	private PublishLevel publishLevel;
 	
@@ -101,10 +105,10 @@ public class PendingPublish extends PendingAction {
 			response = DcfResponse.AP;
 		
 		if ( response == DcfResponse.OK )
-			System.out.println ( publishLevel.getOp() 
+			LOGGER.info ( publishLevel.getOp() + " of " + log.getCatalogueCode()
 					+ ": successfully completed" );
 		else
-			System.out.println ( publishLevel.getOp() 
+			LOGGER.info ( publishLevel.getOp() + " of " + log.getCatalogueCode()
 					+ ": failed - the dcf rejected the operation" );
 
 		return response;

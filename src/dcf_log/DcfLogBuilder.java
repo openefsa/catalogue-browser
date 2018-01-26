@@ -5,6 +5,9 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import utilities.GlobalUtil;
 
@@ -17,6 +20,8 @@ import utilities.GlobalUtil;
  */
 public class DcfLogBuilder {
 
+	private static final Logger LOGGER = LogManager.getLogger(DcfLogBuilder.class);
+	
 	private String action;
 	private Timestamp transmissionDate;
 	private Timestamp processingDate;
@@ -51,6 +56,8 @@ public class DcfLogBuilder {
 			ts = GlobalUtil.getTimestampFromString( date, Catalogue.ISO_8601_24H_FULL_FORMAT );
 		} catch (ParseException e) {
 			e.printStackTrace();
+			LOGGER.error("Cannot parse timestamp=" + date 
+					+ " with format=" + Catalogue.ISO_8601_24H_FULL_FORMAT, e);
 		}
 		
 		return ts;

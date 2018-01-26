@@ -2,6 +2,9 @@ package export_catalogue;
 
 import java.io.IOException;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import catalogue_generator.ThreadFinishedListener;
 import progress_bar.IProgressBar;
@@ -14,6 +17,8 @@ import progress_bar.IProgressBar;
  */
 public class ExportCatalogueThread extends Thread {
 
+	private static final Logger LOGGER = LogManager.getLogger(ExportCatalogueThread.class);
+	
 	private String filename;
 	private Catalogue catalogue;
 	private ThreadFinishedListener listener;
@@ -44,6 +49,8 @@ public class ExportCatalogueThread extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 
+			LOGGER.error("Cannot export catalogue=" + catalogue + " in file=" + filename, e);
+			
 			// exception
 			if ( listener != null )
 				listener.finished( ExportCatalogueThread.this, 

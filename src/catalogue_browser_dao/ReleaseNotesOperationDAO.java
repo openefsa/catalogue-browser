@@ -9,6 +9,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import catalogue.ReleaseNotesOperation;
 
@@ -19,6 +22,8 @@ import catalogue.ReleaseNotesOperation;
  */
 public class ReleaseNotesOperationDAO implements CatalogueEntityDAO<ReleaseNotesOperation>{
 
+	private static final Logger LOGGER = LogManager.getLogger(ReleaseNotesOperationDAO.class);
+	
 	private Catalogue catalogue;
 
 	/**
@@ -84,6 +89,7 @@ public class ReleaseNotesOperationDAO implements CatalogueEntityDAO<ReleaseNotes
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return ids;
@@ -141,6 +147,7 @@ public class ReleaseNotesOperationDAO implements CatalogueEntityDAO<ReleaseNotes
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return ops;

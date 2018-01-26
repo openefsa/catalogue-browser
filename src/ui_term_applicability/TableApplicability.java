@@ -2,6 +2,8 @@ package ui_term_applicability;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -48,6 +50,8 @@ import utilities.GlobalUtil;
 
 public class TableApplicability {
 
+	private static final Logger LOGGER = LogManager.getLogger(TableApplicability.class);
+	
 	private Catalogue catalogue;
 	
 	private Composite parent;                // where to create the table
@@ -527,7 +531,7 @@ public class TableApplicability {
 		else if ( root instanceof AvailableHierarchiesTerm )
 			f.setRootTerm( (AvailableHierarchiesTerm) root );
 		else {
-			System.err.println( "Applicability: Cannot set FormSelectTerm.setRootTerm "
+			LOGGER.error( "Applicability: Cannot set FormSelectTerm.setRootTerm "
 					+ "with an object which is not Hierarchy or "
 					+ "AvailableHierarchiesTerm. Object:" + root );
 			return null;

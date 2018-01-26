@@ -2,6 +2,8 @@ package ui_main_panel;
 
 import javax.xml.soap.SOAPException;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -32,6 +34,8 @@ import window_restorer.RestoreableWindow;
  *
  */
 public class FormDCFLogin {
+	
+	private static final Logger LOGGER = LogManager.getLogger(FormDCFLogin.class);
 	
 	private RestoreableWindow window;
 	private static final String WINDOW_CODE = "FormDCFLogin";
@@ -216,7 +220,7 @@ public class FormDCFLogin {
 				String username = usernameText.getText();
 				String password = passwdText.getText();
 				
-				System.out.println( "Checking credentials" );
+				LOGGER.info( "Checking credentials" );
 				
 				// check the correctness of credentials
 				try {

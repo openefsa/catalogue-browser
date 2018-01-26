@@ -16,6 +16,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.soap.SOAPException;
 import javax.xml.transform.TransformerException;
 
+import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
 import catalogue_browser_dao.AttributeDAO;
@@ -74,6 +75,8 @@ import utilities.GlobalUtil;
 public class Catalogue extends BaseObject 
 	implements Comparable<Catalogue>, Mappable, Cloneable, IDcfCatalogue {
 
+	private static final Logger LOGGER = Logger.getLogger(Catalogue.class);
+	
 	// date format of the catalogues
 	public static final String ISO_8601_24H_FULL_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
 
@@ -314,6 +317,7 @@ public class Catalogue extends BaseObject
 			applThread.join();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+			LOGGER.error("Refresh failed for catalogue=" + this, e);
 		}
 	}
 
@@ -391,7 +395,7 @@ public class Catalogue extends BaseObject
 		if ( manager.getCurrentCatalogue() != null )
 			manager.getCurrentCatalogue().closeQuitely();
 		
-		System.out.println ( "Opening " + this + " at " + getDbPath() );
+		LOGGER.info ( "Opening " + this + " at " + getDbPath() );
 
 		// load the catalogue data into RAM
 		loadData();
@@ -417,8 +421,8 @@ public class Catalogue extends BaseObject
 		try {
 			DriverManager.getConnection( getShutdownDBURL() );
 		} catch (SQLException e) {
-			System.out.println ( "System shutted down with code : " + e.getErrorCode() + " and state " + e.getSQLState() );
-			System.out.println ( "Correct shutdown has code 45000 and state 08006 or XJ004" );
+			LOGGER.info ( "System shutted down with code : " + e.getErrorCode() + " and state " + e.getSQLState() );
+			LOGGER.info ( "Correct shutdown has code 45000 and state 08006 or XJ004" );
 		}
 	}
 
@@ -427,7 +431,7 @@ public class Catalogue extends BaseObject
 	 */
 	public void close() {
 		
-		System.out.println ( "Closing " + this + " at " + getDbPath() );
+		LOGGER.info ( "Closing " + this + " at " + getDbPath() );
 		
 		// remove current catalogue
 		GlobalManager manager = GlobalManager.getInstance();
@@ -480,7 +484,7 @@ public class Catalogue extends BaseObject
 
 		// if the opened catalogue is not this one => return
 		if ( !manager.getCurrentCatalogue().sameAs( this ) ) {
-			System.err.println( "Cannot refresh catalogue UI: catalogue not opened " + this );
+			LOGGER.warn( "Cannot refresh catalogue UI: catalogue not opened " + this );
 			return;
 		}
 
@@ -1023,7 +1027,7 @@ public class Catalogue extends BaseObject
 		Term term = terms.get( id );
 
 		if ( term == null ) {
-			System.err.println ( "Term with id " + id + " not found in catalogue " + this );
+			LOGGER.error ( "Term with id " + id + " not found in catalogue " + this );
 		}
 
 		// get the term with the key
@@ -1085,7 +1089,7 @@ public class Catalogue extends BaseObject
 	public synchronized Catalogue forceEdit ( String username, ReserveLevel level ) {
 
 		if ( level.isNone() ) {
-			System.err.println( "Cannot force editing at level NONE" );
+			LOGGER.error( "Cannot force editing at level NONE" );
 			return null;
 		}
 
@@ -1104,8 +1108,7 @@ public class Catalogue extends BaseObject
 		
 		forcedCatalogue.setStatus( StatusValues.TEMPORARY );
 
-		System.out.println( "Editing forced by " 
-				+ username + " for " + this );
+		LOGGER.info( "Editing forced by " + username + " for " + this );
 
 		ForceCatEditDAO forceDao = new ForceCatEditDAO();
 		forceDao.forceEditing( forcedCatalogue, username, level );
@@ -1119,7 +1122,7 @@ public class Catalogue extends BaseObject
 	 */
 	public void confirmVersion () {
 
-		System.out.println ( "Version confirmed for " + this );
+		LOGGER.info ( "Version confirmed for " + this );
 		
 		// remove forced flag
 		version.confirm();
@@ -1142,7 +1145,7 @@ public class Catalogue extends BaseObject
 	 */
 	public synchronized void invalidate() {
 
-		System.out.println( "Invalid version for " + this );
+		LOGGER.info( "Invalid version for " + this );
 		
 		// add the NULL flag
 		version.invalidate();
@@ -1168,7 +1171,7 @@ public class Catalogue extends BaseObject
 	 */
 	private synchronized void removeForceEdit () {
 
-		System.out.println( "Forced editing removed by " 
+		LOGGER.info( "Forced editing removed by " 
 				+ User.getInstance() + " for " + this );
 
 		ForceCatEditDAO forceDao = new ForceCatEditDAO();
@@ -1228,7 +1231,7 @@ public class Catalogue extends BaseObject
 	public synchronized Catalogue reserve( String note, ReserveLevel reserveLevel ) {
 
 		if ( reserveLevel.isNone() ) {
-			System.err.println ( "You are reserving a catalogue with ReserveLevel.NONE "
+			LOGGER.warn ( "You are reserving a catalogue with ReserveLevel.NONE "
 					+ "as reserve level, use unreserve instead" );
 			return null;
 		}
@@ -1246,7 +1249,7 @@ public class Catalogue extends BaseObject
 		else {
 			// get a new internal version of the catalogue
 			newCatalogue = newInternalVersion();
-			System.out.println ( "Creating new internal version " + newCatalogue );
+			LOGGER.info ( "Creating new internal version " + newCatalogue );
 		}
 
 		// reserve the catalogue into the db
@@ -1281,7 +1284,7 @@ public class Catalogue extends BaseObject
 		if ( rc != null )
 			resDao.remove( rc );
 		else
-			System.err.println( "Catalogue already unreserved " + this );
+			LOGGER.warn( "Cannot unreserve: the catalogue is already unreserved=" + this );
 
 		// update the catalogue status
 		CatalogueDAO catDao = new CatalogueDAO();
@@ -1674,12 +1677,12 @@ public class Catalogue extends BaseObject
 
 	@Override
 	public void setRawVersion(Version version) {
-		System.err.println( "setRawVersion not supported by Catalogue, use setCatalogueVersion instead" );
+		LOGGER.error( "setRawVersion not supported by Catalogue, use setCatalogueVersion instead" );
 	}
 
 	@Override
 	public Version getRawVersion() {
-		System.err.println( "getRawVersion not supported by Catalogue, use getCatalogueVersion instead" );
+		LOGGER.error( "getRawVersion not supported by Catalogue, use getCatalogueVersion instead" );
 		return null;
 	}
 
@@ -1959,7 +1962,7 @@ public class Catalogue extends BaseObject
 			Hierarchy temp = getHierarchyByCode( hierarchyCode );
 
 			if ( temp == null ) {
-				System.err.println( "Catalogue scopenote - "
+				LOGGER.error( "Catalogue scopenote - "
 						+ "NotUsedHierarchies: Hierarchy with code " + hierarchyCode + " not found!");
 				continue;
 			}
@@ -2235,7 +2238,7 @@ public class Catalogue extends BaseObject
 	 */
 	public File download() throws SOAPException, AttachmentNotFoundException {
 
-		System.out.println ( "Downloading " + this );
+		LOGGER.info ( "Downloading " + this );
 
 		// ask for exporting catalogue to the dcf
 		// export the catalogue and save its attachment into an xml file

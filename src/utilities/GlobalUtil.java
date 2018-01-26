@@ -46,9 +46,6 @@ public class GlobalUtil {
 	final static public String RESERVE_SCHEMA = getConfigDir() + "reserveSchema.xml";
 	final static public String PUBLISH_SCHEMA = getConfigDir() + "publishSchema.xml";
 	
-	final static public String LOG_FILES_DIR_NAME = "log";
-	final static public String LOG_FILES_DIR_PATH = getLogDir();
-	
 	// directory which contains all the pick lists
 	final static public String PICKLISTS_DIR_NAME = "picklists";
 	final static public String PICKLISTS_DIR_PATH = getPicklistDir();
@@ -86,11 +83,6 @@ public class GlobalUtil {
 	
 	public static String getPrefDir() {
 		return ( workDir + PREF_DIR_NAME + 
-				System.getProperty( "file.separator" ) );
-	}
-
-	public static String getLogDir() {
-		return ( workDir + LOG_FILES_DIR_NAME + 
 				System.getProperty( "file.separator" ) );
 	}
 	
@@ -196,11 +188,6 @@ public class GlobalUtil {
 		// create the business rules directory
 		if ( !fileExists( BUSINESS_RULES_DIR_PATH ) ) {
 			new File( BUSINESS_RULES_DIR_PATH ).mkdir();
-		}
-		
-		// create the business rules directory
-		if ( !fileExists( LOG_FILES_DIR_PATH ) ) {
-			new File( LOG_FILES_DIR_PATH ).mkdir();
 		}
 		
 		// create preferences directory
@@ -438,9 +425,6 @@ public class GlobalUtil {
 	 * @throws IOException 
 	 */
 	public static void copyFile ( File source, File target ) throws IOException {
-		
-		System.out.println( "Copying " + source + " into " + target );
-		
 		// copy the .start file into the sas folder
 		DatabaseManager.copyFolder( source, target );
 	}

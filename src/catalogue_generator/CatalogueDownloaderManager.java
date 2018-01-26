@@ -3,6 +3,8 @@ package catalogue_generator;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Listener;
 
 /**
@@ -15,6 +17,8 @@ import org.eclipse.swt.widgets.Listener;
  */
 public class CatalogueDownloaderManager extends Thread {
 
+	private static final Logger LOGGER = LogManager.getLogger(CatalogueDownloaderManager.class);
+	
 	private ArrayList<CatalogueDownloader> threads;
 	private int batchSize;
 	private Listener doneListener;
@@ -50,7 +54,7 @@ public class CatalogueDownloaderManager extends Thread {
 	public void run() {
 
 		if ( batchSize > threads.size() ) {
-			System.err.println( "CatalogueDownloaderManager: Cannot create a batch size greater "
+			LOGGER.warn( "CatalogueDownloaderManager: Cannot create a batch size greater "
 					+ "that the available threads. Setting to " + threads.size() );
 			batchSize = threads.size();
 		}
@@ -99,6 +103,7 @@ public class CatalogueDownloaderManager extends Thread {
 			Thread.sleep( time );
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+			LOGGER.error("Cannot sleep thread=" + this, e);
 		}
 	}
 }

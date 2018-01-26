@@ -2,6 +2,9 @@ package catalogue_object;
 
 import java.sql.Timestamp;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import data_transformation.BooleanConverter;
 import data_transformation.DateTrimmer;
@@ -11,6 +14,8 @@ import term.WrongKeyException;
 
 public class Attribute extends SortableCatalogueObject implements Mappable {
 
+	private static final Logger LOGGER = LogManager.getLogger(Attribute.class);
+	
 	// Set the fixed values of attributes
 	public static final String cardinalitySingle = "single";
 	public static final String cardinalityRepeatable = "repeatable";
@@ -463,7 +468,7 @@ public class Attribute extends SortableCatalogueObject implements Mappable {
 		return value;
 	}
 	
-	private String[] splitCatalogueCode() {
+	/*private String[] splitCatalogueCode() {
 		
 		// Return if the attribute is not a catalogue attribute
 		if ( !isCatalogue() ) {
@@ -481,7 +486,7 @@ public class Attribute extends SortableCatalogueObject implements Mappable {
 		}
 
 		return codes;
-	}
+	}*/
 	
 	/*public String getSplittedCatalogueCode() {
 		String[] codes = splitCatalogueCode();
@@ -524,7 +529,7 @@ public class Attribute extends SortableCatalogueObject implements Mappable {
 
 			// Skip if wrong format
 			if ( codes.length != 2 ) {
-				System.err.println ( "Wrong attributeCatalogueCode format! Found " + this.getCatalogueCode()
+				LOGGER.error ( "Wrong attributeCatalogueCode format! Found " + this.getCatalogueCode()
 						             + " The code format should be: catalogueCode.HierarchyCode" );
 				continue;
 			}

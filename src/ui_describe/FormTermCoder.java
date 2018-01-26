@@ -565,7 +565,6 @@ public class FormTermCoder {
 
 					if ( data.equals( "" ) ) { //$NON-NLS-1$
 						data = content;
-						System.out.println( "empty data , refilled" ); //$NON-NLS-1$
 					}
 					clipboard.setContents( new Object[] { data },
 							new Transfer[] { TextTransfer.getInstance() } );

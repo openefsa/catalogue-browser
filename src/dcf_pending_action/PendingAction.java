@@ -7,6 +7,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.soap.SOAPException;
 import javax.xml.transform.TransformerException;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.xml.sax.SAXException;
@@ -37,6 +39,8 @@ import utilities.GlobalUtil;
  *
  */
 public abstract class PendingAction {
+	
+	private static final Logger LOGGER = LogManager.getLogger(PendingAction.class);
 	
 	// id in the database
 	private int id;
@@ -106,7 +110,7 @@ public abstract class PendingAction {
 	 */
 	public void start ( boolean notifyStart ) throws SOAPException {
 		
-		System.out.println( "Starting " + this );
+		LOGGER.info( "Starting " + this );
 		
 		// we are starting the process
 		if ( notifyStart )
@@ -142,7 +146,7 @@ public abstract class PendingAction {
 			// in order to refresh correctly the UI
 			setStatus( PendingActionStatus.QUEUED );
 
-			System.out.println( "Downgrading to LOW priority " + this );
+			LOGGER.info( "Downgrading to LOW priority " + this );
 			
 			// downgrade the pending reserve priority
 			downgradePriority();
@@ -190,6 +194,7 @@ public abstract class PendingAction {
 			parsedLog = parser.parse( log );
 		} catch (SAXException | IOException e) {
 			e.printStackTrace();
+			LOGGER.error("Cannot parse dcf log in file=" + log, e);
 		}
 		
 		return parsedLog;
@@ -201,7 +206,7 @@ public abstract class PendingAction {
 	 */
 	public synchronized void terminate() {
 		
-		System.out.println( "Terminating " + this );
+		LOGGER.info( "Terminating " + this );
 		
 		PendingActionDAO prDao = new PendingActionDAO();
 		prDao.remove( this );
@@ -274,7 +279,7 @@ public abstract class PendingAction {
 			// update the status of the pending reserve
 			setStatus( PendingActionStatus.IMPORTING_LAST_VERSION );
 			
-			System.out.println ( this + ": This is not the last version "
+			LOGGER.info ( this + ": This is not the last version "
 					+ "of the catalogue, importing " + lastVersion );
 
 			
@@ -307,6 +312,8 @@ public abstract class PendingAction {
 		} catch (IOException | TransformerException | 
 				ParserConfigurationException | SAXException e) {
 			e.printStackTrace();
+			
+			LOGGER.error("Cannot import last version of the catalogue=" + catalogue, e);
 			
 			setStatus( PendingActionStatus.ERROR );
 			return null;

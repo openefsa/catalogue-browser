@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Collection;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import catalogue.ReleaseNotes;
 import catalogue.ReleaseNotesOperation;
@@ -18,6 +21,8 @@ import catalogue.ReleaseNotesOperation;
  */
 public class ReleaseNotesDAO {
 
+	private static final Logger LOGGER = LogManager.getLogger(ReleaseNotesDAO.class);
+	
 	private Catalogue catalogue;
 	
 	/**
@@ -58,6 +63,7 @@ public class ReleaseNotesDAO {
 			
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return false;
@@ -92,6 +98,7 @@ public class ReleaseNotesDAO {
 			con.close();
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return rn;

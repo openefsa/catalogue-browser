@@ -6,6 +6,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 
 /**
@@ -17,6 +20,8 @@ import catalogue.Catalogue;
  */
 public class PicklistParser {
 
+	private static final Logger LOGGER = LogManager.getLogger(PicklistParser.class);
+	
 	private Catalogue catalogue;
 	private String delim;
 	private String currentLine;
@@ -29,7 +34,7 @@ public class PicklistParser {
 		File file = new File( filename );
 		
 		if ( !file.exists() ) {
-			System.err.println ( "The file " + filename + " does not exist" );
+			LOGGER.error ( "The file " + filename + " does not exist" );
 			return;
 		}
 		
@@ -43,6 +48,7 @@ public class PicklistParser {
 			
 		} catch (IOException e) {
 			e.printStackTrace();
+			LOGGER.error("Cannot open file=" + filename, e);
 		}
 		
 		this.delim = delim;
@@ -70,6 +76,7 @@ public class PicklistParser {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+			LOGGER.error("Cannot get next term", e);
 		}
 		
 		// parse the current line
@@ -77,7 +84,7 @@ public class PicklistParser {
 
 		// if wrong number of tokens return
 		if ( st.countTokens() < 3 ) {
-			System.err.println ( "Wrong number of columns, expected 3, found : " + st.countTokens() );
+			LOGGER.error ( "Wrong number of columns, expected 3, found : " + st.countTokens() );
 			return null;
 		}
 

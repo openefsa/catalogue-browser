@@ -12,6 +12,9 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import catalogue_object.Term;
 
@@ -21,6 +24,8 @@ import catalogue_object.Term;
  *
  */
 public class TermDAO implements CatalogueEntityDAO<Term> {
+	
+	private static final Logger LOGGER = LogManager.getLogger(TermDAO.class);
 	
 	private Catalogue catalogue;
 	
@@ -116,6 +121,7 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 			
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return ids;
@@ -177,8 +183,9 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 			
 			return true;
 			
-		} catch ( SQLException sqle ) {
-			sqle.printStackTrace();
+		} catch ( SQLException e ) {
+			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return false;
@@ -229,8 +236,9 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 
 			return terms;
 
-		} catch ( SQLException sqle ) {
-			sqle.printStackTrace();
+		} catch ( SQLException e ) {
+			e.printStackTrace();
+			LOGGER.error("DB error", e);
 			return null;
 		}
 	}
@@ -265,8 +273,9 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 			
 			return term;
 
-		} catch ( SQLException sqle ) {
-			sqle.printStackTrace();
+		} catch ( SQLException e ) {
+			e.printStackTrace();
+			LOGGER.error("DB error", e);
 			return null;
 		}
 	}
@@ -302,8 +311,9 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 			
 			return term;
 
-		} catch ( SQLException sqle ) {
-			sqle.printStackTrace();
+		} catch ( SQLException e ) {
+			e.printStackTrace();
+			LOGGER.error("DB error", e);
 			return null;
 		}
 	}
@@ -410,6 +420,7 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 			
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 			return false;
 		}
 	}

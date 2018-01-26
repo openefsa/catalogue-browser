@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.TransformerException;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.apache.poi.openxml4j.exceptions.OpenXML4JException;
 import org.xml.sax.SAXException;
 
@@ -18,6 +20,8 @@ import xml_to_excel.XmlCatalogueToExcel;
 import zip_manager.ZipManager;
 
 public class CatalogueImporter {
+	
+	private static final Logger LOGGER = LogManager.getLogger(CatalogueImporter.class);
 	
 	private String filename;  // path of the file
 	private ImportFileFormat format;  // the format of the file
@@ -115,7 +119,7 @@ public class CatalogueImporter {
 			final File unzippedFolder = new File( outputFolder );
 
 			if ( unzippedFolder.listFiles().length <= 0 ) {
-				System.err.println ( "Wrong file format, "
+				LOGGER.error( "Wrong file format, "
 						+ "cannot find the xml file inside the .ecf" );
 				return null;
 			}

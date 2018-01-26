@@ -8,11 +8,16 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue_browser_dao.CatalogueEntityDAO;
 import catalogue_browser_dao.DatabaseManager;
 
 public class DCTableConfigDAO implements CatalogueEntityDAO<DCTableConfig> {
 
+	private static final Logger LOGGER = LogManager.getLogger(DCTableConfigDAO.class);
+	
 	@Override
 	public int insert(DCTableConfig rel) {
 
@@ -42,6 +47,7 @@ public class DCTableConfigDAO implements CatalogueEntityDAO<DCTableConfig> {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return id;
@@ -68,6 +74,7 @@ public class DCTableConfigDAO implements CatalogueEntityDAO<DCTableConfig> {
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return false;
@@ -111,6 +118,7 @@ public class DCTableConfigDAO implements CatalogueEntityDAO<DCTableConfig> {
 			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return out;

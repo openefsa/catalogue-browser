@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import naming_convention.SpecialValues;
 import term_type.TermType;
@@ -30,6 +33,8 @@ import term_type.TermTypeDAO;
  */
 public class TermTypeImporter {
 
+	private static final Logger LOGGER = LogManager.getLogger(TermTypeImporter.class);
+	
 	private Catalogue catalogue;
 	
 	public TermTypeImporter( Catalogue catalogue ) {
@@ -102,7 +107,7 @@ public class TermTypeImporter {
 					// if wrong number of elements return
 					if ( values.length != 2 ) {
 					
-						System.err.println ( "Wrong term type syntax in scopenotes, found : " + token + " expected: "
+						LOGGER.error ( "Wrong term type syntax in scopenotes, found : " + token + " expected: "
 								+ "code=description. Check also the white spaces." );
 						
 						return null;
@@ -121,6 +126,7 @@ public class TermTypeImporter {
 		}
 		catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return termTypes;

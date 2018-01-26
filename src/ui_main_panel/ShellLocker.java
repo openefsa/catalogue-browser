@@ -1,5 +1,7 @@
 package ui_main_panel;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -17,6 +19,8 @@ import org.eclipse.swt.widgets.Shell;
  *
  */
 public class ShellLocker {
+	
+	private static final Logger LOGGER = LogManager.getLogger(ShellLocker.class);
 	
 	/**
 	 * Set the lock on the shell.
@@ -45,7 +49,7 @@ public class ShellLocker {
 		// add the listener
 		shell.addListener( SWT.Close, listener );
 		
-		System.out.println( "Shell lock set" );
+		LOGGER.info( "Shell lock set for " + shell );
 	}
 	
 	/**
@@ -61,7 +65,7 @@ public class ShellLocker {
 			
 			shell.removeListener( SWT.Close, l );
 
-			System.out.println( "Shell lock removed" );
+			LOGGER.info( "Shell lock removed for " + shell );
 		}
 	}
 }

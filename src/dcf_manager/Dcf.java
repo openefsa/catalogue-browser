@@ -8,6 +8,8 @@ import java.util.Collections;
 
 import javax.xml.soap.SOAPException;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Listener;
 
 import catalogue.Catalogue;
@@ -19,6 +21,7 @@ import data_collection.DCTable;
 import data_collection.DCTableList;
 import data_collection.DataCollection;
 import data_collection.DataCollectionsList;
+import dcf_log.DcfLogParser;
 import dcf_pending_action.PendingAction;
 import dcf_pending_action.PendingActionDAO;
 import dcf_pending_action.PendingActionListener;
@@ -43,6 +46,8 @@ import soap.Ping;
  *
  */
 public class Dcf {
+	
+	private static final Logger LOGGER = LogManager.getLogger(Dcf.class);
 	
 	// get the dcf type and store it for the whole program
 	public static final DcfType dcfType = new Config().isProductionEnvironment() ? 
@@ -357,6 +362,7 @@ public class Dcf {
 			req.getList();
 		} catch (Exception e) {
 			e.printStackTrace();
+			LOGGER.error("Cannot get catalogues list", e);
 		}
 
 		return list;
@@ -375,6 +381,7 @@ public class Dcf {
 			req.getList();
 		} catch (Exception e) {
 			e.printStackTrace();
+			LOGGER.error("Cannot get data collections", e);
 		}
 
 		return list;

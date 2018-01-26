@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -38,6 +40,8 @@ import property.SorterCatalogueObject;
  */
 public class HierarchySelector extends Observable implements Observer {
 
+	private static final Logger LOGGER = LogManager.getLogger(HierarchySelector.class);
+	
 	private Catalogue catalogue;
 	
 	// parent composite
@@ -159,7 +163,7 @@ public class HierarchySelector extends Observable implements Observer {
 					return;
 				
 				if ( catalogue.getFacetHierarchies().isEmpty() ) {
-					System.err.println( "Cannot select facet radio button, "
+					LOGGER.error( "Cannot select facet radio button, "
 							+ "no facets hierarchies were found for " + catalogue );
 					return;
 				}
@@ -255,7 +259,7 @@ public class HierarchySelector extends Observable implements Observer {
 		
 		// the hierarchy is not in the hierarchies list
 		if ( !input.isEmpty() && !input.contains ( hierarchy ) ) {
-			System.err.println( "Cannot change hierarchy selector selection with " 
+			LOGGER.error( "Cannot change hierarchy selector selection with " 
 				+ hierarchy + " since it is not contained in the available hierarchies");
 			return false;
 		}

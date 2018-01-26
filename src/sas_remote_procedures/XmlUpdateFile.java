@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import dcf_pending_action.PendingUploadData;
 import utilities.GlobalUtil;
@@ -17,6 +20,8 @@ import utilities.GlobalUtil;
  */
 public class XmlUpdateFile {
 
+	private static final Logger LOGGER = LogManager.getLogger(XmlUpdateFile.class);
+	
 	/**
 	 * The export format of the exported file as soon
 	 * as the export is finished
@@ -69,7 +74,7 @@ public class XmlUpdateFile {
 	 */
 	public File downloadXml ( long interAttemptsTime ) throws IOException {
 		
-		System.out.println( "Downloading xml" );
+		LOGGER.info( "Downloading xml" );
 		
 		// get the xml filename related to this catalogue
 		XmlUpdateFileDAO xmlDao = new XmlUpdateFileDAO();
@@ -80,7 +85,7 @@ public class XmlUpdateFile {
 					catalogue + " not found in the main database" );
 		}
 		
-		System.out.println( "Filename found: " + xmlUpdateFile.getXmlFilename() );
+		LOGGER.info( "Filename found: " + xmlUpdateFile.getXmlFilename() );
 		
 		String processEndFilename = SasRemotePaths.XML_UPDATES_CREATOR_INPUT_FOLDER + 
 				xmlUpdateFile.getXmlFilename() + REMOTE_END_FORMAT;
@@ -96,11 +101,11 @@ public class XmlUpdateFile {
 		
 		// if the file was already downloaded simply return it
 		if ( localXmlFile.exists() ) {
-			System.out.println( "The file " + localXmlFile + " was already downloaded, returning it..." );
+			LOGGER.info( "The file " + localXmlFile + " was already downloaded, returning it..." );
 			return localXmlFile;
 		}
 		
-		System.out.println( "Searching " + processEndFilename );
+		LOGGER.info( "Searching " + processEndFilename );
 		
 		// POLLING
 		// search for the lock file
@@ -111,10 +116,11 @@ public class XmlUpdateFile {
 				Thread.sleep( interAttemptsTime );
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+				LOGGER.error("Cannot wait thread", e);
 			}
 		}
 
-		System.out.println( "File " + processEndFilename + " found!" );
+		LOGGER.info( "File " + processEndFilename + " found!" );
 		
 		// here the file exists therefore we can go on
 
@@ -124,7 +130,7 @@ public class XmlUpdateFile {
 		// delete the .process.end file from the server
 		Files.delete( Paths.get( processEndFilename ) );
 		
-		System.out.println( "Download xml process finished" );
+		LOGGER.info( "Download xml process finished" );
 		
 		return localXmlFile;
 	}
@@ -141,6 +147,7 @@ public class XmlUpdateFile {
 					XmlUpdateFile.REMOTE_OUT_FORMAT );
 		} catch (IOException e) {
 			e.printStackTrace();
+			LOGGER.error("Cannot delete file " + xmlFilename + XmlUpdateFile.REMOTE_OUT_FORMAT, e);
 		}
 		
 		// delete record on db

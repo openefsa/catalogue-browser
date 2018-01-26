@@ -3,6 +3,8 @@ package ui_main_panel;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -12,16 +14,15 @@ import org.eclipse.swt.widgets.Shell;
 import catalogue_browser_dao.DatabaseManager;
 import catalogue_generator.ThreadFinishedListener;
 import config.AppConfig;
+import converter.ExceptionConverter;
 import dcf_user.ReauthThread;
 import dcf_user.User;
 import dcf_user.UserAccessLevel;
 import dcf_user.UserListener;
-import exception_manager.ExceptionConverter;
 import instance_checker.InstanceChecker;
 import messages.Messages;
 import ui_main_menu.LoginActions;
 import utilities.GlobalUtil;
-import utilities.Log;
 
 /**
  * Entry point for the Catalogue Browser application.
@@ -31,6 +32,8 @@ import utilities.Log;
  */
 public class CatalogueBrowserMain {
 
+	private static final Logger LOGGER = LogManager.getLogger(CatalogueBrowserMain.class);
+	
 	public static final String APP_NAME = AppConfig.getAppName();
 	public static final String APP_VERSION = AppConfig.getAppVersion();
 	public static final String APP_TITLE = APP_NAME + " " + APP_VERSION;
@@ -44,16 +47,14 @@ public class CatalogueBrowserMain {
 	 */
 	public static void main ( String[] args ) {
 
-		Log log = new Log();
-		log.refreshLogging();
-		
 		try {
 			launch();
 		}
 		catch(Exception e) {
 			
 			e.printStackTrace();
-			log.close();
+			
+			LOGGER.error("Generic error occurred", e);
 			
 			String trace = ExceptionConverter.getStackTrace(e);
 			
@@ -93,18 +94,18 @@ public class CatalogueBrowserMain {
 		});
 	}
 	
-	private static void launch() {
+	private static void launch() throws IOException {
 		
 		InstanceChecker.closeIfAlreadyRunning();
 		
 		// application start-up message. Usage of System.err used for red chars
-		System.out.println( "Application Started " + System.currentTimeMillis() );
+		LOGGER.info( "Application Started " + System.currentTimeMillis() );
 
 		// system separator
-		System.out.println( "Reading OS file separator: " + System.getProperty( "file.separator" ) );
+		LOGGER.info( "Reading OS file separator: " + System.getProperty( "file.separator" ) );
 
 		// database path
-		System.out.println( "Locating main database path in: " + DatabaseManager.MAIN_CAT_DB_FOLDER );
+		LOGGER.info( "Locating main database path in: " + DatabaseManager.MAIN_CAT_DB_FOLDER );
 
 		// create the directories of the application
 		GlobalUtil.createApplicationFolders();
@@ -130,6 +131,7 @@ public class CatalogueBrowserMain {
 				DatabaseManager.addNotExistingTables();
 			} catch (SQLException | IOException e) {
 				e.printStackTrace();
+				LOGGER.error("Cannot add not existing tables", e);
 			}
 		}
 		

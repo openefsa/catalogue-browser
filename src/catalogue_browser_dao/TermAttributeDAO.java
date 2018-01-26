@@ -8,6 +8,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import catalogue_object.Attribute;
 import catalogue_object.Term;
@@ -22,6 +25,8 @@ import catalogue_object.TermAttribute;
  */
 public class TermAttributeDAO implements CatalogueRelationDAO< TermAttribute, Term, Attribute >{
 
+	private static final Logger LOGGER = LogManager.getLogger(TermAttributeDAO.class);
+	
 	private Catalogue catalogue;
 	
 	/**
@@ -95,6 +100,7 @@ public class TermAttributeDAO implements CatalogueRelationDAO< TermAttribute, Te
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return ids;
@@ -134,6 +140,7 @@ public class TermAttributeDAO implements CatalogueRelationDAO< TermAttribute, Te
 			
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return false;
@@ -173,6 +180,7 @@ public class TermAttributeDAO implements CatalogueRelationDAO< TermAttribute, Te
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return tas;
@@ -230,6 +238,7 @@ public class TermAttributeDAO implements CatalogueRelationDAO< TermAttribute, Te
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return attributes;
@@ -269,6 +278,7 @@ public class TermAttributeDAO implements CatalogueRelationDAO< TermAttribute, Te
 		}
 		catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return false;
@@ -304,6 +314,7 @@ public class TermAttributeDAO implements CatalogueRelationDAO< TermAttribute, Te
 		}
 		catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return false;
@@ -356,6 +367,7 @@ public class TermAttributeDAO implements CatalogueRelationDAO< TermAttribute, Te
 		}
 		catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return false;

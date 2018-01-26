@@ -9,9 +9,7 @@ public class ContentProviderWarning implements IStructuredContentProvider {
 	public void dispose ( ) {
 	}
 
-	public void inputChanged ( Viewer arg0 , Object arg1 , Object arg2 ) {
-		// System.out.println("Input changed: old=" + arg1 + ", new=" + arg2);
-	}
+	public void inputChanged ( Viewer arg0 , Object arg1 , Object arg2 ) {}
 
 	public Object[] getElements ( Object warnings ) {
 		@SuppressWarnings("unchecked")

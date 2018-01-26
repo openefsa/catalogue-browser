@@ -4,6 +4,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import utilities.GlobalUtil;
 
 /**
@@ -13,6 +16,8 @@ import utilities.GlobalUtil;
  */
 public class AppConfig {
 
+	private static final Logger LOGGER = LogManager.getLogger(AppConfig.class);
+	
 	private static final String APP_NAME_PROPERTY = "Application.Name";
 	private static final String APP_VERSION_PROPERTY = "Application.Version";
 	private static final String DCF_XML_CREATOR = "DcfXmlUpdatesCreator.RemotePath";
@@ -37,7 +42,7 @@ public class AppConfig {
 			in.close();
 		}
 		catch ( IOException e ) {
-			System.err.println( "The default properties file was not found. Please check!" );
+			LOGGER.error( "The default properties file was not found. Please check!", e );
 		}
 		
 		return properties;

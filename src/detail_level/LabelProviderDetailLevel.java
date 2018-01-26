@@ -1,5 +1,7 @@
 package detail_level;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
@@ -7,6 +9,8 @@ import org.eclipse.swt.widgets.Display;
 
 public class LabelProviderDetailLevel implements ILabelProvider {
 
+	private static final Logger LOGGER = LogManager.getLogger(LabelProviderDetailLevel.class);
+	
 	@Override
 	public String getText(Object attr) {
 
@@ -41,7 +45,7 @@ public class LabelProviderDetailLevel implements ILabelProvider {
 			image = new Image( Display.getCurrent() , this.getClass().getClassLoader().getResourceAsStream(
 					detailLevel.getImageName() ) );
 		} catch ( Exception e ) {
-			System.err.println( "Cannot find icons" );
+			LOGGER.error( "Cannot find icons", e );
 		}
 		
 		return image;

@@ -8,6 +8,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import catalogue_object.Applicability;
 import catalogue_object.BaseObject;
@@ -24,6 +27,8 @@ import catalogue_object.Term;
  */
 public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, Hierarchy> {
 
+	private static final Logger LOGGER = LogManager.getLogger(ParentTermDAO.class);
+	
 	private Catalogue catalogue;
 	
 	/**
@@ -110,6 +115,7 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return ids;
@@ -161,6 +167,7 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return false;
@@ -215,6 +222,7 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return false;
@@ -294,6 +302,7 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 			
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return appls;
@@ -324,6 +333,7 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 			return false;
 		}
 		return true;
@@ -417,8 +427,9 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 			stmt.close();
 			con.close();
 			
-		} catch ( SQLException sqle ) {
-			sqle.printStackTrace();
+		} catch ( SQLException e ) {
+			e.printStackTrace();
+			LOGGER.error("DB error", e);
 			return children;
 		}
 		
@@ -474,6 +485,7 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 			return maxOrder;
 		}
 
@@ -530,6 +542,7 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 		}
 		catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}	
 	}
 	
@@ -561,6 +574,7 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 			
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 	}
 	
@@ -602,6 +616,7 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 			
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 	}
 	
@@ -645,6 +660,7 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 		}
 		catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}	
 	}
 

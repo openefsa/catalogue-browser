@@ -1,5 +1,6 @@
 package test;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -25,7 +26,7 @@ public class ForcedReserve {
 
 	public static boolean GO_ON = false;
 	
-	public static void main( String[] args ) throws InterruptedException, SOAPException, SQLException {
+	public static void main( String[] args ) throws InterruptedException, SOAPException, SQLException, IOException {
 		
 		Display display = new Display();
 		final Shell shell = new Shell ( display );

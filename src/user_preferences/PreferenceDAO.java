@@ -7,10 +7,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue_browser_dao.CatalogueEntityDAO;
 
 public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference>{
 
+	private static final Logger LOGGER = LogManager.getLogger(PreferenceDAO.class);
+	
 	/**
 	 * Get the preference value as string
 	 * @param key
@@ -135,6 +140,7 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference>{
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return preferences;
@@ -177,6 +183,7 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference>{
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return id;
@@ -217,6 +224,7 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference>{
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return false;
@@ -239,6 +247,7 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference>{
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 	}
 
@@ -259,13 +268,14 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference>{
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return false;
 	}
 
 	public Preference getById(int id) {
-		System.err.println("PreferenceDAO: getById not supported!");
+		LOGGER.error("PreferenceDAO: getById not supported!");
 		return null;
 	}
 	
@@ -307,6 +317,7 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference>{
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return contained;

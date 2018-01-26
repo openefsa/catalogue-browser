@@ -1,5 +1,7 @@
 package dcf_manager;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
@@ -11,6 +13,8 @@ import org.eclipse.swt.widgets.Listener;
  *
  */
 public class UpdatesChecker extends Thread {
+	
+	private static final Logger LOGGER = LogManager.getLogger(UpdatesChecker.class);
 	
 	// listener called when the updates are finished
 	private Listener updatesListener;
@@ -45,6 +49,7 @@ public class UpdatesChecker extends Thread {
 		
 		catch ( Exception e ) {
 			e.printStackTrace();
+			LOGGER.error("Cannot get catalogues list", e);
 		}
 	}
 }

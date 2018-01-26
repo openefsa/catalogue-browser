@@ -1,5 +1,7 @@
 package catalogue_generator;
 
+import java.io.IOException;
+
 import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_browser_dao.HierarchyDAO;
@@ -13,9 +15,10 @@ public class CatalogueCreator {
 	 * Create a new local catalogue in the user pc. This catalogue is not official!
 	 * Return the new catalogue object
 	 * @throws DuplicatedCatalogueException 
+	 * @throws IOException 
 	 */
 	public static Catalogue newLocalCatalogue ( String catalogueCode ) 
-			throws DuplicatedCatalogueException {
+			throws DuplicatedCatalogueException, IOException {
 
 		// replace spaces with underscores
 		catalogueCode = catalogueCode.replaceAll(" ", "_" );

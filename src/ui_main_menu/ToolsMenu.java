@@ -42,14 +42,7 @@ import ui_main_panel.HierarchyEditor;
 import user_preferences.CataloguePreferenceDAO;
 import user_preferences.FormSearchOptions;
 import user_preferences.FormUserPreferences;
-import user_preferences.GlobalPreference;
-import user_preferences.GlobalPreferenceDAO;
-import user_preferences.Preference;
-import user_preferences.PreferenceDAO;
-import user_preferences.PreferenceNotFoundException;
-import user_preferences.PreferenceType;
 import utilities.GlobalUtil;
-import utilities.Log;
 
 public class ToolsMenu implements MainMenuItem {
 
@@ -92,7 +85,6 @@ public class ToolsMenu implements MainMenuItem {
 	private MenuItem attributeEditMI; 
 	private MenuItem searchOptMI;
 	private MenuItem userPrefMI;
-	private MenuItem loggingMI;
 	
 	/**
 	 * Tools menu in main menu
@@ -176,8 +168,6 @@ public class ToolsMenu implements MainMenuItem {
 
 		// general user preferences
 		userPrefMI = addUserPreferencesMI ( toolsMenu );
-		
-		loggingMI = addLoggingMI(toolsMenu);
 		
 		// called when the tools menu is shown
 		toolsMenu.addListener( SWT.Show, new Listener() {
@@ -1029,41 +1019,6 @@ public class ToolsMenu implements MainMenuItem {
 
 		return attributeEditorItem;
 	}
-	
-	private MenuItem addLoggingMI(Menu menu) {
-		
-		final MenuItem logging = new MenuItem( menu , SWT.CHECK );
-		logging.setText( Messages.getString("BrowserMenu.LoggingCmd") );
-		
-		logging.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				
-				boolean enable = logging.getSelection();
-				
-				PreferenceDAO prefDao = new GlobalPreferenceDAO();
-				Preference pref;
-				try {
-					pref = prefDao.getPreference( GlobalPreference.LOGGING );
-					pref.setValue(enable);
-				} catch (PreferenceNotFoundException e) {
-					pref = new GlobalPreference(GlobalPreference.LOGGING, 
-							PreferenceType.BOOLEAN, enable, true);
-					e.printStackTrace();
-				}
-				prefDao.update(pref);
-				
-				Log log = new Log();
-				log.refreshLogging();
-				
-				if ( listener != null )
-					listener.buttonPressed( logging, 
-							LOGGING, null );
-			}
-		});
-		
-		return logging;
-	}
 
 	/**
 	 * Add a menu item which allows choosing the 
@@ -1144,13 +1099,6 @@ public class ToolsMenu implements MainMenuItem {
 		// and if we know that the user is cm or dp
 		toolsItem.setEnabled( mainMenu.getCatalogue() != null &&
 				!user.isGettingUserLevel() );
-		
-		if (loggingMI != null) {
-			PreferenceDAO prefDao = new GlobalPreferenceDAO();
-			boolean enabled = prefDao.getPreferenceBoolValue(GlobalPreference.LOGGING,
-					false);
-			loggingMI.setSelection(enabled);
-		}
 		
 		if ( mainMenu.getCatalogue() == null )
 			return;

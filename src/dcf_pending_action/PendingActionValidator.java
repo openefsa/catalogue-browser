@@ -2,6 +2,9 @@ package dcf_pending_action;
 
 import javax.xml.soap.SOAPException;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import progress_bar.FormProgressBar;
 
 /**
@@ -15,6 +18,8 @@ import progress_bar.FormProgressBar;
  */
 public class PendingActionValidator extends Thread {
 
+	private static final Logger LOGGER = LogManager.getLogger(PendingActionValidator.class);
+	
 	private PendingAction pendingAction;
 	private PendingActionListener listener;
 	private FormProgressBar bar;
@@ -55,8 +60,8 @@ public class PendingActionValidator extends Thread {
 				notify = false;
 				
 				// bad connection, wait connection
-				System.err.println( "Bad internet connection. The " 
-						+ pendingAction + " waits one minute to restart" );
+				LOGGER.error( "Bad internet connection. The " 
+						+ pendingAction + " waits one minute to restart", e );
 				
 				// wait one minute
 				try {

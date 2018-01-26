@@ -1,4 +1,6 @@
 package ui_implicit_facet;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
@@ -13,6 +15,8 @@ import term.LabelProviderTerm;
 
 public class LabelProviderImplicitFacets implements ILabelProvider {
 
+	private static final Logger LOGGER = LogManager.getLogger(LabelProviderImplicitFacets.class);
+	
 	LabelProviderTerm _termLabelProvider;
 	Image facetCategoryImage = null;
 	
@@ -32,7 +36,8 @@ public class LabelProviderImplicitFacets implements ILabelProvider {
 			facetCategoryImage = new Image( Display.getCurrent() , this.getClass().getClassLoader().getResourceAsStream(
 					"FacetFolder.ico" ) );
 		} catch ( Exception e ) {
-			System.err.println( "Cannot find icons" );
+			e.printStackTrace();
+			LOGGER.error("Cannot get image", e);
 		}
 
 	}

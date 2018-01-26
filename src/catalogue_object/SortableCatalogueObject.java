@@ -2,6 +2,9 @@ package catalogue_object;
 
 import java.sql.Timestamp;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import term.WrongKeyException;
 
@@ -13,6 +16,8 @@ import term.WrongKeyException;
 public class SortableCatalogueObject extends CatalogueObject implements Sortable, 
 	Comparable<SortableCatalogueObject> {
 
+	private static final Logger LOGGER = LogManager.getLogger(SortableCatalogueObject.class);
+	
 	private int order;
 	
 	public SortableCatalogueObject( Catalogue catalogue ) {
@@ -61,7 +66,7 @@ public class SortableCatalogueObject extends CatalogueObject implements Sortable
 			try {
 				setOrder( Integer.parseInt( value ) ); 
 			} catch ( NumberFormatException e ) {
-				System.err.println ( "Wrong type, integer required" );
+				LOGGER.error ( "Wrong type, integer required", e );
 			}
 			break;
 			

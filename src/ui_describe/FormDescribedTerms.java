@@ -2,6 +2,8 @@ package ui_describe;
 
 import java.util.ArrayList;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -38,6 +40,8 @@ import window_restorer.RestoreableWindow;
 
 public class FormDescribedTerms {
 
+	private static final Logger LOGGER = LogManager.getLogger(FormDescribedTerms.class);
+	
 	private RestoreableWindow window;
 	private static final String WINDOW_CODE = "FormDescribedTerms";
 	
@@ -130,7 +134,8 @@ public class FormDescribedTerms {
 					.getResourceAsStream( "Choose.gif" ) ) );
 		}
 		catch ( Exception e ) {
-			System.err.println( "Cannot find Choose.gif file" );
+			e.printStackTrace();
+			LOGGER.error("Cannot get image", e);
 		}
 
 		_dialog.setMaximized( true );

@@ -2,6 +2,9 @@ package catalogue;
 
 import java.sql.SQLException;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_browser_dao.DatabaseManager;
 
@@ -18,6 +21,8 @@ import catalogue_browser_dao.DatabaseManager;
  */
 public class VersionChecker {
 
+	private static final Logger LOGGER = LogManager.getLogger(VersionChecker.class);
+	
 	private Catalogue catalogue;           // the base catalogue
 	private CatalogueVersion version;      // the version of the catalogue
 	private CatalogueVersion oldVersion;   // the previous version of the catalogue
@@ -128,6 +133,7 @@ public class VersionChecker {
 					newVersionCat.getDbPath() );
 		} catch (SQLException e) {
 			e.printStackTrace();
+			LOGGER.error("Cannot backup the catalogue=" + catalogue, e);
 		}
 
 		

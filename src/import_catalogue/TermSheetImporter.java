@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import catalogue_browser_dao.TermDAO;
 import catalogue_object.Term;
@@ -30,6 +33,8 @@ import term_code_generator.TermCodeException;
  */
 public class TermSheetImporter extends SheetImporter<Term> {
 
+	private static final Logger LOGGER = LogManager.getLogger(TermSheetImporter.class);
+	
 	private Catalogue catalogue;
 	
 	// list of new codes which are created if
@@ -57,7 +62,7 @@ public class TermSheetImporter extends SheetImporter<Term> {
 		
 		// skip if no term code
 		if ( code.isEmpty() ) {
-			System.err.println( "Empty code found, skipping this term" );
+			LOGGER.error( "Empty code found, skipping this term" );
 			return null;
 		}
 		
@@ -124,7 +129,7 @@ public class TermSheetImporter extends SheetImporter<Term> {
 
 		if ( !tempTerms.isEmpty() ) {
 			if ( catalogue.getTermCodeMask() == null || catalogue.getTermCodeMask().isEmpty() ) {
-				System.err.println("No term code mask is defined for " 
+				LOGGER.error("No term code mask is defined for " 
 						+ catalogue + ", cannot perform append operation");
 				return;
 			}
@@ -142,6 +147,8 @@ public class TermSheetImporter extends SheetImporter<Term> {
 				newCode = CodeGenerator.getTermCode( catalogue.getTermCodeMask() );
 			} catch (TermCodeException e) {
 				e.printStackTrace();
+				LOGGER.error("Cannot generate additional codes for catalogue=" + catalogue 
+						+ ". Maximum term code reached for mask=" + catalogue.getTermCodeMask(), e);
 				throw new ImportException(e.getMessage(), "X100");
 			}
 			

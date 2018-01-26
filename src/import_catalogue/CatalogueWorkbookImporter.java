@@ -6,6 +6,8 @@ import java.util.HashMap;
 
 import javax.xml.stream.XMLStreamException;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.exceptions.OpenXML4JException;
 import org.xml.sax.SAXException;
@@ -26,6 +28,8 @@ import utilities.GlobalUtil;
  *
  */
 public class CatalogueWorkbookImporter {
+	
+	private static final Logger LOGGER = LogManager.getLogger(CatalogueWorkbookImporter.class);
 	
 	// set this to import a local catalogue
 	private Catalogue openedCat;
@@ -66,7 +70,7 @@ public class CatalogueWorkbookImporter {
 		try(WorkbookReader workbookReader = new WorkbookReader( filename );) {
 			
 			// import catalogue
-			System.out.println( "Import catalogue sheet" );
+			LOGGER.info( "Import catalogue sheet" );
 			progressBar.setLabel( Messages.getString("Import.Catalogue") );
 			catImp = importCatalogueSheet( workbookReader );
 			
@@ -74,27 +78,27 @@ public class CatalogueWorkbookImporter {
 			String catExcelCode = catImp.getExcelCode();
 			
 			// import hierarchies
-			System.out.println( "Import hierarchy sheet" );
+			LOGGER.info( "Import hierarchy sheet" );
 			progressBar.setLabel( Messages.getString("Import.Hierarchy") );
 			importHierarchySheet ( workbookReader, importedCat, catExcelCode );
 
 			// import attributes
-			System.out.println( "Import attribute sheet" );
+			LOGGER.info( "Import attribute sheet" );
 			progressBar.setLabel( Messages.getString("Import.Attribute") );
 			importAttributeSheet ( workbookReader, importedCat );
 			
 			// import terms
-			System.out.println( "Import term sheet" );
+			LOGGER.info( "Import term sheet" );
 			progressBar.setLabel( Messages.getString("Import.Term") );
 			termImp = importTermSheet ( workbookReader, importedCat );
 			
 			// import term attributes and parent
-			System.out.println( "Import term attributes and parents sheet" );
+			LOGGER.info( "Import term attributes and parents sheet" );
 			progressBar.setLabel( Messages.getString("Import.TermAttrParent") );
 			importTermRelations ( workbookReader, importedCat, termImp.getNewCodes() );
 
 			// import the release note sheet
-			System.out.println( "Import release notes sheet" );
+			LOGGER.info( "Import release notes sheet" );
 			progressBar.setLabel( Messages.getString("Import.ReleaseNotes") );
 			importReleaseNotes ( workbookReader, importedCat );
 			
@@ -103,7 +107,7 @@ public class CatalogueWorkbookImporter {
 			
 			// insert default preferences
 			// after having imported the excel, we can insert the default preferences
-			System.out.println ( "Creating default preferences" );
+			LOGGER.info ( "Creating default preferences" );
 			progressBar.setLabel( Messages.getString("Import.Preferences") );
 			
 			CataloguePreferenceDAO prefDao = new CataloguePreferenceDAO( importedCat );
@@ -118,7 +122,7 @@ public class CatalogueWorkbookImporter {
 					ProgressSettings.DEFAULT_PREF, maxProgress );
 			progressBar.addProgress( prog );
 
-			System.out.println( importedCat + " successfully imported in " + importedCat.getDbPath() );
+			LOGGER.info( importedCat + " successfully imported in " + importedCat.getDbPath() );
 			
 			// clear temporary files
 			GlobalUtil.clearTempDir();
@@ -363,7 +367,7 @@ public class CatalogueWorkbookImporter {
 			sheetData.close();
 			
 		} catch ( Exception e ) {
-			System.err.println( "Release notes not found for " + catalogue );
+			LOGGER.error( "Release notes not found for " + catalogue, e );
 		}
 	}
 }

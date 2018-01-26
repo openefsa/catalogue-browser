@@ -4,6 +4,9 @@ import java.io.FileNotFoundException;
 
 import javax.xml.soap.SOAPException;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import dcf_webservice.AttachmentNotFoundException;
 import messages.Messages;
@@ -21,6 +24,8 @@ import progress_bar.IProgressBar;
  */
 public class CatalogueDownloader extends Thread {
 
+	private static final Logger LOGGER = LogManager.getLogger(CatalogueDownloader.class);
+	
 	private ThreadFinishedListener doneListener;
 	private IProgressBar progressBar;
 	private Catalogue catalogue;
@@ -42,6 +47,7 @@ public class CatalogueDownloader extends Thread {
 			downloadAndImport();
 		} catch (SOAPException e) {
 			e.printStackTrace();
+			LOGGER.error("Cannot download/import catalogue=" + catalogue, e);
 			stop ( ThreadFinishedListener.EXCEPTION, e );
 		} catch (AttachmentNotFoundException e) {
 			stop ( ThreadFinishedListener.ERROR, e );

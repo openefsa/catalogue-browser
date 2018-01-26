@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import catalogue_browser_dao.AttributeDAO;
 import catalogue_browser_dao.CatalogueEntityDAO;
@@ -25,6 +28,8 @@ import user_preferences.SearchOption;
  */
 public class SearchOptionDAO implements CatalogueEntityDAO<SearchOption> {
 
+	private static final Logger LOGGER = LogManager.getLogger(SearchOptionDAO.class);
+	
 	Catalogue catalogue;
 	
 	/**
@@ -58,6 +63,7 @@ public class SearchOptionDAO implements CatalogueEntityDAO<SearchOption> {
 			
 		} catch ( SQLException e) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return opt.getId();
@@ -97,6 +103,7 @@ public class SearchOptionDAO implements CatalogueEntityDAO<SearchOption> {
 			
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return false;
@@ -146,6 +153,7 @@ public class SearchOptionDAO implements CatalogueEntityDAO<SearchOption> {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return opts;
@@ -202,6 +210,7 @@ public class SearchOptionDAO implements CatalogueEntityDAO<SearchOption> {
 			
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return opts;

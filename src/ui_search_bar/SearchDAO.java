@@ -4,12 +4,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import catalogue.Catalogue;
 import catalogue_object.Attribute;
@@ -26,6 +28,8 @@ import user_preferences.SearchOption;
  */
 public class SearchDAO {
 
+	private static final Logger LOGGER = LogManager.getLogger(SearchDAO.class);
+	
 	private Catalogue catalogue;
 	private Term rootTerm;
 	
@@ -240,6 +244,7 @@ public class SearchDAO {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return termIds;
@@ -300,6 +305,7 @@ public class SearchDAO {
 			
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return termIds;
@@ -417,6 +423,7 @@ public class SearchDAO {
 			
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return taFilter.toString();

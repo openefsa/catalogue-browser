@@ -3,6 +3,9 @@ package user_preferences;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_browser_dao.DatabaseManager;
@@ -11,6 +14,8 @@ import dcf_manager.Dcf.DcfType;
 
 public class GlobalPreferenceDAO extends PreferenceDAO {
 
+	private static final Logger LOGGER = LogManager.getLogger(GlobalPreferenceDAO.class);
+	
 	/**
 	 * Insert the default preferences for user interface
 	 */
@@ -35,9 +40,6 @@ public class GlobalPreferenceDAO extends PreferenceDAO {
 				PreferenceType.BOOLEAN, false, true ) );
 
 		insert( new GlobalPreference( GlobalPreference.HIDE_TERM_CODE_DESCRIBE, 
-				PreferenceType.BOOLEAN, false, true ) );
-		
-		insert( new GlobalPreference( GlobalPreference.LOGGING, 
 				PreferenceType.BOOLEAN, false, true ) );
 	}
 	
@@ -84,6 +86,7 @@ public class GlobalPreferenceDAO extends PreferenceDAO {
 			catalogue = catDao.getById( id );
 		} catch ( NumberFormatException e ) {
 			e.printStackTrace();
+			LOGGER.info("Cannot find last catalogue", e);
 			throw new PreferenceNotFoundException();
 		}
 		

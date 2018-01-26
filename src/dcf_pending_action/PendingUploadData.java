@@ -1,5 +1,8 @@
 package dcf_pending_action;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import dcf_log.DcfLog;
 import dcf_log.DcfResponse;
@@ -13,6 +16,8 @@ import sas_remote_procedures.XmlUpdateFileDAO;
  *
  */
 public class PendingUploadData extends PendingAction {
+	
+	private static final Logger LOGGER = LogManager.getLogger(PendingUploadData.class);
 	
 	public static final String TYPE = "UPLOAD_DATA";
 	
@@ -71,9 +76,9 @@ public class PendingUploadData extends PendingAction {
 			response = DcfResponse.AP;
 		
 		if ( response == DcfResponse.OK )
-			System.out.println ( "upload data: successfully completed" );
+			LOGGER.info ( "upload data of " + log.getCatalogueCode() + ": successfully completed" );
 		else
-			System.out.println( "upload data: failed" );
+			LOGGER.info( "upload data of " + log.getCatalogueCode() + ": failed" );
 		
 		return response;
 	}

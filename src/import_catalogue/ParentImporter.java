@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import catalogue_browser_dao.HierarchyDAO;
 import catalogue_browser_dao.ParentTermDAO;
@@ -28,6 +31,8 @@ import term_code_generator.CodeGenerator;
  */
 public class ParentImporter extends SheetImporter<Applicability> {
 
+	private static final Logger LOGGER = LogManager.getLogger(ParentImporter.class);
+	
 	private Catalogue catalogue;
 	private HashMap<String, Integer> termIds;
 	private ArrayList<Hierarchy> hierarchies;
@@ -127,7 +132,7 @@ public class ParentImporter extends SheetImporter<Applicability> {
 			// if not root and parent id not found => error
 			if ( parentId == null && !isRoot ) {
 
-				System.err.println ( "The parent term " + parentCode + 
+				LOGGER.error ( "The parent term " + parentCode + 
 						" is not present in the DB, please check!" );
 				continue;
 			}

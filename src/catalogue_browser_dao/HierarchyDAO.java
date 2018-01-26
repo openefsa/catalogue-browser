@@ -8,6 +8,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue.Catalogue;
 import catalogue_object.Hierarchy;
 import catalogue_object.HierarchyBuilder;
@@ -18,6 +21,8 @@ import catalogue_object.HierarchyBuilder;
  *
  */
 public class HierarchyDAO implements CatalogueEntityDAO<Hierarchy> {
+	
+	private static final Logger LOGGER = LogManager.getLogger(HierarchyDAO.class);
 	
 	private Catalogue catalogue;
 	
@@ -123,6 +128,7 @@ public class HierarchyDAO implements CatalogueEntityDAO<Hierarchy> {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return ids;
@@ -159,6 +165,7 @@ public class HierarchyDAO implements CatalogueEntityDAO<Hierarchy> {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		return false;
 	}
@@ -223,6 +230,7 @@ public class HierarchyDAO implements CatalogueEntityDAO<Hierarchy> {
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return false;
@@ -262,6 +270,7 @@ public class HierarchyDAO implements CatalogueEntityDAO<Hierarchy> {
 			
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return null;
@@ -299,6 +308,7 @@ public class HierarchyDAO implements CatalogueEntityDAO<Hierarchy> {
 			
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return null;
@@ -361,6 +371,7 @@ public class HierarchyDAO implements CatalogueEntityDAO<Hierarchy> {
 			
 		} catch ( SQLException e ) {
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 		
 		return hierarchies;

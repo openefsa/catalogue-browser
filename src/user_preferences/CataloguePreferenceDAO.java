@@ -3,6 +3,9 @@ package user_preferences;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import already_described_terms.Picklist;
 import already_described_terms.PicklistDAO;
 import catalogue.Catalogue;
@@ -11,6 +14,8 @@ import catalogue_object.Term;
 
 public class CataloguePreferenceDAO extends PreferenceDAO {
 
+	private static final Logger LOGGER = LogManager.getLogger(CataloguePreferenceDAO.class);
+	
 	private Catalogue catalogue;
 
 	/**
@@ -96,6 +101,7 @@ public class CataloguePreferenceDAO extends PreferenceDAO {
 			hierarchy = catalogue.getHierarchyById( id );
 		} catch ( NumberFormatException e ) {
 			e.printStackTrace();
+			LOGGER.info("Cannot get last hierarchy", e);
 			throw new PreferenceNotFoundException();
 		}
 		
@@ -118,6 +124,7 @@ public class CataloguePreferenceDAO extends PreferenceDAO {
 			term = catalogue.getTermById( id );
 		} catch ( NumberFormatException e ) {
 			e.printStackTrace();
+			LOGGER.info("Cannot get last term", e);
 			throw new PreferenceNotFoundException();
 		}
 		

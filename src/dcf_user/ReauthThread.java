@@ -2,6 +2,9 @@ package dcf_user;
 
 import javax.xml.soap.SOAPException;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue_generator.ThreadFinishedListener;
 
 /**
@@ -11,6 +14,8 @@ import catalogue_generator.ThreadFinishedListener;
  */
 public class ReauthThread extends Thread {
 
+	private static final Logger LOGGER = LogManager.getLogger(ReauthThread.class);
+	
 	private ThreadFinishedListener doneListener;
 
 	public void setDoneListener(ThreadFinishedListener doneListener) {
@@ -30,6 +35,7 @@ public class ReauthThread extends Thread {
 			code = done ? ThreadFinishedListener.OK : ThreadFinishedListener.ERROR;
 		} catch (SOAPException e) {
 			e.printStackTrace();
+			LOGGER.error("Cannot authenticate user", e);
 			code = ThreadFinishedListener.EXCEPTION;
 			exception = e;
 		}

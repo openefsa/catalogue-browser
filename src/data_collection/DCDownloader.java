@@ -2,6 +2,8 @@ package data_collection;
 
 import javax.xml.soap.SOAPException;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Listener;
 
 import progress_bar.FormProgressBar;
@@ -15,6 +17,8 @@ import progress_bar.ProgressStepListener;
  */
 public class DCDownloader extends Thread {
 
+	private static final Logger LOGGER = LogManager.getLogger(DCDownloader.class);
+	
 	private Listener doneListener;
 	private FormProgressBar progressBar;
 	private DataCollection dc;
@@ -76,6 +80,7 @@ public class DCDownloader extends Thread {
 
 		} catch (SOAPException e) {
 			e.printStackTrace();
+			LOGGER.error("Cannot download data collection=" + dc);
 		}
 	}
 	

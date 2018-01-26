@@ -1,5 +1,8 @@
 package ui_implicit_facet;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import catalogue_object.Attribute;
 import catalogue_object.Term;
 import catalogue_object.TermAttribute;
@@ -12,6 +15,8 @@ import catalogue_object.TermAttribute;
  *
  */
 public class FacetDescriptor {
+	
+	private static final Logger LOGGER = LogManager.getLogger(FacetDescriptor.class);
 	
 	private Term descriptor;
 	private String header = null;
@@ -89,6 +94,7 @@ public class FacetDescriptor {
 			return splitValue()[0];
 		} catch (Exception e) {
 			e.printStackTrace();
+			LOGGER.error("Cannot get facet header for facet=" + facetCode, e);
 			return null;
 		}
 	}
