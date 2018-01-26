@@ -1,9 +1,10 @@
-package dcf_log;
+package ui_dcf_log;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Shell;
 
+import dcf_log.DcfLog;
 import messages.Messages;
 
 public class LogNodesForm {

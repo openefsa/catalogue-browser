@@ -1,9 +1,10 @@
-package dcf_log;
+package ui_dcf_log;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
+import dcf_log.DcfLog;
 import messages.Messages;
 
 /**
@@ -31,12 +32,12 @@ public class LogMacroOperationViewer {
 		
 		// catalogue code + version
 		String info = Messages.getString("LogMacroOp.Catalogue") + " " +
-				log.getCatalogueCode() + " " + log.getCatalogueRawVersion();
+				log.getCatalogueCode() + " " + log.getCatalogueVersion();
 		addLabel ( info );
 		
 		// catalogue status
 		info = Messages.getString("LogMacroOp.CatStatus") + " " +
-				log.getCatalogueRawStatus();
+				log.getCatalogueStatus();
 		addLabel ( info );
 		
 		// macro op result

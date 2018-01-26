@@ -1,4 +1,4 @@
-package dcf_log;
+package ui_dcf_log;
 
 import java.util.ArrayList;
 
@@ -13,6 +13,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
+import dcf_log.DcfLog;
+import dcf_log.LogNode;
 import messages.Messages;
 import utilities.GlobalUtil;
 

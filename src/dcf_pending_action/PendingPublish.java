@@ -88,7 +88,7 @@ public class PendingPublish extends PendingAction {
 		
 		DcfResponse response;
 		
-		Status catStatus = log.getCatalogueStatus();
+		Status catStatus = new Status(log.getCatalogueStatus());
 		boolean correct = log.isMacroOperationCorrect();
 		boolean isDraft = catStatus.isDraft();
 		

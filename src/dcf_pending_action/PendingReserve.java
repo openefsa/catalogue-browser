@@ -8,6 +8,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
 import catalogue.Catalogue;
+import catalogue.CatalogueVersion;
 import catalogue_object.Status;
 import dcf_log.DcfLog;
 import dcf_log.DcfResponse;
@@ -199,9 +200,11 @@ public class PendingReserve extends PendingAction {
 	@Override
 	public void processLog(DcfLog log) {
 		
+		CatalogueVersion logVersion = new CatalogueVersion(log.getCatalogueVersion());
+		
 		// get if we need a new version
 		this.needNewVersion = getCatalogue().
-				getCatalogueVersion().isOlder( log.getCatalogueVersion() );
+				getCatalogueVersion().isOlder(logVersion);
 	}
 	
 	/**
@@ -214,7 +217,7 @@ public class PendingReserve extends PendingAction {
 		
 		DcfResponse response;
 		
-		Status catStatus = log.getCatalogueStatus();
+		Status catStatus = new Status(log.getCatalogueStatus());
 		boolean correct = log.isMacroOperationCorrect();
 		boolean minorForbidden = catStatus.isDraft() && catStatus.isMajor() 
 				&& reserveLevel.isMinor();

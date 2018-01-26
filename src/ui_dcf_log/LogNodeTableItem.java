@@ -1,4 +1,6 @@
-package dcf_log;
+package ui_dcf_log;
+
+import dcf_log.DcfResponse;
 
 public class LogNodeTableItem {
 

@@ -24,7 +24,6 @@ import dcf_webservice.PublishLevel;
 import dcf_webservice.ReserveLevel;
 import import_catalogue.CatalogueImporterThread;
 import progress_bar.FormProgressBar;
-import utilities.GlobalUtil;
 
 /**
  * Class which models a generic pending action, that is, a
@@ -216,12 +215,6 @@ public abstract class PendingAction {
 		
 		// update the catalogue status
 		catalogue.setRequestingAction( false );
-		
-		// delete the log filename
-		try {
-			if ( parsedLog != null && parsedLog.getLogFile() != null )
-				GlobalUtil.deleteFileCascade( parsedLog.getLogFile() );
-		} catch (IOException e) {}
 	}
 	
 	/**
@@ -327,11 +320,12 @@ public abstract class PendingAction {
 	 * was found in the available time, otherwise null
 	 * @throws SOAPException 
 	 */
-	private File getLog () throws SOAPException {
+	private File getLog() throws SOAPException {
 		
 		File log = null;
 		
-		int attempts = 12;              // 12 times 10 seconds => 2 minutes
+		// 12 attempts, one every 10 seconds -> 2 minutes total
+		int maxAttempts = 12;
 		long interAttemptsTime = 10000; 
 		
 		// set inter attempts time according to the priority
@@ -347,11 +341,10 @@ public abstract class PendingAction {
 		}
 
 		// initialize a log downloader with the current priority
-		LogDownloader logDown = new LogDownloader( logCode, 
-				interAttemptsTime, attempts, priority );
+		LogDownloader logDown = new LogDownloader(User.getInstance());
 		
 		// get the log
-		log = logDown.getLog();
+		log = logDown.getLog(logCode, interAttemptsTime, maxAttempts);
 		
 		return log;
 	}
