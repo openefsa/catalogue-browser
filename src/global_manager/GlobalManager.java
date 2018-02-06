@@ -5,6 +5,10 @@ import java.util.Observable;
 import org.eclipse.swt.widgets.Display;
 
 import catalogue.Catalogue;
+import catalogue_browser_dao.CatalogueDAO;
+import config.Config;
+import config.Environment;
+import dcf_manager.Dcf.DcfType;
 import dcf_user.User;
 import user_preferences.GlobalPreferenceDAO;
 
@@ -37,6 +41,13 @@ public class GlobalManager extends Observable {
 			manager = new GlobalManager();
 		
 		return manager;
+	}
+	
+	public static Catalogue getLastVersion(String catalogueCode) {
+		Config config = new Config();
+		Environment env = config.getEnvironment();
+		CatalogueDAO dao = new CatalogueDAO();
+		return dao.getLastVersionByCode(catalogueCode, DcfType.fromEnvironment(env));
 	}
 	
 	/**

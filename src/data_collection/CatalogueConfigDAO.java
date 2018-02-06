@@ -7,10 +7,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueEntityDAO;
 import catalogue_browser_dao.DatabaseManager;
 
@@ -22,6 +24,9 @@ import catalogue_browser_dao.DatabaseManager;
 public class CatalogueConfigDAO implements CatalogueEntityDAO<CatalogueConfiguration> {
 
 	private static final Logger LOGGER = LogManager.getLogger(CatalogueConfigDAO.class);
+	
+	@Override
+	public void setCatalogue(Catalogue catalogue) {}
 	
 	@Override
 	public int insert(CatalogueConfiguration config) {
@@ -190,5 +195,11 @@ public class CatalogueConfigDAO implements CatalogueEntityDAO<CatalogueConfigura
 		}
 		
 		return contains;
+	}
+
+	@Override
+	public List<Integer> insert(Iterable<CatalogueConfiguration> attrs) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

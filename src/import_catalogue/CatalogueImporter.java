@@ -14,6 +14,15 @@ import org.apache.poi.openxml4j.exceptions.OpenXML4JException;
 import org.xml.sax.SAXException;
 
 import catalogue.Catalogue;
+import catalogue.ReleaseNotesOperation;
+import catalogue_browser_dao.CatalogueEntityDAO;
+import catalogue_browser_dao.CatalogueRelationDAO;
+import catalogue_browser_dao.ICatalogueDAO;
+import catalogue_object.Applicability;
+import catalogue_object.Attribute;
+import catalogue_object.Hierarchy;
+import catalogue_object.Term;
+import catalogue_object.TermAttribute;
 import progress_bar.IProgressBar;
 import utilities.GlobalUtil;
 import xml_to_excel.XmlCatalogueToExcel;
@@ -33,6 +42,14 @@ public class CatalogueImporter {
 	// list of temporary files which need to
 	// be deleted at the end of the process
 	private ArrayList<String> garbage;
+	
+	private ICatalogueDAO catDao;
+	private CatalogueEntityDAO<Attribute> attrDao;
+	private CatalogueEntityDAO<Hierarchy> hierDao; 
+	private CatalogueEntityDAO<Term> termDao;
+	private CatalogueRelationDAO<TermAttribute, Term, Attribute> taDao;
+	private CatalogueRelationDAO<Applicability, Term, Hierarchy> parentDao;
+	private CatalogueEntityDAO<ReleaseNotesOperation> notesDao;
 	
 	/**
 	 * Enumerator to specify the format
@@ -59,6 +76,26 @@ public class CatalogueImporter {
 		this.garbage = new ArrayList<>();
 		this.progressBar = progressBar;
 		this.maxProgress = maxProgress;
+	}
+	
+	public CatalogueImporter(String filename, ImportFileFormat format) {
+		this(filename, format, null, 100);
+	}
+	
+	public void setDaos(ICatalogueDAO catDao, 
+			CatalogueEntityDAO<Attribute> attrDao,
+			CatalogueEntityDAO<Hierarchy> hierDao,
+			CatalogueEntityDAO<Term> termDao,
+			CatalogueRelationDAO<TermAttribute, Term, Attribute> taDao,
+			CatalogueRelationDAO<Applicability, Term, Hierarchy> parentDao,
+			CatalogueEntityDAO<ReleaseNotesOperation> notesDao) {
+		this.catDao = catDao;
+		this.attrDao = attrDao;
+		this.hierDao = hierDao;
+		this.termDao = termDao;
+		this.taDao = taDao;
+		this.parentDao = parentDao;
+		this.notesDao = notesDao;
 	}
 	
 	/**
@@ -226,7 +263,13 @@ public class CatalogueImporter {
 
 		// instantiate the workbook importer and set
 		// some settings
-		CatalogueWorkbookImporter importer = new CatalogueWorkbookImporter();
+		CatalogueWorkbookImporter importer = null;
+		
+		if (this.attrDao == null)
+			importer = new CatalogueWorkbookImporter();
+		else
+			importer = new CatalogueWorkbookImporter(catDao, attrDao, hierDao, 
+					termDao, taDao, parentDao, notesDao);
 
 		if ( openedCat != null )
 			importer.setOpenedCatalogue( openedCat );

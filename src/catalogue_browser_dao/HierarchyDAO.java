@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -35,6 +36,10 @@ public class HierarchyDAO implements CatalogueEntityDAO<Hierarchy> {
 		this.catalogue = catalogue;
 	}
 
+	@Override
+	public void setCatalogue(Catalogue catalogue) {
+		this.catalogue = catalogue;
+	}
 	
 	/**
 	 * Insert a new hierarchy into the database of the current catalogue
@@ -46,7 +51,7 @@ public class HierarchyDAO implements CatalogueEntityDAO<Hierarchy> {
 		Collection<Hierarchy> hierarchies = new ArrayList<>();
 		hierarchies.add( hierarchy );
 		
-		ArrayList<Integer> ids = insertHierarchies( hierarchies );
+		List<Integer> ids = insert(hierarchies);
 		
 		if ( ids.isEmpty() )
 			return -1;
@@ -59,7 +64,7 @@ public class HierarchyDAO implements CatalogueEntityDAO<Hierarchy> {
 	 * @param hierarchy
 	 * @return
 	 */
-	public synchronized ArrayList<Integer> insertHierarchies ( Collection<Hierarchy> hierarchies ) {
+	public synchronized List<Integer> insert(Iterable<Hierarchy> hierarchies) {
 
 		ArrayList<Integer> ids = new ArrayList<>();
 		

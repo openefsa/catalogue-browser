@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -193,6 +194,17 @@ public class RecentTermDAO implements CatalogueEntityDAO<DescribedTerm> {
 
 	@Override
 	public DescribedTerm getById(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setCatalogue(Catalogue catalogue) {
+		this.catalogue = catalogue;
+	}
+
+	@Override
+	public List<Integer> insert(Iterable<DescribedTerm> attrs) {
 		// TODO Auto-generated method stub
 		return null;
 	}

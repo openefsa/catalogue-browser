@@ -9,6 +9,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import catalogue.Catalogue;
+import catalogue_browser_dao.CatalogueRelationDAO;
 import catalogue_browser_dao.HierarchyDAO;
 import catalogue_browser_dao.ParentTermDAO;
 import catalogue_object.Applicability;
@@ -33,6 +34,7 @@ public class ParentImporter extends SheetImporter<Applicability> {
 
 	private static final Logger LOGGER = LogManager.getLogger(ParentImporter.class);
 	
+	private CatalogueRelationDAO<Applicability, Term, Hierarchy> dao;
 	private Catalogue catalogue;
 	private HashMap<String, Integer> termIds;
 	private ArrayList<Hierarchy> hierarchies;
@@ -42,7 +44,8 @@ public class ParentImporter extends SheetImporter<Applicability> {
 	// temporary applicabilities
 	private Collection<Applicability> tempAppl;
 
-	public ParentImporter( Catalogue catalogue ) throws SQLException {
+	public ParentImporter(CatalogueRelationDAO<Applicability, Term, Hierarchy> dao, Catalogue catalogue) throws SQLException {
+		this.dao = dao;
 		this.catalogue = catalogue;
 		this.newCodes = new HashMap<>();
 		this.tempAppl = new ArrayList<>();
@@ -53,6 +56,10 @@ public class ParentImporter extends SheetImporter<Applicability> {
 		// get all the hierarchies of the catalogue
 		HierarchyDAO hierDao = new HierarchyDAO( catalogue );
 		this.hierarchies = hierDao.getAll();
+	}
+	
+	public ParentImporter(Catalogue catalogue) throws SQLException {
+		this(new ParentTermDAO(catalogue), catalogue);
 	}
 	
 	/**
@@ -222,8 +229,7 @@ public class ParentImporter extends SheetImporter<Applicability> {
 
 	@Override
 	public void insert(Collection<Applicability> data) {
-		ParentTermDAO parentDao = new ParentTermDAO ( catalogue );
-		parentDao.insert( data );
+		dao.insert(data);
 	}
 
 	@Override

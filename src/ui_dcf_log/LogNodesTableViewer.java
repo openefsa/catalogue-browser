@@ -34,10 +34,10 @@ public class LogNodesTableViewer {
 		display( log );
 	}
 	
-	public void display( DcfLog log ) {
+	public void display(DcfLog log) {
 		
-		table = new TableViewer( parent );
-		table.setContentProvider( new LogNodesContentProvider() );
+		table = new TableViewer(parent);
+		table.setContentProvider( new LogNodesContentProvider());
 		
 		GlobalUtil.addStandardColumn( table, 
 				new LogNodeLabelProvider( LogNodeLabelProvider.NAME ), 
@@ -56,7 +56,7 @@ public class LogNodesTableViewer {
 		
 		table.getTable().setHeaderVisible( true );
 		
-		table.setInput( log );
+		table.setInput(log);
 		
 		table.getTable().setLayout( new GridLayout( 1, false ) );
 		table.getTable().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );

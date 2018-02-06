@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -38,6 +39,11 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 		this.catalogue = catalogue;
 	}
 	
+	@Override
+	public void setCatalogue(Catalogue catalogue) {
+		this.catalogue = catalogue;
+	}
+	
 	/**
 	 * Insert a single term into the db
 	 * @param t
@@ -45,10 +51,10 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 	 */
 	public int insert ( Term t ) {
 		
-		ArrayList<Term> terms = new ArrayList<>();
-		terms.add( t );
+		List<Term> terms = new ArrayList<>();
+		terms.add(t);
 		
-		return insertTerms ( terms ).get(0);
+		return insert(terms).get(0);
 	}
 
 	
@@ -58,7 +64,7 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 	 * @param t
 	 * @return
 	 */
-	public synchronized ArrayList<Integer> insertTerms ( Collection<Term> terms ) {
+	public synchronized List<Integer> insert(Iterable<Term> terms) {
 		
 		ArrayList<Integer> ids = new ArrayList<>();
 		
@@ -101,22 +107,20 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 
 				stmt.addBatch();
 			}
-			
+
 			stmt.executeBatch();
 
-			if ( !terms.isEmpty() ) {
+			// if empty
+			// update the terms ids with the ones given by the database
+			try(ResultSet rs = stmt.getGeneratedKeys();) {
 
-				// update the terms ids with the ones given by the database
-				try(ResultSet rs = stmt.getGeneratedKeys();) {
-	
-					while ( rs.next() ) {
-						ids.add( rs.getInt(1) );
-					}
-	
-					rs.close();
+				while ( rs.next() ) {
+					ids.add( rs.getInt(1) );
 				}
+
+				rs.close();
 			}
-			
+
 			con.commit();
 			
 		} catch ( SQLException e ) {
@@ -400,17 +404,19 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 		query = query + "and TERM_CODE <> ?";
 
 		try (Connection con = catalogue.getConnection();
-				PreparedStatement stmt = con.prepareStatement( query );
-				ResultSet rs = stmt.executeQuery();) {
+				PreparedStatement stmt = con.prepareStatement( query );) {
 			
 			stmt.clearParameters();
 			
 			stmt.setString( 1, termName );
 			stmt.setString( 2, termCode );
 
-			boolean noDupl = !rs.next();
+			boolean noDupl = true;
+			try(ResultSet rs = stmt.executeQuery();) {
+				noDupl = !rs.next();
+				rs.close();
+			}
 			
-			rs.close();
 			stmt.close();
 			con.close();
 			

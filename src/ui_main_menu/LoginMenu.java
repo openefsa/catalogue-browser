@@ -3,8 +3,6 @@ package ui_main_menu;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
@@ -73,6 +71,8 @@ public class LoginMenu implements MainMenuItem {
 				if ( !login.isValid() )
 					return;
 				
+				LoginActions.startLoggedThreads(shell, null);
+				
 				// disable the login button
 				loginMI.setEnabled(false);
 
@@ -81,15 +81,7 @@ public class LoginMenu implements MainMenuItem {
 				// (avoid concurrence editing in db)
 				mainMenu.tools.setEnabled( false );
 				
-				// start processes after the user is authenticated
-				LoginActions.startLoggedThreads(shell, mainMenu.getListener(),
-						new Listener() {
-
-					@Override
-					public void handleEvent(Event arg0) {
-						listener.buttonPressed(loginMI, LoginMenu.LOGIN_MI, arg0);
-					}
-				});
+				listener.buttonPressed(loginMI, LoginMenu.LOGIN_MI, null);
 			}
 
 			@Override

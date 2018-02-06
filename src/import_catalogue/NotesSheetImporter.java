@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 
 import catalogue.Catalogue;
 import catalogue.ReleaseNotesOperation;
+import catalogue_browser_dao.CatalogueEntityDAO;
 import catalogue_browser_dao.ReleaseNotesOperationDAO;
 import naming_convention.Headers;
 import open_xml_reader.ResultDataSet;
@@ -17,11 +18,23 @@ import open_xml_reader.ResultDataSet;
 public class NotesSheetImporter extends SheetImporter<ReleaseNotesOperation> {
 
 	private static final Logger LOGGER = LogManager.getLogger(NotesSheetImporter.class);
+
+	private CatalogueEntityDAO<ReleaseNotesOperation> dao;
 	
-	private Catalogue catalogue;
+	/**
+	 * Initialize importer giving the dao which will insert the records
+	 * @param dao
+	 */
+	public NotesSheetImporter(CatalogueEntityDAO<ReleaseNotesOperation> dao) {
+		this.dao = dao;
+	}
 	
-	public NotesSheetImporter( Catalogue catalogue ) {
-		this.catalogue = catalogue;
+	/**
+	 * Default dao for the catalogue
+	 * @param catalogue
+	 */
+	public NotesSheetImporter(Catalogue catalogue) {
+		this(new ReleaseNotesOperationDAO(catalogue));
 	}
 
 	@Override
@@ -68,11 +81,7 @@ public class NotesSheetImporter extends SheetImporter<ReleaseNotesOperation> {
 
 	@Override
 	public void insert( Collection<ReleaseNotesOperation> ops ) {
-		
-		ReleaseNotesOperationDAO opDao = 
-				new ReleaseNotesOperationDAO( catalogue );
-		
-		opDao.insert( ops );
+		dao.insert(ops);
 	}
 
 	@Override

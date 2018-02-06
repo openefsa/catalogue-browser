@@ -13,6 +13,8 @@ import catalogue.Catalogue;
 import catalogue.CatalogueBuilder;
 import catalogue.ReleaseNotes;
 import catalogue_browser_dao.CatalogueDAO;
+import catalogue_browser_dao.DatabaseManager;
+import catalogue_browser_dao.ICatalogueDAO;
 import dcf_manager.Dcf;
 import naming_convention.Headers;
 import open_xml_reader.ResultDataSet;
@@ -21,12 +23,22 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 
 	private static final Logger LOGGER = LogManager.getLogger(CatalogueSheetImporter.class);
 	
+	private ICatalogueDAO dao;
+	
 	// the new catalogue
 	private Catalogue catalogue;
 	private Catalogue openedCatalogue;
 
 	private String excelCatCode;
 
+	public CatalogueSheetImporter() {
+		this(new CatalogueDAO());
+	}
+	
+	CatalogueSheetImporter(ICatalogueDAO dao) {
+		this.dao = dao;
+	}
+	
 	/**
 	 * Pass the opened catalogue if we are importing an excel
 	 * file in it using the Import excel function.
@@ -170,7 +182,13 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 		// get the catalogue and save it as global variable
 		Iterator<Catalogue> iter = data.iterator();
 		Catalogue catalogue = iter.next();
-
+		
+		// if mock
+		if (!(dao instanceof CatalogueDAO)) {
+			dao.insert(catalogue);
+			return;
+		}
+		
 		// create the catalogue database
 		try {
 			createDatabase( catalogue );
@@ -188,7 +206,7 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 	 * @param catalogue
 	 * @throws IOException 
 	 */
-	private static void createDatabase ( Catalogue catalogue ) throws IOException {
+	private void createDatabase ( Catalogue catalogue ) throws IOException {
 
 		int catalogueId;
 		
@@ -203,39 +221,36 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 			// delete the content of the old catalogue database
 			LOGGER.info( "Deleting the database located in " + catalogue.getDbPath() );
 
-			CatalogueDAO catDao = new CatalogueDAO();
-			catDao.deleteDBRecords ( catalogue );
+			dao.deleteContents(catalogue);
 
 			LOGGER.info( "Freeing deleted memory..." );
-			catDao.compressDatabase( catalogue );
+			dao.compress(catalogue);
 
 			// set the id to the catalogue
-			catalogueId = catDao.getCatalogue( catalogue.getCode(), 
+			catalogueId = dao.getCatalogue( catalogue.getCode(), 
 					catalogue.getVersion(), 
 					catalogue.getCatalogueType() ).getId();
 			
 			// set the catalogue id
 			catalogue.setId( catalogueId );
 
-			catDao.update( catalogue );
+			dao.update( catalogue );
 		}
 		catch ( SQLException e ) {
 
 			// otherwise the database does not exist => we create it
 
-			LOGGER.info ( "Add " + catalogue + " to the catalogue table. Db location: " + catalogue.getDbPath() );
-
-			CatalogueDAO catDao = new CatalogueDAO();
-
+			LOGGER.info("Add " + catalogue + " to the catalogue table. Db location: " + catalogue.getDbPath());
+			
 			// insert the new catalogue into the main catalogues db
-			catalogueId = catDao.insert( catalogue );
+			catalogueId = dao.insert(catalogue);
 			
 			// set the catalogue id
-			catalogue.setId( catalogueId );
+			catalogue.setId(catalogueId);
 			
 			// create the standard database structure for
 			// the new catalogue
-			catDao.createDBTables( catalogue.getDbPath() );
+			DatabaseManager.createCatalogueDatabase(catalogue.getDbPath());
 		}
 	}
 

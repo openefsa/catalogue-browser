@@ -1,5 +1,6 @@
 package data_collection;
 
+import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.xml.soap.SOAPException;
+import javax.xml.stream.XMLStreamException;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -154,8 +156,10 @@ public class DataCollection implements IDcfDataCollection {
 	 * 2) download the data collection config and insert it
 	 *   into the db
 	 * @throws SOAPException
+	 * @throws XMLStreamException 
+	 * @throws IOException 
 	 */
-	public void download( ProgressStepListener listener ) throws SOAPException {
+	public void download( ProgressStepListener listener ) throws SOAPException, IOException, XMLStreamException {
 
 		if ( listener == null )
 			throw new InvalidParameterException( "Cannot set listener to null" );

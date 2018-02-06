@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import javax.xml.soap.SOAPException;
+import javax.xml.stream.XMLStreamException;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -17,21 +18,14 @@ import catalogue.CataloguesList;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_generator.ThreadFinishedListener;
 import config.Config;
+import config.Environment;
 import data_collection.DCTable;
 import data_collection.DCTableList;
 import data_collection.DataCollection;
 import data_collection.DataCollectionsList;
-import dcf_log.DcfLogParser;
-import dcf_pending_action.PendingAction;
-import dcf_pending_action.PendingActionDAO;
-import dcf_pending_action.PendingActionListener;
-import dcf_pending_action.PendingActionValidator;
 import dcf_user.User;
 import dcf_user.UserAccessLevel;
 import dcf_user.UserProfileChecker;
-import dcf_webservice.PublishLevel;
-import dcf_webservice.ReserveLevel;
-import dcf_webservice.UploadCatalogueFileThread;
 import progress_bar.FormProgressBar;
 import soap.ExportCatalogueFile;
 import soap.GetCataloguesList;
@@ -78,8 +72,15 @@ public class Dcf {
 	public enum DcfType {
 		PRODUCTION,
 		TEST,
-		LOCAL   // if we are using a local catalogue, a "local" dcf
+		LOCAL;   // if we are using a local catalogue, a "local" dcf
+		
+		// TODO to be removed
+		public static DcfType fromEnvironment(Environment env) {
+			return env == Environment.PRODUCTION ? PRODUCTION : TEST;
+		}
 	}
+	
+
 	
 	// progress bar
 	private FormProgressBar progressBar;
@@ -307,7 +308,8 @@ public class Dcf {
 	 * @throws SOAPException 
 	 */
 	public boolean ping() throws SOAPException {
-		Ping ping = new Ping(User.getInstance());
+		Config config = new Config();
+		Ping ping = new Ping(User.getInstance(), config.getEnvironment());
 		return ping.ping();
 	}
 	
@@ -358,7 +360,8 @@ public class Dcf {
 		CataloguesList list = new CataloguesList();
 		
 		try {
-			GetCataloguesList<Catalogue> req = new GetCataloguesList<>(User.getInstance(), list);
+			Config config = new Config();
+			GetCataloguesList<Catalogue> req = new GetCataloguesList<>(User.getInstance(), config.getEnvironment(), list);
 			req.getList();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -377,7 +380,9 @@ public class Dcf {
 		DataCollectionsList list = new DataCollectionsList();
 		
 		try {
-			GetDataCollectionsList<DataCollection> req = new GetDataCollectionsList<>(User.getInstance(), list);
+			Config config = new Config();
+			GetDataCollectionsList<DataCollection> req = new GetDataCollectionsList<>(User.getInstance(), 
+					config.getEnvironment(), list);
 			req.getList();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -392,12 +397,14 @@ public class Dcf {
 	 * @param resourceId
 	 * @return
 	 * @throws SOAPException
+	 * @throws XMLStreamException 
+	 * @throws IOException 
 	 */
-	public Collection<DCTable> getFile( String resourceId ) throws SOAPException {
+	public Collection<DCTable> getFile( String resourceId ) throws SOAPException, IOException, XMLStreamException {
 		
 		DCTableList output = new DCTableList();
-		
-		GetDataCollectionTables<DCTable> req = new GetDataCollectionTables<>(User.getInstance(), 
+		Config config = new Config();
+		GetDataCollectionTables<DCTable> req = new GetDataCollectionTables<>(User.getInstance(), config.getEnvironment(),
 				output, resourceId);
 		
 		req.getTables();
@@ -414,9 +421,9 @@ public class Dcf {
 	 * @throws SOAPException 
 	 */
 	public File exportCatalogue(Catalogue catalogue) throws SOAPException {
-		
+		Config config = new Config();
 		// export the catalogue and save its attachment into an xml file
-		ExportCatalogueFile export = new ExportCatalogueFile(User.getInstance());
+		ExportCatalogueFile export = new ExportCatalogueFile(User.getInstance(), config.getEnvironment());
 		return export.exportCatalogue(catalogue.getCode());
 	}
 	
@@ -429,8 +436,9 @@ public class Dcf {
 	 */
 	public File exportLog ( String logCode ) throws SOAPException {
 		
+		Config config = new Config();
 		// ask for the log to the dcf
-		ExportCatalogueFile export = new ExportCatalogueFile(User.getInstance());
+		ExportCatalogueFile export = new ExportCatalogueFile(User.getInstance(), config.getEnvironment());
 
 		// write the log document in xml format
 		return export.exportLog(logCode);
@@ -451,136 +459,14 @@ public class Dcf {
 	public File exportCatalogueInternalVersion (String catalogueCode) 
 			throws IOException, SOAPException {
 		
+		Config config = new Config();
+		
 		// ask for the log to the dcf
-		ExportCatalogueFile export = new ExportCatalogueFile(User.getInstance());
+		ExportCatalogueFile export = new ExportCatalogueFile(User.getInstance(), config.getEnvironment());
 
 		// get the catalogue xml as input stream
 		File file = export.exportLastInternalVersion(catalogueCode);
 
 		return file;
-	}
-
-	/**
-	 * Start a reserve operation in background.
-	 * @param catalogue the catalogue we want to reserve
-	 * @param level the reserve level we want
-	 * @param description
-	 * @param listener listener called when reserve events occur
-	 * see {@link PendingActionListener} to check which are the events
-	 */
-	public void reserveBG ( Catalogue catalogue, 
-			ReserveLevel level, String description, PendingActionListener listener ) {
-		
-		catalogue.setRequestingAction( true );
-		
-		UploadCatalogueFileThread reserve = new UploadCatalogueFileThread( catalogue, 
-				level, description );
-		
-		reserve.setListener( listener );
-		reserve.setProgressBar( progressBar );
-		reserve.start();
-	}
-	
-	/**
-	 * Start a publish operation in background.
-	 * @param catalogue the catalogue we want to publish
-	 * @param level the publish level we want
-	 * @param listener listener called when publish events occur
-	 * see {@link PendingActionListener} to check which are the events
-	 */
-	public void publishBG ( Catalogue catalogue, 
-			PublishLevel level, PendingActionListener listener ) {
-		
-		catalogue.setRequestingAction( true );
-		
-		UploadCatalogueFileThread publish = new UploadCatalogueFileThread( catalogue, 
-				level );
-		
-		publish.setListener( listener );
-		publish.setProgressBar( progressBar );
-		publish.start();
-	}
-	
-
-	/**
-	 * Start the xml download in background (for upload data actions)
-	 * @param catalogue
-	 * @param listener
-	 */
-	public void downloadXmlBG ( Catalogue catalogue, final PendingActionListener listener ) {
-		
-		catalogue.setRequestingAction( true );
-		
-		UploadCatalogueFileThread download = new UploadCatalogueFileThread( catalogue );
-		download.setListener( listener );
-		download.start();
-	}
-	
-	/**
-	 * Start an upload data operation in background.
-	 * @param catalogue the catalogue we want to publish
-	 * @param listener listener called when publish events occur
-	 * see {@link PendingActionListener} to check which are the events
-	 */
-	public void uploadDataBG ( final Catalogue catalogue, File xmlFile, 
-			final PendingActionListener listener ) {
-		
-		catalogue.setRequestingAction( true );
-		
-		// start the upload data action with the downloaded xml
-		UploadCatalogueFileThread upload = new UploadCatalogueFileThread( catalogue, xmlFile );
-		upload.setListener( listener );
-		
-		upload.start();
-	}
-
-	/**
-	 * Start a single pending action process
-	 * @param pa the pending action we want to start
-	 * @param listener called to listen pending action events
-	 */
-	public void startPendingAction ( PendingAction pa, PendingActionListener listener ) {
-
-		// start the validator for the current pending reserve
-		PendingActionValidator validator = new PendingActionValidator( pa, listener );
-		validator.setProgressBar( progressBar );
-		validator.start();
-	}
-	
-	/**
-	 * Start all the pending actions of type {@code type} in the database of this user
-	 * Be aware that this method should be called only if no pending
-	 * reserve is currently running, otherwise you will get a duplicated
-	 * process for the same pending reserve.
-	 * @param listener listener which listens to several
-	 * @param type the type of pending actions we want to start
-	 * reserve events, used mainly to notify the user
-	 */
-	public void startPendingActions ( String type, PendingActionListener listener ) {
-
-		PendingActionDAO paDao = new PendingActionDAO();
-
-		// for each pending reserve action (i.e. reserve
-		// actions which did not finish until now, this
-		// includes also the requests made in other
-		// instances of the CatBrowser if it was closed)
-		for ( PendingAction pa : paDao.getAll() ) {
-			
-			if ( !pa.getType().equals( type ) )
-				continue;
-			
-			// skip all the pending reserves which
-			// were not made by the current user
-			if ( !pa.madeBy( User.getInstance() ) )
-				continue;
-			
-			// skip all the pending actions which were
-			// made on a different DCF (e.g. actions in
-			// test will not start if we connect to dcf production)
-			if ( dcfType != pa.getDcfType() )
-				continue;
-			
-			startPendingAction ( pa, listener );
-		}
 	}
 }

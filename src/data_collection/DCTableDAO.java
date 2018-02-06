@@ -7,10 +7,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueEntityDAO;
 import catalogue_browser_dao.DatabaseManager;
 
@@ -22,6 +24,9 @@ import catalogue_browser_dao.DatabaseManager;
 public class DCTableDAO implements CatalogueEntityDAO<DCTable> {
 
 	private static final Logger LOGGER = LogManager.getLogger(DCTableDAO.class);
+	
+	@Override
+	public void setCatalogue(Catalogue catalogue) {}
 	
 	@Override
 	public int insert(DCTable dc) {
@@ -218,5 +223,11 @@ public class DCTableDAO implements CatalogueEntityDAO<DCTable> {
 		}
 
 		return out;
+	}
+
+	@Override
+	public List<Integer> insert(Iterable<DCTable> attrs) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import catalogue.Catalogue;
 import catalogue_browser_dao.AttributeDAO;
+import catalogue_browser_dao.CatalogueEntityDAO;
 import catalogue_object.Attribute;
 import catalogue_object.AttributeBuilder;
 import naming_convention.Headers;
@@ -16,6 +17,7 @@ import open_xml_reader.ResultDataSet;
  */
 public class AttributeSheetImporter extends SheetImporter<Attribute> {
 
+	private CatalogueEntityDAO<Attribute> dao;
 	private Catalogue catalogue;
 	
 	/**
@@ -23,8 +25,12 @@ public class AttributeSheetImporter extends SheetImporter<Attribute> {
 	 * @param catalogue the catalogue which contains the attributes
 	 * @param attrData the sheet data related to the attributes
 	 */
-	public AttributeSheetImporter( Catalogue catalogue ) {
+	public AttributeSheetImporter(CatalogueEntityDAO<Attribute> dao, Catalogue catalogue) {
+		this.dao = dao;
 		this.catalogue = catalogue;
+	}
+	public AttributeSheetImporter(Catalogue catalogue) {
+		this(new AttributeDAO(catalogue), catalogue);
 	}
 
 	@Override
@@ -68,11 +74,8 @@ public class AttributeSheetImporter extends SheetImporter<Attribute> {
 	}
 
 	@Override
-	public void insert( Collection<Attribute> attrs ) {
-		
-		// insert the attributes into the database
-		AttributeDAO attrDao = new AttributeDAO( catalogue );
-		attrDao.insertAttributes( attrs );
+	public void insert(Collection<Attribute> attrs) {
+		dao.insert(attrs);
 	}
 
 	@Override

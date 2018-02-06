@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -356,6 +357,12 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference>{
 				PreferenceType.getTypeFromName(type), value, editable );
 
 		return pref;
+	}
+	
+	@Override
+	public List<Integer> insert(Iterable<Preference> attrs) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	public abstract Connection getConnection() throws SQLException;

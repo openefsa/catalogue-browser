@@ -26,6 +26,11 @@ public class CataloguePreferenceDAO extends PreferenceDAO {
 	public CataloguePreferenceDAO( Catalogue catalogue ) {
 		this.catalogue = catalogue;
 	}
+	
+	@Override
+	public void setCatalogue(Catalogue catalogue) {
+		this.catalogue = catalogue;
+	}
 
 	/**
 	 * Insert into the db the default preferences (used when a new catalogue is created)

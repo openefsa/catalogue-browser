@@ -6,6 +6,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import catalogue.Catalogue;
+import catalogue_browser_dao.CatalogueEntityDAO;
 import catalogue_browser_dao.HierarchyDAO;
 import catalogue_object.Hierarchy;
 import catalogue_object.HierarchyBuilder;
@@ -21,6 +22,7 @@ public class HierarchySheetImporter extends SheetImporter<Hierarchy> {
 
 	private static final Logger LOGGER = LogManager.getLogger(HierarchySheetImporter.class);
 	
+	private CatalogueEntityDAO<Hierarchy> dao;
 	private Catalogue catalogue;
 	private String masterCode;
 	
@@ -39,9 +41,14 @@ public class HierarchySheetImporter extends SheetImporter<Hierarchy> {
 	 * the catalogue sheet). We need this information since the excel workbook
 	 * uses its own master hierarchy code.
 	 */
-	public HierarchySheetImporter( Catalogue catalogue, String masterCode ) {
+	public HierarchySheetImporter(CatalogueEntityDAO<Hierarchy> dao, Catalogue catalogue, String masterCode ) {
 		this.catalogue = catalogue;
 		this.masterCode = masterCode;
+		this.dao = dao;
+	}
+	
+	public HierarchySheetImporter(Catalogue catalogue, String masterCode) {
+		this(new HierarchyDAO(catalogue), catalogue, masterCode);
 	}
 	
 	@Override
@@ -112,17 +119,15 @@ public class HierarchySheetImporter extends SheetImporter<Hierarchy> {
 	}
 
 	@Override
-	public void insert( Collection<Hierarchy> hierarchies ) throws ImportException {
+	public void insert(Collection<Hierarchy> hierarchies) throws ImportException {
 		
 
 		if (!isMasterDefined(hierarchies)) {
 			throw new ImportException("No master hierarchy was defined!", "X102");
 		}
-		
-		HierarchyDAO hierDao = new HierarchyDAO( catalogue );
-		
+
 		// insert all the hierarchies into the database
-		hierDao.insertHierarchies( hierarchies );
+		dao.insert(hierarchies);
 	}
 
 	@Override

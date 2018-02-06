@@ -25,14 +25,17 @@ import already_described_terms.Picklist;
 import already_described_terms.PicklistDAO;
 import already_described_terms.RecentTermDAO;
 import catalogue.Catalogue;
+import catalogue.ReservedCatalogue;
+import catalogue_browser_dao.ForceCatEditDAO;
+import catalogue_browser_dao.ReservedCatDAO;
 import catalogue_browser_dao.TermDAO;
 import catalogue_object.Hierarchy;
 import catalogue_object.Nameable;
 import catalogue_object.Term;
 import dcf_user.User;
-import dcf_webservice.ReserveLevel;
 import global_manager.GlobalManager;
 import messages.Messages;
+import soap.UploadCatalogueFileImpl.ReserveLevel;
 import term_clipboard.TermClipboard;
 import term_clipboard.TermOrderChanger;
 import term_code_generator.TermCodeException;
@@ -349,7 +352,7 @@ public class TermsTreePanel extends Observable implements Observer {
 		// if editing mode update edit mode buttons
 		if ( !manager.isReadOnly() ) {
 			
-			ReserveLevel level;
+			ReserveLevel level = null;
 			
 			// if the editing of the catalogue is forced
 			// we use the forced editing level to refresh
@@ -357,12 +360,22 @@ public class TermsTreePanel extends Observable implements Observer {
 			// reserve level we have on the catalogue
 			String username = User.getInstance().getUsername();
 			
-			if ( catalogue.isForceEdit( username ) )
-				level = catalogue.getForcedEditLevel( username );
-			else
-				level = catalogue.getReserveLevel();
+			ForceCatEditDAO forcedDao = new ForceCatEditDAO();
+			ReservedCatDAO resDao = new ReservedCatDAO();
 			
-			updateEditModeMI( level );
+			ReserveLevel forcedLevel = forcedDao.getEditingLevel(catalogue, username);
+			
+			if (forcedLevel == null) {
+				ReservedCatalogue reservedCat = resDao.getById(catalogue.getId());
+				
+				if (reservedCat != null)
+					level = reservedCat.getLevel();
+			}
+			else {
+				level = forcedLevel;
+			}
+			
+			updateEditModeMI(level);
 		}
 		
 		// update read only buttons
@@ -461,7 +474,10 @@ public class TermsTreePanel extends Observable implements Observer {
 			return;
 		
 		boolean canEdit = User.getInstance().canEdit( catalogue );
-		boolean canEditMajor = catalogue.isLocal() || ( canEdit && reserveLevel.isMajor() );
+		
+		boolean canEditMajor = catalogue.isLocal() || ( canEdit && reserveLevel != null 
+				&& reserveLevel == ReserveLevel.MAJOR );
+		
 		boolean canAddTerm = canEdit && selectedHierarchy.isMaster();
 		
 		if ( addRootTerm != null )

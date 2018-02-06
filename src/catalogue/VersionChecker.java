@@ -5,8 +5,10 @@ import java.sql.SQLException;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import catalogue_browser_dao.CatalogueBackup;
 import catalogue_browser_dao.CatalogueDAO;
-import catalogue_browser_dao.DatabaseManager;
+import catalogue_browser_dao.ICatalogueBackup;
+import catalogue_browser_dao.ICatalogueDAO;
 
 /**
  * Class used to manage the version of a catalogue. In particular,
@@ -23,6 +25,9 @@ public class VersionChecker {
 
 	private static final Logger LOGGER = LogManager.getLogger(VersionChecker.class);
 	
+	private ICatalogueDAO dao;
+	private ICatalogueBackup backup;
+	
 	private Catalogue catalogue;           // the base catalogue
 	private CatalogueVersion version;      // the version of the catalogue
 	private CatalogueVersion oldVersion;   // the previous version of the catalogue
@@ -33,12 +38,18 @@ public class VersionChecker {
 	 * using this class.
 	 * @param version
 	 */
-	public VersionChecker( Catalogue catalogue ) {
+	public VersionChecker(ICatalogueBackup backup, ICatalogueDAO dao, Catalogue catalogue ) {
 		this.catalogue = catalogue;
 		
 		// we use new to avoid to edit the version
 		this.version = new CatalogueVersion( catalogue.getVersion() );
 		this.oldVersion = new CatalogueVersion( catalogue.getVersion() );
+		this.backup = backup;
+		this.dao = dao;
+	}
+	
+	public VersionChecker(Catalogue catalogue) {
+		this(new CatalogueBackup(), new CatalogueDAO(), catalogue);
 	}
 
 	/**
@@ -118,25 +129,22 @@ public class VersionChecker {
 		// insert the new catalogue into the database
 		// note that the db full path is also updated
 		// here!
-		CatalogueDAO catDao = new CatalogueDAO();
-		int id = catDao.insert( newVersionCat );
+		int id = dao.insert( newVersionCat );
 
 		// refresh information
-		newVersionCat = catDao.getById( id );
+		newVersionCat = dao.getById( id );
 		
 		// note that we don't create the standard
 		// structure of the database since we create
 		// a copy of the old catalogue!
 
 		try {
-			DatabaseManager.backupCatalogue( catalogue, 
-					newVersionCat.getDbPath() );
+			backup.backupCatalogue(catalogue, newVersionCat.getDbPath());
 		} catch (SQLException e) {
 			e.printStackTrace();
 			LOGGER.error("Cannot backup the catalogue=" + catalogue, e);
 		}
-
-		
+	
 		// return the new catalogue
 		return newVersionCat;
 	}

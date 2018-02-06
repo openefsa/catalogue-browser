@@ -12,8 +12,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
 import catalogue.Catalogue;
+import catalogue_browser_dao.CatalogueEntityDAO;
 import catalogue_generator.ThreadFinishedListener;
-import dcf_webservice.UploadData;
 import export_catalogue.ExportActions;
 import messages.Messages;
 import progress_bar.FormProgressBar;
@@ -36,10 +36,15 @@ public class XmlUpdatesFactory {
 	
 	private static final Logger LOGGER = LogManager.getLogger(XmlUpdatesFactory.class);
 	
+	private CatalogueEntityDAO<XmlUpdateFile> dao;
 	private IProgressBar progressBar;
 	private Listener abortListener;
 	private Listener doneListener;
 
+	public XmlUpdatesFactory(CatalogueEntityDAO<XmlUpdateFile> dao) {
+		this.dao = dao;
+	}
+	
 	/**
 	 * Ask to the sas server to create the .xml file 
 	 * which contains the differences
@@ -49,7 +54,7 @@ public class XmlUpdatesFactory {
 	 * {@link #XML_UPDATES_CREATOR_PATH}.
 	 * @param catalogue
 	 */
-	public void createXml( final Catalogue catalogue ) {
+	public void createXml(final Catalogue catalogue) {
 
 		LOGGER.info( "Starting xml creation procedure for " + catalogue );
 		
@@ -59,7 +64,7 @@ public class XmlUpdatesFactory {
 		
 		final String filename = createUniqueCode( catalogue );
 
-		final String startFilename = filename + XmlUpdateFile.START_FORMAT;
+		final String startFilename = filename + XmlChangesService.START_FORMAT;
 		
 		// export the catalogue into the start file
 		// and make actions when it has finished
@@ -89,11 +94,11 @@ public class XmlUpdatesFactory {
 				// it is copied into the remote folder. In particular, we
 				// will rename it into .xlsx once the .start is successfully
 				// copied into the remote folder (avoid file system problems)
-				File remoteXlsxFile = new File ( inputFolder + filename + XmlUpdateFile.LOCAL_EXPORT_FORMAT );
+				File remoteXlsxFile = new File ( inputFolder + filename + XmlChangesService.LOCAL_EXPORT_FORMAT );
 				
 				// .end file which is used as green semaphore, i.e., to warn
 				// the sas procedure that it can start processing the .xlsx file
-				File remoteEndFile = new File ( inputFolder + filename + XmlUpdateFile.END_FORMAT );
+				File remoteEndFile = new File ( inputFolder + filename + XmlChangesService.END_FORMAT );
 				
 				// copy the start file into the remote folder
 				// where the sas procedure can read the file
@@ -139,8 +144,7 @@ public class XmlUpdatesFactory {
 	 */
 	private boolean deleteOldInput( Catalogue catalogue ) {
 
-		XmlUpdateFileDAO xmlDao = new XmlUpdateFileDAO();
-		XmlUpdateFile xmlUp = xmlDao.getById( catalogue.getId() );
+		XmlUpdateFile xmlUp = dao.getById( catalogue.getId() );
 		
 		if ( xmlUp == null )
 			return false;
@@ -153,7 +157,7 @@ public class XmlUpdatesFactory {
 		boolean dataDeleted = false;
 		
 		// check if the remote lock exists or not
-		File remoteStartProcFile = new File ( filename + XmlUpdateFile.REMOTE_START_FORMAT );
+		File remoteStartProcFile = new File ( filename + XmlChangesService.REMOTE_START_FORMAT );
 		
 		// if it exists, the procedure was started
 		// therefore we cannot do anything
@@ -162,8 +166,8 @@ public class XmlUpdatesFactory {
 		
 		// otherwise we delete both the local export file and its
 		// green semaphore
-		File remoteEndFile = new File ( filename + XmlUpdateFile.END_FORMAT );
-		File remoteXlsxFile = new File ( filename + XmlUpdateFile.LOCAL_EXPORT_FORMAT );
+		File remoteEndFile = new File ( filename + XmlChangesService.END_FORMAT );
+		File remoteXlsxFile = new File ( filename + XmlChangesService.LOCAL_EXPORT_FORMAT );
 
 		if ( remoteEndFile.exists() )
 			lockDeleted = remoteEndFile.delete();
@@ -260,13 +264,9 @@ public class XmlUpdatesFactory {
 	 */
 	private void saveXmlFilename ( Catalogue catalogue, String xmlFilename ) {
 		
-		XmlUpdateFileDAO xmlDao = new XmlUpdateFileDAO();
-		XmlUpdateFile xml = new XmlUpdateFile( catalogue, 
-				xmlFilename );
-		
-		// remove if present and then insert
-		xmlDao.remove( xml );
-		xmlDao.insert( xml );
+		XmlUpdateFile xml = new XmlUpdateFile(catalogue, xmlFilename);
+		XmlChangesService service = new XmlChangesService();
+		service.update(dao, xml);
 	}
 	
 	/**

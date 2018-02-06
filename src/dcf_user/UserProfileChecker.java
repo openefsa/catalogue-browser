@@ -112,6 +112,7 @@ public class UserProfileChecker extends Thread {
 			}
 		});
 		
+		User.getInstance().setUserLevel(UserAccessLevel.UNKNOWN);
 		downloader.start();
 	}
 

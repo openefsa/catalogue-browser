@@ -5,13 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import catalogue.Catalogue;
 import catalogue.ReservedCatalogue;
-import dcf_webservice.ReserveLevel;
+import soap.UploadCatalogueFileImpl.ReserveLevel;
 
 /**
  * DAO to communicate with the Reserved Catalogue table
@@ -21,6 +22,9 @@ import dcf_webservice.ReserveLevel;
 public class ReservedCatDAO implements CatalogueEntityDAO<ReservedCatalogue> {
 
 	private static final Logger LOGGER = LogManager.getLogger(ReservedCatDAO.class);
+	
+	@Override
+	public void setCatalogue(Catalogue catalogue) {}
 	
 	/**
 	 * Reserve a catalogue inserting a new ReservedCatalogue
@@ -41,7 +45,7 @@ public class ReservedCatDAO implements CatalogueEntityDAO<ReservedCatalogue> {
 			stmt.setInt( 1, rc.getCatalogueId() );
 			stmt.setString( 2, rc.getUsername() );
 			stmt.setString( 3, rc.getNote() );
-			stmt.setString( 4, rc.getLevel().toString() );
+			stmt.setString( 4, rc.getLevel().getDatabaseKey() );
 
 			stmt.executeUpdate();
 
@@ -62,6 +66,8 @@ public class ReservedCatDAO implements CatalogueEntityDAO<ReservedCatalogue> {
 	@Override
 	public boolean remove( ReservedCatalogue rc ) {
 
+		int removedRows = -1;
+		
 		String query = "delete from APP.RESERVED_CATALOGUE where CAT_ID = ?";
 
 		try (Connection con = DatabaseManager.getMainDBConnection();
@@ -71,7 +77,7 @@ public class ReservedCatDAO implements CatalogueEntityDAO<ReservedCatalogue> {
 
 			stmt.setInt( 1, rc.getCatalogueId() );
 			
-			stmt.executeUpdate();
+			removedRows = stmt.executeUpdate();
 			
 			stmt.close();
 			con.close();
@@ -79,10 +85,9 @@ public class ReservedCatDAO implements CatalogueEntityDAO<ReservedCatalogue> {
 		} catch ( SQLException e ) {
 			e.printStackTrace();
 			LOGGER.error("DB error", e);
-			return false;
 		}
 
-		return true;
+		return removedRows > 0;
 	}
 
 	@Override
@@ -128,8 +133,7 @@ public class ReservedCatDAO implements CatalogueEntityDAO<ReservedCatalogue> {
 		int id = rs.getInt( "CAT_ID" );
 		String username = rs.getString( "RESERVE_USERNAME" );
 		String note = rs.getString( "RESERVE_NOTE" );
-		ReserveLevel level = ReserveLevel.valueOf( 
-				rs.getString( "RESERVE_LEVEL" ) );
+		ReserveLevel level = ReserveLevel.fromDatabaseKey( rs.getString( "RESERVE_LEVEL" ) );
 		
 		CatalogueDAO catDao = new CatalogueDAO();
 		Catalogue catalogue = catDao.getById( id );
@@ -146,4 +150,9 @@ public class ReservedCatDAO implements CatalogueEntityDAO<ReservedCatalogue> {
 		return null;
 	}
 
+	@Override
+	public List<Integer> insert(Iterable<ReservedCatalogue> attrs) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

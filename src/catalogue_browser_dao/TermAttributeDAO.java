@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -38,11 +39,16 @@ public class TermAttributeDAO implements CatalogueRelationDAO< TermAttribute, Te
 	}
 	
 	@Override
+	public void setCatalogue(Catalogue catalogue) {
+		this.catalogue = catalogue;
+	}
+	
+	@Override
 	public int insert( TermAttribute ta ) {
 
 		Collection<TermAttribute> tas = new ArrayList<>();
 		tas.add( ta );
-		ArrayList<Integer> ids = insert ( tas );
+		List<Integer> ids = insert ( tas );
 		
 		if ( ids.isEmpty() )
 			return -1;
@@ -50,7 +56,7 @@ public class TermAttributeDAO implements CatalogueRelationDAO< TermAttribute, Te
 		return ids.get(0);
 	}
 	
-	public synchronized ArrayList<Integer> insert ( Collection<TermAttribute> tas ) {
+	public synchronized List<Integer> insert ( Iterable<TermAttribute> tas ) {
 		
 		ArrayList<Integer> ids = new ArrayList<>();
 

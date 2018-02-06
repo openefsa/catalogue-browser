@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import catalogue.Catalogue;
 import catalogue_browser_dao.AttributeDAO;
+import catalogue_browser_dao.CatalogueRelationDAO;
 import catalogue_browser_dao.TermAttributeDAO;
 import catalogue_object.Attribute;
 import catalogue_object.RepeatableParser;
@@ -23,6 +24,7 @@ import term_code_generator.CodeGenerator;
  */
 public class TermAttributeImporter extends SheetImporter<TermAttribute> {
 
+	private CatalogueRelationDAO<TermAttribute, Term, Attribute> dao;
 	private Catalogue catalogue;
 	private HashMap<String, Integer> termIds;
 	private ArrayList<Attribute> attributes;
@@ -30,8 +32,10 @@ public class TermAttributeImporter extends SheetImporter<TermAttribute> {
 	// things for append
 	private HashMap<String, String> newCodes;
 	
-	public TermAttributeImporter( Catalogue catalogue ) throws SQLException {
+	public TermAttributeImporter(CatalogueRelationDAO<TermAttribute, Term, Attribute> dao, 
+			Catalogue catalogue) throws SQLException {
 
+		this.dao = dao;
 		this.catalogue = catalogue;
 		
 		// get all the term ids
@@ -39,6 +43,10 @@ public class TermAttributeImporter extends SheetImporter<TermAttribute> {
 		
 		AttributeDAO attrDao = new AttributeDAO ( catalogue );
 		attributes = attrDao.getAll();
+	}
+	
+	public TermAttributeImporter(Catalogue catalogue) throws SQLException {
+		this(new TermAttributeDAO(catalogue), catalogue);
 	}
 	
 	/**
@@ -62,8 +70,7 @@ public class TermAttributeImporter extends SheetImporter<TermAttribute> {
 
 	@Override
 	public void insert(Collection<TermAttribute> data) {
-		TermAttributeDAO taDao = new TermAttributeDAO( catalogue );
-		taDao.insert( data );
+		dao.insert( data );
 	}
 
 	@Override

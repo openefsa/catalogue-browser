@@ -1,9 +1,7 @@
 package catalogue_browser_dao;
 
-import java.io.IOException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,6 +9,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -20,7 +19,6 @@ import catalogue.CatalogueBuilder;
 import dcf_manager.Dcf.DcfType;
 import dcf_user.User;
 import sas_remote_procedures.XmlUpdateFileDAO;
-import sql.SQLExecutor;
 import utilities.GlobalUtil;
 
 
@@ -29,9 +27,12 @@ import utilities.GlobalUtil;
  * @author avonva
  *
  */
-public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
+public class CatalogueDAO implements ICatalogueDAO {
 
 	private static final Logger LOGGER = LogManager.getLogger(CatalogueDAO.class);
+	
+	@Override
+	public void setCatalogue(Catalogue catalogue) {}
 	
 	/**
 	 * Insert a new catalogue into the main catalogues database. Moreover,
@@ -321,55 +322,13 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 	}
 
 	/**
-	 * Create a generic catalogue db in the db path directory
-	 * @param dbPath
-	 * @throws IOException 
-	 */
-	public void createDBTables ( String dbPath ) throws IOException {
-		
-		// create the db url path, the create = true variable indicates that if
-		// the db is not present it will be created
-		String dbURL = "jdbc:derby:" + dbPath;
-		
-		try (Connection con = DriverManager.getConnection( dbURL + ";create=true" );
-				SQLExecutor executor = new SQLExecutor(con);) {
-			
-			// open the connection to create the database
-			// important! do not remove this line of code since
-			// otherwise the database will not be created
-			
-			// create the catalogue db structure
-			executor.exec(getClass().getClassLoader().getResourceAsStream( "createCatalogueDB" ));
-			
-			// close the connection
-			con.close();
-
-			// shutdown the connection, by default this operation throws an exception
-			// but the command is correct! We close the connection since if we try
-			// to delete a database which is just downloaded an error is shown since
-			// the database is in use
-			try {
-				LOGGER.info ( "Closing connection with " + dbURL );
-				try(Connection con2 = DriverManager.getConnection( dbURL + ";shutdown=true");) {}
-			}
-			catch ( Exception e ) {
-			}
-
-		} catch ( SQLException e ) {
-			e.printStackTrace();
-			LOGGER.error("DB error", e);
-		}
-	}
-
-
-	/**
 	 * Remove all the records of the catalogue database
 	 * 
 	 * @param con
 	 * @throws SQLException
 	 * @throws NoCatalogueOpenException 
 	 */
-	public void deleteDBRecords ( Catalogue catalogue ) throws SQLException {
+	public void deleteContents ( Catalogue catalogue ) throws SQLException {
 		
 		try (Connection con = catalogue.getConnection();
 				Statement stmt = con.createStatement();) {
@@ -395,7 +354,7 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 	/**
 	 * Compress the database to avoid fragmentation
 	 */
-	public void compressDatabase( Catalogue catalogue ) {
+	public void compress( Catalogue catalogue ) {
 
 		// This will fail, if there are dependencies
 
@@ -766,6 +725,13 @@ public class CatalogueDAO implements CatalogueEntityDAO<Catalogue> {
 
 	@Override
 	public Collection<Catalogue> getAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public List<Integer> insert(Iterable<Catalogue> attrs) {
 		// TODO Auto-generated method stub
 		return null;
 	}

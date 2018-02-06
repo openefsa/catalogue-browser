@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -17,6 +18,9 @@ import global_manager.GlobalManager;
 public class DetailLevelDAO implements CatalogueEntityDAO<DetailLevelGraphics> {
 
 	private static final Logger LOGGER = LogManager.getLogger(DetailLevelDAO.class);
+	
+	@Override
+	public void setCatalogue(Catalogue catalogue) {}
 	
 	/**
 	 * Check if the catalogue has detail levels or not
@@ -107,5 +111,11 @@ public class DetailLevelDAO implements CatalogueEntityDAO<DetailLevelGraphics> {
 		DetailLevelGraphics dlg = new DetailLevelGraphics( code, name, imageName );
 		
 		return dlg;
+	}
+
+	@Override
+	public List<Integer> insert(Iterable<DetailLevelGraphics> attrs) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

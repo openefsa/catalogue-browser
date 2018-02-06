@@ -3,6 +3,9 @@ package catalogue_browser_dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.List;
+
+import catalogue.Catalogue;
 
 /**
  * Interface used to create the catalogue DAOs related to entities.
@@ -16,11 +19,24 @@ import java.util.Collection;
 public interface CatalogueEntityDAO<E> {
 
 	/**
+	 * Set the catalogue which contains all the contents
+	 * of this dao
+	 * @param catalogue
+	 */
+	public void setCatalogue(Catalogue catalogue);
+	
+	/**
 	 * Insert an E object into the database
 	 * @param object
 	 * @return the new id created by the db for this object
 	 */
 	public int insert ( E object );
+	
+	/**
+	 * Insert multiple elements
+	 * @param attrs
+	 */
+	public List<Integer> insert(Iterable<E> attrs);
 	
 	/**
 	 * Remove an E object from the database

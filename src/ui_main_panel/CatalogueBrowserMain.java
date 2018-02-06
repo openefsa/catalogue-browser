@@ -178,7 +178,6 @@ public class CatalogueBrowserMain {
 							case OK:
 								
 								LoginActions.startLoggedThreads(shell, 
-										browser.getMenu().getListener(),
 										new Listener() {
 
 									@Override

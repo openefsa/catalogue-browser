@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -33,6 +33,11 @@ public class TermTypeDAO implements CatalogueEntityDAO<TermType> {
 		this.catalogue = catalogue;
 	}
 
+	@Override
+	public void setCatalogue(Catalogue catalogue) {
+		this.catalogue = catalogue;
+	}
+	
 	/**
 	 * Get all the term types from the catalogue db
 	 * @return
@@ -77,7 +82,7 @@ public class TermTypeDAO implements CatalogueEntityDAO<TermType> {
 	 * Insert a batch of term types
 	 * @param termTypes
 	 */
-	public synchronized void insert ( Collection<TermType> termTypes ) {
+	public synchronized List<Integer> insert (Iterable<TermType> termTypes) {
 
 		String query = "insert into APP.TERM_TYPE (TERM_TYPE_CODE, TERM_TYPE_LABEL) values (?, ?)";
 
@@ -111,6 +116,8 @@ public class TermTypeDAO implements CatalogueEntityDAO<TermType> {
 			e.printStackTrace();
 			LOGGER.error("DB error", e);
 		}
+		
+		return null;
 	}
 
 	@Override

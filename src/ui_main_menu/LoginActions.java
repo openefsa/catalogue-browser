@@ -1,5 +1,8 @@
 package ui_main_menu;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -7,11 +10,6 @@ import org.eclipse.swt.widgets.Shell;
 
 import catalogue_generator.ThreadFinishedListener;
 import dcf_manager.Dcf;
-import dcf_pending_action.PendingActionListener;
-import dcf_pending_action.PendingPublish;
-import dcf_pending_action.PendingReserve;
-import dcf_pending_action.PendingUploadData;
-import dcf_pending_action.PendingXmlDownload;
 import dcf_user.User;
 import messages.Messages;
 import progress_bar.FormProgressBar;
@@ -25,8 +23,7 @@ public class LoginActions {
 	 * @param shell
 	 * @param listener
 	 */
-	public static void startLoggedThreads(final Shell shell, 
-			final PendingActionListener listener, final Listener userLevelListener) {
+	public static void startLoggedThreads(final Shell shell, final Listener userLevelListener) {
 		
 		if(!User.getInstance().isLoggedIn())
 			return;
@@ -79,11 +76,11 @@ public class LoginActions {
 							if (userLevelListener != null)
 								userLevelListener.handleEvent(null);
 							
-							// once we have finished checking the user
-							// level we start with the pending reserves
-							// we do this here to avoid concurrence
-							// editing of the database
-							startPendingActions(shell, listener);
+							try {
+								User.getInstance().startPendingRequests();
+							} catch (SQLException | IOException e) {
+								e.printStackTrace();
+							}
 
 							String title = Messages.getString( "Login.PermissionTitle" );
 							String msg;
@@ -107,43 +104,5 @@ public class LoginActions {
 				});
 			}
 		});
-	}
-	
-	/**
-	 * Start all the pending actions in the database
-	 * @return
-	 */
-	public static void startPendingActions(Shell shell, PendingActionListener listener) {
-
-		Dcf dcf = new Dcf();
-
-		// progress bar for pending reserve
-		FormProgressBar bar = new FormProgressBar( shell, 
-				Messages.getString("Reserve.NewInternalTitle") );
-		
-		bar.setLocation( bar.getLocation().x, bar.getLocation().y + 170 );
-		
-		dcf.setProgressBar( bar );
-		
-		// start reserve actions
-		dcf.startPendingActions( PendingReserve.TYPE, listener );
-
-		
-		// progress bar for pending publish
-		FormProgressBar bar2 = new FormProgressBar( shell, 
-				Messages.getString("Publish.DownloadPublished") );
-		
-		bar.setLocation( bar2.getLocation().x, bar2.getLocation().y + 170 );
-		
-		dcf.setProgressBar( bar2 );
-		
-		// start publish actions
-		dcf.startPendingActions( PendingPublish.TYPE, listener );
-		
-		// start upload data actions
-		dcf.startPendingActions( PendingUploadData.TYPE, listener );
-
-		// start upload data actions
-		dcf.startPendingActions( PendingXmlDownload.TYPE, listener );
 	}
 }

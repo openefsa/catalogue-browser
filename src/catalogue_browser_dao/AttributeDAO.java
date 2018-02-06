@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -37,6 +38,11 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 		this.catalogue = catalogue;
 	}
 	
+	@Override
+	public void setCatalogue(Catalogue catalogue) {
+		this.catalogue = catalogue;
+	}
+	
 	/**
 	 * Insert a single attribute into the database
 	 * @param attr
@@ -47,7 +53,7 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 		Collection<Attribute> attrs = new ArrayList<>();
 		attrs.add( attr );
 		
-		ArrayList<Integer> ids = insertAttributes( attrs );
+		List<Integer> ids = insert(attrs);
 		
 		if ( ids.isEmpty() )
 			return -1;
@@ -60,7 +66,7 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 	 * @param hierarchy
 	 * @return
 	 */
-	public synchronized ArrayList<Integer> insertAttributes ( Collection<Attribute> attrs ) {
+	public synchronized List<Integer> insert( Iterable<Attribute> attrs ) {
 
 		ArrayList<Integer> ids = new ArrayList<>();
 		

@@ -8,6 +8,7 @@ package dcf_user;
  *
  */
 public enum UserAccessLevel {
+	UNKNOWN,
 	DATA_PROVIDER,
-	CATALOGUE_MANAGER;
+	CATALOGUE_MANAGER
 }

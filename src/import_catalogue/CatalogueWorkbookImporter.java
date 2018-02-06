@@ -13,6 +13,22 @@ import org.apache.poi.openxml4j.exceptions.OpenXML4JException;
 import org.xml.sax.SAXException;
 
 import catalogue.Catalogue;
+import catalogue.ReleaseNotesOperation;
+import catalogue_browser_dao.AttributeDAO;
+import catalogue_browser_dao.CatalogueDAO;
+import catalogue_browser_dao.CatalogueEntityDAO;
+import catalogue_browser_dao.CatalogueRelationDAO;
+import catalogue_browser_dao.HierarchyDAO;
+import catalogue_browser_dao.ICatalogueDAO;
+import catalogue_browser_dao.ParentTermDAO;
+import catalogue_browser_dao.ReleaseNotesOperationDAO;
+import catalogue_browser_dao.TermAttributeDAO;
+import catalogue_browser_dao.TermDAO;
+import catalogue_object.Applicability;
+import catalogue_object.Attribute;
+import catalogue_object.Hierarchy;
+import catalogue_object.Term;
+import catalogue_object.TermAttribute;
 import messages.Messages;
 import naming_convention.Headers;
 import open_xml_reader.ResultDataSet;
@@ -31,12 +47,46 @@ public class CatalogueWorkbookImporter {
 	
 	private static final Logger LOGGER = LogManager.getLogger(CatalogueWorkbookImporter.class);
 	
+	private ICatalogueDAO catDao;
+	private CatalogueEntityDAO<Attribute> attrDao;
+	private CatalogueEntityDAO<Hierarchy> hierDao; 
+	private CatalogueEntityDAO<Term> termDao;
+	private CatalogueRelationDAO<TermAttribute, Term, Attribute> taDao;
+	private CatalogueRelationDAO<Applicability, Term, Hierarchy> parentDao;
+	private CatalogueEntityDAO<ReleaseNotesOperation> notesDao;
+	
 	// set this to import a local catalogue
 	private Catalogue openedCat;
 	private CatalogueSheetImporter catImp;
 	private TermSheetImporter termImp;
 	private IProgressBar progressBar;
 	private double maxProgress;
+	
+	public CatalogueWorkbookImporter() {
+		this.catDao = new CatalogueDAO();
+		this.attrDao = null;
+		this.hierDao = null;
+		this.termDao = null;
+		this.taDao = null;
+		this.parentDao = null;
+		this.notesDao = null;
+	}
+	
+	public CatalogueWorkbookImporter(ICatalogueDAO catDao, 
+			CatalogueEntityDAO<Attribute> attrDao,
+			CatalogueEntityDAO<Hierarchy> hierDao,
+			CatalogueEntityDAO<Term> termDao,
+			CatalogueRelationDAO<TermAttribute, Term, Attribute> taDao,
+			CatalogueRelationDAO<Applicability, Term, Hierarchy> parentDao,
+			CatalogueEntityDAO<ReleaseNotesOperation> notesDao) {
+		this.catDao = catDao;
+		this.attrDao = attrDao;
+		this.hierDao = hierDao;
+		this.termDao = termDao;
+		this.taDao = taDao;
+		this.parentDao = parentDao;
+		this.notesDao = notesDao;
+	}
 	
 	/**
 	 * Set this to true if the catalogue you
@@ -47,6 +97,25 @@ public class CatalogueWorkbookImporter {
 	 */
 	public void setOpenedCatalogue( Catalogue openedCat ) {
 		this.openedCat = openedCat;
+	}
+	
+	private void initDaos(Catalogue catalogue) {
+		
+		if (this.attrDao == null) {
+			this.attrDao = new AttributeDAO(catalogue);
+			this.hierDao = new HierarchyDAO(catalogue);
+			this.termDao = new TermDAO(catalogue);
+			this.notesDao = new ReleaseNotesOperationDAO(catalogue);
+			this.taDao = new TermAttributeDAO(catalogue);
+			this.parentDao = new ParentTermDAO(catalogue);
+		}
+		
+		this.hierDao.setCatalogue(catalogue);
+		this.attrDao.setCatalogue(catalogue);
+		this.termDao.setCatalogue(catalogue);
+		this.taDao.setCatalogue(catalogue);
+		this.parentDao.setCatalogue(catalogue);
+		this.notesDao.setCatalogue(catalogue);
 	}
 	
 	/**
@@ -71,35 +140,48 @@ public class CatalogueWorkbookImporter {
 			
 			// import catalogue
 			LOGGER.info( "Import catalogue sheet" );
-			progressBar.setLabel( Messages.getString("Import.Catalogue") );
-			catImp = importCatalogueSheet( workbookReader );
+			
+			if (progressBar != null)
+				progressBar.setLabel( Messages.getString("Import.Catalogue") );
+			
+			catImp = importCatalogueSheet(workbookReader);
 			
 			Catalogue importedCat = catImp.getImportedCatalogue();
 			String catExcelCode = catImp.getExcelCode();
 			
+			// prepare daos to import data
+			this.initDaos(importedCat);
+			
 			// import hierarchies
 			LOGGER.info( "Import hierarchy sheet" );
-			progressBar.setLabel( Messages.getString("Import.Hierarchy") );
+			
+			if (progressBar != null)
+				progressBar.setLabel( Messages.getString("Import.Hierarchy") );
+			
 			importHierarchySheet ( workbookReader, importedCat, catExcelCode );
 
 			// import attributes
 			LOGGER.info( "Import attribute sheet" );
-			progressBar.setLabel( Messages.getString("Import.Attribute") );
+			if (progressBar != null)
+				progressBar.setLabel( Messages.getString("Import.Attribute") );
 			importAttributeSheet ( workbookReader, importedCat );
 			
 			// import terms
 			LOGGER.info( "Import term sheet" );
-			progressBar.setLabel( Messages.getString("Import.Term") );
+			if (progressBar != null)
+				progressBar.setLabel( Messages.getString("Import.Term") );
 			termImp = importTermSheet ( workbookReader, importedCat );
 			
 			// import term attributes and parent
 			LOGGER.info( "Import term attributes and parents sheet" );
-			progressBar.setLabel( Messages.getString("Import.TermAttrParent") );
+			if (progressBar != null)
+				progressBar.setLabel( Messages.getString("Import.TermAttrParent") );
 			importTermRelations ( workbookReader, importedCat, termImp.getNewCodes() );
 
 			// import the release note sheet
 			LOGGER.info( "Import release notes sheet" );
-			progressBar.setLabel( Messages.getString("Import.ReleaseNotes") );
+			if (progressBar != null)
+				progressBar.setLabel( Messages.getString("Import.ReleaseNotes") );
 			importReleaseNotes ( workbookReader, importedCat );
 			
 			// close the connection with excel reader
@@ -108,7 +190,8 @@ public class CatalogueWorkbookImporter {
 			// insert default preferences
 			// after having imported the excel, we can insert the default preferences
 			LOGGER.info ( "Creating default preferences" );
-			progressBar.setLabel( Messages.getString("Import.Preferences") );
+			if (progressBar != null)
+				progressBar.setLabel( Messages.getString("Import.Preferences") );
 			
 			CataloguePreferenceDAO prefDao = new CataloguePreferenceDAO( importedCat );
 			prefDao.insertDefaultPreferences();
@@ -117,10 +200,12 @@ public class CatalogueWorkbookImporter {
 			SearchOptionDAO optDao = new SearchOptionDAO ( importedCat );
 			optDao.insertDefaultSearchOpt();
 
-			// add progress
-			double prog = ProgressSettings.getProgress( 
-					ProgressSettings.DEFAULT_PREF, maxProgress );
-			progressBar.addProgress( prog );
+			if (progressBar != null) {
+				// add progress
+				double prog = ProgressSettings.getProgress( 
+						ProgressSettings.DEFAULT_PREF, maxProgress );
+				progressBar.addProgress( prog );
+			}
 
 			LOGGER.info( importedCat + " successfully imported in " + importedCat.getDbPath() );
 			
@@ -148,11 +233,13 @@ public class CatalogueWorkbookImporter {
 
 		ResultDataSet sheetData = workbookReader.next();
 		
-		CatalogueSheetImporter catImp = new CatalogueSheetImporter();
+		CatalogueSheetImporter catImp = new CatalogueSheetImporter(catDao);
 		
-		double prog = ProgressSettings.getProgress( ProgressSettings.CAT_SHEET, maxProgress );
-		catImp.setProgressBar( progressBar, 
-				workbookReader.getRowCount(), prog );
+		if (progressBar != null) {
+			double prog = ProgressSettings.getProgress( ProgressSettings.CAT_SHEET, maxProgress );
+			catImp.setProgressBar( progressBar, 
+					workbookReader.getRowCount(), prog );
+		}
 		
 		if ( openedCat != null )
 			catImp.setOpenedCatalogue ( openedCat );
@@ -183,15 +270,16 @@ public class CatalogueWorkbookImporter {
 		ResultDataSet sheetData = workbookReader.next();
 		
 		AttributeSheetImporter attrImp = new 
-				AttributeSheetImporter( catalogue );
+				AttributeSheetImporter(attrDao, catalogue);
 		
-		double prog = ProgressSettings.getProgress( ProgressSettings.ATTR_SHEET, maxProgress );
-		attrImp.setProgressBar(progressBar, 
-				workbookReader.getRowCount(), prog);
+		if (progressBar != null) {
+			double prog = ProgressSettings.getProgress( ProgressSettings.ATTR_SHEET, maxProgress );
+			attrImp.setProgressBar(progressBar, 
+					workbookReader.getRowCount(), prog);
+		}
 		
 		// start the import
 		attrImp.importData( sheetData );
-		
 		
 		// import the term types related to the attributes
 		TermTypeImporter ttImp = new TermTypeImporter( catalogue );
@@ -223,11 +311,13 @@ public class CatalogueWorkbookImporter {
 		ResultDataSet sheetData = workbookReader.next();
 		
 		HierarchySheetImporter hierImp = new 
-				HierarchySheetImporter( catalogue, catExcelCode );
+				HierarchySheetImporter(hierDao, catalogue, catExcelCode );
 		
-		double prog = ProgressSettings.getProgress( ProgressSettings.HIER_SHEET, maxProgress );
-		hierImp.setProgressBar(progressBar, 
-				workbookReader.getRowCount(), prog);
+		if (progressBar != null) {
+			double prog = ProgressSettings.getProgress( ProgressSettings.HIER_SHEET, maxProgress );
+			hierImp.setProgressBar(progressBar, 
+					workbookReader.getRowCount(), prog);
+		}
 		
 		// start the import
 		hierImp.importData( sheetData );
@@ -288,14 +378,16 @@ public class CatalogueWorkbookImporter {
 		// get the hierarchy sheet
 		workbookReader.processSheetName( Headers.TERM_SHEET_NAME );
 		
-		TermSheetImporter termImp = new TermSheetImporter( catalogue );
+		TermSheetImporter termImp = new TermSheetImporter(termDao, catalogue);
 		
-		double prog = ProgressSettings.getProgress( ProgressSettings.TERM_SHEET, maxProgress );
-		termImp.setProgressBar(progressBar, 
-				workbookReader.getRowCount(), prog);
+		if (progressBar != null) {
+			double prog = ProgressSettings.getProgress( ProgressSettings.TERM_SHEET, maxProgress );
+			termImp.setProgressBar(progressBar, 
+					workbookReader.getRowCount(), prog);
+		}
 		
 		// import terms in a quick way
-		importQuickly ( workbookReader, Headers.TERM_SHEET_NAME, batchSize, termImp );
+		importQuickly (workbookReader, Headers.TERM_SHEET_NAME, batchSize, termImp);
 		
 		return termImp;
 	}
@@ -321,17 +413,20 @@ public class CatalogueWorkbookImporter {
 		// term attributes and parent terms!
 		// import term attributes and parent terms in a parallel way
 		// since they are independent processes
-		QuickParentAttributesImporter tapImporter = new QuickParentAttributesImporter( catalogue, 
+		QuickParentAttributesImporter tapImporter = new QuickParentAttributesImporter(taDao, parentDao, catalogue, 
 				workbookReader, Headers.TERM_SHEET_NAME, batchSize );
 		
-		double progTa = ProgressSettings.getProgress( 
-				ProgressSettings.TERM_ATTR_SHEET, maxProgress );
+		if (progressBar != null) {
 		
-		double progParent = ProgressSettings.getProgress( 
-				ProgressSettings.PARENT_SHEET, maxProgress );
-		
-		tapImporter.setAttributeProgressBar(progressBar, progTa);
-		tapImporter.setParentProgressBar(progressBar, progParent);
+			double progTa = ProgressSettings.getProgress( 
+					ProgressSettings.TERM_ATTR_SHEET, maxProgress );
+			
+			double progParent = ProgressSettings.getProgress( 
+					ProgressSettings.PARENT_SHEET, maxProgress );
+			
+			tapImporter.setAttributeProgressBar(progressBar, progTa);
+			tapImporter.setParentProgressBar(progressBar, progParent);
+		}
 		
 		tapImporter.manageNewTerms( newCodes );
 		
@@ -352,16 +447,17 @@ public class CatalogueWorkbookImporter {
 			
 			ResultDataSet sheetData = workbookReader.next();
 			
-			NotesSheetImporter notesImp = new 
-					NotesSheetImporter( catalogue );
+			NotesSheetImporter notesImp = new NotesSheetImporter(notesDao);
 			
-			double prog = ProgressSettings.getProgress( 
-					ProgressSettings.NOTES_SHEET, maxProgress );
-
-			notesImp.setProgressBar(progressBar, 
-					workbookReader.getRowCount(), prog);
+			if (progressBar != null) {
+				double prog = ProgressSettings.getProgress( 
+						ProgressSettings.NOTES_SHEET, maxProgress );
+	
+				notesImp.setProgressBar(progressBar, 
+						workbookReader.getRowCount(), prog);
+			}
 			
-			notesImp.importData( sheetData );
+			notesImp.importData(sheetData);
 			
 			workbookReader.getSheetParser().close();
 			sheetData.close();

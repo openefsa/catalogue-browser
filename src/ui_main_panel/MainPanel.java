@@ -29,10 +29,14 @@ import catalogue_object.Hierarchy;
 import catalogue_object.Nameable;
 import catalogue_object.Term;
 import data_collection.DCTableConfig;
-import dcf_webservice.ReserveLevel;
+import dcf_log.DcfResponse;
 import global_manager.GlobalManager;
 import messages.Messages;
+import pending_request.PendingRequestStatusChangedEvent;
 import session_manager.BrowserWindowPreferenceDao;
+import soap.UploadCatalogueFileImpl;
+import soap.UploadCatalogueFileImpl.ReserveLevel;
+import ui_dcf_log.LogNodesForm;
 import ui_main_menu.FileActions;
 import ui_main_menu.FileMenu;
 import ui_main_menu.LoginMenu;
@@ -40,6 +44,7 @@ import ui_main_menu.MainMenu;
 import ui_main_menu.MenuListener;
 import ui_main_menu.ToolsMenu;
 import ui_main_menu.ViewMenu;
+import ui_main_panel.IBrowserPendingRequestWorker.PendingRequestWorkerListener;
 import ui_search_bar.HierarchyChangedListener;
 import ui_search_bar.HierarchyEvent;
 import ui_search_bar.SearchEvent;
@@ -61,9 +66,9 @@ import window_restorer.RestoreableWindow;
  * @version 0.2.1
  */
 public class MainPanel implements Observer {
-	
+
 	private static final Logger LOGGER = LogManager.getLogger(MainPanel.class);
-	
+
 	// code for saving window dimensions in db
 	private RestoreableWindow window;
 	private final static String WINDOW_CODE = "MainPanel";
@@ -73,37 +78,138 @@ public class MainPanel implements Observer {
 
 	// main menu (upper left menu)
 	private MainMenu menu;
-	
+
 	// search bar and table
 	private SearchPanel searchPanel;
-	
+
 	// label which shows the current open catalogue label
 	private CatalogueLabel catalogueLabel;
-	
+
 	// combo box with radio buttons to select the displayed hierarchy
 	private HierarchySelector hierarchySelector;
-	
+
 	// checkboxes to filter the tree terms
 	private TermFilter termFilter;
-	
+
 	// main tree which allows browsing catalogue terms
 	private TermsTreePanel tree;
 
 	// term properties in three tabs
 	private TermPropertiesPanel tabPanel;
 
+	public MainPanel(Shell shell, IBrowserPendingRequestWorker requestWorker) {
+		this.shell = shell;
+		listenPendingRequests(requestWorker);
+	}
+	
+	private void listenPendingRequests(IBrowserPendingRequestWorker worker) {
+		worker.addListener(new PendingRequestWorkerListener() {
+
+			@Override
+			public void workerStatusChanged(final WorkerStatus newStatus) {
+				
+				shell.getDisplay().asyncExec(new Runnable() {
+					
+					@Override
+					public void run() {
+						if (newStatus == WorkerStatus.ONGOING) {
+							ShellLocker.setLock(shell, Messages.getString("MainPanel.CannotCloseTitle"), 
+									Messages.getString("MainPanel.CannotCloseMessage"));
+						}
+						else {
+							ShellLocker.removeLock(shell);
+						}
+					}
+				});
+			}
+			
+			@Override
+			public void statusChanged(final PendingRequestStatusChangedEvent event) {
+
+				LOGGER.debug("Received pending request event=" + event);
+
+				// get the code of the catalogue involved
+				// in the pending request
+
+				String catalogueCode = event.getPendingRequest().getData()
+						.get(UploadCatalogueFileImpl.CATALOGUE_CODE_DATA_KEY);
+
+				final String messageBoxTitle = event.getPendingRequest().getType() + " " + catalogueCode;
+
+				switch(event.getNewStatus()) {
+				case ERROR:
+
+					shell.getDisplay().asyncExec(new Runnable() {
+						@Override
+						public void run() {
+							// popup and warn that something went wrong
+							GlobalUtil.showErrorDialog(shell, messageBoxTitle,
+									Messages.getString("pending.request.error") 
+									+ " Log code=" + event.getPendingRequest().getLogCode());
+						}
+					});
+
+					break;
+
+				case DOWNLOADING:
+
+					// update flag to uploading
+
+					break;
+
+				case QUEUED:
+
+					// update queued flag
+
+					break;
+
+				case COMPLETED:
+
+					shell.getDisplay().asyncExec(new Runnable() {
+
+						@Override
+						public void run() {
+
+							final DcfResponse response = event.getPendingRequest().getResponse();
+
+							if (response == DcfResponse.OK)
+								refresh();
+							else {
+								
+								if (event.getPendingRequest().getLog() != null) {
+
+									// if there are errors, show also the errors table
+									LogNodesForm errors = new LogNodesForm(shell, event.getPendingRequest().getLog());
+									errors.open();
+								}
+							}
+
+							PendingRequestMessages msg = new PendingRequestMessages();
+							msg.show(shell, messageBoxTitle, 
+									event.getPendingRequest().getType(), response);
+						}
+					});
+					break;
+
+				default:
+					break;
+				}
+			}
+		});
+	}
+	
 	/**
 	 * Initialize the main UI panel
 	 * @param shell
 	 */
-	public MainPanel( Shell shell ) {
-		this.shell = shell;
+	public MainPanel( final Shell shell ) {
+		this(shell, BrowserPendingRequestWorker.getInstance());
 	}
-	
+
 	public MainMenu getMenu() {
 		return menu;
 	}
-	
+
 	/**
 	 * Creates the user interface
 	 */
@@ -114,22 +220,22 @@ public class MainPanel implements Observer {
 
 		// add all the swt widgets to the main UI
 		addWidgets ( shell );
-		
+
 		// shell name, image, window dimensions (based on
 		// widget! Need to call it after addWidgets)
 		setShellGraphics();
 	}
-	
+
 	public void openLastCatalogue() {
 		// open the last catalogue if present
 		try {
 			Catalogue catalogue = getLastOpenedCatalogue();
-			
+
 			if (catalogue == null)
 				return;
-			
+
 			catalogue.open();
-			
+
 			// enable the user interface only if we have data in the current catalogue
 			if ( !catalogue.isEmpty() ) {
 				enableUI( true );
@@ -137,13 +243,13 @@ public class MainPanel implements Observer {
 			}
 		} catch (PreferenceNotFoundException e) {}
 	}
-	
+
 	/**
 	 * Refresh the catalogue of the objects
 	 * @param catalogue
 	 */
 	public void refresh ( final Catalogue catalogue ) {
-		
+
 		// redraw menus in the ui thread ( we use async exec since
 		// this method is potentially called by threads not in the UI )
 		Display.getDefault().asyncExec( new Runnable() {
@@ -153,9 +259,9 @@ public class MainPanel implements Observer {
 
 				catalogueLabel.setText( catalogue );
 				menu.setCatalogue( catalogue );
-				
+
 				refresh();
-				
+
 				Display.getDefault().update();
 
 				try {
@@ -181,33 +287,33 @@ public class MainPanel implements Observer {
 
 			@Override
 			public void run() {
-				
+
 				if (shell.isDisposed())
 					return;
-				
+
 				// redraw the main menu to refresh buttons
 				shell.setMenuBar( menu.createMainMenu() );
 				menu.refresh();
 
 				// redraw the tree menu to refresh buttons
 				tree.addContextualMenu( true );
-				
+
 				tabPanel.refresh();
 				tabPanel.redraw();
-				
+
 				catalogueLabel.refresh();
 
 				hierarchySelector.refresh();
-				
+
 				searchPanel.refresh( true );
 				//tree.refresh( true );
-				
+
 				shell.redraw();
 				shell.update();
 				shell.layout();
-				
+
 				Display.getDefault().update();
-				
+
 				try {
 					Thread.sleep( 100 );
 				} catch ( InterruptedException e ) {
@@ -217,7 +323,7 @@ public class MainPanel implements Observer {
 			}
 		});
 	}
-	
+
 	/**
 	 * Get the last opened catalogue if there is one
 	 * @return
@@ -234,22 +340,22 @@ public class MainPanel implements Observer {
 	 * catalogue (selected hierarchy and selected term!)
 	 */
 	private void saveState() {
-		
+
 		Catalogue current = GlobalManager.getInstance().getCurrentCatalogue();
-		
+
 		// no catalogue opened, return
 		if ( current == null )
 			return;
-		
+
 		// save main panel state
 		CataloguePreferenceDAO prefDao = 
 				new CataloguePreferenceDAO ( current );
-		
+
 		prefDao.saveMainPanelState ( 
 				hierarchySelector.getSelectedHierarchy(), 
 				tree.getFirstSelectedTerm() );
 	}
-	
+
 	/**
 	 * Get the last hierarchy if present
 	 * @param catalogue
@@ -258,18 +364,18 @@ public class MainPanel implements Observer {
 	 */
 	private Hierarchy getLastHierarchy( Catalogue catalogue ) 
 			throws PreferenceNotFoundException {
-		
+
 		CataloguePreferenceDAO prefDao = 
 				new CataloguePreferenceDAO( catalogue );
-		
+
 		Hierarchy lastHierarchy = null;
-		
+
 		// first try to load the last hierarchy
 		lastHierarchy = prefDao.getLastHierarchy();
-		
+
 		return lastHierarchy;
 	}
-	
+
 	/**
 	 * Get the last term if present
 	 * @param catalogue
@@ -278,48 +384,48 @@ public class MainPanel implements Observer {
 	 */
 	private Term getLastTerm( Catalogue catalogue ) 
 			throws PreferenceNotFoundException {
-		
+
 		CataloguePreferenceDAO prefDao = 
 				new CataloguePreferenceDAO( catalogue );
-		
+
 		Term lastTerm = null;
-		
+
 		// first try to load the last hierarchy
 		lastTerm = prefDao.getLastTerm();
-		
+
 		return lastTerm;
 	}
-	
+
 	/**
 	 * Set the name and the image of the shell. Moreover, set the layout and the paint listener
 	 */
 	private void setShellGraphics () {
 
 		window = new RestoreableWindow(shell, WINDOW_CODE);
-		
+
 		/* use layout manager */
 		shell.setLayout( new GridLayout( 1 , false ) );
-		
+
 		shell.addPaintListener( new PaintListener() {
 			public void paintControl ( PaintEvent e ) {
 				shell.layout();
 			}
 		} );
-		
+
 		shell.setMaximized( true );
-		
+
 		// if shell disposed
 		shell.addDisposeListener( new DisposeListener() {
-			
+
 			@Override
 			public void widgetDisposed(DisposeEvent arg0) {
 				saveState();
 			}
 		});
-		
+
 		// restore the old dimensions of the window
 		window.restore( BrowserWindowPreferenceDao.class );
-		
+
 		// save this window dimensions when it is closed
 		window.saveOnClosure( BrowserWindowPreferenceDao.class );
 	}
@@ -332,14 +438,14 @@ public class MainPanel implements Observer {
 	public void changeHierarchy ( Hierarchy hierarchy, Nameable term ) {
 
 		changeHierarchy ( hierarchy );
-		
+
 		// select the term in the tree
 		tree.selectTerm( term );
-		
+
 		// refresh the browser
 		refresh();
 	}
-	
+
 	/**
 	 * Change the hierarchy to be visualized
 	 * @param hierarchy the new hierarchy to be visualized
@@ -348,28 +454,28 @@ public class MainPanel implements Observer {
 		// update the combo box selection
 		hierarchySelector.setSelection( hierarchy );
 	}
-	
-	
+
+
 	/**
 	 * Enable or disable the entire user interface
 	 */
 	private void enableUI ( boolean enable ) {
-		
+
 		// enable the combo box for hierarchies
 		hierarchySelector.setEnabled( enable );
-		
+
 		// enable search bar
 		searchPanel.setEnabled( enable );
-		
+
 		// enable display filters
 		termFilter.setEnabled( enable );
 	}
-	
+
 	/**
 	 * Load all the default graphics input and listeners
 	 */
 	private void loadData( Catalogue catalogue ) {
-		
+
 		// update the tree input and set its contextual menu
 		// set the tree input
 
@@ -380,22 +486,22 @@ public class MainPanel implements Observer {
 				tabPanel.refresh();
 			}
 		});
-		
+
 		// refresh applicabilities when drop finishes
 		tree.addDropListener( new Listener() {
-			
+
 			@Override
 			public void handleEvent(Event arg0) {
 				tabPanel.refresh();
 			}
 		});
-		
+
 		// if "see in other hierarchies" was pressed
 		tree.addChangeHierarchyListener( new HierarchyChangedListener() {
-			
+
 			@Override
 			public void hierarchyChanged( HierarchyEvent event ) {
-				
+
 				// update the hierarchy to be shown in the main pane
 				changeHierarchy( event.getHierarchy(), (Term) event.getTerm() );
 			}
@@ -403,15 +509,15 @@ public class MainPanel implements Observer {
 
 		// set the hierarchy combo box input and select the first available hierarchy
 		hierarchySelector.refresh();
-		
+
 		Hierarchy hierarchy;
 		try {
-			
+
 			// try to load the hierarchy selector state
 			hierarchy = getLastHierarchy ( catalogue );
 
 		} catch (PreferenceNotFoundException e) {
-			
+
 			// set the first selection of the hierarchy selector
 			// with the default hierarchy if no preference was found
 			hierarchy = catalogue.getDefaultHierarchy();
@@ -425,12 +531,12 @@ public class MainPanel implements Observer {
 			Term lastTerm = getLastTerm( catalogue );
 			tree.selectTerm( lastTerm );
 		} catch ( PreferenceNotFoundException e ) {}
-		
+
 
 		// update also the tree input
 		//tree.setInput( hierarchy );
 	}
-	
+
 	/**
 	 * Remove all the input from the graphics
 	 */
@@ -441,10 +547,10 @@ public class MainPanel implements Observer {
 
 		// remove the term from the panel
 		tabPanel.setTerm( null );
-		
+
 		// remove input from tabs
 		tabPanel.resetInput();
-		
+
 		// disable tabs
 		tabPanel.setEnabled( false );
 
@@ -457,7 +563,7 @@ public class MainPanel implements Observer {
 		hierarchySelector.resetGraphics();
 		hierarchySelector.setEnabled( false );
 	}
-	
+
 	/**
 	 * Add all the widgets to the main UI
 	 * @param parent
@@ -472,12 +578,12 @@ public class MainPanel implements Observer {
 		shellGridData.grabExcessHorizontalSpace = true;
 		shellGridData.grabExcessVerticalSpace = true;
 		sashForm.setLayoutData( shellGridData );
-		
+
 		// left group for catalogue label, search bar and table
 		GridData leftData = new GridData();
 		leftData.minimumWidth = 180;
 		leftData.widthHint = 180;
-		
+
 		Composite leftGroup = new Composite( sashForm , SWT.NONE );
 		leftGroup.setLayout( new GridLayout( 1 , false ) );
 		leftGroup.setLayoutData( leftData );
@@ -505,19 +611,19 @@ public class MainPanel implements Observer {
 
 		// add tree viewer and term tabs
 		addRightSashForm( rightGroup );
-		
+
 		// make the tree viewer observer of the selected hierarchy
 		hierarchySelector.addObserver( tree );
-		
+
 		// make implicit facet tab observer of selected hierarchy
 		hierarchySelector.addObserver( tabPanel );
-		
+
 		// make the search results table aware of the current hierarchy
 		hierarchySelector.addObserver( searchPanel );
-		
+
 		// make the tree observer of the checked filters
 		termFilter.addObserver( tree );
-		
+
 		// objects which observe global manager current catalogue
 		GlobalManager.getInstance().addObserver( hierarchySelector );
 		GlobalManager.getInstance().addObserver( searchPanel );
@@ -526,85 +632,85 @@ public class MainPanel implements Observer {
 		GlobalManager.getInstance().addObserver( menu );
 		GlobalManager.getInstance().addObserver( tabPanel );
 		GlobalManager.getInstance().addObserver( this );
-		
+
 		// tab panel listen term changes
 		tree.addObserver( tabPanel );
-		
+
 		// add the tree as observer of the term filter
 		// and restore the term filter status to the
 		// previous one
 		termFilter.addObserver( tree );
 		termFilter.addObserver( searchPanel );
 		termFilter.restoreStatus();
-		
+
 		// set the weights once all the widgets are inserted
 		sashForm.setWeights( new int[] { 1, 4 } );
 	}
 
-	
+
 	/**
 	 * Add the main menu to the shell
 	 * @param shell
 	 */
 	private void addMainMenu ( final Shell shell ) {
-		
+
 		// create the main menu and set its listener for some buttons
 		menu = new MainMenu( shell );
 
 		menu.setFileListener( new MenuListener() {
-			
+
 			@Override
 			public void buttonPressed( MenuItem button, int code, Event event ) {
 
 				switch ( code ) {
-				
+
 				case FileMenu.OPEN_DC_MI:
 
 					// get the selected hierarchy
 					DCTableConfig config = (DCTableConfig) event.data;
-					
+
 					Catalogue targetCat = config.getCatalogue();
 					Hierarchy hierarchy = config.getHierarchy();
-					
+
 					if ( targetCat == null ) {
 						GlobalUtil.showErrorDialog(shell, 
 								config.getConfig().getCatalogueCode(),
 								Messages.getString( "FormConfigList.CatNotPresentError" ) );
 						return;
 					}
-					
+
 					if ( hierarchy == null ) {
 						GlobalUtil.showErrorDialog(shell, 
 								config.getConfig().getCatalogueCode() + " - " +
-								config.getConfig().getHierarchyCode(), 
-								Messages.getString( "FormConfigList.HierNotPresentError" ) );
+										config.getConfig().getHierarchyCode(), 
+										Messages.getString( "FormConfigList.HierNotPresentError" ) );
 						return;
 					}
-					
+
 					// warn user if necessary
 					int ok = FileActions.openCatalogue( shell, targetCat );
-					
+
 					if ( ok != SWT.YES )
 						break;
-					
+
 					// enable the user interface only if 
 					// we have data in the current catalogue
 					if ( !targetCat.isEmpty() ) {
 						enableUI( true );
 						loadData( targetCat );
 					}
-					
+
 					// change the hierarchy to the target one
 					changeHierarchy( hierarchy );
-					
+
 					break;
-				
+
 				case FileMenu.OPEN_CAT_MI:
-					
+
 					removeData();
-					
+
 					refresh();
-					
+
 					// get the selected catalogue
 					Catalogue catalogue = (Catalogue) event.data;
 
@@ -613,28 +719,28 @@ public class MainPanel implements Observer {
 						enableUI( true );
 						loadData( catalogue );
 					}
-					
+
 					break;
-					
+
 				case FileMenu.CLOSE_CAT_MI:
-					
+
 					// save the current state for the current catalogue
 					saveState();
-					
+
 					removeData();
 					enableUI( false );
 					refresh();
-					
+
 					break;
-				
+
 				default:
 					break;
 				}
 			}
 		});
-		
+
 		menu.setViewListener( new MenuListener() {
-			
+
 			@Override
 			public void buttonPressed(MenuItem button, int code, Event event) {
 
@@ -653,33 +759,33 @@ public class MainPanel implements Observer {
 				}
 			}
 		});
-		
+
 		menu.setToolsListener( new MenuListener() {
-			
+
 			@Override
 			public void buttonPressed(MenuItem button, int code, Event event) {
-				
+
 				switch ( code ) {
-				
+
 				case ToolsMenu.IMPORT_CAT_MI:
-					
+
 					// remove all the search table results
 					// since we change the content of the catalogue
 					searchPanel.removeAll();
-					
+
 					// get the current catalogue
 					Catalogue catalogue = GlobalManager.getInstance()
 							.getCurrentCatalogue();
 
 					// enable user interface if the catalogue is not empty
 					if ( catalogue != null && !catalogue.isEmpty() ) {
-						
+
 						enableUI( true );
-						
+
 						// open the master hierarchy of the catalogue
 						changeHierarchy(catalogue.getMasterHierarchy());
 					}
-					
+
 					break;
 
 				case ToolsMenu.HIER_EDITOR_MI:
@@ -693,9 +799,9 @@ public class MainPanel implements Observer {
 				}
 			}
 		});
-		
+
 		menu.setLoginListener( new MenuListener() {
-			
+
 			@Override
 			public void buttonPressed(MenuItem button, int code, Event event) {
 				switch ( code ) {
@@ -711,12 +817,12 @@ public class MainPanel implements Observer {
 
 		// initialize the main menu with all the sub menus and menu items
 		shell.setMenuBar( menu.createMainMenu() );
-		
+
 		// set the main panel as observer of the main menu
 		menu.addObserver( this );
 	}
-	
-	
+
+
 	/**
 	 * Add a label which displays the current opened catalogue
 	 * @param parent
@@ -724,7 +830,7 @@ public class MainPanel implements Observer {
 	private void addCatalogueLabel ( Composite parent ) {
 		catalogueLabel = new CatalogueLabel( parent );
 	}
-	
+
 	/**
 	 * Add the search panel (search bar and search table results)
 	 * @param parent
@@ -733,10 +839,10 @@ public class MainPanel implements Observer {
 
 		// get the current catalogue
 		Catalogue catalogue = GlobalManager.getInstance().getCurrentCatalogue();
-		
+
 		// add a search table
 		searchPanel = new SearchPanel ( parent, true, catalogue );
-		
+
 		// called when a hierarchy is selected in the
 		// results table using the contextual menu
 		searchPanel.addHierarchyListener( new HierarchyChangedListener() {
@@ -745,13 +851,13 @@ public class MainPanel implements Observer {
 				changeHierarchy ( event.getHierarchy(), event.getTerm() );
 			}
 		});
-		
+
 		// Set the search listener (actions performed at the end of the search)
 		searchPanel.addSearchListener( new SearchListener() {
 
 			@Override
 			public void searchPerformed ( SearchEvent event ) {
-				
+
 				// if empty warn the user
 				if ( event.getResults().isEmpty() ) {
 
@@ -776,19 +882,19 @@ public class MainPanel implements Observer {
 				tree.selectTerm( (Nameable) selection.getFirstElement() );
 			}
 		} );
-		
+
 		// set Go as default button
 		searchPanel.addDefaultButton( shell );
 	}
-	
-	
+
+
 	/**
 	 * Add the hierarchy selector and check buttons to
 	 * filter the tree viewer terms
 	 * @param parent
 	 */
 	private void addDisplayFilters ( Composite parent ) {
-		
+
 		Composite selectionGroup = new Composite( parent , SWT.NONE );
 		selectionGroup.setLayout( new GridLayout( 10 , false ) );
 
@@ -810,40 +916,40 @@ public class MainPanel implements Observer {
 	 * @param parent
 	 */
 	private void addRightSashForm ( Composite parent ) {
-		
+
 		SashForm sashForm2 = new SashForm( parent , SWT.HORIZONTAL );
-		
+
 		GridData gridData = new GridData();
 		gridData.verticalAlignment = SWT.FILL;
 		gridData.horizontalAlignment = SWT.FILL;
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.grabExcessVerticalSpace = true;
 		sashForm2.setLayoutData( gridData );
-		
+
 		// get the current catalogue
 		Catalogue catalogue = GlobalManager.getInstance().getCurrentCatalogue();
-		
+
 		// add the main tree viewer
 		tree = new TermsTreePanel( sashForm2, catalogue );
-		
+
 		// add the tab folder
 		addTabFolder( sashForm2 );
 
 		sashForm2.setWeights( new int[] { 5, 3 } );
 	}
-	
+
 	/**
 	 * Add the tab folder
 	 * @param parent
 	 */
 	private void addTabFolder ( Composite parent ) {
-		
+
 		// get the current catalogue
 		Catalogue catalogue = GlobalManager.getInstance().getCurrentCatalogue();
-		
+
 		// initialize tab panel
 		tabPanel = new TermPropertiesPanel( parent, catalogue );
-		
+
 		// add the open listener, if we open an applicability
 		// we move the hierarchy to the selected one
 		tabPanel.addOpenListener( new HierarchyChangedListener() {
@@ -901,7 +1007,7 @@ public class MainPanel implements Observer {
 			public void handleEvent(Event event) {
 				Term term = (Term) event.data;
 				tree.refresh( term );
-				
+
 				searchPanel.refresh( true );
 			}
 		});
@@ -918,11 +1024,11 @@ public class MainPanel implements Observer {
 				refresh();
 			}
 		}
-		
+
 		else if ( arg1 instanceof Catalogue ) {
 			refresh( (Catalogue) arg1 );
 		}
-		
+
 		// refresh UI if the current catalogue reserve level was changed
 		// or if refresh is required
 		else if ( arg1 instanceof ReserveLevel || arg0 instanceof MainMenu ) {

@@ -8,6 +8,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import catalogue.Catalogue;
+import catalogue_browser_dao.CatalogueEntityDAO;
 import catalogue_browser_dao.TermDAO;
 import catalogue_object.Term;
 import catalogue_object.TermBuilder;
@@ -35,6 +36,7 @@ public class TermSheetImporter extends SheetImporter<Term> {
 
 	private static final Logger LOGGER = LogManager.getLogger(TermSheetImporter.class);
 	
+	private CatalogueEntityDAO<Term> dao;
 	private Catalogue catalogue;
 	
 	// list of new codes which are created if
@@ -47,10 +49,15 @@ public class TermSheetImporter extends SheetImporter<Term> {
 	 * @param catalogue the catalogue which contains the terms
 	 * @param termData the sheet term data
 	 */
-	public TermSheetImporter( Catalogue catalogue ) {
+	public TermSheetImporter(CatalogueEntityDAO<Term> dao, Catalogue catalogue) {
+		this.dao = dao;
 		this.catalogue = catalogue;
 		this.newCodes = new HashMap<>();
 		this.tempTerms = new ArrayList<>();
+	}
+	
+	public TermSheetImporter(Catalogue catalogue) {
+		this(new TermDAO(catalogue), catalogue);
 	}
 	
 	@Override
@@ -101,11 +108,8 @@ public class TermSheetImporter extends SheetImporter<Term> {
 
 	@Override
 	public void insert( Collection<Term> terms ) {
-		
-		TermDAO termDao = new TermDAO( catalogue );
-
 		// insert the batch of terms into the db
-		termDao.insertTerms( terms );
+		dao.insert(terms);
 	}
 
 	@Override

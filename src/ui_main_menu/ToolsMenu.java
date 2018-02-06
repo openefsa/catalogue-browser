@@ -1,13 +1,13 @@
 package ui_main_menu;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Listener;
@@ -23,19 +23,20 @@ import catalogue.Catalogue;
 import catalogue_browser_dao.DatabaseManager;
 import catalogue_generator.ThreadFinishedListener;
 import catalogue_object.Term;
-import dcf_manager.Dcf;
 import dcf_user.User;
-import dcf_webservice.PublishLevel;
-import dcf_webservice.ReserveLevel;
 import export_catalogue.ExportActions;
 import import_catalogue.CatalogueImporter.ImportFileFormat;
 import import_catalogue.CatalogueImporterThread;
 import import_catalogue.ImportException;
 import messages.Messages;
 import progress_bar.FormProgressBar;
+import sas_remote_procedures.XmlChangesService;
 import sas_remote_procedures.XmlUpdateFile;
 import sas_remote_procedures.XmlUpdateFileDAO;
 import sas_remote_procedures.XmlUpdatesFactory;
+import soap.DetailedSOAPException;
+import soap.UploadCatalogueFileImpl.PublishLevel;
+import soap.UploadCatalogueFileImpl.ReserveLevel;
 import ui_general_graphics.DialogSingleText;
 import ui_main_panel.AttributeEditor;
 import ui_main_panel.HierarchyEditor;
@@ -91,10 +92,10 @@ public class ToolsMenu implements MainMenuItem {
 	 * @param mainMenu
 	 * @param menu
 	 */
-	public ToolsMenu( MainMenu mainMenu, Menu menu ) {
+	public ToolsMenu(MainMenu mainMenu, Menu menu) {
 		this.mainMenu = mainMenu;
 		this.shell = mainMenu.getShell();
-		toolsItem = create ( menu );
+		toolsItem = create (menu);
 	}
 	
 	/**
@@ -110,67 +111,67 @@ public class ToolsMenu implements MainMenuItem {
 	 * Create the tools menu with all the sub menu items
 	 * @param menu
 	 */
-	public MenuItem create ( Menu menu ) {
+	public MenuItem create (Menu menu) {
 
-		MenuItem toolsItem = new MenuItem( menu , SWT.CASCADE );
-		toolsItem.setText( Messages.getString( "BrowserMenu.ToolsMenuName" ) );
+		MenuItem toolsItem = new MenuItem(menu , SWT.CASCADE);
+		toolsItem.setText(Messages.getString("BrowserMenu.ToolsMenuName"));
 		
-		Menu toolsMenu = new Menu( menu );
+		Menu toolsMenu = new Menu(menu);
 
-		toolsItem.setMenu( toolsMenu );
+		toolsItem.setMenu(toolsMenu);
 
 		// get the current user
 		User user = User.getInstance();
 		
 		// add reserve/unreserve for cm users
-		if ( mainMenu.getCatalogue() != null && 
-				user.isCatManagerOf( mainMenu.getCatalogue() ) ) {
+		if (mainMenu.getCatalogue() != null && 
+				user.isCatManagerOf(mainMenu.getCatalogue())) {
 
-			reserveMI = addReserveMI ( toolsMenu );
-			unreserveMI = addUnreserveMI ( toolsMenu );
-			createXmlMI = addCreateXmlMI ( toolsMenu );
-			uploadDataMI = addUploadDataMI( toolsMenu );
-			publishMI = addPublishMI( toolsMenu );
-			resetMI = addResetMI( toolsMenu );
+			reserveMI = addReserveMI (toolsMenu);
+			unreserveMI = addUnreserveMI (toolsMenu);
+			createXmlMI = addCreateXmlMI (toolsMenu);
+			uploadDataMI = addUploadDataMI(toolsMenu);
+			publishMI = addPublishMI(toolsMenu);
+			resetMI = addResetMI(toolsMenu);
 		}
 		
 		// import operations
-		importMI = addImportMI ( toolsMenu );
+		importMI = addImportMI (toolsMenu);
 
 		// export operations
-		exportMI = addExportMI ( toolsMenu );
+		exportMI = addExportMI (toolsMenu);
 
 		// add import picklist
-		importPicklistMI = addImportPicklistMI ( toolsMenu );
+		importPicklistMI = addImportPicklistMI (toolsMenu);
 		
 		// favourite picklist
-		favouritePicklistMI = addFavouritePicklistMI ( toolsMenu );
+		favouritePicklistMI = addFavouritePicklistMI (toolsMenu);
 		
 		// delete picklist
-		removePicklistMI = addRemovePicklistMI ( toolsMenu );
+		removePicklistMI = addRemovePicklistMI (toolsMenu);
 
 		// editors only if the catalogue can be edited
-		if ( mainMenu.getCatalogue() != null && 
-				user.canEdit( mainMenu.getCatalogue() ) ) {
+		if (mainMenu.getCatalogue() != null && 
+				user.canEdit(mainMenu.getCatalogue())) {
 			
-			new MenuItem( toolsMenu , SWT.SEPARATOR );
+			new MenuItem(toolsMenu , SWT.SEPARATOR);
 
-			hierarchyEditMI = addHierarchyEditorMI ( toolsMenu );
+			hierarchyEditMI = addHierarchyEditorMI (toolsMenu);
 
-			attributeEditMI = addAttributeEditorMI ( toolsMenu );
+			attributeEditMI = addAttributeEditorMI (toolsMenu);
 		}
 		
 		// horizontal bar to divide the menu elements
-		new MenuItem( toolsMenu , SWT.SEPARATOR );
+		new MenuItem(toolsMenu , SWT.SEPARATOR);
 
 		// search preferences
-		searchOptMI = addSearchOptionsMI ( toolsMenu );
+		searchOptMI = addSearchOptionsMI (toolsMenu);
 
 		// general user preferences
-		userPrefMI = addUserPreferencesMI ( toolsMenu );
+		userPrefMI = addUserPreferencesMI (toolsMenu);
 		
 		// called when the tools menu is shown
-		toolsMenu.addListener( SWT.Show, new Listener() {
+		toolsMenu.addListener(SWT.Show, new Listener() {
 			
 			@Override
 			public void handleEvent(Event event) {
@@ -180,59 +181,48 @@ public class ToolsMenu implements MainMenuItem {
 			}
 		});
 		
-		toolsItem.setEnabled( false );
+		toolsItem.setEnabled(false);
 		
 		return toolsItem;
 	}
-	
 	
 	/**
 	 * Add reserve menu item (major and minor)
 	 * @param menu
 	 */
-	private MenuItem addReserveMI ( Menu menu ) {
+	private MenuItem addReserveMI (Menu menu) {
 		
-		final MenuItem reserveMI = new MenuItem( menu , SWT.CASCADE );
+		final MenuItem reserveMI = new MenuItem(menu , SWT.CASCADE);
 
-		reserveMI.setText( Messages.getString("BrowserMenu.Reserve") );
+		reserveMI.setText(Messages.getString("BrowserMenu.Reserve"));
 		
 		// create menu which hosts major and minor reserve
-		Menu reserveOpMI = new Menu( shell , SWT.DROP_DOWN );
-		reserveMI.setMenu( reserveOpMI );
+		Menu reserveOpMI = new Menu(shell , SWT.DROP_DOWN);
+		reserveMI.setMenu(reserveOpMI);
 
 		// major release
-		MenuItem majorMI = new MenuItem( reserveOpMI , SWT.PUSH );
-		majorMI.setText( Messages.getString( "BrowserMenu.MajorCmd" ) );
+		MenuItem majorMI = new MenuItem(reserveOpMI , SWT.PUSH);
+		majorMI.setText(Messages.getString("BrowserMenu.MajorCmd"));
 		
 		// minor release
-		MenuItem minorMI = new MenuItem( reserveOpMI , SWT.PUSH );
-		minorMI.setText( Messages.getString( "BrowserMenu.MinorCmd" ) );
+		MenuItem minorMI = new MenuItem(reserveOpMI , SWT.PUSH);
+		minorMI.setText(Messages.getString("BrowserMenu.MinorCmd"));
 
-		majorMI.addSelectionListener( new SelectionAdapter() {
+		majorMI.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected ( SelectionEvent event ) {
-				
-				setReserveLevel( ReserveLevel.MAJOR );
-				
-				if ( listener != null )
-					listener.buttonPressed( reserveMI, 
-							RESERVE_CAT_MI, null );
+			public void widgetSelected (SelectionEvent event) {
+				reservePressed(ReserveLevel.MAJOR);
 			}
-		} );
+		});
 		
-		minorMI.addSelectionListener( new SelectionAdapter() {
+		minorMI.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected ( SelectionEvent event ) {
-				
-				setReserveLevel( ReserveLevel.MINOR );
-				
-				if ( listener != null )
-					listener.buttonPressed( reserveMI, 
-							RESERVE_CAT_MI, null );
+			public void widgetSelected (SelectionEvent event) {
+				reservePressed(ReserveLevel.MINOR);
 			}
-		} );
+		});
 
-		reserveMI.setEnabled( false );
+		reserveMI.setEnabled(false);
 		
 		return reserveMI;
 	}
@@ -242,29 +232,56 @@ public class ToolsMenu implements MainMenuItem {
 	 * @param menu
 	 * @return
 	 */
-	private MenuItem addUnreserveMI ( Menu menu ) {
+	private MenuItem addUnreserveMI (Menu menu) {
 
-		final MenuItem unreserveMI = new MenuItem( menu , SWT.PUSH );
+		final MenuItem unreserveMI = new MenuItem(menu , SWT.PUSH);
 
-		unreserveMI.setText( Messages.getString("BrowserMenu.Unreserve") );
-		unreserveMI.addSelectionListener( new SelectionListener() {
+		unreserveMI.setText(Messages.getString("BrowserMenu.Unreserve"));
+		unreserveMI.addSelectionListener(new SelectionListener() {
 
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
+
+				Tools tools = new Tools();
+				String catCode = mainMenu.getCatalogue().getCode();
 				
-				// unreserve the current catalogue
-				setReserveLevel ( ReserveLevel.NONE );
+				GlobalUtil.setShellCursor(shell, SWT.CURSOR_WAIT);
 				
-				if ( listener != null )
-					listener.buttonPressed( unreserveMI, 
-							UNRESERVE_CAT_MI, null );
+				String title = Messages.getString("success.title");
+				String message = Messages.getString("unreserve.sent");
+				int style = SWT.ICON_INFORMATION;
+				
+				// use reservation note stored in db
+				try {
+					tools.unreserve(catCode, mainMenu.getCatalogue().getReserveNote());
+				} catch (DetailedSOAPException e) {
+					String[] warn = GlobalUtil.getSOAPWarning(e);
+					title = warn[0];
+					message = warn[1];
+					style = SWT.ICON_ERROR;
+				}
+				catch (SQLException | IOException e) {
+					e.printStackTrace();
+					title = Messages.getString("error.title");
+					message = Messages.getString("unreserve.error");
+					style = SWT.ICON_ERROR;
+				}
+				finally {
+					GlobalUtil.setShellCursor(shell, SWT.CURSOR_ARROW);
+				}
+				
+				GlobalUtil.showDialog(shell, title, message, style);
+				
+				if (listener != null)
+					listener.buttonPressed(unreserveMI, 
+							UNRESERVE_CAT_MI, null);
 			}
 
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {}
 		});
 		
-		unreserveMI.setEnabled( false );
+		unreserveMI.setEnabled(false);
 		
 		return unreserveMI;
 	}
@@ -277,36 +294,36 @@ public class ToolsMenu implements MainMenuItem {
 	 * @param menu
 	 * @return
 	 */
-	private MenuItem addCreateXmlMI ( Menu menu ) {
+	private MenuItem addCreateXmlMI (Menu menu) {
 		
-		final MenuItem createXmlMI = new MenuItem( menu , SWT.PUSH );
-		createXmlMI.setText( Messages.getString("BrowserMenu.CreateXml") );
-		createXmlMI.addSelectionListener( new SelectionListener() {
+		final MenuItem createXmlMI = new MenuItem(menu , SWT.PUSH);
+		createXmlMI.setText(Messages.getString("BrowserMenu.CreateXml"));
+		createXmlMI.addSelectionListener(new SelectionListener() {
 
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				
 				Term incorrectTerm = mainMenu.getCatalogue().isDataCorrect();
-				if ( incorrectTerm != null ) {
+				if (incorrectTerm != null) {
 					
-					// warn the user that everything went ok
-					GlobalUtil.showErrorDialog( shell, 
+					// warn the user, error occurred
+					GlobalUtil.showErrorDialog(shell, 
 							incorrectTerm.getCode() + "; " + incorrectTerm.getShortName(true),
-									Messages.getString( "Export.DataErrorMessage") );
+									Messages.getString("Export.DataErrorMessage"));
 					
 					return;
 				}
 				
 				FormProgressBar progressBar = 
-						new FormProgressBar( shell, 
-								Messages.getString("CreateXml.CreateXmlBarTitle") );
+						new FormProgressBar(shell, 
+								Messages.getString("CreateXml.CreateXmlBarTitle"));
 				
 				// ask for the xml creation to the sas server
-				XmlUpdatesFactory xmlCreator = new XmlUpdatesFactory();
-				xmlCreator.setProgressBar( progressBar );
+				XmlUpdatesFactory xmlCreator = new XmlUpdatesFactory(new XmlUpdateFileDAO());
+				xmlCreator.setProgressBar(progressBar);
 				
 				// if wrong
-				xmlCreator.setAbortListener( new Listener() {
+				xmlCreator.setAbortListener(new Listener() {
 					
 					@Override
 					public void handleEvent(final Event arg0) {
@@ -314,16 +331,16 @@ public class ToolsMenu implements MainMenuItem {
 						shell.getDisplay().asyncExec(new Runnable() {
 							@Override
 							public void run() {
-								GlobalUtil.showErrorDialog( shell, 
-										Messages.getString( "CreateXml.ErrorTitle" ), 
-										(String) arg0.data );
+								GlobalUtil.showErrorDialog(shell, 
+										Messages.getString("CreateXml.ErrorTitle"), 
+										(String) arg0.data);
 							}
 						});
 					}
 				});
 				
 				// if ok
-				xmlCreator.setDoneListener( new Listener() {
+				xmlCreator.setDoneListener(new Listener() {
 					
 					@Override
 					public void handleEvent(Event arg0) {
@@ -333,28 +350,28 @@ public class ToolsMenu implements MainMenuItem {
 							@Override
 							public void run() {
 								
-								GlobalUtil.showDialog( shell, 
+								GlobalUtil.showDialog(shell, 
 										Messages.getString("CreateXml.SuccessTitle"), 
 										Messages.getString("CreateXml.SuccessMessage"), 
-										SWT.ICON_INFORMATION );
+										SWT.ICON_INFORMATION);
 							}
 						});
 					}
 				});
 				
 				// start
-				xmlCreator.createXml( mainMenu.getCatalogue() );
+				xmlCreator.createXml(mainMenu.getCatalogue());
 				
-				if ( listener != null )
-					listener.buttonPressed( createXmlMI, 
-							CREATE_XML_MI, null );
+				if (listener != null)
+					listener.buttonPressed(createXmlMI, 
+							CREATE_XML_MI, null);
 			}
 
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {}
 		});
 		
-		createXmlMI.setEnabled( false );
+		createXmlMI.setEnabled(false);
 		
 		return createXmlMI;
 	}
@@ -368,30 +385,19 @@ public class ToolsMenu implements MainMenuItem {
 	 * @param menu
 	 * @return
 	 */
-	private MenuItem addUploadDataMI ( Menu menu ) {
+	private MenuItem addUploadDataMI (Menu menu) {
 		
-		final MenuItem uploadDataMI = new MenuItem( menu , SWT.PUSH );
+		final MenuItem uploadDataMI = new MenuItem(menu , SWT.PUSH);
 
-		uploadDataMI.setText( Messages.getString("BrowserMenu.UploadData") );
-		uploadDataMI.addSelectionListener( new SelectionListener() {
-
+		uploadDataMI.setText(Messages.getString("BrowserMenu.UploadData"));
+		uploadDataMI.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				
-				uploadData ( mainMenu.getCatalogue() );
-				
-				if ( listener != null )
-					listener.buttonPressed( uploadDataMI, 
-							UPLOAD_DATA_MI, null );
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent arg0) {
-				
+				uploadDataPressed();
 			}
 		});
 		
-		uploadDataMI.setEnabled( true );
+		uploadDataMI.setEnabled(true);
 		
 		return uploadDataMI;
 	}
@@ -402,59 +408,41 @@ public class ToolsMenu implements MainMenuItem {
 	 * @param menu
 	 * @return
 	 */
-	private MenuItem addPublishMI ( Menu menu ) {
+	private MenuItem addPublishMI (Menu menu) {
 		
-		final MenuItem publishMI = new MenuItem( menu , SWT.CASCADE );
+		final MenuItem publishMI = new MenuItem(menu , SWT.CASCADE);
 
-		publishMI.setText( Messages.getString( "BrowserMenu.Publish" ) );
+		publishMI.setText(Messages.getString("BrowserMenu.Publish"));
 		
 		// create menu which hosts major and minor reserve
-		Menu publishOpMI = new Menu( shell , SWT.DROP_DOWN );
-		publishMI.setMenu( publishOpMI );
+		Menu publishOpMI = new Menu(shell , SWT.DROP_DOWN);
+		publishMI.setMenu(publishOpMI);
 
 		// major release
-		MenuItem majorMI = new MenuItem( publishOpMI , SWT.PUSH );
-		majorMI.setText( Messages.getString( "BrowserMenu.PublishMajorCmd" ) );
+		MenuItem majorMI = new MenuItem(publishOpMI , SWT.PUSH);
+		majorMI.setText(Messages.getString("BrowserMenu.PublishMajorCmd"));
 
 		// minor release
-		MenuItem minorMI = new MenuItem( publishOpMI , SWT.PUSH );
-		minorMI.setText( Messages.getString( "BrowserMenu.PublishMinorCmd" ) );
+		MenuItem minorMI = new MenuItem(publishOpMI , SWT.PUSH);
+		minorMI.setText(Messages.getString("BrowserMenu.PublishMinorCmd"));
 
 		// publish major
-		majorMI.addSelectionListener( new SelectionListener() {
-
+		majorMI.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-
-				publish ( mainMenu.getCatalogue(), PublishLevel.MAJOR );
-				
-				if ( listener != null )
-					listener.buttonPressed( publishMI, 
-							PUBLISH_CAT_MI, null );
+				publishPressed(PublishLevel.MAJOR);
 			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent arg0) {}
 		});
 		
 		// publish minor
-		minorMI.addSelectionListener( new SelectionListener() {
-			
+		minorMI.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				
-				publish ( mainMenu.getCatalogue(), PublishLevel.MINOR );
-				
-				if ( listener != null )
-					listener.buttonPressed( publishMI, 
-							PUBLISH_CAT_MI, null );
+				publishPressed(PublishLevel.MINOR);
 			}
-			
-			@Override
-			public void widgetDefaultSelected(SelectionEvent arg0) {}
 		});
 		
-		publishMI.setEnabled( false );
+		publishMI.setEnabled(false);
 		
 		return publishMI;
 	}
@@ -466,47 +454,42 @@ public class ToolsMenu implements MainMenuItem {
 	 * @param menu
 	 * @return
 	 */
-	private MenuItem addResetMI ( Menu menu ) {
+	private MenuItem addResetMI (Menu menu) {
 		
-		final MenuItem resetMI = new MenuItem( menu , SWT.PUSH );
+		final MenuItem resetMI = new MenuItem(menu , SWT.PUSH);
 
-		resetMI.setText( Messages.getString( "BrowserMenu.Reset" ) );
-		resetMI.addSelectionListener( new SelectionListener() {
+		resetMI.setText(Messages.getString("BrowserMenu.Reset"));
+		resetMI.addSelectionListener(new SelectionAdapter() {
 
 			@Override
-			public void widgetSelected( SelectionEvent arg0 ) {
+			public void widgetSelected(SelectionEvent arg0) {
 
 				// ask for confirmation
-				int val = GlobalUtil.showDialog( shell, 
-						Messages.getString( "ResetChanges.ConfirmTitle" ), 
-						Messages.getString( "ResetChanges.ConfirmMessage" ), 
-						SWT.YES | SWT.NO );
+				int val = GlobalUtil.showDialog(shell, 
+						Messages.getString("ResetChanges.ConfirmTitle"), 
+						Messages.getString("ResetChanges.ConfirmMessage"), 
+						SWT.YES | SWT.NO);
 				
-				if ( val == SWT.NO )
+				if (val == SWT.NO)
 					return;
 				
 				// reset the catalogue data to the previous version
 				try {
-					DatabaseManager.restoreBackup( mainMenu.getCatalogue() );
+					DatabaseManager.restoreBackup(mainMenu.getCatalogue());
 				} catch (IOException e) {
 					
-					GlobalUtil.showErrorDialog( shell, 
-							Messages.getString( "ResetChanges.ErrorTitle" ), 
-							Messages.getString( "ResetChanges.ErrorMessage" ) );
+					GlobalUtil.showErrorDialog(shell, 
+							Messages.getString("ResetChanges.ErrorTitle"), 
+							Messages.getString("ResetChanges.ErrorMessage"));
 				}
 				
-				if ( listener != null )
-					listener.buttonPressed( resetMI, 
-							RESET_CAT_MI, null );
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent arg0) {
-				
+				if (listener != null)
+					listener.buttonPressed(resetMI, 
+							RESET_CAT_MI, null);
 			}
 		});
 		
-		resetMI.setEnabled( false );
+		resetMI.setEnabled(false);
 		
 		return resetMI;
 	}
@@ -515,49 +498,49 @@ public class ToolsMenu implements MainMenuItem {
 	 * Add a menu item which allows to import excels into the DB
 	 * @param menu
 	 */
-	private MenuItem addImportMI ( Menu menu ) {
+	private MenuItem addImportMI (Menu menu) {
 		
-		final MenuItem importItem = new MenuItem( menu , SWT.NONE );
-		importItem.setText( Messages.getString("BrowserMenu.ImportCmd") );
+		final MenuItem importItem = new MenuItem(menu , SWT.NONE);
+		importItem.setText(Messages.getString("BrowserMenu.ImportCmd"));
 		
-		importItem.addSelectionListener( new SelectionAdapter() {
+		importItem.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected ( SelectionEvent event ) {
+			public void widgetSelected (SelectionEvent event) {
 				
-				final String filename = GlobalUtil.showExcelFileDialog( shell, 
-						Messages.getString("Import.ImportWindowTitle"), SWT.OPEN );
+				final String filename = GlobalUtil.showExcelFileDialog(shell, 
+						Messages.getString("Import.ImportWindowTitle"), SWT.OPEN);
 				
 				// return if no filename retrieved
-				if ( filename == null || filename.isEmpty() )
+				if (filename == null || filename.isEmpty())
 					return;
 				
 				// ask for final confirmation
-				int val = GlobalUtil.showDialog( shell, 
+				int val = GlobalUtil.showDialog(shell, 
 						Messages.getString("Import.ImportWarningTitle"), 
-						Messages.getString( "Import.ImportWarningMessage" ), 
-						SWT.OK | SWT.CANCEL | SWT.ICON_QUESTION );
+						Messages.getString("Import.ImportWarningMessage"), 
+						SWT.OK | SWT.CANCEL | SWT.ICON_QUESTION);
 
 				// return if cancel was pressed
-				if ( val == SWT.CANCEL )
+				if (val == SWT.CANCEL)
 					return;
 	
 				CatalogueImporterThread importCat = 
-						new CatalogueImporterThread( filename, ImportFileFormat.XLSX );
+						new CatalogueImporterThread(filename, ImportFileFormat.XLSX);
 				
-				importCat.setProgressBar( new FormProgressBar( shell,
-						Messages.getString( "Import.ImportXlsxBarTitle" ) ) );
+				importCat.setProgressBar(new FormProgressBar(shell,
+						Messages.getString("Import.ImportXlsxBarTitle")));
 				
 				// set the opened catalogue since we are importing
 				// in an already existing catalogue
-				importCat.setOpenedCatalogue( mainMenu.getCatalogue() );
+				importCat.setOpenedCatalogue(mainMenu.getCatalogue());
 				
 				// set the listener
-				importCat.addDoneListener( new ThreadFinishedListener() {
+				importCat.addDoneListener(new ThreadFinishedListener() {
 					
 					@Override
 					public void finished(Thread thread, final int code, final Exception e) {
 						
-						mainMenu.getShell().getDisplay().asyncExec( new Runnable() {
+						mainMenu.getShell().getDisplay().asyncExec(new Runnable() {
 							
 							@Override
 							public void run() {
@@ -566,9 +549,9 @@ public class ToolsMenu implements MainMenuItem {
 								String msg = null;
 								int icon = SWT.ICON_ERROR;
 								
-								if ( code == ThreadFinishedListener.OK ) {
+								if (code == ThreadFinishedListener.OK) {
 									title = Messages.getString("Import.ImportSuccessTitle");
-									msg = Messages.getString( "Import.ImportSuccessMessage" );
+									msg = Messages.getString("Import.ImportSuccessMessage");
 									icon = SWT.ICON_INFORMATION;
 								}
 								else {
@@ -580,24 +563,24 @@ public class ToolsMenu implements MainMenuItem {
 										switch(impEx.getCode()) {
 										case "X100":
 											title = Messages.getString("Import.ImportErrorTitle");
-											msg = Messages.getString( "Import.ImportAppendErrorMessage" );
+											msg = Messages.getString("Import.ImportAppendErrorMessage");
 											icon = SWT.ICON_ERROR;
 											break;
 										case "X101":
 											title = impEx.getData();
-											msg = Messages.getString( "Import.ImportStructureErrorMessage" );
+											msg = Messages.getString("Import.ImportStructureErrorMessage");
 											icon = SWT.ICON_ERROR;
 											break;
 										case "X102":
 											title = Messages.getString("Import.ImportErrorTitle");
-											msg = Messages.getString( "Import.ImportNoMasterErrorMessage" );
+											msg = Messages.getString("Import.ImportNoMasterErrorMessage");
 											icon = SWT.ICON_ERROR;
 											break;
 										}
 									}
 									else {
 										title = Messages.getString("Import.ImportErrorTitle");
-										msg = Messages.getString( "Import.ImportGenericErrorMessage" );
+										msg = Messages.getString("Import.ImportGenericErrorMessage");
 										icon = SWT.ICON_ERROR;
 									}
 								}
@@ -607,12 +590,12 @@ public class ToolsMenu implements MainMenuItem {
 								mainMenu.getCatalogue().refresh();
 								mainMenu.getCatalogue().open();
 								
-								if ( listener != null )
-									listener.buttonPressed( importItem, 
-											IMPORT_CAT_MI, null );
+								if (listener != null)
+									listener.buttonPressed(importItem, 
+											IMPORT_CAT_MI, null);
 								
 								if (title != null && msg != null)
-									GlobalUtil.showDialog(shell, title, msg, icon );
+									GlobalUtil.showDialog(shell, title, msg, icon);
 							}
 						});
 
@@ -621,65 +604,62 @@ public class ToolsMenu implements MainMenuItem {
 				
 				importCat.start();
 			}
-		} );
+		});
 		
-		importItem.setEnabled( false );
+		importItem.setEnabled(false);
 		
 		return importItem;
 	}
-	
-	
-	
 	
 	/**
 	 * Add a menu item which allows to export the database into an excel file
 	 * @param menu
 	 */
-	private MenuItem addExportMI ( Menu menu ) {
+	private MenuItem addExportMI (Menu menu) {
 		
-		final MenuItem exportItem = new MenuItem( menu , SWT.NONE );
-		exportItem.setText( Messages.getString( "BrowserMenu.ExportCmd" ) );
+		final MenuItem exportItem = new MenuItem(menu , SWT.NONE);
+		exportItem.setText(Messages.getString("BrowserMenu.ExportCmd"));
 		
-		exportItem.addSelectionListener( new SelectionAdapter() {
+		exportItem.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected ( SelectionEvent event ) {
+			public void widgetSelected (SelectionEvent event) {
 				
 				Term incorrectTerm = mainMenu.getCatalogue().isDataCorrect();
-				if ( incorrectTerm != null ) {
+				if (incorrectTerm != null) {
 					
 					// warn the user that everything went ok
-					GlobalUtil.showErrorDialog( shell, 
+					GlobalUtil.showErrorDialog(shell, 
 							incorrectTerm.getCode() + "; " + incorrectTerm.getShortName(true),
-									Messages.getString( "Export.DataErrorMessage") );
+									Messages.getString("Export.DataErrorMessage"));
 					
 				}
 				
 				String defaultFilename = mainMenu.getCatalogue().getCode() + "_" 
-				+ mainMenu.getCatalogue().getVersion() + ".xlsx";
+						+ mainMenu.getCatalogue().getVersion() + ".xlsx";
 				
-				final String filename = GlobalUtil.showExcelFileDialog( shell, 
-						Messages.getString( "Export.FileDialogTitle"), 
-						defaultFilename, SWT.SAVE  );
+				final String filename = GlobalUtil.showExcelFileDialog(shell, 
+						Messages.getString("Export.FileDialogTitle"), 
+						defaultFilename, SWT.SAVE );
 
 				// return if no filename retrieved
-				if ( filename == null || filename.isEmpty() )
+				if (filename == null || filename.isEmpty())
 					return;
 				
 				// export the catalogue
 				ExportActions export = new ExportActions();
 				
 				// set the progress bar
-				export.setProgressBar( new FormProgressBar( shell, 
-						Messages.getString("Export.ProgressBarTitle") ) );
+				export.setProgressBar(new FormProgressBar(shell, 
+						Messages.getString("Export.ProgressBarTitle")));
 				
 				// export the opened catalogue
-				export.exportAsync( mainMenu.getCatalogue(), 
+				export.exportAsync(mainMenu.getCatalogue(), 
 						filename, new ThreadFinishedListener() {
 
 					@Override
 					public void finished(Thread thread, final int code, Exception e) {
 						
-						shell.getDisplay().asyncExec( new Runnable() {
+						shell.getDisplay().asyncExec(new Runnable() {
 							
 							@Override
 							public void run() {
@@ -688,31 +668,31 @@ public class ToolsMenu implements MainMenuItem {
 								String msg;
 								int icon;
 								
-								if ( code == ThreadFinishedListener.OK ) {
-									msg = Messages.getString( "Export.DoneMessage" );
+								if (code == ThreadFinishedListener.OK) {
+									msg = Messages.getString("Export.DoneMessage");
 									icon = SWT.ICON_INFORMATION;
 								}
 								else {
-									msg = Messages.getString( "Export.ErrorMessage" );
+									msg = Messages.getString("Export.ErrorMessage");
 									icon = SWT.ICON_ERROR;
 								}
 								
 								// warn the user that everything went ok
-								GlobalUtil.showDialog( shell, 
-										title, msg, icon );
+								GlobalUtil.showDialog(shell, 
+										title, msg, icon);
 								
-								if ( listener != null )
-									listener.buttonPressed( exportItem, 
-											EXPORT_CAT_MI, null );
+								if (listener != null)
+									listener.buttonPressed(exportItem, 
+											EXPORT_CAT_MI, null);
 							}
 						});
 					}
 				});
 			}
-		} );
+		});
 		
 		// enable according to the operation status
-		exportItem.setEnabled( false );
+		exportItem.setEnabled(false);
 		
 		return exportItem;
 	}
@@ -721,72 +701,69 @@ public class ToolsMenu implements MainMenuItem {
 	 * Add a menu item which allows selecting the favourite picklist to use in the browser
 	 * @param menu
 	 */
-	private MenuItem addImportPicklistMI ( Menu menu ) {
+	private MenuItem addImportPicklistMI (Menu menu) {
 		
 		// create a menu item for importing picklists
-		final MenuItem picklistItem = new MenuItem( menu , SWT.CASCADE );
-		picklistItem.setText( Messages.getString("BrowserMenu.ImportPicklistCmd") );
+		final MenuItem picklistItem = new MenuItem(menu , SWT.CASCADE);
+		picklistItem.setText(Messages.getString("BrowserMenu.ImportPicklistCmd"));
 		
 		// open a dialog to select a picklist file
 		
-		picklistItem.addSelectionListener( new SelectionListener() {
+		picklistItem.addSelectionListener(new SelectionAdapter() {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				
 				// create dialog
-				FileDialog fd = new FileDialog( shell , SWT.OPEN );
+				FileDialog fd = new FileDialog(shell , SWT.OPEN);
 				
 				// set dialog title
-				fd.setText( Messages.getString("BrowserMenu.ImportPicklistDialogTitle") );
+				fd.setText(Messages.getString("BrowserMenu.ImportPicklistDialogTitle"));
 				
 				// set working directory
 				// get the working directory from the user preferences
-				fd.setFilterPath( DatabaseManager.MAIN_CAT_DB_FOLDER  );
+				fd.setFilterPath(DatabaseManager.MAIN_CAT_DB_FOLDER );
 				
 				// select only csv files
 				String[] filterExt = { "*.csv" };
-				fd.setFilterExtensions( filterExt );
+				fd.setFilterExtensions(filterExt);
 				
 				// open dialog a listen to get the selected filename
 				String filename = fd.open();
 				
-				if ( ( filename != null ) && ( filename.length() > 0 ) ) {
+				if ((filename != null) && (filename.length() > 0)) {
 					
-					GlobalUtil.setShellCursor( shell, SWT.CURSOR_WAIT );
+					GlobalUtil.setShellCursor(shell, SWT.CURSOR_WAIT);
 					
 					// parse the picklist as a csv semicolon separated file
-					PicklistParser parse = new PicklistParser ( mainMenu.getCatalogue(), 
-							filename, ";" );
+					PicklistParser parse = new PicklistParser (mainMenu.getCatalogue(), 
+							filename, ";");
 					
 					ArrayList <PicklistTerm> picklistTerms = new ArrayList<>();
 					PicklistTerm currentTerm;
 					
 					// for each picklist term add it to the array list
-					while ( ( currentTerm = parse.nextTerm() ) != null )
-						picklistTerms.add( currentTerm );
+					while ((currentTerm = parse.nextTerm()) != null)
+						picklistTerms.add(currentTerm);
 					
 					// create a picklist using the filename as code
-					Picklist picklist = new Picklist ( filename, picklistTerms );
+					Picklist picklist = new Picklist (filename, picklistTerms);
 					
-					PicklistDAO pickDao = new PicklistDAO( mainMenu.getCatalogue() );
+					PicklistDAO pickDao = new PicklistDAO(mainMenu.getCatalogue());
 					
 					// insert the new picklist if it is new
-					pickDao.importPicklist( picklist );
+					pickDao.importPicklist(picklist);
 					
-					GlobalUtil.setShellCursor( shell, SWT.CURSOR_ARROW );
+					GlobalUtil.setShellCursor(shell, SWT.CURSOR_ARROW);
 				}
 				
-				if ( listener != null )
-					listener.buttonPressed( picklistItem, 
-							IMPORT_PICKLIST_MI, null );
+				if (listener != null)
+					listener.buttonPressed(picklistItem, 
+							IMPORT_PICKLIST_MI, null);
 			}
-			
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {}
 		});
 		
-		picklistItem.setEnabled( false );
+		picklistItem.setEnabled(false);
 		
 		return picklistItem;
 	}
@@ -795,16 +772,16 @@ public class ToolsMenu implements MainMenuItem {
 	 * Add a menu item which allows selecting the favourite picklist to use in the browser
 	 * @param menu
 	 */
-	private MenuItem addFavouritePicklistMI ( Menu menu ) {
+	private MenuItem addFavouritePicklistMI (Menu menu) {
 		
-		final MenuItem picklistItem = new MenuItem( menu , SWT.CASCADE );
-		picklistItem.setText( Messages.getString("BrowserMenu.PicklistCmd") );
+		final MenuItem picklistItem = new MenuItem(menu , SWT.CASCADE);
+		picklistItem.setText(Messages.getString("BrowserMenu.PicklistCmd"));
 
 		// Initialize the menu
-		final Menu selectPicklistMenu = new Menu( shell , SWT.DROP_DOWN );
+		final Menu selectPicklistMenu = new Menu(shell , SWT.DROP_DOWN);
 
 		// add the menu
-		picklistItem.setMenu( selectPicklistMenu );
+		picklistItem.setMenu(selectPicklistMenu);
 
 		// when the menu is showed
 		selectPicklistMenu.addListener(SWT.Show, new Listener() {
@@ -814,36 +791,36 @@ public class ToolsMenu implements MainMenuItem {
 
 				// reset the item of the menu, in order to update with 
 				// the current picklists in the app.jar folder
-				for (MenuItem item : selectPicklistMenu.getItems() ) {
+				for (MenuItem item : selectPicklistMenu.getItems()) {
 					item.dispose();
 				}
 				
-				CataloguePreferenceDAO prefDao = new CataloguePreferenceDAO( 
-						mainMenu.getCatalogue() );
+				CataloguePreferenceDAO prefDao = new CataloguePreferenceDAO(
+						mainMenu.getCatalogue());
 
 				// get the favourite picklist
 				Picklist currentPicklist = prefDao.getFavouritePicklist();
 				
 				
-				PicklistDAO pickDao = new PicklistDAO( mainMenu.getCatalogue() );
+				PicklistDAO pickDao = new PicklistDAO(mainMenu.getCatalogue());
 				
 				// for each imported picklist we create a menu item in order to allow choosing
 				// the favourite picklist
-				for ( Picklist picklist : pickDao.getAll() ) {
+				for (Picklist picklist : pickDao.getAll()) {
 				
-					final MenuItem mi = new MenuItem( selectPicklistMenu, SWT.RADIO );
-					mi.setText( picklist.getCode() );
+					final MenuItem mi = new MenuItem(selectPicklistMenu, SWT.RADIO);
+					mi.setText(picklist.getCode());
 					
 					// select the current menu item if the old selected picklist is the current one
 					// if there was a favourite picklist indeed
-					if ( currentPicklist != null )
-						mi.setSelection( picklist.equals( currentPicklist ) );
+					if (currentPicklist != null)
+						mi.setSelection(picklist.equals(currentPicklist));
 					
 					// set the data for the menu item
-					mi.setData( picklist );
+					mi.setData(picklist);
 					
 					// actions taken when this menu item is pressed
-					mi.addSelectionListener( new SelectionListener() {
+					mi.addSelectionListener(new SelectionAdapter() {
 						
 						@Override
 						public void widgetSelected(SelectionEvent e) {
@@ -854,42 +831,39 @@ public class ToolsMenu implements MainMenuItem {
 							// the menu items has the picklist code in the data field
 							Picklist selectedPicklist = (Picklist) mi.getData();
 							
-							CataloguePreferenceDAO prefDao = new CataloguePreferenceDAO( 
-									mainMenu.getCatalogue() );
+							CataloguePreferenceDAO prefDao = new CataloguePreferenceDAO(
+									mainMenu.getCatalogue());
 							
 							// set the favourite picklist
-							prefDao.setFavouritePicklist( selectedPicklist );
+							prefDao.setFavouritePicklist(selectedPicklist);
 							
 							
-							if ( listener != null )
-								listener.buttonPressed( picklistItem, 
-										FAV_PICKLIST_MI, null );
+							if (listener != null)
+								listener.buttonPressed(picklistItem, 
+										FAV_PICKLIST_MI, null);
 						}
-						
-						@Override
-						public void widgetDefaultSelected(SelectionEvent e) {}
 					});
 				}
 			}
 		});
 		
-		picklistItem.setEnabled( false );
+		picklistItem.setEnabled(false);
 		
 		return picklistItem;
 	}
 	
 
-	private MenuItem addRemovePicklistMI ( Menu menu ) {
+	private MenuItem addRemovePicklistMI (Menu menu) {
 		
-		final MenuItem picklistItem = new MenuItem( menu , SWT.CASCADE );
+		final MenuItem picklistItem = new MenuItem(menu , SWT.CASCADE);
 		
-		picklistItem.setText( Messages.getString("BrowserMenu.DeletePicklistCmd") );
+		picklistItem.setText(Messages.getString("BrowserMenu.DeletePicklistCmd"));
 
 		// Initialize the menu
-		final Menu selectPicklistMenu = new Menu( shell , SWT.DROP_DOWN );
+		final Menu selectPicklistMenu = new Menu(shell , SWT.DROP_DOWN);
 
 		// add the menu
-		picklistItem.setMenu( selectPicklistMenu );
+		picklistItem.setMenu(selectPicklistMenu);
 
 		// when the menu is showed
 		selectPicklistMenu.addListener(SWT.Show, new Listener() {
@@ -899,24 +873,24 @@ public class ToolsMenu implements MainMenuItem {
 
 				// reset the item of the menu, in order to update with 
 				// the current picklists in the app.jar folder
-				for (MenuItem item : selectPicklistMenu.getItems() ) {
+				for (MenuItem item : selectPicklistMenu.getItems()) {
 					item.dispose();
 				}
 				
-				PicklistDAO pickDao = new PicklistDAO( mainMenu.getCatalogue() );
+				PicklistDAO pickDao = new PicklistDAO(mainMenu.getCatalogue());
 				
 				// for each imported picklist we create a menu item in order to allow choosing
 				// the favourite picklist
-				for ( Picklist picklist : pickDao.getAll() ) {
+				for (Picklist picklist : pickDao.getAll()) {
 				
-					final MenuItem mi = new MenuItem( selectPicklistMenu, SWT.PUSH );
-					mi.setText( picklist.getCode() );
+					final MenuItem mi = new MenuItem(selectPicklistMenu, SWT.PUSH);
+					mi.setText(picklist.getCode());
 					
 					// set the data for the menu item
-					mi.setData( picklist );
+					mi.setData(picklist);
 					
 					// actions taken when this menu item is pressed
-					mi.addSelectionListener( new SelectionListener() {
+					mi.addSelectionListener(new SelectionAdapter() {
 						
 						@Override
 						public void widgetSelected(SelectionEvent e) {
@@ -927,35 +901,32 @@ public class ToolsMenu implements MainMenuItem {
 							// the menu items has the picklist code in the data field
 							Picklist selectedPicklist = (Picklist) mi.getData();
 
-							CataloguePreferenceDAO prefDao = new CataloguePreferenceDAO( 
-									mainMenu.getCatalogue() );
+							CataloguePreferenceDAO prefDao = new CataloguePreferenceDAO(
+									mainMenu.getCatalogue());
 							
 							// get the favourite picklist
 							Picklist favouritePicklist = prefDao.getFavouritePicklist();
 							
 							// remove favourite picklist if necessary
-							if ( favouritePicklist != null && 
-									selectedPicklist.equals( favouritePicklist) )
-								prefDao.setFavouritePicklist( null ); 
+							if (favouritePicklist != null && 
+									selectedPicklist.equals(favouritePicklist))
+								prefDao.setFavouritePicklist(null); 
 							
-							PicklistDAO pickDao = new PicklistDAO( mainMenu.getCatalogue() );
+							PicklistDAO pickDao = new PicklistDAO(mainMenu.getCatalogue());
 							// delete the selected picklist from the database
-							pickDao.remove( selectedPicklist );
+							pickDao.remove(selectedPicklist);
 							
 
-							if ( listener != null )
-								listener.buttonPressed( picklistItem, 
-										DELETE_PICKLIST_MI, null );
+							if (listener != null)
+								listener.buttonPressed(picklistItem, 
+										DELETE_PICKLIST_MI, null);
 						}
-						
-						@Override
-						public void widgetDefaultSelected(SelectionEvent e) {}
 					});
 				}
 			}
 		});
 		
-		picklistItem.setEnabled( false );
+		picklistItem.setEnabled(false);
 		
 		return picklistItem;
 	}
@@ -964,29 +935,29 @@ public class ToolsMenu implements MainMenuItem {
 	 * Add a menu item which allows modifying the hierarchies names
 	 * @param menu
 	 */
-	private MenuItem addHierarchyEditorMI ( Menu menu ) {
+	private MenuItem addHierarchyEditorMI (Menu menu) {
 		
-		final MenuItem hierarchyEditorItem = new MenuItem( menu , SWT.NONE );
-		hierarchyEditorItem.setText( Messages.getString("BrowserMenu.HierarchyEditorCmd") );
+		final MenuItem hierarchyEditorItem = new MenuItem(menu , SWT.NONE);
+		hierarchyEditorItem.setText(Messages.getString("BrowserMenu.HierarchyEditorCmd"));
 
 		// Enable only if there is a catalogue open		
-		hierarchyEditorItem.addSelectionListener( new SelectionAdapter() {
+		hierarchyEditorItem.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected ( SelectionEvent event ) {
+			public void widgetSelected (SelectionEvent event) {
 				
-				HierarchyEditor editor = new HierarchyEditor( shell, 
+				HierarchyEditor editor = new HierarchyEditor(shell, 
 						mainMenu.getCatalogue(), 
-						Messages.getString("HierarchyEditor.HierarchyFacetLabel") );
+						Messages.getString("HierarchyEditor.HierarchyFacetLabel"));
 				editor.display();
 
-				if ( listener != null )
-					listener.buttonPressed( hierarchyEditorItem, 
-							HIER_EDITOR_MI, null );
+				if (listener != null)
+					listener.buttonPressed(hierarchyEditorItem, 
+							HIER_EDITOR_MI, null);
 			}
-		} );
+		});
 		
 		// enable according to the operation status
-		hierarchyEditorItem.setEnabled( false );
+		hierarchyEditorItem.setEnabled(false);
 		
 		return hierarchyEditorItem;
 	}
@@ -995,27 +966,27 @@ public class ToolsMenu implements MainMenuItem {
 	 * Add a menu item which allows modifying the facet names
 	 * @param menu
 	 */
-	private MenuItem addAttributeEditorMI ( Menu menu ) {
+	private MenuItem addAttributeEditorMI (Menu menu) {
 		
-		final MenuItem attributeEditorItem = new MenuItem( menu , SWT.NONE );
-		attributeEditorItem.setText( Messages.getString("BrowserMenu.AttributeEditorCmd") );
+		final MenuItem attributeEditorItem = new MenuItem(menu , SWT.NONE);
+		attributeEditorItem.setText(Messages.getString("BrowserMenu.AttributeEditorCmd"));
 		
-		attributeEditorItem.addSelectionListener( new SelectionAdapter() {
+		attributeEditorItem.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected ( SelectionEvent event ) {
+			public void widgetSelected (SelectionEvent event) {
 
-				AttributeEditor editor = new AttributeEditor( shell, mainMenu.getCatalogue(), 
-						Messages.getString("FormAttribute.DialogTitle") );
+				AttributeEditor editor = new AttributeEditor(shell, mainMenu.getCatalogue(), 
+						Messages.getString("FormAttribute.DialogTitle"));
 				editor.display();
 				
-				if ( listener != null )
-					listener.buttonPressed( attributeEditorItem, 
-							ATTR_EDITOR_MI, null );
+				if (listener != null)
+					listener.buttonPressed(attributeEditorItem, 
+							ATTR_EDITOR_MI, null);
 			}
-		} );
+		});
 
 		// enable according to the operation status
-		attributeEditorItem.setEnabled( false );
+		attributeEditorItem.setEnabled(false);
 
 		return attributeEditorItem;
 	}
@@ -1025,33 +996,33 @@ public class ToolsMenu implements MainMenuItem {
 	 * search preferences
 	 * @param menu
 	 */
-	private MenuItem addSearchOptionsMI ( Menu menu ) {
+	private MenuItem addSearchOptionsMI (Menu menu) {
 		
 		// Search options form
-		final MenuItem searchOptionsItem = new MenuItem( menu , SWT.PUSH );
-		searchOptionsItem.setText( Messages.getString("BrowserMenu.GeneralSearchOptionsCmd") );
+		final MenuItem searchOptionsItem = new MenuItem(menu , SWT.PUSH);
+		searchOptionsItem.setText(Messages.getString("BrowserMenu.GeneralSearchOptionsCmd"));
 
 		// if search options is clicked
-		searchOptionsItem.addSelectionListener( new SelectionAdapter() {
+		searchOptionsItem.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected ( SelectionEvent event ) {
+			public void widgetSelected (SelectionEvent event) {
 
 				// open the form for choosing the search options
 				FormSearchOptions sof = new FormSearchOptions(shell, 
-						Messages.getString( "SearchOption.Title"), 
-						mainMenu.getCatalogue() );
+						Messages.getString("SearchOption.Title"), 
+						mainMenu.getCatalogue());
 				
 				// display the form
 				sof.display();
 				
-				if ( listener != null )
-					listener.buttonPressed( searchOptionsItem, 
-							SEARCH_OPT_MI, null );
+				if (listener != null)
+					listener.buttonPressed(searchOptionsItem, 
+							SEARCH_OPT_MI, null);
 
 			}
-		} );
+		});
 		
-		searchOptionsItem.setEnabled( false );
+		searchOptionsItem.setEnabled(false);
 		
 		return searchOptionsItem;
 	}
@@ -1060,27 +1031,27 @@ public class ToolsMenu implements MainMenuItem {
 	 * Add a menu item which allows choosing among the user preferences
 	 * @param menu
 	 */
-	private MenuItem addUserPreferencesMI ( Menu menu ) {
+	private MenuItem addUserPreferencesMI (Menu menu) {
 		
-		final MenuItem userPrefItem = new MenuItem( menu , SWT.NONE );
+		final MenuItem userPrefItem = new MenuItem(menu , SWT.NONE);
 		
-		userPrefItem.setText( Messages.getString( "BrowserMenu.UserPrefCmd" ) );
+		userPrefItem.setText(Messages.getString("BrowserMenu.UserPrefCmd"));
 
-		userPrefItem.addSelectionListener( new SelectionAdapter() {
+		userPrefItem.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected ( SelectionEvent event ) {
+			public void widgetSelected (SelectionEvent event) {
 
-				FormUserPreferences e = new FormUserPreferences( shell, 
-						mainMenu.getCatalogue() );
+				FormUserPreferences e = new FormUserPreferences(shell, 
+						mainMenu.getCatalogue());
 				e.Display();
 				
-				if ( listener != null )
-					listener.buttonPressed( userPrefItem, 
-							USER_PREF_MI, null );
+				if (listener != null)
+					listener.buttonPressed(userPrefItem, 
+							USER_PREF_MI, null);
 			}
-		} );
+		});
 		
-		userPrefItem.setEnabled( false );
+		userPrefItem.setEnabled(false);
 		
 		return userPrefItem;
 	}
@@ -1092,18 +1063,18 @@ public class ToolsMenu implements MainMenuItem {
 		
 		User user = User.getInstance();
 		
-		if ( toolsItem.isDisposed() )
+		if (toolsItem.isDisposed())
 			return;
 		
 		// enable the tools menu only if there is a catalogue open
 		// and if we know that the user is cm or dp
-		toolsItem.setEnabled( mainMenu.getCatalogue() != null &&
-				!user.isGettingUserLevel() );
+		toolsItem.setEnabled(mainMenu.getCatalogue() != null &&
+				!user.isGettingUserLevel());
 		
-		if ( mainMenu.getCatalogue() == null )
+		if (mainMenu.getCatalogue() == null)
 			return;
 		
-		PicklistDAO pickDao = new PicklistDAO( mainMenu.getCatalogue() );
+		PicklistDAO pickDao = new PicklistDAO(mainMenu.getCatalogue());
 		
 		// check if the db contains at least one picklist
 		boolean hasPicklists = !pickDao.isEmpty();
@@ -1113,7 +1084,7 @@ public class ToolsMenu implements MainMenuItem {
 
 		// check if the current user can edit the current catalogue or not
 		// we can edit if we are in editing mode or if we are modifying a local catalogue
-		boolean canEdit = user.canEdit( mainMenu.getCatalogue() );
+		boolean canEdit = user.canEdit(mainMenu.getCatalogue());
 		
 		// check if the current catalogue is not empty (has data in it)
 		boolean nonEmptyCat = !mainMenu.getCatalogue().isEmpty();
@@ -1122,143 +1093,136 @@ public class ToolsMenu implements MainMenuItem {
 		// export a local catalogue we create an excel which has as
 		// catalogue code a custom string, but with master hierarchy code
 		// the code defined before in the excel import... And give errors!
-		exportMI.setEnabled( true );
+		exportMI.setEnabled(true);
 
-		importPicklistMI.setEnabled( hasFacets );
-		favouritePicklistMI.setEnabled( hasFacets && hasPicklists );
-		removePicklistMI.setEnabled( hasFacets && hasPicklists );
+		importPicklistMI.setEnabled(hasFacets);
+		favouritePicklistMI.setEnabled(hasFacets && hasPicklists);
+		removePicklistMI.setEnabled(hasFacets && hasPicklists);
 
-		boolean searchPrefEnabled = nonEmptyCat && ( mainMenu.getCatalogue().hasTermTypes() ||
-				mainMenu.getCatalogue().hasGenericAttributes() );
+		boolean searchPrefEnabled = nonEmptyCat && (mainMenu.getCatalogue().hasTermTypes() ||
+				mainMenu.getCatalogue().hasGenericAttributes());
 		
-		searchOptMI.setEnabled( searchPrefEnabled );
-		userPrefMI.setEnabled( true );
-
-		// enable disable publish mi
-		if ( publishMI != null )
-			publishMI.setEnabled( mainMenu.getCatalogue().canBePublished() );
+		searchOptMI.setEnabled(searchPrefEnabled);
+		userPrefMI.setEnabled(true);
 		
 		// if editing modify also editing buttons
-		if ( user.canEdit( mainMenu.getCatalogue() ) ) {
+		if (user.canEdit(mainMenu.getCatalogue())) {
 			
-			if ( hierarchyEditMI != null )
-				hierarchyEditMI.setEnabled ( true );
+			if (hierarchyEditMI != null)
+				hierarchyEditMI.setEnabled (true);
 			
-			if ( attributeEditMI != null )
-				attributeEditMI.setEnabled( true );
+			if (attributeEditMI != null)
+				attributeEditMI.setEnabled(true);
 		}
 
 		// update catalogue manager buttons
 		// if the current user is enabled to
 		// reserve the current catalogue
-		if ( user.isCatManagerOf( mainMenu.getCatalogue() ) ) {
+		if (user.isCatManagerOf(mainMenu.getCatalogue())) {
 
-			// enable reserve if the catalogue is not already reserved by me
-			boolean reservable = !mainMenu.getCatalogue().isReservedBy( User.getInstance() );
-			
-			// can unreserve if we had reserved the catalogue ( not another user )
-			boolean unReservable = mainMenu.getCatalogue().isUnreservable();
+			boolean isReservedByCurrentUser = User.getInstance().hasReserved(mainMenu.getCatalogue());
 
 			// if we are requesting a web service
 			// disable the action which can send another
 			// web service request
-			if ( mainMenu.getCatalogue().isRequestingAction() ) {
-				
-				if ( reserveMI != null ) {
-					reserveMI.setText( Messages.getString( "Reserve.WaitingResponse" ) );
-					reserveMI.setEnabled( false );
+			if (User.getInstance().hasPendingRequestsFor(mainMenu.getCatalogue())) {
+
+				if (reserveMI != null) {
+					reserveMI.setText(Messages.getString("Reserve.WaitingResponse"));
+					reserveMI.setEnabled(false);
 				}
 				
-				if ( unreserveMI != null ) {
-					unreserveMI.setText( Messages.getString( "Reserve.WaitingResponse" ) );
-					unreserveMI.setEnabled( false );
+				if (unreserveMI != null) {
+					unreserveMI.setText(Messages.getString("Reserve.WaitingResponse"));
+					unreserveMI.setEnabled(false);
 				}
 				
-				if ( publishMI != null ) {
-					publishMI.setText( Messages.getString( "Reserve.WaitingResponse" ) );
-					publishMI.setEnabled( false );
+				if (publishMI != null) {
+					publishMI.setText(Messages.getString("Reserve.WaitingResponse"));
+					publishMI.setEnabled(false);
 				}
 				
-				if ( createXmlMI != null ) {
-					createXmlMI.setText( Messages.getString( "Reserve.WaitingResponse" ) );
-					createXmlMI.setEnabled( false );
+				if (createXmlMI != null) {
+					createXmlMI.setText(Messages.getString("Reserve.WaitingResponse"));
+					createXmlMI.setEnabled(false);
 				}
 				
-				if ( uploadDataMI != null ) {
-					uploadDataMI.setText( Messages.getString( "Reserve.WaitingResponse" ) );
-					uploadDataMI.setEnabled( false );
+				if (uploadDataMI != null) {
+					uploadDataMI.setText(Messages.getString("Reserve.WaitingResponse"));
+					uploadDataMI.setEnabled(false);
 				}
 
 				
 				// if we are reserving but we have forced the
 				// editing, we leave these buttons enabled
-				if ( !mainMenu.getCatalogue().isForceEdit( 
-						User.getInstance().getUsername() ) ) {
+				if (mainMenu.getCatalogue() != null 
+						&& User.getInstance().hasForcedReserveOf(mainMenu.getCatalogue()) == null) {
 
-					if ( resetMI != null )
-						resetMI.setEnabled( false );
+					if (resetMI != null)
+						resetMI.setEnabled(false);
 
-					if ( importMI != null )
-						importMI.setEnabled( false );
+					if (importMI != null)
+						importMI.setEnabled(false);
 
-					if ( hierarchyEditMI != null )
-						hierarchyEditMI.setEnabled ( false );
+					if (hierarchyEditMI != null)
+						hierarchyEditMI.setEnabled (false);
 
-					if ( attributeEditMI != null )
-						attributeEditMI.setEnabled( false );
+					if (attributeEditMI != null)
+						attributeEditMI.setEnabled(false);
 				}
 			}
 			else {
 				
-				if ( reserveMI != null ) {
+				if (reserveMI != null) {
 					// can reserve only if not local and catalogue not reserved
-					reserveMI.setText( Messages.getString( "BrowserMenu.Reserve" ) );
-					reserveMI.setEnabled( reservable );
+					reserveMI.setText(Messages.getString("BrowserMenu.Reserve"));
+					reserveMI.setEnabled(!isReservedByCurrentUser);
 				}
 
-				if ( unreserveMI != null ) {
-					unreserveMI.setText( Messages.getString( "BrowserMenu.Unreserve" ) );
-					unreserveMI.setEnabled( unReservable );
+				if (unreserveMI != null) {
+					unreserveMI.setText(Messages.getString("BrowserMenu.Unreserve"));
+					unreserveMI.setEnabled(isReservedByCurrentUser);
 				}
 				
-				if ( uploadDataMI != null ) {
-					uploadDataMI.setText( Messages.getString( "BrowserMenu.UploadData" ) );			
+				if (uploadDataMI != null) {
+					uploadDataMI.setText(Messages.getString("BrowserMenu.UploadData"));			
 					
 					// check if we have already created an xml file for this catalogue
 					XmlUpdateFileDAO xmlDao = new XmlUpdateFileDAO();
-					XmlUpdateFile xml = xmlDao.getById( mainMenu.getCatalogue().getId() );
-					uploadDataMI.setEnabled( unReservable && xml != null );
+					XmlUpdateFile xml = xmlDao.getById(mainMenu.getCatalogue().getId());
+					uploadDataMI.setEnabled(isReservedByCurrentUser && xml != null);
 				}
 
-				if ( createXmlMI != null ) {
-					createXmlMI.setText( Messages.getString( "BrowserMenu.CreateXml" ) );
-					createXmlMI.setEnabled( unReservable );
+				if (createXmlMI != null) {
+					createXmlMI.setText(Messages.getString("BrowserMenu.CreateXml"));
+					createXmlMI.setEnabled(isReservedByCurrentUser);
 				}
 				
-				if ( publishMI != null ) {
-					publishMI.setText( Messages.getString( "BrowserMenu.Publish" ) );
+				if (publishMI != null) {
+					publishMI.setText(Messages.getString("BrowserMenu.Publish"));
+					publishMI.setEnabled(!isReservedByCurrentUser);
 				}
 				
-				if ( resetMI != null && user.canEdit( mainMenu.getCatalogue() ) ) {
+				if (resetMI != null && user.canEdit(mainMenu.getCatalogue())) {
 					
 					// enable resetMI only if the catalogue is an internal version
 					// and if the catalogue is reserved by the current user
-					resetMI.setEnabled( mainMenu.getCatalogue().isReservedBy( user ) && 
-							mainMenu.getCatalogue().getCatalogueVersion().isInternalVersion() );
+					resetMI.setEnabled(mainMenu.getCatalogue().isReservedBy(user) && 
+							mainMenu.getCatalogue().getCatalogueVersion().isInternalVersion());
 				}
 
-				if ( importMI != null )
-					importMI.setEnabled( canEdit );
+				if (importMI != null)
+					importMI.setEnabled(canEdit);
 			}
 		}
 		else {
-			if ( mainMenu.getCatalogue().isLocal() ) {
+			if (mainMenu.getCatalogue().isLocal()) {
 				
-				if ( importMI != null )
-					importMI.setEnabled( true );
+				if (importMI != null)
+					importMI.setEnabled(true);
 				
-				if ( exportMI != null )
-					exportMI.setEnabled( true );
+				if (exportMI != null)
+					exportMI.setEnabled(true);
 			}
 		}
 	}
@@ -1267,138 +1231,203 @@ public class ToolsMenu implements MainMenuItem {
 	 * Set the menu as enabled or not
 	 * @param enabled
 	 */
-	public void setEnabled ( boolean enabled ) {
-		toolsItem.setEnabled( enabled );
+	public void setEnabled (boolean enabled) {
+		toolsItem.setEnabled(enabled);
 	}
 	
 	/**
-	 * Reserve or unreserve the current catalogue
-	 * Ask a short description of the reserve/unreserve
-	 * reason and start the reserve webservice using
-	 * a separated thread.
-	 * @param level the enum {@linkplain ReserveLevel}, 
-	 * a level of MINOR or MAJOR performs a reserve operation
-	 * a level of NONE performs an unreserve operation.
+	 * Check if the reserve button can be used
+	 * and warn the user if not possible to reserve
+	 * @return
 	 */
-	private void setReserveLevel( final ReserveLevel level ) {
+	private boolean isReserveLegit(ReserveLevel level) {
+		
+		Warnings wrn = new Warnings(shell);
 		
 		Catalogue catalogue = mainMenu.getCatalogue();
-		String note = "";
-		
-		Warnings wrn = new Warnings( shell );
-		
-		if ( level.greaterThan( ReserveLevel.NONE ) ) {
-			
-			// check if we have errors
-			boolean block = wrn.reserve( catalogue.getCatalogueStatus() );
-			
-			// if errors => return
-			if ( block )
-				return;
-			
-			// ask the reserve description
-			DialogSingleText dialog = new DialogSingleText( shell, 10 );
-			dialog.setTitle( Messages.getString( "BrowserMenu.ReserveTitle" ) );
-			dialog.setMessage( Messages.getString( "BrowserMenu.ReserveMessage" ) );
-
-			note = dialog.open();
-
-			// return if cancel was pressed
-			// no description was given
-			if ( note == null )
-				return;
-		}
-		else {
-			// get the note which was written during
-			// the reserve note and use it for the unreserve
-			note = mainMenu.getCatalogue().getReserveNote();
-		}
-		
-		// set wait cursor
-		GlobalUtil.setShellCursor( shell, SWT.CURSOR_WAIT );
-		
-		reserve( mainMenu.getCatalogue(), level, note );
-		
-		// restore cursor
-		GlobalUtil.setShellCursor( shell, SWT.CURSOR_ARROW );
-	}
-	
-	/**
-	 * Create the reserve request for the current catalogue.
-	 * Note that in the listeners we need to use the
-	 * {@link Display#syncExec(Runnable)} to perform UI actions
-	 * since we are not in the UI thread.
-	 * @param catalogue
-	 * @param level
-	 * @param text
-	 * @return the {@link ReserveBuilder} with all the listeners set
-	 */
-	private void reserve( Catalogue catalogue, 
-			final ReserveLevel level, String description ) {
-
-		// reserve the catalogue
-		Dcf dcf = new Dcf();
-		
-		FormProgressBar bar = new FormProgressBar( shell, 
-				Messages.getString("Reserve.NewInternalTitle") );
-		
-		bar.setLocation( bar.getLocation().x, bar.getLocation().y + 170 );
-		
-		dcf.setProgressBar( bar );
-		
-		dcf.reserveBG( catalogue, level, description, mainMenu.getListener() );
-	}
-	
-	/**
-	 * Publish a catalogue
-	 * @param catalogue the catalogue we want to publish
-	 * @param level the publish level
-	 */
-	private void publish ( Catalogue catalogue, PublishLevel level ) {
-
-		Warnings wrn = new Warnings( shell );
 		
 		// check if we have errors
-		boolean block = wrn.publish( catalogue.getCatalogueStatus() );
-
-		// if errors => return
-		if ( block )
-			return;
-
-		// set wait cursor
-		GlobalUtil.setShellCursor( shell, SWT.CURSOR_WAIT );
+		boolean block = wrn.reserve(User.getInstance().checkCatalogue(catalogue));
 		
-		// publish the catalogue (only for drafts)
-		Dcf dcf = new Dcf();
-		
-		FormProgressBar bar = new FormProgressBar( shell, 
-				Messages.getString("Publish.DownloadPublished") );
-		
-		bar.setLocation( bar.getLocation().x, bar.getLocation().y + 170 );
-		
-		dcf.setProgressBar( bar );
-		
-		dcf.publishBG( catalogue, level, mainMenu.getListener() );
-		
-		// restore cursor
-		GlobalUtil.setShellCursor( shell, SWT.CURSOR_ARROW );
+		return !block;
 	}
 	
 	/**
-	 * Upload the data of the current catalogue to the dcf
-	 * in order to update the changes we have done locally
-	 * @param catalogue
+	 * Ask to the user a reservation note
+	 * @return
 	 */
-	private void uploadData ( Catalogue catalogue ) {
+	private String askReserveNote() {
+		
+		// ask the reserve description
+		DialogSingleText dialog = new DialogSingleText(shell, 10);
+		dialog.setTitle(Messages.getString("BrowserMenu.ReserveTitle"));
+		dialog.setMessage(Messages.getString("BrowserMenu.ReserveMessage"));
 
+		return dialog.open();
+	}
+	
+	/**
+	 * Check if publish can be used
+	 * @return
+	 */
+	private boolean isPublishLegit(PublishLevel level) {
+		
+		Warnings wrn = new Warnings(shell);
+		
+		Catalogue catalogue = mainMenu.getCatalogue();
+		
+		// check if we have errors
+		boolean block = wrn.publish(User.getInstance().checkCatalogue(catalogue));
+		
+		return !block;
+	}
+
+	/**
+	 * Execute the reserve button actions
+	 * @param level
+	 */
+	private void reservePressed(ReserveLevel level) {
+
+		boolean legit = isReserveLegit(level);
+		
+		if (!legit)
+			return;
+		
+		int val = GlobalUtil.showDialog(shell, level.getDatabaseKey(), 
+				level.getDatabaseKey() + ": " + Messages.getString("upload.cat.file.confirmation"), SWT.ICON_WARNING | SWT.YES | SWT.NO);
+		
+		if (val != SWT.YES)
+			return;
+		
+		String note = askReserveNote();
+		
+		if (note == null)
+			return;
+		
+		String catCode = mainMenu.getCatalogue().getCode();
+		
+		GlobalUtil.setShellCursor(shell, SWT.CURSOR_WAIT);
+		
+		String title = Messages.getString("success.title");
+		String message = Messages.getString("reserve.sent");
+		int style = SWT.ICON_INFORMATION;
+		
+		Tools tools = new Tools();
+		try {
+			tools.reserve(level, catCode, note);
+		} catch (DetailedSOAPException e) {
+			String[] warn = GlobalUtil.getSOAPWarning(e);
+			title = warn[0];
+			message = warn[1];
+			style = SWT.ICON_ERROR;
+		}
+		catch(SQLException | IOException e) {
+			e.printStackTrace();
+			title = Messages.getString("error.title");
+			message = Messages.getString("reserve.error");
+			style = SWT.ICON_ERROR;
+		}
+		finally {
+			GlobalUtil.setShellCursor(shell, SWT.CURSOR_ARROW);
+		}
+		
+		GlobalUtil.showDialog(shell, title, message, style);
+		
+		if (listener != null)
+			listener.buttonPressed(reserveMI, 
+					RESERVE_CAT_MI, null);
+	}
+	
+	/**
+	 * Publish button actions
+	 * @param level
+	 */
+	private void publishPressed(PublishLevel level) {
+
+		boolean legit = isPublishLegit(level);
+		if (!legit)
+			return;
+
+		int val = GlobalUtil.showDialog(shell, level.getDatabaseKey(), 
+				level.getDatabaseKey() + ": " + Messages.getString("upload.cat.file.confirmation"), 
+				SWT.ICON_WARNING | SWT.YES | SWT.NO);
+		
+		if (val != SWT.YES)
+			return;
+		
+		String catalogueCode = mainMenu.getCatalogue().getCode();
+		
+		String title = Messages.getString("success.title");
+		String message = Messages.getString("publish.sent");
+		int style = SWT.ICON_INFORMATION;
+		
 		// set wait cursor
-		GlobalUtil.setShellCursor( shell, SWT.CURSOR_WAIT );
+		GlobalUtil.setShellCursor(shell, SWT.CURSOR_WAIT);
 		
-		// start downloading the file
-		Dcf dcf = new Dcf();
-		dcf.downloadXmlBG( catalogue, mainMenu.getListener() );
+		Tools tools = new Tools();
+		try {
+			tools.publish(level, catalogueCode);
+		} catch (DetailedSOAPException e) {
+			String[] warn = GlobalUtil.getSOAPWarning(e);
+			title = warn[0];
+			message = warn[1];
+			style = SWT.ICON_ERROR;
+		}
+		catch(SQLException | IOException e) {
+			e.printStackTrace();
+			title = Messages.getString("error.title");
+			message = Messages.getString("publish.error");
+			style = SWT.ICON_ERROR;
+		}
+		finally {
+			GlobalUtil.setShellCursor(shell, SWT.CURSOR_ARROW);
+		}
 		
-		// restore cursor
-		GlobalUtil.setShellCursor( shell, SWT.CURSOR_ARROW );
+		GlobalUtil.showDialog(shell, title, message, style);
+		
+		if (listener != null)
+			listener.buttonPressed(publishMI, 
+					PUBLISH_CAT_MI, null);
+	}
+	
+	private void uploadDataPressed() {
+		
+		int val = GlobalUtil.showDialog(shell, XmlChangesService.TYPE_UPLOAD_XML_DATA, 
+				XmlChangesService.TYPE_UPLOAD_XML_DATA + ": " + 
+						Messages.getString("upload.cat.file.confirmation"), SWT.ICON_WARNING | SWT.YES | SWT.NO);
+		
+		if (val != SWT.YES)
+			return;
+		
+		int catId = mainMenu.getCatalogue().getId();
+		String catalogueCode = mainMenu.getCatalogue().getCode();
+		
+		String title = Messages.getString("success.title");
+		String message = Messages.getString("upload.xml.sent");
+		int style = SWT.ICON_INFORMATION;
+		
+		Tools tools = new Tools();
+		try {
+			tools.uploadXmlData(catId, catalogueCode);
+		} catch (DetailedSOAPException e) {
+			String[] warn = GlobalUtil.getSOAPWarning(e);
+			title = warn[0];
+			message = warn[1];
+			style = SWT.ICON_ERROR;
+		}
+		catch(IOException e) {
+			e.printStackTrace();
+			title = Messages.getString("error.title");
+			message = Messages.getString("upload.xml.error");
+			style = SWT.ICON_ERROR;
+		}
+		finally {
+			GlobalUtil.setShellCursor(shell, SWT.CURSOR_ARROW);
+		}
+		
+		GlobalUtil.showDialog(shell, title, message, style);
+		
+		if (listener != null)
+			listener.buttonPressed(publishMI, CREATE_XML_MI, null);
 	}
 }

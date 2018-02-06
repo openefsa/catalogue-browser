@@ -72,7 +72,7 @@ public class DatabaseManager {
 	 * Get a derby connection url to open the main db connection
 	 * @return
 	 */
-	private static String getMainDBURL ( ) {
+	public static String getMainDBURL ( ) {
 		return "jdbc:derby:" + GlobalUtil.getWorkingDir() + OFFICIAL_CAT_DB_FOLDER + 
 				MAIN_CAT_DB_FOLDER_NAME + ";user=dbuser;password=dbuserpwd";
 	}
@@ -90,7 +90,7 @@ public class DatabaseManager {
 	 * Get a derby connection url to create the main db
 	 * @return
 	 */
-	private static String createMainDBURL ( ) {
+	public static String createMainDBURL ( ) {
 		return "jdbc:derby:" + GlobalUtil.getWorkingDir() + 
 				OFFICIAL_CAT_DB_FOLDER + MAIN_CAT_DB_FOLDER_NAME + ";create=true";
 	}
@@ -498,5 +498,46 @@ public class DatabaseManager {
 		
 		// open the catalogue
 		catalogue.open();
+	}
+	
+	/**
+	 * Create a generic catalogue db in the db path directory
+	 * @param dbPath
+	 * @throws IOException 
+	 */
+	public static void createCatalogueDatabase(String dbPath) throws IOException {
+		
+		// create the db url path, the create = true variable indicates that if
+		// the db is not present it will be created
+		String dbURL = "jdbc:derby:" + dbPath;
+		
+		try (Connection con = DriverManager.getConnection( dbURL + ";create=true" );
+				SQLExecutor executor = new SQLExecutor(con);) {
+			
+			// open the connection to create the database
+			// important! do not remove this line of code since
+			// otherwise the database will not be created
+			
+			// create the catalogue db structure
+			executor.exec(ClassLoader.getSystemResourceAsStream( "createCatalogueDB" ));
+			
+			// close the connection
+			con.close();
+
+			// shutdown the connection, by default this operation throws an exception
+			// but the command is correct! We close the connection since if we try
+			// to delete a database which is just downloaded an error is shown since
+			// the database is in use
+			try {
+				LOGGER.info ( "Closing connection with " + dbURL );
+				try(Connection con2 = DriverManager.getConnection( dbURL + ";shutdown=true");) {}
+			}
+			catch ( Exception e ) {
+			}
+
+		} catch ( SQLException e ) {
+			e.printStackTrace();
+			LOGGER.error("DB error", e);
+		}
 	}
 }

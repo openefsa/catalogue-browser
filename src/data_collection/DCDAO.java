@@ -8,10 +8,12 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueEntityDAO;
 import catalogue_browser_dao.DatabaseManager;
 
@@ -23,6 +25,9 @@ import catalogue_browser_dao.DatabaseManager;
 public class DCDAO implements CatalogueEntityDAO<DataCollection> {
 
 	private static final Logger LOGGER = LogManager.getLogger(CatalogueConfigDAO.class);
+	
+	@Override
+	public void setCatalogue(Catalogue catalogue) {}
 	
 	@Override
 	public int insert(DataCollection dc) {
@@ -195,5 +200,11 @@ public class DCDAO implements CatalogueEntityDAO<DataCollection> {
 		}
 		
 		return contains;
+	}
+
+	@Override
+	public List<Integer> insert(Iterable<DataCollection> attrs) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -1,6 +1,9 @@
 package data_collection;
 
+import java.io.IOException;
+
 import javax.xml.soap.SOAPException;
+import javax.xml.stream.XMLStreamException;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -78,7 +81,7 @@ public class DCDownloader extends Thread {
 			if ( listener != null )
 				doneListener.handleEvent( null );
 
-		} catch (SOAPException e) {
+		} catch (SOAPException | IOException | XMLStreamException e) {
 			e.printStackTrace();
 			LOGGER.error("Cannot download data collection=" + dc);
 		}

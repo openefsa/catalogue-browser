@@ -3,7 +3,7 @@ package ui_main_menu;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
-import catalogue.Catalogue.CatalogueStatus;
+import dcf_user.User.CatalogueStatus;
 import messages.Messages;
 import utilities.GlobalUtil;
 
@@ -17,7 +17,7 @@ public class Warnings {
 
 	Shell shell;
 	
-	public Warnings( Shell shell ) {
+	public Warnings(Shell shell) {
 		this.shell = shell;
 	}
 	
@@ -26,36 +26,36 @@ public class Warnings {
 	 * @param problem
 	 * @return true if a warning was raised
 	 */
-	public boolean reserve( CatalogueStatus problem ) {
+	public boolean reserve(CatalogueStatus problem) {
 		
-		String title = Messages.getString( "Reserve.NotAllowedTitle" );
+		String title = Messages.getString("Reserve.NotAllowedTitle");
 		String msg = null;
 		
 		boolean showMessage = true;
 		
-		switch ( problem ) {
+		switch (problem) {
 		case RESERVED_BY_OTHER:
-			msg = Messages.getString( "Reserve.ReservedByOther" );
+			msg = Messages.getString("Reserve.ReservedByOther");
 			break;
-		case NOT_LAST:
-			msg = Messages.getString( "Reserve.NotLast" );
+		case NOT_LAST_VERSION:
+			msg = Messages.getString("Reserve.NotLast");
 			break;
 		case DEPRECATED:
-			msg = Messages.getString( "Reserve.Deprecated" );
+			msg = Messages.getString("Reserve.Deprecated");
 			break;
 		case LOCAL:
-			msg = Messages.getString( "Reserve.Local" );
+			msg = Messages.getString("Reserve.Local");
 			break;
-		case INVALID:
-			msg = Messages.getString( "Reserve.Invalid" );
+		case INV_VERSION:
+			msg = Messages.getString("Reserve.Invalid");
 			break;
 		default:
 			showMessage = false;
 			break;
 		}
 		
-		if ( showMessage )
-			GlobalUtil.showDialog( shell, title, msg, SWT.ICON_ERROR );
+		if (showMessage)
+			GlobalUtil.showDialog(shell, title, msg, SWT.ICON_ERROR);
 		
 		return showMessage;
 	}
@@ -65,37 +65,37 @@ public class Warnings {
 	 * @param problem
 	 * @return
 	 */
-	public boolean publish ( CatalogueStatus problem ) {
+	public boolean publish (CatalogueStatus problem) {
 		
-		String title = Messages.getString( "Publish.NotAllowedTitle" );
+		String title = Messages.getString("Publish.NotAllowedTitle");
 		String msg = null;
 		
 		boolean showMessage = true;
 		
-		switch ( problem ) {
+		switch (problem) {
 		case RESERVED_BY_CURRENT:
 		case RESERVED_BY_OTHER:
-			msg = Messages.getString( "Publish.Reserved" );
+			msg = Messages.getString("Publish.Reserved");
 			break;
-		case NOT_LAST:
-			msg = Messages.getString( "Publish.NotLast" );
+		case NOT_LAST_VERSION:
+			msg = Messages.getString("Publish.NotLast");
 			break;
 		case DEPRECATED:
-			msg = Messages.getString( "Publish.Deprecated" );
+			msg = Messages.getString("Publish.Deprecated");
 			break;
 		case LOCAL:
-			msg = Messages.getString( "Publish.Local" );
+			msg = Messages.getString("Publish.Local");
 			break;
-		case INVALID:
-			msg = Messages.getString( "Publish.Invalid" );
+		case INV_VERSION:
+			msg = Messages.getString("Publish.Invalid");
 			break;
 		default:
 			showMessage = false;
 			break;
 		}
 		
-		if ( showMessage )
-			GlobalUtil.showDialog( shell, title, msg, SWT.ICON_ERROR );
+		if (showMessage)
+			GlobalUtil.showDialog(shell, title, msg, SWT.ICON_ERROR);
 		
 		return showMessage;
 	}

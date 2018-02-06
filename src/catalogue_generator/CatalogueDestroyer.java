@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_browser_dao.DatabaseManager;
+import dcf_user.User;
 import progress_bar.FormProgressBar;
 
 /**
@@ -50,7 +51,7 @@ public class CatalogueDestroyer extends Thread {
 				progressBar.addProgress( step );
 
 			// cannot remove reserved or pending catalogues
-			if ( catalogue.isReserved() || catalogue.isRequestingAction() ) {
+			if ( catalogue.isReserved() || User.getInstance().hasPendingRequestsFor(catalogue) ) {
 				code = ThreadFinishedListener.ERROR;
 				continue; 
 			}

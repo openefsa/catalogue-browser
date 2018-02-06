@@ -9,7 +9,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import catalogue.Catalogue;
-import dcf_webservice.ReserveLevel;
+import soap.UploadCatalogueFileImpl.ReserveLevel;
 
 /**
  * DAO to communicate with the FORCED_CATALOGUE table of the main database.
@@ -19,7 +19,7 @@ import dcf_webservice.ReserveLevel;
  * @author avonva
  *
  */
-public class ForceCatEditDAO {
+public class ForceCatEditDAO implements IForcedCatalogueDAO {
 	
 	private static final Logger LOGGER = LogManager.getLogger(ForceCatEditDAO.class);
 	
@@ -40,7 +40,7 @@ public class ForceCatEditDAO {
 			stmt.setInt( 1, catalogue.getId() );
 			stmt.setString( 2, username );
 			stmt.setBoolean( 3, true );
-			stmt.setString( 4, editLevel.toString() );
+			stmt.setString( 4, editLevel.getDatabaseKey() );
 			
 			stmt.executeUpdate();
 			
@@ -66,7 +66,7 @@ public class ForceCatEditDAO {
 	 */
 	public synchronized ReserveLevel getEditingLevel ( Catalogue catalogue, String username ) {
 		
-		ReserveLevel reserveLevel = ReserveLevel.NONE;
+		ReserveLevel reserveLevel = null;
 		
 		String query = "select * from APP.FORCED_CATALOGUE where CAT_ID = ? and FORCED_USERNAME = ?";
 
@@ -81,7 +81,7 @@ public class ForceCatEditDAO {
 				// if the record is present, the user is
 				// forcing the editing
 				if ( rs.next() )
-					reserveLevel = ReserveLevel.valueOf( 
+					reserveLevel = ReserveLevel.fromDatabaseKey( 
 							rs.getString( "FORCED_LEVEL" ) );
 				
 				rs.close();

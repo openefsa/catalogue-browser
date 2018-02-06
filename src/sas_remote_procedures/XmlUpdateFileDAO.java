@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -23,6 +24,9 @@ import catalogue_browser_dao.DatabaseManager;
 public class XmlUpdateFileDAO implements CatalogueEntityDAO<XmlUpdateFile> {
 
 	private static final Logger LOGGER = LogManager.getLogger(XmlUpdateFileDAO.class);
+	
+	@Override
+	public void setCatalogue(Catalogue catalogue) {}
 	
 	@Override
 	public int insert(XmlUpdateFile object) {
@@ -129,7 +133,7 @@ public class XmlUpdateFileDAO implements CatalogueEntityDAO<XmlUpdateFile> {
 		CatalogueDAO catDao = new CatalogueDAO();
 		Catalogue catalogue = catDao.getById( catId );
 
-		return new XmlUpdateFile( catalogue, xmlFilename );
+		return new XmlUpdateFile(catalogue, xmlFilename);
 	}
 
 	@Override
@@ -156,6 +160,12 @@ public class XmlUpdateFileDAO implements CatalogueEntityDAO<XmlUpdateFile> {
 		}
 		
 		return objs;
+	}
+
+	@Override
+	public List<Integer> insert(Iterable<XmlUpdateFile> attrs) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

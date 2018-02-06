@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -40,6 +41,10 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 		this.catalogue = catalogue;
 	}
 	
+	@Override
+	public void setCatalogue(Catalogue catalogue) {
+		this.catalogue = catalogue;
+	}
 	
 	/**
 	 * Add a new applicability in the database
@@ -50,14 +55,14 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 		Collection<Applicability> appls = new ArrayList<>();
 		appls.add( appl );
 		
-		ArrayList<Integer> ids = insert ( appls );
+		List<Integer> ids = insert(appls);
 		if ( ids.isEmpty() )
 			return -1;
 		
 		return ids.get( 0 );
 	}
 	
-	public synchronized ArrayList<Integer> insert ( Collection<Applicability> appls ) {
+	public synchronized List<Integer> insert(Iterable<Applicability> appls) {
 		
 		ArrayList<Integer> ids = new ArrayList<>();
 		

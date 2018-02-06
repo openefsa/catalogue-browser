@@ -1,6 +1,6 @@
 package catalogue;
 
-import dcf_webservice.ReserveLevel;
+import soap.UploadCatalogueFileImpl.ReserveLevel;
 
 /**
  * Object to model records of the Reserved_Catalogue table.

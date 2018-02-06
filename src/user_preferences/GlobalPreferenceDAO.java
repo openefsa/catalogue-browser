@@ -16,6 +16,9 @@ public class GlobalPreferenceDAO extends PreferenceDAO {
 
 	private static final Logger LOGGER = LogManager.getLogger(GlobalPreferenceDAO.class);
 	
+	@Override
+	public void setCatalogue(Catalogue catalogue) {}
+	
 	/**
 	 * Insert the default preferences for user interface
 	 */

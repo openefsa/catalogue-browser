@@ -147,8 +147,15 @@ public class BaseObject implements Nameable {
 		
 		return null;
 	}
+	
+	public Status getStatusObject() {
+		return this.status;
+	}
 	public Status getRawStatus() {
 		return status;
+	}
+	public void setRawStatus(String status) {
+		this.status = new Status(status);
 	}
 	public boolean isDeprecated() {
 		return deprecated;

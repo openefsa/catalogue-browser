@@ -11,6 +11,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import catalogue.Catalogue;
+import catalogue_browser_dao.CatalogueEntityDAO;
 import naming_convention.SpecialValues;
 import term_type.TermType;
 import term_type.TermTypeDAO;
@@ -35,10 +36,16 @@ public class TermTypeImporter {
 
 	private static final Logger LOGGER = LogManager.getLogger(TermTypeImporter.class);
 	
+	private CatalogueEntityDAO<TermType> dao;
 	private Catalogue catalogue;
 	
-	public TermTypeImporter( Catalogue catalogue ) {
+	public TermTypeImporter(CatalogueEntityDAO<TermType> dao, Catalogue catalogue) {
+		this.dao = dao;
 		this.catalogue = catalogue;
+	}
+	
+	public TermTypeImporter(Catalogue catalogue) {
+		this(new TermTypeDAO(catalogue), catalogue);
 	}
 	
 	/**
@@ -46,8 +53,7 @@ public class TermTypeImporter {
 	 * attribute sheet first with {@link AttributeSheetImporter}
 	 */
 	public void importSheet() {
-		TermTypeDAO ttDao = new TermTypeDAO ( catalogue );
-		ttDao.insert( getTermTypeValues() );
+		dao.insert(getTermTypeValues());
 	}
 	
 	

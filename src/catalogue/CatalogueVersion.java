@@ -12,8 +12,8 @@ import catalogue_object.Version;
 public class CatalogueVersion extends Version {
 
 	// flag for invalid versions
-	private static final String INVALID_VERSION = "NULL";
-	private static final String FORCED_VERSION = "TEMP";
+	public static final String INVALID_VERSION = "NULL";
+	public static final String FORCED_VERSION = "TEMP";
 	
 	private boolean invalid;      // true if the internal version is not the last one
 	private boolean forced;       // true if the version is a dummy version

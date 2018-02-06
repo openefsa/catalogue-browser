@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
+import catalogue_browser_dao.DatabaseManager;
 import catalogue_browser_dao.HierarchyDAO;
 import catalogue_object.Hierarchy;
 import dcf_manager.Dcf.DcfType;
@@ -43,7 +44,7 @@ public class CatalogueCreator {
 		
 		// create the standard database structure for
 		// the new catalogue
-		catDao.createDBTables( newCatalogue.getDbPath() );
+		DatabaseManager.createCatalogueDatabase(newCatalogue.getDbPath());
 
 		CataloguePreferenceDAO prefDao = new CataloguePreferenceDAO( newCatalogue );
 		

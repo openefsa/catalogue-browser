@@ -12,17 +12,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.soap.SOAPException;
-import javax.xml.transform.TransformerException;
 
 import org.apache.log4j.Logger;
-import org.xml.sax.SAXException;
 
 import catalogue_browser_dao.AttributeDAO;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_browser_dao.DatabaseManager;
-import catalogue_browser_dao.ForceCatEditDAO;
 import catalogue_browser_dao.HierarchyDAO;
 import catalogue_browser_dao.ParentTermDAO;
 import catalogue_browser_dao.ReleaseNotesDAO;
@@ -45,13 +41,7 @@ import data_transformation.BooleanConverter;
 import data_transformation.DateTrimmer;
 import dcf_manager.Dcf;
 import dcf_manager.Dcf.DcfType;
-import dcf_manager.VersionFinder;
-import dcf_pending_action.NewCatalogueInternalVersion;
-import dcf_pending_action.PendingAction;
-import dcf_pending_action.PendingActionDAO;
 import dcf_user.User;
-import dcf_webservice.AttachmentNotFoundException;
-import dcf_webservice.ReserveLevel;
 import detail_level.DetailLevelDAO;
 import detail_level.DetailLevelGraphics;
 import global_manager.GlobalManager;
@@ -60,6 +50,7 @@ import import_catalogue.CatalogueImporterThread;
 import messages.Messages;
 import progress_bar.IProgressBar;
 import property.SorterCatalogueObject;
+import soap.UploadCatalogueFileImpl.ReserveLevel;
 import term_code_generator.CodeGenerator;
 import term_code_generator.TermCodeException;
 import term_type.TermType;
@@ -101,10 +92,6 @@ public class Catalogue extends BaseObject
 	private String backupDbPath;  // path where it is located the backup of the catalogue db
 
 	private boolean local;  // if the catalogue is a new local catalogue or not
-
-	// boolean set to true if we start
-	// a pending action on this catalogue
-	private boolean requestingAction;
 
 	// list of terms which are contained in the catalogue
 	private HashMap< Integer, Term > terms;
@@ -332,11 +319,14 @@ public class Catalogue extends BaseObject
 		attributes.clear();
 		facetCategories.clear();
 
-		for ( Term term : terms.values() ) {
-			term.clear();
+		if (terms != null) {
+			for ( Term term : terms.values() ) {
+				term.clear();
+			}
+	
+			terms.clear();
 		}
-
-		terms.clear();
+		
 		detailLevels.clear();
 		termTypes.clear();
 		termsIds.clear();
@@ -648,7 +638,7 @@ public class Catalogue extends BaseObject
 	 * @return
 	 */
 	public boolean hasTerms () {
-		return !terms.isEmpty();
+		return terms != null && !terms.isEmpty();
 	}
 
 
@@ -1080,284 +1070,19 @@ public class Catalogue extends BaseObject
 	}
 
 	/**
-	 * Force the editing of the catalogue even if
-	 * it was not reserved
-	 * @param username who is forcing the editing
-	 * @param level the editing level we want (MINOR or MAJOR)
-	 * @return a copy of the catalogue on which we can edit
-	 */
-	public synchronized Catalogue forceEdit ( String username, ReserveLevel level ) {
-
-		if ( level.isNone() ) {
-			LOGGER.error( "Cannot force editing at level NONE" );
-			return null;
-		}
-
-		// update the forced count for this catalogue
-		forcedCount++;
-
-		// update the forced count also in the db
-		CatalogueDAO catDao = new CatalogueDAO();
-		catDao.update( this );
-
-		// version checker to modify the catalogue version
-		// in a permament way
-		VersionChecker versionChecker = new VersionChecker( this );
-
-		Catalogue forcedCatalogue = versionChecker.force();
-		
-		forcedCatalogue.setStatus( StatusValues.TEMPORARY );
-
-		LOGGER.info( "Editing forced by " + username + " for " + this );
-
-		ForceCatEditDAO forceDao = new ForceCatEditDAO();
-		forceDao.forceEditing( forcedCatalogue, username, level );
-
-		return forcedCatalogue;
-	}
-
-	/**
-	 * Confirm the version of the catalogue
-	 * @param username
-	 */
-	public void confirmVersion () {
-
-		LOGGER.info ( "Version confirmed for " + this );
-		
-		// remove forced flag
-		version.confirm();
-		
-		setStatus( StatusValues.INTERNAL_VERSION );
-
-		// remove the force editing since now
-		// it is correctly enabled
-		removeForceEdit();
-
-		// update the version in the db
-		CatalogueDAO catDao = new CatalogueDAO();
-		catDao.update( this );
-	}
-
-	/**
-	 * Set the current catalogue version as invalid,
-	 * since it has changes made through forced editing
-	 * and the reserve operation does not succeeded 
-	 */
-	public synchronized void invalidate() {
-
-		LOGGER.info( "Invalid version for " + this );
-		
-		// add the NULL flag
-		version.invalidate();
-		
-		setStatus( StatusValues.INVALID );
-
-		// update version in the db
-		CatalogueDAO catDao = new CatalogueDAO();
-		catDao.update( this );
-	}
-
-	/**
 	 * Check if the version of the catalogue is invalid or not
 	 * @return
 	 */
 	public boolean isInvalid() {
 		return version.isInvalid();
 	}
-
-	/**
-	 * Remove the forced editing from this catalogue
-	 * related to the user we want
-	 */
-	private synchronized void removeForceEdit () {
-
-		LOGGER.info( "Forced editing removed by " 
-				+ User.getInstance() + " for " + this );
-
-		ForceCatEditDAO forceDao = new ForceCatEditDAO();
-		forceDao.removeForceEditing( this );
-	}
-
-	/**
-	 * Get the forced editing level of this catalogue regarding
-	 * the User identified by {@code username}.
-	 * @param username
-	 * @return the forced editing level, if NONE, no editing was forced
-	 */
-	public synchronized ReserveLevel getForcedEditLevel ( String username ) {
-
-		ForceCatEditDAO forceDao = new ForceCatEditDAO();
-
-		// we are forcing the editing if we have a forced editing
-		// level greater than NONE
-		return forceDao.getEditingLevel( this, username );
-	}
-
-	/**
-	 * Check if the catalogue has forced
-	 * editing or not by the user
-	 * @param username
-	 * @return
-	 */
-	public boolean isForceEdit( String username ) {
-
-		// we are forcing the editing 
-		// if we have a forced editing
-		// level greater than NONE
-		return getForcedEditLevel( username ).greaterThan( ReserveLevel.NONE );
-	}
-
+	
 	/**
 	 * update the status of the catalogue
 	 * @param value
 	 */
 	public void setStatus ( StatusValues value ) {
 		getRawStatus().markAs( value );
-	}
-
-
-	/**
-	 * Reserve the current catalogue for the current user.
-	 * Note that if you want to unreserve the catalogue you
-	 * must use {@link #unreserve() }
-	 * @param note the reservation note
-	 * @param reserveLevel the reserve level needed. Both
-	 * {@link ReserveLevel.MINOR} or 
-	 * {@link ReserveLevel.MAJOR} are accepted.
-	 * @return the new internal version of the catalogue if a new one is created
-	 * or {@code this} catalogue if the version of the catalogue is simply confirmed
-	 * (only for forced catalogues)
-	 */
-	public synchronized Catalogue reserve( String note, ReserveLevel reserveLevel ) {
-
-		if ( reserveLevel.isNone() ) {
-			LOGGER.warn ( "You are reserving a catalogue with ReserveLevel.NONE "
-					+ "as reserve level, use unreserve instead" );
-			return null;
-		}
-
-		User user = User.getInstance();
-
-		Catalogue newCatalogue;
-
-		if ( this.isForceEdit( user.getUsername() ) ) {
-
-			// we simply confirm the forced version and go on with that
-			confirmVersion();
-			newCatalogue = this;
-		}
-		else {
-			// get a new internal version of the catalogue
-			newCatalogue = newInternalVersion();
-			LOGGER.info ( "Creating new internal version " + newCatalogue );
-		}
-
-		// reserve the catalogue into the db
-		ReservedCatDAO resDao = new ReservedCatDAO();
-		resDao.insert( new ReservedCatalogue(newCatalogue, 
-				user.getUsername(), note, reserveLevel) );
-
-		// update the status of the catalogue
-		if ( reserveLevel.isMajor() )
-			newCatalogue.setStatus( StatusValues.DRAFT_MAJOR_RESERVED );
-		else if ( reserveLevel.isMinor() )
-			newCatalogue.setStatus( StatusValues.DRAFT_MINOR_RESERVED );
-
-		return newCatalogue;
-	}
-
-	/**
-	 * Unreserve the catalogue
-	 */
-	public synchronized void unreserve () {
-
-		// update the status of the catalogue
-		if ( getReserveLevel().isMajor() )
-			this.setStatus( StatusValues.DRAFT_MAJOR_UNRESERVED );
-		else if ( getReserveLevel().isMinor() )
-			this.setStatus( StatusValues.DRAFT_MINOR_UNRESERVED );
-
-		// unreserve the catalogue in the database
-		ReservedCatDAO resDao = new ReservedCatDAO();
-		ReservedCatalogue rc = resDao.getById( getId() );
-
-		if ( rc != null )
-			resDao.remove( rc );
-		else
-			LOGGER.warn( "Cannot unreserve: the catalogue is already unreserved=" + this );
-
-		// update the catalogue status
-		CatalogueDAO catDao = new CatalogueDAO();
-		catDao.update( this );
-	}
-
-	/**
-	 * Publish a minor release of the catalogue
-	 * @return the new version of the catalogue
-	 */
-	public Catalogue publishMinor () {
-
-		// version checker to modify the catalogue version
-		// in a permament way
-		VersionChecker versionChecker = new VersionChecker( this );
-
-		Catalogue newCatalogue = versionChecker.publishMinor();
-
-		newCatalogue.setStatus( StatusValues.PUBLISHED_MINOR );
-
-		return newCatalogue;
-	}
-
-	/**
-	 * Publish a minor release of the catalogue
-	 * @return the new version of the catalogue
-	 */
-	public Catalogue publishMajor () {
-
-		// version checker to modify the catalogue version
-		// in a permament way
-		VersionChecker versionChecker = new VersionChecker( this );
-
-		Catalogue newCatalogue = versionChecker.publishMajor();
-
-		newCatalogue.setStatus( StatusValues.PUBLISHED_MAJOR );
-
-		return newCatalogue;
-	}
-
-	/**
-	 * Publish a new internal version of the catalogue
-	 * @return the new version of the catalogue
-	 */
-	public Catalogue newInternalVersion () {
-
-		// version checker to modify the catalogue version
-		// in a permament way
-		VersionChecker versionChecker = new VersionChecker( this );
-
-		return versionChecker.newInternalVersion();
-	}
-
-
-	/**
-	 * Set if the catalogue is being reserved or 
-	 * unreserved
-	 * @param reserving
-	 */
-	public void setRequestingAction(boolean requestingAction) {
-		this.requestingAction = requestingAction;
-	}
-
-	/**
-	 * Check if a pending action regarding this
-	 * catalogue is being operated
-	 * @return
-	 */
-	public boolean isRequestingAction() {
-
-		PendingActionDAO prDao = new PendingActionDAO();
-		Collection<PendingAction> pas = prDao.getByCatalogue ( this, Dcf.dcfType );
-		return !pas.isEmpty() || requestingAction;
 	}
 
 	/**
@@ -1398,8 +1123,6 @@ public class Catalogue extends BaseObject
 
 		CatalogueStatus problem = CatalogueStatus.NONE;
 
-		String username = User.getInstance().getUsername();
-
 		// if the catalogue is reserved by someone which is not me
 		// then we cannot reserve
 		boolean reservedByOther = !isReservedBy( User.getInstance() ) 
@@ -1411,8 +1134,8 @@ public class Catalogue extends BaseObject
 		// is not local and it is not deprecated
 		if ( isInvalid() )
 			problem = CatalogueStatus.INVALID;
-		else if ( isRequestingAction() )
-			problem = CatalogueStatus.PENDING_ACTION_ONGOING;
+		//else if ( isRequestingAction() )
+		//	problem = CatalogueStatus.PENDING_ACTION_ONGOING;
 		else if ( reservedByOther )
 			problem = CatalogueStatus.RESERVED_BY_OTHER;
 		else if ( isReservedBy ( User.getInstance() ) )
@@ -1423,45 +1146,12 @@ public class Catalogue extends BaseObject
 			problem = CatalogueStatus.LOCAL;
 		else if ( isDeprecated() )
 			problem = CatalogueStatus.DEPRECATED;
-		else if ( isForceEdit( username ) )
-			problem = CatalogueStatus.FORCED_EDIT;
+		//else if ( isForceEdit( username ) )
+		//	problem = CatalogueStatus.FORCED_EDIT;
 
 		return problem;
 	}
 
-	/**
-	 * Check if the catalogue can be unreserved by the current user.
-	 * To check reservability, please use {@link isReservable}
-	 * @return
-	 */
-	public boolean isUnreservable () {
-
-		User user = User.getInstance();
-
-		// if the user had reserved the catalogue
-		// if this is the last release
-		// and if no force editing is applied
-		if ( isReservedBy( user ) 
-				&& isLastRelease() 
-				&& !isForceEdit( user.getUsername() ) )
-			return true;
-
-		return false;
-	}
-
-	/**
-	 * Check if the catalogue can be published
-	 * @return
-	 */
-	public boolean canBePublished () {
-
-		// can be published if not reserved and
-		// if not in forced editing
-		boolean ok = !isReserved() && 
-				!isForceEdit( User.getInstance().getUsername() );
-
-		return ok;
-	}
 	/**
 	 * Get the catalogue term code mask if there is one
 	 * @return
@@ -1598,8 +1288,8 @@ public class Catalogue extends BaseObject
 	 */
 	public ReserveLevel getReserveLevel () {
 
-		ReserveLevel level = ReserveLevel.NONE;
-
+		ReserveLevel level = null;
+		
 		ReservedCatalogue rc = getReservedCatalogue();
 
 		// if catalogue is reserved get the level
@@ -2181,56 +1871,10 @@ public class Catalogue extends BaseObject
 		return true;
 	}
 
-	/**
-	 * Check if the catalogue is the last
-	 * INTERNAL VERSION or not.
-	 * @return the new catalogue internal version if there is one,
-	 * null otherwise
-	 * @throws IOException 
-	 * @throws SAXException 
-	 * @throws ParserConfigurationException 
-	 * @throws TransformerException 
-	 * @throws SOAPException 
-	 */
-	public NewCatalogueInternalVersion getLastInternalVersion() throws IOException, 
-	TransformerException, ParserConfigurationException, SAXException, SOAPException {
-
-		Dcf dcf = new Dcf();
-
-		File file = dcf.exportCatalogueInternalVersion( getCode() );
-
-		// export the internal version in the file
-		boolean written = file != null;
-
-		// if no internal version is retrieved we have
-		// the last version of the catalogue
-		if ( !written )
-			return null;
-
-		VersionFinder finder = new VersionFinder( file.getPath() );
-
-		// compare the catalogues versions
-		CatalogueVersion intVersion = new CatalogueVersion ( finder.getVersion() );
-
-		// if the downloaded version is newer than the one we
-		// are working with => we are using an old version
-		if ( intVersion.compareTo( version ) < 0 ) {
-
-			// save the new version of the catalogue
-			NewCatalogueInternalVersion newVersion = 
-					new NewCatalogueInternalVersion( getCode(), 
-							finder.getVersion(), file.getPath(), catalogueType );
-
-			return newVersion;
-		}
-		else {
-			// delete useless files
-			GlobalUtil.deleteFileCascade( file.getPath() );
-		}
-
-		return null;
+	public void increaseForcedCount() {
+		this.forcedCount++;
 	}
-
+	
 	/**
 	 * Download the catalogue from the dcf and save it on the disk
 	 * @throws SOAPException
@@ -2428,7 +2072,7 @@ public class Catalogue extends BaseObject
 	 */
 	@Override
 	public String toString() {
-		return "CATALOGUE: " + getCode() + " " + getVersion();
+		return getCode() + " " + getVersion();
 	}
 
 

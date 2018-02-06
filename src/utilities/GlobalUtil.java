@@ -24,6 +24,9 @@ import org.eclipse.swt.widgets.Shell;
 
 import catalogue.Catalogue;
 import catalogue_browser_dao.DatabaseManager;
+import messages.Messages;
+import soap.DetailedSOAPException;
+import soap.SOAPError;
 
 
 /**
@@ -544,6 +547,30 @@ public class GlobalUtil {
 		String filename = dialog.open();
 		
 		return filename;
+	}
+	
+	public static String[] getSOAPWarning(DetailedSOAPException e) {
+		
+		String title = null;
+		String message = null;
+		SOAPError error = e.getError();
+		switch(error) {
+		case NO_CONNECTION:
+			title = Messages.getString("error.title");
+			message = Messages.getString("no.connection");
+			break;
+		case UNAUTHORIZED:
+		case FORBIDDEN:
+			title = Messages.getString("error.title");
+			message = Messages.getString("wrong.credentials");
+			break;
+		case MESSAGE_SEND_FAILED:
+			title = Messages.getString("error.title");
+			message = Messages.getString("send.message.failed");
+			break;
+		}
+		
+		return new String[] {title, message};
 	}
 	
 	/**

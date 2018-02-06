@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -20,7 +21,7 @@ import catalogue.ReleaseNotesOperation;
  * @author avonva
  *
  */
-public class ReleaseNotesOperationDAO implements CatalogueEntityDAO<ReleaseNotesOperation>{
+public class ReleaseNotesOperationDAO implements CatalogueEntityDAO<ReleaseNotesOperation> {
 
 	private static final Logger LOGGER = LogManager.getLogger(ReleaseNotesOperationDAO.class);
 	
@@ -33,6 +34,11 @@ public class ReleaseNotesOperationDAO implements CatalogueEntityDAO<ReleaseNotes
 	public ReleaseNotesOperationDAO( Catalogue catalogue ) {
 		this.catalogue = catalogue;
 	}
+	
+	@Override
+	public void setCatalogue(Catalogue catalogue) {
+		this.catalogue = catalogue;
+	}
 
 	@Override
 	public int insert( ReleaseNotesOperation op ) {
@@ -40,7 +46,7 @@ public class ReleaseNotesOperationDAO implements CatalogueEntityDAO<ReleaseNotes
 		Collection<ReleaseNotesOperation> ops = new ArrayList<>();
 		ops.add( op );
 		
-		ArrayList<Integer> ids = insert ( ops );
+		List<Integer> ids = insert(ops);
 		if ( ids.isEmpty() )
 			return -1;
 		
@@ -52,7 +58,7 @@ public class ReleaseNotesOperationDAO implements CatalogueEntityDAO<ReleaseNotes
 	 * @param ops
 	 * @return
 	 */
-	public synchronized ArrayList<Integer> insert ( Collection<ReleaseNotesOperation> ops ) {
+	public synchronized List<Integer> insert(Iterable<ReleaseNotesOperation> ops) {
 		
 		ArrayList<Integer> ids = new ArrayList<>();
 

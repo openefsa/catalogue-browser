@@ -1,4 +1,4 @@
-package dcf_webservice;
+package catalogue;
 
 public class AttachmentNotFoundException extends Exception {
 	

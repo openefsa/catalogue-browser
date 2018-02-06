@@ -7,8 +7,8 @@ import javax.xml.soap.SOAPException;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import catalogue.AttachmentNotFoundException;
 import catalogue.Catalogue;
-import dcf_webservice.AttachmentNotFoundException;
 import messages.Messages;
 import progress_bar.FormProgressBar;
 import progress_bar.IProgressBar;
