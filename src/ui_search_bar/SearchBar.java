@@ -5,6 +5,8 @@ import java.util.Observable;
 import java.util.Observer;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -279,6 +281,21 @@ public class SearchBar implements Observer {
 				buttonSearch.setEnabled( 
 						canSearch( textSearch.getText().trim().length() ) 
 						&& textSearch.isEnabled() );
+			}
+		});
+		
+		textSearch.addFocusListener(new FocusListener() {
+			
+			@Override
+			public void focusLost(FocusEvent arg0) {}
+
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				parent.getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						textSearch.selectAll();
+					}
+				});
 			}
 		});
 

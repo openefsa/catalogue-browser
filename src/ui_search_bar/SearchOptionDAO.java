@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -38,6 +39,11 @@ public class SearchOptionDAO implements CatalogueEntityDAO<SearchOption> {
 	 * @param catalogue
 	 */
 	public SearchOptionDAO( Catalogue catalogue ) {
+		this.catalogue = catalogue;
+	}
+	
+	@Override
+	public void setCatalogue(Catalogue catalogue) {
 		this.catalogue = catalogue;
 	}
 	
@@ -234,5 +240,11 @@ public class SearchOptionDAO implements CatalogueEntityDAO<SearchOption> {
 		for ( Attribute attr : attrDao.fetchGeneric() ) {
 			insert ( new SearchOption( catalogue, attr.getId(), true, OptionType.ATTRIBUTE ) );
 		}
+	}
+
+	@Override
+	public List<Integer> insert(Iterable<SearchOption> attrs) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
