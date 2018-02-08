@@ -1,6 +1,7 @@
 package dcf_pending_request;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -41,9 +42,10 @@ import catalogue_browser_dao.XmlUpdateFileDAOMock;
 import catalogue_object.Applicability;
 import catalogue_object.Attribute;
 import catalogue_object.Hierarchy;
-import catalogue_object.Status;
 import catalogue_object.Term;
 import catalogue_object.TermAttribute;
+import config.Environment;
+import dcf_manager.Dcf.DcfType;
 import dcf_user.User;
 import import_catalogue.ImportException;
 import sas_remote_procedures.SasRemotePaths;
@@ -96,7 +98,7 @@ public class PendingRequestActionsTest {
 				termDao, taDao, parentDao, notesDao);
 		
 		this.actions = new PendingRequestActions(backup, catDao, resDao, 
-				xmlDao, forcedDao, downloader);
+				xmlDao, forcedDao, downloader, Environment.TEST);
 	}
 	
 	public void getLastVersion() {
@@ -124,13 +126,16 @@ public class PendingRequestActionsTest {
 		
 		assertEquals(catDao.getAll().size(), 2);  // new version created
 		
-		// new internal version created
-		catDao.getLastVersionByCode(catalogueCode, null).getVersion().equals("1.0.1");
+		Catalogue lastVersion = catDao.getLastVersionByCode(catalogueCode, null);
 		
-		ReservedCatalogue rs = resDao.get(catalogueCode);
+		// new internal version created
+		assertEquals("1.0.1", lastVersion.getVersion());
+		
+		ReservedCatalogue rs = resDao.getById(lastVersion.getId());
 		
 		// present => reserved
 		assertNotNull(rs);
+		assertEquals("1.0.1", rs.getCatalogue().getVersion());
 		
 		// new version should be equal to the one in dcf
 		VersionComparator comparator = new VersionComparator();
@@ -249,7 +254,8 @@ public class PendingRequestActionsTest {
 	}
 	
 	@Test
-	public void forcedReserveSuccessHavingLastInternalVersion() {
+	public void forcedReserveSuccessHavingLastInternalVersion() throws SOAPException, TransformerException, 
+	IOException, XMLStreamException, OpenXML4JException, SAXException, SQLException, ImportException {
 
 		Catalogue startingPoint = new Catalogue();
 		startingPoint.setCode(catalogueCode);
@@ -258,7 +264,6 @@ public class PendingRequestActionsTest {
 		catDao.insert(startingPoint);
 		
 		String dcfInternalVersion = "1.0.1";
-		
 		
 		// force version
 		actions.forceReserve(catalogueCode, ReserveLevel.MINOR, username);
@@ -269,14 +274,21 @@ public class PendingRequestActionsTest {
 		actions.reserveCompletedAfterForcedReserve(catalogueCode, dcfInternalVersion, 
 				ReserveLevel.MINOR, "reservation note", username);
 		
+		Catalogue last = catDao.getLastVersionByCode(catalogueCode, null);
+		
 		assertEquals(catDao.getAll().size(), 2);
-		assertEquals(catDao.getLastVersionByCode(catalogueCode, null).getVersion().equals("1.0.1"), true);
+		assertEquals(last.getVersion().equals("1.0.1"), true);
+		
+		ReservedCatalogue reservedCat = resDao.getById(last.getId());
+		assertNotNull(reservedCat);
+		assertEquals(ReserveLevel.MINOR, reservedCat.getLevel());
 		
 		System.out.println("forcedReserveSuccessHavingLastInternalVersion db=" + catDao.getAll());
 	}
 	
 	@Test
-	public void forcedReserveSuccessButNotHavingLastInternalVersion() {
+	public void forcedReserveSuccessButNotHavingLastInternalVersion() throws SOAPException, TransformerException, 
+	IOException, XMLStreamException, OpenXML4JException, SAXException, SQLException, ImportException {
 		
 		Catalogue startingPoint = new Catalogue();
 		startingPoint.setCode(catalogueCode);
@@ -284,8 +296,7 @@ public class PendingRequestActionsTest {
 		startingPoint.setRawStatus("PUBLISHED MINOR");
 		catDao.insert(startingPoint);
 		
-		String dcfInternalVersion = "1.3.6";
-		
+		String dcfInternalVersion = "1.3.5";
 		
 		// force version
 		actions.forceReserve(catalogueCode, ReserveLevel.MINOR, username);
@@ -296,17 +307,33 @@ public class PendingRequestActionsTest {
 		boolean isCorrect = actions.reserveCompletedAfterForcedReserve(catalogueCode, dcfInternalVersion, 
 				ReserveLevel.MINOR, "reservation note", username);
 		
-		assertEquals(isCorrect, false); // we do not have the last internal version!
+		assertFalse(isCorrect); // we do not have the last internal version!
 		
-		assertEquals(catDao.getAll().size(), 2);
+		// last internal version downloaded and copy created and reserved
+		// plus the invalidated catalogue and the starting catalogue
+		assertEquals(4, catDao.getAll().size());
+		
 		Catalogue lastInvalidVersion = catDao.getLastInvalidVersion(catalogueCode);
-		assertEquals(lastInvalidVersion.getVersion().equals("1.0.1.1.NULL"), true);
+
+		assertTrue(lastInvalidVersion.getVersion().equals("1.0.1.1.NULL"));
+		
+		// the last internal version must be imported
+		Catalogue lastInternalVersion = catDao.getCatalogue(catalogueCode, "1.3.5", DcfType.TEST);
+		assertNotNull(lastInternalVersion);
+		
+		Catalogue reservedVersion = actions.getLastVersion(catalogueCode);
+		
+		// a new version should be created
+		assertEquals("1.3.6", reservedVersion.getVersion());
+		
+		// and it should be reserved locally
+		assertNotNull(resDao.getById(reservedVersion.getId()));
 		
 		System.out.println("forcedReserveSuccessButNotHavingLastInternalVersion db=" + catDao.getAll());
 	}
 	
 	@Test
-	public void reserveSuccessWithouthHavingLastInternalVersion() throws SOAPException, TransformerException, 
+	public void reserveSuccessWithoutHavingLastInternalVersion() throws SOAPException, TransformerException, 
 		IOException, XMLStreamException, OpenXML4JException, SAXException, SQLException, ImportException {
 		
 		Catalogue startingPoint = new Catalogue();
@@ -329,7 +356,7 @@ public class PendingRequestActionsTest {
 		assertEquals("1.3.6", last.getVersion());  // the new version as the one in dcf
 		assertEquals(3, catDao.getAll().size());  // new version created and a copy found
 		
-		System.out.println("reserveSuccessWithouthHavingLastInternalVersion db=" + catDao.getAll());
+		System.out.println("reserveSuccessWithoutHavingLastInternalVersion db=" + catDao.getAll());
 	}
 	
 	@Test
@@ -410,10 +437,8 @@ public class PendingRequestActionsTest {
 		
 		actions.publishCompleted(catalogueCode, PublishLevel.MINOR);
 		
-		// new version created
-		assertEquals(2, catDao.getAll().size());
-		Status status = actions.getLastVersion(catalogueCode).getStatusObject();
-		assertTrue(status.isMinor() && status.isPublished());
+		// no versions created
+		assertEquals(1, catDao.getAll().size());
 	}
 	
 	@Test
@@ -427,9 +452,7 @@ public class PendingRequestActionsTest {
 		
 		actions.publishCompleted(catalogueCode, PublishLevel.MAJOR);
 		
-		// new version created
-		assertEquals(2, catDao.getAll().size());
-		Status status = actions.getLastVersion(catalogueCode).getStatusObject();
-		assertTrue(status.isMajor() && status.isPublished());
+		// no versions created
+		assertEquals(1, catDao.getAll().size());
 	}
 }

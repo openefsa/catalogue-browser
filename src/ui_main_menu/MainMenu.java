@@ -9,6 +9,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import catalogue.Catalogue;
 import global_manager.GlobalManager;
+import ui_main_panel.MainPanel;
 
 /**
  * Main menu of the catalogue browser. The menu bar is subdivided in
@@ -25,6 +26,7 @@ public class MainMenu extends Observable implements Observer {
 	// the current catalogue
 	private Catalogue catalogue;
 
+	protected MainPanel mainPanel;
 	private Menu mainMenu;         // the main menu bar
 	private FileMenu file;         // file menu
 	private ViewMenu view;         // view menu
@@ -41,8 +43,9 @@ public class MainMenu extends Observable implements Observer {
 	 * Initialize the main menu
 	 * @param shell shell on which creating the menu
 	 */
-	public MainMenu( Shell shell ) {
+	public MainMenu(Shell shell, MainPanel panel) {
 		this.shell = shell;
+		this.mainPanel = panel;
 	}
 	
 	public LoginMenu getLogin() {

@@ -30,4 +30,9 @@ public class BrowserPendingRequestWorkerMock implements IBrowserPendingRequestWo
 	public void addListener(PendingRequestWorkerListener listener) {
 		listeners.add(listener);
 	}
+
+	@Override
+	public void addActionListener(PendingRequestActionsListener event) {
+		
+	}
 }

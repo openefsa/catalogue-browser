@@ -30,13 +30,14 @@ import import_catalogue.CatalogueImporterThread;
 import import_catalogue.ImportException;
 import messages.Messages;
 import progress_bar.FormProgressBar;
-import sas_remote_procedures.XmlChangesService;
 import sas_remote_procedures.XmlUpdateFile;
 import sas_remote_procedures.XmlUpdateFileDAO;
 import sas_remote_procedures.XmlUpdatesFactory;
 import soap.DetailedSOAPException;
 import soap.UploadCatalogueFileImpl.PublishLevel;
 import soap.UploadCatalogueFileImpl.ReserveLevel;
+import ui_console.ConsoleMessage;
+import ui_console.ConsoleMessageFactory;
 import ui_general_graphics.DialogSingleText;
 import ui_main_panel.AttributeEditor;
 import ui_main_panel.HierarchyEditor;
@@ -241,40 +242,7 @@ public class ToolsMenu implements MainMenuItem {
 
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-
-				Tools tools = new Tools();
-				String catCode = mainMenu.getCatalogue().getCode();
-				
-				GlobalUtil.setShellCursor(shell, SWT.CURSOR_WAIT);
-				
-				String title = Messages.getString("success.title");
-				String message = Messages.getString("unreserve.sent");
-				int style = SWT.ICON_INFORMATION;
-				
-				// use reservation note stored in db
-				try {
-					tools.unreserve(catCode, mainMenu.getCatalogue().getReserveNote());
-				} catch (DetailedSOAPException e) {
-					String[] warn = GlobalUtil.getSOAPWarning(e);
-					title = warn[0];
-					message = warn[1];
-					style = SWT.ICON_ERROR;
-				}
-				catch (SQLException | IOException e) {
-					e.printStackTrace();
-					title = Messages.getString("error.title");
-					message = Messages.getString("unreserve.error");
-					style = SWT.ICON_ERROR;
-				}
-				finally {
-					GlobalUtil.setShellCursor(shell, SWT.CURSOR_ARROW);
-				}
-				
-				GlobalUtil.showDialog(shell, title, message, style);
-				
-				if (listener != null)
-					listener.buttonPressed(unreserveMI, 
-							UNRESERVE_CAT_MI, null);
+				unreservePressed();
 			}
 
 			@Override
@@ -1120,7 +1088,7 @@ public class ToolsMenu implements MainMenuItem {
 		// reserve the current catalogue
 		if (user.isCatManagerOf(mainMenu.getCatalogue())) {
 
-			boolean isReservedByCurrentUser = User.getInstance().hasReserved(mainMenu.getCatalogue());
+			boolean isReservedByCurrentUser = User.getInstance().hasReserved(mainMenu.getCatalogue().getCode());
 
 			// if we are requesting a web service
 			// disable the action which can send another
@@ -1190,12 +1158,13 @@ public class ToolsMenu implements MainMenuItem {
 					// check if we have already created an xml file for this catalogue
 					XmlUpdateFileDAO xmlDao = new XmlUpdateFileDAO();
 					XmlUpdateFile xml = xmlDao.getById(mainMenu.getCatalogue().getId());
-					uploadDataMI.setEnabled(isReservedByCurrentUser && xml != null);
+					uploadDataMI.setEnabled(mainMenu.getCatalogue().isLastRelease() 
+							&& isReservedByCurrentUser && xml != null);
 				}
 
 				if (createXmlMI != null) {
 					createXmlMI.setText(Messages.getString("BrowserMenu.CreateXml"));
-					createXmlMI.setEnabled(isReservedByCurrentUser);
+					createXmlMI.setEnabled(mainMenu.getCatalogue().isLastRelease() && isReservedByCurrentUser);
 				}
 				
 				if (publishMI != null) {
@@ -1293,8 +1262,15 @@ public class ToolsMenu implements MainMenuItem {
 		if (!legit)
 			return;
 		
-		int val = GlobalUtil.showDialog(shell, level.getDatabaseKey(), 
-				level.getDatabaseKey() + ": " + Messages.getString("upload.cat.file.confirmation"), SWT.ICON_WARNING | SWT.YES | SWT.NO);
+		String catCode = mainMenu.getCatalogue().getCode();
+		
+		ConsoleMessageFactory factory = new ConsoleMessageFactory(catCode);
+		
+		String levelLabel = factory.getReserveLabel(level);
+		
+		int val = GlobalUtil.showDialog(shell, Messages.getString("warning.title"), 
+				Messages.getString("upload.cat.file.confirmation", catCode, levelLabel), 
+				SWT.ICON_WARNING | SWT.YES | SWT.NO);
 		
 		if (val != SWT.YES)
 			return;
@@ -1303,39 +1279,78 @@ public class ToolsMenu implements MainMenuItem {
 		
 		if (note == null)
 			return;
-		
-		String catCode = mainMenu.getCatalogue().getCode();
-		
+
 		GlobalUtil.setShellCursor(shell, SWT.CURSOR_WAIT);
 		
-		String title = Messages.getString("success.title");
-		String message = Messages.getString("reserve.sent");
-		int style = SWT.ICON_INFORMATION;
+		String message = Messages.getString("reserve.sent", catCode, levelLabel);
+		
+		int colour = SWT.COLOR_DARK_GREEN;
 		
 		Tools tools = new Tools();
 		try {
 			tools.reserve(level, catCode, note);
 		} catch (DetailedSOAPException e) {
 			String[] warn = GlobalUtil.getSOAPWarning(e);
-			title = warn[0];
 			message = warn[1];
-			style = SWT.ICON_ERROR;
+			colour = SWT.COLOR_DARK_RED;
 		}
 		catch(SQLException | IOException e) {
 			e.printStackTrace();
-			title = Messages.getString("error.title");
-			message = Messages.getString("reserve.error");
-			style = SWT.ICON_ERROR;
+			message = Messages.getString("reserve.error", catCode, levelLabel);
+			colour = SWT.COLOR_DARK_RED;
 		}
 		finally {
 			GlobalUtil.setShellCursor(shell, SWT.CURSOR_ARROW);
 		}
 		
-		GlobalUtil.showDialog(shell, title, message, style);
+		mainMenu.mainPanel.addMessageToConsole(new ConsoleMessage(message, colour));
 		
-		if (listener != null)
+		if (listener != null) {
 			listener.buttonPressed(reserveMI, 
 					RESERVE_CAT_MI, null);
+		}
+	}
+	
+	private void unreservePressed() {
+
+		String catCode = mainMenu.getCatalogue().getCode();
+		
+		int val = GlobalUtil.showDialog(shell, Messages.getString("warning.title"), 
+				Messages.getString("upload.cat.file.confirmation", catCode, 
+						Messages.getString("unreserve.label")), 
+				SWT.ICON_WARNING | SWT.YES | SWT.NO);
+		
+		if (val != SWT.YES)
+			return;
+		
+		GlobalUtil.setShellCursor(shell, SWT.CURSOR_WAIT);
+
+		String message = Messages.getString("unreserve.sent", catCode);
+		int colour = SWT.COLOR_DARK_GREEN;
+		
+		Tools tools = new Tools();
+		// use reservation note stored in db
+		try {
+			tools.unreserve(catCode, mainMenu.getCatalogue().getReserveNote());
+		} catch (DetailedSOAPException e) {
+			String[] warn = GlobalUtil.getSOAPWarning(e);
+			message = warn[1];
+			colour = SWT.COLOR_DARK_RED;
+		}
+		catch (SQLException | IOException e) {
+			e.printStackTrace();
+			message = Messages.getString("unreserve.error", catCode);
+			colour = SWT.COLOR_DARK_RED;
+		}
+		finally {
+			GlobalUtil.setShellCursor(shell, SWT.CURSOR_ARROW);
+		}
+		
+		mainMenu.mainPanel.addMessageToConsole(new ConsoleMessage(message, colour));
+		
+		if (listener != null)
+			listener.buttonPressed(unreserveMI, 
+					UNRESERVE_CAT_MI, null);
 	}
 	
 	/**
@@ -1348,43 +1363,44 @@ public class ToolsMenu implements MainMenuItem {
 		if (!legit)
 			return;
 
-		int val = GlobalUtil.showDialog(shell, level.getDatabaseKey(), 
-				level.getDatabaseKey() + ": " + Messages.getString("upload.cat.file.confirmation"), 
+		String catCode = mainMenu.getCatalogue().getCode();
+		
+		ConsoleMessageFactory factory = new ConsoleMessageFactory(catCode);
+		
+		String levelLabel = factory.getPublishLabel(level);
+		
+		int val = GlobalUtil.showDialog(shell, Messages.getString("warning.title"), 
+				Messages.getString("upload.cat.file.confirmation", catCode, levelLabel), 
 				SWT.ICON_WARNING | SWT.YES | SWT.NO);
 		
 		if (val != SWT.YES)
 			return;
 		
-		String catalogueCode = mainMenu.getCatalogue().getCode();
-		
-		String title = Messages.getString("success.title");
-		String message = Messages.getString("publish.sent");
-		int style = SWT.ICON_INFORMATION;
+		String message = Messages.getString("publish.sent", catCode, levelLabel);
+		int colour = SWT.COLOR_DARK_GREEN;
 		
 		// set wait cursor
 		GlobalUtil.setShellCursor(shell, SWT.CURSOR_WAIT);
 		
 		Tools tools = new Tools();
 		try {
-			tools.publish(level, catalogueCode);
+			tools.publish(level, catCode);
 		} catch (DetailedSOAPException e) {
 			String[] warn = GlobalUtil.getSOAPWarning(e);
-			title = warn[0];
 			message = warn[1];
-			style = SWT.ICON_ERROR;
+			colour = SWT.COLOR_DARK_RED;
 		}
 		catch(SQLException | IOException e) {
 			e.printStackTrace();
-			title = Messages.getString("error.title");
-			message = Messages.getString("publish.error");
-			style = SWT.ICON_ERROR;
+			message = Messages.getString("publish.error", catCode, levelLabel);
+			colour = SWT.COLOR_DARK_RED;
 		}
 		finally {
 			GlobalUtil.setShellCursor(shell, SWT.CURSOR_ARROW);
 		}
 		
-		GlobalUtil.showDialog(shell, title, message, style);
-		
+		mainMenu.mainPanel.addMessageToConsole(new ConsoleMessage(message, colour));
+
 		if (listener != null)
 			listener.buttonPressed(publishMI, 
 					PUBLISH_CAT_MI, null);
@@ -1392,41 +1408,39 @@ public class ToolsMenu implements MainMenuItem {
 	
 	private void uploadDataPressed() {
 		
-		int val = GlobalUtil.showDialog(shell, XmlChangesService.TYPE_UPLOAD_XML_DATA, 
-				XmlChangesService.TYPE_UPLOAD_XML_DATA + ": " + 
-						Messages.getString("upload.cat.file.confirmation"), SWT.ICON_WARNING | SWT.YES | SWT.NO);
+		String catCode = mainMenu.getCatalogue().getCode();
+		
+		int val = GlobalUtil.showDialog(shell, Messages.getString("warning.title"), 
+				Messages.getString("upload.cat.file.confirmation", catCode, 
+						Messages.getString("upload.xml.data.label")),
+				SWT.ICON_WARNING | SWT.YES | SWT.NO);
 		
 		if (val != SWT.YES)
 			return;
 		
 		int catId = mainMenu.getCatalogue().getId();
-		String catalogueCode = mainMenu.getCatalogue().getCode();
 		
-		String title = Messages.getString("success.title");
-		String message = Messages.getString("upload.xml.sent");
-		int style = SWT.ICON_INFORMATION;
+		String message = Messages.getString("upload.xml.sent", catCode);
+		int colour = SWT.COLOR_DARK_GREEN;
 		
 		Tools tools = new Tools();
 		try {
-			tools.uploadXmlData(catId, catalogueCode);
+			tools.uploadXmlData(catId, catCode);
 		} catch (DetailedSOAPException e) {
 			String[] warn = GlobalUtil.getSOAPWarning(e);
-			title = warn[0];
 			message = warn[1];
-			style = SWT.ICON_ERROR;
+			colour = SWT.COLOR_DARK_RED;
 		}
 		catch(IOException e) {
 			e.printStackTrace();
-			title = Messages.getString("error.title");
-			message = Messages.getString("upload.xml.error");
-			style = SWT.ICON_ERROR;
+			message = Messages.getString("upload.xml.error", catCode);
+			colour = SWT.COLOR_DARK_RED;
 		}
 		finally {
 			GlobalUtil.setShellCursor(shell, SWT.CURSOR_ARROW);
 		}
 		
-		GlobalUtil.showDialog(shell, title, message, style);
-		
+		mainMenu.mainPanel.addMessageToConsole(new ConsoleMessage(message, colour));
 		if (listener != null)
 			listener.buttonPressed(publishMI, CREATE_XML_MI, null);
 	}

@@ -1,6 +1,7 @@
 package ui_dcf_log;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -78,20 +79,22 @@ public class LogNodesTableViewer {
 				ArrayList<LogNodeTableItem> objects = new ArrayList<>();
 				
 				DcfLog log = (DcfLog) arg0;
+
+				// create the table items using the erroneous
+				// log nodes only
+				for (String operationLog: log.getMacroOpLogs()) {
+					objects.add(new LogNodeTableItem(log.getMacroOpName(), 
+							log.getMacroOpResult(), operationLog));
+				}
 				
 				// create the table items using the erroneous
 				// log nodes only
-				for ( LogNode node : log.getLogNodesWithErrors() ) {
-					
-					// for each operation log of a single node, 
-					// create a new item showing name, result and op log
-					for ( String operationLog : node.getOpLogs() ) {
-						
-						LogNodeTableItem item = new LogNodeTableItem ( node.getName(),
-								node.getResult(), operationLog );
-						
-						objects.add( item );
-					}
+				for (LogNode node: log.getLogNodes()) {
+					objects.addAll(toItems(node));
+				}
+				
+				for (LogNode node: log.getValidationErrors()) {
+					objects.addAll(toItems(node));
 				}
 				
 				return objects.toArray();
@@ -99,6 +102,23 @@ public class LogNodesTableViewer {
 			
 			return null;
 		}
+	}
+	
+	private Collection<LogNodeTableItem> toItems(LogNode node) {
+		
+		Collection<LogNodeTableItem> objects = new ArrayList<>();
+		
+		// for each operation log of a single node, 
+		// create a new item showing name, result and op log
+		for (String operationLog: node.getOpLogs()) {
+			
+			LogNodeTableItem item = new LogNodeTableItem (node.getName(),
+					node.getResult(), operationLog);
+			
+			objects.add(item);
+		}
+		
+		return objects;
 	}
 	
 	/**

@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 
 import catalogue.Catalogue;
 import catalogue.ReservedCatalogue;
+import catalogue_browser_dao.CatalogueDAO;
 import catalogue_browser_dao.DatabaseManager;
 import catalogue_browser_dao.ForceCatEditDAO;
 import catalogue_browser_dao.ReservedCatDAO;
@@ -121,11 +122,14 @@ public class User extends DcfUser {
 	 * @param catalogue
 	 * @return
 	 */
-	public boolean hasReserved(Catalogue catalogue) {
+	public boolean hasReserved(String catalogueCode) {
+		
+		CatalogueDAO catDao = new CatalogueDAO();
+		Catalogue last = catDao.getLastVersionByCode(catalogueCode, Dcf.dcfType);
 		
 		ReservedCatDAO resDao = new ReservedCatDAO();
 
-		ReservedCatalogue rc = resDao.getById(catalogue.getId());
+		ReservedCatalogue rc = resDao.getById(last.getId());
 
 		// if not present the catalogue is not reserved
 		if (rc == null)
@@ -198,7 +202,7 @@ public class User extends DcfUser {
 		
 		ReservedCatDAO dao = new ReservedCatDAO();
 		boolean isReserved = dao.getById(catalogue.getId()) != null;
-		boolean reservedByCurrent = hasReserved(catalogue);
+		boolean reservedByCurrent = hasReserved(catalogue.getCode());
 		
 		// if the catalogue is reserved by someone which is not me
 		// then we cannot reserve
@@ -286,7 +290,7 @@ public class User extends DcfUser {
 		
 		// is the catalogue reserved? (i.e. is it reserved
 		// by this user and the dcf is not reserving)
-		boolean isReserved = hasReserved(catalogue);
+		boolean isReserved = hasReserved(catalogue.getCode());
 
 		// is the user a cm of this catalogue?
 		boolean isCM = isCatManagerOf(catalogue);

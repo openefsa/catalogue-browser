@@ -30,12 +30,19 @@ import catalogue_object.Nameable;
 import catalogue_object.Term;
 import data_collection.DCTableConfig;
 import dcf_log.DcfResponse;
+import dcf_pending_request.PendingRequestActionsListener;
 import global_manager.GlobalManager;
 import messages.Messages;
+import pending_request.IPendingRequest;
+import pending_request.PendingRequestStatus;
 import pending_request.PendingRequestStatusChangedEvent;
+import sas_remote_procedures.XmlChangesService;
 import session_manager.BrowserWindowPreferenceDao;
 import soap.UploadCatalogueFileImpl;
+import soap.UploadCatalogueFileImpl.PublishLevel;
 import soap.UploadCatalogueFileImpl.ReserveLevel;
+import ui_console.ConsoleMessage;
+import ui_console.ConsoleMessageFactory;
 import ui_dcf_log.LogNodesForm;
 import ui_main_menu.FileActions;
 import ui_main_menu.FileMenu;
@@ -50,6 +57,7 @@ import ui_search_bar.HierarchyEvent;
 import ui_search_bar.SearchEvent;
 import ui_search_bar.SearchListener;
 import ui_search_bar.SearchPanel;
+import ui_user_console.UserConsoleDialog;
 import user_preferences.CataloguePreferenceDAO;
 import user_preferences.GlobalPreference;
 import user_preferences.GlobalPreferenceDAO;
@@ -96,13 +104,88 @@ public class MainPanel implements Observer {
 
 	// term properties in three tabs
 	private TermPropertiesPanel tabPanel;
+	
+	private UserConsoleDialog userConsole;
 
 	public MainPanel(Shell shell, IBrowserPendingRequestWorker requestWorker) {
 		this.shell = shell;
 		listenPendingRequests(requestWorker);
 	}
 	
+	public void addMessageToConsole(ConsoleMessage message) {
+		userConsole.selectTab(0);
+		userConsole.setVisible(true);
+		userConsole.add(message);
+	}
+	
+	public void addRequestToConsole(IPendingRequest request) {
+		userConsole.add(request);
+	}
+	
+	public void openUserConsole() {
+		userConsole.setVisible(true);
+	}
+	
 	private void listenPendingRequests(IBrowserPendingRequestWorker worker) {
+
+		worker.addActionListener(new PendingRequestActionsListener() {
+			@Override
+			public void actionPerformed(PendingRequestActionsEvent event) {
+				
+				shell.getDisplay().asyncExec(new Runnable() {
+					
+					@Override
+					public void run() {
+						
+						ActionPerformed action = event.getAction();
+						
+						String catCode = event.getCatalogueCode();
+						String oldVersion = event.getOldVersion();
+						String version = event.getVersion();
+						String livVersion = event.getLastInternalVersion();
+						
+						String text = null;
+						int colour = SWT.COLOR_GREEN;
+						
+						switch(action) {
+						case LIV_IMPORT_STARTED:
+							text = Messages.getString("liv.downloading", catCode);
+							colour = SWT.COLOR_DARK_GREEN;
+							break;
+						case LIV_IMPORTED:
+							text = Messages.getString("liv.imported", catCode, livVersion);
+							colour = SWT.COLOR_DARK_GREEN;
+							break;
+						case TEMP_CAT_CONFIRMED:
+							text = Messages.getString("temp.confirmed", catCode, oldVersion, version);
+							colour = SWT.COLOR_DARK_GREEN;
+							break;
+						case TEMP_CAT_CREATED:
+							text = Messages.getString("temp.created", catCode, oldVersion, version);
+							colour = SWT.COLOR_DARK_YELLOW;
+							break;
+						case TEMP_CAT_INVALIDATED_LIV:
+							text = Messages.getString("temp.inv.liv", catCode, oldVersion, version);
+							colour = SWT.COLOR_DARK_RED;
+							break;
+						case TEMP_CAT_INVALIDATED_NO_RESERVE:
+							text = Messages.getString("temp.inv.reserve", catCode, oldVersion, version);
+							colour = SWT.COLOR_DARK_RED;
+							break;
+						case NEW_INTERNAL_VERSION_CREATED:
+							text = Messages.getString("new.internal.version", catCode, oldVersion, version);
+							colour = SWT.COLOR_DARK_GREEN;
+							break;
+						default:
+							break;
+						}
+						
+						addMessageToConsole(new ConsoleMessage(text, colour));
+					}
+				});
+			}
+		});
+		
 		worker.addListener(new PendingRequestWorkerListener() {
 
 			@Override
@@ -127,42 +210,81 @@ public class MainPanel implements Observer {
 			public void statusChanged(final PendingRequestStatusChangedEvent event) {
 
 				LOGGER.debug("Received pending request event=" + event);
-
+				
+				shell.getDisplay().asyncExec(new Runnable() {
+					
+					@Override
+					public void run() {
+						
+						// if a new request started, add the request to the user console
+						if (event.getOldStatus() == PendingRequestStatus.WAITING)
+							addRequestToConsole(event.getPendingRequest());
+						else
+							userConsole.refresh(event.getPendingRequest());
+					}
+				});
+				
 				// get the code of the catalogue involved
 				// in the pending request
 
 				String catalogueCode = event.getPendingRequest().getData()
 						.get(UploadCatalogueFileImpl.CATALOGUE_CODE_DATA_KEY);
-
-				final String messageBoxTitle = event.getPendingRequest().getType() + " " + catalogueCode;
-
+				
 				switch(event.getNewStatus()) {
 				case ERROR:
 
 					shell.getDisplay().asyncExec(new Runnable() {
 						@Override
 						public void run() {
-							// popup and warn that something went wrong
-							GlobalUtil.showErrorDialog(shell, messageBoxTitle,
-									Messages.getString("pending.request.error") 
-									+ " Log code=" + event.getPendingRequest().getLogCode());
+							
+							ConsoleMessage message = new ConsoleMessage(
+									event.getPendingRequest().getType() 
+									+ " " + catalogueCode + " " 
+									+ Messages.getString("pending.request.error"), 
+									SWT.COLOR_RED
+							);
+							
+							addMessageToConsole(message);
 						}
 					});
 
 					break;
 
-				case DOWNLOADING:
-
-					// update flag to uploading
-
-					break;
-
 				case QUEUED:
-
-					// update queued flag
-
+					
+					shell.getDisplay().asyncExec(new Runnable() {
+						
+						@Override
+						public void run() {
+							ConsoleMessageFactory factory = new ConsoleMessageFactory(catalogueCode);
+							ConsoleMessage message = null;
+							switch(event.getPendingRequest().getType()) {
+							case IPendingRequest.TYPE_PUBLISH_MAJOR:
+								message = factory.getQueuedPublishMessage(PublishLevel.MAJOR);
+								break;
+							case IPendingRequest.TYPE_PUBLISH_MINOR:
+								message = factory.getQueuedPublishMessage(PublishLevel.MINOR);
+								break;
+							case IPendingRequest.TYPE_RESERVE_MAJOR:
+								message = factory.getQueuedReserveMessage(ReserveLevel.MAJOR);
+								break;
+							case IPendingRequest.TYPE_RESERVE_MINOR:
+								message = factory.getQueuedReserveMessage(ReserveLevel.MINOR);
+								break;
+							case IPendingRequest.TYPE_UNRESERVE:
+								message = factory.getQueuedUnreserveMessage();
+								break;
+							case XmlChangesService.TYPE_UPLOAD_XML_DATA:
+								message = factory.getQueuedXmlDataMessage();
+								break;
+							}
+							
+							addMessageToConsole(message);
+						}
+					});
+					
 					break;
-
+					
 				case COMPLETED:
 
 					shell.getDisplay().asyncExec(new Runnable() {
@@ -172,8 +294,9 @@ public class MainPanel implements Observer {
 
 							final DcfResponse response = event.getPendingRequest().getResponse();
 
-							if (response == DcfResponse.OK)
+							if (response == DcfResponse.OK) {
 								refresh();
+							}
 							else {
 								
 								if (event.getPendingRequest().getLog() != null) {
@@ -184,13 +307,34 @@ public class MainPanel implements Observer {
 								}
 							}
 
-							PendingRequestMessages msg = new PendingRequestMessages();
-							msg.show(shell, messageBoxTitle, 
-									event.getPendingRequest().getType(), response);
+							ConsoleMessageFactory factory = new ConsoleMessageFactory(catalogueCode);
+							
+							ConsoleMessage message = null;
+							switch(event.getPendingRequest().getType()) {
+							case IPendingRequest.TYPE_PUBLISH_MAJOR:
+								message = factory.getPublishCompletedMessage(response, PublishLevel.MAJOR);
+								break;
+							case IPendingRequest.TYPE_PUBLISH_MINOR:
+								message = factory.getPublishCompletedMessage(response, PublishLevel.MINOR);
+								break;
+							case IPendingRequest.TYPE_RESERVE_MAJOR:
+								message = factory.getReserveCompletedMessage(response, ReserveLevel.MAJOR);
+								break;
+							case IPendingRequest.TYPE_RESERVE_MINOR:
+								message = factory.getReserveCompletedMessage(response, ReserveLevel.MINOR);
+								break;
+							case IPendingRequest.TYPE_UNRESERVE:
+								message = factory.getUnreserveCompletedMessage(response);
+								break;
+							case XmlChangesService.TYPE_UPLOAD_XML_DATA:
+								message = factory.getXmlDataCompletedMessage(response);
+								break;
+							}
+							
+							addMessageToConsole(message);
 						}
 					});
 					break;
-
 				default:
 					break;
 				}
@@ -570,6 +714,22 @@ public class MainPanel implements Observer {
 	 */
 	private void addWidgets ( Composite parent ) {
 
+		this.userConsole = new UserConsoleDialog(shell, SWT.RESIZE | SWT.DIALOG_TRIM);
+		this.userConsole.setText(Messages.getString("user.console.title"));
+		
+		if (shell.getImage() != null)
+			this.userConsole.setImage(shell.getImage());
+		
+		// do not close the console, just make it non visible
+		this.userConsole.addCloseListener(new Listener() {
+			
+			@Override
+			public void handleEvent(Event event) {
+				event.doit = false;
+				userConsole.setVisible(!userConsole.isVisible());
+			}
+		});
+		
 		// I add a sashForm which is a split pane
 		SashForm sashForm = new SashForm( shell , SWT.HORIZONTAL );
 		GridData shellGridData = new GridData();
@@ -655,7 +815,7 @@ public class MainPanel implements Observer {
 	private void addMainMenu ( final Shell shell ) {
 
 		// create the main menu and set its listener for some buttons
-		menu = new MainMenu( shell );
+		menu = new MainMenu( shell, this );
 
 		menu.setFileListener( new MenuListener() {
 

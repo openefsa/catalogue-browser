@@ -9,7 +9,6 @@ import javax.xml.soap.SOAPException;
 import config.Environment;
 import dcf_log.DcfLog;
 import dcf_log.DcfResponse;
-import dcf_log.IDcfLogDownloader;
 import dcf_log.IDcfLogParser;
 import pending_request.IPendingRequest;
 import pending_request.PendingRequestListener;
@@ -33,7 +32,7 @@ public class PendingRequestMock implements IPendingRequest {
 	}
 	
 	@Override
-	public DcfResponse start(IDcfLogDownloader downloader, IDcfLogParser parser) throws SOAPException, IOException {
+	public DcfResponse start(IDcfLogParser parser) throws SOAPException, IOException {
 		return null;
 	}
 
@@ -54,6 +53,10 @@ public class PendingRequestMock implements IPendingRequest {
 	@Override
 	public PendingRequestStatus getStatus() {
 		return status;
+	}
+	
+	public void setStatus(PendingRequestStatus status) {
+		this.status = status;
 	}
 
 	@Override
@@ -112,4 +115,17 @@ public class PendingRequestMock implements IPendingRequest {
 
 	@Override
 	public void addPendingRequestListener(PendingRequestListener listener) {}
+
+	@Override
+	public void restart() {}
+
+	@Override
+	public long getRestartTime() {
+		return -1;
+	}
+
+	@Override
+	public boolean isPaused() {
+		return false;
+	}
 }

@@ -42,7 +42,7 @@ public class TermTable implements Observer {
 		
 		// create the table viewer for hosting the search results
 		table = new TableViewer( parent , SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL
-				| SWT.FULL_SELECTION );
+				| SWT.FULL_SELECTION | SWT.VIRTUAL );
 
 		// set the content and the label provider of the table
 		contentProvider = new ContentProviderTerm();

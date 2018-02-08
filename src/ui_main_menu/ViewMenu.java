@@ -7,6 +7,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
+import dcf_user.User;
 import messages.Messages;
 
 /**
@@ -29,6 +30,7 @@ public class ViewMenu implements MainMenuItem {
 	private MenuItem expandMI;            // expande node
 	private MenuItem collapseMI;          // collapse node
 	private MenuItem collapseTreeMI;      // collapse tree
+	private MenuItem showConsoleMI;       // open the main panel user console (CM only)
 
 	public ViewMenu( MainMenu mainMenu, Menu menu ) {
 		this.mainMenu = mainMenu;
@@ -58,6 +60,9 @@ public class ViewMenu implements MainMenuItem {
 		expandMI = addExpandMI ( editMenu );
 		collapseMI = addCollapseSingleNodeMI ( editMenu );
 		collapseTreeMI = addCollapseAllMI ( editMenu );
+		
+		if (User.getInstance().isCatManager())
+			showConsoleMI = addConsoleMI(editMenu);
 
 		viewItem.setMenu( editMenu );
 
@@ -66,6 +71,19 @@ public class ViewMenu implements MainMenuItem {
 		return viewItem;
 	}
 
+	private MenuItem addConsoleMI(Menu menu) {
+		MenuItem show = new MenuItem(menu, SWT.NONE);
+		show.setText(Messages.getString("view.show.user.console"));
+		show.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				mainMenu.mainPanel.openUserConsole();
+			}
+		});
+		
+		return show;
+	}
+	
 	/**
 	 * Add menu item which allows to expand a single node and its children
 	 * @param menu

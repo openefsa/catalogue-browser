@@ -17,6 +17,7 @@ import org.xml.sax.SAXException;
 import catalogue.Catalogue;
 import dcf_log.DcfResponse;
 import dcf_pending_request.PendingRequestActions;
+import dcf_pending_request.PendingRequestActionsListener;
 import import_catalogue.ImportException;
 import pending_request.IPendingRequest;
 import pending_request.PendingRequestStatus;
@@ -41,11 +42,13 @@ public class BrowserPendingRequestWorker extends PendingRequestWorker implements
 	private static BrowserPendingRequestWorker updater;
 	
 	private WorkerStatus status;
+	private PendingRequestActions actions;
 	private Collection<PendingRequestWorkerListener> listeners;
 	
 	private BrowserPendingRequestWorker() {
 		super();  // IMPORTANT, otherwise no notification will be received from requests
 		this.status = WorkerStatus.WAITING;
+		this.actions = new PendingRequestActions();
 		this.listeners = new ArrayList<>();
 	}
 	
@@ -59,8 +62,20 @@ public class BrowserPendingRequestWorker extends PendingRequestWorker implements
 		return updater;
 	}
 	
+	/**
+	 * Add a listener to the status changes of pending requests
+	 */
 	public void addListener(PendingRequestWorkerListener listener) {
 		listeners.add(listener);
+	}
+	
+	/**
+	 * Add a listener to the actions which are performed in background
+	 * due to the pending requests
+	 * @param listener
+	 */
+	public void addActionListener(PendingRequestActionsListener listener) {
+		actions.addListener(listener);
 	}
 	
 	private void setStatus(WorkerStatus status) {
@@ -99,7 +114,6 @@ public class BrowserPendingRequestWorker extends PendingRequestWorker implements
 				
 				// force the catalogue to the reserve level required
 				ReserveLevel level = ReserveLevel.fromRequestType(request.getType());
-				PendingRequestActions actions = new PendingRequestActions();
 				actions.forceReserve(catalogueCode, level, username);
 				break;
 			}
@@ -123,17 +137,16 @@ public class BrowserPendingRequestWorker extends PendingRequestWorker implements
 					ReserveLevel level = ReserveLevel.fromRequestType(request.getType());
 					
 					try {
-						PendingRequestActions actions = new PendingRequestActions();
-						
 						Catalogue lastVersion = actions.getLastVersion(catalogueCode);
 						
 						String dcfInternalVersion = event.getPendingRequest().getLog().getCatalogueVersion();
 						
 						// confirm version for temporary versions or simply create
 						// a new internal version for standard versions
-						if (lastVersion.getCatalogueVersion().isForced())
+						if (lastVersion.getCatalogueVersion().isForced()) {
 							actions.reserveCompletedAfterForcedReserve(catalogueCode, dcfInternalVersion, 
 									level, reservationNote, username);
+						}
 						else
 							actions.reserveCompletedBeforeForcing(catalogueCode, dcfInternalVersion, 
 									level, reservationNote, username);
@@ -144,7 +157,6 @@ public class BrowserPendingRequestWorker extends PendingRequestWorker implements
 					}
 				}
 				else {
-					PendingRequestActions actions = new PendingRequestActions();
 					Catalogue lastVersion = actions.getLastVersion(catalogueCode);
 					
 					// forced reserve failed
@@ -161,8 +173,6 @@ public class BrowserPendingRequestWorker extends PendingRequestWorker implements
 				
 				if (response == DcfResponse.OK) {
 					PublishLevel level = PublishLevel.fromRequestType(request.getType());
-					
-					PendingRequestActions actions = new PendingRequestActions();
 					actions.publishCompleted(catalogueCode, level);
 				}
 				
@@ -171,7 +181,6 @@ public class BrowserPendingRequestWorker extends PendingRequestWorker implements
 			case IPendingRequest.TYPE_UNRESERVE:
 				
 				if (response == DcfResponse.OK) {
-					PendingRequestActions actions = new PendingRequestActions();
 					actions.unreserveCompleted(catalogueCode, username);
 				}
 				
@@ -183,8 +192,7 @@ public class BrowserPendingRequestWorker extends PendingRequestWorker implements
 							.get(XmlChangesService.CATALOGUE_ID_DATA_KEY);
 					
 					int catalogueId = Integer.valueOf(catId);
-					
-					PendingRequestActions actions = new PendingRequestActions();
+
 					try {
 						actions.uploadXmlChangesCompleted(catalogueId);
 					} catch (IOException e) {

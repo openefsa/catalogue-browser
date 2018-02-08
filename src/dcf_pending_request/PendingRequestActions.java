@@ -2,6 +2,8 @@ package dcf_pending_request;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.xml.soap.SOAPException;
 import javax.xml.stream.XMLStreamException;
@@ -28,6 +30,8 @@ import catalogue_object.Status.StatusValues;
 import config.Config;
 import config.Environment;
 import dcf_manager.Dcf.DcfType;
+import dcf_pending_request.PendingRequestActionsListener.ActionPerformed;
+import dcf_pending_request.PendingRequestActionsListener.PendingRequestActionsEvent;
 import dcf_user.User;
 import import_catalogue.ImportException;
 import sas_remote_procedures.XmlChangesService;
@@ -41,6 +45,9 @@ public class PendingRequestActions {
 
 	private static final Logger LOGGER = LogManager.getLogger(PendingRequestActions.class);
 	
+	private Collection<PendingRequestActionsListener> listeners;
+	
+	private Environment env;
 	private ICatalogueBackup backup;
 	private ICatalogueDAO catDao; 
 	private CatalogueEntityDAO<ReservedCatalogue> resDao;
@@ -53,13 +60,16 @@ public class PendingRequestActions {
 			CatalogueEntityDAO<ReservedCatalogue> resDao,
 			CatalogueEntityDAO<XmlUpdateFile> xmlDao,
 			IForcedCatalogueDAO forcedDao,
-			ILastInternalVersionDownloader downloader) {
+			ILastInternalVersionDownloader downloader,
+			Environment env) {
 		this.backup = backup;
 		this.catDao = catDao;
 		this.resDao = resDao;
 		this.xmlDao = xmlDao;
 		this.forcedDao = forcedDao;
 		this.downloader = downloader;
+		this.env = env;
+		this.listeners = new ArrayList<>();
 	}
 	
 	public PendingRequestActions() {
@@ -69,11 +79,27 @@ public class PendingRequestActions {
 		this.xmlDao = new XmlUpdateFileDAO();
 		this.forcedDao = new ForceCatEditDAO();
 		this.downloader = new LastInternalVersionDownloader();
+		
+		Config config = new Config();
+		this.env = config.getEnvironment();
+		
+		this.listeners = new ArrayList<>();
+	}
+	
+	/**
+	 * Listen the action performed
+	 * @param listener
+	 */
+	public void addListener(PendingRequestActionsListener listener) {
+		this.listeners.add(listener);
+	}
+	
+	public void notify(PendingRequestActionsEvent event) {
+		for (PendingRequestActionsListener listener: listeners)
+			listener.actionPerformed(event);
 	}
 	
 	public Catalogue getLastVersion(String catalogueCode) {
-		Config config = new Config();
-		Environment env = config.getEnvironment();
 		return catDao.getLastVersionByCode(catalogueCode, DcfType.fromEnvironment(env));
 	}
 	
@@ -105,7 +131,7 @@ public class PendingRequestActions {
 		catalogue.getCatalogueVersion().invalidate();
 		
 		catalogue.setStatus(StatusValues.INVALID);
-
+		
 		// update version in the db
 		catDao.update(catalogue);
 		
@@ -139,15 +165,19 @@ public class PendingRequestActions {
 	private Catalogue importLastInternalVersion(String catalogueCode) throws SOAPException, TransformerException, 
 		IOException, XMLStreamException, OpenXML4JException, SAXException, SQLException, ImportException {
 		
-		// download the file
-		Config config = new Config();
+		notify(new PendingRequestActionsEvent(ActionPerformed.LIV_IMPORT_STARTED, catalogueCode, ""));
 		
 		// download the last internal version and import it
-		downloader.downloadAndImport(catalogueCode, config.getEnvironment());
+		downloader.downloadAndImport(catalogueCode, env);
 		
 		// fetch the last internal version
 		// and update the catalogue reference
-		return getLastVersion(catalogueCode);
+		Catalogue lastInternalVersion = getLastVersion(catalogueCode);
+		
+		notify(new PendingRequestActionsEvent(ActionPerformed.LIV_IMPORTED, catalogueCode, "", "",
+				lastInternalVersion.getCode(), lastInternalVersion.getVersion()));
+		
+		return lastInternalVersion;
 	}
 
 	/**
@@ -159,18 +189,56 @@ public class PendingRequestActions {
 	 * @param level
 	 * @param reservationNote
 	 * @param username
+	 * @throws ImportException 
+	 * @throws SQLException 
+	 * @throws SAXException 
+	 * @throws OpenXML4JException 
+	 * @throws XMLStreamException 
+	 * @throws IOException 
+	 * @throws TransformerException 
+	 * @throws SOAPException 
 	 */
 	public boolean reserveCompletedAfterForcedReserve(String catalogueCode, String dcfInternalVersion, 
-			ReserveLevel level, String reservationNote, String username) {
+			ReserveLevel level, String reservationNote, String username) 
+					throws SOAPException, TransformerException, IOException, XMLStreamException, 
+					OpenXML4JException, SAXException, SQLException, ImportException {
 		
 		Catalogue catalogue = getLastVersion(catalogueCode);
 		
 		boolean isLast = isLastInternalVersion(catalogue, dcfInternalVersion, false);
 
-		if (!isLast)
+		if (!isLast) {
+			
+			String oldVersion = catalogue.getVersion();
+			
+			// invalidate the forced version
 			invalidate(catalogue);
-		else
+			
+			notify(new PendingRequestActionsEvent(ActionPerformed.TEMP_CAT_INVALIDATED_LIV, 
+					catalogueCode, oldVersion, catalogue.getVersion()));
+			
+			// download the last internal one
+			Catalogue lastInternalVersion = importLastInternalVersion(catalogueCode);
+			
+			// create a copy of it with internal version increased 
+			// and mark it as reserved
+			Catalogue newVersion = markAsReservedVersion(lastInternalVersion, username, reservationNote, level);
+			
+			notify(new PendingRequestActionsEvent(ActionPerformed.NEW_INTERNAL_VERSION_CREATED, 
+					catalogueCode, dcfInternalVersion, newVersion.getVersion()));
+		}
+		else {
+			
+			String oldVersion = catalogue.getVersion();
 			confirm(catalogue);
+			
+			// reserve the catalogue into the db
+			resDao.insert(new ReservedCatalogue(catalogue, 
+					username, reservationNote, level));
+			
+			notify(new PendingRequestActionsEvent(ActionPerformed.TEMP_CAT_CONFIRMED, 
+					catalogueCode, oldVersion, catalogue.getVersion()));
+		}
 		
 		return isLast;
 	}
@@ -185,7 +253,12 @@ public class PendingRequestActions {
 		if (!catalogue.getCatalogueVersion().isForced())
 			return false;
 		
+		String oldVersion = catalogue.getVersion();
+		
 		invalidate(catalogue);
+		
+		notify(new PendingRequestActionsEvent(ActionPerformed.TEMP_CAT_INVALIDATED_NO_RESERVE, 
+				catalogueCode, oldVersion, catalogue.getVersion()));
 		
 		return true;
 	}
@@ -225,6 +298,25 @@ public class PendingRequestActions {
 			catalogue = importLastInternalVersion(catalogueCode);
 		}
 		
+		Catalogue newVersion = markAsReservedVersion(catalogue, username, reservationNote, level);
+		
+		notify(new PendingRequestActionsEvent(ActionPerformed.NEW_INTERNAL_VERSION_CREATED, 
+				catalogueCode, catalogue.getVersion(), newVersion.getVersion()));
+	}
+	
+	/**
+	 * Mark the catalogue as reserved in the local machine
+	 * It also creates a new internal version of the catalogue,
+	 * which is returned back by the method
+	 * @param catalogue
+	 * @param username
+	 * @param reservationNote
+	 * @param level
+	 * @return
+	 */
+	private Catalogue markAsReservedVersion(Catalogue catalogue, String username, 
+			String reservationNote, ReserveLevel level) {
+		
 		// version checker, increase version
 		// and create backup
 		VersionChecker versionChecker = new VersionChecker(backup, catDao, catalogue);
@@ -235,6 +327,8 @@ public class PendingRequestActions {
 		// reserve the catalogue into the db
 		resDao.insert(new ReservedCatalogue(catalogue, 
 				username, reservationNote, level));
+		
+		return catalogue;
 	}
 	
 	/**
@@ -253,6 +347,8 @@ public class PendingRequestActions {
 		
 		LOGGER.info("DCF is busy. Creating a FORCED fake local internal version for editing");
 		
+		String oldVersion = catalogue.getVersion();
+		
 		// update the forced count for this catalogue
 		catalogue.increaseForcedCount();
 
@@ -269,6 +365,9 @@ public class PendingRequestActions {
 
 		// save catalogue as forced
 		forcedDao.forceEditing(forcedCatalogue, username, level);
+		
+		notify(new PendingRequestActionsEvent(ActionPerformed.TEMP_CAT_CREATED, 
+				catalogueCode, oldVersion, forcedCatalogue.getVersion()));
 		
 		return true;
 	}
@@ -302,29 +401,7 @@ public class PendingRequestActions {
 	 * @param level
 	 */
 	public void publishCompleted(String catalogueCode, PublishLevel level) {
-		
 		LOGGER.info("Publish completed in DCF.");
-		
-		// question: should i create a new version with
-		// the published one?? Maybe it is better to just
-		// publish it and say to the user to download it
-
-		Catalogue catalogue = getLastVersion(catalogueCode);
-
-		// version checker to modify the catalogue version
-		// in a permament way
-		VersionChecker versionChecker = new VersionChecker(backup, catDao, catalogue);
-
-		// publish the new version in db
-		Catalogue publishedVersion = null;
-		if (level == PublishLevel.MAJOR) {
-			publishedVersion = versionChecker.publishMajor();
-			publishedVersion.setStatus(StatusValues.PUBLISHED_MAJOR);
-		}
-		else {
-			publishedVersion = versionChecker.publishMinor();
-			publishedVersion.setStatus(StatusValues.PUBLISHED_MINOR);
-		}
 	}
 	
 	public void uploadXmlChangesCompleted(int catalogueId) throws IOException {
