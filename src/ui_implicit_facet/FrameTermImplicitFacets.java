@@ -105,6 +105,10 @@ public class FrameTermImplicitFacets implements Observer {
 	 * Remove the contextual menu from the tree viewer
 	 */
 	public void removeMenu() {
+		
+		if (implicitFacets.getTreeViewer().getTree().getMenu() != null)
+			implicitFacets.getTreeViewer().getTree().getMenu().dispose();
+		
 		implicitFacets.getTreeViewer().getTree().setMenu( null );
 	}
 	

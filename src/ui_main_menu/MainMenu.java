@@ -87,6 +87,10 @@ public class MainMenu extends Observable implements Observer {
 		return mainMenu;
 	}
 	
+	public void dispose() {
+		mainMenu.dispose();
+	}
+	
 	/**
 	 * Refresh all the menu
 	 */

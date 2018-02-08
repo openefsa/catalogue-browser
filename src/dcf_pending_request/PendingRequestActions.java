@@ -29,6 +29,7 @@ import catalogue_browser_dao.ReservedCatDAO;
 import catalogue_object.Status.StatusValues;
 import config.Config;
 import config.Environment;
+import dcf_manager.Dcf;
 import dcf_manager.Dcf.DcfType;
 import dcf_pending_request.PendingRequestActionsListener.ActionPerformed;
 import dcf_pending_request.PendingRequestActionsListener.PendingRequestActionsEvent;
@@ -401,7 +402,11 @@ public class PendingRequestActions {
 	 * @param level
 	 */
 	public void publishCompleted(String catalogueCode, PublishLevel level) {
-		LOGGER.info("Publish completed in DCF.");
+		LOGGER.info("Publish completed in DCF");
+		
+		// refresh getCataloguesList
+		Dcf dcf = new Dcf();
+		dcf.refreshCatalogues();
 	}
 	
 	public void uploadXmlChangesCompleted(int catalogueId) throws IOException {

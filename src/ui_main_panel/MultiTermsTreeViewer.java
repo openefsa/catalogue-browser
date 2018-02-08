@@ -433,6 +433,10 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 	 * Remove the tree menu
 	 */
 	public void removeMenu() {
+		
+		if (tree.getTree().getMenu() != null)
+			tree.getTree().getMenu().dispose();
+		
 		tree.getTree().setMenu( null );
 	}
 	

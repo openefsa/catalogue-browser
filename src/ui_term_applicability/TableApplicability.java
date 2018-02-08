@@ -121,6 +121,10 @@ public class TableApplicability {
 		// if term null remove input and return
 		if ( term == null ) {
 			applicabilityTable.setInput( null );
+			
+			if (applicabilityTable.getTable().getMenu() != null)
+				applicabilityTable.getTable().getMenu().dispose();
+			
 			applicabilityTable.getTable().setMenu( null );
 			return;
 		}

@@ -1,13 +1,18 @@
 package ui_term_properties;
 
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
@@ -26,6 +31,7 @@ import catalogue_object.Term;
 import catalogue_object.TermAttribute;
 import dcf_user.User;
 import messages.Messages;
+import term_clipboard.TextClipboard;
 import utilities.GlobalUtil;
 
 /**
@@ -35,7 +41,7 @@ import utilities.GlobalUtil;
  *
  */
 public class TableImplicitAttributes {
-
+	
 	private Composite parent;
 	
 	private TableViewer table;
@@ -106,6 +112,12 @@ public class TableImplicitAttributes {
 
 		User user = User.getInstance();
 		
+		if (table.getTable().getMenu() != null)
+			table.getTable().getMenu().dispose();
+		
+		Menu menu = createMenu ( parent.getShell(), table );
+		table.getTable().setMenu( menu );
+		
 		// add editing support only if possible
 		if ( user.canEdit( term.getCatalogue() ) )
 			addEdit();
@@ -130,10 +142,6 @@ public class TableImplicitAttributes {
 
 		valueCol.setEditingSupport( getEditingSupport( valueCol, 
 				EditingSupportImplicitAttribute.Column.VALUE ) );
-
-		// set the contextual menu for editing purposes
-		Menu menu = createMenu ( parent.getShell(), table );
-		table.getTable().setMenu( menu );
 	}
 	
 	/**
@@ -142,7 +150,47 @@ public class TableImplicitAttributes {
 	private void removeEdit () {
 		keyCol.setEditingSupport( null );
 		valueCol.setEditingSupport( null );
-		table.getTable().setMenu( null );
+	}
+	
+	private enum CopyAction {
+		VALUE,
+		CODE_VALUE,
+		LABEL_VALUE
+	}
+	
+	private void copy(CopyAction action, ISelection sel) {
+		
+		if (sel.isEmpty())
+			return;
+		
+		IStructuredSelection strSel = (IStructuredSelection) sel;
+		
+		Collection<String> texts = new ArrayList<>();
+		for(Object obj: strSel.toArray()) {
+			
+			TermAttribute ta = (TermAttribute) obj;
+			
+			String text = null;
+			switch(action) {
+			case VALUE:
+				text = ta.getValue();
+				break;
+			case CODE_VALUE:
+				text = ta.getAttribute().getCode() + "\t" + ta.getValue();
+				break;
+			case LABEL_VALUE:
+				text = ta.getAttribute().getLabel() + "\t" + ta.getValue();
+				break;
+			default:
+				text = "";
+				break;
+			}
+			
+			texts.add(text);
+		}
+		
+		TextClipboard textClipboard = new TextClipboard(parent.getDisplay());
+		textClipboard.copy(texts);
 	}
 	
 	/**
@@ -154,9 +202,42 @@ public class TableImplicitAttributes {
 		
 		Menu menu = new Menu ( parent, SWT.NONE );
 		
+		MenuItem copyValueMI = new MenuItem(menu, SWT.PUSH);
+		copyValueMI.setText(Messages.getString("implicit.attributes.copy.value"));
+		copyValueMI.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				ISelection sel = table.getSelection();
+				copy(CopyAction.VALUE, sel);
+			}
+		});
+		
+		MenuItem copyLabelMI = new MenuItem(menu, SWT.PUSH);
+		copyLabelMI.setText(Messages.getString("implicit.attributes.copy.label.value"));
+		copyLabelMI.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				ISelection sel = table.getSelection();
+				copy(CopyAction.LABEL_VALUE, sel);
+			}
+		});
+		
+		MenuItem copyCodeMI = new MenuItem(menu, SWT.PUSH);
+		copyCodeMI.setText(Messages.getString("implicit.attributes.copy.code.value"));
+		copyCodeMI.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				ISelection sel = table.getSelection();
+				copy(CopyAction.CODE_VALUE, sel);
+			}
+		});
+		
+		// stop if edit disabled
+		if (!User.getInstance().canEdit(term.getCatalogue()))
+			return menu;
+		
 		final MenuItem addMI = new MenuItem ( menu, SWT.PUSH );
 		final MenuItem removeMI = new MenuItem ( menu, SWT.PUSH );
-		
 		
 		// add an attribute
 		addMI.addSelectionListener( new SelectionListener() {

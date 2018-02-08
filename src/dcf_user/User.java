@@ -127,6 +127,9 @@ public class User extends DcfUser {
 		CatalogueDAO catDao = new CatalogueDAO();
 		Catalogue last = catDao.getLastVersionByCode(catalogueCode, Dcf.dcfType);
 		
+		if (last == null)
+			return false;
+		
 		ReservedCatDAO resDao = new ReservedCatDAO();
 
 		ReservedCatalogue rc = resDao.getById(last.getId());

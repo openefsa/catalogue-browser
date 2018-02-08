@@ -435,6 +435,9 @@ public class MainPanel implements Observer {
 				if (shell.isDisposed())
 					return;
 
+				if (shell.getMenu() != null)
+					shell.getMenu().dispose();
+				
 				// redraw the main menu to refresh buttons
 				shell.setMenuBar( menu.createMainMenu() );
 				menu.refresh();
@@ -975,6 +978,9 @@ public class MainPanel implements Observer {
 			}
 		});
 
+		if (shell.getMenu() != null)
+			shell.getMenu().dispose();
+		
 		// initialize the main menu with all the sub menus and menu items
 		shell.setMenuBar( menu.createMainMenu() );
 
