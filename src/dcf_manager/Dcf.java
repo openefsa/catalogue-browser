@@ -162,9 +162,8 @@ public class Dcf {
 		// get the catalogues which are currently 
 		// present into the user database
 		// at their last release status!
-		ArrayList < Catalogue > myCatalogues = 
-				catDao.getLastReleaseCatalogues ( dcfType );
-
+		ArrayList < Catalogue > myCatalogues = catDao.getMyCatalogues(dcfType);
+		
 		// Check for each official catalogues
 		// if we already have it downloaded or not
 		for ( Catalogue cat : catalogues ) {
@@ -177,13 +176,6 @@ public class Dcf {
 				// skip if same code and version (i.e.,
 				// the same catalogue is already downloaded)
 				if ( myCat.sameAs( cat ) ) {
-					addCat = false;
-					continue;
-				}
-				
-				// if same code but older version
-				// skip, we already have the last version
-				if ( myCat.equals( cat ) && !myCat.isOlder( cat ) ) {
 					addCat = false;
 					continue;
 				}
