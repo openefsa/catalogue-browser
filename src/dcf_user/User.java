@@ -485,12 +485,15 @@ public class User extends DcfUser {
 		}
 		catch(SOAPException e) {
 			this.isReauth = false;
+			super.logout();  // connection error only!
 			throw e;
 		}
 
 		// delete not valid credentials
-		if (!logged)
+		if (!logged) {
 			this.deleteCredentials();
+			super.logout();
+		}
 		
 		this.isReauth = false;
 		

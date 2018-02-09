@@ -420,8 +420,10 @@ public abstract class CatalogueObjectEditor<T extends SortableCatalogueObject> {
 					
 					// convention, if id = -1 then it 
 					// is a new object for the database
-					if ( obj.getId() == -1 )
-						dao.insert( obj );
+					if ( obj.getId() == -1 ) {
+						int dbId = dao.insert( obj );
+						obj.setId(dbId);
+					}
 					else
 						dao.update( obj );
 				}

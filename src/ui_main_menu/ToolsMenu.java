@@ -41,6 +41,7 @@ import ui_console.ConsoleMessageFactory;
 import ui_general_graphics.DialogSingleText;
 import ui_main_panel.AttributeEditor;
 import ui_main_panel.HierarchyEditor;
+import user_interface.ProxySettingsDialog;
 import user_preferences.CataloguePreferenceDAO;
 import user_preferences.FormSearchOptions;
 import user_preferences.FormUserPreferences;
@@ -63,7 +64,6 @@ public class ToolsMenu implements MainMenuItem {
 	public static final int USER_PREF_MI = 12;
 	public static final int CREATE_XML_MI = 13;
 	public static final int DELETE_PICKLIST_MI = 14;
-	public static final int LOGGING = 15;
 	
 	private MenuListener listener;
 	
@@ -87,6 +87,7 @@ public class ToolsMenu implements MainMenuItem {
 	private MenuItem attributeEditMI; 
 	private MenuItem searchOptMI;
 	private MenuItem userPrefMI;
+	private MenuItem proxyMI;
 	
 	/**
 	 * Tools menu in main menu
@@ -171,6 +172,8 @@ public class ToolsMenu implements MainMenuItem {
 		// general user preferences
 		userPrefMI = addUserPreferencesMI (toolsMenu);
 		
+		proxyMI = addProxyMI(toolsMenu);
+		
 		// called when the tools menu is shown
 		toolsMenu.addListener(SWT.Show, new Listener() {
 			
@@ -185,6 +188,23 @@ public class ToolsMenu implements MainMenuItem {
 		toolsItem.setEnabled(false);
 		
 		return toolsItem;
+	}
+	
+	private MenuItem addProxyMI(Menu menu) {
+		
+		final MenuItem item = new MenuItem(menu , SWT.PUSH);
+
+		item.setText(Messages.getString("proxy.config.menu"));
+		item.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				ProxySettingsDialog dialog = new ProxySettingsDialog();
+				dialog.setVisible(true);
+			}
+		});
+		
+		return item;
 	}
 	
 	/**

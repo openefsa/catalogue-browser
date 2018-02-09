@@ -436,8 +436,13 @@ public class FileActions {
 							message = Messages.getString( "Download.DownloadSuccessMessage" );
 							icon = SWT.ICON_INFORMATION;
 						}
-						else {
+						else if (value == EXCEPTION){
 							message = Messages.getString("ExportCatalogue.ErrorMessage");
+							icon = SWT.ICON_ERROR;
+							progressBar.close();
+						}
+						else {
+							message = Messages.getString("ExportCatalogue.general.error");
 							icon = SWT.ICON_ERROR;
 							progressBar.close();
 						}
