@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.w3c.dom.DOMException;
 
+import catalogue.AttachmentNotFoundException;
 import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_generator.CatalogueCreator;
@@ -38,6 +39,7 @@ import progress_bar.FormMultipleProgress;
 import progress_bar.FormProgressBar;
 import progress_bar.IProgressBar;
 import progress_bar.TableMultipleProgress.TableRow;
+import soap.DetailedSOAPException;
 import ui_main_panel.FormLocalCatalogueName;
 import ui_main_panel.OldCatalogueReleaseDialog;
 import utilities.GlobalUtil;
@@ -429,7 +431,7 @@ public class FileActions {
 					@Override
 					public void run() {
 
-						String message;
+						String message = null;
 						int icon;
 
 						if ( value == ThreadFinishedListener.OK ) {
@@ -437,7 +439,14 @@ public class FileActions {
 							icon = SWT.ICON_INFORMATION;
 						}
 						else if (value == EXCEPTION){
-							message = Messages.getString("ExportCatalogue.ErrorMessage");
+							if (e instanceof AttachmentNotFoundException)
+								message = Messages.getString("ExportCatalogue.ErrorMessage");
+							else if (e instanceof DetailedSOAPException){
+								message = GlobalUtil.getSOAPWarning((DetailedSOAPException) e)[1];
+							}
+							else {
+								message = Messages.getString("ExportCatalogue.general.error");
+							}
 							icon = SWT.ICON_ERROR;
 							progressBar.close();
 						}

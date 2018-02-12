@@ -31,8 +31,9 @@ public class MainMenu extends Observable implements Observer {
 	private FileMenu file;         // file menu
 	private ViewMenu view;         // view menu
 	ToolsMenu tools;               // tools menu
-	private AboutMenu about;       // about menu
+	private MainMenuItem about;       // about menu
 	private LoginMenu login;       // login button
+	private MainMenuItem proxy;    // proxy configuration
 	
 	MenuListener fileListener;
 	MenuListener viewListener;
@@ -79,6 +80,8 @@ public class MainMenu extends Observable implements Observer {
 		
 		// about menu with licenses
 		about = new AboutMenu ( this, mainMenu );
+		
+		proxy = new ProxyMenu(mainMenu, mainMenu.getShell());
 		
 		// dcf login button
 		login = new LoginMenu ( this, mainMenu );

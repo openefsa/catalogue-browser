@@ -27,6 +27,7 @@ import pending_request.IPendingRequest;
 import pending_request.PendingRequestDao;
 import sas_remote_procedures.XmlUpdateFile;
 import sas_remote_procedures.XmlUpdateFileDAO;
+import soap.DetailedSOAPException;
 import soap.UploadCatalogueFileImpl;
 import soap.UploadCatalogueFileImpl.ReserveLevel;
 import soap.UploadCatalogueFilePersistentImpl;
@@ -507,7 +508,7 @@ public class User extends DcfUser {
 	 * @throws Exception
 	 */
 	public boolean login ( String username, String password, boolean save ) 
-			throws SOAPException {
+			throws DetailedSOAPException {
 		
 		Config config = new Config();
 		

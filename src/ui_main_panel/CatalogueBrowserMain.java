@@ -21,6 +21,7 @@ import dcf_user.UserAccessLevel;
 import dcf_user.UserListener;
 import instance_checker.InstanceChecker;
 import messages.Messages;
+import soap.DetailedSOAPException;
 import ui_main_menu.LoginActions;
 import utilities.GlobalUtil;
 
@@ -199,10 +200,13 @@ public class CatalogueBrowserMain {
 								break;
 							case EXCEPTION:
 								browser.refresh();
+								
+								if (e instanceof DetailedSOAPException) {
+									String[] warning = GlobalUtil.getSOAPWarning((DetailedSOAPException) e);
+									GlobalUtil.showErrorDialog(shell, warning[0], warning[1]);
+								}
 								//shell.setText( APP_TITLE + " " + Messages.getString("App.Disconnected") );
-								GlobalUtil.showErrorDialog(shell, 
-										Messages.getString("Reauth.title.error"), 
-										Messages.getString("Reauth.BadConnection"));
+
 								break;
 							default:
 								break;

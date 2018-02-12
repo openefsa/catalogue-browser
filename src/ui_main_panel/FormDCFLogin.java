@@ -23,6 +23,7 @@ import config.Config;
 import dcf_user.User;
 import messages.Messages;
 import session_manager.BrowserWindowPreferenceDao;
+import soap.DetailedSOAPException;
 import utilities.GlobalUtil;
 import window_restorer.RestoreableWindow;
 
@@ -225,14 +226,14 @@ public class FormDCFLogin {
 				// check the correctness of credentials
 				try {
 					valid = checkCredentials( username, password );
-				} catch (SOAPException e1) {
+				} catch (DetailedSOAPException e1) {
 					e1.printStackTrace();
 					
 					// reset the original cursor
 					GlobalUtil.setShellCursor( parent, SWT.CURSOR_ARROW );
-					GlobalUtil.showErrorDialog(shell, 
-							Messages.getString("Reauth.title.error"), 
-							Messages.getString("Reauth.BadConnection"));
+					
+					String[] warning = GlobalUtil.getSOAPWarning(e1);
+					GlobalUtil.showErrorDialog(shell, warning[0], warning[1]);
 
 					return;
 				}
@@ -270,7 +271,7 @@ public class FormDCFLogin {
 	 * @return true if the credentials are correct
 	 * @throws SOAPException 
 	 */
-	private boolean checkCredentials ( String username, String password ) throws SOAPException {
+	private boolean checkCredentials ( String username, String password ) throws DetailedSOAPException {
 		
 		User user = User.getInstance();
 		boolean correctCredentials = user.login( usernameText.getText(), 

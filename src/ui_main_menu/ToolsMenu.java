@@ -41,7 +41,6 @@ import ui_console.ConsoleMessageFactory;
 import ui_general_graphics.DialogSingleText;
 import ui_main_panel.AttributeEditor;
 import ui_main_panel.HierarchyEditor;
-import user_interface.ProxySettingsDialog;
 import user_preferences.CataloguePreferenceDAO;
 import user_preferences.FormSearchOptions;
 import user_preferences.FormUserPreferences;
@@ -172,8 +171,6 @@ public class ToolsMenu implements MainMenuItem {
 		// general user preferences
 		userPrefMI = addUserPreferencesMI (toolsMenu);
 		
-		proxyMI = addProxyMI(toolsMenu);
-		
 		// called when the tools menu is shown
 		toolsMenu.addListener(SWT.Show, new Listener() {
 			
@@ -188,23 +185,6 @@ public class ToolsMenu implements MainMenuItem {
 		toolsItem.setEnabled(false);
 		
 		return toolsItem;
-	}
-	
-	private MenuItem addProxyMI(Menu menu) {
-		
-		final MenuItem item = new MenuItem(menu , SWT.PUSH);
-
-		item.setText(Messages.getString("proxy.config.menu"));
-		item.addSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				ProxySettingsDialog dialog = new ProxySettingsDialog();
-				dialog.setVisible(true);
-			}
-		});
-		
-		return item;
 	}
 	
 	/**
