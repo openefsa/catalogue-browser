@@ -26,9 +26,9 @@ public class LastInternalVersionDownloader implements ILastInternalVersionDownlo
 			throws SOAPException, ImportException, IOException, SQLException {
 		
 		// download the file
-		ExportCatalogueFile request = new ExportCatalogueFile(User.getInstance(), env);
+		ExportCatalogueFile request = new ExportCatalogueFile();
 		
-		File file = request.exportLastInternalVersion(catalogueCode);
+		File file = request.exportLastInternalVersion(env, User.getInstance(), catalogueCode);
 		
 		if (file == null || !file.exists())
 			throw new FileNotFoundException("The file containing the last internal version of the catalogue cannot be found");

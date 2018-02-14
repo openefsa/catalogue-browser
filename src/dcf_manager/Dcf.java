@@ -301,8 +301,8 @@ public class Dcf {
 	 */
 	public boolean ping() throws SOAPException {
 		Config config = new Config();
-		Ping ping = new Ping(User.getInstance(), config.getEnvironment());
-		return ping.ping();
+		Ping ping = new Ping();
+		return ping.ping(config.getEnvironment(), User.getInstance());
 	}
 	
 	/**
@@ -353,8 +353,8 @@ public class Dcf {
 		
 		try {
 			Config config = new Config();
-			GetCataloguesList<Catalogue> req = new GetCataloguesList<>(User.getInstance(), config.getEnvironment(), list);
-			req.getList();
+			GetCataloguesList<Catalogue> req = new GetCataloguesList<>();
+			req.getList(config.getEnvironment(), User.getInstance(), list);
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.error("Cannot get catalogues list", e);
@@ -373,9 +373,8 @@ public class Dcf {
 		
 		try {
 			Config config = new Config();
-			GetDataCollectionsList<DataCollection> req = new GetDataCollectionsList<>(User.getInstance(), 
-					config.getEnvironment(), list);
-			req.getList();
+			GetDataCollectionsList<DataCollection> req = new GetDataCollectionsList<>();
+			req.getList(config.getEnvironment(), User.getInstance(), list);
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.error("Cannot get data collections", e);
@@ -396,10 +395,9 @@ public class Dcf {
 		
 		DCTableList output = new DCTableList();
 		Config config = new Config();
-		GetDataCollectionTables<DCTable> req = new GetDataCollectionTables<>(User.getInstance(), config.getEnvironment(),
-				output, resourceId);
+		GetDataCollectionTables<DCTable> req = new GetDataCollectionTables<>();
 		
-		req.getTables();
+		req.getTables(config.getEnvironment(), User.getInstance(), resourceId, output);
 		
 		return output;
 	}
@@ -415,8 +413,8 @@ public class Dcf {
 	public File exportCatalogue(Catalogue catalogue) throws SOAPException {
 		Config config = new Config();
 		// export the catalogue and save its attachment into an xml file
-		ExportCatalogueFile export = new ExportCatalogueFile(User.getInstance(), config.getEnvironment());
-		return export.exportCatalogue(catalogue.getCode());
+		ExportCatalogueFile export = new ExportCatalogueFile();
+		return export.exportCatalogue(config.getEnvironment(), User.getInstance(), catalogue.getCode());
 	}
 	
 	/**
@@ -430,10 +428,10 @@ public class Dcf {
 		
 		Config config = new Config();
 		// ask for the log to the dcf
-		ExportCatalogueFile export = new ExportCatalogueFile(User.getInstance(), config.getEnvironment());
+		ExportCatalogueFile export = new ExportCatalogueFile();
 
 		// write the log document in xml format
-		return export.exportLog(logCode);
+		return export.exportLog(config.getEnvironment(), User.getInstance(), logCode);
 	}
 
 	/**
@@ -454,10 +452,10 @@ public class Dcf {
 		Config config = new Config();
 		
 		// ask for the log to the dcf
-		ExportCatalogueFile export = new ExportCatalogueFile(User.getInstance(), config.getEnvironment());
+		ExportCatalogueFile export = new ExportCatalogueFile();
 
 		// get the catalogue xml as input stream
-		File file = export.exportLastInternalVersion(catalogueCode);
+		File file = export.exportLastInternalVersion(config.getEnvironment(), User.getInstance(), catalogueCode);
 
 		return file;
 	}
