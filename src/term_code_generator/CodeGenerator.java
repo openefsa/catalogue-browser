@@ -64,6 +64,35 @@ public class CodeGenerator {
 		}
 		return retVal;
 	}
+	
+	private static char[] initializeChar(char code[], char[] mask, int index) {
+
+		// cannot do anything
+		if (index >= mask.length)
+			return code;
+		
+		char[] retVal;
+		if (index >= code.length) {
+			retVal = new char[index + 1];
+		}
+		else {
+			retVal = new char[code.length];
+		}
+		
+		// copy code
+		for (int i = 0; i < code.length; ++i)
+			retVal[i] = code[i];
+		
+		
+		if ( mask[index] == '#' )
+			retVal[index] = numberCode[0];
+		if ( mask[index] == '@' )
+			retVal[index] = alphaCode[0];
+		if ( mask[index] == '§' )
+			retVal[index] = numberAlphaCode[0];
+		
+		return retVal;
+	}
 
 	private static String initialiseCode ( String mask ) {
 		return ( String.valueOf( initialiseCode( mask.toCharArray() ) ) );
@@ -85,6 +114,14 @@ public class CodeGenerator {
 		// if overflow, that is, the maximum code is reached
 		if (i == -1) {
 			throw new TermCodeException("Maximum term code reached for the current term code mask. Cannot create new code!");
+		}
+		
+		// fix mask missing elements
+		if (i >= alphaNumCode.length) {
+			// for each missing term
+			for (int j = i; j >= alphaNumCode.length; --j) {
+				alphaNumCode = initializeChar(alphaNumCode, mask, j);
+			}
 		}
 		
 		int index;

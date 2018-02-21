@@ -229,7 +229,7 @@ public class CatalogueBrowserMain {
 				display.sleep();
 		}
 
-		if (!display.isDisposed())
+		if (display != null && !display.isDisposed() )
 			display.dispose();
 
 		// stop the database
