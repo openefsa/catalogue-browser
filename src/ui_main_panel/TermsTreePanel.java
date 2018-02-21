@@ -386,9 +386,6 @@ public class TermsTreePanel extends Observable implements Observer {
 	 * Create a right click contextual menu for a tree which contains terms
 	 */
 	public Menu createTreeMenu () {
-
-		// get an instance of the global manager
-		GlobalManager manager = GlobalManager.getInstance();
 		
 		/* Menu for the tree */
 
@@ -399,8 +396,7 @@ public class TermsTreePanel extends Observable implements Observer {
 		otherHierarchies = addChangeHierarchyMI ( termMenu );
 		
 		// Add edit buttons if we are in editing mode
-		// and if we are not (un)reserving a catalogue
-		if ( !manager.isReadOnly() ) {
+		if (User.getInstance().canEdit(catalogue) && !catalogue.hasUpdate()) {
 
 			new MenuItem( termMenu, SWT.SEPARATOR );
 
@@ -473,7 +469,10 @@ public class TermsTreePanel extends Observable implements Observer {
 		if ( selectedHierarchy == null )
 			return;
 		
-		boolean canEdit = User.getInstance().canEdit( catalogue );
+		boolean canEdit = User.getInstance().canEdit( catalogue ) && !catalogue.hasUpdate();
+		
+		if (!canEdit)  // buttons are not created if edit mode disabled
+			return;
 		
 		boolean canEditMajor = catalogue.isLocal() || ( canEdit && reserveLevel != null 
 				&& reserveLevel == ReserveLevel.MAJOR );
@@ -486,7 +485,6 @@ public class TermsTreePanel extends Observable implements Observer {
 		// enable add only in master hierarchy
 		if ( addTerm != null )
 			addTerm.setEnabled( !isSelectionEmpty() && canAddTerm );
-		
 		
 		// can paste only if we are cutting/copying and we are pasting under a single term
 		if ( pasteTerm != null )
@@ -513,11 +511,12 @@ public class TermsTreePanel extends Observable implements Observer {
 		// the others need a selected term
 		if ( isSelectionEmpty() )
 			return;
-		
+
 		// refresh deprecate term text
 		if ( getFirstSelectedTerm().isDeprecated() ) {
+
 			deprecateTerm.setText(  Messages.getString( "BrowserTreeMenu.RemoveDeprecation" ) );
-			
+
 			// allow only if the term has not deprecated parents
 			// allow only for major releases
 			deprecateTerm.setEnabled ( canEditMajor && 
@@ -525,20 +524,20 @@ public class TermsTreePanel extends Observable implements Observer {
 		}
 		else {
 			deprecateTerm.setText( Messages.getString( "BrowserTreeMenu.DeprecateTerm" ) );
-			
+
 			// allow only if the term has all the subtree deprecated, allow only for
 			// major releases
 			deprecateTerm.setEnabled ( canEditMajor && 
 					getFirstSelectedTerm().hasAllChildrenDeprecated() );
 		}
-		
+
 		// check if the selected terms can be moved in the current hierarchy
 		termMoveUp.setEnabled( canEdit 
 				&& termOrderChanger.canMoveUp( getSelectedTerms(), selectedHierarchy ) );
-		
+
 		termMoveDown.setEnabled( canEdit 
 				&& termOrderChanger.canMoveDown( getSelectedTerms(), selectedHierarchy ) );
-		
+
 		termLevelUp.setEnabled( canEdit 
 				&& termOrderChanger.canMoveLevelUp( getSelectedTerms(), selectedHierarchy ) );
 		

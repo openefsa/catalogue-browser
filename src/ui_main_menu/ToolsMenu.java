@@ -126,7 +126,8 @@ public class ToolsMenu implements MainMenuItem {
 		
 		// add reserve/unreserve for cm users
 		if (mainMenu.getCatalogue() != null && 
-				user.isCatManagerOf(mainMenu.getCatalogue())) {
+				user.isCatManagerOf(mainMenu.getCatalogue())
+				&& !mainMenu.getCatalogue().hasUpdate()) {
 
 			reserveMI = addReserveMI (toolsMenu);
 			unreserveMI = addUnreserveMI (toolsMenu);
