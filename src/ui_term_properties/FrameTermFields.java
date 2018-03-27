@@ -655,23 +655,10 @@ public class FrameTermFields {
 				if ( termShortName.getText().equals( term.getShortName( false ) ) )
 					return;
 
-
 				// if the text already exists in the database it cannot
 				// be used
 				// get the current catalogue
 				TermDAO termDao = new TermDAO( term.getCatalogue() );
-				
-				if ( !termDao.isTermNameUnique ( term.getCode(), termShortName.getText(), false ) ) {
-
-					GlobalUtil.showErrorDialog( parent.getShell(), 
-							Messages.getString("TermProperties.InputErrorTitle"), 
-							Messages.getString( "TermProperties.InputErrorMessage4") );
-
-					termShortName.setText( term.getShortName( false ) );
-
-					return;
-
-				} 
 
 				// here the new short name is acceptable
 

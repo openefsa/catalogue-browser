@@ -1,5 +1,7 @@
 package ui_main_menu;
 
+import java.io.IOException;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -30,7 +32,12 @@ public class ProxyMenu implements MainMenuItem {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				ProxySettingsDialog dialog = new ProxySettingsDialog(shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-				dialog.open();
+				try {
+					dialog.open();
+				} catch (IOException e) {
+					e.printStackTrace();
+					// TODO warning
+				}
 			}
 		});
 		
