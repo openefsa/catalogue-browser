@@ -20,3 +20,4 @@ The project needs the following projects to work properly:
 * https://github.com/openefsa/java-swt-window-size-save-and-restore
 * https://github.com/openefsa/version-manager
 * https://github.com/openefsa/http-manager-gui
+* https://github.com/openefsa/sql-script-executor
