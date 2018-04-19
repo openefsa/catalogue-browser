@@ -175,8 +175,10 @@ public class Version {
 		// initialize another checker for the other catalogue
 		Version other = new Version( version );
 		
-		// if wrong format return -1
-		if ( this.wrongFormat || other.wrongFormat )
+		if (this.isWrongFormat() && !other.isWrongFormat())
+			return 1;
+		
+		if (!this.isWrongFormat() && other.isWrongFormat())
 			return -1;
 
 		int majorCheck = compareInteger( this.getMajor(), other.getMajor() );
