@@ -15,3 +15,8 @@ The project needs the following projects to work properly:
 * https://github.com/openefsa/Open-xml-reader
 * https://github.com/openefsa/CatalogueXmlToXlsx
 * https://github.com/openefsa/Progress-bar
+* https://github.com/openefsa/http-manager
+* https://github.com/openefsa/java-exception-to-string
+* https://github.com/openefsa/java-swt-window-size-save-and-restore
+* https://github.com/openefsa/version-manager
+* https://github.com/openefsa/http-manager-gui
