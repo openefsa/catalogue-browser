@@ -1,4 +1,5 @@
 package ui_describe;
+
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -44,12 +45,11 @@ import user_preferences.GlobalPreference;
 import window_restorer.RestoreableWindow;
 
 /**
- * This class is used to display a list of nameable 
- * (i.e terms, hierarchies, global terms) with a tree
- * visualization panel. It is possible to select the nameable
- * objects and give as output them.
- * Note that both single selection and multiple selection 
- * with checkboxes are supported.
+ * This class is used to display a list of nameable (i.e terms, hierarchies,
+ * global terms) with a tree visualization panel. It is possible to select the
+ * nameable objects and give as output them. Note that both single selection and
+ * multiple selection with checkboxes are supported.
+ * 
  * @author avonva
  *
  */
@@ -57,15 +57,17 @@ public class FormSelectTerm implements Observer {
 
 	private RestoreableWindow window;
 	private static final String WINDOW_CODE = "FormSelectTerm";
-	
+	//Author: AlbyDev
+	public static Boolean instanceExists = false;
+
 	// output list
 	private ArrayList<Nameable> selectedTerms;
-	
-	private boolean multi;              // multiple selection is enabled?
-	private Catalogue catalogue;        // the catalogue which contains the objects to show
-	private Nameable rootTerm;          // root of the tree
-	private Hierarchy rootHierarchy;    // the hierarchy in which the root term is contained (if applicable)
-	
+
+	private boolean multi; // multiple selection is enabled?
+	private Catalogue catalogue; // the catalogue which contains the objects to show
+	private Nameable rootTerm; // root of the tree
+	private Hierarchy rootHierarchy; // the hierarchy in which the root term is contained (if applicable)
+
 	private Shell shell;
 	private Shell dialog;
 	private String title;
@@ -74,91 +76,100 @@ public class FormSelectTerm implements Observer {
 	private MultiTermsTreeViewer tree;
 	private TableSelectedDescriptors selectedDescriptors;
 	private FrameTermFields termPropTab = null;
-	
+
 	private boolean searchEnabled = true;
-	
+
 	/**
-	 * Initialize the form with the shell and the title string. The boolean enableMultipleSelection is used
-	 * to initialize the treeviewer as multiple selector or not.
+	 * Initialize the form with the shell and the title string. The boolean
+	 * enableMultipleSelection is used to initialize the treeviewer as multiple
+	 * selector or not.
+	 * 
 	 * @param shell
 	 * @param title
-	 * @param multiSel true to enable multiple selection of objects
+	 * @param multiSel
+	 *            true to enable multiple selection of objects
 	 */
-	
-	public FormSelectTerm( Shell shell, String title, Catalogue catalogue, boolean enableMultipleSelection ) {
+
+	public FormSelectTerm(Shell shell, String title, Catalogue catalogue, boolean enableMultipleSelection) {
 
 		this.shell = shell;
 		this.catalogue = catalogue;
 		this.multi = enableMultipleSelection;
-		
+
 		// default title
-		this.title = Messages.getString( "FormSelectTerm.DialogTitle" );
-		
-		if ( title == null || title.length() > 0 ) {
+		this.title = Messages.getString("FormSelectTerm.DialogTitle");
+
+		if (title == null || title.length() > 0) {
 			this.title = title;
 		}
-		
+
 		selectedTerms = new ArrayList<>();
+
+		//Author: AlbyDev
+		// var used to check if an instance of the class already exists
+		FormSelectTerm.instanceExists = true;
 	}
-	
+
 	// The following four method are externally used, that is they are called
 	// outside this form to make other operations (they are like output arrays)
-	
+
 	/**
-	 * Get all the selected terms (used in both single and multiple selection)
-	 * Used to make code compatible with previous version
-	 * A fix could remove this variable
+	 * Get all the selected terms (used in both single and multiple selection) Used
+	 * to make code compatible with previous version A fix could remove this
+	 * variable
+	 * 
 	 * @return
 	 */
-	public ArrayList<Nameable> getSelectedTerms ( ) {
+	public ArrayList<Nameable> getSelectedTerms() {
 		return selectedTerms;
 	}
-	
-	
+
 	/**
-	 * Set the root term of the tree viewer for a global term.
-	 * A global term is just a fake term to group different
-	 * types of hierarchies and terms. For example, we can
-	 * use the global term AllHierarchies to show all the
-	 * hierarchies (and then the terms under the hierarchies).
+	 * Set the root term of the tree viewer for a global term. A global term is just
+	 * a fake term to group different types of hierarchies and terms. For example,
+	 * we can use the global term AllHierarchies to show all the hierarchies (and
+	 * then the terms under the hierarchies).
+	 * 
 	 * @param rootTerm
 	 */
-	public void setRootTerm ( GlobalTerm rootTerm ) {
+	public void setRootTerm(GlobalTerm rootTerm) {
 		this.rootTerm = rootTerm;
 		this.searchEnabled = false;
 	}
-	
+
 	/**
-	 * Set the root term of the tree viewer for
-	 * a term. We need to specify which hierarchy to
-	 * consider related to the term because otherwise
-	 * we don't know which are the term children.
+	 * Set the root term of the tree viewer for a term. We need to specify which
+	 * hierarchy to consider related to the term because otherwise we don't know
+	 * which are the term children.
+	 * 
 	 * @param rootTerm
 	 */
-	public void setRootTerm ( Term rootTerm, Hierarchy hierarchy ) {
-		
+	public void setRootTerm(Term rootTerm, Hierarchy hierarchy) {
+
 		this.rootTerm = rootTerm;
 		this.rootHierarchy = hierarchy;
 		this.catalogue = hierarchy.getCatalogue();
 	}
-	
+
 	/**
 	 * Set the root term of the tree with a facet category
+	 * 
 	 * @param rootTerm
 	 */
-	public void setRootTerm ( Attribute facetCategory ) {
-		
+	public void setRootTerm(Attribute facetCategory) {
+
 		this.rootHierarchy = facetCategory.getHierarchy();
 		this.rootTerm = rootHierarchy;
 		this.catalogue = rootHierarchy.getCatalogue();
 	}
-	
+
 	/**
 	 * Set the root term of the tree with a facet category
+	 * 
 	 * @param rootTerm
 	 */
-	public void setRootTerm ( Hierarchy hierarchy ) {
-		
+	public void setRootTerm(Hierarchy hierarchy) {
+
 		this.rootHierarchy = hierarchy;
 		this.rootTerm = rootHierarchy;
 		this.catalogue = hierarchy.getCatalogue();
@@ -167,121 +178,120 @@ public class FormSelectTerm implements Observer {
 	/**
 	 * This method is called when the form is displayed
 	 */
-	public void display () {
+	public void display() {
 
-		dialog = new Shell( shell , SWT.SHELL_TRIM | SWT.APPLICATION_MODAL );
-		dialog.setImage( new Image( Display.getCurrent() , this.getClass().getClassLoader()
-				.getResourceAsStream( "Choose.gif" ) ) );
-		dialog.setMaximized( true );
+		//Author: AlbyDev
+		// dialog = new Shell( shell , SWT.SHELL_TRIM | SWT.APPLICATION_MODAL );
+		dialog = new Shell(shell, SWT.SHELL_TRIM | SWT.MODELESS);
+		//
 
-		dialog.setText( title );
-		dialog.setLayout( new GridLayout( 2 , false ) );
-		
+		dialog.setImage(
+				new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream("Choose.gif")));
+		dialog.setMaximized(true);
+
+		dialog.setText(title);
+		dialog.setLayout(new GridLayout(2, false));
+
 		window = new RestoreableWindow(dialog, WINDOW_CODE);
-		
 
 		// Add a search bar
-		searchBar = new SearchBar( dialog, false );
-		
+		searchBar = new SearchBar(dialog, false);
+
 		// set search root term
-		if ( rootTerm instanceof Term ) {
-			searchBar.setRootTerm( (Term) rootTerm );
+		if (rootTerm instanceof Term) {
+			searchBar.setRootTerm((Term) rootTerm);
 		}
-		
-		searchBar.setCatalogue( catalogue );
-		searchBar.setCurrentHierarchy( rootHierarchy );
-		
+
+		searchBar.setCatalogue(catalogue);
+		searchBar.setCurrentHierarchy(rootHierarchy);
+
 		// set the search listener
-		searchBar.setListener( new SearchListener() {
-			
+		searchBar.setListener(new SearchListener() {
+
 			@Override
-			public void searchPerformed( SearchEvent e ) {
-				
+			public void searchPerformed(SearchEvent e) {
+
 				// get the search results
-				ArrayList< Term > searchResults = e.getResults();
-				
+				ArrayList<Term> searchResults = e.getResults();
+
 				// if no results are retrieved, a message box is shown
-				if ( searchResults.isEmpty() ) {
-					
-					MessageBox mb = new MessageBox( dialog , SWT.OK );
-					mb.setText( Messages.getString("FormSelectTerm.SearchResultTitle") );
-					mb.setMessage( Messages.getString("FormSelectTerm.SearchResultMessage") );
+				if (searchResults.isEmpty()) {
+
+					MessageBox mb = new MessageBox(dialog, SWT.OK);
+					mb.setText(Messages.getString("FormSelectTerm.SearchResultTitle"));
+					mb.setMessage(Messages.getString("FormSelectTerm.SearchResultMessage"));
 					mb.open();
 					return;
 				}
-				
+
 				// show results
-				FormDescribeSearchResult resultsForm = new FormDescribeSearchResult(shell, 
-						Messages.getString("FormSelectTerm.SearchResultWindowTitle"), rootHierarchy,
-						searchResults );
-				
-				resultsForm.setHideDeprecated( termFilter.isHidingDeprecated() );
-				resultsForm.setHideNotInUse( termFilter.isHidingNotReportable() );
-				
-				resultsForm.display( catalogue );
-				
+				dialog.setEnabled(false);
+				FormDescribeSearchResult resultsForm = new FormDescribeSearchResult(dialog,
+						Messages.getString("FormSelectTerm.SearchResultWindowTitle"), rootHierarchy, searchResults);
+
+				resultsForm.setHideDeprecated(termFilter.isHidingDeprecated());
+				resultsForm.setHideNotInUse(termFilter.isHidingNotReportable());
+
+				resultsForm.display(catalogue);
+
 				// get selected term
 				final Term selectedTerm = resultsForm.getSelectedTerm();
 
-				if ( selectedTerm == null )
+				if (selectedTerm == null)
 					return;
-				
+
 				// If multi selection, check the term and
 				// add it to the selected descriptors table
-				if ( multi ) {
+				if (multi) {
 					// add if not already present
-					if ( !selectedDescriptors.contains( selectedTerm ) ) {
-						
-						selectedDescriptors.addTerm( selectedTerm );
-						
-						// check term in the tree
-						tree.checkTerm( selectedTerm, true );
-					}
-				}
-				else {
-					
-					// add term in output
-					selectedTerms.add( selectedTerm );
+					if (!selectedDescriptors.contains(selectedTerm)) {
 
-					// close the form (we needed only one term => job done)
-					dialog.close();	
+						selectedDescriptors.addTerm(selectedTerm);
+
+						// check term in the tree
+						tree.checkTerm(selectedTerm, true);
+					}
+				} else {
+
+					// add term in output
+					selectedTerms.add(selectedTerm);
 				}
+				//Author: AlbyDev
+				dialog.setEnabled(true);
 			}
 		});
 
 		// show the search bar
 		searchBar.display();
-		
-		searchBar.setEnabled( searchEnabled );
 
-		dialog.setDefaultButton( searchBar.getButton() );
-		
+		searchBar.setEnabled(searchEnabled);
+
+		dialog.setDefaultButton(searchBar.getButton());
+
 		// add the filters to the tree viewer
-		Composite filterComp = new Composite( dialog, SWT.NONE );
-		filterComp.setLayout( new GridLayout( 4, false ) );
-		
-		termFilter = new TermFilter( filterComp );
-		termFilter.display( GlobalPreference.HIDE_DEPR_DESCRIBE, 
-				GlobalPreference.HIDE_NOT_REP_DESCRIBE,
-				GlobalPreference.HIDE_TERM_CODE_DESCRIBE );
-		termFilter.setEnabled( true );
-		
+		Composite filterComp = new Composite(dialog, SWT.NONE);
+		filterComp.setLayout(new GridLayout(4, false));
+
+		termFilter = new TermFilter(filterComp);
+		termFilter.display(GlobalPreference.HIDE_DEPR_DESCRIBE, GlobalPreference.HIDE_NOT_REP_DESCRIBE,
+				GlobalPreference.HIDE_TERM_CODE_DESCRIBE);
+		termFilter.setEnabled(true);
+
 		// open tree viewer with multi selection enabled if required
-		tree = new MultiTermsTreeViewer( dialog, multi, 
-				SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL, catalogue );
-		
-		tree.setHierarchy( rootHierarchy );
-		
+		tree = new MultiTermsTreeViewer(dialog, multi, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL, catalogue);
+
+		tree.setHierarchy(rootHierarchy);
+
 		// set the input of the tree
-		tree.setInput( rootTerm );
-		
+		tree.setInput(rootTerm);
+
 		// add the tree as observer of the term filter
 		// and restore the term filter status to the
 		// previous one
-		termFilter.addObserver( tree );
-		termFilter.addObserver( searchBar );
+		termFilter.addObserver(tree);
+		termFilter.addObserver(searchBar);
 		termFilter.restoreStatus();
-		
+
 		// Layout settings for term properties
 		GridData gridData = new GridData();
 		gridData.verticalAlignment = SWT.FILL;
@@ -292,25 +302,25 @@ public class FormSelectTerm implements Observer {
 		gridData.minimumWidth = 250;
 		gridData.widthHint = 250;
 		gridData.heightHint = 250;
-		
+
 		// Right panel
-		Composite rightPanelComposite = new Composite( dialog, SWT.NONE );
-		rightPanelComposite.setLayout( new GridLayout( 1, false ) );
-		rightPanelComposite.setLayoutData( gridData );
-		
-		// Add the selected descriptors table 
+		Composite rightPanelComposite = new Composite(dialog, SWT.NONE);
+		rightPanelComposite.setLayout(new GridLayout(1, false));
+		rightPanelComposite.setLayoutData(gridData);
+
+		// Add the selected descriptors table
 		// only if multiple selection allowed
-		if ( multi ) {
-			selectedDescriptors = addTableSelectedDescriptors( rightPanelComposite );
-			selectedDescriptors.setCurrentHierarchy( rootHierarchy );
+		if (multi) {
+			selectedDescriptors = addTableSelectedDescriptors(rightPanelComposite);
+			selectedDescriptors.setCurrentHierarchy(rootHierarchy);
 		}
-		
-		// add only scopenotes and implicit attributes 
+
+		// add only scopenotes and implicit attributes
 		// of the frame term properties
 		ArrayList<String> properties = new ArrayList<>();
-		properties.add( "scopenotes" );
-		properties.add( "attributes" );
-		termPropTab = new FrameTermFields( rightPanelComposite, properties );
+		properties.add("scopenotes");
+		properties.add("attributes");
+		termPropTab = new FrameTermFields(rightPanelComposite, properties);
 
 		gridData = new GridData();
 		gridData.verticalAlignment = SWT.FILL;
@@ -319,80 +329,78 @@ public class FormSelectTerm implements Observer {
 		gridData.grabExcessVerticalSpace = true;
 		gridData.minimumWidth = 500;
 		gridData.widthHint = 300;
-		
-		tree.setLayoutData( gridData );
 
-		
-		Composite c2 = new Composite( dialog , SWT.NONE );
+		tree.setLayoutData(gridData);
+
+		Composite c2 = new Composite(dialog, SWT.NONE);
 		gridData = new GridData();
 		gridData.verticalAlignment = SWT.FILL;
 		gridData.horizontalAlignment = SWT.FILL;
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.grabExcessVerticalSpace = false;
-		c2.setLayoutData( gridData );
+		c2.setLayoutData(gridData);
 
-		c2.setLayout( new GridLayout( 2 , true ) );
-		
-		Button ok = new Button( c2 , SWT.PUSH );
-		ok.setText( Messages.getString("FormSelectTerm.OkButton") );
+		c2.setLayout(new GridLayout(2, true));
+
+		Button ok = new Button(c2, SWT.PUSH);
+		ok.setText(Messages.getString("FormSelectTerm.OkButton"));
 		gridData = new GridData();
 		gridData.verticalAlignment = SWT.FILL;
 		gridData.horizontalAlignment = SWT.RIGHT;
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.grabExcessVerticalSpace = false;
-		ok.setLayoutData( gridData );
-		
-		Button cancel = new Button( c2 , SWT.PUSH );
-		cancel.setText( Messages.getString("FormSelectTerm.CancelButton") );
+		ok.setLayoutData(gridData);
+
+		Button cancel = new Button(c2, SWT.PUSH);
+		cancel.setText(Messages.getString("FormSelectTerm.CancelButton"));
 		gridData = new GridData();
 		gridData.verticalAlignment = SWT.FILL;
 		gridData.horizontalAlignment = SWT.LEFT;
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.grabExcessVerticalSpace = false;
-		cancel.setLayoutData( gridData );
-        
-        // if ok button is pressed
-		ok.addSelectionListener( new SelectionAdapter() {
-			public void widgetSelected ( SelectionEvent event ) {
-				
+		cancel.setLayoutData(gridData);
+
+		// if ok button is pressed
+		ok.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
+
 				// set the output list
 				setOutput();
 				
 				dialog.close();
 			}
-		} );
+		});
 
-		cancel.addSelectionListener( new SelectionAdapter() {
+		cancel.addSelectionListener(new SelectionAdapter() {
 
-			public void widgetSelected ( SelectionEvent event ) {
+			public void widgetSelected(SelectionEvent event) {
 				dialog.close();
 			}
-		} );
-		
-		tree.addDoubleClickListener( new IDoubleClickListener() {
-			
+		});
+
+		tree.addDoubleClickListener(new IDoubleClickListener() {
+
 			@Override
 			public void doubleClick(DoubleClickEvent arg0) {
-				
+
 				IStructuredSelection sel = (IStructuredSelection) arg0.getSelection();
-				
-				if ( sel.isEmpty() )
+
+				if (sel.isEmpty())
 					return;
-				
-				if ( multi ) {
-					tree.invertTermCheck( (Nameable) sel.getFirstElement() );
-				}
-				else {
-					
+
+				if (multi) {
+					tree.invertTermCheck((Nameable) sel.getFirstElement());
+				} else {
+
 					// set the selected term as output
 					setOutput();
-					
+
 					// close the dialog
 					dialog.close();
 				}
 			}
 		});
-		
+
 		// when we check/uncheck terms from the tree
 		tree.addCheckStateListener(new ICheckStateListener() {
 
@@ -402,32 +410,31 @@ public class FormSelectTerm implements Observer {
 				// get the checked term
 				Term term = (Term) arg0.getElement();
 
-				if ( arg0.getChecked() ) {
-					
+				if (arg0.getChecked()) {
+
 					// if the term is not already present add it
-					if ( !selectedDescriptors.contains( term ) )
-						selectedDescriptors.addTerm( term );
-				}
-				else
-					selectedDescriptors.removeTerm( term );
+					if (!selectedDescriptors.contains(term))
+						selectedDescriptors.addTerm(term);
+				} else
+					selectedDescriptors.removeTerm(term);
 			}
 		});
-		
+
 		// When the user selects an item from the tree viewer we call this method
-		tree.addSelectionChangedListener( new ISelectionChangedListener() {
+		tree.addSelectionChangedListener(new ISelectionChangedListener() {
 
 			@Override
 			public void selectionChanged(SelectionChangedEvent arg0) {
 
 				// if the selection is empty clear the label
-				if ( tree.isSelectionEmpty() )
+				if (tree.isSelectionEmpty())
 					return;
 
 				// set the term for the term properties tab
-				termPropTab.setTerm( tree.getFirstSelectedTerm() );
+				termPropTab.setTerm(tree.getFirstSelectedTerm());
 			}
 		});
-		
+
 		// when enter is pressed
 		dialog.addTraverseListener(new TraverseListener() {
 
@@ -435,48 +442,51 @@ public class FormSelectTerm implements Observer {
 			public void keyTraversed(TraverseEvent e) {
 
 				// if RETURN is pressed and the user does not use it for SEARCH purposes
-				if ( e.detail == SWT.TRAVERSE_RETURN && !searchBar.getText().isFocusControl() ) {
+				if (e.detail == SWT.TRAVERSE_RETURN && !searchBar.getText().isFocusControl()) {
 
 					// return if empty selection or wrong class type
-					if ( tree.isSelectionEmpty() )
+					if (tree.isSelectionEmpty())
 						return;
 
 					// invert the check state of the selected term
-					if ( multi ) {
-						tree.invertTermCheck( tree.getFirstSelectedTerm() );
+					if (multi) {
+						tree.invertTermCheck(tree.getFirstSelectedTerm());
 					}
 				}
 			}
 		});
-		
-		dialog.setMaximized( false );
+
+		dialog.setMaximized(false);
 		dialog.pack();
 
 		// restore previous window dimensions
-		window.restore( BrowserWindowPreferenceDao.class );
-		window.saveOnClosure( BrowserWindowPreferenceDao.class );
+		window.restore(BrowserWindowPreferenceDao.class);
+		window.saveOnClosure(BrowserWindowPreferenceDao.class);
 
 		dialog.open();
 
-		while ( !dialog.isDisposed() ) {
-			if ( !dialog.getDisplay().readAndDispatch() )
+		while (!dialog.isDisposed()) {
+			if (!dialog.getDisplay().readAndDispatch())
 				dialog.getDisplay().sleep();
 		}
+
+		//Author: AlbyDev
 		dialog.dispose();
 	}
-	
+
 	/**
-	 * Add the table which contains the checked descriptors 
-	 * (only multiple selection)
+	 * Add the table which contains the checked descriptors (only multiple
+	 * selection)
+	 * 
 	 * @param parent
 	 * @return
 	 */
-	private TableSelectedDescriptors addTableSelectedDescriptors ( Composite parent ) {
-		
-		TableSelectedDescriptors selectedDescriptors = new TableSelectedDescriptors( parent, catalogue );
+	private TableSelectedDescriptors addTableSelectedDescriptors(Composite parent) {
+
+		TableSelectedDescriptors selectedDescriptors = new TableSelectedDescriptors(parent, catalogue);
 
 		// called when a term is removed from the table
-		selectedDescriptors.addRemoveListener( new Listener() {
+		selectedDescriptors.addRemoveListener(new Listener() {
 
 			@Override
 			public void handleEvent(Event event) {
@@ -485,26 +495,26 @@ public class FormSelectTerm implements Observer {
 				final Term selectedTerm = (Term) event.data;
 
 				// remove check from tree
-				tree.checkTerm( selectedTerm, false );
+				tree.checkTerm(selectedTerm, false);
 			}
 		});
-		
-		selectedDescriptors.addOpenListener( new Listener() {
-			
+
+		selectedDescriptors.addOpenListener(new Listener() {
+
 			@Override
 			public void handleEvent(Event event) {
-				
+
 				// get the selected term which has to be removed
 				final Term selectedTerm = (Term) event.data;
 
 				// remove check from tree
-				tree.selectTerm( selectedTerm );
-				
+				tree.selectTerm(selectedTerm);
+
 			}
 		});
-		
+
 		// update term tab if terms of selected descriptors table are selected
-		selectedDescriptors.addSelectionListener( new Listener() {
+		selectedDescriptors.addSelectionListener(new Listener() {
 
 			@Override
 			public void handleEvent(Event event) {
@@ -513,7 +523,7 @@ public class FormSelectTerm implements Observer {
 				Term selectedTerm = (Term) event.data;
 
 				// update the term properties tab
-				termPropTab.setTerm( selectedTerm );
+				termPropTab.setTerm(selectedTerm);
 			}
 		});
 
@@ -521,39 +531,35 @@ public class FormSelectTerm implements Observer {
 	}
 
 	/**
-	 * Create the output list using the
-	 * selected/checked objects of the tree
-	 * We need to copy the elements since
-	 * when we close the window the tree
-	 * will be disposed.
+	 * Create the output list using the selected/checked objects of the tree We need
+	 * to copy the elements since when we close the window the tree will be
+	 * disposed.
 	 */
 	private void setOutput() {
-		
+
 		selectedTerms.clear();
-		
-		if ( multi ) {
-			
+
+		if (multi) {
+
 			// add all the checked terms
-			for ( Nameable obj : tree.getCheckedTerms() )
-				selectedTerms.add( obj );
-			
+			for (Nameable obj : tree.getCheckedTerms())
+				selectedTerms.add(obj);
+
 			// if no element was checked, then add the selected
 			// term (if there is one)
-			if ( selectedTerms.isEmpty() && !tree.isSelectionEmpty() ) {
-				selectedTerms.add( tree.getFirstSelectedObj() );
+			if (selectedTerms.isEmpty() && !tree.isSelectionEmpty()) {
+				selectedTerms.add(tree.getFirstSelectedObj());
 			}
-		}
-		else {
-			
+		} else {
+
 			// add the selected term if it was set
-			if ( !tree.isSelectionEmpty() )
-				selectedTerms.add( tree.getFirstSelectedObj() );
+			if (!tree.isSelectionEmpty())
+				selectedTerms.add(tree.getFirstSelectedObj());
 		}
 	}
-	
+
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		tree.update(arg0, arg1);
 	}
 }
-

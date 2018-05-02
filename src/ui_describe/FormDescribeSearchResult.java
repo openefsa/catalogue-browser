@@ -1,4 +1,5 @@
 package ui_describe;
+
 import java.util.ArrayList;
 
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -21,8 +22,9 @@ import messages.Messages;
 import ui_search_bar.TermTable;
 
 /**
- * Form to show search results in a stand alone window.
- * Double click a term to select it.
+ * Form to show search results in a stand alone window. Double click a term to
+ * select it.
+ * 
  * @author avonva
  *
  */
@@ -32,7 +34,7 @@ public class FormDescribeSearchResult {
 	private Shell dialog;
 	private String title;
 	private TermTable table;
-	private ArrayList< Term > searchResults;
+	private ArrayList<Term> searchResults;
 	private Term selectedTerm;
 	private Hierarchy hierarchy;
 	private boolean hideDepr;
@@ -40,14 +42,19 @@ public class FormDescribeSearchResult {
 
 	/**
 	 * Constructor, display the search results passed in the input.
-	 * @param parentShell parent widget
-	 * @param title title of the window
-	 * @param hierarchy the hierarchy used to compute reportability of terms
-	 * @param searchResults array of terms which needs to be shown
+	 * 
+	 * @param parentShell
+	 *            parent widget
+	 * @param title
+	 *            title of the window
+	 * @param hierarchy
+	 *            the hierarchy used to compute reportability of terms
+	 * @param searchResults
+	 *            array of terms which needs to be shown
 	 */
-	public FormDescribeSearchResult( Shell parentShell, String title, 
-			Hierarchy hierarchy, ArrayList< Term > searchResults ) {
-		
+	public FormDescribeSearchResult(Shell parentShell, String title, Hierarchy hierarchy,
+			ArrayList<Term> searchResults) {
+
 		this.shell = parentShell;
 		this.title = title;
 		this.hierarchy = hierarchy;
@@ -59,30 +66,33 @@ public class FormDescribeSearchResult {
 	/**
 	 * Display the window
 	 */
-	public void display ( Catalogue catalogue ) {
+	public void display(Catalogue catalogue) {
 
+		//Author: AlbyDev
 		// Set the layout of the form
-		dialog = new Shell( shell , SWT.SHELL_TRIM | SWT.APPLICATION_MODAL );
+		// dialog = new Shell( shell , SWT.SHELL_TRIM | SWT.APPLICATION_MODAL );
+		dialog = new Shell(shell, SWT.SHELL_TRIM | SWT.MODELESS);
+		//
 
 		// window icon (on the top left)
-		dialog.setImage( new Image( Display.getCurrent() , this.getClass().getClassLoader()
-				.getResourceAsStream( "Choose.gif" ) ) );
+		dialog.setImage(
+				new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream("Choose.gif")));
 
-		dialog.setMaximized( true );
-		dialog.setText( title );  // window title
-		dialog.setLayout( new FillLayout() );  // layout style
-		dialog.setSize( 500, 400 );  // default size
+		dialog.setMaximized(true);
+		dialog.setText(title); // window title
+		dialog.setLayout(new FillLayout()); // layout style
+		dialog.setSize(500, 400); // default size
 
 		// table to show the results
-		table = new TermTable( dialog, catalogue );
-		
-		table.setHideDeprecated( hideDepr );
-		table.setHideNotInUse( hideNotInUse );
-		
-		table.setCurrentHierarchy( hierarchy );
+		table = new TermTable(dialog, catalogue);
+
+		table.setHideDeprecated(hideDepr);
+		table.setHideNotInUse(hideNotInUse);
+
+		table.setCurrentHierarchy(hierarchy);
 
 		// Set the results to be displayed in the table
-		table.setInput( searchResults );
+		table.setInput(searchResults);
 
 		// if an element is double clicked
 		table.addDoubleClickListener(new IDoubleClickListener() {
@@ -97,18 +107,18 @@ public class FormDescribeSearchResult {
 			}
 		});
 
-		Menu searchMenu = new Menu ( dialog, SWT.POP_UP );
-		MenuItem addItem = new MenuItem ( searchMenu, SWT.PUSH );
-		addItem.setText( Messages.getString("FormDescribeSearchResult.AddCmd") ); //$NON-NLS-1$
-		Image addIcon = new Image( Display.getCurrent() , this.getClass().getClassLoader().getResourceAsStream(
-				"add-icon.png" ) );
+		Menu searchMenu = new Menu(dialog, SWT.POP_UP);
+		MenuItem addItem = new MenuItem(searchMenu, SWT.PUSH);
+		addItem.setText(Messages.getString("FormDescribeSearchResult.AddCmd")); //$NON-NLS-1$
+		Image addIcon = new Image(Display.getCurrent(),
+				this.getClass().getClassLoader().getResourceAsStream("add-icon.png"));
 		addItem.setImage(addIcon);
 
 		// Set the menu
-		table.addMenu( searchMenu );
+		table.addMenu(searchMenu);
 
 		// if add term is selected
-		addItem.addSelectionListener( new SelectionListener() {
+		addItem.addSelectionListener(new SelectionListener() {
 
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -121,31 +131,37 @@ public class FormDescribeSearchResult {
 			}
 		});
 
-		dialog.setVisible( true );  // show the window
+		dialog.setVisible(true); // show the window
 		dialog.open();
 
-		while ( !dialog.isDisposed() ) {
-			if ( !dialog.getDisplay().readAndDispatch() )
+		while (!dialog.isDisposed()) {
+			if (!dialog.getDisplay().readAndDispatch())
 				dialog.getDisplay().sleep();
 		}
-		dialog.dispose();
+		//Author: AlbyDev
+		if (!shell.isDisposed()) {
+			shell.setEnabled(true);
+			dialog.dispose();
+		}
+		//
 	}
-	
-	public void setHideDeprecated ( boolean hide ) {
+
+	public void setHideDeprecated(boolean hide) {
 		// update content provider settings
 		hideDepr = hide;
 	}
-	
-	public void setHideNotInUse ( boolean hide ) {
+
+	public void setHideNotInUse(boolean hide) {
 		// update content provider settings
 		hideNotInUse = hide;
 	}
 
 	/**
 	 * Get the selected term
+	 * 
 	 * @return
 	 */
-	public Term getSelectedTerm () {
-		return( selectedTerm );
+	public Term getSelectedTerm() {
+		return (selectedTerm);
 	}
 }

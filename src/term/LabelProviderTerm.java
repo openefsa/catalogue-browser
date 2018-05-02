@@ -215,7 +215,7 @@ public class LabelProviderTerm extends LabelProvider implements IFontProvider {
 		else {
 			text = Messages.getString("LabelProviderTerm.NameNotAvailable");
 		}
-
+		
 		return text;
 	}
 
