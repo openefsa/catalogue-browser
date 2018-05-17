@@ -538,6 +538,8 @@ public class FormTermCoder {
 		cancel.addSelectionListener(new SelectionAdapter() {
 
 			public void widgetSelected(SelectionEvent event) {
+
+				FormTermCoder.instanceExists=false;
 				_dialog.close();
 			}
 
@@ -585,6 +587,7 @@ public class FormTermCoder {
 				_dialog.getDisplay().sleep();
 		}
 
+		FormTermCoder.instanceExists=false;
 		_dialog.dispose();
 	}
 

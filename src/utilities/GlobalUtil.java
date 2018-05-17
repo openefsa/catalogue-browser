@@ -69,7 +69,23 @@ public class GlobalUtil {
 	
 	// the filename of the file which contains the business rule EXCEPTIONS for the describe 
 	final static public String BUSINESS_RULES_EX_FILE = "BR_Exceptions.csv";
+	
+	//AlbyDev: path of the changelog file
+	final static public String CHANGELOG_PATH = "config/changelog.txt";
+	final static public String FLAG_PATH = "config/flag.txt";
 
+	/**
+	 * AlbyDev: Path for the changelog file and the flag which inform the program 
+	 * that the release note was read
+	 */
+	public static String getChangelogPath() {
+		return CHANGELOG_PATH;
+	}
+	
+	public static String getFlagPath() {
+		return FLAG_PATH;
+	}
+	
 	/**
 	 * Set the working directory where the directories should
 	 * be searched.

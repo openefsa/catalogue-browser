@@ -257,6 +257,10 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 		tree.addSelectionChangedListener( listener );
 	}
 	
+	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
+		tree.removeSelectionChangedListener(listener);
+	}
+	
 	/**
 	 * Add a check listener to the tree (if multiple selection enabled)
 	 * @param listener

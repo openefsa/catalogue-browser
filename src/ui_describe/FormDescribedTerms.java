@@ -414,14 +414,17 @@ public class FormDescribedTerms {
 
 			@Override
 			public void doubleClick(DoubleClickEvent arg0) {
-				if ( !baseTermsTable.getSelection().isEmpty() ) {
-					IStructuredSelection selection = (IStructuredSelection) baseTermsTable.getSelection();
-					
-					// get the selected item
-					DescribedTerm fc = (DescribedTerm) selection.getFirstElement();
-
-					// load in the describe window the selected term
-					loadTermInDescribe( fc );
+				//Author: AlbyDev
+				if(!FormTermCoder.instanceExists) {
+					if ( !baseTermsTable.getSelection().isEmpty() ) {
+						IStructuredSelection selection = (IStructuredSelection) baseTermsTable.getSelection();
+						
+						// get the selected item
+						DescribedTerm fc = (DescribedTerm) selection.getFirstElement();
+	
+						// load in the describe window the selected term
+						loadTermInDescribe( fc );
+					}
 				}
 			}
 		});
@@ -460,30 +463,32 @@ public class FormDescribedTerms {
 	 * @param describedTerm
 	 */
 	private void loadTermInDescribe ( DescribedTerm describedTerm ) {
-		
-		// if not valid stop
-		if ( !describedTerm.isValid() ) {
-			GlobalUtil.showErrorDialog( _shell, 
-					describedTerm.getCode(), 
-					Messages.getString( "FormRecentlyDescribe.InvalidTermMessage" ) );
-			return;
+		//Author: AlbyDev
+		if(!FormTermCoder.instanceExists) {
+			// if not valid stop
+			if ( !describedTerm.isValid() ) {
+				GlobalUtil.showErrorDialog( _shell, 
+						describedTerm.getCode(), 
+						Messages.getString( "FormRecentlyDescribe.InvalidTermMessage" ) );
+				return;
+			}
+			
+			// open the describe window
+			FormTermCoder tcf = new FormTermCoder( _shell, 
+					Messages.getString("FormRecentlyDescribe.DescribeWindowTitle"), catalogue );
+			
+			// load the described term into the describe window
+			tcf.loadDescribedTerm( describedTerm );
+			
+			// hide the current form
+			_dialog.setVisible(false);
+	
+			// show the window and add the facet
+			tcf.display( catalogue );
+	
+			// close the current dialog
+			_dialog.close();
 		}
-		
-		// open the describe window
-		FormTermCoder tcf = new FormTermCoder( _shell, 
-				Messages.getString("FormRecentlyDescribe.DescribeWindowTitle"), catalogue );
-		
-		// load the described term into the describe window
-		tcf.loadDescribedTerm( describedTerm );
-		
-		// hide the current form
-		_dialog.setVisible(false);
-
-		// show the window and add the facet
-		tcf.display( catalogue );
-
-		// close the current dialog
-		_dialog.close();
 	}
 
 	
