@@ -231,8 +231,8 @@ public class TermsTreePanel extends Observable implements Observer {
 	 * 
 	 * @param term
 	 */
-	public void selectTerm(Nameable term) {
-		tree.selectTerm(term, 0);
+	public void selectTerm(Nameable term, boolean flag) {
+		tree.selectTerm(term, 0, flag);
 	}
 
 	/**
@@ -241,7 +241,7 @@ public class TermsTreePanel extends Observable implements Observer {
 	 * @param term
 	 */
 	public void selectTerm(Nameable term, int level) {
-		tree.selectTerm(term, level);
+		tree.selectTerm(term, level, true);
 	}
 
 	/**

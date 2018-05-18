@@ -72,6 +72,7 @@ import user_preferences.GlobalPreferenceDAO;
 import user_preferences.PreferenceNotFoundException;
 import utilities.GlobalUtil;
 import window_restorer.RestoreableWindow;
+import ui_main_panel.NavButtons;
 
 /**
  * Main UI class, it displays the main page of the browser. Here we have the
@@ -89,22 +90,22 @@ public class MainPanel implements Observer {
 	// code for saving window dimensions in db
 	private RestoreableWindow window;
 	private final static String WINDOW_CODE = "MainPanel";
-	
+
 	// the shell which hosts the UI
 	public Shell shell;
 
 	// main menu (upper left menu)
 	private MainMenu menu;
-	
+
 	// search bar and table
 	private SearchPanel searchPanel;
 
 	// label which shows the current open catalogue label
 	private CatalogueLabel catalogueLabel;
 
-	//AlbyDev: navigation buttons
+	// AlbyDev: navigation buttons
 	private NavButtons<TreeItemSelection> navigationalButtons;
-	
+
 	// combo box with radio buttons to select the displayed hierarchy
 	private HierarchySelector hierarchySelector;
 
@@ -377,60 +378,62 @@ public class MainPanel implements Observer {
 		setShellGraphics();
 
 		// Author: AlbanDev
-		//check if exists the notes file which is created when the changelog is shown once
-		if(!new File(GlobalUtil.getFlagPath()).isFile())
+		// check if exists the notes file which is created when the changelog is shown
+		// once
+		if (!new File(GlobalUtil.getFlagPath()).isFile())
 			showLastFeatures();
 	}
 
 	/**
-	 * Author: AlbyDev
-	 * Show a message dialog with the new features with updates
+	 * Author: AlbyDev Show a message dialog with the new features with updates
 	 */
 	public void showLastFeatures() {
 
 		Composite composite = new Composite(shell, SWT.NONE);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		
+
 		MessageDialog mex = null;
-		
+
 		// Create a big text box for the message text
-		final Text text = new Text(composite, SWT.READ_ONLY | SWT.MULTI | SWT.WRAP | SWT.BORDER | SWT.V_SCROLL | SWT.TITLE);
-		
+		final Text text = new Text(composite,
+				SWT.READ_ONLY | SWT.MULTI | SWT.WRAP | SWT.BORDER | SWT.V_SCROLL | SWT.TITLE);
+
 		BufferedReader buff = null;
-		String str="";
+		String str = "";
 		try {
-			
+
 			buff = new BufferedReader(new FileReader(GlobalUtil.getChangelogPath()));
-			
-			//read the header
-			text.append("\n" + buff.readLine()+"\n\n");
-			
-			//read the rest of the file
+
+			// read the header
+			text.append("\n" + buff.readLine() + "\n\n");
+
+			// read the rest of the file
 			while ((str = buff.readLine()) != null) {
 
 				text.append("\n" + str);
 			}
-			
-			//show the message dialog
-			mex = new MessageDialog(shell, "Release Notes", null, text.getText(), MessageDialog.INFORMATION, new String[] {}, 0);
-		
-			//if ok is pressed a new file flag is generated
-			if (mex.open()<0) 
+
+			// show the message dialog
+			mex = new MessageDialog(shell, "Release Notes", null, text.getText(), MessageDialog.INFORMATION,
+					new String[] {}, 0);
+
+			// if ok is pressed a new file flag is generated
+			if (mex.open() < 0)
 				new File(GlobalUtil.getFlagPath()).createNewFile();
-			
-		} catch (IOException e){
-			
+
+		} catch (IOException e) {
+
 			System.out.println(e);
 			return;
-			
+
 		} finally {
-			
+
 			try {
 				buff.close();
 			} catch (Exception ex) {
 			}
 		}
-		
+
 	}
 
 	public void openLastCatalogue() {
@@ -652,7 +655,7 @@ public class MainPanel implements Observer {
 		changeHierarchy(hierarchy);
 
 		// select the term in the tree
-		tree.selectTerm(term);
+		tree.selectTerm(term, true);
 
 		// refresh the browser
 		refresh();
@@ -719,30 +722,25 @@ public class MainPanel implements Observer {
 				changeHierarchy(event.getHierarchy(), (Term) event.getTerm());
 			}
 		});
-		
-		//AlbyDev: add the selected term to the list of indexes
+
+		// AlbyDev: add the selected term to the list of indexes
 		/*
-		tree.addSelectionChangedListener(new ISelectionChangedListener() {
-			
-			@Override
-			public void selectionChanged(SelectionChangedEvent arg0) {
-				TreeItemSelection sel = new TreeItemSelection(tree.getFirstSelectedTerm(), hierarchySelector.getSelectedHierarchy());
-				navigationalButtons.addNewObject(sel);
-			}
-		});
-		
-		navigationalButtons.addNavButtonsListener(new INavButtonsListener<TreeItemSelection>() {
-			
-			@Override
-			public void forwardPressed(TreeItemSelection sel) {
-				changeHierarchy(sel.getHierarchy(), sel.getTerm());
-			}
-			
-			@Override
-			public void backPressed(TreeItemSelection sel) {
-				changeHierarchy(sel.getHierarchy(), sel.getTerm());
-			}
-		});*/
+		 * tree.addSelectionChangedListener(new ISelectionChangedListener() {
+		 * 
+		 * @Override public void selectionChanged(SelectionChangedEvent arg0) {
+		 * TreeItemSelection sel = new TreeItemSelection(tree.getFirstSelectedTerm(),
+		 * hierarchySelector.getSelectedHierarchy());
+		 * navigationalButtons.addNewObject(sel); } });
+		 * 
+		 * navigationalButtons.addNavButtonsListener(new
+		 * INavButtonsListener<TreeItemSelection>() {
+		 * 
+		 * @Override public void forwardPressed(TreeItemSelection sel) {
+		 * changeHierarchy(sel.getHierarchy(), sel.getTerm()); }
+		 * 
+		 * @Override public void backPressed(TreeItemSelection sel) {
+		 * changeHierarchy(sel.getHierarchy(), sel.getTerm()); } });
+		 */
 
 		// set the hierarchy combo box input and select the first available hierarchy
 		hierarchySelector.refresh();
@@ -766,7 +764,7 @@ public class MainPanel implements Observer {
 		// recover the last selected term if present
 		try {
 			Term lastTerm = getLastTerm(catalogue);
-			tree.selectTerm(lastTerm);
+			tree.selectTerm(lastTerm, true);
 		} catch (PreferenceNotFoundException e) {
 		}
 
@@ -825,14 +823,9 @@ public class MainPanel implements Observer {
 		});
 
 		// I add a sashForm which is a split pane
-		SashForm sashForm = new SashForm(shell, SWT.HORIZONTAL);
-		GridData shellGridData = new GridData();
-		shellGridData.horizontalAlignment = SWT.FILL;
-		shellGridData.verticalAlignment = SWT.FILL;
-		shellGridData.grabExcessHorizontalSpace = true;
-		shellGridData.grabExcessVerticalSpace = true;
-		sashForm.setLayoutData(shellGridData);
-
+		SashForm sashForm = new SashForm(shell, SWT.HORIZONTAL | SWT.SMOOTH);
+		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
 		// left group for catalogue label, search bar and table
 		GridData leftData = new GridData();
 		leftData.minimumWidth = 180;
@@ -841,13 +834,13 @@ public class MainPanel implements Observer {
 		Composite leftGroup = new Composite(sashForm, SWT.NONE);
 		leftGroup.setLayout(new GridLayout(1, false));
 		leftGroup.setLayoutData(leftData);
-	    
+
 		// add the label which displays the catalogue label
 		addCatalogueLabel(leftGroup);
-		
+
 		// add the search bar and table
 		addSearchPanel(leftGroup);
-
+		
 		// group which contains hierarchy selector, tree viewer and tab folder
 		Group rightGroup = new Group(sashForm, SWT.NONE);
 		rightGroup.setLayout(new GridLayout(1, false));
@@ -862,16 +855,16 @@ public class MainPanel implements Observer {
 
 		// add hierarchy selector and deprecated/non reportable filters
 		addDisplayFilters(rightGroup);
-		
+
 		// AlbyDev: add the navigation buttons(back and forward)
-		//addNavButtons(rightGroup);
+		addNavButtons(rightGroup);
 
 		// add tree viewer and term tabs
 		addRightSashForm(rightGroup);
 
 		// make the tree viewer observer of the selected hierarchy
 		hierarchySelector.addObserver(tree);
-		
+
 		// make implicit facet tab observer of selected hierarchy
 		hierarchySelector.addObserver(tabPanel);
 
@@ -901,7 +894,8 @@ public class MainPanel implements Observer {
 		termFilter.restoreStatus();
 
 		// set the weights once all the widgets are inserted
-		sashForm.setWeights(new int[] { 1, 4 });
+		//AlbyDev: increased the width for the search view (second parm from 4 to 3)
+		sashForm.setWeights(new int[] { 1, 3});
 	}
 
 	/**
@@ -910,12 +904,12 @@ public class MainPanel implements Observer {
 	 * @param Composite
 	 */
 	private void addNavButtons(Composite parent) {
-		
-		Composite composite = new Composite( parent, SWT.NONE );
-		composite.setLayout( new RowLayout() );
-		
+
+		Composite composite = new Composite(parent, SWT.NONE);
+		composite.setLayout(new RowLayout());
+
 		navigationalButtons = new NavButtons<>(composite);
-		
+
 	}
 
 	/**
@@ -1138,7 +1132,7 @@ public class MainPanel implements Observer {
 				}
 			}
 		});
-
+		
 		// expand the selected term of the search results in the tree if clicked
 		searchPanel.addSelectionChangedListener(new ISelectionChangedListener() {
 
@@ -1149,8 +1143,9 @@ public class MainPanel implements Observer {
 				// return if no selected elements
 				if (selection.isEmpty())
 					return;
-
-				tree.selectTerm((Nameable) selection.getFirstElement());
+				
+				tree.selectTerm((Nameable) selection.getFirstElement(), false);
+				
 			}
 		});
 
@@ -1186,7 +1181,7 @@ public class MainPanel implements Observer {
 	 * @param parent
 	 */
 	private void addRightSashForm(Composite parent) {
-		
+
 		SashForm sashForm2 = new SashForm(parent, SWT.HORIZONTAL);
 
 		GridData gridData = new GridData();
@@ -1201,10 +1196,10 @@ public class MainPanel implements Observer {
 
 		// add the main tree viewer
 		tree = new TermsTreePanel(sashForm2, catalogue);
-		
+
 		// add the tab folder
 		addTabFolder(sashForm2);
-		
+
 		sashForm2.setWeights(new int[] { 5, 3 });
 	}
 
@@ -1217,10 +1212,10 @@ public class MainPanel implements Observer {
 
 		// get the current catalogue
 		Catalogue catalogue = GlobalManager.getInstance().getCurrentCatalogue();
-		
+
 		// initialize tab panel
 		tabPanel = new TermPropertiesPanel(parent, catalogue);
-		
+
 		// add the open listener, if we open an applicability
 		// we move the hierarchy to the selected one
 		tabPanel.addOpenListener(new HierarchyChangedListener() {

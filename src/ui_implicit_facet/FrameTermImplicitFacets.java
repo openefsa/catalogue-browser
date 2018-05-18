@@ -516,4 +516,5 @@ public class FrameTermImplicitFacets implements Observer {
 		// forward update to the table
 		implicitFacets.update(o, arg);
 	}
+	
 }

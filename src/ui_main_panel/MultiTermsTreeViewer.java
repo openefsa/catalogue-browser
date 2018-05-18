@@ -46,11 +46,6 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 
 	private static final Logger LOGGER = LogManager.getLogger(MultiTermsTreeViewer.class);
 	
-	private Composite parent;
-	private boolean multi;
-	private Catalogue catalogue;
-	private Hierarchy hierarchy;
-	
 	// providers of the tree
 	private ContentProviderTerm contentProvider;
 	private LabelProviderTerm labelProvider;
@@ -68,10 +63,6 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 	 */
 	public MultiTermsTreeViewer( Composite parent, boolean multi, int style, Catalogue catalogue ) {
 
-		this.parent = parent;
-		this.multi = multi;
-		this.catalogue = catalogue;
-		
 		if( multi )	
 			// Multiple selection with checkboxes
 			tree = new CheckboxTreeViewer( parent , SWT.CHECK | SWT.BORDER );
@@ -316,20 +307,21 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 	 * @param term
 	 */
 	public void selectTerm ( Nameable term ) {
-		selectTerm( term, 0 );
+		selectTerm( term, 0, true );
 	}
 	
 	/**
 	 * Select a term of the tree viewer, expand tree to the selected level
 	 * @param term
 	 */
-	public void selectTerm ( Nameable term, int level ) {
+	public void selectTerm ( Nameable term, int level, boolean flag) {
 		
 		if (term == null)
 			return;
 		
 		// get the focus
-		tree.getControl().setFocus();
+		if(flag)
+			tree.getControl().setFocus();
 		
 		// expand the tree until the term level
 		tree.expandToLevel( term, level );
@@ -345,7 +337,7 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 	public void expandSelectedTerms ( int level ) { 
 		
 		for ( Nameable term : getSelectedTerms() )
-			selectTerm( term, level );
+			selectTerm( term, level, true);
 	}
 	
 	/**
@@ -466,8 +458,6 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 	 * @param hierarchy
 	 */
 	public void setHierarchy ( Hierarchy hierarchy ) {
-		
-		this.hierarchy = hierarchy;
 		
 		// update the hierarchy for the label provider
 		labelProvider.setCurrentHierarchy ( hierarchy );

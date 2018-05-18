@@ -40,7 +40,7 @@ public class CatalogueLabel implements Observer {
 	 */
 	public CatalogueLabel( final Composite parent ) {
 		
-		composite = new Composite( parent, SWT.NONE );
+		composite = new Composite( parent, SWT.NONE);
 		composite.setLayout( new GridLayout(1, false) );
 		
 		GridData gd = new GridData();

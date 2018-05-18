@@ -188,7 +188,7 @@ public class TermPropertiesPanel implements Observer {
 		TabItem tabFacets = new TabItem( parent , SWT.NONE );
 		tabFacets.setText( Messages.getString("TreeImplicitFacets.TabName") );
 		tabFacets.setData( "implicitFacets" );
-
+		
 		Composite compImplicitFacets = new Composite( parent , SWT.NONE );
 		compImplicitFacets.setLayout( new GridLayout( 1 , false ) );
 
@@ -257,7 +257,7 @@ public class TermPropertiesPanel implements Observer {
 		parent.addSelectionListener( new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-
+				
 				Object data = parent.getSelection()[0].getData();
 
 				if ( data != null && data.equals( "implicitFacets" ) ) {
@@ -269,6 +269,10 @@ public class TermPropertiesPanel implements Observer {
 				} else
 					facetTab.setVisible( false );
 			}
+		});
+		
+		facetTab.addSelectionListener(new SelectionAdapter() {
+			
 		});
 	}
 	
@@ -422,4 +426,5 @@ public class TermPropertiesPanel implements Observer {
 		// pass the update to the facet tab
 		facetTab.update( arg0, arg1 );
 	}
+	
 }
