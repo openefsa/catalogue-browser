@@ -70,7 +70,7 @@ public class XmlUpdatesFactory {
 		// and make actions when it has finished
 		ExportActions export = new ExportActions();
 		export.setProgressBar( progressBar );
-		export.exportAsync( catalogue, startFilename, new ThreadFinishedListener() {
+		export.exportAsync( catalogue, startFilename, true, new ThreadFinishedListener() {
 			
 			@Override
 			public void finished(Thread thread, int code, Exception exception) {

@@ -158,6 +158,9 @@ public class CatalogueBrowserMain {
 		// show ui
 		browser.shell.open();
 		
+		//logout
+		//User.getInstance().deleteCredentials();
+		
 		if (User.getInstance().areCredentialsStored()) {
 			
 			// reauthenticate the user in background if needed

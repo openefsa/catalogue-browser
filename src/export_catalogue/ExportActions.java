@@ -12,7 +12,7 @@ import progress_bar.IProgressBar;
 public class ExportActions {
 
 	private IProgressBar progressBar;
-	
+
 	/**
 	 * Set the progress bar for the process
 	 * @param progressBar
@@ -29,10 +29,10 @@ public class ExportActions {
 	 * @param filename
 	 * @return
 	 */
-	public boolean exportSync ( Catalogue catalogue, String filename ) {
+	public boolean exportSync ( Catalogue catalogue, String filename, boolean b ) {
 		
 		// create an export
-		ExportCatalogueThread exportThread = new ExportCatalogueThread( catalogue, filename );
+		ExportCatalogueThread exportThread = new ExportCatalogueThread( catalogue, filename, b );
 		
 		if ( progressBar != null )
 			exportThread.setProgressBar( progressBar );
@@ -56,14 +56,15 @@ public class ExportActions {
 	 * export action is finished). Set the doneListener to
 	 * make actions at the end of the export process
 	 * @param catalogue catalogue to be exported
+	 * @param b 
 	 * @param outputFilename the name of the xlsx file
 	 * @param doneListener listener to be called when the export is finished
 	 */
 	public void exportAsync ( Catalogue catalogue, String filename,
-			ThreadFinishedListener doneListener ) {
+			boolean b, ThreadFinishedListener doneListener ) {
 		
 		// create a thread for the excel export
-		ExportCatalogueThread exportThread = new ExportCatalogueThread( catalogue, filename );
+		ExportCatalogueThread exportThread = new ExportCatalogueThread( catalogue, filename, b );
 		
 		if ( progressBar != null )
 			exportThread.setProgressBar( progressBar );

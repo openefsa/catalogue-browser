@@ -23,15 +23,18 @@ public class ExportCatalogueThread extends Thread {
 	private Catalogue catalogue;
 	private ThreadFinishedListener listener;
 	private IProgressBar progressForm;
+	private Boolean flag; //used for reconize two different export
 	
 	/**
 	 * Start an export process.
 	 * @param catalogue the catalogue we want to export
 	 * @param filename the .xlsx file which will host the catalogue data
+	 * @param b 
 	 */
-	public ExportCatalogueThread( Catalogue catalogue, String filename ) {
+	public ExportCatalogueThread( Catalogue catalogue, String filename, boolean b ) {
 		this.catalogue = catalogue;
 		this.filename = filename;
+		this.flag=b;
 	}
 	
 	@Override
@@ -45,7 +48,7 @@ public class ExportCatalogueThread extends Thread {
 		
 		// export the catalogue
 		try {
-			exportCat.exportCatalogue( catalogue, filename );
+			exportCat.exportCatalogue( catalogue, filename, flag );
 		} catch (IOException e) {
 			e.printStackTrace();
 

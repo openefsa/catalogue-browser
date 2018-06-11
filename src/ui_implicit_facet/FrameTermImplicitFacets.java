@@ -51,6 +51,7 @@ public class FrameTermImplicitFacets implements Observer {
 
 	private Listener addDescriptorListener; // called each time that a facet is added (if multiple, it is called
 											// multiple times)
+
 	private Listener removeDescriptorListener; // called each time that a facet is removed
 	private Listener updateListener; // called at the end of an adding operation, useful if we have to do something
 										// only once in multiple selection cases
@@ -58,7 +59,6 @@ public class FrameTermImplicitFacets implements Observer {
 	private Object selElement; //get the selected facet folder
 	private Attribute facetCategory;
 	
-
 	public void addAddDescriptorListener(Listener listener) {
 		this.addDescriptorListener = listener;
 	}

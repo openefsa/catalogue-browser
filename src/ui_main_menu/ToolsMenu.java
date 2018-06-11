@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -70,15 +71,16 @@ public class ToolsMenu implements MainMenuItem {
 	private Shell shell;
 	
 	// tools menu items
-	private MenuItem toolsItem;           // tools menu
-	private MenuItem reserveMI;           // reserve catalogue
-	private MenuItem unreserveMI;         // unreserve catalogue
+	private MenuItem toolsItem;           		// tools menu
+	private MenuItem reserveMI;          		// reserve catalogue
+	private MenuItem unreserveMI;         	// unreserve catalogue
 	private MenuItem uploadDataMI;        // upload changes of the catalogue
 	private MenuItem createXmlMI;
-	private MenuItem publishMI;           // publish a draft catalogue
-	private MenuItem resetMI;             // reset the catalogues data to the previous version
+	private MenuItem publishMI;           		// publish a draft catalogue
+	private MenuItem resetMI;            			// reset the catalogues data to the previous version
 	private MenuItem importMI;
 	private MenuItem exportMI;
+	private MenuItem exportForIECT; 		//export for the interpreting and checking tool
 	private MenuItem importPicklistMI;
 	private MenuItem favouritePicklistMI;
 	private MenuItem removePicklistMI;
@@ -143,6 +145,9 @@ public class ToolsMenu implements MainMenuItem {
 		// export operations
 		exportMI = addExportMI (toolsMenu);
 
+		//export for IECT
+		exportForIECT = addExportForIECT(toolsMenu);
+		
 		// add import picklist
 		importPicklistMI = addImportPicklistMI (toolsMenu);
 		
@@ -623,7 +628,7 @@ public class ToolsMenu implements MainMenuItem {
 				
 				// export the opened catalogue
 				export.exportAsync(mainMenu.getCatalogue(), 
-						filename, new ThreadFinishedListener() {
+						filename, true, new ThreadFinishedListener() {
 
 					@Override
 					public void finished(Thread thread, final int code, Exception e) {
@@ -666,6 +671,91 @@ public class ToolsMenu implements MainMenuItem {
 		return exportItem;
 	}
 
+	/**
+	 * AlbyDev: Add a menu item which allows to export the database into an excel file
+	 * for the interpreting and checking tool
+	 * @param menu
+	 */
+	private MenuItem addExportForIECT (Menu menu) {
+		
+		final MenuItem exportItem = new MenuItem(menu , SWT.NONE);
+		exportItem.setText(Messages.getString("BrowserMenu.ExportICTCmd"));
+		
+		exportItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected (SelectionEvent event) {
+				
+				Term incorrectTerm = mainMenu.getCatalogue().isDataCorrect();
+				if (incorrectTerm != null) {
+					
+					// warn the user that everything went ok
+					GlobalUtil.showErrorDialog(shell, 
+							incorrectTerm.getCode() + "; " + incorrectTerm.getShortName(true),
+									Messages.getString("Export.DataErrorMessage"));
+					
+				}
+				
+				String defaultFilename = mainMenu.getCatalogue().getCode() + "_" 
+						+ mainMenu.getCatalogue().getVersion() + "_slim.xlsx";
+				
+				String filePath = System.getProperty("user.dir")+"/Database/"+defaultFilename ;
+				
+				//albydev instead of the save window, give a warning message which says that the file will be saved in the followinf path
+				MessageDialog.openInformation(shell, "Info", "The file will be saved in the default path for the Interpreting and checking tool:\n"
+						+ filePath);
+				
+				// export the catalogue (changed the main class so to know that the call is coming from a different export button
+				ExportActions export = new ExportActions();
+				
+				// set the progress bar
+				export.setProgressBar(new FormProgressBar(shell, 
+						Messages.getString("Export.ProgressBarTitle")));
+				
+				// export the opened catalogue
+				export.exportAsync(mainMenu.getCatalogue(), 
+						filePath, false, new ThreadFinishedListener() {
+
+					@Override
+					public void finished(Thread thread, final int code, Exception e) {
+						
+						shell.getDisplay().asyncExec(new Runnable() {
+							
+							@Override
+							public void run() {
+								
+								String title = defaultFilename;
+								String msg;
+								int icon;
+								
+								if (code == ThreadFinishedListener.OK) {
+									msg = Messages.getString("Export.DoneMessage");
+									icon = SWT.ICON_INFORMATION;
+								}
+								else {
+									msg = Messages.getString("Export.ErrorMessage");
+									icon = SWT.ICON_ERROR;
+								}
+								
+								// warn the user that everything went ok
+								GlobalUtil.showDialog(shell, 
+										title, msg, icon);
+								
+								if (listener != null)
+									listener.buttonPressed(exportItem, 
+											EXPORT_CAT_MI, null);
+							}
+						});
+					}
+				});
+			}
+		});
+		
+		// enable according to the operation status
+		exportItem.setEnabled(false);
+		
+		return exportItem;
+	}
+	
 	/**
 	 * Add a menu item which allows selecting the favourite picklist to use in the browser
 	 * @param menu
@@ -1063,6 +1153,7 @@ public class ToolsMenu implements MainMenuItem {
 		// catalogue code a custom string, but with master hierarchy code
 		// the code defined before in the excel import... And give errors!
 		exportMI.setEnabled(true);
+		exportForIECT.setEnabled(true);
 
 		importPicklistMI.setEnabled(hasFacets);
 		favouritePicklistMI.setEnabled(hasFacets && hasPicklists);
@@ -1192,6 +1283,9 @@ public class ToolsMenu implements MainMenuItem {
 					importMI.setEnabled(true);
 				
 				if (exportMI != null)
+					exportMI.setEnabled(true);
+				
+				if (exportForIECT != null)
 					exportMI.setEnabled(true);
 			}
 		}

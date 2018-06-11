@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.poi.ss.usermodel.Workbook;
 
@@ -28,12 +30,14 @@ import term.CodeSorter;
 public class ExportTermSheet extends SheetWriter {
 
 	private Catalogue catalogue;
+	private boolean flag;
+	private List<String> IECTColumns = Stream.of("allFacets", "matrixCode", "foodexOldCode", "detailLevel", "termType").collect(Collectors.toList());
 	
-	public ExportTermSheet( Catalogue catalogue, 
-			Workbook workbook, String sheetName) {
+	public ExportTermSheet( Catalogue catalogue, Workbook workbook, String sheetName, boolean b) {
 		
 		super(workbook, sheetName);
 		this.catalogue = catalogue;
+		this.flag = b;
 	}
 
 	@Override
@@ -43,23 +47,37 @@ public class ExportTermSheet extends SheetWriter {
 
 		int i = 0;
 		
-		headers.put( "TERM_CODE",              new SheetHeader(i++, Headers.TERM_CODE ) );
-		headers.put( "TERM_EXTENDED_NAME",     new SheetHeader(i++, Headers.TERM_EXT_NAME ) );
-		headers.put( "TERM_SHORT_NAME",        new SheetHeader(i++, Headers.TERM_SHORT_NAME ) );
-		headers.put( "TERM_SCOPENOTE",         new SheetHeader(i++, Headers.TERM_SCOPENOTE ) );
-		headers.put( "TERM_VERSION",           new SheetHeader(i++, Headers.VERSION ) );
-		headers.put( "TERM_LAST_UPDATE",       new SheetHeader(i++, Headers.LAST_UPDATE ) );
-		headers.put( "TERM_VALID_FROM",        new SheetHeader(i++, Headers.VALID_FROM ) );
-		headers.put( "TERM_VALID_TO",          new SheetHeader(i++, Headers.VALID_TO ) );
-		headers.put( "TERM_STATUS",            new SheetHeader(i++, Headers.STATUS ) );
-		headers.put( "TERM_DEPRECATED",        new SheetHeader(i++, Headers.DEPRECATED ) );
+		if(flag) {//if all info needed 
+			headers.put( "TERM_CODE",              new SheetHeader(i++, Headers.TERM_CODE ) );
+			headers.put( "TERM_EXTENDED_NAME",     new SheetHeader(i++, Headers.TERM_EXT_NAME ) );
+			headers.put( "TERM_SHORT_NAME",        new SheetHeader(i++, Headers.TERM_SHORT_NAME ) );
+			headers.put( "TERM_SCOPENOTE",         new SheetHeader(i++, Headers.TERM_SCOPENOTE ) );
+			headers.put( "TERM_VERSION",           new SheetHeader(i++, Headers.VERSION ) );
+			headers.put( "TERM_LAST_UPDATE",       new SheetHeader(i++, Headers.LAST_UPDATE ) );
+			headers.put( "TERM_VALID_FROM",        new SheetHeader(i++, Headers.VALID_FROM ) );
+			headers.put( "TERM_VALID_TO",          new SheetHeader(i++, Headers.VALID_TO ) );
+			headers.put( "TERM_STATUS",            new SheetHeader(i++, Headers.STATUS ) );
+			headers.put( "TERM_DEPRECATED",        new SheetHeader(i++, Headers.DEPRECATED ) );
+		}else {//if just for IECT
+			headers.put( "TERM_CODE",              new SheetHeader(i++, Headers.TERM_CODE ) );
+			headers.put( "TERM_EXTENDED_NAME",     new SheetHeader(i++, Headers.TERM_EXT_NAME ) );
+		}
 
 		AttributeDAO attrDao = new AttributeDAO( catalogue );
 
 		// for each attribute add the header with the attribute name
-		for ( Attribute attr : attrDao.getNonFacetAttributes() ) {
-			headers.put( "attribute_" + attr.getName(), 
-					new SheetHeader( i++, attr.getName() ) );
+		if(flag) {
+			for ( Attribute attr : attrDao.getNonFacetAttributes() ) {
+				headers.put( "attribute_" + attr.getName(), 
+						new SheetHeader( i++, attr.getName() ) );
+			}
+		}else {
+			for ( Attribute attr : attrDao.getNonFacetAttributes() ) {
+				if(IECTColumns.contains(attr.getName())){
+					headers.put( "attribute_" + attr.getName(), 
+							new SheetHeader( i++, attr.getName() ) );
+				}
+			}
 		}
 		
 		// for each hierarchy add 4 headers regarding the flag, the parent code
@@ -78,18 +96,20 @@ public class ExportTermSheet extends SheetWriter {
 
 			headers.put( "flag_" + code,
 					new SheetHeader( i++, code + Headers.SUFFIX_FLAG ) );
-
-			headers.put( "parent_" + code,
-					new SheetHeader( i++, code + Headers.SUFFIX_PARENT_CODE ) );
-
-			headers.put( "order_" + code,
-					new SheetHeader( i++, code + Headers.SUFFIX_ORDER ) );
-
-			headers.put( "reportable_" + code,
-					new SheetHeader( i++, code + Headers.SUFFIX_REPORT ) );
-
-			headers.put( "hierarchyCode_" + code,
-					new SheetHeader( i++, code + Headers.SUFFIX_HIER_CODE ) );
+			
+			if(flag) {
+				headers.put( "parent_" + code,
+						new SheetHeader( i++, code + Headers.SUFFIX_PARENT_CODE ) );
+	
+				headers.put( "order_" + code,
+						new SheetHeader( i++, code + Headers.SUFFIX_ORDER ) );
+	
+				headers.put( "reportable_" + code,
+						new SheetHeader( i++, code + Headers.SUFFIX_REPORT ) );
+	
+				headers.put( "hierarchyCode_" + code,
+						new SheetHeader( i++, code + Headers.SUFFIX_HIER_CODE ) );
+			}
 		}
 
 		return headers;

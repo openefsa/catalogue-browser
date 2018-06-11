@@ -4,11 +4,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -20,9 +17,6 @@ import messages.Messages;
 
 public class FrameTermApplicabilities {
 
-	private Term term;
-	private Composite parent;
-	
 	private TableApplicability applTable;
 	private TableFacetApplicability facetApplTable;
 	private TreeFacetRestrictions restrictionTree;
@@ -44,8 +38,6 @@ public class FrameTermApplicabilities {
 	 * @param term
 	 */
 	public void setTerm ( Term term ) {
-		
-		this.term = term;
 		
 		applTable.setTerm( term );
 		/*facetApplTable.setTerm( term );
@@ -71,8 +63,6 @@ public class FrameTermApplicabilities {
 	 * @param parent
 	 */
 	public FrameTermApplicabilities( Composite parent, Catalogue catalogue ) {
-		
-		this.parent = parent;
 		
 		// create applicability table
 		applTable = new TableApplicability ( parent, catalogue );
@@ -127,7 +117,7 @@ public class FrameTermApplicabilities {
 		addTermApplicability.addSelectionListener( new SelectionAdapter() {
 			@Override
 			public void widgetSelected ( SelectionEvent e ) {
-
+				
 			}
 		} );
 		
@@ -147,9 +137,9 @@ public class FrameTermApplicabilities {
 		removeTermApplicability.setEnabled( false );
 
 		menu.addListener( SWT.Show, new Listener() {
-
+				
 			public void handleEvent ( Event event ) {
-
+				
 			}
 		} );
 

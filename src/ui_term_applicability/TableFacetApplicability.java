@@ -1,10 +1,7 @@
 package ui_term_applicability;
 import java.util.ArrayList;
-import java.util.Iterator;
-
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
@@ -18,14 +15,10 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.MessageBox;
-
-import catalogue_browser_dao.TermAttributeDAO;
 import catalogue_object.Attribute;
 import catalogue_object.Term;
 import catalogue_object.TermAttribute;
 import messages.Messages;
-import term_code_generator.CodeGenerator;
 import utilities.GlobalUtil;
 
 

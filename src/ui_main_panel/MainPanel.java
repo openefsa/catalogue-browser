@@ -22,7 +22,6 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -72,7 +71,6 @@ import user_preferences.GlobalPreferenceDAO;
 import user_preferences.PreferenceNotFoundException;
 import utilities.GlobalUtil;
 import window_restorer.RestoreableWindow;
-import ui_main_panel.NavButtons;
 
 /**
  * Main UI class, it displays the main page of the browser. Here we have the
@@ -102,9 +100,6 @@ public class MainPanel implements Observer {
 
 	// label which shows the current open catalogue label
 	private CatalogueLabel catalogueLabel;
-
-	// AlbyDev: navigation buttons
-	private NavButtons<TreeItemSelection> navigationalButtons;
 
 	// combo box with radio buttons to select the displayed hierarchy
 	private HierarchySelector hierarchySelector;
@@ -856,9 +851,6 @@ public class MainPanel implements Observer {
 		// add hierarchy selector and deprecated/non reportable filters
 		addDisplayFilters(rightGroup);
 
-		// AlbyDev: add the navigation buttons(back and forward)
-		addNavButtons(rightGroup);
-
 		// add tree viewer and term tabs
 		addRightSashForm(rightGroup);
 
@@ -896,20 +888,6 @@ public class MainPanel implements Observer {
 		// set the weights once all the widgets are inserted
 		//AlbyDev: increased the width for the search view (second parm from 4 to 3)
 		sashForm.setWeights(new int[] { 1, 3});
-	}
-
-	/**
-	 * AlbyDev: add the navigation buttons under the label
-	 * 
-	 * @param Composite
-	 */
-	private void addNavButtons(Composite parent) {
-
-		Composite composite = new Composite(parent, SWT.NONE);
-		composite.setLayout(new RowLayout());
-
-		navigationalButtons = new NavButtons<>(composite);
-
 	}
 
 	/**
@@ -1215,14 +1193,14 @@ public class MainPanel implements Observer {
 
 		// initialize tab panel
 		tabPanel = new TermPropertiesPanel(parent, catalogue);
-
+				
 		// add the open listener, if we open an applicability
 		// we move the hierarchy to the selected one
 		tabPanel.addOpenListener(new HierarchyChangedListener() {
 
 			@Override
 			public void hierarchyChanged(HierarchyEvent event) {
-
+				
 				// get the selected hierarchy from the event
 				Hierarchy selectedHierarchy = event.getHierarchy();
 				Nameable parent = event.getTerm();
@@ -1277,6 +1255,7 @@ public class MainPanel implements Observer {
 				searchPanel.refresh(true);
 			}
 		});
+		
 	}
 
 	// warned if the reserve level of the current catalogue is changed

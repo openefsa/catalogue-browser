@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-Class-Path: swt.jar 
-  org.eclipse.core.commands.jar 
-  org.eclipse.equinox.common.jar 
-  org.eclipse.jface.jar 
-  org.eclipse.osgi.jar 
-  org.eclipse.ui.workbench.jar
-Main-Class: FoodexBrowser

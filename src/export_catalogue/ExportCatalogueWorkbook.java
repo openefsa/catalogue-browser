@@ -37,9 +37,10 @@ public class ExportCatalogueWorkbook {
 	 * Four sheets are created: catalogue, hierarchy, attribute, term
 	 * @param catalogue the catalogue we want to export
 	 * @param filename
+	 * @param flag 
 	 * @throws IOException
 	 */
-	public void exportCatalogue( Catalogue catalogue, String filename ) throws IOException {
+	public void exportCatalogue( Catalogue catalogue, String filename, Boolean flag ) throws IOException {
 		
 		long startTime = System.currentTimeMillis();
 		
@@ -50,66 +51,98 @@ public class ExportCatalogueWorkbook {
 
 		// set that we want to maintain the temp files smaller
 		workbook.setCompressTempFiles( true );
-		
-		LOGGER.info("Exporting catalogue" + catalogue);
-		
-		// write the catalogue sheet
-		ExportCatalogueSheet catSheet = new ExportCatalogueSheet( catalogue, 
-				workbook, Headers.CAT_SHEET_NAME );
-		
-		if ( progressBar != null )
-			catSheet.setProgressBar( progressBar, 1, 
-					Messages.getString( "Export.CatalogueSheet" ) );
-		
-		catSheet.write();
 
-		LOGGER.info( "Exporting hierarchies" );
+		//if exporting the info
+		if (flag) {
+			
+			LOGGER.info("Exporting catalogue" + catalogue);
+			
+			// write the catalogue sheet
+			ExportCatalogueSheet catSheet = new ExportCatalogueSheet( catalogue, 
+					workbook, Headers.CAT_SHEET_NAME );
+			
+			if ( progressBar != null )
+				catSheet.setProgressBar( progressBar, 1, 
+						Messages.getString( "Export.CatalogueSheet" ) );
+			
+			catSheet.write();
 		
-		// write the hierarchy sheet
-		ExportHierarchySheet hierarchySheet = new ExportHierarchySheet( catalogue, 
-				workbook, Headers.HIER_SHEET_NAME );
-		
-		if ( progressBar != null )
-			hierarchySheet.setProgressBar( progressBar, 4, 
-					Messages.getString( "Export.HierarchySheet" ) );
-		
-		hierarchySheet.write();
-		
-		LOGGER.info ( "Exporting attributes" );
-		
-		// write the attribute sheet
-		ExportAttributeSheet attrSheet = new ExportAttributeSheet( catalogue, 
-				workbook, Headers.ATTR_SHEET_NAME );
-		
-		if ( progressBar != null )
-			attrSheet.setProgressBar( progressBar, 5, 
-					Messages.getString( "Export.AttributeSheet" ) );
-		
-		attrSheet.write();
-		
-		LOGGER.info ( "Exporting terms" );
+			LOGGER.info( "Exporting hierarchies" );
+			
+			// write the hierarchy sheet
+			ExportHierarchySheet hierarchySheet = new ExportHierarchySheet( catalogue, 
+					workbook, Headers.HIER_SHEET_NAME );
+			
+			if ( progressBar != null )
+				hierarchySheet.setProgressBar( progressBar, 4, 
+						Messages.getString( "Export.HierarchySheet" ) );
+			
+			hierarchySheet.write();
+			
+			LOGGER.info ( "Exporting attributes" );
+			
+			// write the attribute sheet
+			ExportAttributeSheet attrSheet = new ExportAttributeSheet( catalogue, 
+					workbook, Headers.ATTR_SHEET_NAME, true );
+			
+			if ( progressBar != null )
+				attrSheet.setProgressBar( progressBar, 5, 
+						Messages.getString( "Export.AttributeSheet" ) );
+			
+			attrSheet.write();
+			
+			LOGGER.info ( "Exporting terms" );
 
-		// write the term sheet
-		ExportTermSheet termSheet = new ExportTermSheet( catalogue, 
-				workbook, Headers.TERM_SHEET_NAME );
-		
-		if ( progressBar != null )
-			termSheet.setProgressBar( progressBar, 80, 
-					Messages.getString( "Export.TermSheet" ) );
-		
-		termSheet.write();
-		
-		LOGGER.info ( "Exporting release notes" );
-		
-		// write the term sheet
-		ExportReleaseNotesSheet noteSheet = new ExportReleaseNotesSheet( 
-				catalogue, workbook, Headers.NOTES_SHEET_NAME );
-		
-		if ( progressBar != null )
-			noteSheet.setProgressBar( progressBar, 95, 
-					Messages.getString( "Export.NotesSheet" ) );
-		
-		noteSheet.write();
+			// write the term sheet
+			ExportTermSheet termSheet = new ExportTermSheet( catalogue, 
+					workbook, Headers.TERM_SHEET_NAME, true );
+			
+			if ( progressBar != null )
+				termSheet.setProgressBar( progressBar, 80, 
+						Messages.getString( "Export.TermSheet" ) );
+			
+			termSheet.write();
+			
+			LOGGER.info ( "Exporting release notes" );
+			
+			// write the term sheet
+			ExportReleaseNotesSheet noteSheet = new ExportReleaseNotesSheet( 
+					catalogue, workbook, Headers.NOTES_SHEET_NAME );
+			
+			if ( progressBar != null )
+				noteSheet.setProgressBar( progressBar, 95, 
+						Messages.getString( "Export.NotesSheet" ) );
+			
+			noteSheet.write();
+			
+		}else {
+			
+			//if needed just the interpreting and checking tool info
+			LOGGER.info ( "Exporting attributes" );
+			
+			// write the attribute sheet
+			ExportAttributeSheet attrSheet = new ExportAttributeSheet( catalogue, 
+					workbook, Headers.ATTR_SHEET_NAME, false );
+			
+			if ( progressBar != null )
+				attrSheet.setProgressBar( progressBar, 5, 
+						Messages.getString( "Export.AttributeSheet" ) );
+			
+			attrSheet.write();
+			
+			LOGGER.info ( "Exporting terms" );
+
+			// write the term sheet
+			ExportTermSheet termSheet = new ExportTermSheet( catalogue, 
+					workbook, Headers.TERM_SHEET_NAME, false);
+			
+			if ( progressBar != null )
+				termSheet.setProgressBar( progressBar, 80, 
+						Messages.getString( "Export.TermSheet" ) );
+			
+			termSheet.write();
+		}
+	
 		
 		// last operation
 		if ( progressBar != null )

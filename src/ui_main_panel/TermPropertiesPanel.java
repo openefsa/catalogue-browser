@@ -14,7 +14,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
-
 import catalogue.Catalogue;
 import catalogue_browser_dao.TermAttributeDAO;
 import catalogue_object.Term;
@@ -137,7 +136,6 @@ public class TermPropertiesPanel implements Observer {
 			
 			@Override
 			public void hierarchyChanged( HierarchyEvent arg0 ) {
-
 				if ( openListener != null )
 					openListener.hierarchyChanged( arg0 );
 			}
@@ -206,7 +204,7 @@ public class TermPropertiesPanel implements Observer {
 		// we set that new facets which will be added are considered as implicit facets
 		// and not as explicit (as in the describe)
 		facetTab = new FrameTermImplicitFacets( compImplicitFacets, FacetType.IMPLICIT, catalogue );
-
+		
 		// if a facet is added in the implicit facet tab
 		facetTab.addAddDescriptorListener( new Listener() {
 
@@ -269,10 +267,6 @@ public class TermPropertiesPanel implements Observer {
 				} else
 					facetTab.setVisible( false );
 			}
-		});
-		
-		facetTab.addSelectionListener(new SelectionAdapter() {
-			
 		});
 	}
 	
