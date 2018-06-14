@@ -51,7 +51,6 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 	private LabelProviderTerm labelProvider;
 	private SorterTermViewer sorter;
 	private TreeViewer tree;
-	
 	private TermTreeDragSourceListener drag;
 	private TermTreeDropTargetListener drop;
 
@@ -98,6 +97,7 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 		if ( catalogue != null ) {
 			setHierarchy( catalogue.getDefaultHierarchy() );
 		}
+		
 	}
 	
 	/**
@@ -320,8 +320,8 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 			return;
 		
 		// get the focus
-		if(flag)
-			tree.getControl().setFocus();
+		//if(flag)
+		//	tree.getControl().setFocus();
 		
 		// expand the tree until the term level
 		tree.expandToLevel( term, level );

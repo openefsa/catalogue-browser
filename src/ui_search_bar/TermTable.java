@@ -13,6 +13,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 
 import catalogue.Catalogue;
@@ -40,7 +42,7 @@ public class TermTable implements Observer {
 	public TermTable(Composite parent, Catalogue catalogue) {
 
 		this.parent = parent;
-
+				
 		// create the table viewer for hosting the search results
 		table = new TableViewer(parent,
 				SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.VIRTUAL);
@@ -57,6 +59,14 @@ public class TermTable implements Observer {
 
 		// layout data of the table
 		table.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
+		//albydev: set the focus when enter the table
+		table.getTable().addListener(SWT.MouseEnter, new Listener() {
+		    public void handleEvent(Event event) {
+		        table.getControl().setFocus();
+		    }
+		});
+			
 	}
 
 	/**

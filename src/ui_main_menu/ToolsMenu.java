@@ -695,10 +695,7 @@ public class ToolsMenu implements MainMenuItem {
 					
 				}
 				
-				String defaultFilename = mainMenu.getCatalogue().getCode() + "_" 
-						+ mainMenu.getCatalogue().getVersion() + "_slim.xlsx";
-				
-				String filePath = System.getProperty("user.dir")+"/Database/"+defaultFilename ;
+				String filePath = System.getProperty("user.dir")+"/Interpreting_Tool/FoodEx2.xlsx" ;
 				
 				//albydev instead of the save window, give a warning message which says that the file will be saved in the followinf path
 				MessageDialog.openInformation(shell, "Info", "The file will be saved in the default path for the Interpreting and checking tool:\n"
@@ -723,7 +720,7 @@ public class ToolsMenu implements MainMenuItem {
 							@Override
 							public void run() {
 								
-								String title = defaultFilename;
+								String title = "FoodEx2.xlsx";
 								String msg;
 								int icon;
 								

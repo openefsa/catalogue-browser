@@ -6,6 +6,8 @@ import java.util.Observer;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -59,11 +61,10 @@ public class TermsTreePanel extends Observable implements Observer {
 	private static final Logger LOGGER = LogManager.getLogger(TermsTreePanel.class);
 
 	private Catalogue catalogue;
-
 	private MultiTermsTreeViewer tree;
 	private Shell shell;
 	private Hierarchy selectedHierarchy; // current hierarchy, retrieved from observable
-	
+
 	private MenuItem otherHierarchies, deprecateTerm, termMoveDown, termMoveUp, termLevelUp, describe, recentTerms,
 			addTerm, cutTerm, copyNode, copyBranch, copyCode, copyTerm, fullCopyTerm, pasteTerm, prefSearchTerm,
 			favouritePicklist, addRootTerm, pasteRootTerm;
@@ -88,17 +89,26 @@ public class TermsTreePanel extends Observable implements Observer {
 	public TermsTreePanel(Composite parent, Catalogue catalogue) {
 
 		this.shell = parent.getShell();
+		
 		this.catalogue = catalogue;
 		// initialize the term clipboard object
 		termClip = new TermClipboard();
 
 		// initialize the term order changer object
 		termOrderChanger = new TermOrderChanger();
-		
+
 		// add the main tree viewer
 		tree = createTreeViewer(parent);
+		
 	}
 
+	/**
+	 * AlbyDev: set focus on tree
+	 */
+	public void setTreeFocus() {
+		this.tree.getTreeViewer().getControl().setFocus();
+	}
+	
 	/**
 	 * Called when something needs to be refreshed
 	 * 
@@ -144,7 +154,7 @@ public class TermsTreePanel extends Observable implements Observer {
 		Menu menu = null;
 
 		// set the menu if no empty selection
-		//Author: AlbyDev
+		// Author: AlbyDev
 		if (tree.isSelectionEmpty())
 			menu = createEmptyMenu();
 		// if the menu is not set yet, create it
@@ -303,27 +313,53 @@ public class TermsTreePanel extends Observable implements Observer {
 
 		MultiTermsTreeViewer tree = new MultiTermsTreeViewer(parent, false,
 				SWT.MULTI | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.VIRTUAL, catalogue);
-
+		
 		// allow drag n drop
 		tree.addDragAndDrop();
 		
+		//albydev: set the focus when enter the tree
+		tree.getTreeViewer().getTree().addListener(SWT.MouseEnter, new Listener() {
+		    public void handleEvent(Event event) {
+		        setTreeFocus();
+		    }
+		});
+		
+		//single click
 		tree.addSelectionChangedListener(new ISelectionChangedListener() {
-
+			
 			@Override
 			public void selectionChanged(SelectionChangedEvent arg0) {
-
+				
 				// if the selection is empty or bad instance return
 				if (arg0.getSelection().isEmpty() || !(arg0.getSelection() instanceof IStructuredSelection))
 					return;
 
 				setChanged();
 				notifyObservers();
-				
+
 				// add the menu to the tree if it was not set before
 				addContextualMenu(false);
 
 				if (selectionListener != null) {
 					selectionListener.selectionChanged(arg0);
+				}
+			}
+		});
+		
+		//AlbyDev: double click on the term for directly opening the describe window
+		tree.addDoubleClickListener(new IDoubleClickListener() {
+			
+			@Override
+			public void doubleClick(DoubleClickEvent arg0) {
+				
+				if (!FormTermCoder.instanceExists) {
+					// open the describe form
+					FormTermCoder tcf = new FormTermCoder(shell, Messages.getString("FormTermCoder.Title"), catalogue);
+
+					tcf.setBaseTerm(getFirstSelectedTerm());
+
+					tcf.display(catalogue);
+
 				}
 			}
 		});
@@ -399,17 +435,18 @@ public class TermsTreePanel extends Observable implements Observer {
 	 */
 	public Menu createTreeMenu() {
 
-		//Author: AlbyDev
-		//This will prevent accidental stacktrace error in case of closing the app when the describe window is open
+		// Author: AlbyDev
+		// This will prevent accidental stacktrace error in case of closing the app when
+		// the describe window is open
 		/* Menu for the tree */
 		Menu termMenu = null;
-		
-		if(!shell.isDisposed())
+
+		if (!shell.isDisposed())
 			termMenu = new Menu(shell, SWT.POP_UP);
 		else
 			return termMenu;
 		//
-		
+
 		/* Menu which helps browsing the hierarchies among terms */
 
 		otherHierarchies = addChangeHierarchyMI(termMenu);
@@ -1200,31 +1237,31 @@ public class TermsTreePanel extends Observable implements Observer {
 	private MenuItem addDescribeMI(Menu menu) {
 
 		MenuItem describeTerm = new MenuItem(menu, SWT.NONE);
-		
-		describeTerm.setText(Messages.getString("BrowserTreeMenu.DescribeCmd"));
 
+		describeTerm.setText(Messages.getString("BrowserTreeMenu.DescribeCmd"));
+		
 		// if describe is clicked and not describe instance exists
 		describeTerm.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
-				//Author: AlbyDev
-				if(!FormTermCoder.instanceExists) {
+				// Author: AlbyDev
+				if (!FormTermCoder.instanceExists) {
 					// open the describe form
 					FormTermCoder tcf = new FormTermCoder(shell, Messages.getString("FormTermCoder.Title"), catalogue);
-	
+
 					tcf.setBaseTerm(getFirstSelectedTerm());
-	
+
 					tcf.display(catalogue);
-					
+
 				}
-				//Author: AlbyDev
-				createTreeMenu();
-				}
-			
+				// Author: AlbyDev
+				//createTreeMenu();
+			}
+
 		});
-		
+
 		describeTerm.setEnabled(false);
 		return describeTerm;
 	}

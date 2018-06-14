@@ -820,7 +820,7 @@ public class MainPanel implements Observer {
 		// I add a sashForm which is a split pane
 		SashForm sashForm = new SashForm(shell, SWT.HORIZONTAL | SWT.SMOOTH);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		
+
 		// left group for catalogue label, search bar and table
 		GridData leftData = new GridData();
 		leftData.minimumWidth = 180;
@@ -835,7 +835,7 @@ public class MainPanel implements Observer {
 
 		// add the search bar and table
 		addSearchPanel(leftGroup);
-		
+
 		// group which contains hierarchy selector, tree viewer and tab folder
 		Group rightGroup = new Group(sashForm, SWT.NONE);
 		rightGroup.setLayout(new GridLayout(1, false));
@@ -886,8 +886,8 @@ public class MainPanel implements Observer {
 		termFilter.restoreStatus();
 
 		// set the weights once all the widgets are inserted
-		//AlbyDev: increased the width for the search view (second parm from 4 to 3)
-		sashForm.setWeights(new int[] { 1, 3});
+		// AlbyDev: increased the width for the search view (second parm from 4 to 3)
+		sashForm.setWeights(new int[] { 1, 3 });
 	}
 
 	/**
@@ -1086,7 +1086,7 @@ public class MainPanel implements Observer {
 
 		// add a search table
 		searchPanel = new SearchPanel(parent, true, catalogue);
-
+		
 		// called when a hierarchy is selected in the
 		// results table using the contextual menu
 		searchPanel.addHierarchyListener(new HierarchyChangedListener() {
@@ -1110,7 +1110,7 @@ public class MainPanel implements Observer {
 				}
 			}
 		});
-		
+
 		// expand the selected term of the search results in the tree if clicked
 		searchPanel.addSelectionChangedListener(new ISelectionChangedListener() {
 
@@ -1121,9 +1121,9 @@ public class MainPanel implements Observer {
 				// return if no selected elements
 				if (selection.isEmpty())
 					return;
-				
+
 				tree.selectTerm((Nameable) selection.getFirstElement(), false);
-				
+
 			}
 		});
 
@@ -1168,13 +1168,13 @@ public class MainPanel implements Observer {
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.grabExcessVerticalSpace = true;
 		sashForm2.setLayoutData(gridData);
-
+		
 		// get the current catalogue
 		Catalogue catalogue = GlobalManager.getInstance().getCurrentCatalogue();
 
 		// add the main tree viewer
 		tree = new TermsTreePanel(sashForm2, catalogue);
-
+		
 		// add the tab folder
 		addTabFolder(sashForm2);
 
@@ -1193,14 +1193,14 @@ public class MainPanel implements Observer {
 
 		// initialize tab panel
 		tabPanel = new TermPropertiesPanel(parent, catalogue);
-				
+
 		// add the open listener, if we open an applicability
 		// we move the hierarchy to the selected one
 		tabPanel.addOpenListener(new HierarchyChangedListener() {
 
 			@Override
 			public void hierarchyChanged(HierarchyEvent event) {
-				
+
 				// get the selected hierarchy from the event
 				Hierarchy selectedHierarchy = event.getHierarchy();
 				Nameable parent = event.getTerm();
@@ -1255,7 +1255,7 @@ public class MainPanel implements Observer {
 				searchPanel.refresh(true);
 			}
 		});
-		
+
 	}
 
 	// warned if the reserve level of the current catalogue is changed

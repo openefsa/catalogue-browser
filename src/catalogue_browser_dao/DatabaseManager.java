@@ -74,7 +74,8 @@ public class DatabaseManager {
 	 */
 	public static String getMainDBURL ( ) {
 		return "jdbc:derby:" + GlobalUtil.getWorkingDir() + OFFICIAL_CAT_DB_FOLDER + 
-				MAIN_CAT_DB_FOLDER_NAME + ";user=dbuser;password=dbuserpwd";
+			MAIN_CAT_DB_FOLDER_NAME + ";user=dbuser;password=dbuserpwd";
+		
 	}
 
 	/**
