@@ -57,7 +57,7 @@ public class FormSelectTerm implements Observer {
 
 	private RestoreableWindow window;
 	private static final String WINDOW_CODE = "FormSelectTerm";
-	//Author: AlbyDev
+	// Author: AlbyDev
 	public static Boolean instanceExists = false;
 
 	// output list
@@ -69,6 +69,7 @@ public class FormSelectTerm implements Observer {
 	private Hierarchy rootHierarchy; // the hierarchy in which the root term is contained (if applicable)
 
 	private Shell shell;
+	private boolean flag;
 	private Shell dialog;
 	private String title;
 	private SearchBar searchBar;
@@ -90,11 +91,13 @@ public class FormSelectTerm implements Observer {
 	 *            true to enable multiple selection of objects
 	 */
 
-	public FormSelectTerm(Shell shell, String title, Catalogue catalogue, boolean enableMultipleSelection) {
+	public FormSelectTerm(Shell shell, String title, Catalogue catalogue, boolean enableMultipleSelection,
+			boolean flag) {
 
 		this.shell = shell;
 		this.catalogue = catalogue;
 		this.multi = enableMultipleSelection;
+		this.flag = flag; // flag is used for knowing if coming from the operability tab in the main page
 
 		// default title
 		this.title = Messages.getString("FormSelectTerm.DialogTitle");
@@ -105,7 +108,7 @@ public class FormSelectTerm implements Observer {
 
 		selectedTerms = new ArrayList<>();
 
-		//Author: AlbyDev
+		// Author: AlbyDev
 		// var used to check if an instance of the class already exists
 		FormSelectTerm.instanceExists = true;
 	}
@@ -180,9 +183,17 @@ public class FormSelectTerm implements Observer {
 	 */
 	public void display() {
 
-		//Author: AlbyDev
-		// dialog = new Shell( shell , SWT.SHELL_TRIM | SWT.APPLICATION_MODAL );
-		dialog = new Shell(shell, SWT.SHELL_TRIM | SWT.MODELESS);
+		// Author: AlbyDev
+		// if coming from reportability tab then dont let the user to surf the main page
+		if (flag)
+			dialog = new Shell(shell, SWT.SHELL_TRIM | SWT.APPLICATION_MODAL);
+		// otherwise u are coming from the describe window
+		else
+			dialog = new Shell(shell, SWT.SHELL_TRIM | SWT.MODELESS);
+		
+		// prevent user close what is behind
+		dialog.forceFocus();
+		dialog.forceActive();
 		//
 
 		dialog.setImage(
@@ -228,7 +239,7 @@ public class FormSelectTerm implements Observer {
 				dialog.setEnabled(false);
 				FormDescribeSearchResult resultsForm = new FormDescribeSearchResult(dialog,
 						Messages.getString("FormSelectTerm.SearchResultWindowTitle"), rootHierarchy, searchResults);
-
+				
 				resultsForm.setHideDeprecated(termFilter.isHidingDeprecated());
 				resultsForm.setHideNotInUse(termFilter.isHidingNotReportable());
 
@@ -237,12 +248,16 @@ public class FormSelectTerm implements Observer {
 				// get selected term
 				final Term selectedTerm = resultsForm.getSelectedTerm();
 
+				// Author: AlbyDev
+				dialog.setEnabled(true);
+
 				if (selectedTerm == null)
 					return;
 
 				// If multi selection, check the term and
 				// add it to the selected descriptors table
 				if (multi) {
+
 					// add if not already present
 					if (!selectedDescriptors.contains(selectedTerm)) {
 
@@ -255,9 +270,8 @@ public class FormSelectTerm implements Observer {
 
 					// add term in output
 					selectedTerms.add(selectedTerm);
+					dialog.dispose();
 				}
-				//Author: AlbyDev
-				dialog.setEnabled(true);
 			}
 		});
 
@@ -360,13 +374,19 @@ public class FormSelectTerm implements Observer {
 		gridData.grabExcessVerticalSpace = false;
 		cancel.setLayoutData(gridData);
 
+		// AlbyDev: if close button is pressed then clar the list of selected items
+		/*
+		 * dialog.addListener(SWT.Close, new Listener() {
+		 * 
+		 * @Override public void handleEvent(Event arg0) { selectedTerms.clear(); } });
+		 */
+
 		// if ok button is pressed
 		ok.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
-
 				// set the output list
 				setOutput();
-				
+
 				dialog.close();
 			}
 		});
@@ -465,13 +485,13 @@ public class FormSelectTerm implements Observer {
 
 		dialog.open();
 
+		// Author: AlbyDev
 		while (!dialog.isDisposed()) {
 			if (!dialog.getDisplay().readAndDispatch())
 				dialog.getDisplay().sleep();
 		}
-
-		//Author: AlbyDev
 		dialog.dispose();
+
 	}
 
 	/**
@@ -537,13 +557,15 @@ public class FormSelectTerm implements Observer {
 	 */
 	private void setOutput() {
 
+		// AlbyDev: commented because it clears the term added from the search results
 		selectedTerms.clear();
 
 		if (multi) {
 
 			// add all the checked terms
-			for (Nameable obj : tree.getCheckedTerms())
+			for (Nameable obj : tree.getCheckedTerms()) {
 				selectedTerms.add(obj);
+			}
 
 			// if no element was checked, then add the selected
 			// term (if there is one)
@@ -553,8 +575,9 @@ public class FormSelectTerm implements Observer {
 		} else {
 
 			// add the selected term if it was set
-			if (!tree.isSelectionEmpty())
+			if (!tree.isSelectionEmpty()) {
 				selectedTerms.add(tree.getFirstSelectedObj());
+			}
 		}
 	}
 

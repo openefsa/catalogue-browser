@@ -110,6 +110,7 @@ public class FormSearchOptions {
 		
 		
 		// table used to show implicit attributes
+		@SuppressWarnings("unused")
 		OptionTable attrTable = new OptionTable( optionsComp, 
 				Messages.getString( "FormSearchOptions.ImplicitAttribute" ),
 				optDao.getByType( OptionType.ATTRIBUTE ) );

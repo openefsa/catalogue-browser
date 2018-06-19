@@ -88,8 +88,6 @@ public class ToolsMenu implements MainMenuItem {
 	private MenuItem attributeEditMI; 
 	private MenuItem searchOptMI;
 	private MenuItem userPrefMI;
-	private MenuItem proxyMI;
-	
 	/**
 	 * Tools menu in main menu
 	 * @param mainMenu

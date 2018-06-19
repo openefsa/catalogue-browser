@@ -258,8 +258,7 @@ public class FrameTermImplicitFacets implements Observer {
 				//Author: AlbyDev
 				parent.setEnabled(false);
 				//
-				FormSelectTerm sf = new FormSelectTerm(parent, Messages.getString("Browser.SelectTermWindowTitle"),
-						term.getCatalogue(), facetCategory.isRepeatable());
+				FormSelectTerm sf = new FormSelectTerm(parent, Messages.getString("Browser.SelectTermWindowTitle"), term.getCatalogue(), facetCategory.isRepeatable(), false);
 
 				// set the root term for the form in order to show only
 				// the facet related to the facet category
@@ -344,7 +343,7 @@ public class FrameTermImplicitFacets implements Observer {
 				//Author: AlbyDev
 				if (!parent.isDisposed())
 					parent.setEnabled(true);
-				//
+				
 			}
 
 		});

@@ -18,13 +18,12 @@ public class AboutMenu implements MainMenuItem {
 	
 	private Shell shell;
 	private MainMenu mainMenu;
-	private MenuItem aboutItem;
 	private MenuItem notesItem;
 	
 	public AboutMenu( MainMenu mainMenu, Menu menu ) {
 		this.mainMenu = mainMenu;
 		this.shell = mainMenu.getShell();
-		aboutItem = create( menu );
+		create( menu );
 	}
 
 	/**

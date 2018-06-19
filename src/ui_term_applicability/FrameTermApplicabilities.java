@@ -38,7 +38,6 @@ public class FrameTermApplicabilities {
 	 * @param term
 	 */
 	public void setTerm ( Term term ) {
-		
 		applTable.setTerm( term );
 		/*facetApplTable.setTerm( term );
 		
@@ -107,6 +106,7 @@ public class FrameTermApplicabilities {
 	 * @param termAttributeApplicability
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private Menu addRestrictionsMenu ( final Shell parent, final TreeViewer termAttributeApplicability ) {
 		
 		Menu menu = new Menu( parent , SWT.POP_UP );

@@ -42,7 +42,6 @@ public class FileMenu implements MainMenuItem {
 	private MainMenu mainMenu;
 	private Shell shell;
 	
-	private MenuItem newMI;
 	private MenuItem openMI;
 	private MenuItem openDcMI;
 	private MenuItem downloadDcMI;
@@ -50,8 +49,6 @@ public class FileMenu implements MainMenuItem {
 	private MenuItem downloadMI;
 	private MenuItem closeMI;
 	private MenuItem deleteMI;
-	private MenuItem exitMI;
-	
 	/**
 	 * Set the listener to the file menu
 	 * @param listener
@@ -86,7 +83,7 @@ public class FileMenu implements MainMenuItem {
 		fileItem.setText( Messages.getString("BrowserMenu.FileMenuName") );
 		fileItem.setMenu( fileMenu );
 		
-		newMI = addNewLocalCatMI ( fileMenu );  // new database, only edit
+		addNewLocalCatMI ( fileMenu );
 
 		openMI = addOpenDBMI ( fileMenu );  // open a catalogue
 		
@@ -105,7 +102,7 @@ public class FileMenu implements MainMenuItem {
 		// add separator
 		new MenuItem( fileMenu , SWT.SEPARATOR );
 		
-		exitMI = addExitMI ( fileMenu );  // exit app
+		addExitMI ( fileMenu );
 		
 		fileMenu.addListener( SWT.Show, new Listener() {
 			

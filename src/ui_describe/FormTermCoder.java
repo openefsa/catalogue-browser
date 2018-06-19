@@ -201,14 +201,15 @@ public class FormTermCoder {
 
 		// sash form to resize panels
 		SashForm sashForm = new SashForm(_dialog, SWT.HORIZONTAL);
-		sashForm.setLayout(new GridLayout(1, false));
+	    
+	    sashForm.setLayout(new GridLayout(1, false));
 		GridData gData = new GridData();
 		gData.grabExcessHorizontalSpace = true;
 		gData.grabExcessVerticalSpace = true;
 		gData.verticalAlignment = SWT.FILL;
 		gData.horizontalAlignment = SWT.FILL;
 		sashForm.setLayoutData(gData);
-
+		
 		// implicit facets tree viewer, we set that new facets will be considered as
 		// explicit
 		implicitFacets = new FrameTermImplicitFacets(sashForm, FacetType.EXPLICIT, catalogue);

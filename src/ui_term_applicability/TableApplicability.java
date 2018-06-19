@@ -1,6 +1,7 @@
 package ui_term_applicability;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.apache.log4j.LogManager;
@@ -311,9 +312,10 @@ public class TableApplicability {
 	 * @return
 	 */
 	private Menu createApplicabilityMenu() {
+		
 		// create menu
 		Menu applicabilityOperationMenu = new Menu(parent.getShell(), SWT.POP_UP);
-
+		
 		// add open item
 		final MenuItem openMI = addOpenApplicabilityMI(applicabilityOperationMenu);
 
@@ -344,10 +346,10 @@ public class TableApplicability {
 				boolean editable = user.canEdit(term.getCatalogue());
 				// can modify only if editing and if we have selected some applicabilities
 				boolean selected = !applicabilityTable.getSelection().isEmpty();
-
+				
 				openMI.setEnabled(selected);
-				addHier.setEnabled(editable);
-				addParent.setEnabled(editable);
+				addHier.setEnabled(selected&&editable);
+				addParent.setEnabled(selected&&editable);
 				editApplicability.setEnabled(selected && editable);
 				removeMI.setEnabled(selected && editable);
 
@@ -489,7 +491,7 @@ public class TableApplicability {
 	 * @return
 	 */
 	private MenuItem addParentApplMI(Menu menu) {
-
+		
 		MenuItem addParentAppl = new MenuItem(menu, SWT.PUSH);
 		addParentAppl.setText(Messages.getString("TableApplicability.AddParentCmd"));
 
@@ -526,13 +528,14 @@ public class TableApplicability {
 	 * @return
 	 */
 	private Nameable selectTerm(Object root) {
-
+		
 		FormSelectTerm f = new FormSelectTerm(parent.getShell(),
-				Messages.getString("TableApplicability.SelectTermWindowTitle"), term.getCatalogue(), false);
+				Messages.getString("TableApplicability.SelectTermWindowTitle"), term.getCatalogue(), false, true);
 
 		// use the master hierarchy to choose the parent term
 		// then you can select all the other hierarchies with the
 		// guided approach
+		
 		if (root instanceof Hierarchy)
 			f.setRootTerm((Hierarchy) root);
 		else if (root instanceof AvailableHierarchiesTerm)
@@ -546,11 +549,12 @@ public class TableApplicability {
 		f.display();
 
 		// return if nothing was selected
+		System.out.println ("Y "+(f.getSelectedTerms()==null));
+		System.out.println("X "+Arrays.asList(f.getSelectedTerms().isEmpty()));
 		if (f.getSelectedTerms() == null || f.getSelectedTerms().isEmpty())
 			return null;
 
 		Nameable parentTerm = (Nameable) f.getSelectedTerms().get(0);
-
 		return parentTerm;
 	}
 
@@ -575,7 +579,7 @@ public class TableApplicability {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-
+				
 				final Nameable parentTerm = selectTerm(root);
 
 				// if we have selected a term => get all the hierarchies where the parent is

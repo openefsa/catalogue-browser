@@ -55,6 +55,7 @@ public class TermCodeGenerator {
 
 		// iterate term code mask
 		char[] termCodeMaskElems = termCodeMask.toCharArray();
+		@SuppressWarnings("unused")
 		char[] newTermCode = termCodeMaskElems.clone();
 
 		//newTermCode = increaseCode(newTermCode);
@@ -62,6 +63,7 @@ public class TermCodeGenerator {
 		return null;
 	}
 	
+	@SuppressWarnings("unused")
 	private char[] increaseCodeRec(char[] codeChars, int index) {
 		
 		char[] output = codeChars.clone();

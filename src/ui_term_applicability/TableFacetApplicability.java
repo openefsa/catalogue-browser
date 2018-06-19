@@ -96,6 +96,7 @@ public class TableFacetApplicability {
 
 		
 		// ### Add the cardinality column and its label provider ###
+		@SuppressWarnings("unused")
 		TableViewerColumn cardinalityCol = GlobalUtil.addStandardColumn ( 
 				tableViewer, new CardinalityColumnLabelProvider(), Messages.getString("TableFacetApplicability.CardinalityColumn") ); //$NON-NLS-1$
 
@@ -198,6 +199,7 @@ public class TableFacetApplicability {
 	 * @param term
 	 * @param attr
 	 */
+	@SuppressWarnings("unused")
 	private MenuItem addAttributeMenuItem ( Menu menu, final Term term, Attribute attr ) {
 
 		// create a new menu item
@@ -303,6 +305,7 @@ public class TableFacetApplicability {
 	 * @param applicabilityFacetTable
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private Menu addApplicabilityFacetMenu ( Term term ) {
 		
 		// create the menu

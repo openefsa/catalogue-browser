@@ -115,6 +115,7 @@ public class LabelProviderTerm extends LabelProvider implements IFontProvider {
 			if ( t.getDetailLevel() == null )
 				return null;
 			
+			@SuppressWarnings("unlikely-arg-type")
 			int index = detailLevels.indexOf( t.getDetailLevel() );
 			
 			// if detail level not found => return

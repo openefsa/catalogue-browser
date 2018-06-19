@@ -23,6 +23,7 @@ import term.TermElem;
  * @author avonva
  *
  */
+@SuppressWarnings("deprecation")
 public class TreeFacetRestrictions {
 
 	private TreeViewer tree;  // tree which contains the restrictions

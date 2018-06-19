@@ -4,8 +4,6 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
 
-import catalogue.Catalogue;
-
 public class LabelProviderSearchOption implements ILabelProvider {
 
 	@Override

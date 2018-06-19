@@ -70,7 +70,7 @@ public class FormDescribeSearchResult {
 
 		//Author: AlbyDev
 		// Set the layout of the form
-		// dialog = new Shell( shell , SWT.SHELL_TRIM | SWT.APPLICATION_MODAL );
+		 //dialog = new Shell( shell , SWT.SHELL_TRIM | SWT.APPLICATION_MODAL );
 		dialog = new Shell(shell, SWT.SHELL_TRIM | SWT.MODELESS);
 		//
 
@@ -138,12 +138,9 @@ public class FormDescribeSearchResult {
 			if (!dialog.getDisplay().readAndDispatch())
 				dialog.getDisplay().sleep();
 		}
-		//Author: AlbyDev
-		if (!shell.isDisposed()) {
-			shell.setEnabled(true);
-			dialog.dispose();
-		}
-		//
+		
+		dialog.dispose();
+		
 	}
 
 	public void setHideDeprecated(boolean hide) {

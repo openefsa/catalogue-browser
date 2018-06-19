@@ -138,6 +138,7 @@ public class SearchDAO {
 	 * @param term
 	 * @return
 	 */
+	@SuppressWarnings("unlikely-arg-type")
 	private boolean isTypeSearchable( Term term ) {
 
 		// if the catalogue does not use term types

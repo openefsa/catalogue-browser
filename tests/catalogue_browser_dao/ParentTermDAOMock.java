@@ -4,15 +4,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import catalogue.Catalogue;
 import catalogue_object.Applicability;
-import catalogue_object.Attribute;
 import catalogue_object.Hierarchy;
 import catalogue_object.Term;
-import catalogue_object.Applicability;
 
 public class ParentTermDAOMock implements CatalogueRelationDAO<Applicability, Term, Hierarchy> {
 

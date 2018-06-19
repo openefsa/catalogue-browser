@@ -818,14 +818,14 @@ public class MainPanel implements Observer {
 		});
 
 		// I add a sashForm which is a split pane
-		SashForm sashForm = new SashForm(shell, SWT.HORIZONTAL | SWT.SMOOTH);
+		SashForm sashForm = new SashForm(shell, SWT.HORIZONTAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-
+		
 		// left group for catalogue label, search bar and table
 		GridData leftData = new GridData();
 		leftData.minimumWidth = 180;
 		leftData.widthHint = 180;
-
+		
 		Composite leftGroup = new Composite(sashForm, SWT.NONE);
 		leftGroup.setLayout(new GridLayout(1, false));
 		leftGroup.setLayoutData(leftData);
@@ -835,7 +835,7 @@ public class MainPanel implements Observer {
 
 		// add the search bar and table
 		addSearchPanel(leftGroup);
-
+		
 		// group which contains hierarchy selector, tree viewer and tab folder
 		Group rightGroup = new Group(sashForm, SWT.NONE);
 		rightGroup.setLayout(new GridLayout(1, false));

@@ -908,6 +908,7 @@ public class Term extends CatalogueObject implements Mappable {
 	 * Remove an attribute from the term
 	 * @param ta
 	 */
+	@SuppressWarnings("unlikely-arg-type")
 	public void removeAttribute ( TermAttribute ta ) {
 		
 		termAttributes.remove( ta );
@@ -927,6 +928,7 @@ public class Term extends CatalogueObject implements Mappable {
 	 * Add directly an implicit facet to the list of facets (and thus to the attributes)
 	 * @param fd
 	 */
+	@SuppressWarnings("unlikely-arg-type")
 	public void addImplicitFacet ( FacetDescriptor fd ) {
 		
 		// return if the implicit facet was already added
@@ -996,6 +998,7 @@ public class Term extends CatalogueObject implements Mappable {
 	 * Remove a term attribute from the term (we use only the attribute equals, since we are in the term class)
 	 * @param ta
 	 */
+	@SuppressWarnings("unlikely-arg-type")
 	public void removeTermAttribute( TermAttribute ta ) {
 		
 		for ( int i = 0; i < termAttributes.size(); i++ ) {
