@@ -20,12 +20,10 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
@@ -59,7 +57,7 @@ import window_restorer.RestoreableWindow;
 public class FormTermCoder {
 
 	private static final String WINDOW_CODE = "FormTermCoder";
-	//Author: AlbyDev
+	// Author: AlbyDev
 	public static Boolean instanceExists = false;
 	//
 
@@ -110,7 +108,7 @@ public class FormTermCoder {
 		_enableBR = catalogue.isMTXCatalogue()
 				&& prefDao.getPreferenceBoolValue(CataloguePreference.enableBusinessRules, false);
 
-		//Author: AlbyDev
+		// Author: AlbyDev
 		// var used to check if an instance of the class already exists
 		FormTermCoder.instanceExists = true;
 		//
@@ -128,11 +126,11 @@ public class FormTermCoder {
 
 		_baseTerm = describedTerm.getBaseTerm();
 		_tempTerm = describedTerm.getTerm();
-		
+
 		// to be working the tempTerm is added as child of baseTerm only in memory
 		Applicability app = new Applicability(_tempTerm, _baseTerm, catalogue.getMasterHierarchy(), 1, true);
 		_tempTerm.addApplicability(app, false);
-		
+
 	}
 
 	/**
@@ -144,12 +142,12 @@ public class FormTermCoder {
 
 		// set the global base term
 		_baseTerm = baseTerm;
-		
+
 		_tempTerm = new Term(catalogue);
 		_tempTerm.setCode(_baseTerm.getCode());
 		_tempTerm.setName(_baseTerm.getName());
 		_tempTerm.setShortName(_baseTerm.getShortName(true));
-		
+
 		// to be working the tempTerm is added as child of baseTerm only in memory
 		Applicability app = new Applicability(_tempTerm, _baseTerm, catalogue.getMasterHierarchy(), 1, true);
 		_tempTerm.addApplicability(app, false);
@@ -159,7 +157,7 @@ public class FormTermCoder {
 	public void display(final Catalogue catalogue) {
 
 		// _dialog = new Shell( _shell , SWT.SHELL_TRIM | SWT.APPLICATION_MODAL );
-		//Author: AlbyDev
+		// Author: AlbyDev
 		_dialog = new Shell(_shell, SWT.SHELL_TRIM | SWT.MODELESS);
 		//
 
@@ -168,7 +166,7 @@ public class FormTermCoder {
 		_dialog.setMaximized(true);
 
 		_dialog.setText(_title);
-		_dialog.setLayout(new GridLayout(2, false));
+		_dialog.setLayout(new GridLayout(1, false));
 
 		window = new RestoreableWindow(_dialog, WINDOW_CODE);
 
@@ -179,7 +177,7 @@ public class FormTermCoder {
 			@Override
 			public void widgetDisposed(DisposeEvent e) {
 
-				//Author: AlbyDev
+				// AlbyDev: reset the instance flag
 				FormTermCoder.instanceExists = false;
 				//
 
@@ -198,28 +196,28 @@ public class FormTermCoder {
 				recentDao.insert(new DescribedTerm(catalogue, fullCode.getText(), _tempTerm.getInterpretedCode()));
 			}
 		});
-
+		
 		// sash form to resize panels
 		SashForm sashForm = new SashForm(_dialog, SWT.HORIZONTAL);
-	    
-	    sashForm.setLayout(new GridLayout(1, false));
+
+		sashForm.setLayout(new GridLayout(1, false));
 		GridData gData = new GridData();
 		gData.grabExcessHorizontalSpace = true;
 		gData.grabExcessVerticalSpace = true;
 		gData.verticalAlignment = SWT.FILL;
 		gData.horizontalAlignment = SWT.FILL;
 		sashForm.setLayoutData(gData);
-		
+
 		// implicit facets tree viewer, we set that new facets will be considered as
 		// explicit
 		implicitFacets = new FrameTermImplicitFacets(sashForm, FacetType.EXPLICIT, catalogue);
-		
+
 		implicitFacets.setHierarchy(catalogue.getMasterHierarchy());
-		
+
 		implicitFacets.setTerm(_tempTerm);
 
 		implicitFacets.addMenu(); // add the contextual menu
-		
+
 		implicitFacets.addUpdateListener(new Listener() {
 
 			@Override
@@ -238,35 +236,13 @@ public class FormTermCoder {
 
 		// the composite which contains: full code, interpreter, semaphore, console
 		// (warning messages)
-		Composite rightSide = new Composite(sashForm, SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
-		rightSide.setLayout(new GridLayout(1, false));
+		Group rightSide = new Group(sashForm, SWT.NONE);
+		rightSide.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
+		rightSide.setLayout(new GridLayout(1, true));
 
-		/*
-		 * Composite for full code and interpreter
-		 */
-
-		Composite codeDescriptionComposite = new Composite(rightSide, SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
-
-		GridData gridData = new GridData();/* layout esterno */
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = true;
-		codeDescriptionComposite.setLayoutData(gridData);
-
-		rightSide.setLayoutData(gridData);
-
-		/* full code */
-		codeDescriptionComposite.setLayout(new GridLayout(2, false));/* layout interno */
-		Label l = new Label(codeDescriptionComposite, SWT.NONE);
+		/////////////////full code 
+		Label l = new Label(rightSide, SWT.NONE);
 		l.setText(Messages.getString("FormTermCoder.FullCodeLabel"));
-		
-		gridData = new GridData();
-		gridData.verticalAlignment = SWT.CENTER;
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = false;
-		gridData.grabExcessVerticalSpace = true;
-		l.setLayoutData(gridData);
 
 		int operations = DND.DROP_MOVE | DND.DROP_COPY;
 		Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
@@ -290,15 +266,17 @@ public class FormTermCoder {
 			}
 		});
 
-		fullCode = new Text(codeDescriptionComposite, SWT.BORDER | SWT.READ_ONLY);
+		fullCode = new Text(rightSide, SWT.BORDER | SWT.READ_ONLY);
 
-		gridData = new GridData();
+		GridData gridData = new GridData();
 		gridData.verticalAlignment = SWT.FILL;
 		gridData.horizontalAlignment = SWT.FILL;
 		gridData.grabExcessHorizontalSpace = true;
-		gridData.minimumWidth = 200;
-		gridData.widthHint = 310;
 		gridData.grabExcessVerticalSpace = true;
+		gridData.minimumWidth = 200;
+		gridData.minimumHeight=20;
+		gridData.widthHint = 310;
+		gridData.heightHint=20;
 		fullCode.setLayoutData(gridData);
 
 		// when the full code is modified, then check if some warnings
@@ -338,20 +316,12 @@ public class FormTermCoder {
 		});
 
 		/* intepreted code */
-		codeDescriptionComposite.setLayout(new GridLayout(2, false));
-		Label interp = new Label(codeDescriptionComposite, SWT.NONE);
+		Label interp = new Label(rightSide, SWT.NONE);
 		interp.setText(Messages.getString("FormTermCoder.InterpretedCodeLabel")); //$NON-NLS-1$
-
-		gridData = new GridData();
-		gridData.verticalAlignment = SWT.CENTER;
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = false;
-		gridData.grabExcessVerticalSpace = true;
-		interp.setLayoutData(gridData);
 
 		// textinterp = new Text( c , SWT.BORDER | SWT.READ_ONLY | SWT.MULTI |
 		// SWT.H_SCROLL );
-		textinterp = new Text(codeDescriptionComposite,
+		textinterp = new Text(rightSide,
 				SWT.BORDER | SWT.READ_ONLY | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
 		// textinterp.setText( _tempTerm.getName() );
 		gridData = new GridData();
@@ -361,31 +331,18 @@ public class FormTermCoder {
 		gridData.grabExcessVerticalSpace = true;
 		gridData.minimumWidth = 200;
 		gridData.widthHint = 310;
+		gridData.heightHint=100;
 		gridData.minimumHeight = 80;
 		textinterp.setLayoutData(gridData);
 
-		/*
-		 * WARNING COMPOSITE: semaphore + warnings log
-		 */
+		////////////////// WARNING COMPOSITE: semaphore + warnings log
 
-		// Composite which contains the semaphore, the warning logs and the 3 buttons
-		Composite warningComposite = new Composite(rightSide, SWT.APPLICATION_MODAL | SWT.SHELL_TRIM);
-		warningComposite.setLayout(new GridLayout(1, false));
-
-		gridData = new GridData();
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = true;
-		warningComposite.setLayoutData(gridData);
-
-		// group which contains the semaphore
-		Group semaphoreGroup = new Group(warningComposite, SWT.NONE);
-		semaphoreGroup.setText(Messages.getString("FormTermCoder.OverallWarningLevelLabel")); //$NON-NLS-1$
-		semaphoreGroup.setLayout(new FillLayout());
-
+		// Semaphore
+		Label semaphoreLabel = new Label(rightSide, SWT.NONE);
+		semaphoreLabel.setText(Messages.getString("FormTermCoder.OverallWarningLevelLabel")); //$NON-NLS-1$
+		
 		// create a rectangle
-		semaphore = new Canvas(semaphoreGroup, SWT.NONE);
+		semaphore = new Canvas(rightSide, SWT.NONE);
 
 		// layout of the rectangle
 		gridData = new GridData();
@@ -395,18 +352,18 @@ public class FormTermCoder {
 		gridData.grabExcessVerticalSpace = true;
 		gridData.minimumWidth = 175;
 		gridData.widthHint = 475;
+		gridData.heightHint=50;
 		gridData.minimumHeight = 50;
 		gridData.heightHint = 50;
 
 		semaphore.setLayoutData(gridData);
-		semaphoreGroup.setLayoutData(gridData);
 
-		Group tableWarningGroup = new Group(warningComposite, SWT.NONE);
-		tableWarningGroup.setText(Messages.getString("FormTermCoder.MessageLogLabel")); //$NON-NLS-1$
-		tableWarningGroup.setLayout(new FillLayout());
+		// Warning log
+		Label warningLabel = new Label(rightSide, SWT.NONE);
+		warningLabel.setText(Messages.getString("FormTermCoder.MessageLogLabel")); //$NON-NLS-1$
 
 		// Table with warnings:
-		warningsTable = new TableViewer(tableWarningGroup,
+		warningsTable = new TableViewer(rightSide,
 				SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL | SWT.NONE);
 
 		// layout of the rectangle
@@ -417,10 +374,10 @@ public class FormTermCoder {
 		gridData.grabExcessVerticalSpace = true;
 		gridData.minimumWidth = 300;
 		gridData.widthHint = 450;
-		gridData.heightHint = 300;
+		gridData.heightHint = 450;
 		gridData.minimumHeight = 200;
 
-		tableWarningGroup.setLayoutData(gridData);
+		warningsTable.getTable().setLayoutData(gridData);
 
 		// Set the content based
 		warningsTable.setContentProvider(new ContentProviderWarning());
@@ -437,63 +394,40 @@ public class FormTermCoder {
 		if (_enableBR)
 			warnUtils.refreshWarningsTable(currentCode);
 
-		/*
-		 * Three Buttons = COPY + COPY DESCRIPTION + CANCEL
-		 */
+		/////////////////Three Buttons = COPY + COPY DESCRIPTION + BOTH
 
-		Composite buttonsComposite = new Composite(rightSide, SWT.NONE);
-
-		gridData = new GridData();
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = false;
-		gridData.grabExcessVerticalSpace = false;
-		buttonsComposite.setLayoutData(gridData);
-
+		Group buttonsComposite = new Group(_dialog, SWT.NONE);
+		buttonsComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
 		buttonsComposite.setLayout(new GridLayout(3, true));
 
 		Button copy = new Button(buttonsComposite, SWT.PUSH);
-		copy.setText(Messages.getString("FormTermCoder.CopyCodeButton")); //$NON-NLS-1$
-		gridData = new GridData();
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = false;
-		gridData.grabExcessVerticalSpace = true;
-		copy.setLayoutData(gridData);
-
-		/* setting up copy description(description of code interpreted) */
-		Button copyDesc = new Button(buttonsComposite, SWT.PUSH);
-		copyDesc.setText(Messages.getString("FormTermCoder.CopyDescriptionButton")); //$NON-NLS-1$
-		gridData = new GridData();
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = false;
-		gridData.grabExcessVerticalSpace = true;
-		copyDesc.setLayoutData(gridData);
-
-		/* setting up copy code + description */
-		Button copyCodeDesc = new Button(buttonsComposite, SWT.PUSH);
-		copyCodeDesc.setText(Messages.getString("FormTermCoder.CopyCodeDescrButton")); //$NON-NLS-1$
-		gridData = new GridData();
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = false;
-		gridData.grabExcessVerticalSpace = true;
-		copyCodeDesc.setLayoutData(gridData);
-
-		// used to shift the cancel button in the center
-		Label dummyLabel = new Label(buttonsComposite, SWT.PUSH);
-		dummyLabel.setText(""); //$NON-NLS-1$
-
-		// Button cancel = new Button(c2, SWT.TOGGLE);
-		Button cancel = new Button(buttonsComposite, SWT.PUSH);
-		cancel.setText(Messages.getString("FormTermCoder.CloseWindowButton")); //$NON-NLS-1$
+		copy.setText(Messages.getString("FormTermCoder.CopyCodeButton"));
 		gridData = new GridData();
 		gridData.verticalAlignment = SWT.FILL;
 		gridData.horizontalAlignment = SWT.FILL;
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.grabExcessVerticalSpace = true;
-		cancel.setLayoutData(gridData);
+		copy.setLayoutData(gridData);
+
+		/* setting up copy description(description of code interpreted) */
+		Button copyDesc = new Button(buttonsComposite, SWT.PUSH);
+		copyDesc.setText(Messages.getString("FormTermCoder.CopyDescriptionButton"));
+		gridData = new GridData();
+		gridData.verticalAlignment = SWT.FILL;
+		gridData.horizontalAlignment = SWT.FILL;
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.grabExcessVerticalSpace = true;
+		copyDesc.setLayoutData(gridData);
+
+		/* setting up copy code + description */
+		Button copyCodeDesc = new Button(buttonsComposite, SWT.PUSH);
+		copyCodeDesc.setText(Messages.getString("FormTermCoder.CopyCodeDescrButton"));
+		gridData = new GridData();
+		gridData.verticalAlignment = SWT.FILL;
+		gridData.horizontalAlignment = SWT.FILL;
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.grabExcessVerticalSpace = true;
+		copyCodeDesc.setLayoutData(gridData);
 
 		// copy button is selected:
 		copy.addSelectionListener(new SelectionAdapter() {
@@ -533,17 +467,6 @@ public class FormTermCoder {
 
 				clip.copyFullCodeAndDescription(sources, _copyImplicit);
 			}
-		});
-
-		// cancel button is selected:
-		cancel.addSelectionListener(new SelectionAdapter() {
-
-			public void widgetSelected(SelectionEvent event) {
-
-				FormTermCoder.instanceExists=false;
-				_dialog.close();
-			}
-
 		});
 
 		// default action is to copy the code
@@ -588,7 +511,7 @@ public class FormTermCoder {
 				_dialog.getDisplay().sleep();
 		}
 
-		FormTermCoder.instanceExists=false;
+		FormTermCoder.instanceExists = false;
 		_dialog.dispose();
 	}
 
@@ -598,8 +521,8 @@ public class FormTermCoder {
 	private void updateTextFields() {
 
 		String newCode = _tempTerm.getFullCode(_copyImplicit, true);
-		
-		if(!_dialog.isDisposed()) {
+
+		if (!_dialog.isDisposed()) {
 			fullCode.setText(newCode);
 			textinterp.setText(_tempTerm.getInterpretedCode(_copyImplicit));
 		}

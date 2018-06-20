@@ -106,6 +106,7 @@ public class VersionChecker {
 	 * the related database is also created.
 	 * @return the new catalogue with the new version
 	 */
+	@SuppressWarnings("unlikely-arg-type")
 	private Catalogue apply() {
 		
 		String newVersion = version.getVersion();

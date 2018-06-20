@@ -223,7 +223,7 @@ public class CatalogueBrowserMain {
 		}
 		
 		browser.openLastCatalogue();
-		
+
 		browser.getMenu().refresh();
 
 		// Event loop
@@ -231,9 +231,10 @@ public class CatalogueBrowserMain {
 			if ( !display.readAndDispatch() )
 				display.sleep();
 		}
-
-		if (display != null && !display.isDisposed() )
-			display.dispose();
+		
+		//albydev: prevent unexcpected error if user try to close the main page before the ui was loaded properly
+		//if (display != null && !display.isDisposed() )
+		shell.dispose();
 
 		// stop the database
 		DatabaseManager.stopMainDB();

@@ -307,7 +307,7 @@ public class WarningUtil {
 
 			// delete the first part of the code (i.e. the facet index)
 			String facetCode = facetComponents[1];
-
+			
 			// get the facet by code
 			Term facet = termDao.getByCode( facetCode );
 
@@ -459,9 +459,10 @@ public class WarningUtil {
 		warningsTable.getTable().setFont( descriptor.createFont( Display.getCurrent() ) );
 
 		// set the background color of the table accordingly to the warning options
-		int[] rgb = warnOptions.getConsoleBG();
-		warningsTable.getTable().setBackground( new Color (Display.getCurrent(), rgb[0], rgb[1], rgb[2]) );
-
+		//int[] rgb = warnOptions.getConsoleBG();
+		//warningsTable.getTable().setBackground( new Color (Display.getCurrent(), rgb[0], rgb[1], rgb[2]) );
+		warningsTable.getTable().setBackground(new Color(Display.getCurrent(), 60, 130, 130));
+		
 		// refresh the graphical elements of the table
 		warningsTable.refresh();
 	}

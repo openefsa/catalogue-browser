@@ -1,7 +1,6 @@
 package ui_term_applicability;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 
 import org.apache.log4j.LogManager;
@@ -348,8 +347,8 @@ public class TableApplicability {
 				boolean selected = !applicabilityTable.getSelection().isEmpty();
 				
 				openMI.setEnabled(selected);
-				addHier.setEnabled(selected&&editable);
-				addParent.setEnabled(selected&&editable);
+				addHier.setEnabled(editable);
+				addParent.setEnabled(editable);
 				editApplicability.setEnabled(selected && editable);
 				removeMI.setEnabled(selected && editable);
 
@@ -549,8 +548,6 @@ public class TableApplicability {
 		f.display();
 
 		// return if nothing was selected
-		System.out.println ("Y "+(f.getSelectedTerms()==null));
-		System.out.println("X "+Arrays.asList(f.getSelectedTerms().isEmpty()));
 		if (f.getSelectedTerms() == null || f.getSelectedTerms().isEmpty())
 			return null;
 
