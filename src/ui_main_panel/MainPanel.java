@@ -1,15 +1,11 @@
 package ui_main_panel;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -29,8 +25,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
-
 import catalogue.Catalogue;
 import catalogue_object.Hierarchy;
 import catalogue_object.Nameable;
@@ -383,52 +377,7 @@ public class MainPanel implements Observer {
 	 * Author: AlbyDev Show a message dialog with the new features with updates
 	 */
 	public void showLastFeatures() {
-
-		Composite composite = new Composite(shell, SWT.NONE);
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-
-		MessageDialog mex = null;
-
-		// Create a big text box for the message text
-		final Text text = new Text(composite,
-				SWT.READ_ONLY | SWT.MULTI | SWT.WRAP | SWT.BORDER | SWT.V_SCROLL | SWT.TITLE);
-
-		BufferedReader buff = null;
-		String str = "";
-		try {
-
-			buff = new BufferedReader(new FileReader(GlobalUtil.getChangelogPath()));
-
-			// read the header
-			text.append("\n" + buff.readLine() + "\n\n");
-
-			// read the rest of the file
-			while ((str = buff.readLine()) != null) {
-
-				text.append("\n" + str);
-			}
-
-			// show the message dialog
-			mex = new MessageDialog(shell, "Release Notes", null, text.getText(), MessageDialog.INFORMATION,
-					new String[] {}, 0);
-
-			// if ok is pressed a new file flag is generated
-			if (mex.open() < 0)
-				new File(GlobalUtil.getFlagPath()).createNewFile();
-
-		} catch (IOException e) {
-
-			System.out.println(e);
-			return;
-
-		} finally {
-
-			try {
-				buff.close();
-			} catch (Exception ex) {
-			}
-		}
-
+		BrowserReleaseNotes.display(shell, true);
 	}
 
 	public void openLastCatalogue() {

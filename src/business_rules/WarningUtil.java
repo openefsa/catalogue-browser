@@ -1236,7 +1236,7 @@ public class WarningUtil {
 	 * @param facetCode
 	 */
 	private void minorIngredientCheck ( Term baseTerm, String facetIndex, String facetCode, boolean stdOut ) {
-
+		System.out.println("Ciao");
 		// if the base term is a raw commodity or a derivative
 		if ( isRawCommodityTerm( baseTerm ) || isDerivativeTerm( baseTerm ) ) {
 
@@ -1635,7 +1635,7 @@ public class WarningUtil {
 		// attach title
 		if( postMessageString != null && !postMessageString.equals("") )
 			message = message + "(" + postMessageString + ") ";
-
+		
 		// get the warning level from the message
 		//WarningLevel warningLevel = warningMessages.get( event.ordinal() ).getWarningLevel();
 
@@ -1686,15 +1686,14 @@ public class WarningUtil {
 
 	private void printWarning( WarningEvent event, String postMessageString, 
 			boolean attachDatetime, boolean stdOut ) {
-
+		
 		// create the warning message to be printed
 		String message = createMessage( event, postMessageString, attachDatetime );
 
 		// get the warning levels for making colours
 		WarningLevel semaphoreLevel = getSemaphoreLevel( event );
 		WarningLevel textWarningLevel = getTextLevel( event );
-
-
+		
 		// if the message should be printed into the standard output
 		// CSV line semicolon separated
 		// do not print the base term successfully added warning! It is useless for the excel macro

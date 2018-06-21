@@ -49,7 +49,7 @@ public class FormReleaseNotes {
 	
 	public void display() {
 		
-		this.dialog = new Shell( shell , SWT.TITLE | SWT.APPLICATION_MODAL | SWT.SHELL_TRIM );
+		this.dialog = new Shell( shell , SWT.SHEET|SWT.APPLICATION_MODAL | SWT.WRAP | SWT.BORDER | SWT.TITLE );
 		
 		// set the dialog layout
 		dialog.setLayout( new GridLayout( 1 , false ) );
