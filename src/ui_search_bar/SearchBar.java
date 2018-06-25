@@ -57,6 +57,7 @@ public class SearchBar implements Observer {
 	private Button globalSearch;
 	private boolean hideDeprecated;
 	private boolean hideNotInUse;
+	public static boolean flag; //used for determinate the focus over the main UI
 	
 	private SearchListener listener;
 	
@@ -291,6 +292,7 @@ public class SearchBar implements Observer {
 			public void focusLost(FocusEvent arg0) {
 				parent.getDisplay().asyncExec(new Runnable() {
 					public void run() {
+						flag = textSearch.isFocusControl();
 						textSearch.clearSelection();
 					}
 				});
@@ -300,7 +302,10 @@ public class SearchBar implements Observer {
 			public void focusGained(FocusEvent arg0) {
 				parent.getDisplay().asyncExec(new Runnable() {
 					public void run() {
+						//set a public flag to true so to dont loose the focus if the user move the mouse around the ui
+						flag = textSearch.isFocusControl();
 						textSearch.selectAll();
+						
 					}
 				});
 			}

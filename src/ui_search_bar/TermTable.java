@@ -38,7 +38,6 @@ public class TermTable implements Observer {
 	private TableViewer table;
 	private LabelProviderTerm labelProvider;
 	private ContentProviderTerm contentProvider;
-
 	public TermTable(Composite parent, Catalogue catalogue) {
 
 		this.parent = parent;
@@ -59,11 +58,14 @@ public class TermTable implements Observer {
 
 		// layout data of the table
 		table.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		
+
 		//albydev: set the focus when enter the table
+		//check before if the search field is not selected
 		table.getTable().addListener(SWT.MouseEnter, new Listener() {
+			
 		    public void handleEvent(Event event) {
-		        table.getControl().setFocus();
+				if(!SearchBar.flag)
+		    		table.getControl().setFocus();
 		    }
 		});
 			

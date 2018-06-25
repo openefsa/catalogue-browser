@@ -143,8 +143,9 @@ public class ToolsMenu implements MainMenuItem {
 		// export operations
 		exportMI = addExportMI (toolsMenu);
 
-		//export for IECT
-		exportForIECT = addExportForIECT(toolsMenu);
+		//export for IECT (just for the MTX cat)
+		if(mainMenu.getCatalogue() != null && mainMenu.getCatalogue().getName().contains("MTX"))
+			exportForIECT = addExportForIECT(toolsMenu);
 		
 		// add import picklist
 		importPicklistMI = addImportPicklistMI (toolsMenu);
@@ -180,7 +181,7 @@ public class ToolsMenu implements MainMenuItem {
 			
 			@Override
 			public void handleEvent(Event event) {
-
+				
 				// refresh the tool menu items
 				refresh();
 			}
@@ -693,7 +694,7 @@ public class ToolsMenu implements MainMenuItem {
 					
 				}
 				
-				String filePath = System.getProperty("user.dir")+"/Interpreting_Tool/FoodEx2.xlsx" ;
+				String filePath = System.getProperty("user.dir")+"\\Interpreting_Tool\\FoodEx2.xlsx" ;
 				
 				//albydev instead of the save window, give a warning message which says that the file will be saved in the followinf path
 				MessageDialog.openInformation(shell, "Info", "The file will be saved in the default path for the Interpreting and checking tool:\n"
@@ -1148,7 +1149,9 @@ public class ToolsMenu implements MainMenuItem {
 		// catalogue code a custom string, but with master hierarchy code
 		// the code defined before in the excel import... And give errors!
 		exportMI.setEnabled(true);
-		exportForIECT.setEnabled(true);
+		
+		if(mainMenu.getCatalogue() != null && mainMenu.getCatalogue().getName().contains("MTX"))
+			exportForIECT.setEnabled(true);
 
 		importPicklistMI.setEnabled(hasFacets);
 		favouritePicklistMI.setEnabled(hasFacets && hasPicklists);

@@ -46,6 +46,7 @@ import ui_describe.FormTermCoder;
 import ui_general_graphics.DialogSingleText;
 import ui_search_bar.HierarchyChangedListener;
 import ui_search_bar.HierarchyEvent;
+import ui_search_bar.SearchBar;
 import user_preferences.CataloguePreferenceDAO;
 import utilities.GlobalUtil;
 
@@ -318,9 +319,11 @@ public class TermsTreePanel extends Observable implements Observer {
 		tree.addDragAndDrop();
 		
 		//albydev: set the focus when enter the tree
+		//check before if the search field is not selected
 		tree.getTreeViewer().getTree().addListener(SWT.MouseEnter, new Listener() {
 		    public void handleEvent(Event event) {
-		        setTreeFocus();
+		    	if(!SearchBar.flag)
+		        	setTreeFocus();
 		    }
 		});
 		

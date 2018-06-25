@@ -2,11 +2,9 @@ package export_catalogue;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-
 import catalogue.Catalogue;
 import messages.Messages;
 import naming_convention.Headers;
@@ -137,12 +135,22 @@ public class ExportCatalogueWorkbook {
 					workbook, Headers.TERM_SHEET_NAME, false);
 			
 			if ( progressBar != null )
-				termSheet.setProgressBar( progressBar, 80, 
+				termSheet.setProgressBar( progressBar, 30, 
 						Messages.getString( "Export.TermSheet" ) );
 			
 			termSheet.write();
+			
+			LOGGER.info ( "Copying MTX DB" );
+
+			// write the term sheet
+			if ( progressBar != null )
+				termSheet.setProgressBar( progressBar, 50, 
+						Messages.getString( "Export.Database" ));
+			
+			//check and copy the db
+			new CopyDB();
+			
 		}
-	
 		
 		// last operation
 		if ( progressBar != null )
@@ -178,4 +186,7 @@ public class ExportCatalogueWorkbook {
 		landuse.loadData();
 		export.exportCatalogue(landuse, "landuse_export.xlsx");
 	}*/
+	
 }
+
+
