@@ -3,7 +3,7 @@ Message ID;Trigger Event Description;Text;SemaphoreWarningLevel;TextWarningLevel
 2;if a non-hierarchy is selected as base term (describe function);The base term was successfully added!;NONE;NONE
 3;if a forbidden process is chosen (the derivative should be used);Don't apply the process to the raw commodity: use the existing derivative;HIGH;HIGH
 4;if a derivative is described with a process facet with an ordCode value less than the implicit ordCode;Process applied in the wrong order!;HIGH;HIGH
-5;if an ambiguous term is selected (terms reported in the BR_Exceptions); You have selected an ambiguous term, please choose a better defined element!;LOW;LOW
+5;if an ambiguous term is selected (terms reported in the BR_Exceptions);You have selected an ambiguous term, please choose a better defined element!;LOW;LOW
 6;if more than one process with the same ordCode is chosen (mutually exclusive property violated);You cannot use these processes together!;HIGH;HIGH
 7;if a base term which does not belong to reporting or exposure hierarchy is selected;You cannot use a non reportable term!;LOW;LOW
 8;if a non exposure hierarchy-term (blue pyramid) is selected as base term (describe);You have selected a non-exposure hierarchy term!;LOW;LOW
@@ -19,3 +19,4 @@ Message ID;Trigger Event Description;Text;SemaphoreWarningLevel;TextWarningLevel
 18;if two processes (implicit or explicit) with decimal ordcode and same integer part are applied (at least one explicit);Use the existing derivative instead of adding the facet;HIGH;HIGH
 19;if one or more source commodities are added to a derivative already having an implicit source commodity (not parent of the added);Use the generic derivative as base term for describing a mixed derivative;HIGH;HIGH
 20;if a source is selected for a generic derivative without F27 (neither explicit nor implicit);Forbidden to use the Source without the (single) source commodity;HIGH;HIGH
+21;if wrong term structure or term not found;Error: wrong term structure or term not found!;ERROR;ERROR
