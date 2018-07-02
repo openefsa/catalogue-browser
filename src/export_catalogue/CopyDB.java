@@ -21,13 +21,13 @@ public class CopyDB {
 
 		try {
 			createIectDirs();
+			checkLatestDB();
+			prepIectDir();
+			copyDB();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		checkLatestDB();
-		prepIectDir();
-		copyDB();
 
 	}
 
@@ -95,17 +95,18 @@ public class CopyDB {
 
 		if (f.exists() && f.isDirectory()) {
 
-			// track just the latest version of the production's sub folders
-			long lastMod = Long.MIN_VALUE;
-
 			File[] subDirectories = f.listFiles(File::isDirectory);
-
-			for (File sub : subDirectories)
-				if (sub.lastModified() > lastMod) {
-					lastMod = sub.lastModified();
+			//initialize the version number
+			Double versNo = 0.0;
+			for (File sub : subDirectories) {
+				//check the version number
+				Double tempVersNo = Double.parseDouble(sub.getName().replaceAll("[^0-9.]+",""));
+				
+				if (tempVersNo > versNo) {
+					versNo = tempVersNo;
 					this.latestDb = sub;
 				}
-
+			}
 		} else
 			System.out.println("DB production folder does not exists!");
 
@@ -117,9 +118,11 @@ public class CopyDB {
 		try {
 
 			// create usefull dirs
-			new File(iectDir + mainCat).mkdir();
-			new File(iectDir + prodCat[0]).mkdir();
-			new File(iectDir + prodCat[0] + prodCat[1]).mkdir();
+			File f=new File(iectDir + mainCat);
+			checkFolder(f);
+			
+			f=new File(iectDir + prodCat[0]);
+			checkFolder(f);
 
 			// copy the main dir
 			FileUtils.copyDirectory(new File(mainDir + mainCat), new File(iectDir + mainCat));
@@ -128,6 +131,15 @@ public class CopyDB {
 			e.printStackTrace();
 		}
 
+	}
+	
+	private void checkFolder(File f) throws IOException {
+		if(f.exists()&&f.isDirectory())
+			//remove what is inside it
+			FileUtils.cleanDirectory(f); 
+		else
+			//make it
+			f.mkdir();
 	}
 
 	// method is used so to save the specific MTX folder into the I&CT

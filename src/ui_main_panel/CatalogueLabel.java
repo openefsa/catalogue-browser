@@ -33,65 +33,66 @@ public class CatalogueLabel implements Observer {
 	private Catalogue catalogue;
 	private ToolTip toolTip;
 	private boolean toolTipShown;
-	
+
 	/**
 	 * Initialize and display the label in the parent composite
+	 * 
 	 * @param parent
 	 */
-	public CatalogueLabel( final Composite parent ) {
-		
-		composite = new Composite( parent, SWT.NONE);
-		composite.setLayout( new GridLayout(1, false) );
-		
+	public CatalogueLabel(final Composite parent) {
+
+		composite = new Composite(parent, SWT.NONE);
+		composite.setLayout(new GridLayout(1, false));
+
 		GridData gd = new GridData();
 		gd.exclude = true;
 		composite.setVisible(false);
 		composite.setLayoutData(gd);
-		
+
 		// label which shows the label of the current opened catalogue
-		label = new Label( composite, SWT.NONE );
-		
+		label = new Label(composite, SWT.NONE);
+
 		// set the label font to italic and bold
 		FontData fontData = Display.getCurrent().getSystemFont().getFontData()[0];
 
-		Font font = new Font( Display.getCurrent(), 
-				new FontData( fontData.getName(), fontData.getHeight() + 5, SWT.ITALIC | SWT.BOLD ) );
+		Font font = new Font(Display.getCurrent(),
+				new FontData(fontData.getName(), fontData.getHeight() + 5, SWT.ITALIC | SWT.BOLD));
 
-		label.setFont ( font );
-		
+		label.setFont(font);
+
 		addUpdatePanel();
 
 		refresh();
-		
+
 		registerForUserLevel();
 	}
-	
+
 	private void addUpdatePanel() {
-		
+
 		toolTip = new ToolTip(composite.getShell(), SWT.ICON_INFORMATION | SWT.BALLOON);
 		toolTipShown = false;
-		
+
 		buttonComp = new Composite(composite, SWT.NONE);
-		buttonComp.setLayout( new GridLayout(2, false) );
-		
+		buttonComp.setLayout(new GridLayout(2, false));
+
 		GridData gd = new GridData();
 		gd.exclude = true;
 		buttonComp.setVisible(false);
 		buttonComp.setLayoutData(gd);
-		
+
 		Label newVersionAvailable = new Label(buttonComp, SWT.NONE);
 		newVersionAvailable.setText(Messages.getString("CatalogueLabel.UpdateLabel"));
-		
+
 		// set the label font to italic and bold
 		FontData fontData = Display.getCurrent().getSystemFont().getFontData()[0];
 
-		Font font = new Font( Display.getCurrent(), 
-				new FontData( fontData.getName(), fontData.getHeight() + 3, SWT.BOLD) );
+		Font font = new Font(Display.getCurrent(),
+				new FontData(fontData.getName(), fontData.getHeight() + 3, SWT.BOLD));
 
 		newVersionAvailable.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_RED));
-		
-		newVersionAvailable.setFont ( font );
-		
+
+		newVersionAvailable.setFont(font);
+
 		updateBtn = new Button(buttonComp, SWT.PUSH);
 		updateBtn.setText(Messages.getString("CatalogueLabel.UpdateButton"));
 		
@@ -100,31 +101,32 @@ public class CatalogueLabel implements Observer {
 			public void widgetSelected(SelectionEvent arg0) {
 				// download the last catalogue release
 				// and open it
+				FileActions.downloadLastVersion(composite.getShell(), catalogue, null);
 				
-				FileActions.downloadLastVersion(composite.getShell(), 
-						catalogue, null);
 			}
 		});
+
 	}
 
 	/**
 	 * Refresh composite each time the user level changes
 	 */
 	private void registerForUserLevel() {
-		
+
 		User.getInstance().addUserListener(new UserListener() {
-			
+
 			@Override
-			public void connectionChanged(boolean connected) {}
-			
+			public void connectionChanged(boolean connected) {
+			}
+
 			@Override
 			public void userLevelChanged(UserAccessLevel newLevel) {
-				
+
 				Display.getDefault().asyncExec(new Runnable() {
-					
+
 					@Override
 					public void run() {
-						
+
 						// refresh the label and the update button
 						if (!label.isDisposed())
 							refresh();
@@ -134,131 +136,129 @@ public class CatalogueLabel implements Observer {
 			}
 		});
 	}
-	
+
 	/**
 	 * Set the default label
 	 */
-	public void setDefaultLabel () {
-		label.setText( Messages.getString( "CatalogueLabel.EmptyLabel" ) );
+	public void setDefaultLabel() {
+		label.setText(Messages.getString("CatalogueLabel.EmptyLabel"));
 	}
-	
+
 	/**
 	 * Set the label text using the catalogue information
+	 * 
 	 * @param catalogue
 	 */
-	public void setText( Catalogue catalogue ) {
+	public void setText(Catalogue catalogue) {
 
 		this.catalogue = catalogue;
-		
+
 		String text = "";
-		
+
 		// display only the name if the catalogue is local
-		if ( catalogue.isLocal() )
+		if (catalogue.isLocal())
 			text = catalogue.getLabel();
 		else
 			text = catalogue.getVersion() + " " + catalogue.getLabel();
-		
-		label.setText( text );
+
+		label.setText(text);
 	}
-	
+
 	private void open() {
 		this.composite.setVisible(true);
 		((GridData) this.composite.getLayoutData()).exclude = false;
-		
+
 		// show update button and tool tip if there is an update
 		if (addUpdateButton()) {
-			
+
 			this.buttonComp.setVisible(true);
 			((GridData) this.buttonComp.getLayoutData()).exclude = false;
 			final String current = this.catalogue.getCode();
 
 			Display.getDefault().timerExec(5000, new Runnable() {
-				
+
 				@Override
 				public void run() {
-					
+
 					// if the catalogue was changed
 					if (!current.equals(catalogue.getCode()))
 						return;
-					
+
 					if (toolTip.isDisposed() || toolTipShown)
 						return;
-					
+
 					toolTipShown = true;
-					
+
 					toolTip.setText(Messages.getString("CatalogueLabel.ToolTipTitle"));
 					toolTip.setMessage(Messages.getString("CatalogueLabel.ToolTipMessage"));
 					toolTip.setLocation(updateBtn.toDisplay(16, 16));
 					toolTip.setVisible(true);
 					toolTip.setAutoHide(false);
-					
-					
+
 					// start auto hide after other 5 seconds
 					Display.getDefault().timerExec(10000, new Runnable() {
-						
+
 						@Override
 						public void run() {
-							
+
 							// if the catalogue was changed
 							if (!current.equals(catalogue.getCode()))
 								return;
-							
+
 							if (toolTip.isDisposed())
 								return;
-							
+
 							toolTip.setAutoHide(true);
 						}
 					});
 				}
 			});
-		}
-		else {
+		} else {
 			this.buttonComp.setVisible(false);
 			((GridData) this.buttonComp.getLayoutData()).exclude = true;
 		}
-		
+
 		this.composite.getParent().layout();
 	}
-	
+
 	private boolean addUpdateButton() {
-		return catalogue != null && catalogue.hasUpdate() 
-				&& !catalogue.isLastReleaseAlreadyDownloaded();
+		return catalogue != null && catalogue.hasUpdate() && !catalogue.isLastReleaseAlreadyDownloaded();
 	}
-	
+
 	/**
 	 * Refresh the label
 	 */
 	public void refresh() {
-		if ( catalogue != null )
-			setText ( catalogue );
+		if (catalogue != null)
+			setText(catalogue);
 		else
 			setDefaultLabel();
-		
+
 		open();
 	}
-	
+
 	/**
 	 * Redraw the label
 	 */
 	public void redraw() {
 		label.redraw();
 	}
-	
+
 	@Override
 	public void update(Observable o, Object arg) {
 
 		// update current catalogue
-		if ( o instanceof GlobalManager ) {
-			
-			if ( arg instanceof Catalogue )
+		if (o instanceof GlobalManager) {
+
+			if (arg instanceof Catalogue)
 				this.catalogue = (Catalogue) arg;
 			else
 				this.catalogue = null;
-			
+
 			this.toolTip.setVisible(false);
-			
+
 			toolTipShown = false;
-			
+
 			// update the catalogue label
 			refresh();
 		}

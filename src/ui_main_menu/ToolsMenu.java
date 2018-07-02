@@ -146,7 +146,7 @@ public class ToolsMenu implements MainMenuItem {
 		exportMI = addExportMI(toolsMenu);
 
 		// export for IECT (just for the MTX cat)
-		if (mainMenu.getCatalogue() != null && mainMenu.getCatalogue().getName().contains("MTX"))
+		if (mainMenu.getCatalogue() != null && mainMenu.getCatalogue().getName().equals("MTX"))
 			exportForIECT = addExportForIECT(toolsMenu);
 
 		// add import picklist
@@ -1124,7 +1124,7 @@ public class ToolsMenu implements MainMenuItem {
 		// the code defined before in the excel import... And give errors!
 		exportMI.setEnabled(true);
 
-		if (mainMenu.getCatalogue() != null && mainMenu.getCatalogue().getName().contains("MTX"))
+		if (mainMenu.getCatalogue() != null && mainMenu.getCatalogue().getName().equals("MTX"))
 			exportForIECT.setEnabled(true);
 
 		importPicklistMI.setEnabled(hasFacets);
