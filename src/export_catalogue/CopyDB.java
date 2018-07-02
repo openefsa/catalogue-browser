@@ -13,6 +13,10 @@ public class CopyDB {
 	private String mainCat = "MAIN_CATS_DB";
 	private File latestDb = null;
 
+	/*
+	 * flag used to know if the utils folder is present or not if yes move all the
+	 * files inside into the proper place and remove utils if not then do the rest
+	 */
 	public CopyDB() {
 
 		try {
@@ -30,14 +34,14 @@ public class CopyDB {
 	// the methods create the folders
 	private void createIectDirs() throws IOException {
 
-		//////////////////////////////////////Folder
-		//** check folder
+		////////////////////////////////////// Folder
+		// ** check folder
 		File file = new File(System.getProperty("user.dir") + "\\Check\\");
 		// if not present create it
 		if (!file.exists())
 			file.mkdir();
 
-		//** int. tool folder
+		// ** int. tool folder
 		file = new File(System.getProperty("user.dir") + "\\Interpreting_Tool\\");
 		if (!file.exists()) {
 			file.mkdir();
@@ -50,19 +54,37 @@ public class CopyDB {
 			// remove everything from the folder
 			FileUtils.cleanDirectory(file);
 
-		//////////////////////////////////////File
-		//** business rules app if are not present
-		file = new File(System.getProperty("user.dir") + "\\Interpreting_Tool\\app.jar");
-		if (!file.exists())
-			FileUtils.copyFileToDirectory(new File(System.getProperty("user.dir") + "\\utils\\app.jar"),
-					new File(System.getProperty("user.dir") + "\\Interpreting_Tool\\"));
-		//** foodex1
-		file = new File(System.getProperty("user.dir") + "\\Interpreting_Tool\\FoodEx1.xlsx");
-		if (!file.exists())
-			FileUtils.copyFileToDirectory(new File(System.getProperty("user.dir") + "\\utils\\FoodEx1.xlsx"),
-					new File(System.getProperty("user.dir") + "\\Interpreting_Tool\\"));
+		////////////////////////////////////// File
+		// get the main folder
+		file = new File(System.getProperty("user.dir")).getParentFile();
+		File[] subDirs = file.listFiles(File::isDirectory);
+		for (File dir : subDirs) {
 
-		file=null;
+			// check if utils exists and is a directory
+			if (dir.getName().equals("utils")) {
+				// list all the files inside
+				File[] subFiles = dir.listFiles(File::isFile);
+				// check for every file the extension
+				for (File sub : subFiles) {
+
+					// move the jar/xlsx files into the interpreting folder
+					if (sub.getName().endsWith(".jar") || sub.getName().endsWith(".xlsx")) {
+						FileUtils.copyFileToDirectory(sub,
+								new File(System.getProperty("user.dir") + "\\Interpreting_Tool\\"));
+						sub.delete();
+					} else
+						// move the xlsm file into the parent folder for an easy access of it
+						if (sub.getName().endsWith(".xlsm")) {
+							FileUtils.copyFileToDirectory(sub, file);
+							sub.delete();
+						}
+				}
+				// remove the utilis folder
+				dir.delete();
+			}
+		}
+
+		file = null;
 		return;
 	}
 

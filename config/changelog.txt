@@ -1,21 +1,17 @@
 New in FoodEx2 vers. 1.2.5:
-  -New Back and Forward buttons for tree item selection
-  -TextField autoselected when clicked (fast copy for long term)
-  -Added right click GoTo button for terms in the implicit tab
-  -Drag & Drop from main to describe
-  -Search result focus improvements
-  -Rearranged Search view for a better navigation (without hiden view item) & sashaform smooth nav
-  -Bug fix and other improvements
-  -Make the new release notes reachble from the main menu
-  
-Next build:
-  -Tab view for more instances of catalogue browser
-  -New smart search field (use of TextMining teq.)
-  -New title disposition and recent terms tab under search.
+  -Redesigned Mouse floating focus
+  -TextFields autoselected with single click
+  -New Export button under tools (just for MTX catalogue)
+  	*first time it is required the utils folder
+  -Double click on a term from the tree-view for describing it
+  -New redesigned describe window
+  -Solved UI inconsistency for windows under about menu
+  -New "latest features" button under the about menu
+  -Fixed composite size and interactions on the main page
+  -Removed warnings and other bugs from the source folder
   
  -------------------------------------------------------------------
-  
-New in FoodEx2 vers. 1.3.2:
+New in FoodEx2 vers. 1.2.4:
   -Added the ability to surf the main page while describing a new term
   -Added the new "Release notes" message dialog for new features
   -Implicit parent term removed when added a child into describe window
