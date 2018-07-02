@@ -1,2 +1,19 @@
 New in FoodEx2 vers. 1.2.5:
-  -Automatically export the latest catalogue for the Int.&Check.Tool
+  -Redesigned Mouse floating focus
+  -TextFields autoselected with single click
+  -New Export button under tools (just for MTX catalogue)
+  	*first time it is required the utils folder
+  -Double click on a term from the tree-view for describing it
+  -New redesigned describe window
+  -Solved UI inconsistency for windows under about menu
+  -New "latest features" button under the about menu
+  -Fixed composite size and interactions on the main page
+  -Autoupdate the I&CT db when with new version of the catalogue
+  -Removed warnings and other bugs from the source folder
+  
+ -------------------------------------------------------------------
+New in FoodEx2 vers. 1.2.4:
+  -Added the ability to surf the main page while describing a new term
+  -Added the new "Release notes" message dialog for new features
+  -Implicit parent term removed when added a child into describe window
+  -Bug fix and other improvements
