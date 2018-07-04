@@ -1236,7 +1236,6 @@ public class WarningUtil {
 	 * @param facetCode
 	 */
 	private void minorIngredientCheck ( Term baseTerm, String facetIndex, String facetCode, boolean stdOut ) {
-		System.out.println("Ciao");
 		// if the base term is a raw commodity or a derivative
 		if ( isRawCommodityTerm( baseTerm ) || isDerivativeTerm( baseTerm ) ) {
 

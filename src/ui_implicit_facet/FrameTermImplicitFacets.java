@@ -56,7 +56,6 @@ public class FrameTermImplicitFacets implements Observer {
 	private Listener updateListener; // called at the end of an adding operation, useful if we have to do something
 										// only once in multiple selection cases
 	
-	private Object selElement; //get the selected facet folder
 	private Attribute facetCategory;
 	
 	public void addAddDescriptorListener(Listener listener) {
@@ -91,7 +90,7 @@ public class FrameTermImplicitFacets implements Observer {
 	 * @param term
 	 */
 	public void setTerm(Term term) {
-
+		
 		this.term = term;
 		implicitFacets.getTreeViewer().setInput(term);
 		refresh();
@@ -156,39 +155,23 @@ public class FrameTermImplicitFacets implements Observer {
 	 * 
 	 * @return
 	 */
-	public void checkAncestor(TreeViewer implicitFacets ) {
+	public void checkAncestor(Term descriptor ) {
 		
 		/*
 		 * Author: AlbyDev
 		 * Date: 30/04/2018
 		*/
 		
-		//get the content
-		ContentProviderImplicitFacets provider = (ContentProviderImplicitFacets) implicitFacets.getContentProvider();
-		//get the child of the content
-		DescriptorTreeItem[] children =Arrays.stream(provider.getChildren(facetCategory)).toArray(DescriptorTreeItem[]::new);
-		//list of facet parent group
-		ArrayList<DescriptorTreeItem> parents = new ArrayList<>();
+		//get the category folder content
+		ContentProviderImplicitFacets provider = (ContentProviderImplicitFacets) implicitFacets.getTreeViewer().getContentProvider();
+		DescriptorTreeItem[] goupItems =Arrays.stream(provider.getChildren(facetCategory)).toArray(DescriptorTreeItem[]::new);
 		
-		for (DescriptorTreeItem o : children) {
-			// find the parent
-			if ((o.getTerm().getParent(facetCategory.getHierarchy()) == null)) {
-				//System.out.println(o.getTerm().getName() + " is a master group;");
-				parents.add(o);
-			}
+		//for each item
+		for (DescriptorTreeItem item : goupItems) {
+			//if the the selected term has as ancestor the item then remove it from the term description
+			if (descriptor.hasAncestor(item.getTerm(), facetCategory.getHierarchy())) 
+				term.removeImplicitFacet(item.getDescriptor());
 		}
-		
-		//it is supposed to have more children then parents so we loop through the children removing the parents
-		for (DescriptorTreeItem c : children) {
-			if(parents.isEmpty())
-				break;
-			
-			for (DescriptorTreeItem p : parents)
-				//remove the parent if it includes the children and if it is the parent of the children
-				if (!parents.contains(c) & c.getTerm().hasAncestor(p.getTerm(), facetCategory.getHierarchy()))
-					implicitFacets.remove(p);
-		}
-
 	}
 
 	/**
@@ -240,9 +223,6 @@ public class FrameTermImplicitFacets implements Observer {
 				// get the selected element ( facet category or descriptor )
 				Object selectedElem = ((IStructuredSelection) (implicitFacets.getSelection())).getFirstElement();
 				
-				//get the selected facet folder
-				selElement = ((IStructuredSelection) implicitFacets.getSelection()).getFirstElement();
-				
 				// get the facet category from the selection
 				if (selectedElem instanceof Attribute) // if we have selected the facet category simply cast it
 					facetCategory = (Attribute) selectedElem;
@@ -259,7 +239,7 @@ public class FrameTermImplicitFacets implements Observer {
 				parent.setEnabled(false);
 				//
 				FormSelectTerm sf = new FormSelectTerm(parent, Messages.getString("Browser.SelectTermWindowTitle"), term.getCatalogue(), facetCategory.isRepeatable(), false);
-
+					
 				// set the root term for the form in order to show only
 				// the facet related to the facet category
 				sf.setRootTerm(facetCategory);
@@ -288,10 +268,10 @@ public class FrameTermImplicitFacets implements Observer {
 				
 				// get the current catalogue
 				Catalogue currentCat = manager.getCurrentCatalogue();
-
+				
 				// for each selected descriptor we add it
 				for (int i = 0; i < sf.getSelectedTerms().size(); i++) {
-
+					
 					// get the current descriptor
 					Term descriptor = (Term) sf.getSelectedTerms().get(i);
 					
@@ -304,7 +284,10 @@ public class FrameTermImplicitFacets implements Observer {
 							break;
 						}
 					}
-
+					
+					//check if the selected term has ancestors into the facets group folder
+					checkAncestor(descriptor);
+					
 					// create the term attribute for the facet descriptor
 					TermAttribute ta = new TermAttribute(term, facetAttr,
 							FacetDescriptor.getFullFacetCode(descriptor, facetCategory));
@@ -313,16 +296,12 @@ public class FrameTermImplicitFacets implements Observer {
 					// code
 					// we set the facet type with the newFacetType
 					FacetDescriptor attr = new FacetDescriptor(descriptor, ta, newFacetType);
-
+					
 					// add the descriptor to the implicit facets
 					term.addImplicitFacet(attr);
 					
 					// update the table input
 					setTerm(term);
-					
-					//Author: AlbyDev
-					checkAncestor(implicitFacets) ;
-					//
 					
 					// call the add listener if it was set
 					if (addDescriptorListener != null) {
@@ -363,13 +342,7 @@ public class FrameTermImplicitFacets implements Observer {
 				if (implicitFacets.getSelection().isEmpty())
 					return;
 				
-				//Author: AlbyDev
-				//get the selected facet folder
-				selElement = ((IStructuredSelection) implicitFacets.getSelection()).getFirstElement();
 				
-				 // if we have selected a descriptor get the category from it
-				facetCategory = ((DescriptorTreeItem) selElement).getDescriptor().getFacetCategory();
-				//
 				
 				// get the selected tree item from the implicit facet tree
 				// ( we can have only selected a descriptor tree item, since remove is disabled
@@ -384,10 +357,6 @@ public class FrameTermImplicitFacets implements Observer {
 				
 				// update table input
 				setTerm(term);
-
-				//Author: AlbyDev
-				checkAncestor(implicitFacets) ;
-				//
 				
 				// call the remove listener if it was set
 				if (removeDescriptorListener != null) {
@@ -397,6 +366,11 @@ public class FrameTermImplicitFacets implements Observer {
 					event.data = treeItem.getDescriptor();
 
 					removeDescriptorListener.handleEvent(event);
+				}
+				
+				// call the update listener if remove process if finished
+				if (updateListener != null) {
+					updateListener.handleEvent(new Event());
 				}
 
 			}

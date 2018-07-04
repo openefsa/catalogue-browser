@@ -31,7 +31,7 @@ public class BrowserReleaseNotes {
 			StringBuffer stringBuffer = new StringBuffer();
 
 			// read the header
-			messageDialog.setText("\n" + buff.readLine() + "\n\n");
+			messageDialog.setText("\nNew in Catalogue browser vers. " +CatalogueBrowserMain.APP_VERSION + "\n\n");
 
 			// read the rest of the file
 			String str = "";
