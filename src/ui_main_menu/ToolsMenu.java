@@ -1195,17 +1195,16 @@ public class ToolsMenu implements MainMenuItem {
 		
 		// export for IECT (just for the MTX cat)
 		if (mainMenu.getCatalogue() != null && mainMenu.getCatalogue().getName().equals("MTX")) {
-			exportForIECT.setEnabled(true);
-
+			
 			File utils = new File(new File(System.getProperty("user.dir")).getParent()+"\\utils");
 			File iect = new File(System.getProperty("user.dir") + "\\Interpreting_Tool");
 			File tool = new File(new File(System.getProperty("user.dir")).getParent()+"\\ICT.xlsm");
 			
-			if(!utils.exists()&&iect.exists()&&tool.exists()) 
+			exportForIECT.setEnabled(true);
+			
+			if(!utils.exists()&&iect.exists()&&tool.exists()&&launchICT!=null) 
 				launchICT.setEnabled(true);
 		}
-		if (mainMenu.getCatalogue() != null && mainMenu.getCatalogue().getName().equals("MTX"))
-			exportForIECT.setEnabled(true);
 
 		importPicklistMI.setEnabled(hasFacets);
 		favouritePicklistMI.setEnabled(hasFacets && hasPicklists);
