@@ -342,8 +342,6 @@ public class FrameTermImplicitFacets implements Observer {
 				if (implicitFacets.getSelection().isEmpty())
 					return;
 				
-				
-				
 				// get the selected tree item from the implicit facet tree
 				// ( we can have only selected a descriptor tree item, since remove is disabled
 				// for

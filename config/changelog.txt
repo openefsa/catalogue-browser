@@ -7,5 +7,5 @@
   -Solved UI inconsistency for windows under about menu
   -New "latest features" button under the about menu
   -Fixed composite size and interactions on the main page
-  -Autoupdate the I&CT db when with new version of the catalogue
+  -Update the I&CT db when new version of the MTX is available
   -Removed warnings and other bugs from the source folder

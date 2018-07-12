@@ -1,6 +1,9 @@
 package ui_main_menu;
 
+import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -81,6 +84,7 @@ public class ToolsMenu implements MainMenuItem {
 	private MenuItem importMI;
 	private MenuItem exportMI;
 	private MenuItem exportForIECT; // export for the interpreting and checking tool
+	private MenuItem launchICT; // launch the interpreting and checking tool
 	private MenuItem importPicklistMI;
 	private MenuItem favouritePicklistMI;
 	private MenuItem removePicklistMI;
@@ -146,8 +150,19 @@ public class ToolsMenu implements MainMenuItem {
 		exportMI = addExportMI(toolsMenu);
 
 		// export for IECT (just for the MTX cat)
-		if (mainMenu.getCatalogue() != null && mainMenu.getCatalogue().getName().equals("MTX"))
-			exportForIECT = addExportForIECT(toolsMenu);
+		if (mainMenu.getCatalogue() != null && mainMenu.getCatalogue().getName().equals("MTX")) {
+
+			//initialize the files needed for the ict
+			File utils = new File(new File(System.getProperty("user.dir")).getParent()+"\\utils");
+			File ict = new File(System.getProperty("user.dir") + "\\Interpreting_Tool");
+			File tool = new File(new File(System.getProperty("user.dir")).getParent()+"\\ICT.xlsm");
+			
+			//add the export button (update/install)
+			exportForIECT = addExportForIECT(toolsMenu, utils, ict);
+			
+			if(!utils.exists()&&ict.exists()&&tool.exists()) 
+				launchICT = addLaunchICT(toolsMenu);
+		}
 
 		// add import picklist
 		importPicklistMI = addImportPicklistMI(toolsMenu);
@@ -660,15 +675,39 @@ public class ToolsMenu implements MainMenuItem {
 	 * 
 	 * @param menu
 	 */
-	private MenuItem addExportForIECT(Menu menu) {
+	private MenuItem addExportForIECT(Menu menu, File utils, File ict) {
 
 		final MenuItem exportItem = new MenuItem(menu, SWT.NONE);
-		exportItem.setText(Messages.getString("BrowserMenu.ExportICTCmd"));
-
+		
+		if(!utils.exists()&&ict.exists())
+			//set the text on update when iect exists
+			exportItem.setText(Messages.getString("BrowserMenu.UpdateICTCmd"));
+		else
+			//set the text on install otherwise
+			exportItem.setText(Messages.getString("BrowserMenu.InstallICTCmd"));
+		
+		
 		exportItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
 
+				//if utils and iect are not present
+				if(!utils.exists()&&!ict.exists()) {
+					
+					if(MessageDialog.openConfirm(shell, "Info", "Utils folder not found.\n"
+							+ "Do you want me to download it for you?\n\n"
+							+ "Tip: Once the donwload is finished extract the content of the zip file into the main catalogues browser folder.")) {
+						//redirect  to the download site
+						try {
+						    Desktop.getDesktop().browse(new URL("https://github.com/openefsa/Interpreting-and-Checking-Tool/releases/download/v2.1.5-alpha/utils.zip").toURI());
+						} catch (Exception e) {}
+					}
+					// enable according to the operation status
+					exportItem.setEnabled(false);
+					
+					return;
+				}
+				
 				Term incorrectTerm = mainMenu.getCatalogue().isDataCorrect();
 				if (incorrectTerm != null) {
 
@@ -736,6 +775,36 @@ public class ToolsMenu implements MainMenuItem {
 		exportItem.setEnabled(false);
 
 		return exportItem;
+	}
+	
+	/**
+	 * AlbyDev: Add a menu item which allows to launch the ICT tool
+	 * 
+	 * @param menu
+	 */
+	private MenuItem addLaunchICT(Menu menu) {
+
+		final MenuItem launchItem = new MenuItem(menu, SWT.NONE);
+		
+		launchItem.setText(Messages.getString("BrowserMenu.LaunchICTCmd"));
+		
+		launchItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+
+				try {
+						Desktop.getDesktop().open(new File(new File(System.getProperty("user.dir")).getParent()+"\\ICT.xlsm"));
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+			}
+		});
+
+		// enable according to the operation status
+		launchItem.setEnabled(false);
+
+		return launchItem;
 	}
 
 	/**
@@ -1123,7 +1192,18 @@ public class ToolsMenu implements MainMenuItem {
 		// catalogue code a custom string, but with master hierarchy code
 		// the code defined before in the excel import... And give errors!
 		exportMI.setEnabled(true);
+		
+		// export for IECT (just for the MTX cat)
+		if (mainMenu.getCatalogue() != null && mainMenu.getCatalogue().getName().equals("MTX")) {
+			exportForIECT.setEnabled(true);
 
+			File utils = new File(new File(System.getProperty("user.dir")).getParent()+"\\utils");
+			File iect = new File(System.getProperty("user.dir") + "\\Interpreting_Tool");
+			File tool = new File(new File(System.getProperty("user.dir")).getParent()+"\\ICT.xlsm");
+			
+			if(!utils.exists()&&iect.exists()&&tool.exists()) 
+				launchICT.setEnabled(true);
+		}
 		if (mainMenu.getCatalogue() != null && mainMenu.getCatalogue().getName().equals("MTX"))
 			exportForIECT.setEnabled(true);
 
@@ -1255,7 +1335,10 @@ public class ToolsMenu implements MainMenuItem {
 					exportMI.setEnabled(true);
 
 				if (exportForIECT != null)
-					exportMI.setEnabled(true);
+					exportForIECT.setEnabled(true);
+				
+				if (launchICT != null)
+					launchICT.setEnabled(true);
 			}
 		}
 	}
