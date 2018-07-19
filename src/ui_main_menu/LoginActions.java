@@ -85,6 +85,7 @@ public class LoginActions {
 							String title = Messages.getString( "Login.PermissionTitle" );
 							String msg;
 
+							
 							if ( User.getInstance().isCatManager() )
 								msg = Messages.getString("Login.CatalogueManagerMessage");
 							else

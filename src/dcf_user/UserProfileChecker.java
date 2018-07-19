@@ -82,7 +82,7 @@ public class UserProfileChecker extends Thread {
 			public void finished(Thread thread, int code, Exception e ) {
 				
 				User user = User.getInstance();
-				
+
 				switch ( code ) {
 
 				case OK:

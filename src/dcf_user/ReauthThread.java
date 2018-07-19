@@ -4,7 +4,6 @@ import javax.xml.soap.SOAPException;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-
 import catalogue_generator.ThreadFinishedListener;
 
 /**
@@ -39,7 +38,7 @@ public class ReauthThread extends Thread {
 			code = ThreadFinishedListener.EXCEPTION;
 			exception = e;
 		}
-
+		
 		if (doneListener != null) {
 			this.doneListener.finished(this, code, exception);
 		}

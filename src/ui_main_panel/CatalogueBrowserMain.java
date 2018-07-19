@@ -74,7 +74,7 @@ public class CatalogueBrowserMain {
 			
 			@Override
 			public void userLevelChanged(UserAccessLevel newLevel) {
-				
+
 				final String connectedAs = newLevel == UserAccessLevel.CATALOGUE_MANAGER ? 
 						Messages.getString("App.ConnectedCM") :
 							Messages.getString("App.ConnectedDP");
@@ -159,8 +159,8 @@ public class CatalogueBrowserMain {
 		browser.shell.open();
 		
 		//logout
-		//User.getInstance().deleteCredentials();
-		
+	   //User.getInstance().deleteCredentials();
+
 		if (User.getInstance().areCredentialsStored()) {
 			
 			// reauthenticate the user in background if needed
@@ -169,7 +169,7 @@ public class CatalogueBrowserMain {
 				
 				@Override
 				public void finished(Thread thread, final int code, Exception e) {
-					
+
 					if (shell.isDisposed())
 						return;
 					

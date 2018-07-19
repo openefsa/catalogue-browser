@@ -53,7 +53,7 @@ public class ExportCatalogueThread extends Thread {
 			e.printStackTrace();
 
 			LOGGER.error("Cannot export catalogue=" + catalogue + " in file=" + filename, e);
-			
+
 			// exception
 			if ( listener != null )
 				listener.finished( ExportCatalogueThread.this, 

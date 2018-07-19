@@ -1921,7 +1921,7 @@ public class Catalogue extends BaseObject
 
 			@Override
 			public void finished(Thread thread, int code, Exception exception) {
-
+				
 				// remove temporary file if needed
 				try {
 					GlobalUtil.deleteFileCascade( file );

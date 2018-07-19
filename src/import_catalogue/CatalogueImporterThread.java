@@ -65,14 +65,14 @@ public class CatalogueImporterThread extends Thread {
 		
 		CatalogueImporter importer = new CatalogueImporter(filename, format, 
 				progressBar, maxProgress );
-		
+
 		importer.setOpenedCat( openedCat );
 		try {
 			importer.makeImport();
 		} catch (TransformerException | IOException | 
 				XMLStreamException | OpenXML4JException | 
 				SAXException | SQLException | ImportException e) {
-			
+
 			doneListener.finished(this, ThreadFinishedListener.EXCEPTION, e);
 			
 			if ( progressBar != null ) {
