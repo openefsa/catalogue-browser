@@ -3,6 +3,7 @@ package ui_main_panel;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.graphics.Image;
@@ -32,7 +33,7 @@ import utilities.GlobalUtil;
  *
  */
 public class CatalogueBrowserMain {
-
+	
 	private static final Logger LOGGER = LogManager.getLogger(CatalogueBrowserMain.class);
 	
 	public static final String APP_NAME = AppConfig.getAppName();
@@ -48,6 +49,9 @@ public class CatalogueBrowserMain {
 	 */
 	public static void main ( String[] args ) {
 
+		BasicConfigurator.configure();
+		
+		
 		try {
 			launch();
 		}
