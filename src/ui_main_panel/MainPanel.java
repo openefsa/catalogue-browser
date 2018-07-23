@@ -977,12 +977,19 @@ public class MainPanel implements Observer {
 
 					break;
 
+					
+				case ToolsMenu.DOWNLOADICT:
+					//refresh the tools item menu when ict download and install is completed
+					refresh();
+					break;
+					
 				case ToolsMenu.HIER_EDITOR_MI:
 				case ToolsMenu.ATTR_EDITOR_MI:
 					// refresh
 					tabPanel.setTerm(tree.getFirstSelectedTerm());
 					refresh();
 					break;
+					
 				default:
 					break;
 				}

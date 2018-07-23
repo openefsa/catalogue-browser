@@ -27,11 +27,12 @@
 	<classpathentry kind="lib" path="D:/PortableApps/EclipsePortable/App/eclipse/Data/workspace/UnusedJarFiles/junit.jar"/>
 	<classpathentry kind="lib" path="D:/PortableApps/EclipsePortable/App/eclipse/Data/workspace/UnusedJarFiles/log4j-1.2.16.jar"/>
 	<classpathentry kind="lib" path="D:/PortableApps/EclipsePortable/App/eclipse/Data/workspace/UnusedJarFiles/org.eclipse.core.commands.jar"/>
-	<classpathentry kind="lib" path="D:/PortableApps/EclipsePortable/App/eclipse/Data/workspace/UnusedJarFiles/xmlbeans-2.6.0.jar"/>
 	<classpathentry kind="lib" path="D:/PortableApps/EclipsePortable/App/eclipse/Data/workspace/UnusedJarFiles/hamcrest-all-1.3.jar"/>
 	<classpathentry kind="lib" path="D:/PortableApps/EclipsePortable/App/eclipse/Data/workspace/UnusedJarFiles/jxl.jar"/>
 	<classpathentry kind="lib" path="D:/PortableApps/EclipsePortable/App/eclipse/Data/workspace/UnusedJarFiles/protobuf-java-3.5.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="D:/PortableApps/EclipsePortable/App/eclipse/Data/workspace/UnusedJarFiles/swt.jar"/>
+	<classpathentry kind="lib" path="D:/PortableApps/EclipsePortable/App/eclipse/Data/workspace/UnusedJarFiles/junit-platform-commons-1.3.0-M1.jar"/>
+	<classpathentry kind="lib" path="D:/PortableApps/EclipsePortable/App/eclipse/Data/workspace/UnusedJarFiles/xmlbeans-2.6.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
