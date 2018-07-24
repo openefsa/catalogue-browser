@@ -1,11 +1,36 @@
-  -Redesigned Mouse floating focus
-  -TextFields autoselected with single click
-  -New Export button under tools (just for MTX catalogue)
-  	*first time it is required the utils folder
-  -Double click on a term from the tree-view for describing it
-  -New redesigned describe window
-  -Solved UI inconsistency for windows under about menu
-  -New "latest features" button under the about menu
-  -Fixed composite size and interactions on the main page
-  -Update the I&CT db when new version of the MTX is available
-  -Removed warnings and other bugs from the source folder
+------------------------ Redesigned Mouse floating focus -------------------------------------
+Thanks to this new feature you will be able to simply move the mouse in the section where you 
+want to scroll without having to necessarily click on it.
+   
+------------------------ TextFields autoselected with single click ---------------------------
+Auto select text fields on the main page with a single click (Ability to perform also ctrl+a).
+   
+------------------------ New buttons in the main menu (just for MTX catalogue) 
+Added several buttons under tools that allow to install, update or launch the Interpreting and 
+Checking tool.
+   
+------------------------ Double click on a Tree-view Term ------------------------------------
+From the tree view on the main page now it will be possible to open the descriptive window of 
+the specific term just by double-clcking on it.
+   
+------------------------ New redesigned descriptive window -----------------------------------
+Removed useless components as well as other small UI changes.
+   
+------------------------ Solved UI inconsistency ---------------------------------------------
+All the windows accessible from the about main menu button now follow a specific UI
+window template.
+   
+------------------------ New "latest features" button ----------------------------------------
+Clicking on this specific voice allow you to know every time which are the changes made with 
+the latest installed version.
+   
+------------------------ Fixed composite size ------------------------------------------------
+
+Solved different bugs related to the composite size which was blocking the scrolling 
+(e.g. the term result composite under the search panel).
+  
+------------------------ Auto-Update the ICT db 
+Now when new version of the MTX is available it is possible to autoupdate the ICT db related to 
+the specifc MTX catalogue.
+   
+------------------------ Other minor changes and bug fixes 

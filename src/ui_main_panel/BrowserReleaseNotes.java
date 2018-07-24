@@ -1,11 +1,18 @@
 package ui_main_panel;
 
+import java.awt.Event;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
@@ -21,17 +28,20 @@ public class BrowserReleaseNotes {
 	 */
 	public static void display(Shell shell, boolean flag) {
 
-		// Message
-		MessageBox messageDialog = new MessageBox(shell,
-				SWT.ICON_INFORMATION | SWT.WRAP | SWT.BORDER | SWT.V_SCROLL | SWT.TITLE);
-		
+		Shell notes = new Shell(shell, SWT.SHEET | SWT.APPLICATION_MODAL | SWT.WRAP | SWT.BORDER | SWT.TITLE);
+		notes.setSize(550, 500);
+		notes.setLayout(new FillLayout());
+
+		// read the header
+		notes.setText("\nNew in Catalogue browser vers. " + CatalogueBrowserMain.APP_VERSION + "\n\n");
+
+		StyledText t1 = new StyledText(notes, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
+		t1.setEditable(false);
+
 		try {
 
 			BufferedReader buff = new BufferedReader(new FileReader(GlobalUtil.getChangelogPath()));
 			StringBuffer stringBuffer = new StringBuffer();
-
-			// read the header
-			messageDialog.setText("\nNew in Catalogue browser vers. " +CatalogueBrowserMain.APP_VERSION + "\n\n");
 
 			// read the rest of the file
 			String str = "";
@@ -42,17 +52,30 @@ public class BrowserReleaseNotes {
 			buff.close();
 
 			// print the string result
-			messageDialog.setMessage(stringBuffer.toString());
+			t1.setText(stringBuffer.toString());
 
-			// if ok is pressed and coming from new update a new file flag is generated
-			if (messageDialog.open() == SWT.OK && flag) {
-				new File(GlobalUtil.getFlagPath()).createNewFile();
-			}
+			//if closed and flag then create the flag for not showing the release notes automatically
+			notes.addListener(SWT.Close, new Listener() {
+
+				@Override
+				public void handleEvent(org.eclipse.swt.widgets.Event arg0) {
+					if(flag)
+						try {
+							new File(GlobalUtil.getFlagPath()).createNewFile();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+				}
+			});
 
 		} catch (IOException e) {
 
 			e.printStackTrace();
 			return;
 		}
+
+		notes.open();
+
 	}
 }

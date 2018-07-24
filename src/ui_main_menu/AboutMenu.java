@@ -133,10 +133,12 @@ public class AboutMenu implements MainMenuItem {
 		notesItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+
 				BrowserReleaseNotes.display(shell, false);
+				
 			}
 		});
-
+		
 	}
 
 	@Override
