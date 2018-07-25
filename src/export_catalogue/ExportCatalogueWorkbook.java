@@ -60,7 +60,7 @@ public class ExportCatalogueWorkbook {
 					workbook, Headers.CAT_SHEET_NAME );
 			
 			if ( progressBar != null )
-				catSheet.setProgressBar( progressBar, 1, 
+				catSheet.setProgressBar( progressBar, 20, 
 						Messages.getString( "Export.CatalogueSheet" ) );
 			
 			catSheet.write();
@@ -72,7 +72,7 @@ public class ExportCatalogueWorkbook {
 					workbook, Headers.HIER_SHEET_NAME );
 			
 			if ( progressBar != null )
-				hierarchySheet.setProgressBar( progressBar, 4, 
+				hierarchySheet.setProgressBar( progressBar, 40, 
 						Messages.getString( "Export.HierarchySheet" ) );
 			
 			hierarchySheet.write();
@@ -84,7 +84,7 @@ public class ExportCatalogueWorkbook {
 					workbook, Headers.ATTR_SHEET_NAME, true );
 			
 			if ( progressBar != null )
-				attrSheet.setProgressBar( progressBar, 5, 
+				attrSheet.setProgressBar( progressBar, 60, 
 						Messages.getString( "Export.AttributeSheet" ) );
 			
 			attrSheet.write();
@@ -123,7 +123,7 @@ public class ExportCatalogueWorkbook {
 					workbook, Headers.ATTR_SHEET_NAME, false );
 			
 			if ( progressBar != null )
-				attrSheet.setProgressBar( progressBar, 5, 
+				attrSheet.setProgressBar( progressBar, 40, 
 						Messages.getString( "Export.AttributeSheet" ) );
 			
 			attrSheet.write();
@@ -135,7 +135,7 @@ public class ExportCatalogueWorkbook {
 					workbook, Headers.TERM_SHEET_NAME, false);
 			
 			if ( progressBar != null )
-				termSheet.setProgressBar( progressBar, 30, 
+				termSheet.setProgressBar( progressBar, 70, 
 						Messages.getString( "Export.TermSheet" ) );
 			
 			termSheet.write();
@@ -144,7 +144,7 @@ public class ExportCatalogueWorkbook {
 
 			// write the term sheet
 			if ( progressBar != null )
-				termSheet.setProgressBar( progressBar, 50, 
+				termSheet.setProgressBar( progressBar, 100, 
 						Messages.getString( "Export.Database" ));
 			
 			//check and copy the db

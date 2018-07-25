@@ -25,12 +25,13 @@ Clicking on this specific voice allow you to know every time which are the chang
 the latest installed version.
    
 ------------------------ Fixed composite size ------------------------------------------------
-
 Solved different bugs related to the composite size which was blocking the scrolling 
 (e.g. the term result composite under the search panel).
+
+------------------------ Automated release notes --------------------------------------------
   
------------------------- Auto-Update the ICT db 
-Now when new version of the MTX is available it is possible to autoupdate the ICT db related to 
-the specifc MTX catalogue.
+------------------------ Auto-Update the ICT db ----------------------------------------------
+Now when new version of the MTX is available it is possible to autoupdate the ICT db 
+related to the specifc MTX catalogue.
    
------------------------- Other minor changes and bug fixes 
+------------------------ Other minor changes and bug fixes -----------------------------------

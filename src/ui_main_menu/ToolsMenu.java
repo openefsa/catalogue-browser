@@ -37,7 +37,6 @@ import import_catalogue.CatalogueImporterThread;
 import import_catalogue.ImportException;
 import messages.Messages;
 import progress_bar.FormProgressBar;
-import progress_bar.IProgressBar;
 import sas_remote_procedures.XmlUpdateFile;
 import sas_remote_procedures.XmlUpdateFileDAO;
 import sas_remote_procedures.XmlUpdatesFactory;
@@ -706,34 +705,21 @@ public class ToolsMenu implements MainMenuItem {
 				//ask the user before continuing the operation
 				if (MessageDialog.openConfirm(shell, "Info",
 						"Do you want to continue with the Installation of the Interpreting and Checking Tool?")) {
-
-					//create the installation progress bar
-					IProgressBar pb = new FormProgressBar(shell, Messages.getString("Export.InstallTitle"));
-					pb.getProgressBar().setSelection(1);
-					pb.open();
 					
 					LOGGER.info("Starting download process...");
-					
+
 					// if the zip file and the utils folder doesnt exists then download
 					if (!toolZipFile.exists() && !toolFolder.exists()) {
 						
-						// start the process with the download
-						if (pb != null) pb.getProgressBar().setSelection(20);
-						
 						// redirect to the download site
 						try {
+							
 							// url of the ICT tool
 							String url = "https://github.com/openefsa/Interpreting-and-Checking-Tool/releases/download/v1.2.5-alpha/utils.zip";
 							
-							// donwload the file into the specific main folder
 							HttpDownloadUtility.downloadFile(url, mainFolder);
 							
-							// update the pb
-							if (pb != null) pb.getProgressBar().setSelection(40);
-							
 						} catch (Exception e) {
-							//close the pb
-							pb.close();
 							// print the error msg
 							MessageDialog.openError(shell, "Error",
 									"I was not able to download the tool main folder!\nCheck your Internet connection or contact the Administrator.");
@@ -745,9 +731,6 @@ public class ToolsMenu implements MainMenuItem {
 					
 					// if the zip file exists and not the utils folder then extract
 					if (toolZipFile.exists() && !toolFolder.exists()) {
-
-						// start the process with the download
-						if (pb != null) pb.getProgressBar().setSelection(50);
 						
 						// update the progress bar witht the message which is warning about the
 						// extraction
@@ -756,16 +739,10 @@ public class ToolsMenu implements MainMenuItem {
 							// extract the zip folder
 							zip_manager.ZipManager.extractFolder(mainFolder + "\\utils.zip", mainFolder);
 							
-							//update the pb
-							if (pb != null) pb.getProgressBar().setSelection(75);
-							
 							// remove the zip file when the extraction has finished
 							toolZipFile.delete();
 							
-							if (pb != null) pb.getProgressBar().setSelection(85);
-							
 						} catch (IOException e) {
-							pb.close();
 							MessageDialog.openError(shell, "Error",
 									"The tool was not correctly unziped!\nPlease try again!");
 							e.printStackTrace();
@@ -777,15 +754,13 @@ public class ToolsMenu implements MainMenuItem {
 					
 					// if the folder exists and is a directory then setup the ICT
 					if (toolFolder.exists() && toolFolder.isDirectory()) {
-
-						if (pb != null) pb.getProgressBar().setSelection(100);
 						
 						// export the catalogue (changed the main class so to know that the call is
 						// coming from a different export button
 						ExportActions export = new ExportActions();
 
 						// set the progress bar
-						export.setProgressBar(pb);
+						export.setProgressBar(new FormProgressBar(shell, Messages.getString("Export.InstallTitle"), true, SWT.TITLE | SWT.APPLICATION_MODAL));
 
 						// export the opened catalogue
 						export.exportAsync(mainMenu.getCatalogue(),

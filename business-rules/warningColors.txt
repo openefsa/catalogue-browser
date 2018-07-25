@@ -1,0 +1,10 @@
+SemaphoreNoWarn = 0;255;0
+SemaphoreLowWarn = 255;255;0
+SemaphoreHighWarn = 255;165;0
+SemaphoreErrorWarn = 255;0;0
+TxtNoWarn = 0;255;0
+TxtLowWarn = 255;255;0
+TxtHighWarn = 255;255;255
+TxtErrorWarn = 255;255;255
+ConsoleBG = 0;0;0
+WarnFontSize = 14

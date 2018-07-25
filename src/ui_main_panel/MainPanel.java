@@ -1,6 +1,5 @@
 package ui_main_panel;
 
-import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -365,20 +364,8 @@ public class MainPanel implements Observer {
 		// shell name, image, window dimensions (based on
 		// widget! Need to call it after addWidgets)
 		setShellGraphics();
-
-		// Author: AlbanDev
-		// check if exists the notes file which is created when the changelog is shown
-		// once
-		if (!new File(GlobalUtil.getFlagPath()).isFile())
-			showLastFeatures();
 	}
 
-	/**
-	 * Author: AlbyDev Show a message dialog with the new features with updates
-	 */
-	public void showLastFeatures() {
-		BrowserReleaseNotes.display(shell, true);
-	}
 
 	public void openLastCatalogue() {
 		// open the last catalogue if present

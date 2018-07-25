@@ -1,19 +1,18 @@
 package ui_main_panel;
 
-import java.awt.Event;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 import utilities.GlobalUtil;
@@ -54,17 +53,28 @@ public class BrowserReleaseNotes {
 			// print the string result
 			t1.setText(stringBuffer.toString());
 
-			//if closed and flag then create the flag for not showing the release notes automatically
+			// if closed and flag then create the flag for not showing the release notes
+			// automatically
 			notes.addListener(SWT.Close, new Listener() {
 
 				@Override
 				public void handleEvent(org.eclipse.swt.widgets.Event arg0) {
-					if(flag)
+					BufferedWriter writer = null;
+					if (flag)
 						try {
-							new File(GlobalUtil.getFlagPath()).createNewFile();
+							File flagFile = new File(GlobalUtil.getFlagPath());
+							flagFile.createNewFile();
+							writer = new BufferedWriter(new FileWriter(flagFile));
+							writer.write(CatalogueBrowserMain.APP_VERSION);
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
+						} finally {
+							try {
+								// Close the writer regardless of what happens...
+								writer.close();
+							} catch (Exception e) {
+							}
 						}
 				}
 			});
@@ -77,5 +87,40 @@ public class BrowserReleaseNotes {
 
 		notes.open();
 
+	}
+
+	public static void checkVersion(Shell shell) {
+		//check if the flag contains a number older then the new version
+		String[] v1 = readAllBytesJava7(GlobalUtil.getFlagPath()).split("\\.");
+		String[] v2 = CatalogueBrowserMain.APP_VERSION.split("\\.");
+
+		if (v1.length != v2.length)
+		    return;
+
+		for (int pos = 0; pos < v1.length; pos++) {
+		    // compare v1[pos] with v2[pos] as necessary
+		    if (Integer.parseInt(v1[pos]) < Integer.parseInt(v2[pos])) {
+		    	File flagFile = new File(GlobalUtil.getFlagPath());
+				flagFile.delete();
+				display(shell, true);
+				break;
+		    }
+		}
+		
+	}
+
+	// Read file content into string with - Files.readAllBytes(Path path)
+
+	private static String readAllBytesJava7(String filePath) {
+		String content = "";
+		try {
+			content = new String(Files.readAllBytes(Paths.get(filePath)));
+			//if the content is empty then assign the minimum version
+			if(content.equals(""))
+				content="1.0.0";
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return content;
 	}
 }
