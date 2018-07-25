@@ -165,6 +165,7 @@ public class FileMenu implements MainMenuItem {
 				if ( listener != null )
 					listener.buttonPressed( loadCatalogueItem, 
 							DOWNLOAD_CAT_MI, null );
+				
 			}
 
 			@Override
@@ -174,7 +175,6 @@ public class FileMenu implements MainMenuItem {
 		
 		return loadCatalogueItem;
 	}
-
 
 
 	/**
@@ -356,6 +356,7 @@ public class FileMenu implements MainMenuItem {
 				
 				// refresh UI
 				mainMenu.refresh();
+				
 			}
 			
 			@Override
@@ -428,7 +429,7 @@ public class FileMenu implements MainMenuItem {
 		
 		// get all the catalogues I have downloaded before and get the size
 		boolean hasCatalogues = catDao.getMyCatalogues( Dcf.dcfType ).size() > 0;
-
+			
 		// Return if widget disposed
 		if ( openMI.isDisposed() )
 			return;

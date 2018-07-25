@@ -447,6 +447,8 @@ public class FileActions {
 		else
 			downloadCatalogues(shell, Messages.getString("Download.MultiSuccessTitle"),
 					Messages.getString("Download.MultiSuccessMessage"), selectedCats);
+		
+		System.gc();
 	}
 
 	/**
@@ -508,7 +510,7 @@ public class FileActions {
 						CatalogueDAO dao = new CatalogueDAO();
 						Catalogue catalogueWithId = dao.getCatalogue(catalogue.getCode(), catalogue.getVersion(),
 								catalogue.getCatalogueType());
-
+						
 						if (listener != null) {
 							Event event = new Event();
 							event.data = catalogueWithId;
@@ -518,8 +520,9 @@ public class FileActions {
 				});
 			}
 		});
-
+		
 		catDown.start();
+		
 	}
 
 	/**

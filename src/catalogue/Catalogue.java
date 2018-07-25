@@ -432,8 +432,12 @@ public class Catalogue extends BaseObject
 		// closing => set the current catalogue as null
 		if ( current != null && current.sameAs( this ) )
 			manager.setCurrentCatalogue( null );
+		
+		current=null;
+		manager=null;
 
 		closeQuitely();
+		System.gc();
 	}
 	
 	/**

@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
+
 import catalogue.Catalogue;
 import catalogue_object.Hierarchy;
 import catalogue_object.Nameable;
@@ -903,7 +904,7 @@ public class MainPanel implements Observer {
 
 					// save the current state for the current catalogue
 					saveState();
-
+					
 					removeData();
 					enableUI(false);
 					refresh();

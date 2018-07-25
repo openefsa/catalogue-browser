@@ -24,7 +24,7 @@ public class GlobalManager extends Observable {
 	private static GlobalManager manager;
 	
 	// the currently opened catalogue
-	private static Catalogue currentCatalogue;
+	private Catalogue currentCatalogue;
 	
 	//block instantiation
 	protected GlobalManager() {}
@@ -56,7 +56,7 @@ public class GlobalManager extends Observable {
 	 */
 	public void setCurrentCatalogue( final Catalogue currentCatalogue ) {
 		
-		GlobalManager.currentCatalogue = currentCatalogue;
+		this.currentCatalogue = currentCatalogue;
 		
 		refresh();
 		
