@@ -217,7 +217,7 @@ public class FormTermCoder {
 		implicitFacets.setTerm(_tempTerm);
 
 		implicitFacets.addMenu(); // add the contextual menu
-
+		
 		implicitFacets.addUpdateListener(new Listener() {
 
 			@Override

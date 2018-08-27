@@ -886,7 +886,7 @@ public class MainPanel implements Observer {
 				case FileMenu.OPEN_CAT_MI:
 
 					removeData();
-
+					
 					refresh();
 
 					// get the selected catalogue
@@ -907,6 +907,7 @@ public class MainPanel implements Observer {
 					
 					removeData();
 					enableUI(false);
+
 					refresh();
 
 					break;

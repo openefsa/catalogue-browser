@@ -15,7 +15,6 @@ import java.util.StringTokenizer;
 import javax.xml.soap.SOAPException;
 
 import org.apache.log4j.Logger;
-
 import catalogue_browser_dao.AttributeDAO;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_browser_dao.DatabaseManager;
@@ -437,7 +436,6 @@ public class Catalogue extends BaseObject
 		manager=null;
 
 		closeQuitely();
-		System.gc();
 	}
 	
 	/**
@@ -1893,7 +1891,7 @@ public class Catalogue extends BaseObject
 		Dcf dcf = new Dcf();
 
 		File file = dcf.exportCatalogue(this);
-
+		
 		if ( file == null || !file.exists() ) {
 			throw new AttachmentNotFoundException();
 		}
@@ -1928,6 +1926,7 @@ public class Catalogue extends BaseObject
 				
 				// remove temporary file if needed
 				try {
+					//interrupt the thread when the process is done
 					GlobalUtil.deleteFileCascade( file );
 				} catch (IOException e) {}
 
@@ -1954,7 +1953,7 @@ public class Catalogue extends BaseObject
 		File catalogueXml;
 
 		catalogueXml = download();
-
+		
 		// stop if not existing
 		if ( !catalogueXml.exists() ) {
 			return false;
@@ -1963,6 +1962,8 @@ public class Catalogue extends BaseObject
 		// import the catalogue
 		makeXmlImport( catalogueXml, progressBar, maxProgress, doneListener );
 
+		catalogueXml=null;
+		
 		return true;
 	}
 	

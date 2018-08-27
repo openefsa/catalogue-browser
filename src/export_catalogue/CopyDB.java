@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 
+import utilities.GlobalUtil;
+
 //class used to make a copy of the MTX db for the interpreting and checking tool
 public class CopyDB {
 
@@ -56,7 +58,7 @@ public class CopyDB {
 
 		////////////////////////////////////// File
 		// get the main folder
-		file = new File(System.getProperty("user.dir")).getParentFile();
+		file = new File(GlobalUtil.MAIN_DIR);
 		File[] subDirs = file.listFiles(File::isDirectory);
 		for (File dir : subDirs) {
 

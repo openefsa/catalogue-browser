@@ -1,6 +1,8 @@
 package ui_main_menu;
 
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -448,7 +450,6 @@ public class FileActions {
 			downloadCatalogues(shell, Messages.getString("Download.MultiSuccessTitle"),
 					Messages.getString("Download.MultiSuccessMessage"), selectedCats);
 		
-		System.gc();
 	}
 
 	/**
@@ -463,6 +464,26 @@ public class FileActions {
 		final IProgressBar progressBar = new FormProgressBar(shell,
 				Messages.getString("Download.ProgressDownloadTitle"));
 
+		double availableRam = ((com.sun.management.OperatingSystemMXBean) ManagementFactory
+		        .getOperatingSystemMXBean()).getFreePhysicalMemorySize();
+		double maxHeap = Runtime.getRuntime().maxMemory();
+		
+		//removed 256 mb from the available ram so to be sure that we are in
+		availableRam = availableRam/(1024*1024)-256.0;
+		maxHeap = maxHeap /(1024*1024);
+		
+		//print just two decimals
+		DecimalFormat f = new DecimalFormat("##.00");
+		
+		//check if there is available memory
+		if (availableRam<= maxHeap)//||true)
+			//if negative answer return
+			if(!MessageDialog.openConfirm(shell, "Insufficient Memory", "You don't have enough memory for downloading this catalogue, clean your memory before continuing this operation!\n"
+					+"Do you want to continue this operation?\n\n"
+					+ "- Available RAM memory: "+f.format(availableRam)+"MB;\n"
+					+ "- Required memory: "+f.format(maxHeap)+"MB;\n"))
+				return;
+		
 		// start downloading the catalogue
 		CatalogueDownloader catDown = new CatalogueDownloader(catalogue);
 

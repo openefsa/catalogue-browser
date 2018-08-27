@@ -40,6 +40,8 @@ public class GlobalUtil {
 	private static final String TEMP_DIR_NAME = "temp";
 	
 	private static String workDir = "";
+
+	final static public String MAIN_DIR = new File(System.getProperty("user.dir")).getParent();
 	
 	// directory for the user files as the settings 
 	final static public String CONFIG_FILES_DIR_NAME = "config";
@@ -72,7 +74,7 @@ public class GlobalUtil {
 	
 	//AlbyDev: path of the changelog file
 	final static public String CHANGELOG_PATH = "config/changelog.txt";
-	final static public String FLAG_PATH = "config/flag.txt";
+	final static public String VERSION_FLAG_PATH = MAIN_DIR+"\\flag.txt";
 
 	/**
 	 * AlbyDev: Path for the changelog file and the flag which inform the program 
@@ -83,7 +85,7 @@ public class GlobalUtil {
 	}
 	
 	public static String getFlagPath() {
-		return FLAG_PATH;
+		return VERSION_FLAG_PATH;
 	}
 	
 	/**

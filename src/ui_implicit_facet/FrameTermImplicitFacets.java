@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -191,6 +193,7 @@ public class FrameTermImplicitFacets implements Observer {
 
 		// add the implicit facets list in the tab
 		implicitFacets = new TreeImplicitFacets(parent, catalogue);
+		
 	}
 
 	/**
@@ -211,118 +214,20 @@ public class FrameTermImplicitFacets implements Observer {
 				.setImage(new Image(Display.getCurrent(), ClassLoader.getSystemResourceAsStream("add-icon.png")));
 		addImplicitFacet.setText(Messages.getString("TreeImplicitFacets.AddCommand"));
 		
-		
+		//AlbyDev: double click on the term for directly opening add term window
+		implicitFacets.addDoubleClickListener(new IDoubleClickListener() {
+			
+			@Override
+			public void doubleClick(DoubleClickEvent arg0) {
+				addTermsToSelection(parent, implicitFacets);
+			}
+		});
+				
+		//AlbyDev: listener called when click on add menu item
 		addImplicitFacet.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-
-				// return if empty selection
-				if (implicitFacets.getSelection().isEmpty())
-					return;
-				
-				// get the selected element ( facet category or descriptor )
-				Object selectedElem = ((IStructuredSelection) (implicitFacets.getSelection())).getFirstElement();
-				
-				// get the facet category from the selection
-				if (selectedElem instanceof Attribute) // if we have selected the facet category simply cast it
-					facetCategory = (Attribute) selectedElem;
-				else // if we have selected a descriptor get the category from it
-					facetCategory = ((DescriptorTreeItem) selectedElem).getDescriptor().getFacetCategory();
-				
-				
-				// open a form to select descriptors. In particular we enable the multiple
-				// selection
-				// only if the facet category is repeatable, that is, with cardinality zero or
-				// more
-				
-				//Author: AlbyDev
-				parent.setEnabled(false);
-				//
-				FormSelectTerm sf = new FormSelectTerm(parent, Messages.getString("Browser.SelectTermWindowTitle"), term.getCatalogue(), facetCategory.isRepeatable(), false);
-					
-				// set the root term for the form in order to show only
-				// the facet related to the facet category
-				sf.setRootTerm(facetCategory);
-				
-				// if cardinality is single
-				if (!facetCategory.isRepeatable()) {
-
-					// if we have the inherited implicit facet
-					// (it can be only one, cardinality is single)
-					ArrayList<DescriptorTreeItem> inh = term.getInheritedImplicitFacets(facetCategory);
-					if (!inh.isEmpty()) {
-
-						// then we can only specify better the inherited
-						// facet, we set as root term the inherited descriptor!
-						sf.setRootTerm(inh.get(0).getTerm(), facetCategory.getHierarchy());
-					}
-				}
-				
-				// display the form
-				sf.display();
-
-				// here we have closed the form and the descriptors have been selected
-
-				// get an instance of the global manager
-				GlobalManager manager = GlobalManager.getInstance();
-				
-				// get the current catalogue
-				Catalogue currentCat = manager.getCurrentCatalogue();
-				
-				// for each selected descriptor we add it
-				for (int i = 0; i < sf.getSelectedTerms().size(); i++) {
-					
-					// get the current descriptor
-					Term descriptor = (Term) sf.getSelectedTerms().get(i);
-					
-					// find the implicit facet attribute
-					// TODO move this code under Catalogue
-					Attribute facetAttr = null;
-					for (Attribute attr : currentCat.getAttributes()) {
-						if (attr.isImplicitFacet()) {
-							facetAttr = attr;
-							break;
-						}
-					}
-					
-					//check if the selected term has ancestors into the facets group folder
-					checkAncestor(descriptor);
-					
-					// create the term attribute for the facet descriptor
-					TermAttribute ta = new TermAttribute(term, facetAttr,
-							FacetDescriptor.getFullFacetCode(descriptor, facetCategory));
-					
-					// create the new facet descriptor using the facet category and the term full
-					// code
-					// we set the facet type with the newFacetType
-					FacetDescriptor attr = new FacetDescriptor(descriptor, ta, newFacetType);
-					
-					// add the descriptor to the implicit facets
-					term.addImplicitFacet(attr);
-					
-					// update the table input
-					setTerm(term);
-					
-					// call the add listener if it was set
-					if (addDescriptorListener != null) {
-
-						// set as event data the new attribute
-						Event event = new Event();
-						event.data = attr;
-
-						addDescriptorListener.handleEvent(event);
-					}
-
-				}
-
-				// call the update listener if add process if finished
-				if (updateListener != null) {
-					updateListener.handleEvent(new Event());
-				}
-				//Author: AlbyDev
-				if (!parent.isDisposed())
-					parent.setEnabled(true);
-				
+				addTermsToSelection(parent, implicitFacets);
 			}
 
 		});
@@ -488,4 +393,115 @@ public class FrameTermImplicitFacets implements Observer {
 		implicitFacets.update(o, arg);
 	}
 	
+	//AlbyDev: method used to create the window which show all the possible terms which could be added to the group selected
+	public void addTermsToSelection(final Shell parent, final TreeViewer implicitFacets) {
+		
+		// return if empty selection
+		if (implicitFacets.getSelection().isEmpty())
+			return;
+		
+		// get the selected element ( facet category or descriptor )
+		Object selectedElem = ((IStructuredSelection) (implicitFacets.getSelection())).getFirstElement();
+		
+		// get the facet category from the selection
+		if (selectedElem instanceof Attribute) // if we have selected the facet category simply cast it
+			facetCategory = (Attribute) selectedElem;
+		else // if we have selected a descriptor get the category from it
+			facetCategory = ((DescriptorTreeItem) selectedElem).getDescriptor().getFacetCategory();
+		
+		
+		// open a form to select descriptors. In particular we enable the multiple
+		// selection
+		// only if the facet category is repeatable, that is, with cardinality zero or
+		// more
+		
+		//Author: AlbyDev
+		parent.setEnabled(false);
+		//
+		FormSelectTerm sf = new FormSelectTerm(parent, Messages.getString("Browser.SelectTermWindowTitle"), term.getCatalogue(), facetCategory.isRepeatable(), false);
+			
+		// set the root term for the form in order to show only
+		// the facet related to the facet category
+		sf.setRootTerm(facetCategory);
+		
+		// if cardinality is single
+		if (!facetCategory.isRepeatable()) {
+
+			// if we have the inherited implicit facet
+			// (it can be only one, cardinality is single)
+			ArrayList<DescriptorTreeItem> inh = term.getInheritedImplicitFacets(facetCategory);
+			if (!inh.isEmpty()) {
+
+				// then we can only specify better the inherited
+				// facet, we set as root term the inherited descriptor!
+				sf.setRootTerm(inh.get(0).getTerm(), facetCategory.getHierarchy());
+			}
+		}
+		
+		// display the form
+		sf.display();
+
+		// here we have closed the form and the descriptors have been selected
+
+		// get an instance of the global manager
+		GlobalManager manager = GlobalManager.getInstance();
+		
+		// get the current catalogue
+		Catalogue currentCat = manager.getCurrentCatalogue();
+		
+		// for each selected descriptor we add it
+		for (int i = 0; i < sf.getSelectedTerms().size(); i++) {
+			
+			// get the current descriptor
+			Term descriptor = (Term) sf.getSelectedTerms().get(i);
+			
+			// find the implicit facet attribute
+			// TODO move this code under Catalogue
+			Attribute facetAttr = null;
+			for (Attribute attr : currentCat.getAttributes()) {
+				if (attr.isImplicitFacet()) {
+					facetAttr = attr;
+					break;
+				}
+			}
+			
+			//check if the selected term has ancestors into the facets group folder
+			checkAncestor(descriptor);
+			
+			// create the term attribute for the facet descriptor
+			TermAttribute ta = new TermAttribute(term, facetAttr,
+					FacetDescriptor.getFullFacetCode(descriptor, facetCategory));
+			
+			// create the new facet descriptor using the facet category and the term full
+			// code
+			// we set the facet type with the newFacetType
+			FacetDescriptor attr = new FacetDescriptor(descriptor, ta, newFacetType);
+			
+			// add the descriptor to the implicit facets
+			term.addImplicitFacet(attr);
+			
+			// update the table input
+			setTerm(term);
+			
+			// call the add listener if it was set
+			if (addDescriptorListener != null) {
+
+				// set as event data the new attribute
+				Event event = new Event();
+				event.data = attr;
+
+				addDescriptorListener.handleEvent(event);
+			}
+
+		}
+
+		// call the update listener if add process if finished
+		if (updateListener != null) {
+			updateListener.handleEvent(new Event());
+		}
+		//Author: AlbyDev
+		if (!parent.isDisposed())
+			parent.setEnabled(true);
+		
+	}
 }

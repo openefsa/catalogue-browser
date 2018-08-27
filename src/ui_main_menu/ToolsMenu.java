@@ -696,7 +696,7 @@ public class ToolsMenu implements MainMenuItem {
 			public void widgetSelected(SelectionEvent event) {
 
 				// main catalogue browser
-				String mainFolder = new File(System.getProperty("user.dir")).getParent();
+				String mainFolder = GlobalUtil.MAIN_DIR;
 				// ict zip file
 				File toolZipFile = new File(mainFolder + "\\utils.zip");
 				// ict folder

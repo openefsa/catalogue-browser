@@ -3,6 +3,7 @@ package ui_implicit_facet;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -93,5 +94,13 @@ public class TreeImplicitFacets implements Observer {
 			Hierarchy selectedHierarchy = ((HierarchySelector) arg0).getSelectedHierarchy();
 			labelProvider.setCurrentHierarchy( selectedHierarchy );
 		}
+	}
+	
+	/**
+	 * Add double click listener
+	 * @param listener
+	 */
+	public void addDoubleClickListener ( IDoubleClickListener listener ) {
+		tree.addDoubleClickListener( listener );
 	}
 }

@@ -1,7 +1,7 @@
 ------------------------ Redesigned Mouse floating focus -------------------------------------
 Thanks to this new feature you will be able to simply move the mouse in the section where you 
 want to scroll without having to necessarily click on it.
-   
+
 ------------------------ TextFields autoselected with single click ---------------------------
 Auto select text fields on the main page with a single click (Ability to perform also ctrl+a).
    
@@ -12,6 +12,10 @@ Checking tool.
 ------------------------ Double click on a Tree-view Term ------------------------------------
 From the tree view on the main page now it will be possible to open the descriptive window of 
 the specific term just by double-clcking on it.
+
+------------------------ Double click on a Group-id (describe window) ------------------------
+Added the ability to add term to the goup id(from the describe window) by double clicking 
+on it instead of right click + add.
    
 ------------------------ New redesigned descriptive window -----------------------------------
 Removed useless components as well as other small UI changes.
@@ -29,6 +33,10 @@ Solved different bugs related to the composite size which was blocking the scrol
 (e.g. the term result composite under the search panel).
 
 ------------------------ Automated release notes --------------------------------------------
+
+------------------------ Check Memory available when a download catalogue is performed ------
+
+------------------------ Small improvements to the memory managment -------------------------
   
 ------------------------ Auto-Update the ICT db ----------------------------------------------
 Now when new version of the MTX is available it is possible to autoupdate the ICT db 
