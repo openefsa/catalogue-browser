@@ -132,9 +132,6 @@ public class CatalogueImporter {
 		default:
 			break;
 		}
-		
-		deleteGarbage();
-		
 	}
 	
 	/**
@@ -303,8 +300,6 @@ public class CatalogueImporter {
 		for ( String filename : garbage ) {
 			try {
 				GlobalUtil.deleteFileCascade( new File( filename ) );
-				System.gc();
-				System.runFinalization();
 			} catch (IOException e) {}
 		}
 	}

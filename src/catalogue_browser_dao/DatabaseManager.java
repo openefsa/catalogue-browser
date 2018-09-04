@@ -345,6 +345,8 @@ public class DatabaseManager {
 	 */
 	public static void deleteDb ( Catalogue catalogue ) throws IOException {
 		
+		System.gc();
+		
 		// close all the catalogue connections
 		catalogue.closeConnection();
 		

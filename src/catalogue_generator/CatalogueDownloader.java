@@ -78,8 +78,6 @@ public class CatalogueDownloader extends Thread {
 			
 			@Override
 			public void finished(Thread thread, int code, Exception e) {
-
-				thread.interrupt();
 				callListener ( code );
 				finished = true;
 			}
