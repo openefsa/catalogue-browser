@@ -464,12 +464,14 @@ public class FileActions {
 		final IProgressBar progressBar = new FormProgressBar(shell,
 				Messages.getString("Download.ProgressDownloadTitle"));
 
+		//available rma in memory
 		double availableRam = ((com.sun.management.OperatingSystemMXBean) ManagementFactory
 		        .getOperatingSystemMXBean()).getFreePhysicalMemorySize();
+		//max memory dedicated to the jvm
 		double maxHeap = Runtime.getRuntime().maxMemory();
 		
 		//removed 256 mb from the available ram so to be sure that we are in
-		availableRam = availableRam/(1024*1024)-256.0;
+		availableRam = availableRam/(1024*1024);
 		maxHeap = maxHeap /(1024*1024);
 		
 		//print just two decimals
@@ -478,9 +480,9 @@ public class FileActions {
 		//check if there is available memory
 		if (availableRam<= maxHeap)//||true)
 			//if negative answer return
-			if(!MessageDialog.openConfirm(shell, "Insufficient Memory", "You don't have enough memory for downloading this catalogue, clean your memory before continuing this operation!\n"
+			if(!MessageDialog.openConfirm(shell, "Insufficient Memory", "Not enogh memory in RAM, close some apps or restart the Catalogue browser before continuing this operation!\n"
 					+"Do you want to continue this operation?\n\n"
-					+ "- Available RAM memory: "+f.format(availableRam)+"MB;\n"
+					+ "- Available memory in RAM: "+f.format(availableRam)+"MB;\n"
 					+ "- Required memory: "+f.format(maxHeap)+"MB;\n"))
 				return;
 		
