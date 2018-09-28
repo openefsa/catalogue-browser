@@ -90,6 +90,7 @@ public class ToolsMenu implements MainMenuItem {
 	private MenuItem downloadICT; // download the ict tool
 	private MenuItem updateICTdb; // update ict db
 	private MenuItem launchICT; // launch ICT tool
+	private MenuItem reinstallICT;// reinstall ICT
 	private MenuItem importPicklistMI;
 	private MenuItem favouritePicklistMI;
 	private MenuItem removePicklistMI;
@@ -154,20 +155,19 @@ public class ToolsMenu implements MainMenuItem {
 		// export operations
 		exportMI = addExportMI(toolsMenu);
 
+		// initialize the files needed for the ict
+		boolean ictReady = checkFiles();
+
 		// export for IECT (just for the MTX cat)
 		if (mainMenu.getCatalogue() != null && mainMenu.getCatalogue().getName().equals("MTX")) {
 
-			// initialize the files needed for the ict
-			File ictFolder = new File(System.getProperty("user.dir") + "\\Interpreting_Tool");
-			File ict = new File(new File(System.getProperty("user.dir")).getParent() + "\\ICT.xlsm");
-
 			// donwlaod if nothing regarding ict in the main folder of the cat browser
-			if (!ictFolder.exists() && !ict.exists()) {
-				downloadICT = addDownloadCT(toolsMenu);
-			} else {
+			if (ictReady) {
 				// add the update and launch button if the ict folders/files exists
 				updateICTdb = addUpdateICTdb(toolsMenu);
 				launchICT = addLaunchICT(toolsMenu);
+			} else {
+				downloadICT = addDownloadCT(toolsMenu, true);
 			}
 
 		}
@@ -200,6 +200,10 @@ public class ToolsMenu implements MainMenuItem {
 		// general user preferences
 		userPrefMI = addUserPreferencesMI(toolsMenu);
 
+		// reinstall the ict files
+		if (ictReady)
+			reinstallICT = addDownloadCT(toolsMenu, false);
+
 		// called when the tools menu is shown
 		toolsMenu.addListener(SWT.Show, new Listener() {
 
@@ -214,6 +218,18 @@ public class ToolsMenu implements MainMenuItem {
 		toolsItem.setEnabled(false);
 
 		return toolsItem;
+	}
+
+	/*
+	 * albydev: check if the files needed for launching the ICT are present
+	 */
+	private boolean checkFiles() {
+
+		boolean ictFolder = new File(System.getProperty("user.dir") + "\\Interpreting_Tool").isDirectory();
+		boolean checkFolder = new File(System.getProperty("user.dir") + "\\Check").isDirectory();
+		boolean ictFile = new File(new File(System.getProperty("user.dir")).getParent() + "\\ICT.xlsm").isFile();
+
+		return (ictFile && ictFolder && checkFolder);
 	}
 
 	/**
@@ -678,18 +694,22 @@ public class ToolsMenu implements MainMenuItem {
 	}
 
 	/**
-	 * AlbyDev: Add a menu item which allows to download and install
-	 * the ICT automatically
+	 * AlbyDev: Add a menu item which allows to download and install the ICT
+	 * automatically
 	 * 
 	 * @param menu
 	 */
-	private MenuItem addDownloadCT(Menu menu) {
+	private MenuItem addDownloadCT(Menu menu, boolean flag) {
 
 		final MenuItem downloadItem = new MenuItem(menu, SWT.NONE);
 
 		final Logger LOGGER = LogManager.getLogger(ExportCatalogueWorkbook.class);
 
-		downloadItem.setText(Messages.getString("BrowserMenu.DownloadICTCmd"));
+		// if flag true -> install ICT
+		if (flag)
+			downloadItem.setText(Messages.getString("BrowserMenu.InstallICTCmd"));
+		else
+			downloadItem.setText(Messages.getString("BrowserMenu.ReinstallICTCmd"));
 
 		downloadItem.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -702,23 +722,23 @@ public class ToolsMenu implements MainMenuItem {
 				// ict folder
 				File toolFolder = new File(mainFolder + "\\utils");
 
-				//ask the user before continuing the operation
+				// ask the user before continuing the operation
 				if (MessageDialog.openConfirm(shell, "Info",
 						"Do you want to continue with the Installation of the Interpreting and Checking Tool?")) {
-					
+
 					LOGGER.info("Starting download process...");
 
 					// if the zip file and the utils folder doesnt exists then download
 					if (!toolZipFile.exists() && !toolFolder.exists()) {
-						
+
 						// redirect to the download site
 						try {
-							
+
 							// url of the ICT tool
 							String url = "https://github.com/openefsa/Interpreting-and-Checking-Tool/releases/download/v1.2.5-alpha/utils.zip";
-							
+
 							HttpDownloadUtility.downloadFile(url, mainFolder);
-							
+
 						} catch (Exception e) {
 							// print the error msg
 							MessageDialog.openError(shell, "Error",
@@ -728,20 +748,20 @@ public class ToolsMenu implements MainMenuItem {
 					}
 
 					LOGGER.info("Starting extraction process...");
-					
+
 					// if the zip file exists and not the utils folder then extract
 					if (toolZipFile.exists() && !toolFolder.exists()) {
-						
+
 						// update the progress bar witht the message which is warning about the
 						// extraction
 						try {
-							
+
 							// extract the zip folder
 							zip_manager.ZipManager.extractFolder(mainFolder + "\\utils.zip", mainFolder);
-							
+
 							// remove the zip file when the extraction has finished
 							toolZipFile.delete();
-							
+
 						} catch (IOException e) {
 							MessageDialog.openError(shell, "Error",
 									"The tool was not correctly unziped!\nPlease try again!");
@@ -751,16 +771,17 @@ public class ToolsMenu implements MainMenuItem {
 
 					// start the process with the download
 					LOGGER.info("Starting extraction process...");
-					
+
 					// if the folder exists and is a directory then setup the ICT
 					if (toolFolder.exists() && toolFolder.isDirectory()) {
-						
+
 						// export the catalogue (changed the main class so to know that the call is
 						// coming from a different export button
 						ExportActions export = new ExportActions();
 
 						// set the progress bar
-						export.setProgressBar(new FormProgressBar(shell, Messages.getString("Export.InstallTitle"), true, SWT.TITLE | SWT.APPLICATION_MODAL));
+						export.setProgressBar(new FormProgressBar(shell, Messages.getString("Export.InstallTitle"),
+								true, SWT.TITLE | SWT.APPLICATION_MODAL));
 
 						// export the opened catalogue
 						export.exportAsync(mainMenu.getCatalogue(),
@@ -913,9 +934,11 @@ public class ToolsMenu implements MainMenuItem {
 				try {
 					Desktop.getDesktop()
 							.open(new File(new File(System.getProperty("user.dir")).getParent() + "\\ICT.xlsm"));
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				} catch (Exception e) {
+						// ask the user before continuing the operation
+						MessageDialog.openInformation(shell, "Info",
+								"Some files are missing for launching the ICT, please reinstall the program and try again.");
+						e.printStackTrace();
 				}
 			}
 		});
@@ -1315,17 +1338,25 @@ public class ToolsMenu implements MainMenuItem {
 		// export for IECT (just for the MTX cat)
 		if (mainMenu.getCatalogue() != null && mainMenu.getCatalogue().getName().equals("MTX")) {
 
-			File ictFolder = new File(System.getProperty("user.dir") + "\\Interpreting_Tool");
-			File ict = new File(new File(System.getProperty("user.dir")).getParent() + "\\ICT.xlsm");
+			// check if ready to launch ictì
+			boolean ictReady = checkFiles();
 
-			if (downloadICT != null) {
-				if (!ictFolder.exists() && !ict.exists())
+			try {
+				if (downloadICT != null && !ictReady) {
+					updateICTdb=launchICT=reinstallICT=null;
 					downloadICT.setEnabled(true);
-			} else if (updateICTdb != null && launchICT != null) {
-				updateICTdb.setEnabled(true);
-				launchICT.setEnabled(true);
+				} else if(updateICTdb!=null&&launchICT!=null&&reinstallICT!=null&ictReady){
+					updateICTdb.setEnabled(true);
+					launchICT.setEnabled(true);
+					reinstallICT.setEnabled(true);
+					downloadICT=null;
+				}
+			}catch(Exception e) {
+				// ask the user before continuing the operation
+				MessageDialog.openConfirm(shell, "Info",
+						"Some files are missing for launching the ICT, please reinstall the program and try again.");
+				e.printStackTrace();
 			}
-
 		}
 
 		importPicklistMI.setEnabled(hasFacets);
@@ -1463,6 +1494,9 @@ public class ToolsMenu implements MainMenuItem {
 
 				if (launchICT != null)
 					launchICT.setEnabled(true);
+
+				if (reinstallICT != null)
+					reinstallICT.setEnabled(true);
 			}
 		}
 	}

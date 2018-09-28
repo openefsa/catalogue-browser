@@ -219,7 +219,8 @@ public class SearchDAO {
 			
 			query = query + " ( upper(TERM_EXTENDED_NAME) like " + keyLike;
 			query = query + " or upper(TERM_CODE) = " + keyUp + " ) ";
-
+			//query = query + " upper(TERM_CODE) = " + keyUp;
+			
 			// go to the next keyword
 			count++;
 			
@@ -227,6 +228,7 @@ public class SearchDAO {
 			// the conjunction operator
 			if ( count < keywords.size() )
 				query = query + " " + getLogicalOp(type) + " ";
+			
 		}
 
 		// execute the query

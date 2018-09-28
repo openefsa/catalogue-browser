@@ -470,9 +470,10 @@ public class FileActions {
 		//max memory dedicated to the jvm
 		double maxHeap = Runtime.getRuntime().maxMemory();
 		
-		//removed 256 mb from the available ram so to be sure that we are in
+		//convert in MB
 		availableRam = availableRam/(1024*1024);
-		maxHeap = maxHeap /(1024*1024);
+		//divided by 2 cause that is minimum amount needed
+		maxHeap = (maxHeap /(1024*1024))/2;
 		
 		//print just two decimals
 		DecimalFormat f = new DecimalFormat("##.00");
@@ -480,8 +481,8 @@ public class FileActions {
 		//check if there is available memory
 		if (availableRam<= maxHeap)//||true)
 			//if negative answer return
-			if(!MessageDialog.openConfirm(shell, "Insufficient Memory", "Not enogh memory in RAM, close some apps or restart the Catalogue browser before continuing this operation!\n"
-					+"Do you want to continue this operation?\n\n"
+			if(!MessageDialog.openConfirm(shell, "Catalogue browser", "Your computer has not enough memory. Close some apps or restart the Catalogue browser before continuing this operation!\n"
+					+"Do you want to continue ?\n\n"
 					+ "- Available memory in RAM: "+f.format(availableRam)+"MB;\n"
 					+ "- Required memory: "+f.format(maxHeap)+"MB;\n"))
 				return;
