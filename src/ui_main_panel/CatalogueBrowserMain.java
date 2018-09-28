@@ -4,9 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -50,8 +49,6 @@ public class CatalogueBrowserMain {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-
-		BasicConfigurator.configure();
 
 		try {
 			launch();

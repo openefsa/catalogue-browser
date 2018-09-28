@@ -4,8 +4,8 @@ import java.io.FileNotFoundException;
 
 import javax.xml.soap.SOAPException;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import catalogue.AttachmentNotFoundException;
 import catalogue.Catalogue;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-<entry key="Proxy.ManualPort">8080</entry>
 <entry key="Proxy.ManualHostName">tmgproxy.efsa.eu.int</entry>
+<entry key="Proxy.ManualPort">8080</entry>
 <entry key="Proxy.Mode">NO_PROXY</entry>
 </properties>

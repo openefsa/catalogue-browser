@@ -14,7 +14,8 @@ import java.util.StringTokenizer;
 
 import javax.xml.soap.SOAPException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import catalogue_browser_dao.AttributeDAO;
 import catalogue_browser_dao.CatalogueDAO;
@@ -66,7 +67,7 @@ import utilities.GlobalUtil;
 public class Catalogue extends BaseObject 
 	implements Comparable<Catalogue>, Mappable, Cloneable, IDcfCatalogue {
 
-	private static final Logger LOGGER = Logger.getLogger(Catalogue.class);
+	private static final Logger LOGGER = LogManager.getLogger(Catalogue.class);
 	
 	// date format of the catalogues
 	public static final String ISO_8601_24H_FULL_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";

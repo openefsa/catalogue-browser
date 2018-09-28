@@ -2,8 +2,8 @@ package catalogue;
 
 import java.sql.SQLException;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import catalogue_browser_dao.CatalogueBackup;
 import catalogue_browser_dao.CatalogueDAO;

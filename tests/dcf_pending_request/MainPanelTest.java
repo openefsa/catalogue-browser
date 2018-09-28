@@ -3,7 +3,6 @@ package dcf_pending_request;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.BasicConfigurator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.junit.Before;
@@ -29,7 +28,6 @@ public class MainPanelTest {
 	
 	@Before
 	public void init() {
-		BasicConfigurator.configure();
 		
 		display = new Display();
 		shell = new Shell(display);

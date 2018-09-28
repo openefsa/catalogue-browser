@@ -3,8 +3,8 @@ package user_preferences;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
