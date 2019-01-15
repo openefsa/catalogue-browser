@@ -45,6 +45,7 @@ import utilities.GlobalUtil;
  * term
  * 
  * @author avonva
+ * @author shahaal
  *
  */
 public class FrameTermFields {
@@ -455,7 +456,7 @@ public class FrameTermFields {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 
 				DetailLevelGraphics dlg = (DetailLevelGraphics) selection.getFirstElement();
-
+				
 				String oldValue;
 
 				if (term.getDetailLevel() != null)
@@ -499,7 +500,7 @@ public class FrameTermFields {
 
 	/**
 	 * Add the term code text box into the parent composite
-	 * 
+	 * @author shahaal
 	 * @param parent
 	 * @return
 	 */
@@ -523,7 +524,6 @@ public class FrameTermFields {
 		// create the text box
 		final Text textTermCode = new Text(groupTermCode, SWT.BORDER | SWT.READ_ONLY);
 
-		// AlbyDev: Enable the focus select all function
 		textTermCode.addFocusListener(new FocusListener() {
 
 			@Override
@@ -545,7 +545,6 @@ public class FrameTermFields {
 			}
 		});
 
-		// AlbyDev: Enable the ctrl-a key combination
 		textTermCode.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -561,7 +560,7 @@ public class FrameTermFields {
 
 	/**
 	 * Add the term name text box into the parent composite
-	 * 
+	 * @author shahaal
 	 * @param parent
 	 * @return
 	 */
@@ -645,7 +644,7 @@ public class FrameTermFields {
 			}
 		});
 
-		// AlbyDev: Enable the focus select all function
+		// shahaal: Enable the focus select all function
 		textTermName.addFocusListener(new FocusListener() {
 
 			@Override
@@ -667,7 +666,7 @@ public class FrameTermFields {
 			}
 		});
 
-		// AlbyDev: Enable the ctrl-a key combination
+		// shahaal: Enable the ctrl-a key combination
 		textTermName.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {

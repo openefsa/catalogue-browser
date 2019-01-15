@@ -51,13 +51,14 @@ import window_restorer.RestoreableWindow;
  * This class creates a Describing pop-up for Term selected. In this pop-up we
  * will add facets to the term.
  * 
- * @author
+ * @author avonva
+ * @author shahaal
  * 
  */
 public class FormTermCoder {
 
 	private static final String WINDOW_CODE = "FormTermCoder";
-	// Author: AlbyDev
+	// Author: shahaal
 	public static Boolean instanceExists = false;
 	//
 
@@ -108,7 +109,7 @@ public class FormTermCoder {
 		_enableBR = catalogue.isMTXCatalogue()
 				&& prefDao.getPreferenceBoolValue(CataloguePreference.enableBusinessRules, false);
 
-		// Author: AlbyDev
+		// Author: shahaal
 		// var used to check if an instance of the class already exists
 		FormTermCoder.instanceExists = true;
 		//
@@ -157,7 +158,7 @@ public class FormTermCoder {
 	public void display(final Catalogue catalogue) {
 
 		// _dialog = new Shell( _shell , SWT.SHELL_TRIM | SWT.APPLICATION_MODAL );
-		// Author: AlbyDev
+		// Author: shahaal
 		_dialog = new Shell(_shell, SWT.SHELL_TRIM | SWT.MODELESS);
 		//
 
@@ -177,7 +178,7 @@ public class FormTermCoder {
 			@Override
 			public void widgetDisposed(DisposeEvent e) {
 
-				// AlbyDev: reset the instance flag
+				// shahaal: reset the instance flag
 				FormTermCoder.instanceExists = false;
 				//
 

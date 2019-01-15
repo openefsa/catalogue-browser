@@ -655,7 +655,7 @@ public class MainPanel implements Observer {
 			}
 		});
 
-		// AlbyDev: add the selected term to the list of indexes
+		// shahaal: add the selected term to the list of indexes
 		/*
 		 * tree.addSelectionChangedListener(new ISelectionChangedListener() {
 		 * 
@@ -823,7 +823,7 @@ public class MainPanel implements Observer {
 		termFilter.restoreStatus();
 
 		// set the weights once all the widgets are inserted
-		// AlbyDev: increased the width for the search view (second parm from 4 to 3)
+		// shahaal: increased the width for the search view (second parm from 4 to 3)
 		sashForm.setWeights(new int[] { 1, 3 });
 	}
 

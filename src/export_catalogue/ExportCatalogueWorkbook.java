@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import catalogue.Catalogue;
+import ict_add_on.ICT;
 import messages.Messages;
 import naming_convention.Headers;
 import progress_bar.IProgressBar;
@@ -14,7 +15,7 @@ import progress_bar.IProgressBar;
 /**
  * Export all the database related to the current catalogue in a workbook.
  * @author avonva
- *
+ * @author shahaal
  */
 public class ExportCatalogueWorkbook {
 
@@ -148,7 +149,7 @@ public class ExportCatalogueWorkbook {
 						Messages.getString( "Export.Database" ));
 			
 			//check and copy the db
-			new CopyDB();
+			new ICT();
 			
 		}
 		

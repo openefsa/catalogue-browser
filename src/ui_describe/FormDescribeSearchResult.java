@@ -68,12 +68,13 @@ public class FormDescribeSearchResult {
 	 */
 	public void display(Catalogue catalogue) {
 
-		//Author: AlbyDev
-		// Set the layout of the form
-		 //dialog = new Shell( shell , SWT.SHELL_TRIM | SWT.APPLICATION_MODAL );
+		/**
+		 * Set the layout of the form
+		 * @author shahaal
+		 */
+		//dialog = new Shell( shell , SWT.SHELL_TRIM | SWT.APPLICATION_MODAL );
 		dialog = new Shell(shell, SWT.SHELL_TRIM | SWT.MODELESS);
-		//
-
+		
 		// window icon (on the top left)
 		dialog.setImage(
 				new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream("Choose.gif")));

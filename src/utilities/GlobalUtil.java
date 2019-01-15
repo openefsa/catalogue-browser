@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -31,8 +32,8 @@ import soap.SOAPError;
 
 /**
  * This class contains static functions and static variables that can be used everywhere in the application
+ * @author shahaal
  * @author Valentino
- *
  */
 
 public class GlobalUtil {
@@ -41,7 +42,7 @@ public class GlobalUtil {
 	
 	private static String workDir = "";
 
-	final static public String MAIN_DIR = new File(System.getProperty("user.dir")).getParent();
+	final static public String MAIN_DIR = getMainDir();
 	
 	// directory for the user files as the settings 
 	final static public String CONFIG_FILES_DIR_NAME = "config";
@@ -72,21 +73,24 @@ public class GlobalUtil {
 	// the filename of the file which contains the business rule EXCEPTIONS for the describe 
 	final static public String BUSINESS_RULES_EX_FILE = "BR_Exceptions.csv";
 	
-	//AlbyDev: path of the changelog file
-	final static public String CHANGELOG_PATH = "config/changelog.txt";
-	final static public String VERSION_FLAG_PATH = MAIN_DIR+"\\flag.txt";
-
-	/**
-	 * AlbyDev: Path for the changelog file and the flag which inform the program 
-	 * that the release note was read
-	 */
-	public static String getChangelogPath() {
-		return CHANGELOG_PATH;
-	}
-	
-	public static String getFlagPath() {
-		return VERSION_FLAG_PATH;
-	}
+	//change log file
+	final static public String CHANGELOG_PATH = getConfigDir()+"changelog.txt";
+	//flag for change log
+	final static public String VERSION_FLAG_PATH = MAIN_DIR+"flag.txt";
+	// path for ICT add-on and related folders/files
+	final static public String ICT_FILE_PATH =MAIN_DIR+"ICT.xlsm";
+	final static public String UTILS_FILE_PATH =MAIN_DIR+"utils.zip";
+	final static public String UTILS_FOLDER_PATH =MAIN_DIR+"utils";
+	final static public String CHECK_DIR_NAME = "Check";
+	final static public String CHECK_DIR_PATH = getCheckDir();
+	final static public String ICT_DIR_NAME ="Interpreting_Tool";
+	final static public String ICT_DIR_PATH = getIctDir();
+	final static public String ICT_DATABASE_DIR_NAME ="Database";
+	final static public String ICT_DATABASE_DIR_PATH = getIctDatabaseDir();
+	final static public String ICT_MAIN_CAT_DB_NAME ="MAIN_CATS_DB";
+	final static public String ICT_MAIN_CAT_DB_PATH =getIctMainCatDbDir();
+	final static public String FOODEX2_DIR_PATH =getIctDir()+"FoodEx2.xlsx";
+	final static public String ICT_MTX_CAT_DB_FOLDER =ICT_DATABASE_DIR_PATH+"/PRODUCTION_CATS/CAT_MTX_DB/";
 	
 	/**
 	 * Set the working directory where the directories should
@@ -122,6 +126,50 @@ public class GlobalUtil {
 	 */
 	public static String getBusinessRulesDir() {
 		return ( workDir + BUSINESS_RULES_DIR_NAME + 
+				System.getProperty( "file.separator" ) );
+	}
+	
+	/**
+	 * get the main directory path
+	 * @return
+	 */
+	public static String getMainDir() {
+		return new File(System.getProperty("user.dir")).getParent()+System.getProperty( "file.separator" );
+	}
+	
+	/**
+	 * get the check directory path
+	 * @return
+	 */
+	public static String getCheckDir() {
+		return ( workDir + CHECK_DIR_NAME + 
+				System.getProperty( "file.separator" ) );
+	}
+	
+	/**
+	 * get the interpreting tool directory path
+	 * @return
+	 */
+	public static String getIctDir() {
+		return ( workDir + ICT_DIR_NAME + 
+				System.getProperty( "file.separator" ) );
+	}
+	
+	/**
+	 * get the interpreting tool DB directory path
+	 * @return
+	 */
+	public static String getIctDatabaseDir() {
+		return ( getIctDir() + ICT_DATABASE_DIR_NAME + 
+				System.getProperty( "file.separator" ) );
+	}
+	
+	/**
+	 * get the interpreting tool DB directory path
+	 * @return
+	 */
+	public static String getIctMainCatDbDir() {
+		return ( getIctDatabaseDir() + ICT_MAIN_CAT_DB_NAME + 
 				System.getProperty( "file.separator" ) );
 	}
 	
@@ -214,6 +262,22 @@ public class GlobalUtil {
 		// create preferences directory
 		if ( !fileExists( PREF_DIR_PATH ) ) {
 			new File( PREF_DIR_PATH ).mkdir();
+		}
+		
+		////FOR ICT
+		// create check folder
+		if ( !fileExists( CHECK_DIR_PATH ) ) {
+			new File( CHECK_DIR_PATH ).mkdir();
+		}
+		
+		// create ict main folder
+		if ( !fileExists( ICT_DIR_PATH ) ) {
+			new File( ICT_DIR_PATH ).mkdir();
+		}
+		
+		// create ict db folder
+		if ( !fileExists( ICT_DATABASE_DIR_PATH ) ) {
+			new File( ICT_DATABASE_DIR_PATH ).mkdir();
 		}
 		
 		// create the temp directory 
@@ -600,5 +664,29 @@ public class GlobalUtil {
 	 */
 	public static String showFileDialog ( Shell shell, String text, String[] extensions, int buttonType ) {
 		return showFileDialog( shell, text, extensions, "", buttonType );
+	}
+	
+	/**
+	 * the function move a file into another folder
+	 * @author shahaal
+	 * @param sourcePath
+	 * @param targetPath
+	 * @return
+	 */
+	public static boolean moveFile(String sourcePath, String targetPath) {
+
+	    boolean fileMoved = true;
+
+	    try {
+
+	        Files.move(Paths.get(sourcePath), Paths.get(targetPath), StandardCopyOption.REPLACE_EXISTING);
+
+	    } catch (Exception e) {
+
+	        fileMoved = false;
+	        e.printStackTrace();
+	    }
+
+	    return fileMoved;
 	}
 }

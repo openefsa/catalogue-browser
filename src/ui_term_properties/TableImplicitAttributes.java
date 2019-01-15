@@ -305,7 +305,7 @@ public class TableImplicitAttributes {
 			
 			@Override
 			public void handleEvent(Event event) {
-				
+
 				addMI.setEnabled( false );
 				removeMI.setEnabled( false );
 				

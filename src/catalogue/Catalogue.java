@@ -62,6 +62,7 @@ import utilities.GlobalUtil;
  * Catalogue object, it contains the catalogue metadata, the catalogue
  * terms, hierarchies and attributes, term attributes and applicabilities.
  * @author avonva
+ * @author shahaal
  *
  */
 public class Catalogue extends BaseObject 
@@ -952,6 +953,120 @@ public class Catalogue extends BaseObject
 		return addNewTerm ( code, parent, hierarchy );
 	}
 
+	/**
+	 * Add a new term into the catalogue database as 
+	 * child of the term "parent" in the selected hierarchy. The term is a complete
+	 * term since we save the term, all its attributes and its applicability.
+	 * @author shahaal
+	 * @param code the code of the new term
+	 * @param parent the parent of the new term
+	 * @param hierarchy the hierarchy in which the term is added to the parent
+	 * @param termExtendedName
+	 * @param scopeNotes
+	 * @param scientificName
+	 * @return the new term
+	 */
+	public Term addNewTerm ( String code, Nameable parent, Hierarchy hierarchy, String termExtendedName, String scopeNotes, String scientificName) {
+
+		TermDAO termDao = new TermDAO( this );
+
+		// get a new default term
+		Term child = Term.getDefaultTerm( code );
+		
+		// ste terms string values
+		child.setName(termExtendedName);
+		child.setShortName("");
+		child.setScopenotes(scopeNotes);
+
+		// set term level of detail
+		// E stands for ExtendedTerm
+		child.setDetailLevelValue("E");
+		
+		//split the cientific name
+		TermAttribute ta = TermAttribute.getDefaultTermAttribute( child );
+		ta.setValue(scientificName);
+		
+		// get the names in scientific name field (delim = $)
+		for(String name:ta.getRepeatableValues()) {
+			TermAttribute taTemp = TermAttribute.getDefaultTermAttribute( child );
+			taTemp.setValue(name);
+			child.addAttribute(taTemp);
+		}
+
+		// insert the new term into the database and get the new term
+		// with the id set
+		int id = termDao.insert( child );
+		child.setId( id );
+
+		// initialize term attribute dao
+		TermAttributeDAO taDao = new TermAttributeDAO( this );
+		
+		// insert the term attributes of the term
+		taDao.updateByA1( child );
+
+		ParentTermDAO parentDao = new ParentTermDAO( this );
+		
+		/*comment for removing specifical auto insertion ONLY for MASTER & BOTANICALS*/
+		ArrayList<Hierarchy> hierarchies = new ArrayList<>();
+		hierarchies.add(hierarchy);
+		hierarchies.add(getHierarchyById(9));
+		
+		for(Hierarchy h : hierarchies) {
+			
+			// get the first available order integer under the parent term
+			// in the selected hierarchy
+			int order = parentDao.getNextAvailableOrder( parent, h );
+	
+			// create the term applicability for the term in the selected hierarchy
+			// we set the new term as child of the selected term
+			// we set it to reportable as default
+			Applicability appl = new Applicability( child, parent, 
+					h, order, true );
+	
+			// add permanently the new applicability to the child
+			child.addApplicability( appl, true );
+			
+		}
+		
+		/*uncomment for adding the term to each hierarchy which contains the term's parent
+		Term parentTerm = (Term) parent;
+		
+		for(Hierarchy h : getHierarchies()) {
+			
+			if(parentTerm.belongsToHierarchy(h)) {
+				
+				System.out.println("shahaal adding "+h);
+				
+				// get the first available order integer under the parent term
+				// in the selected hierarchy
+				int order = parentDao.getNextAvailableOrder( parent, h );
+		
+				// create the term applicability for the term in the selected hierarchy
+				// we set the new term as child of the selected term
+				// we set it to reportable as default
+				Applicability appl = new Applicability( child, parent, 
+						h, order, true );
+		
+				// add permanently the new applicability to the child
+				child.addApplicability( appl, true );
+			}
+		}*/
+		
+		// update the involved terms in RAM
+		termDao.update( child );
+
+		if ( parent instanceof Term )
+			termDao.update( (Term) parent );
+
+		// add the term to the hashmap
+		terms.put( id, child );
+
+		// update also the ids cache
+		termsIds.put( code, id );
+
+		return child;
+	}
+	
 	/**
 	 * Add a new term into the catalogue database as 
 	 * child of the term "parent" in the selected hierarchy. The term is a complete

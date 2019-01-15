@@ -39,7 +39,7 @@ public class BrowserReleaseNotes {
 
 		try {
 
-			BufferedReader buff = new BufferedReader(new FileReader(GlobalUtil.getChangelogPath()));
+			BufferedReader buff = new BufferedReader(new FileReader(GlobalUtil.CHANGELOG_PATH));
 			StringBuffer stringBuffer = new StringBuffer();
 
 			// read the rest of the file
@@ -62,7 +62,7 @@ public class BrowserReleaseNotes {
 					BufferedWriter writer = null;
 					if (flag)
 						try {
-							File flagFile = new File(GlobalUtil.getFlagPath());
+							File flagFile = new File(GlobalUtil.VERSION_FLAG_PATH);
 							flagFile.createNewFile();
 							writer = new BufferedWriter(new FileWriter(flagFile));
 							writer.write(CatalogueBrowserMain.APP_VERSION);
@@ -91,7 +91,7 @@ public class BrowserReleaseNotes {
 
 	public static void checkVersion(Shell shell) {
 		//check if the flag contains a number older then the new version
-		String[] v1 = readAllBytesJava7(GlobalUtil.getFlagPath()).split("\\.");
+		String[] v1 = readAllBytesJava7(GlobalUtil.CHANGELOG_PATH).split("\\.");
 		String[] v2 = CatalogueBrowserMain.APP_VERSION.split("\\.");
 
 		if (v1.length != v2.length)
@@ -100,7 +100,7 @@ public class BrowserReleaseNotes {
 		for (int pos = 0; pos < v1.length; pos++) {
 		    // compare v1[pos] with v2[pos] as necessary
 		    if (Integer.parseInt(v1[pos]) < Integer.parseInt(v2[pos])) {
-		    	File flagFile = new File(GlobalUtil.getFlagPath());
+		    	File flagFile = new File(GlobalUtil.VERSION_FLAG_PATH);
 				flagFile.delete();
 				display(shell, true);
 				break;

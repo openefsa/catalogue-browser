@@ -120,7 +120,7 @@ public class AboutMenu implements MainMenuItem {
 	}
 
 	/**
-	 * AlbyDev
+	 * shahaal
 	 * Add the browser release notes menu item
 	 * @param menu
 	 */

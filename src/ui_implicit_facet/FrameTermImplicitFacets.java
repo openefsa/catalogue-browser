@@ -37,7 +37,7 @@ import ui_describe.FormSelectTerm;
  * new facets
  * 
  * @author avonva
- *
+ * @author shahaal
  */
 public class FrameTermImplicitFacets implements Observer {
 
@@ -154,15 +154,10 @@ public class FrameTermImplicitFacets implements Observer {
 	/**
 	 * Remove the ancestor (if exists in the selected folder)
 	 * when a child term of it is added
-	 * 
+	 * @author shahaal
 	 * @return
 	 */
 	public void checkAncestor(Term descriptor ) {
-		
-		/*
-		 * Author: AlbyDev
-		 * Date: 30/04/2018
-		*/
 		
 		//get the category folder content
 		ContentProviderImplicitFacets provider = (ContentProviderImplicitFacets) implicitFacets.getTreeViewer().getContentProvider();
@@ -198,7 +193,7 @@ public class FrameTermImplicitFacets implements Observer {
 
 	/**
 	 * Add the contextual menu to the implicit facets
-	 * 
+	 * @author shahaal
 	 * @param parent
 	 * @param implicitFacets
 	 * @return
@@ -214,7 +209,7 @@ public class FrameTermImplicitFacets implements Observer {
 				.setImage(new Image(Display.getCurrent(), ClassLoader.getSystemResourceAsStream("add-icon.png")));
 		addImplicitFacet.setText(Messages.getString("TreeImplicitFacets.AddCommand"));
 		
-		//AlbyDev: double click on the term for directly opening add term window
+		//shahaal: double click on the term for directly opening add term window
 		implicitFacets.addDoubleClickListener(new IDoubleClickListener() {
 			
 			@Override
@@ -223,7 +218,7 @@ public class FrameTermImplicitFacets implements Observer {
 			}
 		});
 				
-		//AlbyDev: listener called when click on add menu item
+		//shahaal: listener called when click on add menu item
 		addImplicitFacet.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -333,7 +328,7 @@ public class FrameTermImplicitFacets implements Observer {
 			// count the descriptors
 			descriptorsCount = baseTerm.getDescriptorsByCategory((Attribute) facetCategory, true).size();
 		}else {
-			//Author: AlbyDev
+			//Author: shahaal
 			// if we selected a facet descriptor we get the cardinality from the attribute
 			// contained into the
 			// descriptor, which is the facet category
@@ -371,7 +366,7 @@ public class FrameTermImplicitFacets implements Observer {
 			isMultipleAddable = true;
 			break;
 			
-		//Author: AlbyDev
+		//Author: shahaal
 		default:
 			isAddable = false;
 			isRemovable=false;
@@ -393,7 +388,7 @@ public class FrameTermImplicitFacets implements Observer {
 		implicitFacets.update(o, arg);
 	}
 	
-	//AlbyDev: method used to create the window which show all the possible terms which could be added to the group selected
+	//shahaal: method used to create the window which show all the possible terms which could be added to the group selected
 	public void addTermsToSelection(final Shell parent, final TreeViewer implicitFacets) {
 		
 		// return if empty selection
@@ -415,7 +410,7 @@ public class FrameTermImplicitFacets implements Observer {
 		// only if the facet category is repeatable, that is, with cardinality zero or
 		// more
 		
-		//Author: AlbyDev
+		//Author: shahaal
 		parent.setEnabled(false);
 		//
 		FormSelectTerm sf = new FormSelectTerm(parent, Messages.getString("Browser.SelectTermWindowTitle"), term.getCatalogue(), facetCategory.isRepeatable(), false);
@@ -499,7 +494,7 @@ public class FrameTermImplicitFacets implements Observer {
 		if (updateListener != null) {
 			updateListener.handleEvent(new Event());
 		}
-		//Author: AlbyDev
+		//Author: shahaal
 		if (!parent.isDisposed())
 			parent.setEnabled(true);
 		

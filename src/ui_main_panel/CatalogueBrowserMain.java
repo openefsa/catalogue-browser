@@ -223,7 +223,7 @@ public class CatalogueBrowserMain {
 		browser.getMenu().refresh();
 
 		// Author: AlbanDev
-		if (new File(GlobalUtil.getFlagPath()).exists()) {
+		if (new File(GlobalUtil.VERSION_FLAG_PATH).exists()) {
 			//check the version inside the flag file
 			BrowserReleaseNotes.checkVersion(shell);
 		} else {
@@ -236,7 +236,7 @@ public class CatalogueBrowserMain {
 			if (!display.readAndDispatch())
 				display.sleep();
 		}
-
+		
 		// albydev: prevent unexcpected error if user try to close the main page before
 		// the ui was loaded properly
 		// if (display != null && !display.isDisposed() )

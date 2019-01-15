@@ -285,9 +285,12 @@ public class SearchBar implements Observer {
 			}
 		});
 		
+		/**
+		 * Remove the selection if the focus is lost
+		 * @author shahaal
+		 */
 		textSearch.addFocusListener(new FocusListener() {
 			
-			//AlbyDev: remove the selection if the focus is lost
 			@Override
 			public void focusLost(FocusEvent arg0) {
 				parent.getDisplay().asyncExec(new Runnable() {

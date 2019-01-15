@@ -17,6 +17,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -28,12 +29,15 @@ import already_described_terms.PicklistDAO;
 import already_described_terms.RecentTermDAO;
 import catalogue.Catalogue;
 import catalogue.ReservedCatalogue;
+import catalogue_browser_dao.DatabaseManager;
 import catalogue_browser_dao.ForceCatEditDAO;
 import catalogue_browser_dao.ReservedCatDAO;
 import catalogue_browser_dao.TermDAO;
+import catalogue_object.CSVTermsParser;
 import catalogue_object.Hierarchy;
 import catalogue_object.Nameable;
 import catalogue_object.Term;
+import config.DebugConfig;
 import dcf_user.User;
 import global_manager.GlobalManager;
 import messages.Messages;
@@ -55,6 +59,7 @@ import utilities.GlobalUtil;
  * page of the tool, at the center of the screen) and its contextual menu.
  * 
  * @author avonva
+ * @author shahaal
  *
  */
 public class TermsTreePanel extends Observable implements Observer {
@@ -68,7 +73,7 @@ public class TermsTreePanel extends Observable implements Observer {
 
 	private MenuItem otherHierarchies, deprecateTerm, termMoveDown, termMoveUp, termLevelUp, describe, recentTerms,
 			addTerm, cutTerm, copyNode, copyBranch, copyCode, copyTerm, fullCopyTerm, pasteTerm, prefSearchTerm,
-			favouritePicklist, addRootTerm, pasteRootTerm;
+			favouritePicklist, addRootTerm, addTxtTerms, pasteRootTerm;
 
 	private Listener updateListener;
 	private HierarchyChangedListener changeHierarchyListener;
@@ -90,7 +95,7 @@ public class TermsTreePanel extends Observable implements Observer {
 	public TermsTreePanel(Composite parent, Catalogue catalogue) {
 
 		this.shell = parent.getShell();
-		
+
 		this.catalogue = catalogue;
 		// initialize the term clipboard object
 		termClip = new TermClipboard();
@@ -100,16 +105,17 @@ public class TermsTreePanel extends Observable implements Observer {
 
 		// add the main tree viewer
 		tree = createTreeViewer(parent);
-		
+
 	}
 
 	/**
-	 * AlbyDev: set focus on tree
+	 * Set focus on tree
+	 * @author shahaal
 	 */
 	public void setTreeFocus() {
 		this.tree.getTreeViewer().getControl().setFocus();
 	}
-	
+
 	/**
 	 * Called when something needs to be refreshed
 	 * 
@@ -155,7 +161,7 @@ public class TermsTreePanel extends Observable implements Observer {
 		Menu menu = null;
 
 		// set the menu if no empty selection
-		// Author: AlbyDev
+		// Author: shahaal
 		if (tree.isSelectionEmpty())
 			menu = createEmptyMenu();
 		// if the menu is not set yet, create it
@@ -314,25 +320,25 @@ public class TermsTreePanel extends Observable implements Observer {
 
 		MultiTermsTreeViewer tree = new MultiTermsTreeViewer(parent, false,
 				SWT.MULTI | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.VIRTUAL, catalogue);
-		
+
 		// allow drag n drop
 		tree.addDragAndDrop();
-		
-		//albydev: set the focus when enter the tree
-		//check before if the search field is not selected
+
+		// albydev: set the focus when enter the tree
+		// check before if the search field is not selected
 		tree.getTreeViewer().getTree().addListener(SWT.MouseEnter, new Listener() {
-		    public void handleEvent(Event event) {
-		    	if(!SearchBar.flag)
-		        	setTreeFocus();
-		    }
+			public void handleEvent(Event event) {
+				if (!SearchBar.flag)
+					setTreeFocus();
+			}
 		});
-		
-		//single click
+
+		// single click
 		tree.addSelectionChangedListener(new ISelectionChangedListener() {
-			
+
 			@Override
 			public void selectionChanged(SelectionChangedEvent arg0) {
-				
+
 				// if the selection is empty or bad instance return
 				if (arg0.getSelection().isEmpty() || !(arg0.getSelection() instanceof IStructuredSelection))
 					return;
@@ -348,13 +354,13 @@ public class TermsTreePanel extends Observable implements Observer {
 				}
 			}
 		});
-		
-		//AlbyDev: double click on the term for directly opening the describe window
+
+		// shahaal: double click on the term for directly opening the describe window
 		tree.addDoubleClickListener(new IDoubleClickListener() {
-			
+
 			@Override
 			public void doubleClick(DoubleClickEvent arg0) {
-				
+
 				if (!FormTermCoder.instanceExists) {
 					// open the describe form
 					FormTermCoder tcf = new FormTermCoder(shell, Messages.getString("FormTermCoder.Title"), catalogue);
@@ -438,9 +444,10 @@ public class TermsTreePanel extends Observable implements Observer {
 	 */
 	public Menu createTreeMenu() {
 
-		// Author: AlbyDev
-		// This will prevent accidental stacktrace error in case of closing the app when
+		// shahaal: This will prevent accidental stacktrace error in case of closing the
+		// app when
 		// the describe window is open
+
 		/* Menu for the tree */
 		Menu termMenu = null;
 
@@ -486,6 +493,11 @@ public class TermsTreePanel extends Observable implements Observer {
 
 			// new term operation
 			addRootTerm = addNewRootTermMI(termMenu);
+
+			// shahaal add import csv term function
+			if (DebugConfig.betaTest) {
+				addTxtTerms = addImportTermMI(termMenu);
+			}
 
 			deprecateTerm = addDeprecateTermMI(termMenu);
 
@@ -544,6 +556,10 @@ public class TermsTreePanel extends Observable implements Observer {
 		// enable add only in master hierarchy
 		if (addTerm != null)
 			addTerm.setEnabled(!isSelectionEmpty() && canAddTerm);
+
+		// shahaal enable is it is possible to add term
+		if (addTxtTerms != null)
+			addTxtTerms.setEnabled(canAddTerm);
 
 		// can paste only if we are cutting/copying and we are pasting under a single
 		// term
@@ -892,6 +908,74 @@ public class TermsTreePanel extends Observable implements Observer {
 		return termAdd;
 	}
 
+	/**
+	 * Add a menu item which allows importing a txt file containing a list of terms
+	 * The file must be exported from excel as Tab delimiter txt file with the following columns:
+	 * [parentCode, termExtendedName, termScopenote, termScientificName]
+	 * 
+	 * @author shahaal
+	 * @param menu
+	 */
+	private MenuItem addImportTermMI(Menu menu) {
+
+		MenuItem termAdd = new MenuItem(menu, SWT.NONE);
+		termAdd.setText(Messages.getString("BrowserTreeMenu.AddImportTermsTxt"));
+
+		termAdd.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+
+				// open file dialog for csv file
+
+				// create dialog
+				FileDialog fd = new FileDialog(shell, SWT.OPEN);
+
+				// set dialog title
+				fd.setText(Messages.getString("ImportTerms.ImportTermsFromTXT"));
+
+				// set working directory
+				// get the working directory from the user preferences
+				fd.setFilterPath(DatabaseManager.MAIN_CAT_DB_FOLDER);
+
+				// select only txt files
+				String[] filterExt = { "*.txt" };
+				fd.setFilterExtensions(filterExt);
+
+				// open dialog a listen to get the selected filename
+				String filename = fd.open();
+
+				if ((filename != null) && (filename.length() > 0)) {
+
+					GlobalUtil.setShellCursor(shell, SWT.CURSOR_WAIT);
+
+					// parse the file as a csv semicolon separated file
+					CSVTermsParser parse = new CSVTermsParser(catalogue, filename);
+
+					// for each term in txt add it
+					try {
+						int termsAdded = parse.startToImportTerms();
+						String mes = "Imported "+termsAdded+" Terms.";
+						GlobalUtil.showDialog(shell, "Terms From TXT", mes , SWT.ICON_INFORMATION );
+					} catch (TermCodeException e1) {
+						LOGGER.error("Something went wrong during the read terms process...");
+						e1.printStackTrace();
+					}
+
+					GlobalUtil.setShellCursor(shell, SWT.CURSOR_ARROW);
+
+					// refresh tree
+					tree.refresh();
+				}
+			}
+
+		});
+
+		termAdd.setEnabled(false);
+
+		return termAdd;
+	}
+
 	private Term addNewTerm(Nameable parent, Hierarchy hierarchy) {
 
 		Term child;
@@ -913,7 +997,6 @@ public class TermsTreePanel extends Observable implements Observer {
 			// of the selected term in the selected hierarchy
 			try {
 				child = catalogue.addNewTerm(parent, selectedHierarchy);
-
 			} catch (TermCodeException e) {
 				e.printStackTrace();
 				LOGGER.error("Max term code reached", e);
@@ -1234,7 +1317,7 @@ public class TermsTreePanel extends Observable implements Observer {
 
 	/**
 	 * Add a menu item which allows opening the describe on the selected term
-	 * 
+	 * @author shahaal
 	 * @param menu
 	 */
 	private MenuItem addDescribeMI(Menu menu) {
@@ -1242,14 +1325,13 @@ public class TermsTreePanel extends Observable implements Observer {
 		MenuItem describeTerm = new MenuItem(menu, SWT.NONE);
 
 		describeTerm.setText(Messages.getString("BrowserTreeMenu.DescribeCmd"));
-		
+
 		// if describe is clicked and not describe instance exists
 		describeTerm.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
-				// Author: AlbyDev
 				if (!FormTermCoder.instanceExists) {
 					// open the describe form
 					FormTermCoder tcf = new FormTermCoder(shell, Messages.getString("FormTermCoder.Title"), catalogue);
@@ -1259,8 +1341,7 @@ public class TermsTreePanel extends Observable implements Observer {
 					tcf.display(catalogue);
 
 				}
-				// Author: AlbyDev
-				//createTreeMenu();
+				// createTreeMenu();
 			}
 
 		});

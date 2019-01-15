@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- * @author AlbyDev
+ * @author shahaal
  *
  */
 public class NavButtons<T> {

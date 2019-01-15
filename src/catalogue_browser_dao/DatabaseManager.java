@@ -27,6 +27,7 @@ import utilities.GlobalUtil;
 /**
  * Manager which manages physical actions on the db, as
  * backups, db compression...
+ * @author shahaal
  * @author avonva
  *
  */
@@ -48,6 +49,12 @@ public class DatabaseManager {
 	 */
 	public static final String PRODUCTION_CAT_DB_FOLDER = OFFICIAL_CAT_DB_FOLDER 
 			 + "PRODUCTION_CATS";
+	
+	/**
+	 * Where the mtx catalogue is stored (in production)
+	 */
+	public static final String MTX_CAT_DB_FOLDER = PRODUCTION_CAT_DB_FOLDER 
+			 + System.getProperty("file.separator") + "CAT_MTX_DB";
 
 	/**
 	 * Where the test catalogues are stored

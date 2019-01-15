@@ -54,7 +54,7 @@ import utilities.GlobalUtil;
  * and to reuse possibly the file actions for testing purposes.
  * 
  * @author avonva
- *
+ * @author shahaal
  */
 public class FileActions {
 
@@ -201,9 +201,10 @@ public class FileActions {
 				if (listener != null)
 					listener.handleEvent(arg0);
 				
-				//albydev
-				// ask the user if he wants to update also the interpreting tool db
-				exportForIect(shell, lastReleaseImported);
+				// shahaal
+				// ask the user if he wants to update also the interpreting tool db (ONLY MTX)
+				if(lastRelease.isMTXCatalogue())
+					exportForIect(shell, lastReleaseImported);
 			}
 		});
 

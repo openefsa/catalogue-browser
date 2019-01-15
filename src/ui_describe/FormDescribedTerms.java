@@ -38,6 +38,15 @@ import session_manager.BrowserWindowPreferenceDao;
 import utilities.GlobalUtil;
 import window_restorer.RestoreableWindow;
 
+/**
+ * Template class used to manage the search terms windows and the
+ * Recently described one
+ * 
+ * @author avonva
+ * @author shahaal
+ *
+ */
+
 public class FormDescribedTerms {
 
 	private static final Logger LOGGER = LogManager.getLogger(FormDescribedTerms.class);
@@ -201,6 +210,8 @@ public class FormDescribedTerms {
 		// make the table stretchable
 		baseTermsTable.getTable().setLayoutData( gridData );
 		
+		//TODO finish the method for adding multiple selection + copy and paste option into the lastsearched window 
+		//baseTermsTable.add
 	
 		/* Add the search filter if it was set */
 		if ( searchViewerFilter != null ) {
@@ -409,12 +420,15 @@ public class FormDescribedTerms {
 		baseTermsTable.getTable().setMenu( rightClickMenu );
 
 
-		// double click => load the selected element
+		/**
+		 * double click => load the selected element
+		 * @author shahaal
+		 */
 		baseTermsTable.addDoubleClickListener( new IDoubleClickListener() {
 
 			@Override
 			public void doubleClick(DoubleClickEvent arg0) {
-				//Author: AlbyDev
+				
 				if(!FormTermCoder.instanceExists) {
 					if ( !baseTermsTable.getSelection().isEmpty() ) {
 						IStructuredSelection selection = (IStructuredSelection) baseTermsTable.getSelection();
@@ -460,10 +474,11 @@ public class FormDescribedTerms {
 	/**
 	 * Retrieve the base term and the related facets from the full code, then open
 	 * the describe window and load all the terms
+	 * @author shahaal
 	 * @param describedTerm
 	 */
 	private void loadTermInDescribe ( DescribedTerm describedTerm ) {
-		//Author: AlbyDev
+		
 		if(!FormTermCoder.instanceExists) {
 			// if not valid stop
 			if ( !describedTerm.isValid() ) {

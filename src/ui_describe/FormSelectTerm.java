@@ -51,13 +51,14 @@ import window_restorer.RestoreableWindow;
  * multiple selection with checkboxes are supported.
  * 
  * @author avonva
- *
+ * @author shahaal
  */
 public class FormSelectTerm implements Observer {
 
 	private RestoreableWindow window;
 	private static final String WINDOW_CODE = "FormSelectTerm";
-	// Author: AlbyDev
+	
+	// Author: shahaal
 	public static Boolean instanceExists = false;
 
 	// output list
@@ -108,7 +109,7 @@ public class FormSelectTerm implements Observer {
 
 		selectedTerms = new ArrayList<>();
 
-		// Author: AlbyDev
+		// Author: shahaal
 		// var used to check if an instance of the class already exists
 		FormSelectTerm.instanceExists = true;
 	}
@@ -183,7 +184,7 @@ public class FormSelectTerm implements Observer {
 	 */
 	public void display() {
 
-		// Author: AlbyDev
+		// Author: shahaal
 		// if coming from reportability tab then dont let the user to surf the main page
 		if (flag)
 			dialog = new Shell(shell, SWT.SHELL_TRIM | SWT.APPLICATION_MODAL);
@@ -248,7 +249,7 @@ public class FormSelectTerm implements Observer {
 				// get selected term
 				final Term selectedTerm = resultsForm.getSelectedTerm();
 
-				// Author: AlbyDev
+				// Author: shahaal
 				dialog.setEnabled(true);
 
 				if (selectedTerm == null)
@@ -374,7 +375,7 @@ public class FormSelectTerm implements Observer {
 		gridData.grabExcessVerticalSpace = false;
 		cancel.setLayoutData(gridData);
 
-		// AlbyDev: if close button is pressed then clar the list of selected items
+		// shahaal: if close button is pressed then clar the list of selected items
 		/*
 		 * dialog.addListener(SWT.Close, new Listener() {
 		 * 
@@ -485,7 +486,7 @@ public class FormSelectTerm implements Observer {
 
 		dialog.open();
 
-		// Author: AlbyDev
+		// Author: shahaal
 		while (!dialog.isDisposed()) {
 			if (!dialog.getDisplay().readAndDispatch())
 				dialog.getDisplay().sleep();
@@ -557,7 +558,7 @@ public class FormSelectTerm implements Observer {
 	 */
 	private void setOutput() {
 
-		// AlbyDev: commented because it clears the term added from the search results
+		// shahaal: commented because it clears the term added from the search results
 		selectedTerms.clear();
 
 		if (multi) {
