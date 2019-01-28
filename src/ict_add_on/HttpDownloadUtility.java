@@ -26,7 +26,10 @@ public class HttpDownloadUtility {
 	 * @throws IOException
 	 */
 	
-	public static boolean downloadFile(String fileURL, String saveDir) throws IOException {
+	public static File downloadFile(String fileURL, String saveDir) throws IOException {
+		
+		// file to be returned after download
+		File file = null;
 		
 		URL url = new URL(fileURL);
 		HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
@@ -64,28 +67,32 @@ public class HttpDownloadUtility {
 
 			// opens input stream from the HTTP connection
 			InputStream inputStream = httpConn.getInputStream();
-			String saveFilePath = saveDir + File.separator + fileName;
-
+			
+			String filePath = saveDir + File.separator + fileName;
+			
+			// create the new file to be returned
+			file = new File(filePath);
+			
 			// opens an output stream to save into file
-			FileOutputStream outputStream = new FileOutputStream(saveFilePath);
+			FileOutputStream outputStream = new FileOutputStream(file);
 
 			int bytesRead = -1;
 			byte[] buffer = new byte[BUFFER_SIZE];
 			while ((bytesRead = inputStream.read(buffer)) != -1) {
 				outputStream.write(buffer, 0, bytesRead);
 			}
-
+			
+			System.out.println("File downloaded");
+			
 			outputStream.close();
 			inputStream.close();
-
-			System.out.println("File downloaded");
 			httpConn.disconnect();
-			return true;
+			return file;
 			
-		} else {
-			System.out.println("No file to download. Server replied HTTP code: " + responseCode);
 		}
-		httpConn.disconnect();
-		return false;
+		
+		System.out.println("No file to download. Server replied HTTP code: " + responseCode);
+		return file;
+		
 	}
 }

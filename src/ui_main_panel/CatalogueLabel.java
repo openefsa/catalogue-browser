@@ -99,8 +99,7 @@ public class CatalogueLabel implements Observer {
 		updateBtn.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				// download the last catalogue release
-				// and open it
+				// download the last catalogue release and open it
 				FileActions.downloadLastVersion(composite.getShell(), catalogue, null);
 				
 			}

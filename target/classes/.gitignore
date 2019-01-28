@@ -1,3 +1,7 @@
+/already_described_terms/
+/business_rules/
+/catalogue/
+/catalogue_browser_dao/
 /catalogue_generator/
 /catalogue_object/
 /config/
@@ -9,7 +13,7 @@
 /export_catalogue/
 /form_objects_list/
 /global_manager/
-/ict/
+/ict_add_on/
 /import_catalogue/
 /instance_checker/
 /messages/
@@ -36,6 +40,4 @@
 /ui_term_properties/
 /ui_user_console/
 /user_preferences/
-/catalogue_browser_dao/
 /utilities/
-/ict_add_on/

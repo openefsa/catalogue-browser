@@ -6,5 +6,5 @@ public class DebugConfig {
 	public static boolean disableFileFuncs = false;
 	
 	// shahaal new button for changing report status
-	public static boolean betaTest = true;
+	public static boolean betaTest = false;
 }

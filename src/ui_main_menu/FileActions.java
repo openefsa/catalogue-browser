@@ -173,8 +173,10 @@ public class FileActions {
 	}
 
 	/**
-	 * Download the last version of a catalogue and open it
-	 * 
+	 * Download the last version of a catalogue,
+	 * update ict db if MTX,
+	 * then open the catalogue
+	 * @author shahaal
 	 * @param shell
 	 * @param catalogue
 	 * @param listener
@@ -193,6 +195,10 @@ public class FileActions {
 
 				Catalogue lastReleaseImported = (Catalogue) arg0.data;
 
+				// update also the interpreting tool db (ONLY MTX)
+				if(lastRelease.isMTXCatalogue())
+					updatedICTDatabase(shell, lastReleaseImported);
+				
 				// open the new catalogue
 				lastReleaseImported.open();
 
@@ -200,36 +206,28 @@ public class FileActions {
 
 				if (listener != null)
 					listener.handleEvent(arg0);
-				
-				// shahaal
-				// ask the user if he wants to update also the interpreting tool db (ONLY MTX)
-				if(lastRelease.isMTXCatalogue())
-					exportForIect(shell, lastReleaseImported);
 			}
 		});
 
 	}
 
-	private static void exportForIect(Shell shell, Catalogue catalogue) {
-		// albydev instead of the save window, give a warning message which says that
-		// the file will be saved in the followinf path
-		boolean result = MessageDialog.openConfirm(shell, "Info",
-				"Do you want to update the database for the Interpreting tool as well?");
-
-		// return if the user not press the ok button
-		if (!result)
-			return;
-
+	/**
+	 * the method update the ict db when a new update of the mtx is available
+	 * @author shahaal
+	 * @param shell
+	 * @param catalogue
+	 */
+	private static void updatedICTDatabase(Shell shell, Catalogue catalogue) {
+		
 		// export the catalogue (changed the main class so to know that the call is
 		// coming from a different export button
 		ExportActions export = new ExportActions();
 
 		// set the progress bar
 		export.setProgressBar(new FormProgressBar(shell, Messages.getString("Export.ProgressBarTitle")));
-
-		String filePath = System.getProperty("user.dir") + "\\Interpreting_Tool\\FoodEx2.xlsx";
+		
 		// export the opened catalogue
-		export.exportAsync(catalogue, filePath, false, new ThreadFinishedListener() {
+		export.exportAsync(catalogue, GlobalUtil.ICT_FOODEX2_FILE_PATH, false, new ThreadFinishedListener() {
 
 			@Override
 			public void finished(Thread thread, final int code, Exception e) {
@@ -239,7 +237,7 @@ public class FileActions {
 					@Override
 					public void run() {
 
-						String title = "FoodEx2.xlsx";
+						String title = "ICT database updated";
 						String msg;
 						int icon;
 

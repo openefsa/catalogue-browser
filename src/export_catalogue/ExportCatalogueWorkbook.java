@@ -6,7 +6,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import catalogue.Catalogue;
-import ict_add_on.ICT;
 import messages.Messages;
 import naming_convention.Headers;
 import progress_bar.IProgressBar;
@@ -32,8 +31,10 @@ public class ExportCatalogueWorkbook {
 	}
 	
 	/**
-	 * Export the catalogue into a workbook formatted as .xlsx
+	 * if (flag) -> Export the catalogue into a workbook formatted as .xlsx
 	 * Four sheets are created: catalogue, hierarchy, attribute, term
+	 * else -> Export only attributes and terms (ICT)
+	 * @author shahaal
 	 * @param catalogue the catalogue we want to export
 	 * @param filename
 	 * @param flag 
@@ -124,7 +125,7 @@ public class ExportCatalogueWorkbook {
 					workbook, Headers.ATTR_SHEET_NAME, false );
 			
 			if ( progressBar != null )
-				attrSheet.setProgressBar( progressBar, 40, 
+				attrSheet.setProgressBar( progressBar, 20, 
 						Messages.getString( "Export.AttributeSheet" ) );
 			
 			attrSheet.write();
@@ -136,21 +137,10 @@ public class ExportCatalogueWorkbook {
 					workbook, Headers.TERM_SHEET_NAME, false);
 			
 			if ( progressBar != null )
-				termSheet.setProgressBar( progressBar, 70, 
+				termSheet.setProgressBar( progressBar, 95, 
 						Messages.getString( "Export.TermSheet" ) );
 			
 			termSheet.write();
-			
-			LOGGER.info ( "Copying MTX DB" );
-
-			// write the term sheet
-			if ( progressBar != null )
-				termSheet.setProgressBar( progressBar, 100, 
-						Messages.getString( "Export.Database" ));
-			
-			//check and copy the db
-			new ICT();
-			
 		}
 		
 		// last operation

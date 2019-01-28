@@ -78,7 +78,6 @@ public class GlobalUtil {
 	//flag for change log
 	final static public String VERSION_FLAG_PATH = MAIN_DIR+"flag.txt";
 	// path for ICT add-on and related folders/files
-	final static public String ICT_FILE_PATH =MAIN_DIR+"ICT.xlsm";
 	final static public String UTILS_FILE_PATH =MAIN_DIR+"utils.zip";
 	final static public String UTILS_FOLDER_PATH =MAIN_DIR+"utils";
 	final static public String CHECK_DIR_NAME = "Check";
@@ -89,8 +88,11 @@ public class GlobalUtil {
 	final static public String ICT_DATABASE_DIR_PATH = getIctDatabaseDir();
 	final static public String ICT_MAIN_CAT_DB_NAME ="MAIN_CATS_DB";
 	final static public String ICT_MAIN_CAT_DB_PATH =getIctMainCatDbDir();
-	final static public String FOODEX2_DIR_PATH =getIctDir()+"FoodEx2.xlsx";
+	final static public String ICT_FOODEX2_FILE_PATH =ICT_DIR_PATH+"FoodEx2.xlsx";
 	final static public String ICT_MTX_CAT_DB_FOLDER =ICT_DATABASE_DIR_PATH+"/PRODUCTION_CATS/CAT_MTX_DB/";
+	final static public String ICT_CONFIG_FILE = getConfigDir() + "ictConfig.xml";
+	final static public String ICT_FILE_PATH =ICT_DIR_PATH+"ICT.xlsm";
+	final static public String ICT_UPDATE_FILE_PATH =ICT_DIR_PATH+"update.bat";
 	
 	/**
 	 * Set the working directory where the directories should
@@ -688,5 +690,21 @@ public class GlobalUtil {
 	    }
 
 	    return fileMoved;
+	}
+
+	/**
+	 * the method check if ict files are present
+	 * @return
+	 */
+	public static boolean ictIsInstalled() {
+		
+		// if ict file + foodEx2 + db exists then ict is installed
+		if(new File(GlobalUtil.ICT_FILE_PATH).exists() 
+				&& new File(GlobalUtil.ICT_FOODEX2_FILE_PATH).exists() 
+				&& new File(GlobalUtil.ICT_DATABASE_DIR_PATH).exists()
+				&& new File(GlobalUtil.ICT_UPDATE_FILE_PATH).exists())
+			return true;
+		
+		return false;
 	}
 }
