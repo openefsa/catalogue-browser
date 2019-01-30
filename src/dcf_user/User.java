@@ -41,6 +41,7 @@ import user.DcfUser;
  * local application and it is a global concept
  * in the software.
  * @author avonva
+ * @author shahaal
  *
  */
 public class User extends DcfUser {
@@ -358,6 +359,15 @@ public class User extends DcfUser {
 	 */
 	public boolean isUserLevelDefined() {
 		return userLevel != null;
+	}
+	
+	/**
+	 * Remove the user instance
+	 * @author shahaal
+	 * @return
+	 */
+	public void removeUser() {
+		user = null;
 	}
 
 	/**

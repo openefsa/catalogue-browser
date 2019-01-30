@@ -23,7 +23,7 @@ import dcf_user.UserListener;
 import instance_checker.InstanceChecker;
 import messages.Messages;
 import soap.DetailedSOAPException;
-import ui_main_menu.LoginActions;
+import ui_main_menu.DcfActions;
 import utilities.GlobalUtil;
 
 /**
@@ -179,7 +179,7 @@ public class CatalogueBrowserMain {
 							switch (code) {
 							case OK:
 
-								LoginActions.startLoggedThreads(shell, new Listener() {
+								DcfActions.startLoginThreads(shell, new Listener() {
 
 									@Override
 									public void handleEvent(Event arg0) {

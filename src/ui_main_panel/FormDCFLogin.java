@@ -22,24 +22,23 @@ import org.eclipse.swt.widgets.Text;
 import config.Config;
 import dcf_user.User;
 import messages.Messages;
-import session_manager.BrowserWindowPreferenceDao;
 import soap.DetailedSOAPException;
 import utilities.GlobalUtil;
-import window_restorer.RestoreableWindow;
 
 /**
  * Form used to login into the DCF using username and
  * password. It is possible to listen the form in order
  * to get the credentials and if they are valid or not
  * @author avonva
+ * @author shahaal
  *
  */
 public class FormDCFLogin {
 	
 	private static final Logger LOGGER = LogManager.getLogger(FormDCFLogin.class);
 	
-	private RestoreableWindow window;
-	private static final String WINDOW_CODE = "FormDCFLogin";
+	//private RestoreableWindow window;
+	//private static final String WINDOW_CODE = "FormDCFLogin";
 	
 	private String title;
 	
@@ -48,7 +47,6 @@ public class FormDCFLogin {
 	private Text usernameText;
 	private Text passwdText;
 	private Button loginBtn;
-	private Button saveBtn;
 	
 	// if the credentials are valid or not
 	private boolean valid;
@@ -73,10 +71,13 @@ public class FormDCFLogin {
 	public void display () {
 		
 		// create a dialog and set its title
-		dialog = new Shell( shell , SWT.TITLE | SWT.APPLICATION_MODAL | SWT.SHELL_TRIM );
+		dialog = new Shell( shell , SWT.TITLE | SWT.APPLICATION_MODAL | SWT.WRAP);
 		dialog.setText( title );
 		
-		window = new RestoreableWindow(dialog, WINDOW_CODE);
+		//set the shell position
+		dialog.setLocation(100, 100);
+		
+		//window = new RestoreableWindow(dialog, WINDOW_CODE);
 		
 		// set the dialog layout
 		dialog.setLayout( new GridLayout( 1 , false ) );
@@ -84,9 +85,9 @@ public class FormDCFLogin {
 		gridData.horizontalAlignment = SWT.CENTER;
 		gridData.verticalAlignment = SWT.CENTER;
 		gridData.grabExcessHorizontalSpace = true;
-		gridData.minimumHeight = 100;
-		gridData.minimumWidth = 100;
-		gridData.widthHint = 200;
+		gridData.minimumHeight = 200;
+		gridData.minimumWidth = 200;
+		gridData.widthHint = 400;
 		
 		dialog.setLayoutData( gridData );
 		
@@ -111,10 +112,6 @@ public class FormDCFLogin {
 		// add username password text box
 		addCredential ( dialog );
 		
-		saveBtn = new Button(dialog, SWT.CHECK);
-		saveBtn.setText(Messages.getString("Remember.me"));
-		saveBtn.setSelection(true);
-		
 		// add button to make login
 		addLoginButton( dialog );
 
@@ -125,8 +122,8 @@ public class FormDCFLogin {
 		dialog.setVisible( true );  
 		dialog.open();
 
-		window.restore( BrowserWindowPreferenceDao.class );
-		window.saveOnClosure( BrowserWindowPreferenceDao.class );
+		//window.restore( BrowserWindowPreferenceDao.class );
+		//window.saveOnClosure( BrowserWindowPreferenceDao.class );
 		
 		while ( !dialog.isDisposed() ) {
 			if ( !dialog.getDisplay().readAndDispatch() )
@@ -148,6 +145,7 @@ public class FormDCFLogin {
 		gridData.minimumHeight = 100;
 		gridData.minimumWidth = 100;
 		gridData.widthHint = 200;
+		gridData.heightHint = 20;
 		
 		// add username
 		Label usernameLabel = new Label ( parent, SWT.NONE );
@@ -275,7 +273,7 @@ public class FormDCFLogin {
 		
 		User user = User.getInstance();
 		boolean correctCredentials = user.login( usernameText.getText(), 
-				passwdText.getText(), saveBtn.getSelection() );
+				passwdText.getText(), true);
 		
 		return correctCredentials;
 	}

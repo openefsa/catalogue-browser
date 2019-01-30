@@ -45,9 +45,9 @@ import soap.UploadCatalogueFileImpl.ReserveLevel;
 import ui_console.ConsoleMessage;
 import ui_console.ConsoleMessageFactory;
 import ui_dcf_log.LogNodesForm;
+import ui_main_menu.DcfMenu;
 import ui_main_menu.FileActions;
 import ui_main_menu.FileMenu;
-import ui_main_menu.LoginMenu;
 import ui_main_menu.MainMenu;
 import ui_main_menu.MenuListener;
 import ui_main_menu.ToolsMenu;
@@ -72,7 +72,10 @@ import window_restorer.RestoreableWindow;
  * attributes, implicit facets, applicabilities...), a search bar, a combo box
  * to select the current hierarchy or facet list...
  * 
- * @author Thomas Milani(documentation), Valentino Avon
+ * @author shahaal
+ * @author Thomas Milani(documentation)
+ * @author Valentino Avon
+ * 
  * @version 0.2.1
  */
 public class MainPanel implements Observer {
@@ -984,22 +987,25 @@ public class MainPanel implements Observer {
 				}
 			}
 		});
-
-		menu.setLoginListener(new MenuListener() {
+		
+		menu.setDcfListener(new MenuListener() {
 
 			@Override
 			public void buttonPressed(MenuItem button, int code, Event event) {
 				switch (code) {
-				case LoginMenu.LOGIN_MI:
+				case DcfMenu.DCF_LOGIN_MI:
 					refresh();
 					hierarchySelector.refreshFilter();
+					break;
+				case DcfMenu.DCF_LOGOUT_MI:
+					refresh();
 					break;
 				default:
 					break;
 				}
 			}
 		});
-
+		
 		if (shell.getMenu() != null)
 			shell.getMenu().dispose();
 
