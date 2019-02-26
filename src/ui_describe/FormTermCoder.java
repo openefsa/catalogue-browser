@@ -58,9 +58,8 @@ import window_restorer.RestoreableWindow;
 public class FormTermCoder {
 
 	private static final String WINDOW_CODE = "FormTermCoder";
-	// Author: shahaal
+	//shahaal
 	public static Boolean instanceExists = false;
-	//
 
 	private RestoreableWindow window;
 
@@ -109,10 +108,8 @@ public class FormTermCoder {
 		_enableBR = catalogue.isMTXCatalogue()
 				&& prefDao.getPreferenceBoolValue(CataloguePreference.enableBusinessRules, false);
 
-		// Author: shahaal
-		// var used to check if an instance of the class already exists
+		//shahaal var used to check if an instance of the class already exists
 		FormTermCoder.instanceExists = true;
-		//
 	}
 
 	/**
@@ -158,7 +155,7 @@ public class FormTermCoder {
 	public void display(final Catalogue catalogue) {
 
 		// _dialog = new Shell( _shell , SWT.SHELL_TRIM | SWT.APPLICATION_MODAL );
-		// Author: shahaal
+		// shahaal
 		_dialog = new Shell(_shell, SWT.SHELL_TRIM | SWT.MODELESS);
 		//
 
@@ -178,7 +175,7 @@ public class FormTermCoder {
 			@Override
 			public void widgetDisposed(DisposeEvent e) {
 
-				// shahaal: reset the instance flag
+				// shahaal reset the instance flag
 				FormTermCoder.instanceExists = false;
 				//
 

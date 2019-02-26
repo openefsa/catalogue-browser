@@ -12,8 +12,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="var" path="JFace"/>
-	<classpathentry kind="var" path="SWT_64"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Catalogue converter - xml to xlsx"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/DCF webservice framework"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/HttpManager"/>
@@ -25,5 +23,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/VersionManager"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Window size save and restore"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ZipManager"/>
+	<classpathentry kind="var" path="JFace"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

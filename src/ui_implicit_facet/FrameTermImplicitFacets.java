@@ -410,9 +410,9 @@ public class FrameTermImplicitFacets implements Observer {
 		// only if the facet category is repeatable, that is, with cardinality zero or
 		// more
 		
-		//Author: shahaal
+		//shahaal
 		parent.setEnabled(false);
-		//
+		
 		FormSelectTerm sf = new FormSelectTerm(parent, Messages.getString("Browser.SelectTermWindowTitle"), term.getCatalogue(), facetCategory.isRepeatable(), false);
 			
 		// set the root term for the form in order to show only
@@ -494,7 +494,7 @@ public class FrameTermImplicitFacets implements Observer {
 		if (updateListener != null) {
 			updateListener.handleEvent(new Event());
 		}
-		//Author: shahaal
+		// shahaal
 		if (!parent.isDisposed())
 			parent.setEnabled(true);
 		

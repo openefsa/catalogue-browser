@@ -1,10 +1,21 @@
 --- New Features: 
 
-	+ Recompilation using Maven technology
-	+ Added Ability to reinstall ICT (from 'Tools' drop down list) - REMOVED
-	+ Added ability to select copy/paste multiple terms from 'Recently described terms' window
-	+ Added the ability to check for updates in ICT
+	+ Recompiled using Maven technology
+	+ New progress bar while downloading ICT
+	+ Redesigned the installation procedure of the ICT
+	+ Now the ICT is able to check and install new updates
+	+ Cleaned useless files from the package
+	+ Added new DCF drop-down button on Main menu
+	+ Added ability to log in/out from DCF
+	+ All files related to ICT has been moved into the related folder
+	+ ICT db automatically updated when new version are available
+	
 
 --- Other improvements:
 
     + Fixed bug when ICT files are missing, now the CB allows to reinstall it
+    + Solved bug which was reinstalling ICT db even if not using the MTX catalogue
+    + Solved UI refresh bug when the user perform a logout from DCF
+    + Fixed group facet information not shown on ICT
+    + Fixed automated process for the colours under the risk column
+    

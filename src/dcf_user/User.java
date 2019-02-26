@@ -488,10 +488,8 @@ public class User extends DcfUser {
 
 		this.isReauth = true;
 		
-		Config config = new Config();
-		
 		try {
-			setLogged(super.verifiedLogin(config.getEnvironment(), 
+			setLogged(super.verifiedLogin(Config.getEnvironment(), 
 					credentials[0], credentials[1]));
 		}
 		catch(SOAPException e) {
@@ -520,9 +518,7 @@ public class User extends DcfUser {
 	public boolean login ( String username, String password, boolean save ) 
 			throws DetailedSOAPException {
 		
-		Config config = new Config();
-		
-		setLogged(super.verifiedLogin(config.getEnvironment(), username, password));
+		setLogged(super.verifiedLogin(Config.getEnvironment(), username, password));
 
 		// if wrong credential => remove them 
 		if ( logged ) {

@@ -36,6 +36,7 @@ import export_catalogue.ExportActions;
 import form_objects_list.FormCataloguesList;
 import form_objects_list.FormDCTableConfigsList;
 import form_objects_list.FormDataCollectionsList;
+import ict_add_on.ICT;
 import import_catalogue.CatalogueImporter.ImportFileFormat;
 import import_catalogue.CatalogueImporterThread;
 import messages.Messages;
@@ -173,9 +174,9 @@ public class FileActions {
 	}
 
 	/**
-	 * Download the last version of a catalogue,
-	 * update ict db if MTX,
-	 * then open the catalogue
+	 * Download the last version of a catalogue, update ict db if MTX, then open the
+	 * catalogue
+	 * 
 	 * @author shahaal
 	 * @param shell
 	 * @param catalogue
@@ -195,12 +196,12 @@ public class FileActions {
 
 				Catalogue lastReleaseImported = (Catalogue) arg0.data;
 
-				// update also the interpreting tool db (ONLY MTX)
-				if(lastRelease.isMTXCatalogue())
-					updatedICTDatabase(shell, lastReleaseImported);
-				
 				// open the new catalogue
 				lastReleaseImported.open();
+
+				// update also the interpreting tool db (ONLY MTX)
+				if (lastRelease.isMTXCatalogue())
+					updatedICTDatabase(shell, lastReleaseImported);
 
 				GlobalUtil.setShellCursor(shell, SWT.CURSOR_ARROW);
 
@@ -213,19 +214,20 @@ public class FileActions {
 
 	/**
 	 * the method update the ict db when a new update of the mtx is available
+	 * 
 	 * @author shahaal
 	 * @param shell
 	 * @param catalogue
 	 */
 	private static void updatedICTDatabase(Shell shell, Catalogue catalogue) {
-		
+
 		// export the catalogue (changed the main class so to know that the call is
 		// coming from a different export button
 		ExportActions export = new ExportActions();
 
 		// set the progress bar
 		export.setProgressBar(new FormProgressBar(shell, Messages.getString("Export.ProgressBarTitle")));
-		
+
 		// export the opened catalogue
 		export.exportAsync(catalogue, GlobalUtil.ICT_FOODEX2_FILE_PATH, false, new ThreadFinishedListener() {
 
@@ -375,14 +377,10 @@ public class FileActions {
 	 * Ask to the user to select a catalogue from the {@code input} list.
 	 * 
 	 * @param shell
-	 * @param title
-	 *            title of the form
-	 * @param input
-	 *            list of choosable catalogues
-	 * @param multiSel
-	 *            can we select multiple catalogues?
-	 * @param columns
-	 *            table columns to show
+	 * @param title    title of the form
+	 * @param input    list of choosable catalogues
+	 * @param multiSel can we select multiple catalogues?
+	 * @param columns  table columns to show
 	 * @return
 	 */
 	private static Catalogue chooseCatalogue(Shell shell, String title, Collection<Catalogue> input, String[] columns,
@@ -448,7 +446,7 @@ public class FileActions {
 		else
 			downloadCatalogues(shell, Messages.getString("Download.MultiSuccessTitle"),
 					Messages.getString("Download.MultiSuccessMessage"), selectedCats);
-		
+
 	}
 
 	/**
@@ -463,29 +461,29 @@ public class FileActions {
 		final IProgressBar progressBar = new FormProgressBar(shell,
 				Messages.getString("Download.ProgressDownloadTitle"));
 
-		//available rma in memory
-		double availableRam = ((com.sun.management.OperatingSystemMXBean) ManagementFactory
-		        .getOperatingSystemMXBean()).getFreePhysicalMemorySize();
-		//max memory dedicated to the jvm
+		// available rma in memory
+		double availableRam = ((com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean())
+				.getFreePhysicalMemorySize();
+		// max memory dedicated to the jvm
 		double maxHeap = Runtime.getRuntime().maxMemory();
-		
-		//convert in MB
-		availableRam = availableRam/(1024*1024);
-		//divided by 2 cause that is minimum amount needed
-		maxHeap = (maxHeap /(1024*1024))/2;
-		
-		//print just two decimals
+
+		// convert in MB
+		availableRam = availableRam / (1024 * 1024);
+		// divided by 2 cause that is minimum amount needed
+		maxHeap = (maxHeap / (1024 * 1024)) / 2;
+
+		// print just two decimals
 		DecimalFormat f = new DecimalFormat("##.00");
-		
-		//check if there is available memory
-		if (availableRam<= maxHeap)//||true)
-			//if negative answer return
-			if(!MessageDialog.openConfirm(shell, "Catalogue browser", "Your computer has not enough memory. Close some apps or restart the Catalogue browser before continuing this operation!\n"
-					+"Do you want to continue ?\n\n"
-					+ "- Available memory in RAM: "+f.format(availableRam)+"MB;\n"
-					+ "- Required memory: "+f.format(maxHeap)+"MB;\n"))
+
+		// check if there is available memory
+		if (availableRam <= maxHeap)// ||true)
+			// if negative answer return
+			if (!MessageDialog.openConfirm(shell, "Catalogue browser",
+					"Your computer has not enough memory. Close some apps or restart the Catalogue browser before continuing this operation!\n"
+							+ "Do you want to continue ?\n\n" + "- Available memory in RAM: " + f.format(availableRam)
+							+ "MB;\n" + "- Required memory: " + f.format(maxHeap) + "MB;\n"))
 				return;
-		
+
 		// start downloading the catalogue
 		CatalogueDownloader catDown = new CatalogueDownloader(catalogue);
 
@@ -533,7 +531,7 @@ public class FileActions {
 						CatalogueDAO dao = new CatalogueDAO();
 						Catalogue catalogueWithId = dao.getCatalogue(catalogue.getCode(), catalogue.getVersion(),
 								catalogue.getCatalogueType());
-						
+
 						if (listener != null) {
 							Event event = new Event();
 							event.data = catalogueWithId;
@@ -543,9 +541,9 @@ public class FileActions {
 				});
 			}
 		});
-		
+
 		catDown.start();
-		
+
 	}
 
 	/**
@@ -608,11 +606,11 @@ public class FileActions {
 	}
 
 	/**
-	 * Ask to the user the .ecf to import and import it.
+	 * Ask to the user the .ecf to import and import it. Update also ICT db
 	 * 
+	 * @author shahaal
 	 * @param shell
-	 * @param doneListener
-	 *            called when the import is finished
+	 * @param doneListener called when the import is finished
 	 */
 	public static void importCatalogue(Shell shell, final ThreadFinishedListener doneListener) {
 
@@ -640,6 +638,25 @@ public class FileActions {
 		importCat.addDoneListener(doneListener);
 
 		importCat.start();
+		
+		//if the ICT is installed and mtx is imported then copy the new catalogue version
+		if (GlobalUtil.ictIsInstalled() && filename.contains("MTX")) {
+			// when the import of the offline cat is complete copy it in ICT db
+			importCat.addDoneListener(new ThreadFinishedListener() {
+
+				@Override
+				public void finished(Thread thread, int code, Exception e) {
+					try {
+						// update ICT db
+						new ICT().createDatabase();
+					} catch (IOException e1) {
+						GlobalUtil.showDialog(shell, Messages.getString("ICT.Title"),
+								Messages.getString("ICT.DatabaseUpdateError"), SWT.ICON_ERROR);
+					}
+
+				}
+			});
+		}
 	}
 
 	/**

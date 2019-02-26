@@ -120,8 +120,8 @@ public class AboutMenu implements MainMenuItem {
 	}
 
 	/**
-	 * shahaal
 	 * Add the browser release notes menu item
+	 * @author shahaal
 	 * @param menu
 	 */
 	private void addNotesBrowserMI(Menu menu) {

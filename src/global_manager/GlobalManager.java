@@ -17,7 +17,7 @@ import user_preferences.GlobalPreferenceDAO;
  * application and to access them in a safe way.
  * This class is a singleton!
  * @author avonva
- *
+ * @author shahaal
  */
 public class GlobalManager extends Observable {
 
@@ -44,8 +44,7 @@ public class GlobalManager extends Observable {
 	}
 	
 	public static Catalogue getLastVersion(String catalogueCode) {
-		Config config = new Config();
-		Environment env = config.getEnvironment();
+		Environment env = Config.getEnvironment();
 		CatalogueDAO dao = new CatalogueDAO();
 		return dao.getLastVersionByCode(catalogueCode, DcfType.fromEnvironment(env));
 	}

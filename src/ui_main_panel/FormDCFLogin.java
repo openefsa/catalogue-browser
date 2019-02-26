@@ -91,8 +91,7 @@ public class FormDCFLogin {
 		
 		dialog.setLayoutData( gridData );
 		
-		Config config = new Config();
-		if (!config.isProductionEnvironment()) {
+		if (!Config.isProductionEnvironment()) {
 			
 			Label dcfTypeLabel = new Label ( dialog, SWT.CENTER );
 			

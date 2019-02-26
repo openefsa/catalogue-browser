@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -29,6 +28,7 @@ import catalogue_object.Term;
 import dcf_user.User;
 import export_catalogue.ExportActions;
 import ict_add_on.ICT;
+import ict_add_on.ICTDownloader;
 import import_catalogue.CatalogueImporter.ImportFileFormat;
 import import_catalogue.CatalogueImporterThread;
 import import_catalogue.ImportException;
@@ -74,7 +74,7 @@ public class ToolsMenu implements MainMenuItem {
 	public static final int USER_PREF_MI = 12;
 	public static final int CREATE_XML_MI = 13;
 	public static final int DELETE_PICKLIST_MI = 14;
-	public static final int DOWNLOADICT = 15;
+	public static final int INSTALL_ICT = 15;
 
 	private MenuListener listener;
 
@@ -101,7 +101,7 @@ public class ToolsMenu implements MainMenuItem {
 	private MenuItem userPrefMI;
 
 	private boolean ictIsInstalled; // check if the ict is installed
-	private MenuItem installIct; // download the ict tool
+	private MenuItem installIct; // install the ict tool
 	private MenuItem launchIct; // launch ICT tool
 
 	/**
@@ -169,7 +169,6 @@ public class ToolsMenu implements MainMenuItem {
 				launchIct = addLaunchIct(toolsMenu);
 			else
 				installIct = addInstallIct(toolsMenu);
-
 		}
 
 		// add import picklist
@@ -631,43 +630,8 @@ public class ToolsMenu implements MainMenuItem {
 					return;
 
 				// export the catalogue
-				ExportActions export = new ExportActions();
+				extractCatalogue(exportItem, filename, EXPORT_CAT_MI, true);
 
-				// set the progress bar
-				export.setProgressBar(new FormProgressBar(shell, Messages.getString("Export.ProgressBarTitle")));
-
-				// export the opened catalogue
-				export.exportAsync(mainMenu.getCatalogue(), filename, true, new ThreadFinishedListener() {
-
-					@Override
-					public void finished(Thread thread, final int code, Exception e) {
-
-						shell.getDisplay().asyncExec(new Runnable() {
-
-							@Override
-							public void run() {
-
-								String title = filename;
-								String msg;
-								int icon;
-
-								if (code == ThreadFinishedListener.OK) {
-									msg = Messages.getString("Export.DoneMessage");
-									icon = SWT.ICON_INFORMATION;
-								} else {
-									msg = Messages.getString("Export.ErrorMessage");
-									icon = SWT.ICON_ERROR;
-								}
-
-								// warn the user that everything went ok
-								GlobalUtil.showDialog(shell, title, msg, icon);
-
-								if (listener != null)
-									listener.buttonPressed(exportItem, EXPORT_CAT_MI, null);
-							}
-						});
-					}
-				});
 			}
 		});
 
@@ -678,86 +642,73 @@ public class ToolsMenu implements MainMenuItem {
 	}
 
 	/**
-	 * Add a menu item which allows to download and install the ICT automatically
+	 * Add a menu item which allows to download and install the ICT
 	 * 
 	 * @author shahaal
 	 * @param menu
 	 */
 	private MenuItem addInstallIct(Menu menu) {
 
-		final MenuItem downloadItem = new MenuItem(menu, SWT.NONE);
+		final MenuItem installItem = new MenuItem(menu, SWT.NONE);
 
-		downloadItem.setText(Messages.getString("BrowserMenu.InstallICTCmd"));
+		installItem.setText(Messages.getString("BrowserMenu.InstallICTCmd"));
 
-		downloadItem.addSelectionListener(new SelectionAdapter() {
+		installItem.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent event) {
 
 				// ask the user before continuing the operation
-				boolean confirmation = MessageDialog.openConfirm(shell, "Info", Messages.getString("ICT.InstallationMsg"));
-				
-				if (confirmation) {
+				boolean confirmation = MessageDialog.openConfirm(shell, Messages.getString("ICT.Title"),
+						Messages.getString("ICT.InstallationMsg"));
 
-					//install the ICT
-					try {
-						(new ICT()).installICT();
-					} catch (Exception e) {
-						// print the error msg
-						GlobalUtil.showErrorDialog(shell, "Error", Messages.getString("ICT.InstallationError"));
-						return;
-					}
-					
-					// export the catalogue
-					ExportActions export = new ExportActions();
+				if (!confirmation)
+					return;
 
-					// set the progress bar
-					export.setProgressBar(new FormProgressBar(shell, Messages.getString("Export.InstallTitle"), true,
-							SWT.TITLE | SWT.APPLICATION_MODAL));
+				// invoke the ICT downloader
+				ICTDownloader downloader = new ICTDownloader();
 
-					// export the opened catalogue
-					export.exportAsync(mainMenu.getCatalogue(), GlobalUtil.ICT_FOODEX2_FILE_PATH, false,
-							new ThreadFinishedListener() {
+				downloader.setProgressBar(new FormProgressBar(shell, Messages.getString("Export.InstallTitle")));
 
-								@Override
-								public void finished(Thread thread, final int code, Exception e) {
+				// when finished
+				downloader.setDoneListener(new ThreadFinishedListener() {
 
-									shell.getDisplay().asyncExec(new Runnable() {
+					@Override
+					public void finished(Thread thread, final int code, Exception e) {
 
-										@Override
-										public void run() {
+						shell.getDisplay().asyncExec(new Runnable() {
 
-											String title = "FoodEx2.xlsx";
-											String msg;
-											int icon;
+							@Override
+							public void run() {
 
-											if (code == ThreadFinishedListener.OK) {
-												msg = Messages.getString("Export.DoneMessage");
-												icon = SWT.ICON_INFORMATION;
-											} else {
-												msg = Messages.getString("Export.ErrorMessage");
-												icon = SWT.ICON_ERROR;
-											}
-
-											// warn the user that everything went ok
-											GlobalUtil.showDialog(shell, title, msg, icon);
-
-											if (listener != null)
-												listener.buttonPressed(downloadItem, DOWNLOADICT, null);
-										}
-									});
+								// if download ok then continue with installation else warn the user
+								if (code == ThreadFinishedListener.OK) {
+									
+									try {
+										// invoke the ICT installer
+										new ICT().installICT();
+										String filename = GlobalUtil.ICT_FOODEX2_FILE_PATH;
+										extractCatalogue(installItem, filename, INSTALL_ICT, false);
+									} catch (IOException e) {
+										GlobalUtil.showDialog(shell, Messages.getString("ICT.Title"),
+												Messages.getString("ICT.InstallationError"), SWT.ICON_ERROR);
+									}
 								}
-							});
 
-				}
+							}
+						});
+					}
+				});
+
+				downloader.start();
+
 			}
 		});
 
 		// enable according to the operation status
-		downloadItem.setEnabled(false);
+		installItem.setEnabled(false);
 
-		return downloadItem;
-
+		return installItem;
 	}
 
 	/**
@@ -1182,7 +1133,7 @@ public class ToolsMenu implements MainMenuItem {
 				launchIct = null;
 				installIct.setEnabled(true);
 			}
-			
+
 			if (launchIct != null && ictIsInstalled) {
 				launchIct.setEnabled(true);
 				installIct = null;
@@ -1567,6 +1518,49 @@ public class ToolsMenu implements MainMenuItem {
 		mainMenu.mainPanel.addMessageToConsole(new ConsoleMessage(message, colour));
 		if (listener != null)
 			listener.buttonPressed(publishMI, CREATE_XML_MI, null);
+	}
+
+	private void extractCatalogue(MenuItem item, String filename, int action, boolean flag) {
+
+		// export the FoodEx2 catalogue
+		ExportActions export = new ExportActions();
+
+		// set the progress bar
+		export.setProgressBar(new FormProgressBar(shell, Messages.getString("Export.ProgressBarTitle")));
+
+		// export the opened catalogue
+		export.exportAsync(mainMenu.getCatalogue(), filename, flag, new ThreadFinishedListener() {
+
+			@Override
+			public void finished(Thread thread, final int code, Exception e) {
+
+				shell.getDisplay().asyncExec(new Runnable() {
+
+					@Override
+					public void run() {
+
+						String title = filename;
+						String msg;
+						int icon;
+
+						if (code == ThreadFinishedListener.OK) {
+							msg = Messages.getString("Export.DoneMessage");
+							icon = SWT.ICON_INFORMATION;
+						} else {
+							msg = Messages.getString("Export.ErrorMessage");
+							icon = SWT.ICON_ERROR;
+						}
+
+						// warn the user that everything went ok
+						GlobalUtil.showDialog(shell, title, msg, icon);
+
+						if (listener != null)
+							listener.buttonPressed(item, action, null);
+					}
+				});
+			}
+
+		});
 	}
 
 }

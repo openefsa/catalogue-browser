@@ -17,6 +17,7 @@ import zip_manager.ZipManager;
 /**
  * Class to manage soap attachments
  * @author avonva
+ * @author shahaal
  *
  */
 public class AttachmentHandler implements Closeable {
@@ -107,6 +108,8 @@ public class AttachmentHandler implements Closeable {
 
 	/**
 	 * Write a standard attachment which is not encoded.
+	 * @author shahaal
+	 * @author avonva
 	 * @param attachment
 	 * @param filename
 	 * @throws SOAPException
@@ -114,21 +117,23 @@ public class AttachmentHandler implements Closeable {
 	 */
 	private void writeNonEncodedAttachment ( String filename ) throws SOAPException, IOException {
 
-		InputStream input = readAttachment();
+		//for avoiding that the input string is not closed
+		try(InputStream input = readAttachment()){
 
-		// write the input stream into the output filename
-		byte[] buffer = new byte[ input.available() ];
-		input.read( buffer );
-
-		File targetFile = new File( filename );
-		OutputStream outStream = new FileOutputStream( targetFile );
-		outStream.write( buffer );
-		
-		// close stream
-		outStream.close();
-
-		// close input stream of read attachment
-		close();
+			// write the input stream into the output filename
+			byte[] buffer = new byte[ input.available() ];
+			input.read( buffer );
+	
+			File targetFile = new File( filename );
+			OutputStream outStream = new FileOutputStream( targetFile );
+			outStream.write( buffer );
+			
+			// close stream
+			outStream.close();
+	
+			// close input stream of read attachment
+			close();
+		}
 	}
 	
 	/**

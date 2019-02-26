@@ -58,7 +58,7 @@ public class FormSelectTerm implements Observer {
 	private RestoreableWindow window;
 	private static final String WINDOW_CODE = "FormSelectTerm";
 	
-	// Author: shahaal
+	//shahaal
 	public static Boolean instanceExists = false;
 
 	// output list
@@ -109,8 +109,7 @@ public class FormSelectTerm implements Observer {
 
 		selectedTerms = new ArrayList<>();
 
-		// Author: shahaal
-		// var used to check if an instance of the class already exists
+		//shahaal var used to check if an instance of the class already exists
 		FormSelectTerm.instanceExists = true;
 	}
 
@@ -184,8 +183,7 @@ public class FormSelectTerm implements Observer {
 	 */
 	public void display() {
 
-		// Author: shahaal
-		// if coming from reportability tab then dont let the user to surf the main page
+		//shahaal if coming from reportability tab then dont let the user to surf the main page
 		if (flag)
 			dialog = new Shell(shell, SWT.SHELL_TRIM | SWT.APPLICATION_MODAL);
 		// otherwise u are coming from the describe window
@@ -249,7 +247,7 @@ public class FormSelectTerm implements Observer {
 				// get selected term
 				final Term selectedTerm = resultsForm.getSelectedTerm();
 
-				// Author: shahaal
+				// shahaal
 				dialog.setEnabled(true);
 
 				if (selectedTerm == null)
@@ -558,7 +556,7 @@ public class FormSelectTerm implements Observer {
 	 */
 	private void setOutput() {
 
-		// shahaal: commented because it clears the term added from the search results
+		// shahaal commented because it clears the term added from the search results
 		selectedTerms.clear();
 
 		if (multi) {

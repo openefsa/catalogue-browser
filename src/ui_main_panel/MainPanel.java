@@ -968,9 +968,8 @@ public class MainPanel implements Observer {
 					}
 
 					break;
-
 					
-				case ToolsMenu.DOWNLOADICT:
+				case ToolsMenu.INSTALL_ICT:
 					//refresh the tools item menu when ict download and install is completed
 					refresh();
 					break;

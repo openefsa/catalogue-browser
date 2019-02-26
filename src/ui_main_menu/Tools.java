@@ -30,6 +30,7 @@ import user.IDcfUser;
 /**
  * Actions performed from the user interface in the tools menu.
  * @author avonva
+ * @author shahaal
  */
 public class Tools {
 	
@@ -156,8 +157,7 @@ public class Tools {
 	 * @return
 	 */
 	private Environment getEnvironment() {
-		Config config = new Config();
-		Environment env = config.getEnvironment();
+		Environment env = Config.getEnvironment();
 		return env;
 	}
 }

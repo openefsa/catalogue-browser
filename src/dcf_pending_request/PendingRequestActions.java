@@ -81,8 +81,7 @@ public class PendingRequestActions {
 		this.forcedDao = new ForceCatEditDAO();
 		this.downloader = new LastInternalVersionDownloader();
 		
-		Config config = new Config();
-		this.env = config.getEnvironment();
+		this.env = Config.getEnvironment();
 		
 		this.listeners = new ArrayList<>();
 	}
