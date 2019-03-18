@@ -255,7 +255,7 @@ public class HierarchySelector extends Observable implements Observer {
 	@SuppressWarnings("unchecked")
 	public boolean setSelection ( Hierarchy hierarchy ) {
 
-		Collection<Hierarchy> input = ( (Collection<Hierarchy>) hierarchyCombo.getInput() );
+		Collection<Hierarchy> input = (Collection<Hierarchy>) hierarchyCombo.getInput();
 		
 		// the hierarchy is not in the hierarchies list
 		if ( !input.isEmpty() && !input.contains ( hierarchy ) ) {

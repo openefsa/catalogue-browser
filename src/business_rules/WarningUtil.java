@@ -665,30 +665,6 @@ public class WarningUtil {
 	}
 
 	/**
-	 * Retrieve the current forbidden processes ord code starting from the current
-	 * forbidden processes
-	 * 
-	 * @param baseTerm
-	 * @param currentFP
-	 * @return
-	 */
-	@SuppressWarnings("unused")
-	private ArrayList<Double> getCurrentForbiddenProcessesOrdCode(Term baseTerm,
-			ArrayList<ForbiddenProcess> currentFP) {
-		// return if no forbidden processes
-		if (currentFP == null)
-			return null;
-
-		// get the forbidden process codes
-		ArrayList<Double> fpCodes = new ArrayList<>();
-		for (ForbiddenProcess proc : currentFP) {
-			fpCodes.add(proc.getOrdCode());
-		}
-
-		return (fpCodes);
-	}
-
-	/**
 	 * Retrieve the minimum ord code contained in the array list of forbidden
 	 * processes
 	 * 

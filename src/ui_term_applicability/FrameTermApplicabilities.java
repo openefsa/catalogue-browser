@@ -19,7 +19,6 @@ public class FrameTermApplicabilities {
 
 	private TableApplicability applTable;
 	private TableFacetApplicability facetApplTable;
-	private TreeFacetRestrictions restrictionTree;
 	
 	public TableApplicability getApplTable() {
 		return applTable;
@@ -27,10 +26,6 @@ public class FrameTermApplicabilities {
 	
 	public TableFacetApplicability getFacetApplTable() {
 		return facetApplTable;
-	}
-	
-	public TreeFacetRestrictions getRestrictionTree() {
-		return restrictionTree;
 	}
 
 	/**

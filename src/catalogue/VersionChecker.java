@@ -106,13 +106,12 @@ public class VersionChecker {
 	 * the related database is also created.
 	 * @return the new catalogue with the new version
 	 */
-	@SuppressWarnings("unlikely-arg-type")
 	private Catalogue apply() {
 		
 		String newVersion = version.getVersion();
 
 		// if no changes at all => return the same catalogue
-		if ( newVersion.equals( oldVersion ) )
+		if ( newVersion.equals( oldVersion.getVersion() ) )
 			return catalogue;
 		
 		// clone the catalogue and set the new version
