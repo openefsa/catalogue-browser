@@ -271,10 +271,8 @@ public class FormDCFLogin {
 	private boolean checkCredentials ( String username, String password ) throws DetailedSOAPException {
 		
 		User user = User.getInstance();
-		boolean correctCredentials = user.login( usernameText.getText(), 
+		return user.loginWithDcf( usernameText.getText(), 
 				passwdText.getText(), true);
-		
-		return correctCredentials;
 	}
 	
 	/**

@@ -144,7 +144,7 @@ public class FormTermCoder {
 		_tempTerm = new Term(catalogue);
 		_tempTerm.setCode(_baseTerm.getCode());
 		_tempTerm.setName(_baseTerm.getName());
-		_tempTerm.setShortName(_baseTerm.getShortName(true));
+		_tempTerm.setFullCodeDescription(_baseTerm.getShortName(true));
 
 		// to be working the tempTerm is added as child of baseTerm only in memory
 		Applicability app = new Applicability(_tempTerm, _baseTerm, catalogue.getMasterHierarchy(), 1, true);

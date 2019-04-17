@@ -5,6 +5,6 @@ public class DebugConfig {
 	public static boolean disableMainPanel = false;
 	public static boolean disableFileFuncs = false;
 	
-	// shahaal new button for changing report status
+	// shahaal activate beta test functions
 	public static boolean betaTest = false;
 }

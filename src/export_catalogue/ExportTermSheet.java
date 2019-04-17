@@ -25,13 +25,14 @@ import term.CodeSorter;
  * Export the terms, attribute values for each term and the term applicabilities
  * in the term sheet.
  * @author avonva
- *
+ * @author shahaal
  */
 public class ExportTermSheet extends SheetWriter {
 
 	private Catalogue catalogue;
-	private boolean flag;
-	private List<String> IECTColumns = Stream.of("allFacets", "matrixCode", "foodexOldCode", "detailLevel", "termType").collect(Collectors.toList());
+	//flag used for the interpreting and checking tool
+	private boolean flag; 
+	private List<String> IctColumns = Stream.of("allFacets", "matrixCode", "foodexOldCode", "detailLevel", "termType").collect(Collectors.toList());
 	
 	public ExportTermSheet( Catalogue catalogue, Workbook workbook, String sheetName, boolean b) {
 		
@@ -58,7 +59,7 @@ public class ExportTermSheet extends SheetWriter {
 			headers.put( "TERM_VALID_TO",          new SheetHeader(i++, Headers.VALID_TO ) );
 			headers.put( "TERM_STATUS",            new SheetHeader(i++, Headers.STATUS ) );
 			headers.put( "TERM_DEPRECATED",        new SheetHeader(i++, Headers.DEPRECATED ) );
-		}else {//if just for IECT
+		}else {//if just for ICT
 			headers.put( "TERM_CODE",              new SheetHeader(i++, Headers.TERM_CODE ) );
 			headers.put( "TERM_EXTENDED_NAME",     new SheetHeader(i++, Headers.TERM_EXT_NAME ) );
 		}
@@ -73,7 +74,7 @@ public class ExportTermSheet extends SheetWriter {
 			}
 		}else {
 			for ( Attribute attr : attrDao.getNonFacetAttributes() ) {
-				if(IECTColumns.contains(attr.getName())){
+				if(IctColumns.contains(attr.getName())){
 					headers.put( "attribute_" + attr.getName(), 
 							new SheetHeader( i++, attr.getName() ) );
 				}

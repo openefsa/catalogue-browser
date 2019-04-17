@@ -242,7 +242,7 @@ public class Catalogue extends BaseObject
 	 * levels and term types
 	 */
 	public void loadData() {
-
+		
 		// thread to load small data
 		Thread baseThread = new Thread ( new Runnable() {
 
@@ -255,7 +255,7 @@ public class Catalogue extends BaseObject
 				refreshReleaseNotes();
 			}
 		});
-
+		
 		// Thread to load terms
 		Thread termThread = new Thread( new Runnable() {
 
@@ -264,11 +264,11 @@ public class Catalogue extends BaseObject
 				refreshTerms();
 			}
 		});
-
+		
 		// load terms and base information
 		baseThread.start();
 		termThread.start();
-
+		
 		// wait to finish, since the applicabilities
 		// and term attributes need the terms in the
 		// RAM memory
@@ -387,8 +387,6 @@ public class Catalogue extends BaseObject
 		if ( manager.getCurrentCatalogue() != null )
 			manager.getCurrentCatalogue().closeQuitely();
 		
-		LOGGER.info ( "Opening " + this + " at " + getDbPath() );
-
 		// load the catalogue data into RAM
 		loadData();
 
@@ -655,7 +653,7 @@ public class Catalogue extends BaseObject
 		terms = termDao.fetchTerms();
 
 		termsIds = new HashMap<>();
-
+		
 		// update cache of ids
 		for ( Term term : terms.values() ) {
 			termsIds.put( term.getCode(), term.getId() );
@@ -975,7 +973,7 @@ public class Catalogue extends BaseObject
 		
 		// ste terms string values
 		child.setName(termExtendedName);
-		child.setShortName("");
+		child.setFullCodeDescription("");
 		child.setScopenotes(scopeNotes);
 
 		// set term level of detail
@@ -2003,7 +2001,7 @@ public class Catalogue extends BaseObject
 		// ask for exporting catalogue to the dcf
 		// export the catalogue and save its attachment into an xml file
 		Dcf dcf = new Dcf();
-
+		
 		File file = dcf.exportCatalogue(this);
 
 		if ( file == null || !file.exists() ) {
@@ -2119,13 +2117,13 @@ public class Catalogue extends BaseObject
 
 	/**
 	 * Open the db connection with the currently open catalogue
+	 * @author shahaal
 	 * @return
 	 * @throws SQLException
 	 */
 	public Connection getConnection () throws SQLException {
 		
 		Connection con = DriverManager.getConnection( getDbUrl() );
-
 		return con;
 	}
 

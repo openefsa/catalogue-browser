@@ -8,6 +8,7 @@ import catalogue_generator.ThreadFinishedListener;
 
 /**
  * Thread to re-authenticate the user using previous credentials stored in the database.
+ * @author shahaal
  * @author avonva
  *
  */
@@ -30,7 +31,15 @@ public class ReauthThread extends Thread {
 		// try to reauthenticate the user if possible
 		boolean done;
 		try {
-			done = User.getInstance().reauthenticate();
+			
+			User user = User.getInstance();
+			
+			//check if the user logged in with token
+			if(user.isAuthWithOpeanAPI())
+				done = user.reauthenticateWithOpenAPI();
+			else
+				done = user.reauthenticate();
+			
 			code = done ? ThreadFinishedListener.OK : ThreadFinishedListener.ERROR;
 		} catch (SOAPException e) {
 			e.printStackTrace();

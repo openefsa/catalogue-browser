@@ -45,7 +45,7 @@ import soap.UploadCatalogueFileImpl.ReserveLevel;
 import ui_console.ConsoleMessage;
 import ui_console.ConsoleMessageFactory;
 import ui_dcf_log.LogNodesForm;
-import ui_main_menu.DcfMenu;
+import ui_main_menu.AccountMenu;
 import ui_main_menu.FileActions;
 import ui_main_menu.FileMenu;
 import ui_main_menu.MainMenu;
@@ -590,7 +590,7 @@ public class MainPanel implements Observer {
 		changeHierarchy(hierarchy);
 
 		// select the term in the tree
-		tree.selectTerm(term, true);
+		tree.selectTerm(term);
 
 		// refresh the browser
 		refresh();
@@ -699,7 +699,7 @@ public class MainPanel implements Observer {
 		// recover the last selected term if present
 		try {
 			Term lastTerm = getLastTerm(catalogue);
-			tree.selectTerm(lastTerm, true);
+			tree.selectTerm(lastTerm);
 		} catch (PreferenceNotFoundException e) {
 		}
 
@@ -992,11 +992,11 @@ public class MainPanel implements Observer {
 			@Override
 			public void buttonPressed(MenuItem button, int code, Event event) {
 				switch (code) {
-				case DcfMenu.DCF_LOGIN_MI:
+				case AccountMenu.DCF_LOGIN_MI:
 					refresh();
 					hierarchySelector.refreshFilter();
 					break;
-				case DcfMenu.DCF_LOGOUT_MI:
+				case AccountMenu.DCF_LOGOUT_MI:
 					refresh();
 					break;
 				default:
@@ -1072,7 +1072,7 @@ public class MainPanel implements Observer {
 				if (selection.isEmpty())
 					return;
 
-				tree.selectTerm((Nameable) selection.getFirstElement(), false);
+				tree.selectTerm((Nameable) selection.getFirstElement());
 
 			}
 		});

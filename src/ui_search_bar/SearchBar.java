@@ -34,21 +34,22 @@ import user_preferences.CataloguePreference;
 import user_preferences.CataloguePreferenceDAO;
 
 /**
- * This class implements a search bar which allows to perform a search in the database
- * In particular, you can write the keywords you want to search and set some settings:
- * - search as exact match, any word or all words
- * - search in the selected hierarchy or globally
+ * This class implements a search bar which allows to perform a search in the
+ * database In particular, you can write the keywords you want to search and set
+ * some settings: - search as exact match, any word or all words - search in the
+ * selected hierarchy or globally
  * 
- * When the search button is pressed, the search is performed. When the results are ready to be
- * used by the program, a listener is called to update the main thread that the search is finished
- * and it can use the results.
+ * When the search button is pressed, the search is performed. When the results
+ * are ready to be used by the program, a listener is called to update the main
+ * thread that the search is finished and it can use the results.
+ * 
  * @author avonva
  * @author shahaal
  */
 public class SearchBar implements Observer {
 
 	private Catalogue catalogue;
-	
+
 	private Term rootTerm;
 	private Text textSearch;
 	private Combo comboOptSearch;
@@ -57,115 +58,120 @@ public class SearchBar implements Observer {
 	private Button globalSearch;
 	private boolean hideDeprecated;
 	private boolean hideNotInUse;
-	public static boolean flag; //used for determinate the focus over the main UI
-	
+	public static boolean flag; // used for determinate the focus over the main UI
+
 	private SearchListener listener;
-	
+
 	// hierarchy which is currently opened in the browser
 	private Hierarchy currentHierarchy;
-	
+
 	// hierarchy in which we make the search
 	private Hierarchy searchHierarchy;
-	
+
 	// Array list which contains the results of the search (terms)
-	private ArrayList < Term > searchResults = new ArrayList<>();
-	
+	private ArrayList<Term> searchResults = new ArrayList<>();
+
 	// composite which contains the search bar
 	Composite parent;
-	boolean addGlobalSearch;  // should global search button be added?
+	boolean addGlobalSearch; // should global search button be added?
 	boolean globalSearchEnabled = false;
-	
-	public SearchBar( Composite parent, boolean addGlobalSearch ) {
+
+	/**
+	 * @wbp.parser.entryPoint
+	 */
+	public SearchBar(Composite parent, boolean addGlobalSearch) {
 		this.parent = parent;
 		this.addGlobalSearch = addGlobalSearch;
 	}
-	
+
 	/**
 	 * Set the catalogue on which we want to search
+	 * 
 	 * @param catalogue
 	 */
 	public void setCatalogue(Catalogue catalogue) {
 		this.catalogue = catalogue;
 	}
-	
+
 	/**
-	 * Set the entire search panel enabled or disabled
-	 * Note that if a catalogue was not set, the search will
-	 * give errors.
+	 * Set the entire search panel enabled or disabled Note that if a catalogue was
+	 * not set, the search will give errors.
+	 * 
 	 * @param enabled
 	 */
-	public void setEnabled ( boolean enabled ) {
+	public void setEnabled(boolean enabled) {
 
-		comboOptSearch.setEnabled( enabled );
-		buttonSearch.setEnabled( enabled );
-		textSearch.setEnabled( enabled );
-		
-		if ( catalogue != null )
+		comboOptSearch.setEnabled(enabled);
+		buttonSearch.setEnabled(enabled);
+		textSearch.setEnabled(enabled);
+
+		if (catalogue != null)
 			textSearch.setText("");
-		
-		if ( addGlobalSearch ) {
-			
+
+		if (addGlobalSearch) {
+
 			// reset the default settings
-			localSearch.setSelection( true );
-			globalSearch.setSelection( false );
-			
-			localSearch.setEnabled( enabled );
-			globalSearch.setEnabled( enabled );
+			localSearch.setSelection(true);
+			globalSearch.setSelection(false);
+
+			localSearch.setEnabled(enabled);
+			globalSearch.setEnabled(enabled);
 		}
 	}
-	
-	
+
 	/**
 	 * Restrict the search space to a single hierarchy
 	 */
-	public void setCurrentHierarchy ( Hierarchy hierarchy ) {
+	public void setCurrentHierarchy(Hierarchy hierarchy) {
 		this.currentHierarchy = hierarchy;
 	}
-	
+
 	/**
-	 * Get the hierarchy in which the search was performed
-	 * null if no search was performed yet
+	 * Get the hierarchy in which the search was performed null if no search was
+	 * performed yet
+	 * 
 	 * @return
 	 */
 	public Hierarchy getSearchHierarchy() {
 		return searchHierarchy;
 	}
-	
+
 	/**
 	 * Get the written keyword (before clean it)
+	 * 
 	 * @author shahaal
 	 * @return
 	 */
 	public String getKeyword() {
-		
-		if ( textSearch == null )
+
+		if (textSearch == null)
 			return "";
-		
+
 		String textTyped = textSearch.getText();
-		
+
 		///////// TEXT CLEANER (used in AI browser)
 		// 1-trasform in lower case, 2-remove irrelevant punctation (not numbers!)
 		textTyped = textTyped.replaceAll("\\p{Punct}", " ").toLowerCase();
 		// 2-trim all group of spaces generated with a single one
 		textTyped = textTyped.trim().replaceAll("\\s{2,}", " ");
-		
+
 		return textTyped;
 	}
-	
-	
+
 	/**
 	 * Get the search option which was selected before
+	 * 
 	 * @return
 	 */
 	public SearchType getSearchMode() {
-		
-		if ( comboOptSearch == null )
+
+		if (comboOptSearch == null)
 			return SearchType.EXACT_MATCH;
-		
+
 		// default
 		SearchType type = SearchType.EXACT_MATCH;
-		
-		switch( comboOptSearch.getSelectionIndex() ) {
+
+		switch (comboOptSearch.getSelectionIndex()) {
 		case 0:
 			type = SearchType.EXACT_MATCH;
 			break;
@@ -177,129 +183,136 @@ public class SearchBar implements Observer {
 			break;
 		default:
 			break;
-		};
-		
+		}
+		;
+
 		return type;
 	}
-	
+
 	/**
-	 * Get the search results ( it is filled only when the search button is pressed )
+	 * Get the search results ( it is filled only when the search button is pressed
+	 * )
+	 * 
 	 * @return
 	 */
-	public ArrayList <Term> getSearchResults () {
-		
+	public ArrayList<Term> getSearchResults() {
+
 		return searchResults;
 	}
-	
+
 	/**
 	 * Get the search button
+	 * 
 	 * @return
 	 */
-	public Button getButton () {
+	public Button getButton() {
 		return buttonSearch;
 	}
-	
+
 	/**
 	 * Get the search text box
+	 * 
 	 * @return
 	 */
-	public Text getText () {
+	public Text getText() {
 		return textSearch;
 	}
+
 	/**
 	 * Set the listener for the search
+	 * 
 	 * @param listener
 	 */
-	public void setListener ( SearchListener listener ) {
+	public void setListener(SearchListener listener) {
 		this.listener = listener;
 	}
-	
+
 	/**
 	 * Update the search globally feature (used to restore previous state)
+	 * 
 	 * @param searchGlobally
 	 */
-	public void setSearchGlobally ( boolean searchGlobally ) {
-		
+	public void setSearchGlobally(boolean searchGlobally) {
+
 		// if global search is not allowed return
-		if ( !addGlobalSearch )
+		if (!addGlobalSearch)
 			return;
 
 		// otherwise update the selection of the radio buttons
-		globalSearch.setSelection( searchGlobally );
-		localSearch.setSelection( !searchGlobally );
+		globalSearch.setSelection(searchGlobally);
+		localSearch.setSelection(!searchGlobally);
 	}
-	
+
 	/**
 	 * Get the minimum number of characters needed to perform a search
+	 * 
 	 * @return
 	 */
 	private int getMinSearchChar() {
-		
+
 		// if we have a catalogue open check which is the min search char preference
 		// otherwise always allows
 		int minSearchChar = -1;
 
-		CataloguePreferenceDAO prefDao = new CataloguePreferenceDAO( catalogue );
+		CataloguePreferenceDAO prefDao = new CataloguePreferenceDAO(catalogue);
 
-		minSearchChar = prefDao.
-				getPreferenceIntValue( CataloguePreference.minSearchChar, 3 );
+		minSearchChar = prefDao.getPreferenceIntValue(CataloguePreference.minSearchChar, 3);
 
 		return minSearchChar;
 
 	}
-	
+
 	/**
-	 * Check if we can perform a search or not based on the number of character we inputed in the text box
+	 * Check if we can perform a search or not based on the number of character we
+	 * inputed in the text box
+	 * 
 	 * @return
 	 */
-	private boolean canSearch( int inputedCharacters ) {
+	private boolean canSearch(int inputedCharacters) {
 		return inputedCharacters >= getMinSearchChar();
 	}
-	
-	
-	
+
 	/**
 	 * Display the search bar, instantiate the UI
 	 */
 	public void display() {
-		
+
 		GridData gridData = new GridData();
 		gridData.horizontalAlignment = SWT.FILL;
-		
-		// Setting the "search" widget 
-		Group searchGroup = new Group( parent , SWT.NONE );
-		
+
+		// Setting the "search" widget
+		Group searchGroup = new Group(parent, SWT.NONE);
+
 		// if no global buttons place all the element on one row
 		int numberOfColumns = addGlobalSearch ? 3 : 4;
-		
-		searchGroup.setLayout( new GridLayout( numberOfColumns , false ) );
-		searchGroup.setLayoutData( gridData );
+
+		searchGroup.setLayout(new GridLayout(numberOfColumns, false));
+		searchGroup.setLayoutData(gridData);
 
 		// Search label
-		Label labelSearch = new Label( searchGroup , SWT.NONE );
-		labelSearch.setText( Messages.getString("SearchBar.SearchLabel") );
+		Label labelSearch = new Label(searchGroup, SWT.NONE);
+		labelSearch.setText(Messages.getString("SearchBar.SearchLabel"));
 
 		// Search text box (where you write keywords)
-		textSearch = addSearchTextBox ( searchGroup );
-		
+		textSearch = addSearchTextBox(searchGroup);
+
 		// listener for text changes (enable/disable button search)
-		textSearch.addModifyListener( new ModifyListener() {
+		textSearch.addModifyListener(new ModifyListener() {
 
 			@Override
 			public void modifyText(ModifyEvent e) {
-				
-				buttonSearch.setEnabled( 
-						canSearch( textSearch.getText().trim().length() ) 
-						&& textSearch.isEnabled() );
+
+				buttonSearch.setEnabled(canSearch(textSearch.getText().trim().length()) && textSearch.isEnabled());
 			}
 		});
-		
+
 		/**
 		 * Remove the selection if the focus is lost
+		 * 
 		 * @author shahaal
 		 */
 		textSearch.addFocusListener(new FocusListener() {
-			
+
 			@Override
 			public void focusLost(FocusEvent arg0) {
 				parent.getDisplay().asyncExec(new Runnable() {
@@ -314,229 +327,226 @@ public class SearchBar implements Observer {
 			public void focusGained(FocusEvent arg0) {
 				parent.getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						//set a public flag to true so to dont loose the focus if the user move the mouse around the ui
+						// set a public flag to true so to dont loose the focus if the user move the
+						// mouse around the ui
 						flag = textSearch.isFocusControl();
 						textSearch.selectAll();
-						
+
 					}
 				});
 			}
 		});
 
 		// search options, all words, any word...
-		comboOptSearch = addSearchOptions ( searchGroup );
-		
+		comboOptSearch = addSearchOptions(searchGroup);
+
 		// add global search button if required
-		if ( addGlobalSearch ) {
-			
-			Composite g = new Composite( searchGroup , SWT.NONE );
+		if (addGlobalSearch) {
+
+			Composite g = new Composite(searchGroup, SWT.NONE);
 			gridData = new GridData();
 			gridData.verticalAlignment = SWT.FILL;
 			gridData.horizontalAlignment = SWT.FILL;
 			gridData.horizontalSpan = 3;
 
-			g.setLayoutData( gridData );
+			g.setLayoutData(gridData);
 			RowLayout r = new RowLayout();
 			r.justify = true;
 			r.center = true;
-			g.setLayout( r );
-			
-			// add global search radio button
-			addGlobalSearch( g );
-			
-			buttonSearch = new Button( g , SWT.PUSH );// searchGroup
-		}
-		else
-			buttonSearch = new Button( searchGroup , SWT.PUSH );// searchGroup
-		
+			g.setLayout(r);
 
-		buttonSearch.setAlignment( SWT.CENTER );
-		buttonSearch.setText( Messages.getString("SearchBar.GoButton") );
-		buttonSearch.setEnabled( false );  // until a keyword is added, disabled
+			// add global search radio button
+			addGlobalSearch(g);
+
+			buttonSearch = new Button(g, SWT.PUSH);// searchGroup
+		} else
+			buttonSearch = new Button(searchGroup, SWT.PUSH);// searchGroup
+
+		buttonSearch.setAlignment(SWT.CENTER);
+		buttonSearch.setText(Messages.getString("SearchBar.GoButton"));
+		buttonSearch.setEnabled(false); // until a keyword is added, disabled
 		buttonSearch.pack();
-		
-		buttonSearch.addSelectionListener( new SelectionListener() {
-			
+
+		buttonSearch.addSelectionListener(new SelectionListener() {
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				
+
 				// change the cursor to wait
-				Cursor cursor = new Cursor( parent.getDisplay() , SWT.CURSOR_WAIT );
-				parent.getShell().setCursor( cursor );
-				
-				// call the external listener to say that the search results are ready to be used
-				searchResults = search( getKeyword(), getSearchMode() );
-				
+				Cursor cursor = new Cursor(parent.getDisplay(), SWT.CURSOR_WAIT);
+				parent.getShell().setCursor(cursor);
+
+				// call the external listener to say that the search results are ready to be
+				// used
+				searchResults = search(getKeyword(), getSearchMode());
+
 				// dispose the old cursor and instantiate the new one
-				if ( cursor != null )
+				if (cursor != null)
 					cursor.dispose();
 
 				// reload the old cursor, the search is finished
-				cursor = new Cursor( parent.getDisplay() , SWT.CURSOR_ARROW );
-				parent.getShell().setCursor( cursor );
-				
-				
-				if ( listener != null ) {
-					
+				cursor = new Cursor(parent.getDisplay(), SWT.CURSOR_ARROW);
+				parent.getShell().setCursor(cursor);
+
+				if (listener != null) {
+
 					SearchEvent event = new SearchEvent();
-					event.setResults( searchResults );
+					event.setResults(searchResults);
 
 					// call the search listener
-					listener.searchPerformed( event );
+					listener.searchPerformed(event);
 				}
 			}
-			
+
 			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {}
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
 		});
 	}
-	
-	
+
 	/**
 	 * Add global search button if required
+	 * 
 	 * @param parent
 	 */
-	private void addGlobalSearch ( Composite parent ) {
-		
-		localSearch = new Button( parent , SWT.RADIO );
-		localSearch.setText( Messages.getString( "SearchBar.SearchCurrentButton" ) );
+	private void addGlobalSearch(Composite parent) {
 
-		globalSearch = new Button( parent , SWT.RADIO );
-		globalSearch.setText( Messages.getString( "SearchBar.SearchDictionaryButton" ) );
-		
+		localSearch = new Button(parent, SWT.RADIO);
+		localSearch.setText(Messages.getString("SearchBar.SearchCurrentButton"));
+
+		globalSearch = new Button(parent, SWT.RADIO);
+		globalSearch.setText(Messages.getString("SearchBar.SearchDictionaryButton"));
+
 		/* setting local/global search */
-		localSearch.setSelection( true );
-		globalSearch.setSelection( false );
+		localSearch.setSelection(true);
+		globalSearch.setSelection(false);
 
-		globalSearch.addSelectionListener( new SelectionAdapter() {
+		globalSearch.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected ( SelectionEvent event ) {
-				globalSearch.setSelection( true );
-				localSearch.setSelection( false );
+			public void widgetSelected(SelectionEvent event) {
+				globalSearch.setSelection(true);
+				localSearch.setSelection(false);
 				globalSearchEnabled = true;
 			}
-		} );
+		});
 
-		localSearch.addSelectionListener( new SelectionAdapter() {
+		localSearch.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected ( SelectionEvent event ) {
-				localSearch.setSelection( true );
-				globalSearch.setSelection( false );
+			public void widgetSelected(SelectionEvent event) {
+				localSearch.setSelection(true);
+				globalSearch.setSelection(false);
 				globalSearchEnabled = false;
 			}
-		} );
+		});
 	}
-	
-	
-	
+
 	/**
 	 * Add a text box for search
+	 * 
 	 * @param parent
 	 * @return
 	 */
-	private Text addSearchTextBox ( Composite parent ) {
-		
-		Text textSearch = new Text( parent , SWT.BORDER );
-		textSearch.setMessage( Messages.getString( "SearchBar.SearchTipText" ) );
-		
+	private Text addSearchTextBox(Composite parent) {
+
+		Text textSearch = new Text(parent, SWT.BORDER);
+		textSearch.setMessage(Messages.getString("SearchBar.SearchTipText"));
+
 		GridData gridData = new GridData();
 		gridData.verticalAlignment = SWT.CENTER;
 		gridData.horizontalAlignment = SWT.FILL;
 		gridData.grabExcessHorizontalSpace = true;
-		textSearch.setLayoutData( gridData );
-		textSearch.setSize( 100, 50 );
-		
+		textSearch.setLayoutData(gridData);
+		textSearch.setSize(100, 50);
+
 		return textSearch;
 	}
-	
-	
-	
+
 	/**
 	 * Add a combo box for searching with options
+	 * 
 	 * @param parent
 	 * @return
 	 */
-	private Combo addSearchOptions ( Composite parent ) {
-		
-		Combo comboOptSearch = new Combo( parent , SWT.READ_ONLY );
-		String items[] = { Messages.getString("SearchBar.SearchOption1"), Messages.getString("SearchBar.SearchOption2"), 
+	private Combo addSearchOptions(Composite parent) {
+
+		Combo comboOptSearch = new Combo(parent, SWT.READ_ONLY);
+		String items[] = { Messages.getString("SearchBar.SearchOption1"), Messages.getString("SearchBar.SearchOption2"),
 				Messages.getString("SearchBar.SearchOption3") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		comboOptSearch.setItems( items );
-		comboOptSearch.select( 0 );
+		comboOptSearch.setItems(items);
+		comboOptSearch.select(0);
 		comboOptSearch.pack();
-		comboOptSearch.setToolTipText( Messages.getString("SearchBar.SearchTip1") //$NON-NLS-1$
+		comboOptSearch.setToolTipText(Messages.getString("SearchBar.SearchTip1") //$NON-NLS-1$
 				+ Messages.getString("SearchBar.SearchTip2") //$NON-NLS-1$
 				+ Messages.getString("SearchBar.SearchTip3") //$NON-NLS-1$
-				+ Messages.getString("SearchBar.SearchTip4") ); //$NON-NLS-1$
-		
+				+ Messages.getString("SearchBar.SearchTip4")); //$NON-NLS-1$
+
 		return comboOptSearch;
 	}
-	
-	
+
 	/**
-	 * The search method check the query string and search the terms who match
-	 * the query string. Method added for reducing and avoiding duplication code
-	 * in the system.
-	 * Return an array list of terms (search results), which is empty if no results are found
+	 * The search method check the query string and search the terms who match the
+	 * query string. Method added for reducing and avoiding duplication code in the
+	 * system. Return an array list of terms (search results), which is empty if no
+	 * results are found
 	 */
-	private ArrayList<Term> search ( String keyword, SearchType type ) {
-		
+	private ArrayList<Term> search(String keyword, SearchType type) {
+
 		// output array
-		ArrayList< Term > searchResults = new ArrayList<>();
-		
-		// if the number of characters of the search are less than the minimum number of characters
-		if ( !canSearch( keyword.trim().length() ) )
+		ArrayList<Term> searchResults = new ArrayList<>();
+
+		// if the number of characters of the search are less than the minimum number of
+		// characters
+		if (!canSearch(keyword.trim().length()))
 			return searchResults;
 
-		SearchDAO searchDao = new SearchDAO( catalogue );
-		
+		SearchDAO searchDao = new SearchDAO(catalogue);
+
 		// Set root term for the search
-		if ( rootTerm != null )
-			searchDao.setRootTerm( rootTerm );
-		
+		if (rootTerm != null)
+			searchDao.setRootTerm(rootTerm);
+
 		// get the hierarchy in which we have to search
 		searchHierarchy = globalSearchEnabled ? catalogue.getMasterHierarchy() : currentHierarchy;
-		
-		searchResults = searchDao.startSearch( keyword, type, searchHierarchy );
+
+		searchResults = searchDao.startSearch(keyword, type, searchHierarchy);
 		
 		// filter deprecated and not in use terms
-		searchResults = TermFilter.filterByFlag( hideDeprecated, 
-				hideNotInUse, searchResults, searchHierarchy );
-		
+		searchResults = TermFilter.filterByFlag(hideDeprecated, hideNotInUse, searchResults, searchHierarchy);
+
 		// return the results
 		return searchResults;
 	}
-	
+
 	/**
-	 * Set a root term for the search. All the terms
-	 * which are not under the sub tree of the the root term
-	 * will be excuded from the results.
+	 * Set a root term for the search. All the terms which are not under the sub
+	 * tree of the the root term will be excuded from the results.
+	 * 
 	 * @param rootTerm
 	 */
 	public void setRootTerm(Term rootTerm) {
 		this.rootTerm = rootTerm;
 	}
-	
+
 	/**
 	 * What to do if the selected hierarchy is changed? Save the selected hierarchy
 	 */
 	@Override
-	public void update ( Observable o, Object data ) {
-		
-		if ( o instanceof HierarchySelector ) {
-			setCurrentHierarchy ( (Hierarchy) data );
+	public void update(Observable o, Object data) {
+
+		if (o instanceof HierarchySelector) {
+			setCurrentHierarchy((Hierarchy) data);
 		}
-		
+
 		// if the check boxes for visualizing
 		// terms are changed
-		if ( o instanceof TermFilter ) {
-			
-			hideDeprecated = ( (TermFilter) o ).isHidingDeprecated();
-			hideNotInUse = ( (TermFilter) o ).isHidingNotReportable();
+		if (o instanceof TermFilter) {
+
+			hideDeprecated = ((TermFilter) o).isHidingDeprecated();
+			hideNotInUse = ((TermFilter) o).isHidingNotReportable();
 		}
-		
-		if ( o instanceof GlobalManager && data instanceof Catalogue ) {
-			
+
+		if (o instanceof GlobalManager && data instanceof Catalogue) {
+
 			this.catalogue = (Catalogue) data;
 		}
 	}

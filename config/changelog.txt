@@ -5,7 +5,7 @@
 	+ Redesigned the installation procedure of the ICT
 	+ Now the ICT is able to check and install new updates
 	+ Cleaned useless files from the package
-	+ Added new DCF drop-down button on Main menu
+	+ Added new Account drop-down button on Main menu
 	+ Added ability to log in/out from DCF
 	+ All files related to ICT has been moved into the related folder
 	+ ICT db automatically updated when new version are available

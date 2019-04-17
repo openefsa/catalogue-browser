@@ -354,7 +354,7 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 		t.setName( rs.getString( "TERM_EXTENDED_NAME" ) );
 
 		// set the term short name
-		t.setShortName( rs.getString( "TERM_SHORT_NAME" ) );
+		t.setFullCodeDescription( rs.getString( "TERM_SHORT_NAME" ) );
 
 		// set the term scopenotes
 		t.setScopenotes( rs.getString( "TERM_SCOPENOTE" ) );

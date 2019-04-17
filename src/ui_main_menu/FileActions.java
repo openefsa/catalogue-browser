@@ -307,7 +307,7 @@ public class FileActions {
 	public static void warnPossibleOldCatalogue(Shell shell, Catalogue catalogue) {
 
 		User user = User.getInstance();
-		if (user.isLoggedIn() || catalogue.isLocal() || catalogue.isDeprecated())
+		if (user.isLoggedIn() || user.isLoggedInOpenAPI() || catalogue.isLocal() || catalogue.isDeprecated())
 			return;
 
 		// if we are not logged in, simply warn the user that we cannot
@@ -339,7 +339,7 @@ public class FileActions {
 		}
 
 		// if the user is logged in we can check the updates
-		else if (user.isLoggedIn()) {
+		else if (user.isLoggedIn()||user.isLoggedInOpenAPI()) {
 
 			// check if there is a catalogue update
 			boolean hasUpdate = catalogue.hasUpdate();

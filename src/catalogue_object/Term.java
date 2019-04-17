@@ -680,11 +680,12 @@ public class Term extends CatalogueObject implements Mappable {
 	}
 
 	/**
-	 * Set the term short name (the displayed as name)
-	 * @param shortName
+	 * Set the full term interpretation (the term extended description)
+	 * @author shahaal
+	 * @param fullCodeDescription
 	 */
-	public void setShortName(String shortName) {
-		setLabel( shortName );
+	public void setFullCodeDescription(String fullCodeDescription) {
+		setLabel( fullCodeDescription );
 	}
 
 	/**
@@ -1604,7 +1605,7 @@ public class Term extends CatalogueObject implements Mappable {
 		
 		// default names and scopenotes
 		term.setName( Messages.getString("BrowserTreeMenu.NewTermDefaultName") + code );
-		term.setShortName( Messages.getString("BrowserTreeMenu.NewTermDefaultName") + code );
+		term.setFullCodeDescription( Messages.getString("BrowserTreeMenu.NewTermDefaultName") + code );
 		term.setScopenotes( "" );
 		
 		// default the term is not deprecated

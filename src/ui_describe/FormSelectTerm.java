@@ -373,7 +373,7 @@ public class FormSelectTerm implements Observer {
 		gridData.grabExcessVerticalSpace = false;
 		cancel.setLayoutData(gridData);
 
-		// shahaal: if close button is pressed then clar the list of selected items
+		// shahaal: if close button is pressed then clear the list of selected items
 		/*
 		 * dialog.addListener(SWT.Close, new Listener() {
 		 * 
@@ -525,7 +525,7 @@ public class FormSelectTerm implements Observer {
 
 				// get the selected term which has to be removed
 				final Term selectedTerm = (Term) event.data;
-
+				
 				// remove check from tree
 				tree.selectTerm(selectedTerm);
 
@@ -556,7 +556,7 @@ public class FormSelectTerm implements Observer {
 	 */
 	private void setOutput() {
 
-		// shahaal commented because it clears the term added from the search results
+		// shahaal clear terms added from search results
 		selectedTerms.clear();
 
 		if (multi) {

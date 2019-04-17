@@ -454,7 +454,9 @@ public class FileMenu implements MainMenuItem {
 				Dcf.getDownloadableCat() != null;
 
 		downloadMI.setEnabled ( canDownload );
-		downloadDcMI.setEnabled( canDownload );
+		
+		// the openapi users cannot download all catalogues at once (too many server requests)
+		downloadDcMI.setEnabled( canDownload ); //&& !user.isLoggedInOpenAPI() );
 		
 		// enable close only if there is an open catalogue
 		closeMI.setEnabled( mainMenu.getCatalogue() != null );

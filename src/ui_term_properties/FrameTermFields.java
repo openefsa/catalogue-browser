@@ -44,8 +44,8 @@ import utilities.GlobalUtil;
  * Frame which shows to the user a lot of information related to the selected
  * term
  * 
- * @author avonva
  * @author shahaal
+ * @author avonva
  *
  */
 public class FrameTermFields {
@@ -55,8 +55,9 @@ public class FrameTermFields {
 	private ComboTextBox termType;
 	private ComboTextBox detailLevel;
 	private Text code;
+	private Text fullCode;
 	private Text extName;
-	private Text shortName;
+	private Text fullCodeDesc;
 	private ScopenotesWithLinks scopenotes;
 	private TableImplicitAttributes attributes;
 
@@ -127,7 +128,8 @@ public class FrameTermFields {
 
 	/**
 	 * Set the selected term and update the graphics
-	 * 
+	 * @author shahaal
+	 * @author avonva
 	 * @param term
 	 */
 	@SuppressWarnings("unlikely-arg-type")
@@ -149,13 +151,28 @@ public class FrameTermFields {
 
 		if (code != null)
 			code.setText(term.getCode());
-
+		
+		boolean hasImpFacets = !term.getImplicitFacets().isEmpty();
+		
+		//full code with baseterm and facets
+		if(fullCode != null) {
+			if(hasImpFacets)
+				fullCode.setText(term.getFullCode(true, true));
+			else 
+				fullCode.setText("");
+		}
+		
 		if (extName != null)
 			extName.setText(term.getName());
 
-		if (shortName != null)
-			shortName.setText(term.getShortName(false));
-
+		//show the full code interpretation if the term contains implicit facets
+		if (fullCodeDesc != null) {
+			if(hasImpFacets)
+				fullCodeDesc.setText(term.getInterpretedCode(true));
+			else 
+				fullCodeDesc.setText("");
+		}
+		
 		if (scopenotes != null)
 			scopenotes.setTerm(term);
 
@@ -257,11 +274,14 @@ public class FrameTermFields {
 		if (code != null)
 			code.setEnabled(enabled);
 
+		if(fullCode != null)
+			fullCode.setEnabled(enabled);
+		
 		if (extName != null)
 			extName.setEnabled(enabled);
 
-		if (shortName != null)
-			shortName.setEnabled(enabled);
+		if (fullCodeDesc != null)
+			fullCodeDesc.setEnabled(enabled);
 
 		if (scopenotes != null)
 			scopenotes.setEnabled(enabled);
@@ -288,11 +308,14 @@ public class FrameTermFields {
 		if (code != null)
 			code.setText("");
 
+		if(fullCode != null )
+			fullCode.setText("");
+		
 		if (extName != null)
 			extName.setText("");
 
-		if (shortName != null)
-			shortName.setText("");
+		if (fullCodeDesc != null)
+			fullCodeDesc.setText("");
 
 		if (scopenotes != null)
 			scopenotes.setTerm(null);
@@ -307,10 +330,10 @@ public class FrameTermFields {
 	public void setEditable(boolean editable) {
 		if (extName != null)
 			extName.setEditable(editable);
-
-		if (shortName != null)
-			shortName.setEditable(editable);
-
+		
+		if (fullCodeDesc != null)
+			fullCodeDesc.setEditable(editable);
+		
 		if (scopenotes != null)
 			scopenotes.setEditable(editable);
 	}
@@ -330,10 +353,11 @@ public class FrameTermFields {
 	public FrameTermFields(Composite parent, ArrayList<String> properties) {
 
 		boolean includeAll = properties.isEmpty();
-
+		
 		// composite for all the flags, corex and state
 		Composite compFlags = new Composite(parent, SWT.NONE);
-		compFlags.setLayout(new GridLayout(2, false));
+		compFlags.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+		compFlags.setLayout(new GridLayout(2, true));
 
 		// add the term type
 		if (includeAll || properties.contains("type"))
@@ -342,18 +366,22 @@ public class FrameTermFields {
 		// add the detail level
 		if (includeAll || properties.contains("detail"))
 			detailLevel = addDetailLevel(compFlags);
-
+		
 		// add term code
 		if (includeAll || properties.contains("code"))
-			code = addTermCodeTextBox(parent);
+			code = addTermCodeTextBox(parent, Messages.getString("TermProperties.TermCodeTitle"));
+		
+		// add term code with implicit facets
+		if (includeAll || properties.contains("fullCode"))
+			fullCode = addTermCodeTextBox(parent, Messages.getString("TermProperties.TermCompleteCodeTitle"));
 
 		// add term extended name
 		if (includeAll || properties.contains("extname"))
 			extName = addTermNameTextBox(parent);
 
 		// add term short name
-		if (includeAll || properties.contains("shortname"))
-			shortName = addTermShortNameTextBox(parent);
+		if (includeAll || properties.contains("fullCodeDesc"))
+			fullCodeDesc = addFullCodeDescTextBox(parent);
 
 		// add term scopenotes and links
 		if (includeAll || properties.contains("scopenotes"))
@@ -504,13 +532,13 @@ public class FrameTermFields {
 	 * @param parent
 	 * @return
 	 */
-	private Text addTermCodeTextBox(Composite parent) {
+	private Text addTermCodeTextBox(Composite parent, String label) {
 
 		// create a new group for term code
 		Group groupTermCode = new Group(parent, SWT.NONE);
 
 		// set its name and layout
-		groupTermCode.setText(Messages.getString("TermProperties.TermCodeTitle"));
+		groupTermCode.setText(label);
 
 		groupTermCode.setLayout(new FillLayout());
 
@@ -564,7 +592,7 @@ public class FrameTermFields {
 	 * @param parent
 	 * @return
 	 */
-	private Text addTermNameTextBox(final Composite parent) {
+	private Text addTermNameTextBox(Composite parent) {
 
 		Group groupTermName = new Group(parent, SWT.NONE);
 
@@ -681,18 +709,20 @@ public class FrameTermFields {
 	}
 
 	/**
-	 * Add the term code text box into the parent composite
+	 * Add the full term code description text box 
+	 * into the parent composite
 	 * 
+	 * @author shahaal
 	 * @param parent
 	 * @return
 	 */
-	private Text addTermShortNameTextBox(final Composite parent) {
+	private Text addFullCodeDescTextBox(Composite parent) {
 
 		// create a new group for term code
 		Group groupShortName = new Group(parent, SWT.NONE);
 
 		// set its name and layout
-		groupShortName.setText(Messages.getString("TermProperties.ShortNameTitle"));
+		groupShortName.setText(Messages.getString("TermProperties.TermFullCodeDesc"));
 
 		groupShortName.setLayout(new FillLayout());
 
@@ -704,9 +734,9 @@ public class FrameTermFields {
 		groupShortName.setLayoutData(gridData);
 
 		// create the text box
-		final Text termShortName = new Text(groupShortName, SWT.BORDER);
-
-		termShortName.addFocusListener(new FocusAdapter() {
+		final Text termFullCodeDesc = new Text(groupShortName, SWT.MULTI | SWT.BORDER | SWT.NONE);
+		
+		termFullCodeDesc.addFocusListener(new FocusAdapter() {
 
 			@Override
 			public void focusLost(FocusEvent e) {
@@ -717,7 +747,7 @@ public class FrameTermFields {
 					return;
 
 				// return if the name does not change at all
-				if (termShortName.getText().equals(term.getShortName(false)))
+				if (termFullCodeDesc.getText().equals(term.getInterpretedCode(true)))
 					return;
 
 				// if the text already exists in the database it cannot
@@ -727,8 +757,8 @@ public class FrameTermFields {
 
 				// here the new short name is acceptable
 
-				// set the new name
-				term.setShortName(termShortName.getText());
+				// set the code description (including implicit facets)
+				term.setFullCodeDescription(termFullCodeDesc.getText());
 
 				// update the term in the DB
 				termDao.update(term);
@@ -738,7 +768,7 @@ public class FrameTermFields {
 			}
 		});
 
-		return termShortName;
+		return termFullCodeDesc;
 	}
 
 	/**

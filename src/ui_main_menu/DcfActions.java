@@ -17,7 +17,7 @@ import ui_main_panel.ShellLocker;
 import utilities.GlobalUtil;
 
 /**
- * the class refresh all the methods while the user log in/out from the DCF
+ * the class refresh all the methods while the user log in/out from the DCF/Openapi
  * @author shahaal
  *
  */
@@ -30,7 +30,8 @@ public class DcfActions {
 	 */
 	public static void startLoginThreads(final Shell shell, final Listener userLevelListener) {
 		
-		if(!User.getInstance().isLoggedIn())
+		//if not logged at all (dcf and openapi) then return
+		if(!User.getInstance().isLoggedIn()&&!User.getInstance().isLoggedInOpenAPI())
 			return;
 		
 		// Check catalogues updates and 
@@ -102,9 +103,10 @@ public class DcfActions {
 						else { // errors
 							if (userLevelListener != null)
 								userLevelListener.handleEvent(null);
-							GlobalUtil.showErrorDialog(shell, 
-									Messages.getString("ExportCatalogue.ErrorTitle"), 
-									Messages.getString("ExportCatUsers.ErrorMessage"));
+							GlobalUtil.showDialog(shell, 
+									Messages.getString("ExportCatalogue.WarningTitle"), 
+									Messages.getString("ExportCatUsers.WarningMessage"),
+									SWT.ICON_INFORMATION);
 						}
 					}
 				});

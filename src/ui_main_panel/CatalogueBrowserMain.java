@@ -31,7 +31,7 @@ import utilities.GlobalUtil;
  * database are started here.
  * 
  * @author avonva
- *
+ * @author shahaal
  */
 public class CatalogueBrowserMain {
 

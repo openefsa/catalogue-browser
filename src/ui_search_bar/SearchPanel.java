@@ -23,7 +23,7 @@ import utilities.GlobalUtil;
 /**
  * This class displays a search bar and a table to host the search results.
  * @author avonva
- *
+ * @author shahaal
  */
 public class SearchPanel implements Observer {
 	

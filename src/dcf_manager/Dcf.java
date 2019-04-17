@@ -34,168 +34,165 @@ import soap.GetDataCollectionsList;
 import soap.Ping;
 
 /**
- * Class to model the DCF. Here we can download
- * catalogues and perform web service operations.
+ * Class to model the DCF. Here we can download catalogues and perform web
+ * service operations.
+ * 
  * @author avonva
  * @author shahaal
  *
  */
 public class Dcf {
-	
+
 	private static final Logger LOGGER = LogManager.getLogger(Dcf.class);
-	
+
 	// get the dcf type and store it for the whole program
-	public static final DcfType dcfType = Config.isProductionEnvironment() ? 
-			DcfType.PRODUCTION : DcfType.TEST;
-	
+	public static final DcfType dcfType = Config.isProductionEnvironment() ? DcfType.PRODUCTION : DcfType.TEST;
+
 	/**
 	 * List of downloaded data collections
 	 */
-	private static ArrayList <DataCollection> dataCollections = null;
-	
-	/**
-	 * A list which contains all the published 
-	 * dcf catalogues
-	 */
-	private static ArrayList <Catalogue> catalogues = null;
+	private static ArrayList<DataCollection> dataCollections = null;
 
 	/**
-	 *  True if we are currently getting catalogue updates
-	 *  false otherwise
+	 * A list which contains all the published dcf catalogues
+	 */
+	private static ArrayList<Catalogue> catalogues = null;
+
+	/**
+	 * True if we are currently getting catalogue updates false otherwise
 	 */
 	private static boolean gettingUpdates = false;
+
 	/**
-	 * Enumerator to identify the dcf
-	 * as test or production type.
+	 * Enumerator to identify the dcf as test or production type.
+	 * 
 	 * @author avonva
 	 *
 	 */
 	public enum DcfType {
-		PRODUCTION,
-		TEST,
-		LOCAL;   // if we are using a local catalogue, a "local" dcf
-		
+		PRODUCTION, TEST, LOCAL; // if we are using a local catalogue, a "local" dcf
+
 		// TODO to be removed
 		public static DcfType fromEnvironment(Environment env) {
 			return env == Environment.PRODUCTION ? PRODUCTION : TEST;
 		}
 	}
-	
 
-	
 	// progress bar
 	private FormProgressBar progressBar;
 
 	/**
-	 * Get all the catalogues which can 
-	 * be downloaded from the dcf
+	 * Get all the catalogues which can be downloaded from the dcf
+	 * 
 	 * @return
 	 */
 	public static ArrayList<Catalogue> getCatalogues() {
 		return catalogues;
 	}
-	
+
 	/**
 	 * Get a catalogue from the official catalogues list by its code
+	 * 
 	 * @param code
 	 * @return
 	 */
-	public static Catalogue getCatalogueByCode( String code ) {
-		for ( Catalogue cat : catalogues ) {
-			if ( cat.getCode().equals( code ) )
+	public static Catalogue getCatalogueByCode(String code) {
+		for (Catalogue cat : catalogues) {
+			if (cat.getCode().equals(code))
 				return cat;
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Get all the dc which were downloaded
+	 * 
 	 * @return
 	 */
 	public static ArrayList<DataCollection> getDataCollections() {
 		return dataCollections;
 	}
-	
+
 	/**
 	 * Get the list of downloadable data collections
+	 * 
 	 * @return
 	 */
 	public static ArrayList<DataCollection> getDownloadableDC() {
-		
+
 		ArrayList<DataCollection> out = new ArrayList<>();
-		
-		if ( dataCollections == null )
+
+		if (dataCollections == null)
 			return out;
-		
-		for ( DataCollection dc : dataCollections ) {
-			if ( dc.isActive() && !dc.alreadyImported() )
-				out.add( dc );
+
+		for (DataCollection dc : dataCollections) {
+			if (dc.isActive() && !dc.alreadyImported())
+				out.add(dc);
 		}
-		
+
 		return out;
 	}
 
 	/**
-	 * Get the codes of the catalogues which need to be updated or are new
-	 * compared to the ones that I already have downloaded in my pc.
+	 * Get the codes of the catalogues which need to be updated or are new compared
+	 * to the ones that I already have downloaded in my pc.
 	 * 
-	 * A list which contains all the catalogues 
-	 * which can be downloaded compared to the ones we
-	 * have already downloaded in our local machine. This
-	 * means that this list contains all the catalogues we
-	 * don't have and the catalogues which need an update
-	 * compared to the version we have in our machine.
+	 * A list which contains all the catalogues which can be downloaded compared to
+	 * the ones we have already downloaded in our local machine. This means that
+	 * this list contains all the catalogues we don't have and the catalogues which
+	 * need an update compared to the version we have in our machine.
+	 * 
 	 * @return
 	 */
-	public static ArrayList <Catalogue> getDownloadableCat () {
-		
+	public static ArrayList<Catalogue> getDownloadableCat() {
+
 		// list of catalogues from which the user can select
 		// we want them to be only the catalogues which have not been downloaded yet
 		// or catalogues updates
-		ArrayList <Catalogue> catalogueToShow = new ArrayList<>();
+		ArrayList<Catalogue> catalogueToShow = new ArrayList<>();
 
-		if ( catalogues == null || catalogues.isEmpty() )
+		if (catalogues == null || catalogues.isEmpty())
 			return catalogueToShow;
-		
+
 		CatalogueDAO catDao = new CatalogueDAO();
-		
-		// get the catalogues which are currently 
+
+		// get the catalogues which are currently
 		// present into the user database
 		// at their last release status!
-		ArrayList < Catalogue > myCatalogues = catDao.getMyCatalogues(dcfType);
-		
+		ArrayList<Catalogue> myCatalogues = catDao.getMyCatalogues(dcfType);
+
 		// Check for each official catalogues
 		// if we already have it downloaded or not
-		for ( Catalogue cat : catalogues ) {
+		for (Catalogue cat : catalogues) {
 
 			boolean addCat = true;
-			
+
 			// for each already downloaded catalogue
-			for ( Catalogue myCat : myCatalogues ) {
+			for (Catalogue myCat : myCatalogues) {
 
 				// skip if same code and version (i.e.,
 				// the same catalogue is already downloaded)
-				if ( myCat.sameAs( cat ) ) {
+				if (myCat.sameAs(cat)) {
 					addCat = false;
 					continue;
 				}
 			}
-			
+
 			// if we can add the catalogue add it
-			if ( addCat ) 
-				catalogueToShow.add( cat );
+			if (addCat)
+				catalogueToShow.add(cat);
 		}
 
 		// sort catalogues by label and version
-		Collections.sort( catalogueToShow );
-		
+		Collections.sort(catalogueToShow);
+
 		return catalogueToShow;
 	}
-	
+
 	/**
-	 * Is the application getting the catalogues updates
-	 * from the dcf?
+	 * Is the application getting the catalogues updates from the dcf?
+	 * 
 	 * @return
 	 */
 	public static boolean isGettingUpdates() {
@@ -204,6 +201,7 @@ public class Dcf {
 
 	/**
 	 * Are the catalogue meta data being downloaded now?
+	 * 
 	 * @param gettingUpdates
 	 */
 	public static void setGettingUpdates(boolean gettingUpdates) {
@@ -212,148 +210,153 @@ public class Dcf {
 
 	/**
 	 * Get the last release of a catalogue
+	 * 
 	 * @param catalogue
 	 * @return
 	 */
-	public static Catalogue getLastPublishedRelease ( Catalogue catalogue ) {
+	public static Catalogue getLastPublishedRelease(Catalogue catalogue) {
 
-		if ( catalogues == null ) {
-			return null; 
+		if (catalogues == null) {
+			return null;
 		}
 
 		// get the catalogue in the dcf list
 		// using only its code
-		int index = catalogues.indexOf( catalogue );
+		int index = catalogues.indexOf(catalogue);
 
 		// if not found
-		if ( index == -1 )
+		if (index == -1)
 			return null;
 
-		return catalogues.get( index );
+		return catalogues.get(index);
 	}
 
 	/**
-	 * Refresh the catalogues of the dcf downloading their
-	 * meta data. Refresh also the downloadable catalogues.
+	 * Refresh the catalogues of the dcf downloading their meta data. Refresh also
+	 * the downloadable catalogues.
 	 */
 	public void refreshCatalogues() {
-		
+
 		// flag to say that we are getting the updates
 		gettingUpdates = true;
-		
-		// get all the dcf catalogues and save them
 
+		// get all the dcf catalogues and save them
 		catalogues = getCataloguesList();
 
 		if (catalogues == null)
 			return;
-		
+
 		// sort catalogues by label and version
-		Collections.sort( catalogues );
+		Collections.sort(catalogues);
 
 		// we have finished to get updates
 		gettingUpdates = false;
 	}
-	
+
 	/**
 	 * Refresh the data collections list in background
 	 */
 	public void refreshDataCollections() {
-		
-		Thread t = new Thread(
-			new Runnable() {
-			
+
+		Thread t = new Thread(new Runnable() {
+
 			@Override
 			public void run() {
-				
+
 				gettingUpdates = true;
-				
+
 				dataCollections = getDataCollectionsList();
-				
+
 				gettingUpdates = false;
 			}
 		});
-		
+
 		t.start();
 	}
-	
+
 	/**
-	 * Set a progress bar which is called for
-	 * webservices.
+	 * Set a progress bar which is called for webservices.
+	 * 
 	 * @param progressBar
 	 */
-	public void setProgressBar ( FormProgressBar progressBar ) {
+	public void setProgressBar(FormProgressBar progressBar) {
 		this.progressBar = progressBar;
 	}
-	
+
 	/**
 	 * Set the progress bar title
+	 * 
 	 * @param title
 	 */
-	public void setProgressBarTitle ( String title ) {
-		if ( progressBar != null )
-			progressBar.setLabel( title );
+	public void setProgressBarTitle(String title) {
+		if (progressBar != null)
+			progressBar.setLabel(title);
 	}
-	
+
 	/**
 	 * Make a ping to the dcf
+	 * 
 	 * @return true if the dcf is responding correctly
-	 * @throws SOAPException 
+	 * @throws SOAPException
 	 */
 	public boolean ping() throws SOAPException {
 		Ping ping = new Ping();
 		return ping.ping(Config.getEnvironment(), User.getInstance());
 	}
-	
+
 	/**
-	 * Start the thread which checks the user access
-	 * level (see {@link UserAccessLevel} ).
-	 * @param doneListener {@link Listener } called when
-	 * the thread has finished its work.
+	 * Start the thread which checks the user access level (see
+	 * {@link UserAccessLevel} ).
+	 * 
+	 * @param doneListener {@link Listener } called when the thread has finished its
+	 *                     work.
 	 */
-	public void setUserLevel( ThreadFinishedListener doneListener ) {
-		
+	public void setUserLevel(ThreadFinishedListener doneListener) {
+
 		// set the access level of the user
 		final UserProfileChecker userLevel = new UserProfileChecker();
-		
-		userLevel.addDoneListener( doneListener );
 
-		userLevel.setProgressBar( progressBar );
-		
+		userLevel.addDoneListener(doneListener);
+
+		userLevel.setProgressBar(progressBar);
+
 		userLevel.start();
 	}
-	
+
 	/**
-	 * Get the catalogues updates from the dcf. In particular,
-	 * we download the all the published catalogues (only metadata)
-	 * and refresh the dcf catalogues cache ( {@link Dcf#catalogues} )
+	 * Get the catalogues updates from the dcf. In particular, we download the all
+	 * the published catalogues (only metadata) and refresh the dcf catalogues cache
+	 * ( {@link Dcf#catalogues} )
+	 * 
 	 * @param doneListener
 	 */
-	public void checkUpdates ( Listener doneListener ) {
-		
+	public void checkUpdates(Listener doneListener) {
+
 		// start downloading the catalogues updates (meta data only)
 		final UpdatesChecker catUpdates = new UpdatesChecker();
-		
+
 		// set the listener
-		catUpdates.setUpdatesListener( doneListener );
-		
+		catUpdates.setUpdatesListener(doneListener);
+
 		catUpdates.start();
 	}
-	
+
 	/**
-	 * Get the list of all the dcf catalogues (only published)
-	 * Note that these catalogues has as {@link DcfType}
-	 * the one used in the dcf (either {@link DcfType#TEST}
-	 * or {@link DcfType#PRODUCTION})
+	 * Get the list of all the dcf catalogues (only published) Note that these
+	 * catalogues has as {@link DcfType} the one used in the dcf (either
+	 * {@link DcfType#TEST} or {@link DcfType#PRODUCTION})
+	 * 
 	 * @return array list of dcf published catalogues
 	 */
 	public ArrayList<Catalogue> getCataloguesList() {
-		
+
 		CataloguesList list = new CataloguesList();
-		
+
 		try {
-			GetCataloguesList<Catalogue> req = new GetCataloguesList<>();
-			req.getList(Config.getEnvironment(), User.getInstance(), list);
+			User user = User.getInstance();
+			
+			GetCataloguesList<Catalogue> req = new GetCataloguesList<>(user.isOpeanapi());
+			req.getList(Config.getEnvironment(), user, list);
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.error("Cannot get catalogues list", e);
@@ -361,19 +364,22 @@ public class Dcf {
 
 		return list;
 	}
-	
+
 	/**
 	 * Get all the data collections related to the current user
+	 * 
 	 * @return
 	 */
 	public ArrayList<DataCollection> getDataCollectionsList() {
-		
+
 		DataCollectionsList list = new DataCollectionsList();
-		
+
 		try {
-			new Config();
-			GetDataCollectionsList<DataCollection> req = new GetDataCollectionsList<>();
-			req.getList(Config.getEnvironment(), User.getInstance(), list);
+			User user = User.getInstance();
+
+			GetDataCollectionsList<DataCollection> req = new GetDataCollectionsList<>(user.isLoggedInOpenAPI());
+			req.getList(Config.getEnvironment(), user, list);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.error("Cannot get data collections", e);
@@ -381,80 +387,85 @@ public class Dcf {
 
 		return list;
 	}
-	
+
 	/**
 	 * Get a resource file using its resource id
+	 * 
 	 * @param resourceId
 	 * @return
 	 * @throws SOAPException
-	 * @throws XMLStreamException 
-	 * @throws IOException 
+	 * @throws XMLStreamException
+	 * @throws IOException
 	 */
-	public Collection<DCTable> getFile( String resourceId ) throws SOAPException, IOException, XMLStreamException {
-		
+	public Collection<DCTable> getFile(String resourceId) throws SOAPException, IOException, XMLStreamException {
+
 		DCTableList output = new DCTableList();
-		new Config();
+
+		User user = User.getInstance();
+		
 		GetDataCollectionTables<DCTable> req = new GetDataCollectionTables<>();
-		
-		req.getTables(Config.getEnvironment(), User.getInstance(), resourceId, output);
-		
+		req.getTables(Config.getEnvironment(), user, resourceId, output);
+
 		return output;
 	}
-	
+
 	/**
-	 * Download a dcf catalogue into the local machine. The
-	 * catalogue is downloaded in xml format.
+	 * Download a dcf catalogue into the local machine. The catalogue is downloaded
+	 * in xml format.
+	 * 
 	 * @param catalogue the catalogue we want to download
-	 * @param filename the xml filename
+	 * @param filename  the xml filename
 	 * @return true if the export was successful
-	 * @throws SOAPException 
+	 * @throws SOAPException
 	 */
 	public File exportCatalogue(Catalogue catalogue) throws SOAPException {
-		new Config();
+		
+		User user = User.getInstance();
+		
 		// export the catalogue and save its attachment into an xml file
 		ExportCatalogueFile export = new ExportCatalogueFile();
-		return export.exportCatalogue(Config.getEnvironment(), User.getInstance(), catalogue.getCode());
+		return export.exportCatalogue(Config.getEnvironment(), user, catalogue.getCode());
 	}
-	
+
 	/**
 	 * Export a log from the dcf given its code
-	 * @param logCode the code of the log which needs to
-	 * be downloaded
+	 * 
+	 * @param logCode the code of the log which needs to be downloaded
 	 * @return the file which points to the log file
-	 * @throws SOAPException 
+	 * @throws SOAPException
 	 */
-	public File exportLog ( String logCode ) throws SOAPException {
+	public File exportLog(String logCode) throws SOAPException {
 		
-		new Config();
+		User user = User.getInstance();
+		
 		// ask for the log to the dcf
 		ExportCatalogueFile export = new ExportCatalogueFile();
 
 		// write the log document in xml format
-		return export.exportLog(Config.getEnvironment(), User.getInstance(), logCode);
+		return export.exportLog(Config.getEnvironment(), user, logCode);
 	}
 
 	/**
-	 * Export the last internal version of a catalogue into the selected
-	 * filename. If no internal version is retrieved no action is
-	 * performed.
-	 * @param catalogueCode the code which identifies the catalogue
-	 * we want to download
-	 * @param filename the filename in which we want to store the
-	 * last internal version of the catalogue
+	 * Export the last internal version of a catalogue into the selected filename.
+	 * If no internal version is retrieved no action is performed.
+	 * 
+	 * @param catalogueCode the code which identifies the catalogue we want to
+	 *                      download
+	 * @param filename      the filename in which we want to store the last internal
+	 *                      version of the catalogue
 	 * @return the file which was created
 	 * @throws IOException
-	 * @throws SOAPException 
+	 * @throws SOAPException
 	 */
-	public File exportCatalogueInternalVersion (String catalogueCode) 
-			throws IOException, SOAPException {
-		
-		new Config();
+	public File exportCatalogueInternalVersion(String catalogueCode) throws IOException, SOAPException {
+
+		User user = User.getInstance();
 		
 		// ask for the log to the dcf
 		ExportCatalogueFile export = new ExportCatalogueFile();
 
 		// get the catalogue xml as input stream
-		File file = export.exportLastInternalVersion(Config.getEnvironment(), User.getInstance(), catalogueCode);
+		File file = export.exportLastInternalVersion(Config.getEnvironment(), user, catalogueCode);
 
 		return file;
 	}

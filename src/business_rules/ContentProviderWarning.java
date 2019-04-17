@@ -11,7 +11,6 @@ public class ContentProviderWarning implements IStructuredContentProvider {
 
 	public void inputChanged ( Viewer arg0 , Object arg1 , Object arg2 ) {}
 
-	@SuppressWarnings("unchecked")
 	public Object[] getElements ( Object warnings ) {
 		ArrayList< String > l = (ArrayList< String >) warnings;
 		return l.toArray();

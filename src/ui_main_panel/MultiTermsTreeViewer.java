@@ -307,14 +307,14 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 	 * @param term
 	 */
 	public void selectTerm ( Nameable term ) {
-		selectTerm( term, 0, true );
+		selectTerm( term, 0);
 	}
 	
 	/**
 	 * Select a term of the tree viewer, expand tree to the selected level
 	 * @param term
 	 */
-	public void selectTerm ( Nameable term, int level, boolean flag) {
+	public void selectTerm ( Nameable term, int level) {
 		
 		if (term == null)
 			return;
@@ -337,7 +337,7 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 	public void expandSelectedTerms ( int level ) { 
 		
 		for ( Nameable term : getSelectedTerms() )
-			selectTerm( term, level, true);
+			selectTerm( term, level);
 	}
 	
 	/**

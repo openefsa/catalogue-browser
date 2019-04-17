@@ -12,28 +12,30 @@ import org.eclipse.swt.widgets.Shell;
 import dcf_user.User;
 import messages.Messages;
 import ui_main_panel.FormDCFLogin;
+import ui_main_panel.FormOpenapiLogin;
 import utilities.GlobalUtil;
 
 /**
- * class that allows to login and logout from DCF
+ * class that allows to login/logout from DCF or OpenApi portal
  * 
  * @author shahaal
  *
  */
-public class DcfMenu implements MainMenuItem {
+public class AccountMenu implements MainMenuItem {
 
 	public static final int DCF_LOGIN_MI = 0;
 	public static final int DCF_LOGOUT_MI = 1;
-	
+
 	private MenuListener listener;
 
-	private MenuItem loginItem; // login
+	private MenuItem DCFLoginItem; // login dcf
+	private MenuItem OpenAPILoginItem; // login with openapi portal
 	private MenuItem logoutItem;// logout
 
 	private Shell shell;
 	private MainMenu mainMenu;
 
-	public DcfMenu(MainMenu mainMenu, Menu menu) {
+	public AccountMenu(MainMenu mainMenu, Menu menu) {
 		this.mainMenu = mainMenu;
 		this.shell = mainMenu.getShell();
 		create(menu);
@@ -49,22 +51,23 @@ public class DcfMenu implements MainMenuItem {
 	}
 
 	/**
-	 * Create the DCF menu in the main menu and its sub menu items
+	 * Create the account menu in the main menu and its sub menu items
 	 * 
 	 * @param menu
 	 */
 	public MenuItem create(Menu menu) {
 
-		Menu dcfMenu = new Menu(menu);
-		
-		MenuItem dcfItem = new MenuItem(menu, SWT.CASCADE);
-		dcfItem.setText(Messages.getString("BrowserMenu.DCFMenuName"));
-		dcfItem.setMenu(dcfMenu);
+		Menu accountMenu = new Menu(menu);
 
-		loginItem = addLoginMI(dcfMenu);
-		logoutItem = addLogoutMI(dcfMenu);
+		MenuItem accountItem = new MenuItem(menu, SWT.CASCADE);
+		accountItem.setText(Messages.getString("BrowserMenu.AccountMenuName"));
+		accountItem.setMenu(accountMenu);
 
-		dcfMenu.addListener(SWT.Show, new Listener() {
+		DCFLoginItem = addDCFLoginMI(accountMenu);
+		OpenAPILoginItem = addOpenLoginMI(accountMenu);
+		logoutItem = addLogoutMI(accountMenu);
+
+		accountMenu.addListener(SWT.Show, new Listener() {
 
 			@Override
 			public void handleEvent(Event arg0) {
@@ -72,18 +75,18 @@ public class DcfMenu implements MainMenuItem {
 			}
 		});
 
-		return dcfItem;
+		return accountItem;
 	}
 
 	/**
-	 * Add a menu item which allows seeing the derby licence
+	 * Add a menu item which allows to login into the DCF
 	 * 
 	 * @param menu
 	 */
-	private MenuItem addLoginMI(Menu menu) {
+	private MenuItem addDCFLoginMI(Menu menu) {
 
 		final MenuItem loginItem = new MenuItem(menu, SWT.NONE);
-		loginItem.setText(Messages.getString("BrowserMenu.LoginMenuName"));
+		loginItem.setText(Messages.getString("BrowserMenu.DCFLoginMenuName"));
 
 		loginItem.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -92,10 +95,44 @@ public class DcfMenu implements MainMenuItem {
 				FormDCFLogin login = new FormDCFLogin(shell, Messages.getString("BrowserMenu.DCFLoginWindowTitle"));
 
 				login.display();
-				
+
 				// if wrong credentials return
 				if (!login.isValid())
 					return;
+
+				DcfActions.startLoginThreads(shell, null);
+
+				// disable tools menu until we have
+				// obtained the user access level
+				// (avoid concurrence editing in db)
+				mainMenu.tools.setEnabled(false);
+
+				if (listener != null)
+					listener.buttonPressed(loginItem, DCF_LOGIN_MI, null);
+			}
+
+		});
+
+		return loginItem;
+	}
+	
+	/**
+	 * Add a menu item which allows to login using the openapi credentials
+	 * 
+	 * @param menu
+	 */
+	private MenuItem addOpenLoginMI(Menu menu) {
+
+		final MenuItem loginItem = new MenuItem(menu, SWT.NONE);
+		loginItem.setText(Messages.getString("BrowserMenu.OpenAPILoginMenuName"));
+
+		loginItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+
+				FormOpenapiLogin login = new FormOpenapiLogin(shell, Messages.getString("BrowserMenu.OpenAPILoginWindowTitle"));
+
+				login.display();
 				
 				DcfActions.startLoginThreads(shell, null);
 
@@ -114,7 +151,7 @@ public class DcfMenu implements MainMenuItem {
 	}
 
 	/**
-	 * Add a menu item which allows seeing the licence of the foodex browser
+	 * Add a menu item which allows to logout from dcf or OpenAPI portal
 	 * 
 	 * @param menu
 	 */
@@ -133,17 +170,17 @@ public class DcfMenu implements MainMenuItem {
 				User.getInstance().deleteCredentials();
 				// set the instance at null
 				User.getInstance().removeUser();
-				
-				String title=Messages.getString("BrowserMenu.DCFLogoutWindowTitle");
-				String msg=Messages.getString("BrowserMenu.DCFLogout.message");
-				
+
+				String title = Messages.getString("BrowserMenu.DCFLogoutWindowTitle");
+				String msg = Messages.getString("BrowserMenu.DCFLogout.message");
+
 				GlobalUtil.showDialog(shell, title, msg, SWT.ICON_INFORMATION);
 
 				if (listener != null)
 					listener.buttonPressed(logoutItem, DCF_LOGOUT_MI, null);
 			}
 		});
-		
+
 		return logoutItem;
 	}
 
@@ -151,12 +188,15 @@ public class DcfMenu implements MainMenuItem {
 	 * Refresh all the menu items contained in the tool menu
 	 */
 	public void refresh() {
+
+		User user = User.getInstance();
 		
 		// check if the current catalogue is not empty (has data in it)
-		boolean isLoggedIn = User.getInstance().isLoggedIn();
-		
-		loginItem.setEnabled(!isLoggedIn);
+		boolean isLoggedIn = user.isLoggedIn() || user.isLoggedInOpenAPI();
+
+		DCFLoginItem.setEnabled(!isLoggedIn);
+		OpenAPILoginItem.setEnabled(!isLoggedIn);
 		logoutItem.setEnabled(isLoggedIn);
-		
+
 	}
 }

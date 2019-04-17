@@ -23,7 +23,7 @@ import dcf_user.User;
  * the combo box in editing mode. This is useful since the combo box allows modifying 
  * the values while the text box is read only.
  * @author avonva
- *
+ * @author shahaal
  */
 public class ComboTextBox {
 	

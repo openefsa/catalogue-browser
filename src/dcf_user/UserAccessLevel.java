@@ -5,6 +5,7 @@ package dcf_user;
  * data provider (i.e. read only) or catalogue
  * manager (i.e. edit mode on).
  * @author avonva
+ * @author shahaal
  *
  */
 public enum UserAccessLevel {

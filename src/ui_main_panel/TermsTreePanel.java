@@ -248,8 +248,8 @@ public class TermsTreePanel extends Observable implements Observer {
 	 * 
 	 * @param term
 	 */
-	public void selectTerm(Nameable term, boolean flag) {
-		tree.selectTerm(term, 0, flag);
+	public void selectTerm(Nameable term) {
+		tree.selectTerm(term, 0);
 	}
 
 	/**
@@ -258,7 +258,7 @@ public class TermsTreePanel extends Observable implements Observer {
 	 * @param term
 	 */
 	public void selectTerm(Nameable term, int level) {
-		tree.selectTerm(term, level, true);
+		tree.selectTerm(term, level);
 	}
 
 	/**
@@ -324,7 +324,7 @@ public class TermsTreePanel extends Observable implements Observer {
 		// allow drag n drop
 		tree.addDragAndDrop();
 
-		// albydev: set the focus when enter the tree
+		// shahaal: set the focus when enter the tree
 		// check before if the search field is not selected
 		tree.getTreeViewer().getTree().addListener(SWT.MouseEnter, new Listener() {
 			public void handleEvent(Event event) {

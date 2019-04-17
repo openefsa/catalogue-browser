@@ -34,11 +34,12 @@ public class MainMenu extends Observable implements Observer {
 	private ViewMenu view; // view menu
 	ToolsMenu tools; // tools menu
 	private MainMenuItem about; // about menu
-	private DcfMenu dcf; // dcf button
+	private AccountMenu account; // account menu
 	MenuListener fileListener;
 	MenuListener viewListener;
 	MenuListener toolsListener;
-	MenuListener dcfListener;
+	MenuListener accountListener;
+	MenuListener openapiListener;
 
 	/**
 	 * Initialize the main menu
@@ -81,10 +82,10 @@ public class MainMenu extends Observable implements Observer {
 
 		new ProxyMenu(mainMenu, mainMenu.getShell());
 
-		// dcf menu for login/logout
-		dcf = new DcfMenu(this, mainMenu);
-		dcf.setListener(dcfListener);
-
+		// account menu for login/logout DCF
+		account = new AccountMenu(this, mainMenu);
+		account.setListener(accountListener);
+		
 		return mainMenu;
 	}
 
@@ -107,7 +108,7 @@ public class MainMenu extends Observable implements Observer {
 				view.refresh();
 				tools.refresh();
 				about.refresh();
-				dcf.refresh();
+				account.refresh();
 			}
 		});
 	}
@@ -200,6 +201,6 @@ public class MainMenu extends Observable implements Observer {
 	 * @param loginListener
 	 */
 	public void setDcfListener(MenuListener dcfListener) {
-		this.dcfListener = dcfListener;
+		this.accountListener = dcfListener;
 	}
 }
