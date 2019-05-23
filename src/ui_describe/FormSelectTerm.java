@@ -57,12 +57,12 @@ public class FormSelectTerm implements Observer {
 
 	private RestoreableWindow window;
 	private static final String WINDOW_CODE = "FormSelectTerm";
-	
-	//shahaal
+
+	// shahaal
 	public static Boolean instanceExists = false;
 
 	// output list
-	private ArrayList<Nameable> selectedTerms;
+	private ArrayList<Term> selectedTerms;
 
 	private boolean multi; // multiple selection is enabled?
 	private Catalogue catalogue; // the catalogue which contains the objects to show
@@ -88,8 +88,7 @@ public class FormSelectTerm implements Observer {
 	 * 
 	 * @param shell
 	 * @param title
-	 * @param multiSel
-	 *            true to enable multiple selection of objects
+	 * @param multiSel true to enable multiple selection of objects
 	 */
 
 	public FormSelectTerm(Shell shell, String title, Catalogue catalogue, boolean enableMultipleSelection,
@@ -109,7 +108,7 @@ public class FormSelectTerm implements Observer {
 
 		selectedTerms = new ArrayList<>();
 
-		//shahaal var used to check if an instance of the class already exists
+		// shahaal var used to check if an instance of the class already exists
 		FormSelectTerm.instanceExists = true;
 	}
 
@@ -123,7 +122,7 @@ public class FormSelectTerm implements Observer {
 	 * 
 	 * @return
 	 */
-	public ArrayList<Nameable> getSelectedTerms() {
+	public ArrayList<Term> getSelectedTerms() {
 		return selectedTerms;
 	}
 
@@ -183,13 +182,14 @@ public class FormSelectTerm implements Observer {
 	 */
 	public void display() {
 
-		//shahaal if coming from reportability tab then dont let the user to surf the main page
+		// shahaal if coming from reportability tab then dont let the user to surf the
+		// main page
 		if (flag)
 			dialog = new Shell(shell, SWT.SHELL_TRIM | SWT.APPLICATION_MODAL);
 		// otherwise u are coming from the describe window
 		else
 			dialog = new Shell(shell, SWT.SHELL_TRIM | SWT.MODELESS);
-		
+
 		// prevent user close what is behind
 		dialog.forceFocus();
 		dialog.forceActive();
@@ -238,7 +238,7 @@ public class FormSelectTerm implements Observer {
 				dialog.setEnabled(false);
 				FormDescribeSearchResult resultsForm = new FormDescribeSearchResult(dialog,
 						Messages.getString("FormSelectTerm.SearchResultWindowTitle"), rootHierarchy, searchResults);
-				
+
 				resultsForm.setHideDeprecated(termFilter.isHidingDeprecated());
 				resultsForm.setHideNotInUse(termFilter.isHidingNotReportable());
 
@@ -429,12 +429,9 @@ public class FormSelectTerm implements Observer {
 				// get the checked term
 				Term term = (Term) arg0.getElement();
 
-				if (arg0.getChecked()) {
-
-					// if the term is not already present add it
-					if (!selectedDescriptors.contains(term))
-						selectedDescriptors.addTerm(term);
-				} else
+				if (arg0.getChecked())
+					selectedDescriptors.addTerm(term);
+				else
 					selectedDescriptors.removeTerm(term);
 			}
 		});
@@ -525,7 +522,7 @@ public class FormSelectTerm implements Observer {
 
 				// get the selected term which has to be removed
 				final Term selectedTerm = (Term) event.data;
-				
+
 				// remove check from tree
 				tree.selectTerm(selectedTerm);
 
@@ -562,20 +559,20 @@ public class FormSelectTerm implements Observer {
 		if (multi) {
 
 			// add all the checked terms
-			for (Nameable obj : tree.getCheckedTerms()) {
+			for (Term obj : tree.getCheckedTerms()) {
 				selectedTerms.add(obj);
 			}
 
 			// if no element was checked, then add the selected
 			// term (if there is one)
 			if (selectedTerms.isEmpty() && !tree.isSelectionEmpty()) {
-				selectedTerms.add(tree.getFirstSelectedObj());
+				selectedTerms.add(tree.getFirstSelectedTerm());
 			}
 		} else {
 
 			// add the selected term if it was set
 			if (!tree.isSelectionEmpty()) {
-				selectedTerms.add(tree.getFirstSelectedObj());
+				selectedTerms.add(tree.getFirstSelectedTerm());
 			}
 		}
 	}

@@ -113,7 +113,7 @@ public class SearchPanel implements Observer {
 				
 				// get the applicable hierarchies of the term
 				ArrayList<Hierarchy> termApplicableHierarchies = selectedTerm.getApplicableHierarchies();
-
+				
 				// if there are applicable hierarchies then
 				if ( termApplicableHierarchies != null ) {
 
@@ -122,7 +122,11 @@ public class SearchPanel implements Observer {
 
 						// get the current hierarchy
 						final Hierarchy selectedHierarchy = termApplicableHierarchies.get( i );
-
+						
+						// shahaal if the term is dismissed in the hierarchy than dont add it to the menu
+						if(selectedTerm.isDismissed(selectedHierarchy)&&searchBar.getNotInUseFlag())
+							continue;
+						
 						// add a menu item for each applicable hierarchy
 						// if a menu item is clicked an external listener is called passing
 						// as parameter the selected hierarchy and the selected term

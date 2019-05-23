@@ -33,9 +33,9 @@ import utilities.GlobalUtil;
  * @author shahaal
  *
  */
-public class FormDCFLogin {
+public class FormDcfLogin {
 	
-	private static final Logger LOGGER = LogManager.getLogger(FormDCFLogin.class);
+	private static final Logger LOGGER = LogManager.getLogger(FormDcfLogin.class);
 	
 	//private RestoreableWindow window;
 	//private static final String WINDOW_CODE = "FormDCFLogin";
@@ -59,7 +59,7 @@ public class FormDCFLogin {
 	 * @param shell
 	 * @param title
 	 */
-	public FormDCFLogin( Shell shell, String title ) {
+	public FormDcfLogin( Shell shell, String title ) {
 		this.shell = shell;
 		this.title = title;
 		this.valid = false;
@@ -269,9 +269,7 @@ public class FormDCFLogin {
 	 * @throws SOAPException 
 	 */
 	private boolean checkCredentials ( String username, String password ) throws DetailedSOAPException {
-		
-		User user = User.getInstance();
-		return user.loginWithDcf( usernameText.getText(), 
+		return User.getInstance().loginWithDcf( usernameText.getText(), 
 				passwdText.getText(), true);
 	}
 	

@@ -21,32 +21,29 @@ public class ICT {
 	private static final Logger LOGGER = LogManager.getLogger(ICT.class);
 
 	/**
-	 * call all the methods needed for the
-	 * installation of the ICT
+	 * call all the methods needed for the installation of the ICT
+	 * @return 
+	 * 
 	 * @return
-	 * @throws IOException 
-	 * @throws ZipException 
+	 * @throws IOException
+	 * @throws ZipException
 	 */
-	public void installICT() throws ZipException, IOException {
+	public void installICT() throws IOException {
 
 		String utilsZipFile = GlobalUtil.UTILS_FILE_PATH;
 
 		// extract the zip folder
-		LOGGER.info("Starting extraction process...");
-		ZipManager.extractFolder(utilsZipFile, GlobalUtil.MAIN_DIR);
-		
-		// remove the zip file when the extraction has finished
-		LOGGER.info("Removing utils.zip file...");
-		removeZipFile(utilsZipFile);
+		LOGGER.info("Extracting the folder content...");
+		ZipManager.extractFolder(utilsZipFile, GlobalUtil.ICT_DIR_PATH);
 
-		// install ict
-		LOGGER.info("Setting up ICT...");
-		setupICT();
+		// remove the zip file when the extraction has finished
+		LOGGER.info("Removing zip file...");
+		removeZipFile(utilsZipFile);
 
 		// copy database
 		LOGGER.info("Creating ICT database...");
 		createDatabase();
-			
+
 	}
 
 	/**
@@ -64,34 +61,11 @@ public class ICT {
 	}
 
 	/**
-	 * the method moves the files of the "utils" folder
-	 * 
-	 * @author shahaal
-	 * @throws IOException
-	 */
-	private void setupICT() {
-
-		// get the utils folder
-		File utils = new File(GlobalUtil.UTILS_FOLDER_PATH);
-
-		// check if utils exists and is a folder
-		if (utils.exists() && utils.isDirectory()) {
-
-			// move all files into the interpreting folder
-			for (File subFile : utils.listFiles())
-				GlobalUtil.moveFile(subFile.getAbsolutePath(), GlobalUtil.getIctDir() + subFile.getName());
-
-			// remove folder (must be empty)
-			utils.delete();
-		}
-	}
-
-	/**
 	 * the method copies only the following folder into ict db (from main db):
 	 * PRODUCTION, CAT_MTX_DB
 	 * 
 	 * @author shahaal
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public void createDatabase() throws IOException {
 
@@ -99,8 +73,7 @@ public class ICT {
 		GlobalUtil.deleteFileCascade(GlobalUtil.ICT_DATABASE_DIR_PATH);
 
 		// copy main cat folder into the ict database one
-		GlobalUtil.copyFile(new File(DatabaseManager.MAIN_CAT_DB_FOLDER),
-				new File(GlobalUtil.ICT_MAIN_CAT_DB_PATH));
+		GlobalUtil.copyFile(new File(DatabaseManager.MAIN_CAT_DB_FOLDER), new File(GlobalUtil.ICT_MAIN_CAT_DB_PATH));
 
 		File lastMtxVersion = getLastMtxVersion();
 
@@ -111,7 +84,7 @@ public class ICT {
 		GlobalUtil.copyFile(lastMtxVersion, new File(GlobalUtil.ICT_MTX_CAT_DB_FOLDER + lastMtxVersion.getName()));
 
 		LOGGER.info("ICT correctly installed");
-			
+
 	}
 
 	/**
@@ -125,6 +98,9 @@ public class ICT {
 		File catMtxDb = new File(DatabaseManager.MTX_CAT_DB_FOLDER);
 
 		File[] folders = catMtxDb.listFiles();
+
+		if (folders == null)
+			return null;
 
 		double latestVersion = 0.0;
 		File lastMtxFolder = null;

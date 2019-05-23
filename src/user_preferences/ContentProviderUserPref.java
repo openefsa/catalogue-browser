@@ -15,7 +15,6 @@ public class ContentProviderUserPref implements IStructuredContentProvider {
 
 	public Object[] getElements ( Object list ) {
 		
-		@SuppressWarnings("unchecked")
 		ArrayList< CataloguePreference > l = ( ArrayList< CataloguePreference > ) list;
 		return l.toArray();
 	}

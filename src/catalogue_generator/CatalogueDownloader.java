@@ -6,12 +6,17 @@ import javax.xml.soap.SOAPException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 
 import catalogue.AttachmentNotFoundException;
 import catalogue.Catalogue;
 import messages.Messages;
 import progress_bar.FormProgressBar;
 import progress_bar.IProgressBar;
+import soap.DetailedSOAPException;
+import utilities.GlobalUtil;
 
 /**
  * Thread used to download a catalogue in background. If needed,
@@ -19,7 +24,9 @@ import progress_bar.IProgressBar;
  * If you need to perform actions when the download is finished, specify them
  * in the {@link ThreadFinishedListener} using the
  * {@link #setDoneListener(ThreadFinishedListener)} method.
+ * 
  * @author avonva
+ * @author shahaal
  *
  */
 public class CatalogueDownloader extends Thread {
@@ -46,9 +53,20 @@ public class CatalogueDownloader extends Thread {
 		try {
 			downloadAndImport();
 		} catch (SOAPException e) {
+			
+			//shahaal show the error message for openapi users
+			if (e instanceof DetailedSOAPException) {
+				
+				String[] warning = GlobalUtil.getSOAPWarning((DetailedSOAPException) e);
+				Display display = new Display();
+				GlobalUtil.showErrorDialog(new Shell(display, SWT.ON_TOP), warning[0], warning[1]);
+			}
+			
 			e.printStackTrace();
 			LOGGER.error("Cannot download/import catalogue=" + catalogue, e);
+			
 			stop ( ThreadFinishedListener.EXCEPTION, e );
+			
 		} catch (AttachmentNotFoundException e) {
 			stop ( ThreadFinishedListener.ERROR, e );
 		}

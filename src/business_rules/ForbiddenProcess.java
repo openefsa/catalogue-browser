@@ -8,7 +8,7 @@ package business_rules;
  * list (with its own code). Moreover, the processes have to be applied with a
  * particular order, therefore we check that order with the ordCode field.
  * 
- * @author Valentino
+ * @author avonva
  * @author shahaal
  */
 public class ForbiddenProcess {

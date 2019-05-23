@@ -72,9 +72,9 @@ import window_restorer.RestoreableWindow;
  * attributes, implicit facets, applicabilities...), a search bar, a combo box
  * to select the current hierarchy or facet list...
  * 
- * @author shahaal
+ * @author Shahaj Alban 
  * @author Thomas Milani(documentation)
- * @author Valentino Avon
+ * @author Avon Valentino
  * 
  * @version 0.2.1
  */
@@ -439,14 +439,14 @@ public class MainPanel implements Observer {
 
 				if (shell.getMenu() != null)
 					shell.getMenu().dispose();
-
+				
 				// redraw the main menu to refresh buttons
 				shell.setMenuBar(menu.createMainMenu());
 				menu.refresh();
-
+				
 				// redraw the tree menu to refresh buttons
 				tree.addContextualMenu(true);
-
+				
 				tabPanel.refresh();
 				tabPanel.redraw();
 
@@ -993,10 +993,11 @@ public class MainPanel implements Observer {
 			public void buttonPressed(MenuItem button, int code, Event event) {
 				switch (code) {
 				case AccountMenu.DCF_LOGIN_MI:
+				case AccountMenu.OPENAPI_LOGIN_MI:
 					refresh();
 					hierarchySelector.refreshFilter();
 					break;
-				case AccountMenu.DCF_LOGOUT_MI:
+				case AccountMenu.LOGOUT_MI:
 					refresh();
 					break;
 				default:

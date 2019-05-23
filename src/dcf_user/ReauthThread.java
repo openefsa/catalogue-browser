@@ -38,7 +38,7 @@ public class ReauthThread extends Thread {
 			if(user.isAuthWithOpeanAPI())
 				done = user.reauthenticateWithOpenAPI();
 			else
-				done = user.reauthenticate();
+				done = user.reauthenticateWithDCF();
 			
 			code = done ? ThreadFinishedListener.OK : ThreadFinishedListener.ERROR;
 		} catch (SOAPException e) {

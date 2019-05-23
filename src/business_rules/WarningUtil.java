@@ -28,7 +28,7 @@ import utilities.GlobalUtil;
  * full code of a term raise warnings or not ( and possibly it shows the related
  * warnings in the warningTable ).
  * 
- * @author Valentino
+ * @author avonva
  * @author shahaal
  *
  */
@@ -87,20 +87,15 @@ public class WarningUtil extends TermRules {
 	 */
 	public void refreshWarningsTable(String fullCode) {
 
-		/*
-		 * GRAPHICS UPDATE
-		 */
+		//////////////////// GRAPHICS UPDATE
 
 		// reset the warning messages and level
 		resetWarningState();
-
-		// refresh the graphics ( font and colors )
+		// refresh the graphics ( font and colours )
 		refreshWarningTableGraphics();
 
-		/*
-		 * CHECKS
-		 */
-
+		//////////////////// CHECKS
+		
 		// execute all the warning checks
 		performWarningChecks(fullCode, false);
 	}
@@ -127,11 +122,9 @@ public class WarningUtil extends TermRules {
 
 		warningsTable.getTable().setFont(descriptor.createFont(Display.getCurrent()));
 
-		// set the background color of the table accordingly to the warning options
-		// int[] rgb = warnOptions.getConsoleBG();
-		// warningsTable.getTable().setBackground( new Color (Display.getCurrent(),
-		// rgb[0], rgb[1], rgb[2]) );
-		warningsTable.getTable().setBackground(new Color(Display.getCurrent(), 60, 130, 130));
+		// set the background colour of the table accordingly to the warning options
+		int[] rgb = warnOptions.getConsoleBG();
+		warningsTable.getTable().setBackground(new Color(Display.getCurrent(), rgb[0], rgb[1], rgb[2]));
 
 		// refresh the graphical elements of the table
 		warningsTable.refresh();
@@ -187,7 +180,6 @@ public class WarningUtil extends TermRules {
 		warningsTable.reveal(message);
 
 		// get the index of the last inserted element (in the table)
-		// to change its text color
 		int lastElementIndex = warningsTable.getTable().getItemCount() - 1;
 
 		// get the warning color (related to the warning level)
@@ -196,37 +188,48 @@ public class WarningUtil extends TermRules {
 		Color txtColor; // message color in the console
 		int[] rgb;
 
-		// semaphore color based on warning level
-		if (semaphoreLevel == WarningLevel.NONE) { // if the level warning is NONE
-			rgb = warnOptions.getSemNoWarnRGB();
-			warningColor = new Color(device, rgb[0], rgb[1], rgb[2]);
-		} else if (semaphoreLevel == WarningLevel.LOW) { // if level warning is LOW
-			rgb = warnOptions.getSemLowWarnRGB();
-			warningColor = new Color(device, rgb[0], rgb[1], rgb[2]);
-		} else { // if level warning is HIGH
+		// semaphore colour based on warning level
+		switch (semaphoreLevel) {
+		case HIGH:
 			rgb = warnOptions.getSemHiWarnRGB();
 			warningColor = new Color(device, rgb[0], rgb[1], rgb[2]);
+			break;
+		case LOW:
+			rgb = warnOptions.getSemLowWarnRGB();
+			warningColor = new Color(device, rgb[0], rgb[1], rgb[2]);
+			break;
+		case NONE:
+			rgb = warnOptions.getSemNoWarnRGB();
+			warningColor = new Color(device, rgb[0], rgb[1], rgb[2]);
+			break;
+		default:
+			rgb = warnOptions.getSemErrorRGB();
+			warningColor = new Color(device, rgb[0], rgb[1], rgb[2]);
 		}
 
-		// text color based on warning level
-		if (textWarningLevel == WarningLevel.NONE) {
-			rgb = warnOptions.getTxtNoWarnRGB();
-			txtColor = new Color(device, rgb[0], rgb[1], rgb[2]);
-		} else if (textWarningLevel == WarningLevel.LOW) {
-			rgb = warnOptions.getTxtLowWarnRGB();
-			txtColor = new Color(device, rgb[0], rgb[1], rgb[2]);
-		} else {
+		// text colour based on warning level
+		switch (textWarningLevel) {
+		case HIGH:
 			rgb = warnOptions.getTxtHiWarnRGB();
 			txtColor = new Color(device, rgb[0], rgb[1], rgb[2]);
+			break;
+		case LOW:
+			rgb = warnOptions.getTxtLowWarnRGB();
+			txtColor = new Color(device, rgb[0], rgb[1], rgb[2]);
+			break;
+		case NONE:
+			rgb = warnOptions.getTxtNoWarnRGB();
+			txtColor = new Color(device, rgb[0], rgb[1], rgb[2]);
+			break;
+		default:
+			rgb = warnOptions.getTxtErrorRGB();
+			txtColor = new Color(device, rgb[0], rgb[1], rgb[2]);
 		}
 
-		// update the text color accordingly to the warning color
+		// update the text colour accordingly to the warning colour
 		warningsTable.getTable().getItems()[lastElementIndex].setForeground(txtColor);
 
 		// if the warning level of this message is greater than or equal the previous
-		// ones
-		// ( the equal is used to show the green semaphore for warning level = NONE )
-
 		if (semaphoreLevel.ordinal() >= currentWarningLevel.ordinal()) {
 
 			// update the currentWarningLevel
@@ -248,12 +251,12 @@ public class WarningUtil extends TermRules {
 		try {
 
 			WarningOptions options = new WarningOptions();
-			
+
 			File file = new File(filename);
 			if (!file.exists()) {
 				options.createDefaultWarnColorOptionsFile(filename);
 			}
-			
+
 			// FileReader reads text files in the default encoding.
 			FileReader fileReader = new FileReader(filename);
 

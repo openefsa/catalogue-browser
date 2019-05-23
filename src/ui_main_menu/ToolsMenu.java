@@ -2,6 +2,7 @@ package ui_main_menu;
 
 import java.awt.Desktop;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -100,9 +101,8 @@ public class ToolsMenu implements MainMenuItem {
 	private MenuItem searchOptMI;
 	private MenuItem userPrefMI;
 
-	private boolean ictIsInstalled; // check if the ict is installed
-	private MenuItem installIct; // install the ict tool
-	private MenuItem launchIct; // launch ICT tool
+	private MenuItem installIctMI; // install the ict tool
+	private MenuItem launchIctMI; // launch ICT tool
 
 	/**
 	 * Tools menu in main menu
@@ -113,7 +113,6 @@ public class ToolsMenu implements MainMenuItem {
 	public ToolsMenu(MainMenu mainMenu, Menu menu) {
 		this.mainMenu = mainMenu;
 		this.shell = mainMenu.getShell();
-		this.ictIsInstalled = GlobalUtil.ictIsInstalled();
 		this.toolsItem = create(menu);
 	}
 
@@ -161,14 +160,14 @@ public class ToolsMenu implements MainMenuItem {
 		// export operations
 		exportMI = addExportMI(toolsMenu);
 
-		// export for IECT (just for the MTX cat)
+		// export for ICT (just for the MTX cat)
 		if (mainMenu.getCatalogue() != null && mainMenu.getCatalogue().isMTXCatalogue()) {
 
 			// check if ict file is present
-			if (ictIsInstalled)
-				launchIct = addLaunchIct(toolsMenu);
+			if (GlobalUtil.isIctInstalled())
+				launchIctMI = addLaunchIct(toolsMenu);
 			else
-				installIct = addInstallIct(toolsMenu);
+				installIctMI = addInstallIct(toolsMenu);
 		}
 
 		// add import picklist
@@ -518,8 +517,7 @@ public class ToolsMenu implements MainMenuItem {
 
 				importCat.setProgressBar(new FormProgressBar(shell, Messages.getString("Import.ImportXlsxBarTitle")));
 
-				// set the opened catalogue since we are importing
-				// in an already existing catalogue
+				// set the opened catalogue (importing an already existing catalogue)
 				importCat.setOpenedCatalogue(mainMenu.getCatalogue());
 
 				// set the listener
@@ -533,54 +531,42 @@ public class ToolsMenu implements MainMenuItem {
 							@Override
 							public void run() {
 
-								String title = null;
-								String msg = null;
+								String title = Messages.getString("Import.ImportErrorTitle");
+								String msg = Messages.getString("Import.ImportGenericErrorMessage");
 								int icon = SWT.ICON_ERROR;
 
 								if (code == ThreadFinishedListener.OK) {
 									title = Messages.getString("Import.ImportSuccessTitle");
 									msg = Messages.getString("Import.ImportSuccessMessage");
 									icon = SWT.ICON_INFORMATION;
-								} else {
+								} else if (e instanceof ImportException) {
 
-									if (e instanceof ImportException) {
+									ImportException impEx = (ImportException) e;
 
-										ImportException impEx = (ImportException) e;
-
-										switch (impEx.getCode()) {
-										case "X100":
-											title = Messages.getString("Import.ImportErrorTitle");
-											msg = Messages.getString("Import.ImportAppendErrorMessage");
-											icon = SWT.ICON_ERROR;
-											break;
-										case "X101":
-											title = impEx.getData();
-											msg = Messages.getString("Import.ImportStructureErrorMessage");
-											icon = SWT.ICON_ERROR;
-											break;
-										case "X102":
-											title = Messages.getString("Import.ImportErrorTitle");
-											msg = Messages.getString("Import.ImportNoMasterErrorMessage");
-											icon = SWT.ICON_ERROR;
-											break;
-										}
-									} else {
-										title = Messages.getString("Import.ImportErrorTitle");
-										msg = Messages.getString("Import.ImportGenericErrorMessage");
-										icon = SWT.ICON_ERROR;
+									switch (impEx.getCode()) {
+									case "X100":
+										msg = Messages.getString("Import.ImportAppendErrorMessage");
+										break;
+									case "X101":
+										title = impEx.getData();
+										msg = Messages.getString("Import.ImportStructureErrorMessage");
+										break;
+									case "X102":
+										msg = Messages.getString("Import.ImportNoMasterErrorMessage");
+										break;
 									}
 								}
 
 								// load catalogue data in ram
-								// we do not open it since it is already opened
 								mainMenu.getCatalogue().refresh();
 								mainMenu.getCatalogue().open();
-
+								
 								if (listener != null)
 									listener.buttonPressed(importItem, IMPORT_CAT_MI, null);
+								
+								// show the message
+								GlobalUtil.showDialog(shell, title, msg, icon);
 
-								if (title != null && msg != null)
-									GlobalUtil.showDialog(shell, title, msg, icon);
 							}
 						});
 
@@ -659,16 +645,22 @@ public class ToolsMenu implements MainMenuItem {
 			public void widgetSelected(SelectionEvent event) {
 
 				// ask the user before continuing the operation
-				boolean confirmation = MessageDialog.openConfirm(shell, Messages.getString("ICT.Title"),
+				boolean confirmation = MessageDialog.openQuestion(shell, Messages.getString("ICT.Title"),
 						Messages.getString("ICT.InstallationMsg"));
 
 				if (!confirmation)
 					return;
 
+				// create first the required folders
+				GlobalUtil.createIctFolders();
+
 				// invoke the ICT downloader
 				ICTDownloader downloader = new ICTDownloader();
 
-				downloader.setProgressBar(new FormProgressBar(shell, Messages.getString("Export.InstallTitle")));
+				// instantiate the progress bar
+				FormProgressBar progressbar = new FormProgressBar(shell, Messages.getString("ICT.Title"));
+
+				downloader.setProgressBar(progressbar);
 
 				// when finished
 				downloader.setDoneListener(new ThreadFinishedListener() {
@@ -683,16 +675,23 @@ public class ToolsMenu implements MainMenuItem {
 
 								// if download ok then continue with installation else warn the user
 								if (code == ThreadFinishedListener.OK) {
-									
+
 									try {
 										// invoke the ICT installer
-										new ICT().installICT();
-										String filename = GlobalUtil.ICT_FOODEX2_FILE_PATH;
-										extractCatalogue(installItem, filename, INSTALL_ICT, false);
+										ICT ict = new ICT();
+										ict.installICT();
+
+										// extract the foodex2 catalogue
+										extractCatalogue(installItem, GlobalUtil.ICT_FOODEX2_FILE_PATH, INSTALL_ICT,
+												false);
+
 									} catch (IOException e) {
-										GlobalUtil.showDialog(shell, Messages.getString("ICT.Title"),
+
+										GlobalUtil.showDialog(shell, Messages.getString("ICT.Title, Messages"),
 												Messages.getString("ICT.InstallationError"), SWT.ICON_ERROR);
+										e.printStackTrace();
 									}
+
 								}
 
 							}
@@ -1129,15 +1128,13 @@ public class ToolsMenu implements MainMenuItem {
 		// export for ICT (just for the MTX cat)
 		if (mainMenu.getCatalogue() != null && mainMenu.getCatalogue().isMTXCatalogue()) {
 
-			if (installIct != null && !ictIsInstalled) {
-				launchIct = null;
-				installIct.setEnabled(true);
-			}
+			boolean ict = GlobalUtil.isIctInstalled();
 
-			if (launchIct != null && ictIsInstalled) {
-				launchIct.setEnabled(true);
-				installIct = null;
-			}
+			if (installIctMI != null)
+				installIctMI.setEnabled(!ict);
+
+			if (launchIctMI != null)
+				launchIctMI.setEnabled(ict);
 		}
 
 		importPicklistMI.setEnabled(hasFacets);
@@ -1165,12 +1162,12 @@ public class ToolsMenu implements MainMenuItem {
 		// reserve the current catalogue
 		if (user.isCatManagerOf(mainMenu.getCatalogue())) {
 
-			boolean isReservedByCurrentUser = User.getInstance().hasReserved(mainMenu.getCatalogue().getCode());
+			boolean isReservedByCurrentUser = user.hasReserved(mainMenu.getCatalogue().getCode());
 
 			// if we are requesting a web service
 			// disable the action which can send another
 			// web service request
-			if (User.getInstance().hasPendingRequestsFor(mainMenu.getCatalogue())) {
+			if (user.hasPendingRequestsFor(mainMenu.getCatalogue())) {
 
 				if (reserveMI != null) {
 					reserveMI.setText(Messages.getString("Reserve.WaitingResponse"));
@@ -1199,8 +1196,7 @@ public class ToolsMenu implements MainMenuItem {
 
 				// if we are reserving but we have forced the
 				// editing, we leave these buttons enabled
-				if (mainMenu.getCatalogue() != null
-						&& User.getInstance().hasForcedReserveOf(mainMenu.getCatalogue()) == null) {
+				if (mainMenu.getCatalogue() != null && user.hasForcedReserveOf(mainMenu.getCatalogue()) == null) {
 
 					if (resetMI != null)
 						resetMI.setEnabled(false);
@@ -1267,11 +1263,11 @@ public class ToolsMenu implements MainMenuItem {
 				if (exportMI != null)
 					exportMI.setEnabled(true);
 
-				if (installIct != null)
-					installIct.setEnabled(true);
+				if (installIctMI != null)
+					installIctMI.setEnabled(true);
 
-				if (launchIct != null)
-					launchIct.setEnabled(true);
+				if (launchIctMI != null)
+					launchIctMI.setEnabled(true);
 			}
 		}
 	}
@@ -1506,6 +1502,10 @@ public class ToolsMenu implements MainMenuItem {
 		} catch (DetailedSOAPException e) {
 			String[] warn = GlobalUtil.getSOAPWarning(e);
 			message = warn[1];
+			colour = SWT.COLOR_DARK_RED;
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			message = Messages.getString("upload.xml_not_found.error", catCode);
 			colour = SWT.COLOR_DARK_RED;
 		} catch (IOException e) {
 			e.printStackTrace();

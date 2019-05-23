@@ -523,7 +523,7 @@ public class User extends DcfUser {
 	 * @return
 	 * @throws SOAPException
 	 */
-	public boolean reauthenticate() throws SOAPException {
+	public boolean reauthenticateWithDCF() throws SOAPException {
 
 		// return if credentials are empty
 		if (credentials == null)
@@ -554,6 +554,10 @@ public class User extends DcfUser {
 
 	/**
 	 * Use stored credentials to perform a login without re-asking the user token
+	 * 
+	 * TODO the method is not used since the starter program has a limitation
+	 * of 5 calls/minutes instead when making a call if receiving error then 
+	 * notify the user
 	 * 
 	 * @author shahaal
 	 * @return
@@ -621,11 +625,12 @@ public class User extends DcfUser {
 	 * downloading the dump catalogue CATUSERS
 	 * 
 	 * @return true if logged in successfully, otherwise false
+	 * @throws DetailedSOAPException 
 	 * @throws AttachmentNotFoundException
 	 * @throws SOAPException
 	 * @throws Exception
 	 */
-	public boolean loginWithOpenapi(String username, String token, boolean save) throws DetailedSOAPException {
+	public boolean loginWithOpenapi(String username, String token, boolean save) throws DetailedSOAPException  {
 
 		// code of the catusers catalogue
 		String catUsers = Catalogue.getCatUsersCatalogue().getCode();

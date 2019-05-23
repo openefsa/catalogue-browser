@@ -283,7 +283,6 @@ public abstract class FormObjectsList<T> {
 		@Override
 		public void inputChanged(Viewer arg0, Object arg1, Object arg2) {}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public Object[] getElements(Object arg0) {
 
@@ -359,7 +358,6 @@ public abstract class FormObjectsList<T> {
 	 * @param viewer
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	private ArrayList<T> getSelectedElem () {
 
 		// output array
@@ -388,7 +386,6 @@ public abstract class FormObjectsList<T> {
 	 * @param viewer
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	private ArrayList<T> getCheckedElem () {
 
 		ArrayList <T> selObj = new ArrayList<>();

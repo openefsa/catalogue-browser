@@ -138,7 +138,6 @@ public class FormSelectApplicableHierarchies {
 		@Override
 		public Object[] getElements(Object arg0) {
 
-			@SuppressWarnings("unchecked")
 			ArrayList<Hierarchy> hierarchies = (ArrayList<Hierarchy>) arg0;
 
 			return hierarchies.toArray();

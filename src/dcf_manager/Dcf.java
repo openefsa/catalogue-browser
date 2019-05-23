@@ -11,7 +11,9 @@ import javax.xml.stream.XMLStreamException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Shell;
 
 import catalogue.Catalogue;
 import catalogue.CataloguesList;
@@ -27,11 +29,13 @@ import dcf_user.User;
 import dcf_user.UserAccessLevel;
 import dcf_user.UserProfileChecker;
 import progress_bar.FormProgressBar;
+import soap.DetailedSOAPException;
 import soap.ExportCatalogueFile;
 import soap.GetCataloguesList;
 import soap.GetDataCollectionTables;
 import soap.GetDataCollectionsList;
 import soap.Ping;
+import utilities.GlobalUtil;
 
 /**
  * Class to model the DCF. Here we can download catalogues and perform web
@@ -354,7 +358,7 @@ public class Dcf {
 
 		try {
 			User user = User.getInstance();
-			
+
 			GetCataloguesList<Catalogue> req = new GetCataloguesList<>(user.isOpeanapi());
 			req.getList(Config.getEnvironment(), user, list);
 		} catch (Exception e) {
@@ -381,6 +385,15 @@ public class Dcf {
 			req.getList(Config.getEnvironment(), user, list);
 
 		} catch (Exception e) {
+
+			// shahaal show the error message for openapi users
+			if (e instanceof DetailedSOAPException) {
+
+				String[] warning = GlobalUtil.getSOAPWarning((DetailedSOAPException) e);
+				Display display = new Display();
+				GlobalUtil.showErrorDialog(new Shell(display), warning[0], warning[1]);
+			}
+
 			e.printStackTrace();
 			LOGGER.error("Cannot get data collections", e);
 		}
@@ -401,10 +414,8 @@ public class Dcf {
 
 		DCTableList output = new DCTableList();
 
-		User user = User.getInstance();
-		
 		GetDataCollectionTables<DCTable> req = new GetDataCollectionTables<>();
-		req.getTables(Config.getEnvironment(), user, resourceId, output);
+		req.getTables(Config.getEnvironment(), User.getInstance(), resourceId, output);
 
 		return output;
 	}
@@ -419,12 +430,9 @@ public class Dcf {
 	 * @throws SOAPException
 	 */
 	public File exportCatalogue(Catalogue catalogue) throws SOAPException {
-		
-		User user = User.getInstance();
-		
 		// export the catalogue and save its attachment into an xml file
 		ExportCatalogueFile export = new ExportCatalogueFile();
-		return export.exportCatalogue(Config.getEnvironment(), user, catalogue.getCode());
+		return export.exportCatalogue(Config.getEnvironment(), User.getInstance(), catalogue.getCode());
 	}
 
 	/**
@@ -435,14 +443,12 @@ public class Dcf {
 	 * @throws SOAPException
 	 */
 	public File exportLog(String logCode) throws SOAPException {
-		
-		User user = User.getInstance();
-		
+
 		// ask for the log to the dcf
 		ExportCatalogueFile export = new ExportCatalogueFile();
 
 		// write the log document in xml format
-		return export.exportLog(Config.getEnvironment(), user, logCode);
+		return export.exportLog(Config.getEnvironment(), User.getInstance(), logCode);
 	}
 
 	/**
@@ -459,13 +465,11 @@ public class Dcf {
 	 */
 	public File exportCatalogueInternalVersion(String catalogueCode) throws IOException, SOAPException {
 
-		User user = User.getInstance();
-		
 		// ask for the log to the dcf
 		ExportCatalogueFile export = new ExportCatalogueFile();
 
 		// get the catalogue xml as input stream
-		File file = export.exportLastInternalVersion(Config.getEnvironment(), user, catalogueCode);
+		File file = export.exportLastInternalVersion(Config.getEnvironment(), User.getInstance(), catalogueCode);
 
 		return file;
 	}

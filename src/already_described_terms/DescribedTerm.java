@@ -146,11 +146,11 @@ public class DescribedTerm {
 
 			// get the descriptor term
 			Term descriptor = getTerm( facetCode );
-			
+
 			// add the descriptor to the term facet as explicit facet
 			baseTermCopy.addImplicitFacet( new FacetDescriptor( descriptor, ta, FacetType.EXPLICIT) );
 		}
-		
+
 		return baseTermCopy;
 	}
 	

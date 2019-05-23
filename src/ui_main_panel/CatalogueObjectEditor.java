@@ -259,7 +259,6 @@ public abstract class CatalogueObjectEditor<T extends SortableCatalogueObject> {
 				IStructuredSelection selection = (IStructuredSelection) table.getSelection();
 
 				// get the selected obj
-				@SuppressWarnings("unchecked")
 				T selectedObj = (T) selection.getFirstElement();
 
 				// return if cannot remove object
@@ -311,8 +310,7 @@ public abstract class CatalogueObjectEditor<T extends SortableCatalogueObject> {
 				// return if no selection
 				if ( selection.isEmpty() )
 					return;
-
-				@SuppressWarnings("unchecked")
+				
 				T current = (T) selection.getFirstElement();
 				T target = null;
 				

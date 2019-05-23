@@ -36,7 +36,6 @@ import export_catalogue.ExportActions;
 import form_objects_list.FormCataloguesList;
 import form_objects_list.FormDCTableConfigsList;
 import form_objects_list.FormDataCollectionsList;
-import ict_add_on.ICT;
 import import_catalogue.CatalogueImporter.ImportFileFormat;
 import import_catalogue.CatalogueImporterThread;
 import messages.Messages;
@@ -66,7 +65,7 @@ public class FileActions {
 	 * 
 	 * @param shell
 	 */
-	public static void createNewLocalCatalogue(Shell shell) {
+	public void createNewLocalCatalogue(Shell shell) {
 
 		FormLocalCatalogueName dialog = new FormLocalCatalogueName(shell);
 
@@ -564,7 +563,7 @@ public class FileActions {
 
 		// for each catalogue
 		for (Catalogue cat : cats) {
-
+			
 			// add a progress row in the table
 			final TableRow row = dialog.addRow(cat.getLabel());
 
@@ -598,7 +597,7 @@ public class FileActions {
 				});
 			}
 		});
-
+		
 		// start thread in a batch way
 		manager.start();
 
@@ -612,7 +611,7 @@ public class FileActions {
 	 * @param shell
 	 * @param doneListener called when the import is finished
 	 */
-	public static void importCatalogue(Shell shell, final ThreadFinishedListener doneListener) {
+	public void importCatalogue(Shell shell, final ThreadFinishedListener doneListener) {
 
 		// ask the file to the user
 		String filename = GlobalUtil.showFileDialog(shell, Messages.getString("BrowserMenu.ImportCatalogueCmd"),
@@ -639,24 +638,6 @@ public class FileActions {
 
 		importCat.start();
 		
-		//if the ICT is installed and mtx is imported then copy the new catalogue version
-		if (GlobalUtil.ictIsInstalled() && filename.contains("MTX")) {
-			// when the import of the offline cat is complete copy it in ICT db
-			importCat.addDoneListener(new ThreadFinishedListener() {
-
-				@Override
-				public void finished(Thread thread, int code, Exception e) {
-					try {
-						// update ICT db
-						new ICT().createDatabase();
-					} catch (IOException e1) {
-						GlobalUtil.showDialog(shell, Messages.getString("ICT.Title"),
-								Messages.getString("ICT.DatabaseUpdateError"), SWT.ICON_ERROR);
-					}
-
-				}
-			});
-		}
 	}
 
 	/**

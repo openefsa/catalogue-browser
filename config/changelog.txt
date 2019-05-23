@@ -2,20 +2,48 @@
 
 	+ Recompiled using Maven technology
 	+ New progress bar while downloading ICT
-	+ Redesigned the installation procedure of the ICT
-	+ Now the ICT is able to check and install new updates
-	+ Cleaned useless files from the package
 	+ Added new Account drop-down button on Main menu
-	+ Added ability to log in/out from DCF
-	+ All files related to ICT has been moved into the related folder
-	+ ICT db automatically updated when new version are available
+	+ Added ability to login using the token provided by the OpenAPI portal
+	+ Added ability to log out (DCF/OpenAPI)
+	+ Added function for auto importing terms from external files (beta tester or cat manager)
+	+ New algorithm for checking the parent hierarchy when using the auto import terms function
+	+ Added ability to eventual errors when using the auto import terms function
+	+ Added Windows 10 compatibility (internal users)
+	+ BR 11 doesn't print the warning message if adding a facet more specific than the already existing implicit one
+	+ Added warning messages for OpenAPI users
+	+ Different optimisations to the general UI
+	+ Performance improvements on applying the BRs in the Describe window 
+	+ Optimisations of the export process while installing the ICT
+	+ Redesigned main menu
+	+ Redesigned term information panel
 	
+--- Bugs fixed and other improvements:
 
---- Other improvements:
-
-    + Fixed bug when ICT files are missing, now the CB allows to reinstall it
-    + Solved bug which was reinstalling ICT db even if not using the MTX catalogue
+    + Fixed bug when ICT files are missing
+    + Solved bug which was recreating ICT database even if not using the MTX catalogue
+	+ ICT installation procedure redesigned
+	+ Added links to new ICT version (include auto-update checker)
+	+ All files related to ICT has been moved into the related folder
+	+ Solved bug which was showing in the search panel terms not in use
+	+ New global variable for checking if the ICT is correctly installed
+	+ Business Rules aligned with the ICT
+	+ Semaphore levels and warning messages aligned with ICT
+	+ Fixed "Disconnected" message not appearing when the logout is performed
+	+ ICT database automatically updated when new version of MTX is available
+	+ Added dump row for 'term' sheet when exporting a catalogue (only for catalogue managers)
+	+ The ICT required folders now are created only when the user install the ICT
     + Solved UI refresh bug when the user perform a logout from DCF
-    + Fixed group facet information not shown on ICT
-    + Fixed automated process for the colours under the risk column
+	+ Removed useless classes and files from the package
+	+ Removed unused libraries and added syntax for last jars “[curVersion, )” with Maven
+	+ Solved bug showing update ICT db message even if catalogue != MTX
+	+ Cat browser memory management improvements (memory leaks like buffer opened but not closed, db connections and URL connections)
+	+ Removed useless static methods/variables which are not removed from the GC
+	+ Removed the remember me option from login
+	+ The login window now: wrap the content, is not resizable, appears in a fixed position
+	+ Fixed bug in which the ICT db is not updated if updating from CB
+	+ Added ability to update ICT db even if updating MTX in offline mode
+	+ Fixed bug in which the download of the ICT followed by its installation were giving thread errors
+	+ Merged function for the export catalogue process used from different methods into the ToolsMenu class
+	+ Fixed bug which was allowing to add terms to facet groups with single cardinality
+	+ Better throw and catch of the soap errors during the login action (both dcf and openapi)
     

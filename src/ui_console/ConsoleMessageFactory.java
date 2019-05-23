@@ -70,7 +70,7 @@ public class ConsoleMessageFactory {
 		if (level == ReserveLevel.MINOR)
 			levelLabel = Messages.getString("reserve.minor.label");
 		else if (level == ReserveLevel.MAJOR)
-			levelLabel = Messages.getString("reserve.major.label");
+			levelLabel = Messages.getString("");
 		
 		return levelLabel;
 	}

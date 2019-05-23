@@ -20,7 +20,7 @@ import utilities.GlobalUtil;
  * This form displays all the catalogues passed by the input parameter. In particular,
  * it shows several catalogues properties and allows selecting one catalogue to make 
  * further action on it.
- * @author Valentino
+ * @author avonva
  *
  */
 public class FormCataloguesList extends FormObjectsList<Catalogue> {

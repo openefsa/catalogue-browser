@@ -297,7 +297,6 @@ public class TableApplicability {
 		}
 
 		public Object[] getElements(Object applicabilities) {
-			@SuppressWarnings("unchecked")
 			Collection<Applicability> apps = (Collection<Applicability>) applicabilities;
 			return apps.toArray();
 		}

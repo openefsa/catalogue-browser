@@ -65,8 +65,7 @@ public class SearchDAO {
 		
 		ArrayList< String > keywords;
 		
-		// if exact match, we use the entire text
-		// as single keyword
+		// if exact match, we use the entire text as single keyword
 		if ( type == SearchType.EXACT_MATCH ) {
 			
 			keywords = new ArrayList<>();
@@ -138,7 +137,6 @@ public class SearchDAO {
 	 * @param term
 	 * @return
 	 */
-	@SuppressWarnings("unlikely-arg-type")
 	private boolean isTypeSearchable( Term term ) {
 
 		// if the catalogue does not use term types

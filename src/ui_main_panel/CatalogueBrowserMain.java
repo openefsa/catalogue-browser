@@ -1,6 +1,5 @@
 package ui_main_panel;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -23,7 +22,7 @@ import dcf_user.UserListener;
 import instance_checker.InstanceChecker;
 import messages.Messages;
 import soap.DetailedSOAPException;
-import ui_main_menu.DcfActions;
+import ui_main_menu.LoginActions;
 import utilities.GlobalUtil;
 
 /**
@@ -51,7 +50,8 @@ public class CatalogueBrowserMain {
 	public static void main(String[] args) {
 
 		try {
-			launch();
+			CatalogueBrowserMain main = new CatalogueBrowserMain();
+			main.launch();
 		} catch (Exception e) {
 
 			e.printStackTrace();
@@ -65,7 +65,7 @@ public class CatalogueBrowserMain {
 		}
 	}
 
-	private static void startShellTextUpdate(final Shell shell) {
+	private void startShellTextUpdate(final Shell shell) {
 
 		// default
 		shell.setText(APP_TITLE + " " + Messages.getString("App.Disconnected"));
@@ -95,7 +95,7 @@ public class CatalogueBrowserMain {
 		});
 	}
 
-	private static void launch() throws IOException {
+	private void launch() throws IOException {
 
 		InstanceChecker.closeIfAlreadyRunning();
 
@@ -110,7 +110,7 @@ public class CatalogueBrowserMain {
 
 		// create the directories of the application
 		GlobalUtil.createApplicationFolders();
-
+		
 		// clear the temporary directory
 		GlobalUtil.clearTempDir();
 
@@ -143,11 +143,11 @@ public class CatalogueBrowserMain {
 		shell.setText(APP_TITLE + " " + Messages.getString("App.Disconnected"));
 
 		// set the application image into the shell
-		shell.setImage(new Image(Display.getCurrent(), ClassLoader.getSystemResourceAsStream("Foodex2.ico")));
+		shell.setImage(new Image(display, ClassLoader.getSystemResourceAsStream("Foodex2.ico")));
 
 		startShellTextUpdate(shell);
 
-		// initialize the browser user interface
+		// initialise the browser user interface
 		final MainPanel browser = new MainPanel(shell);
 
 		// creates the main panel user interface
@@ -160,7 +160,7 @@ public class CatalogueBrowserMain {
 		// User.getInstance().deleteCredentials();
 
 		if (User.getInstance().areCredentialsStored()) {
-
+			
 			// reauthenticate the user in background if needed
 			ReauthThread reauth = new ReauthThread();
 			reauth.setDoneListener(new ThreadFinishedListener() {
@@ -179,7 +179,7 @@ public class CatalogueBrowserMain {
 							switch (code) {
 							case OK:
 
-								DcfActions.startLoginThreads(shell, new Listener() {
+								LoginActions.startLoginThreads(shell, new Listener() {
 
 									@Override
 									public void handleEvent(Event arg0) {
@@ -222,25 +222,15 @@ public class CatalogueBrowserMain {
 
 		browser.getMenu().refresh();
 
-		// Author: AlbanDev
-		if (new File(GlobalUtil.VERSION_FLAG_PATH).exists()) {
-			//check the version inside the flag file
-			BrowserReleaseNotes.checkVersion(shell);
-		} else {
-			//display release notes and create the flag file
-			BrowserReleaseNotes.display(shell, true);
-		}
-
 		// Event loop
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())
 				display.sleep();
 		}
 		
-		// albydev: prevent unexcpected error if user try to close the main page before
-		// the ui was loaded properly
-		// if (display != null && !display.isDisposed() )
-		shell.dispose();
+		// shahaal: prevent error if close main page before the UI is loaded
+		if (display != null && !display.isDisposed())
+			display.dispose();
 
 		// stop the database
 		DatabaseManager.stopMainDB();

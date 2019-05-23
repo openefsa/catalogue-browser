@@ -30,15 +30,16 @@ public class ICTDownloader extends Thread {
 		int code = ThreadFinishedListener.OK;
 		
 		try {
-			progressBar.open();
+			this.progressBar.open();
 			
 			URL url = new URL(txtURL);
+
+			LOGGER.info("creating connection...");
+			if (progressBar != null)
+				progressBar.setLabel("Instantiating the connection...");
 			
-			progressBar.setLabel("Creating connection...");
 			URLConnection conexion = url.openConnection();
 			conexion.connect();
-			
-			LOGGER.info("Connection instantiated.");
 
 			int lenghtOfFile = conexion.getContentLength();
 
@@ -57,8 +58,11 @@ public class ICTDownloader extends Thread {
 			int count;
 
 			long total = 0;
+
+			LOGGER.info("Starting to download the ICT...");
+			if (progressBar != null)
+				progressBar.setLabel("Downloading the file...");
 			
-			progressBar.setLabel("Downloading the file...");
 			while ((count = input.read(data)) != -1) {
 				total += count;
 				output.write(data, 0, count);

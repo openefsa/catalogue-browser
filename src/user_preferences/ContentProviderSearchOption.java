@@ -16,7 +16,6 @@ public class ContentProviderSearchOption implements IStructuredContentProvider {
 	@Override
 	public Object[] getElements(Object arg0) {
 		
-		@SuppressWarnings("unchecked")
 		ArrayList< SearchOption > opts = (ArrayList< SearchOption >) arg0;
 		return opts.toArray();
 	}

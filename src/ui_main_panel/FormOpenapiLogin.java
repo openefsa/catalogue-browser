@@ -174,8 +174,9 @@ public class FormOpenapiLogin {
 				try {
 					valid = checkCredentials(token);
 				} catch (DetailedSOAPException e1) {
+					
 					e1.printStackTrace();
-
+					
 					// reset the original cursor
 					GlobalUtil.setShellCursor(parent, SWT.CURSOR_ARROW);
 
@@ -185,9 +186,10 @@ public class FormOpenapiLogin {
 					return;
 				}
 				
+				
 				// reset the original cursor
 				GlobalUtil.setShellCursor(parent, SWT.CURSOR_ARROW);
-
+				
 				// check if the credentials are correct or not
 				if (valid) {
 
@@ -204,7 +206,7 @@ public class FormOpenapiLogin {
 
 				// call the listener if it was set
 				if (listener != null)
-					listener.credentialsSet(getOapiusr(), token, valid);
+					listener.credentialsSet(OApiUsr, token, valid);
 			}
 		});
 
@@ -218,9 +220,7 @@ public class FormOpenapiLogin {
 	 * @throws SOAPException
 	 */
 	private boolean checkCredentials(String token) throws DetailedSOAPException {
-		
-		User user = User.getInstance();
-		return user.loginWithOpenapi(getOapiusr(), token, true);
+		return User.getInstance().loginWithOpenapi(OApiUsr, token, true);
 	}
 
 	/**

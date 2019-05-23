@@ -342,7 +342,7 @@ public class TermsTreePanel extends Observable implements Observer {
 				// if the selection is empty or bad instance return
 				if (arg0.getSelection().isEmpty() || !(arg0.getSelection() instanceof IStructuredSelection))
 					return;
-
+				
 				setChanged();
 				notifyObservers();
 

@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
  * class which contains all the options related to the warnings colors
  * 
  * @author shahaal
- * @author Valentino
+ * @author avonva
  *
  */
 public class WarningOptions {
@@ -82,6 +82,10 @@ public class WarningOptions {
 	public int[] getSemHiWarnRGB() {
 		return semHiWarnRGB;
 	}
+	
+	public int[] getSemErrorRGB() {
+		return semErrorRGB;
+	}
 
 	public int[] getTxtNoWarnRGB() {
 		return txtNoWarnRGB;
@@ -93,6 +97,10 @@ public class WarningOptions {
 
 	public int[] getTxtHiWarnRGB() {
 		return txtHiWarnRGB;
+	}
+	
+	public int[] getTxtErrorRGB() {
+		return txtErrorRGB;
 	}
 
 	public int[] getConsoleBG() {
@@ -119,7 +127,7 @@ public class WarningOptions {
 
 			sb.append("SemaphoreNoWarn = 0;255;0\r\n" + "SemaphoreLowWarn = 255;255;0\r\n"
 					+ "SemaphoreHighWarn = 255;0;0\r\n" + "TxtNoWarn = 0;255;0\r\n" + "TxtLowWarn = 255;255;0\r\n"
-					+ "TxtHighWarn = 255;0;0\r\n" + "ConsoleBG = 0;0;0\r\n" + "WarnFontSize = 14\r\n");
+					+ "TxtHighWarn = 255;0;0\r\n" + "ConsoleBG = 0;90;150\r\n" + "WarnFontSize = 14\r\n");
 
 			// write the string
 			out.write(sb.toString());

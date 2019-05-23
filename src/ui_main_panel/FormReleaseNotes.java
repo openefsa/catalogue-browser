@@ -148,7 +148,6 @@ public class FormReleaseNotes {
 		@Override
 		public void inputChanged(Viewer arg0, Object arg1, Object arg2) {}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public Object[] getElements(Object arg0) {
 

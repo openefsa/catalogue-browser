@@ -97,7 +97,6 @@ public class UserProfileChecker extends Thread {
 					user.setUserLevel( UserAccessLevel.CATALOGUE_MANAGER );
 					
 					break;
-				
 				case ERROR:
 				case EXCEPTION:
 					// set the current user as data provider

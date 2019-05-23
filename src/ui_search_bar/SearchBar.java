@@ -137,6 +137,16 @@ public class SearchBar implements Observer {
 	}
 
 	/**
+	 * Get the flag for not in used terms
+	 * 
+	 * @author shahaal
+	 * @return
+	 */
+	public boolean getNotInUseFlag() {
+		return this.hideNotInUse;
+	}
+
+	/**
 	 * Get the written keyword (before clean it)
 	 * 
 	 * @author shahaal
@@ -509,7 +519,7 @@ public class SearchBar implements Observer {
 		searchHierarchy = globalSearchEnabled ? catalogue.getMasterHierarchy() : currentHierarchy;
 
 		searchResults = searchDao.startSearch(keyword, type, searchHierarchy);
-		
+
 		// filter deprecated and not in use terms
 		searchResults = TermFilter.filterByFlag(hideDeprecated, hideNotInUse, searchResults, searchHierarchy);
 

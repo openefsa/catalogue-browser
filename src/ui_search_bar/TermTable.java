@@ -16,7 +16,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
-
 import catalogue.Catalogue;
 import catalogue_object.Hierarchy;
 import catalogue_object.Term;
@@ -30,6 +29,7 @@ import ui_main_panel.TermFilter;
  * Table which is used to show a list of terms
  * 
  * @author avonva
+ * @author shahaal
  *
  */
 public class TermTable implements Observer {
@@ -38,10 +38,11 @@ public class TermTable implements Observer {
 	private TableViewer table;
 	private LabelProviderTerm labelProvider;
 	private ContentProviderTerm contentProvider;
+
 	public TermTable(Composite parent, Catalogue catalogue) {
 
 		this.parent = parent;
-				
+
 		// create the table viewer for hosting the search results
 		table = new TableViewer(parent,
 				SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.VIRTUAL);
@@ -59,16 +60,16 @@ public class TermTable implements Observer {
 		// layout data of the table
 		table.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		//albydev: set the focus when enter the table
-		//check before if the search field is not selected
+		// albydev: set the focus when enter the table
+		// check before if the search field is not selected
 		table.getTable().addListener(SWT.MouseEnter, new Listener() {
-			
-		    public void handleEvent(Event event) {
-				if(!SearchBar.flag)
-		    		table.getControl().setFocus();
-		    }
+
+			public void handleEvent(Event event) {
+				if (!SearchBar.flag)
+					table.getControl().setFocus();
+			}
 		});
-			
+
 	}
 
 	/**
@@ -117,7 +118,6 @@ public class TermTable implements Observer {
 
 		// if the term is already present return true
 		for (int i = 0; i < getItemCount(); i++) {
-
 			if (((Term) table.getElementAt(i)).equals(term))
 				return true;
 		}

@@ -11,7 +11,8 @@ import org.eclipse.swt.widgets.Shell;
 
 import dcf_user.User;
 import messages.Messages;
-import ui_main_panel.FormDCFLogin;
+import ui_main_panel.CatalogueBrowserMain;
+import ui_main_panel.FormDcfLogin;
 import ui_main_panel.FormOpenapiLogin;
 import utilities.GlobalUtil;
 
@@ -24,12 +25,13 @@ import utilities.GlobalUtil;
 public class AccountMenu implements MainMenuItem {
 
 	public static final int DCF_LOGIN_MI = 0;
-	public static final int DCF_LOGOUT_MI = 1;
+	public static final int OPENAPI_LOGIN_MI = 1;
+	public static final int LOGOUT_MI = 2;
 
 	private MenuListener listener;
 
-	private MenuItem DCFLoginItem; // login dcf
-	private MenuItem OpenAPILoginItem; // login with openapi portal
+	private MenuItem dcfLoginItem; // login dcf
+	private MenuItem openapiLoginItem; // login with openapi portal
 	private MenuItem logoutItem;// logout
 
 	private Shell shell;
@@ -63,8 +65,8 @@ public class AccountMenu implements MainMenuItem {
 		accountItem.setText(Messages.getString("BrowserMenu.AccountMenuName"));
 		accountItem.setMenu(accountMenu);
 
-		DCFLoginItem = addDCFLoginMI(accountMenu);
-		OpenAPILoginItem = addOpenLoginMI(accountMenu);
+		dcfLoginItem = addDCFLoginMI(accountMenu);
+		openapiLoginItem = addOpenLoginMI(accountMenu);
 		logoutItem = addLogoutMI(accountMenu);
 
 		accountMenu.addListener(SWT.Show, new Listener() {
@@ -92,7 +94,7 @@ public class AccountMenu implements MainMenuItem {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
-				FormDCFLogin login = new FormDCFLogin(shell, Messages.getString("BrowserMenu.DCFLoginWindowTitle"));
+				FormDcfLogin login = new FormDcfLogin(shell, Messages.getString("BrowserMenu.DCFLoginWindowTitle"));
 
 				login.display();
 
@@ -100,7 +102,7 @@ public class AccountMenu implements MainMenuItem {
 				if (!login.isValid())
 					return;
 
-				DcfActions.startLoginThreads(shell, null);
+				LoginActions.startLoginThreads(shell, null);
 
 				// disable tools menu until we have
 				// obtained the user access level
@@ -134,7 +136,7 @@ public class AccountMenu implements MainMenuItem {
 
 				login.display();
 				
-				DcfActions.startLoginThreads(shell, null);
+				LoginActions.startLoginThreads(shell, null);
 
 				// disable tools menu until we have
 				// obtained the user access level
@@ -142,7 +144,7 @@ public class AccountMenu implements MainMenuItem {
 				mainMenu.tools.setEnabled(false);
 
 				if (listener != null)
-					listener.buttonPressed(loginItem, DCF_LOGIN_MI, null);
+					listener.buttonPressed(loginItem, OPENAPI_LOGIN_MI, null);
 			}
 
 		});
@@ -165,25 +167,44 @@ public class AccountMenu implements MainMenuItem {
 			public void widgetSelected(SelectionEvent e) {
 
 				// logout the user
-				User.getInstance().logout();
-				// remove the credentials from the db
-				User.getInstance().deleteCredentials();
-				// set the instance at null
-				User.getInstance().removeUser();
+				logout();
 
+				// set the text of the shell to default
+				shell.setText(CatalogueBrowserMain.APP_TITLE + " " + Messages.getString("App.Disconnected"));
+				
 				String title = Messages.getString("BrowserMenu.DCFLogoutWindowTitle");
 				String msg = Messages.getString("BrowserMenu.DCFLogout.message");
 
 				GlobalUtil.showDialog(shell, title, msg, SWT.ICON_INFORMATION);
 
 				if (listener != null)
-					listener.buttonPressed(logoutItem, DCF_LOGOUT_MI, null);
+					listener.buttonPressed(logoutItem, LOGOUT_MI, null);
+				
 			}
 		});
 
 		return logoutItem;
 	}
 
+	/**
+	 * the method is used for loggin out and removing the credetials of the user
+	 * 
+	 * @author shahaal
+	 */
+	private void logout() {
+		
+		//get the user
+		User user = User.getInstance();
+		
+		// logout the user
+		user.logout();
+		// remove the credentials from the db
+		user.deleteCredentials();
+		// set the instance at null
+		user.removeUser();
+		
+	}
+	
 	/**
 	 * Refresh all the menu items contained in the tool menu
 	 */
@@ -194,8 +215,8 @@ public class AccountMenu implements MainMenuItem {
 		// check if the current catalogue is not empty (has data in it)
 		boolean isLoggedIn = user.isLoggedIn() || user.isLoggedInOpenAPI();
 
-		DCFLoginItem.setEnabled(!isLoggedIn);
-		OpenAPILoginItem.setEnabled(!isLoggedIn);
+		dcfLoginItem.setEnabled(!isLoggedIn);
+		openapiLoginItem.setEnabled(!isLoggedIn);
 		logoutItem.setEnabled(isLoggedIn);
 
 	}

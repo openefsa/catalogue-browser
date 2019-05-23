@@ -166,14 +166,13 @@ public class EditingSupportSimpleProperty extends EditingSupport {
 				return;
 		}
 		
-		// try to set the current variabile with the new value
+		// try to set the current variable with the new value
 		try {
 			sp.setVariableByKey( _property, value.toString() );
 		} catch (WrongKeyException e1) {
 			
 			e1.printStackTrace();
 		}
-		
 		
 		if ( _property.equals( "facet" ) ) { 
 			//Attribute att = (Attribute) sp;

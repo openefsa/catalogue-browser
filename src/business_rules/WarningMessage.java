@@ -8,7 +8,7 @@ import business_rules.TermRules.WarningLevel;
  * Class which store the information related to a single warning message.
  * 
  * @author shahaal
- * @author Valentino
+ * @author avonva
  *
  */
 public class WarningMessage {
@@ -64,110 +64,111 @@ public class WarningMessage {
 
 			// first message
 			sb.append(
-					"1;if a hierarchy is selected as base term (describe function);Warning: the base term is a hierarchy!;LOW;LOW");
+					"1;if a hierarchy is selected as base term (describe function);Warning: using a hierarchy as a base term is too general, could you be more precise? ;LOW;LOW");
 			sb.append("\r\n");
 
 			// second message
 			sb.append(
-					"2;if a non-hierarchy is selected as base term (describe function);The base term was successfully added!;NONE;NONE");
+					"2;if a non-hierarchy is selected as base term (describe function);Base term successfully added ;NONE;NONE");
 			sb.append("\r\n");
 
 			// third message
 			sb.append(
-					"3;if a forbidden process is chosen (the derivative should be used);You are trying to generate an already existing derivative!;HIGH;HIGH");
+					"3;if a forbidden process is chosen (the derivative should be used);Risk: don't apply a process to a raw commodity! Use the existing derivative instead. ;HIGH;HIGH");
 			sb.append("\r\n");
 
 			// fourth message
 			sb.append(
 					"4;if a derivative is described with a process facet with an ordCode value less than the implicit ordCode;"
-							+ "Process applied in the wrong order!;HIGH;HIGH");
+							+ "Risk: process applied in the wrong order! ;HIGH;HIGH");
 			sb.append("\r\n");
 
 			// fifth message
 			sb.append("5;if an ambiguous term is selected (terms reported in the BR_Exceptions); "
-					+ "You have selected an ambiguous term, please specify the element better!;LOW;LOW");
+					+ "Warning: an ambiguous term has been selected; please choose a more specific one! ;LOW;LOW");
 			sb.append("\r\n");
 
 			// sixth message
 			sb.append(
 					"6;if more than one process with the same ordCode is chosen (mutually exclusive property violated);"
-							+ "You cannot use these processes together!;HIGH;HIGH");
+							+ "Risk: these processes cannot be used together! ;HIGH;HIGH");
 			sb.append("\r\n");
 
 			// seventh message
 			sb.append("7;if a base term which does not belong to reporting or exposure hierarchy is selected;"
-					+ "You cannot use a non reportable term!;LOW;LOW");
+					+ "Warning: don't use a non reportable term! ;LOW;LOW");
 			sb.append("\r\n");
 
 			// eight message
-			sb.append(
-					"8;if a non exposure hierarchy is selected as base term (describe);You have selected a non-exposure hierarchy!;LOW;LOW");
+			sb.append("8;if a non exposure hierarchy is selected as base term (describe);"
+					+ "Warning: a non-exposure hierarchy term has been selected! ;LOW;LOW");
 			sb.append("\r\n");
 
 			// ninth message
 			sb.append("9;if a non-specific term is selected (describe);You have selected a non-specific term. "
-					+ "Are you sure that you cannot be more precise?;NONE;LOW");
+					+ "Warning: a non-specific term has been selected! Please choose a more precise one. ;NONE;LOW");
 			sb.append("\r\n");
 
 			// tenth message
 			sb.append("10;if the generic facet processed is selected;"
-					+ "You have selected a generic process facet. Are you sure that you cannot be more precise?;LOW;LOW");
+					+ "Warning: a generic process facet has been selected! Please choose a more precise one. ;LOW;LOW");
 			sb.append("\r\n");
 
 			// eleventh message
 			sb.append("11;if an ingredient is selected for raw commodity or derivative;"
-					+ "Is it a minor ingredient? Please check!;LOW;LOW");
+					+ "Warning: is it a minor ingredient? Please check! ;LOW;LOW");
 			sb.append("\r\n");
 
 			// 12 message
-			sb.append(
-					"12;if a single source commodity is selected for raw commodity;Only multiple source commodities allowed, "
-							+ "for mixed raw commodities!;HIGH;HIGH");
+			sb.append("12;if a single source commodity is selected for raw commodity;"
+					+ "Risk: only multiple source commodities are allowed for mixed raw commodities! ;HIGH;HIGH");
 			sb.append("\r\n");
 
 			// 13 message
 			sb.append("13;if a source is selected for mixed derivative (more than one F27.);"
-					+ "Source facet not allowed in mixed derivatives;HIGH;HIGH");
+					+ "Risk: source facet not allowed in mixed derivatives! ;HIGH;HIGH");
 			sb.append("\r\n");
 
 			// 14 message
 			sb.append("14;if a source is selected for derivative with only one F27.;"
-					+ "Make sure that Source is used for better specifying the raw source -otherwise forbidden;LOW;LOW");
+					+ "Warning: make sure that source is used for better specifying the raw source otherwise is forbidden. ;LOW;LOW");
 			sb.append("\r\n");
 
 			// 15 message
 			sb.append("15;if a base term not valid in the exposure hierarchy is chosen;"
-					+ "Not valid for human exposure calculation;NONE;HIGH");
+					+ "Risk: the term is not valid for human exposure calculation! ;NONE;HIGH");
 			sb.append("\r\n");
 
 			// 16 message
-			sb.append(
-					"16;if a source is selected for composite (c or s);Source is not applicable for composite food;HIGH;HIGH");
+			sb.append("16;if a source is selected for composite (c or s);"
+					+ "Risk: source not applicable to composite food! ;HIGH;HIGH");
 			sb.append("\r\n");
 
 			// 17 message
-			sb.append(
-					"17;if a source commodity is selected for composite (c or s);Source commodity is not applicable for composite food;HIGH;HIGH");
+			sb.append("17;if a source commodity is selected for composite (c or s);"
+					+ "Risk: source commodity not applicable to composite food! ;HIGH;HIGH");
 			sb.append("\r\n");
 
 			// 18 message
 			sb.append(
 					"18;if two processes (implicit or explicit) with decimal ordcode and same integer part are applied (at least one explicit);"
-							+ "You are trying to generate an already existing derivative!;HIGH;HIGH");
+							+ "Risk: use the existing derivative instead of adding the facet! ;HIGH;HIGH");
 			sb.append("\r\n");
 
 			// 19 message
 			sb.append(
 					"19;if one or more source commodities are added to a derivative already having an implicit source commodity (not parent of the added);"
-							+ "Use the generic derivative as base term for describing a mixed derivative;HIGH;HIGH");
+							+ "Risk: use the generic derivative as base term for describing a mixed derivative! ;HIGH;HIGH");
 			sb.append("\r\n");
 
 			sb.append(
-					"20;if a source is selected for a generic derivative without F27 (neither explicit nor implicit);Forbidden to use the Source without the (single) source commodity;HIGH;HIGH");
+					"20;if a source is selected for a generic derivative without F27 (neither explicit nor implicit);"
+					+ "Risk: it's forbidden to use the source without the (single) source commodity! ;HIGH;HIGH");
 			sb.append("\r\n");
 
 			sb.append(
-					"21;if wrong term structure or term not found;Error: wrong term structure or term not found!;ERROR;ERROR");
+					"21;if wrong term structure or term not found;"
+					+ "Error: code not well structured! ;ERROR;ERROR");
 			sb.append("\r\n");
 
 			out.write(sb.toString());

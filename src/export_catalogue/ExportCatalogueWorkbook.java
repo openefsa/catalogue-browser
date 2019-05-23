@@ -144,7 +144,8 @@ public class ExportCatalogueWorkbook {
 			termSheet.write();
 			
 			// copy the new db into the ict main folder
-			new ICT().createDatabase();
+			ICT ict = new ICT();
+			ict.createDatabase();
 		}
 		
 		// last operation
@@ -177,9 +178,9 @@ public class ExportCatalogueWorkbook {
 		
 		ExportCatalogueWorkbook export = new ExportCatalogueWorkbook();
 		CatalogueDAO dao = new CatalogueDAO();
-		Catalogue landuse = dao.getLastVersionByCode("LANDUSE", DcfType.LOCAL);
+		Catalogue landuse = dao.getLastVersionByCode("ACTFOR", DcfType.LOCAL);
 		landuse.loadData();
-		export.exportCatalogue(landuse, "landuse_export.xlsx");
+		export.exportCatalogue(landuse, "landuse_export.xlsx", true);
 	}*/
 	
 }

@@ -153,7 +153,7 @@ public class FrameTermFields {
 			code.setText(term.getCode());
 		
 		boolean hasImpFacets = !term.getImplicitFacets().isEmpty();
-		
+
 		//full code with baseterm and facets
 		if(fullCode != null) {
 			if(hasImpFacets)

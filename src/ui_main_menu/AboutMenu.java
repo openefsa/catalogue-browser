@@ -134,7 +134,8 @@ public class AboutMenu implements MainMenuItem {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
-				BrowserReleaseNotes.display(shell, false);
+				BrowserReleaseNotes changelog = new BrowserReleaseNotes();
+				changelog.display(shell);
 				
 			}
 		});

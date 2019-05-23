@@ -241,7 +241,7 @@ public class TermFilter extends Observable {
 			
 			out.add( obj );
 		}
-		
+
 		return out;
 	}
 }

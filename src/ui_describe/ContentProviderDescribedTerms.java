@@ -14,7 +14,6 @@ public class ContentProviderDescribedTerms implements IStructuredContentProvider
 
 	public Object[] getElements ( Object fullCodes ) {
 		
-		@SuppressWarnings("unchecked")
 		ArrayList< DescribedTerm > l = (ArrayList< DescribedTerm >) fullCodes;
 
 		return l.toArray();

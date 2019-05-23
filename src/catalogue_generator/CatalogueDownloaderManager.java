@@ -25,7 +25,7 @@ public class CatalogueDownloaderManager extends Thread {
 	private int startedCount = 0;
 
 	/**
-	 * Initialize the manager
+	 * Initialise the manager
 	 * @param batchSize maximum number of threads which can
 	 * be active at runtime in the same time
 	 */

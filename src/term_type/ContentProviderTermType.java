@@ -15,7 +15,6 @@ public class ContentProviderTermType implements IStructuredContentProvider {
 
 	@Override
 	public Object[] getElements(Object list) {
-		@SuppressWarnings("unchecked")
 		ArrayList< TermType > l = (ArrayList< TermType >) list;
 		return l.toArray();
 	}

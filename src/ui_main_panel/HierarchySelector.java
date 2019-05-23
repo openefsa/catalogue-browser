@@ -252,7 +252,6 @@ public class HierarchySelector extends Observable implements Observer {
 	 * @param hierarchy
 	 * @return false if the hierarchy was not changed true otherwise
 	 */
-	@SuppressWarnings("unchecked")
 	public boolean setSelection ( Hierarchy hierarchy ) {
 
 		Collection<Hierarchy> input = (Collection<Hierarchy>) hierarchyCombo.getInput();

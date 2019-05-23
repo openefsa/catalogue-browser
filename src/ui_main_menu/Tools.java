@@ -1,6 +1,7 @@
 package ui_main_menu;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -98,7 +99,7 @@ public class Tools {
 	 * @throws IOException
 	 */
 	public void uploadXmlData(int catalogueDatabaseId, String catalogueCode) 
-			throws DetailedSOAPException, IOException {
+			throws DetailedSOAPException, FileNotFoundException, IOException {
 		
 		XmlChangesService xmlService = new XmlChangesService();
 		XmlUpdateFile xmlUpdatesFile = xmlService.getById(new XmlUpdateFileDAO(), catalogueDatabaseId);

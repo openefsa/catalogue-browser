@@ -10,8 +10,8 @@ import org.apache.logging.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
@@ -42,10 +42,10 @@ public class FormBrowser {
 		dialog.setImage( new Image( Display.getCurrent() , this.getClass().getClassLoader()
 				.getResourceAsStream( "Print24.gif" ) ) );
 		
-		dialog.setSize(650, 500);
+		dialog.setSize(720, 500);
 
 		dialog.setText( _title );
-		dialog.setLayout( new GridLayout( 1 , false ) );
+		dialog.setLayout( new FillLayout() );
 		
 		_browser = new Browser( dialog , SWT.NONE );
 		GridData gridData = new GridData();

@@ -128,14 +128,14 @@ public class CatalogueWorkbookImporter {
 	 * @throws ImportException
 	 * @throws Exception
 	 */
-	public void importWorkbook(IProgressBar progressBar, String filename, double maxProgress)
+	public void importWorkbook(IProgressBar pb, String filename, double maxProgress)
 			throws IOException, XMLStreamException, OpenXML4JException, SAXException, SQLException, ImportException {
 
-		this.progressBar = progressBar;
+		this.progressBar = pb;
 		this.maxProgress = maxProgress;
 
 		// get the excel data
-		try (WorkbookReader workbookReader = new WorkbookReader(filename);) {
+		try (WorkbookReader workbookReader = new WorkbookReader(filename)) {
 
 			// import catalogue
 			LOGGER.info("Import catalogue sheet");

@@ -1,7 +1,6 @@
 package ui_implicit_facet;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -57,9 +56,9 @@ public class FrameTermImplicitFacets implements Observer {
 	private Listener removeDescriptorListener; // called each time that a facet is removed
 	private Listener updateListener; // called at the end of an adding operation, useful if we have to do something
 										// only once in multiple selection cases
-	
+
 	private Attribute facetCategory;
-	
+
 	public void addAddDescriptorListener(Listener listener) {
 		this.addDescriptorListener = listener;
 	}
@@ -92,7 +91,7 @@ public class FrameTermImplicitFacets implements Observer {
 	 * @param term
 	 */
 	public void setTerm(Term term) {
-		
+
 		this.term = term;
 		implicitFacets.getTreeViewer().setInput(term);
 		refresh();
@@ -127,10 +126,21 @@ public class FrameTermImplicitFacets implements Observer {
 
 	/**
 	 * Refresh the tree
+	 * 
+	 * @author shahaal
 	 */
 	public void refresh() {
-		implicitFacets.getTreeViewer().refresh();
-		implicitFacets.getTreeViewer().expandAll();
+		
+		try {
+			// set redraw to false
+			implicitFacets.getTreeViewer().getControl().setRedraw(false);
+			// make ui changes
+			implicitFacets.getTreeViewer().refresh();
+			implicitFacets.getTreeViewer().expandAll();
+		} finally {
+			// flush changes at once
+			implicitFacets.getTreeViewer().getControl().setRedraw(true);
+		}
 	}
 
 	/**
@@ -150,25 +160,21 @@ public class FrameTermImplicitFacets implements Observer {
 	public Tree getTree() {
 		return getTreeViewer().getTree();
 	}
-	
+
 	/**
-	 * Remove the ancestor (if exists in the selected folder)
-	 * when a child term of it is added
+	 * Remove (into the facet category) the ancestor of the new facet added; note
+	 * that the method is applied to all the facets (implicit and explicit)
+	 * 
 	 * @author shahaal
 	 * @return
 	 */
-	public void checkAncestor(Term descriptor ) {
-		
-		//get the category folder content
-		ContentProviderImplicitFacets provider = (ContentProviderImplicitFacets) implicitFacets.getTreeViewer().getContentProvider();
-		DescriptorTreeItem[] goupItems =Arrays.stream(provider.getChildren(facetCategory)).toArray(DescriptorTreeItem[]::new);
-		
-		//for each item
-		for (DescriptorTreeItem item : goupItems) {
-			//if the the selected term has as ancestor the item then remove it from the term description
-			if (descriptor.hasAncestor(item.getTerm(), facetCategory.getHierarchy())) 
-				term.removeImplicitFacet(item.getDescriptor());
+	private void checkAncestors(Term descriptor) {
+
+		for (FacetDescriptor fd : term.getDescriptorsByCategory(facetCategory, true)) {
+			if (descriptor.hasAncestor(fd.getDescriptor(), facetCategory.getHierarchy()))
+				term.removeImplicitFacet(fd);
 		}
+
 	}
 
 	/**
@@ -188,11 +194,12 @@ public class FrameTermImplicitFacets implements Observer {
 
 		// add the implicit facets list in the tab
 		implicitFacets = new TreeImplicitFacets(parent, catalogue);
-		
+
 	}
 
 	/**
 	 * Add the contextual menu to the implicit facets
+	 * 
 	 * @author shahaal
 	 * @param parent
 	 * @param implicitFacets
@@ -208,24 +215,6 @@ public class FrameTermImplicitFacets implements Observer {
 		addImplicitFacet
 				.setImage(new Image(Display.getCurrent(), ClassLoader.getSystemResourceAsStream("add-icon.png")));
 		addImplicitFacet.setText(Messages.getString("TreeImplicitFacets.AddCommand"));
-		
-		//shahaal: double click on the term for directly opening add term window
-		implicitFacets.addDoubleClickListener(new IDoubleClickListener() {
-			
-			@Override
-			public void doubleClick(DoubleClickEvent arg0) {
-				addTermsToSelection(parent, implicitFacets);
-			}
-		});
-				
-		//shahaal: listener called when click on add menu item
-		addImplicitFacet.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				addTermsToSelection(parent, implicitFacets);
-			}
-
-		});
 
 		// remove menu item
 		final MenuItem removeImplicitFacet = new MenuItem(implicitFacetOperationMenu, SWT.PUSH);
@@ -233,46 +222,6 @@ public class FrameTermImplicitFacets implements Observer {
 		removeImplicitFacet
 				.setImage(new Image(Display.getCurrent(), ClassLoader.getSystemResourceAsStream("remove-icon.png")));
 		removeImplicitFacet.setText(Messages.getString("TreeImplicitFacets.RemoveCommand"));
-
-		removeImplicitFacet.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-
-				// return if empty selection
-				if (implicitFacets.getSelection().isEmpty())
-					return;
-				
-				// get the selected tree item from the implicit facet tree
-				// ( we can have only selected a descriptor tree item, since remove is disabled
-				// for
-				// facet categories )
-				DescriptorTreeItem treeItem = (DescriptorTreeItem) ((IStructuredSelection) (implicitFacets
-						.getSelection())).getFirstElement();
-
-				// remove the descriptor contained in the selected tree node from the implicit
-				// facets
-				term.removeImplicitFacet(treeItem.getDescriptor());
-				
-				// update table input
-				setTerm(term);
-				
-				// call the remove listener if it was set
-				if (removeDescriptorListener != null) {
-
-					// set as event data the removed attribute
-					Event event = new Event();
-					event.data = treeItem.getDescriptor();
-
-					removeDescriptorListener.handleEvent(event);
-				}
-				
-				// call the update listener if remove process if finished
-				if (updateListener != null) {
-					updateListener.handleEvent(new Event());
-				}
-
-			}
-		});
 
 		// set the menu for the tree
 		implicitFacets.getTree().setMenu(implicitFacetOperationMenu);
@@ -291,6 +240,72 @@ public class FrameTermImplicitFacets implements Observer {
 
 				addImplicitFacet.setEnabled(enables[0]);
 				removeImplicitFacet.setEnabled(enables[1]);
+			}
+		});
+
+		// shahaal: double click on the term for directly opening add term window
+		implicitFacets.addDoubleClickListener(new IDoubleClickListener() {
+
+			@Override
+			public void doubleClick(DoubleClickEvent arg0) {
+
+				Object selectedElem = ((IStructuredSelection) implicitFacets.getSelection()).getFirstElement();
+
+				boolean[] enables = isAddableRemovable(term, selectedElem);
+
+				// if it is possible to add terms
+				if (enables[0])
+					addTermsToSelection(parent, implicitFacets);
+			}
+		});
+
+		// shahaal: listener called when click on add menu item
+		addImplicitFacet.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				addTermsToSelection(parent, implicitFacets);
+			}
+
+		});
+
+		// add the remove option
+		removeImplicitFacet.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+
+				// return if empty selection
+				if (implicitFacets.getSelection().isEmpty())
+					return;
+
+				// get the selected tree item from the implicit facet tree
+				// ( we can have only selected a descriptor tree item, since remove is disabled
+				// for
+				// facet categories )
+				DescriptorTreeItem treeItem = (DescriptorTreeItem) ((IStructuredSelection) (implicitFacets
+						.getSelection())).getFirstElement();
+
+				// remove the descriptor contained in the selected tree node from the implicit
+				// facets
+				term.removeImplicitFacet(treeItem.getDescriptor());
+
+				// update table input
+				setTerm(term);
+
+				// call the remove listener if it was set
+				if (removeDescriptorListener != null) {
+
+					// set as event data the removed attribute
+					Event event = new Event();
+					event.data = treeItem.getDescriptor();
+
+					removeDescriptorListener.handleEvent(event);
+				}
+
+				// call the update listener if remove process if finished
+				if (updateListener != null) {
+					updateListener.handleEvent(new Event());
+				}
+
 			}
 		});
 
@@ -327,14 +342,19 @@ public class FrameTermImplicitFacets implements Observer {
 
 			// count the descriptors
 			descriptorsCount = baseTerm.getDescriptorsByCategory((Attribute) facetCategory, true).size();
-		}else {
-			//Author: shahaal
+
+			// shahaal: add the impl facets
+			descriptorsCount += baseTerm.getInheritedImplicitFacets((Attribute) facetCategory).size();
+
+		} else {
+			// Author: shahaal
 			// if we selected a facet descriptor we get the cardinality from the attribute
 			// contained into the
 			// descriptor, which is the facet category
-			//cardinality = ((DescriptorTreeItem) facetCategory).getDescriptor().getFacetCategory()
-			//		.getSingleOrRepeatable();
-			cardinality = "single";
+			cardinality = ((DescriptorTreeItem) facetCategory).getDescriptor().getFacetCategory()
+					.getSingleOrRepeatable();
+
+			// cardinality = "single";
 			// we have at least one descriptor
 			descriptorsCount = 1;
 
@@ -346,13 +366,12 @@ public class FrameTermImplicitFacets implements Observer {
 			isRemovable = !((DescriptorTreeItem) facetCategory).isInherited();
 			//
 		}
-		
+
 		// get the attribute cardinality and evaluate the addability/removability
 		switch (cardinality) {
 
 		// if single cardinality ( zero or one descriptor allowed )
 		case Attribute.cardinalitySingle:
-
 			// allow adding descriptors only if others are not already present
 			if (descriptorsCount == 0)
 				isAddable = true;
@@ -360,19 +379,16 @@ public class FrameTermImplicitFacets implements Observer {
 
 		// if repeatable cardinality ( zero or more descriptors )
 		case Attribute.cardinalityRepeatable:
-
 			// allow adding descriptors without limitations
 			isAddable = true;
 			isMultipleAddable = true;
 			break;
-			
-		//Author: shahaal
+
 		default:
 			isAddable = false;
-			isRemovable=false;
+			isRemovable = false;
 			isMultipleAddable = false;
 			break;
-		//
 		}
 
 		// Return embedded results
@@ -387,38 +403,42 @@ public class FrameTermImplicitFacets implements Observer {
 		// forward update to the table
 		implicitFacets.update(o, arg);
 	}
-	
-	//shahaal: method used to create the window which show all the possible terms which could be added to the group selected
+
+	/**
+	 * method used to create the window which show all the possible terms which
+	 * could be added to the group selected
+	 * 
+	 * @author shahaal
+	 * @param parent
+	 * @param implicitFacets
+	 */
 	public void addTermsToSelection(final Shell parent, final TreeViewer implicitFacets) {
-		
+
 		// return if empty selection
 		if (implicitFacets.getSelection().isEmpty())
 			return;
-		
+
 		// get the selected element ( facet category or descriptor )
 		Object selectedElem = ((IStructuredSelection) (implicitFacets.getSelection())).getFirstElement();
-		
-		// get the facet category from the selection
+
 		if (selectedElem instanceof Attribute) // if we have selected the facet category simply cast it
 			facetCategory = (Attribute) selectedElem;
 		else // if we have selected a descriptor get the category from it
 			facetCategory = ((DescriptorTreeItem) selectedElem).getDescriptor().getFacetCategory();
-		
-		
+
 		// open a form to select descriptors. In particular we enable the multiple
-		// selection
-		// only if the facet category is repeatable, that is, with cardinality zero or
-		// more
-		
-		//shahaal
+		// selection only if the facet category is repeatable (cardinality 0 or + )
+
+		// shahaal
 		parent.setEnabled(false);
-		
-		FormSelectTerm sf = new FormSelectTerm(parent, Messages.getString("Browser.SelectTermWindowTitle"), term.getCatalogue(), facetCategory.isRepeatable(), false);
-			
+
+		FormSelectTerm sf = new FormSelectTerm(parent, Messages.getString("Browser.SelectTermWindowTitle"),
+				term.getCatalogue(), facetCategory.isRepeatable(), false);
+
 		// set the root term for the form in order to show only
 		// the facet related to the facet category
 		sf.setRootTerm(facetCategory);
-		
+
 		// if cardinality is single
 		if (!facetCategory.isRepeatable()) {
 
@@ -432,7 +452,7 @@ public class FrameTermImplicitFacets implements Observer {
 				sf.setRootTerm(inh.get(0).getTerm(), facetCategory.getHierarchy());
 			}
 		}
-		
+
 		// display the form
 		sf.display();
 
@@ -440,44 +460,32 @@ public class FrameTermImplicitFacets implements Observer {
 
 		// get an instance of the global manager
 		GlobalManager manager = GlobalManager.getInstance();
-		
+
 		// get the current catalogue
 		Catalogue currentCat = manager.getCurrentCatalogue();
-		
+
 		// for each selected descriptor we add it
-		for (int i = 0; i < sf.getSelectedTerms().size(); i++) {
-			
-			// get the current descriptor
-			Term descriptor = (Term) sf.getSelectedTerms().get(i);
-			
-			// find the implicit facet attribute
-			// TODO move this code under Catalogue
-			Attribute facetAttr = null;
-			for (Attribute attr : currentCat.getAttributes()) {
-				if (attr.isImplicitFacet()) {
-					facetAttr = attr;
-					break;
-				}
-			}
-			
-			//check if the selected term has ancestors into the facets group folder
-			checkAncestor(descriptor);
-			
+		for (Term descriptor : sf.getSelectedTerms()) {
+
+			Attribute facetAttr = currentCat.findImplicitFacetsAttribute();
+
+			// check if the selected term has ancestors into the facets group folder
+			checkAncestors(descriptor);
+
 			// create the term attribute for the facet descriptor
 			TermAttribute ta = new TermAttribute(term, facetAttr,
 					FacetDescriptor.getFullFacetCode(descriptor, facetCategory));
-			
+
 			// create the new facet descriptor using the facet category and the term full
-			// code
-			// we set the facet type with the newFacetType
+			// code we set the facet type with the newFacetType
 			FacetDescriptor attr = new FacetDescriptor(descriptor, ta, newFacetType);
-			
+
 			// add the descriptor to the implicit facets
 			term.addImplicitFacet(attr);
-			
+
 			// update the table input
 			setTerm(term);
-			
+
 			// call the add listener if it was set
 			if (addDescriptorListener != null) {
 
@@ -497,6 +505,6 @@ public class FrameTermImplicitFacets implements Observer {
 		// shahaal
 		if (!parent.isDisposed())
 			parent.setEnabled(true);
-		
+
 	}
 }
