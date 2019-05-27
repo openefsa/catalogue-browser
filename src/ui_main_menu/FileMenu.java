@@ -226,7 +226,7 @@ public class FileMenu implements MainMenuItem {
 	private MenuItem addDcMI(Menu menu) {
 
 		final MenuItem dc = new MenuItem(menu, SWT.CASCADE);
-		dc.setText("Data Collection");
+		dc.setText(Messages.getString("BrowserMenu.CataloguesRepo"));
 
 		// Initialize the menu
 		final Menu selectDcMenu = new Menu(shell, SWT.DROP_DOWN);

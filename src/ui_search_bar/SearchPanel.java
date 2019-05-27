@@ -8,8 +8,11 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -41,8 +44,12 @@ public class SearchPanel implements Observer {
 	 */
 	public SearchPanel( Composite parent, boolean addGlobalSearch, Catalogue catalogue ) {
 		
+		Group searchGroup = new Group(parent, SWT.NONE);
+		searchGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		searchGroup.setLayout(new GridLayout(1, false));
+		
 		// create the search bar
-		searchBar = new SearchBar( parent, addGlobalSearch );
+		searchBar = new SearchBar( searchGroup, addGlobalSearch );
 		
 		// create the graphics of the search bar
 		searchBar.display();
@@ -51,7 +58,7 @@ public class SearchPanel implements Observer {
 		searchBar.setEnabled( false );
 		
 		// table to show the results
-		table = new TermTable( parent, catalogue );
+		table = new TermTable( searchGroup, catalogue );
 		
 		searchBar.setListener( new SearchListener() {
 			

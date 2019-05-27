@@ -19,7 +19,6 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
@@ -291,20 +290,20 @@ public class SearchBar implements Observer {
 		gridData.horizontalAlignment = SWT.FILL;
 
 		// Setting the "search" widget
-		Group searchGroup = new Group(parent, SWT.NONE);
+		Composite searchComposite = new Composite(parent, SWT.NONE);
 
 		// if no global buttons place all the element on one row
 		int numberOfColumns = addGlobalSearch ? 3 : 4;
 
-		searchGroup.setLayout(new GridLayout(numberOfColumns, false));
-		searchGroup.setLayoutData(gridData);
+		searchComposite.setLayout(new GridLayout(numberOfColumns, false));
+		searchComposite.setLayoutData(gridData);
 
 		// Search label
-		Label labelSearch = new Label(searchGroup, SWT.NONE);
+		Label labelSearch = new Label(searchComposite, SWT.NONE);
 		labelSearch.setText(Messages.getString("SearchBar.SearchLabel"));
 
 		// Search text box (where you write keywords)
-		textSearch = addSearchTextBox(searchGroup);
+		textSearch = addSearchTextBox(searchComposite);
 
 		// listener for text changes (enable/disable button search)
 		textSearch.addModifyListener(new ModifyListener() {
@@ -348,12 +347,12 @@ public class SearchBar implements Observer {
 		});
 
 		// search options, all words, any word...
-		comboOptSearch = addSearchOptions(searchGroup);
+		comboOptSearch = addSearchOptions(searchComposite);
 
 		// add global search button if required
 		if (addGlobalSearch) {
 
-			Composite g = new Composite(searchGroup, SWT.NONE);
+			Composite g = new Composite(searchComposite, SWT.NONE);
 			gridData = new GridData();
 			gridData.verticalAlignment = SWT.FILL;
 			gridData.horizontalAlignment = SWT.FILL;
@@ -370,7 +369,7 @@ public class SearchBar implements Observer {
 
 			buttonSearch = new Button(g, SWT.PUSH);// searchGroup
 		} else
-			buttonSearch = new Button(searchGroup, SWT.PUSH);// searchGroup
+			buttonSearch = new Button(searchComposite, SWT.PUSH);// searchGroup
 
 		buttonSearch.setAlignment(SWT.CENTER);
 		buttonSearch.setText(Messages.getString("SearchBar.GoButton"));

@@ -132,7 +132,6 @@ public class FrameTermFields {
 	 * @author avonva
 	 * @param term
 	 */
-	@SuppressWarnings("unlikely-arg-type")
 	public void setTerm(Term term) {
 
 		if (term == null) {

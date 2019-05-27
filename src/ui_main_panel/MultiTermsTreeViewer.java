@@ -343,7 +343,7 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 
 			// expand the tree until the term level
 			tree.expandToLevel(term, level);
-
+			
 			// select the term
 			tree.setSelection(new StructuredSelection(term));
 
@@ -536,6 +536,7 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 
 			// refresh contents
 			tree.refresh();
+			
 		}
 	}
 

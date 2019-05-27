@@ -79,7 +79,7 @@ public class TermsTreePanel extends Observable implements Observer {
 	private HierarchyChangedListener changeHierarchyListener;
 	private ISelectionChangedListener selectionListener;
 
-	// term clipboard to manage all the cut copy paste operations on terms
+	// term clip board to manage all the cut copy paste operations on terms
 	TermClipboard termClip;
 
 	// order changer to manage move up/move down/move level up/drag&drop operations
@@ -97,10 +97,11 @@ public class TermsTreePanel extends Observable implements Observer {
 		this.shell = parent.getShell();
 
 		this.catalogue = catalogue;
-		// initialize the term clipboard object
+
+		// initialise the term clip board object
 		termClip = new TermClipboard();
 
-		// initialize the term order changer object
+		// initialise the term order changer object
 		termOrderChanger = new TermOrderChanger();
 
 		// add the main tree viewer
@@ -110,6 +111,7 @@ public class TermsTreePanel extends Observable implements Observer {
 
 	/**
 	 * Set focus on tree
+	 * 
 	 * @author shahaal
 	 */
 	public void setTreeFocus() {
@@ -332,26 +334,26 @@ public class TermsTreePanel extends Observable implements Observer {
 					setTreeFocus();
 			}
 		});
-
+		
 		// single click
 		tree.addSelectionChangedListener(new ISelectionChangedListener() {
 
 			@Override
 			public void selectionChanged(SelectionChangedEvent arg0) {
-
+				
 				// if the selection is empty or bad instance return
 				if (arg0.getSelection().isEmpty() || !(arg0.getSelection() instanceof IStructuredSelection))
 					return;
-				
+
 				setChanged();
 				notifyObservers();
 
 				// add the menu to the tree if it was not set before
 				addContextualMenu(false);
 
-				if (selectionListener != null) {
+				if (selectionListener != null)
 					selectionListener.selectionChanged(arg0);
-				}
+				
 			}
 		});
 
@@ -910,8 +912,9 @@ public class TermsTreePanel extends Observable implements Observer {
 
 	/**
 	 * Add a menu item which allows importing a txt file containing a list of terms
-	 * The file must be exported from excel as Tab delimiter txt file with the following columns:
-	 * [parentCode, termExtendedName, termScopenote, termScientificName]
+	 * The file must be exported from excel as Tab delimiter txt file with the
+	 * following columns: [parentCode, termExtendedName, termScopenote,
+	 * termScientificName]
 	 * 
 	 * @author shahaal
 	 * @param menu
@@ -955,8 +958,8 @@ public class TermsTreePanel extends Observable implements Observer {
 					// for each term in txt add it
 					try {
 						int termsAdded = parse.startToImportTerms();
-						String mes = "Imported "+termsAdded+" Terms.";
-						GlobalUtil.showDialog(shell, "Terms From TXT", mes , SWT.ICON_INFORMATION );
+						String mes = "Imported " + termsAdded + " Terms.";
+						GlobalUtil.showDialog(shell, "Terms From TXT", mes, SWT.ICON_INFORMATION);
 					} catch (TermCodeException e1) {
 						LOGGER.error("Something went wrong during the read terms process...");
 						e1.printStackTrace();
@@ -1317,6 +1320,7 @@ public class TermsTreePanel extends Observable implements Observer {
 
 	/**
 	 * Add a menu item which allows opening the describe on the selected term
+	 * 
 	 * @author shahaal
 	 * @param menu
 	 */
@@ -1471,6 +1475,8 @@ public class TermsTreePanel extends Observable implements Observer {
 
 	/**
 	 * Called by the observable
+	 * 
+	 * @author shahaal
 	 */
 	@Override
 	public void update(Observable o, Object data) {
@@ -1493,5 +1499,12 @@ public class TermsTreePanel extends Observable implements Observer {
 			if (catalogue != null)
 				tree.setHierarchy(catalogue.getDefaultHierarchy());
 		}
+
+		// update selected element from history
+		if (o instanceof TermHistory) {
+			Term term = (Term) data;
+			tree.selectTerm(term);
+		}
+
 	}
 }

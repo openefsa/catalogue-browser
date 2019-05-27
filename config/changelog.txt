@@ -16,6 +16,9 @@
 	+ Optimisations of the export process while installing the ICT
 	+ Redesigned main menu
 	+ Redesigned term information panel
+	+ Added back/next term action
+	+ UI improvements to the filter panel
+	+ UI changes to the group components 
 	
 --- Bugs fixed and other improvements:
 

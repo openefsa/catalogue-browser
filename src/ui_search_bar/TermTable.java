@@ -60,8 +60,8 @@ public class TermTable implements Observer {
 		// layout data of the table
 		table.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		// albydev: set the focus when enter the table
-		// check before if the search field is not selected
+		// shahaal: set the focus when enter the table
+		// check before if search field is not selected
 		table.getTable().addListener(SWT.MouseEnter, new Listener() {
 
 			public void handleEvent(Event event) {

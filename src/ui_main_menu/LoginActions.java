@@ -78,38 +78,25 @@ public class LoginActions {
 
 						progressBar.close();
 
-						String title, msg;
+						String title = null, msg = null;
 
-						switch (code) {
-						// if correct
-						case ThreadFinishedListener.OK:
-						case ThreadFinishedListener.ERROR:
-
-							if (userLevelListener != null)
-								userLevelListener.handleEvent(null);
-
+						if (code == ThreadFinishedListener.OK || code == ThreadFinishedListener.ERROR) {
 							try {
 								User.getInstance().startPendingRequests();
 							} catch (SQLException | IOException e) {
+								title = Messages.getString("FormDCFLogin.ErrorTitle");
+								msg = Messages.getString("FormDCFLogin.WrongCredentialMessage");
+								GlobalUtil.showDialog(shell, title, msg, SWT.ICON_INFORMATION);
 								e.printStackTrace();
 							}
-
-							title = Messages.getString("Login.PermissionTitle");
-
-							if (User.getInstance().isCatManager())
-								msg = Messages.getString("Login.CatalogueManagerMessage");
-							else
-								msg = Messages.getString("Login.DataProviderMessage");
-							break;
-						// if errors
-						default:
+						} else {
 							if (userLevelListener != null)
 								userLevelListener.handleEvent(null);
+
 							title = Messages.getString("ExportCatalogue.WarningTitle");
 							msg = Messages.getString("ExportCatUsers.WarningMessage");
+							GlobalUtil.showDialog(shell, title, msg, SWT.ICON_INFORMATION);
 						}
-
-						GlobalUtil.showDialog(shell, title, msg, SWT.ICON_INFORMATION);
 
 					}
 				});

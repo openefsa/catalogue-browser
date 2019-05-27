@@ -72,7 +72,7 @@ import window_restorer.RestoreableWindow;
  * attributes, implicit facets, applicabilities...), a search bar, a combo box
  * to select the current hierarchy or facet list...
  * 
- * @author Shahaj Alban 
+ * @author Shahaj Alban
  * @author Thomas Milani(documentation)
  * @author Avon Valentino
  * 
@@ -97,6 +97,9 @@ public class MainPanel implements Observer {
 
 	// label which shows the current open catalogue label
 	private CatalogueLabel catalogueLabel;
+
+	// nav buttons for previous/next term
+	private TermHistory history;
 
 	// combo box with radio buttons to select the displayed hierarchy
 	private HierarchySelector hierarchySelector;
@@ -370,7 +373,6 @@ public class MainPanel implements Observer {
 		setShellGraphics();
 	}
 
-
 	public void openLastCatalogue() {
 		// open the last catalogue if present
 		try {
@@ -439,14 +441,14 @@ public class MainPanel implements Observer {
 
 				if (shell.getMenu() != null)
 					shell.getMenu().dispose();
-				
+
 				// redraw the main menu to refresh buttons
 				shell.setMenuBar(menu.createMainMenu());
 				menu.refresh();
-				
+
 				// redraw the tree menu to refresh buttons
 				tree.addContextualMenu(true);
-				
+
 				tabPanel.refresh();
 				tabPanel.redraw();
 
@@ -577,13 +579,12 @@ public class MainPanel implements Observer {
 	}
 
 	/**
-	 * Change the hierarchy to be visualized and expand the tree to the selected
+	 * Change the hierarchy to be visualised and expand the tree to the selected
 	 * term
 	 * 
-	 * @param hierarchy
-	 *            the new hierarchy to be visualized
-	 * @param term
-	 *            the selected term which has to be reopened in the new hierarchy
+	 * @param hierarchy the new hierarchy to be visualised
+	 * @param term      the selected term which has to be reopened in the new
+	 *                  hierarchy
 	 */
 	public void changeHierarchy(Hierarchy hierarchy, Nameable term) {
 
@@ -599,8 +600,7 @@ public class MainPanel implements Observer {
 	/**
 	 * Change the hierarchy to be visualized
 	 * 
-	 * @param hierarchy
-	 *            the new hierarchy to be visualized
+	 * @param hierarchy the new hierarchy to be visualized
 	 */
 	public void changeHierarchy(Hierarchy hierarchy) {
 		// update the combo box selection
@@ -658,25 +658,6 @@ public class MainPanel implements Observer {
 			}
 		});
 
-		// shahaal: add the selected term to the list of indexes
-		/*
-		 * tree.addSelectionChangedListener(new ISelectionChangedListener() {
-		 * 
-		 * @Override public void selectionChanged(SelectionChangedEvent arg0) {
-		 * TreeItemSelection sel = new TreeItemSelection(tree.getFirstSelectedTerm(),
-		 * hierarchySelector.getSelectedHierarchy());
-		 * navigationalButtons.addNewObject(sel); } });
-		 * 
-		 * navigationalButtons.addNavButtonsListener(new
-		 * INavButtonsListener<TreeItemSelection>() {
-		 * 
-		 * @Override public void forwardPressed(TreeItemSelection sel) {
-		 * changeHierarchy(sel.getHierarchy(), sel.getTerm()); }
-		 * 
-		 * @Override public void backPressed(TreeItemSelection sel) {
-		 * changeHierarchy(sel.getHierarchy(), sel.getTerm()); } });
-		 */
-
 		// set the hierarchy combo box input and select the first available hierarchy
 		hierarchySelector.refresh();
 
@@ -714,6 +695,9 @@ public class MainPanel implements Observer {
 
 		// remove elements from the tree
 		tree.setInput(null);
+
+		// clear the history list
+		history.clear();
 
 		// remove the term from the panel
 		tabPanel.setTerm(null);
@@ -760,12 +744,12 @@ public class MainPanel implements Observer {
 		// I add a sashForm which is a split pane
 		SashForm sashForm = new SashForm(shell, SWT.HORIZONTAL);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		
+
 		// left group for catalogue label, search bar and table
 		GridData leftData = new GridData();
-		leftData.minimumWidth = 180;
-		leftData.widthHint = 180;
-		
+		leftData.minimumWidth = 150;
+		leftData.widthHint = 150;
+
 		Composite leftGroup = new Composite(sashForm, SWT.NONE);
 		leftGroup.setLayout(new GridLayout(1, false));
 		leftGroup.setLayoutData(leftData);
@@ -775,24 +759,23 @@ public class MainPanel implements Observer {
 
 		// add the search bar and table
 		addSearchPanel(leftGroup);
-		
+
 		// group which contains hierarchy selector, tree viewer and tab folder
-		Group rightGroup = new Group(sashForm, SWT.NONE);
+		Group rightGroup = new Group(sashForm, SWT.WRAP);
 		rightGroup.setLayout(new GridLayout(1, false));
-
-		GridData gridData = new GridData();
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = true;
-
-		rightGroup.setLayoutData(gridData);
+		rightGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		// add hierarchy selector and deprecated/non reportable filters
 		addDisplayFilters(rightGroup);
 
 		// add tree viewer and term tabs
 		addRightSashForm(rightGroup);
+
+		// make the tree viewer observe of the history
+		history.addObserver(tree);
+
+		// make the history observe of the tree
+		tree.addObserver(history);
 
 		// make the tree viewer observer of the selected hierarchy
 		hierarchySelector.addObserver(tree);
@@ -889,7 +872,7 @@ public class MainPanel implements Observer {
 				case FileMenu.OPEN_CAT_MI:
 
 					removeData();
-					
+
 					refresh();
 
 					// get the selected catalogue
@@ -907,7 +890,7 @@ public class MainPanel implements Observer {
 
 					// save the current state for the current catalogue
 					saveState();
-					
+
 					removeData();
 					enableUI(false);
 
@@ -968,25 +951,25 @@ public class MainPanel implements Observer {
 					}
 
 					break;
-					
+
 				case ToolsMenu.INSTALL_ICT:
-					//refresh the tools item menu when ict download and install is completed
+					// refresh the tools item menu when ict download and install is completed
 					refresh();
 					break;
-					
+
 				case ToolsMenu.HIER_EDITOR_MI:
 				case ToolsMenu.ATTR_EDITOR_MI:
 					// refresh
 					tabPanel.setTerm(tree.getFirstSelectedTerm());
 					refresh();
 					break;
-					
+
 				default:
 					break;
 				}
 			}
 		});
-		
+
 		menu.setDcfListener(new MenuListener() {
 
 			@Override
@@ -1005,7 +988,7 @@ public class MainPanel implements Observer {
 				}
 			}
 		});
-		
+
 		if (shell.getMenu() != null)
 			shell.getMenu().dispose();
 
@@ -1037,7 +1020,7 @@ public class MainPanel implements Observer {
 
 		// add a search table
 		searchPanel = new SearchPanel(parent, true, catalogue);
-		
+
 		// called when a hierarchy is selected in the
 		// results table using the contextual menu
 		searchPanel.addHierarchyListener(new HierarchyChangedListener() {
@@ -1090,8 +1073,13 @@ public class MainPanel implements Observer {
 	private void addDisplayFilters(Composite parent) {
 
 		Composite selectionGroup = new Composite(parent, SWT.NONE);
-		selectionGroup.setLayout(new GridLayout(10, false));
+		selectionGroup.setLayout(new GridLayout(15, false));
+		selectionGroup.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_CENTER | GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL));
 
+		// nav buttons for previous/next term
+		history = new TermHistory(selectionGroup);
+		history.display();
+		
 		// hierarchy selector (combo box + radio buttons)
 		hierarchySelector = new HierarchySelector(selectionGroup);
 		hierarchySelector.display();
@@ -1104,28 +1092,26 @@ public class MainPanel implements Observer {
 	}
 
 	/**
-	 * Add the right sashform, that is, the form which contains the tree viewer and
+	 * Add the right sash form, that is, the form which contains the tree viewer and
 	 * the tab folder.
 	 * 
 	 * @param parent
 	 */
 	private void addRightSashForm(Composite parent) {
 
-		SashForm sashForm2 = new SashForm(parent, SWT.HORIZONTAL);
+		Composite treeGroup = new Composite(parent, SWT.NONE);
+		treeGroup.setLayout(new GridLayout(1, false));
+		treeGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		GridData gridData = new GridData();
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = true;
-		sashForm2.setLayoutData(gridData);
-		
+		SashForm sashForm2 = new SashForm(treeGroup, SWT.HORIZONTAL | SWT.SMOOTH);
+		sashForm2.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
 		// get the current catalogue
 		Catalogue catalogue = GlobalManager.getInstance().getCurrentCatalogue();
 
 		// add the main tree viewer
 		tree = new TermsTreePanel(sashForm2, catalogue);
-		
+
 		// add the tab folder
 		addTabFolder(sashForm2);
 
