@@ -168,12 +168,17 @@ public class TermCodeGenerator {
 			
 			if (rs.next())
 				lastUsedCode = rs.getString("LAST_USED_CODE");
+<<<<<<< HEAD
 			
 			rs.close();
 			codeStmt.close();
 			con.close();
 			
 		} catch (SQLException e) {
+=======
+		}
+		catch (SQLException e) {
+>>>>>>> 574ffe363e78d250cf6350ff4ea89f2f48352380
 			e.printStackTrace();
 			throw e;
 		}

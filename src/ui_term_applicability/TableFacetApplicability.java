@@ -24,10 +24,15 @@ import utilities.GlobalUtil;
 
 /**
  * Create a facet applicability table (i.e. it shows the applicability of the facets, the attribute
+<<<<<<< HEAD
  * the
  * 
  * @author avonva
  * @author shahaal
+=======
+ * the 
+ * @author avonva
+>>>>>>> 574ffe363e78d250cf6350ff4ea89f2f48352380
  *
  */
 public class TableFacetApplicability {
@@ -80,9 +85,19 @@ public class TableFacetApplicability {
 		tableViewer.setContentProvider( new ContentProviderTermAttribute() );
 		
 		// set the layout data for the table viewer
+<<<<<<< HEAD
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gridData.minimumHeight = 150;
 		gridData.heightHint = 150;
+=======
+		GridData gridData = new GridData();
+		gridData.verticalAlignment = SWT.FILL;
+		gridData.horizontalAlignment = SWT.FILL;
+		gridData.minimumHeight = 150;
+		gridData.heightHint = 150;
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.grabExcessVerticalSpace = true;
+>>>>>>> 574ffe363e78d250cf6350ff4ea89f2f48352380
 
 		tableViewer.getTable().setLayoutData( gridData );
 		tableViewer.getTable().setHeaderVisible( true );

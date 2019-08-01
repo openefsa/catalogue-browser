@@ -13,17 +13,26 @@ import catalogue.ReleaseNotesOperation;
 public class NotesDAOMock implements CatalogueEntityDAO<ReleaseNotesOperation> {
 
 	private Collection<ReleaseNotesOperation> database;
+<<<<<<< HEAD
 
 	public NotesDAOMock() {
 		this.database = new ArrayList<>();
 	}
 
+=======
+	
+	public NotesDAOMock() {
+		this.database = new ArrayList<>();
+	}
+	
+>>>>>>> 574ffe363e78d250cf6350ff4ea89f2f48352380
 	public void clear() {
 		database.clear();
 	}
 
 	@Override
 	public boolean remove(ReleaseNotesOperation attr) {
+<<<<<<< HEAD
 
 		Iterator<ReleaseNotesOperation> iterator = database.iterator();
 
@@ -35,6 +44,19 @@ public class NotesDAOMock implements CatalogueEntityDAO<ReleaseNotesOperation> {
 				iterator.remove();
 		}
 
+=======
+		
+		Iterator<ReleaseNotesOperation> iterator = database.iterator();
+		
+		while(iterator.hasNext()) {
+			
+			ReleaseNotesOperation c = iterator.next();
+			
+			if (c.getId() == attr.getId())
+				iterator.remove();
+		}
+		
+>>>>>>> 574ffe363e78d250cf6350ff4ea89f2f48352380
 		return true;
 	}
 
@@ -62,6 +84,10 @@ public class NotesDAOMock implements CatalogueEntityDAO<ReleaseNotesOperation> {
 
 	@Override
 	public ReleaseNotesOperation getByResultSet(ResultSet rs) throws SQLException {
+<<<<<<< HEAD
+=======
+		// TODO Auto-generated method stub
+>>>>>>> 574ffe363e78d250cf6350ff4ea89f2f48352380
 		return null;
 	}
 
@@ -71,8 +97,12 @@ public class NotesDAOMock implements CatalogueEntityDAO<ReleaseNotesOperation> {
 	}
 
 	@Override
+<<<<<<< HEAD
 	public void setCatalogue(Catalogue catalogue) {
 	}
+=======
+	public void setCatalogue(Catalogue catalogue) {}
+>>>>>>> 574ffe363e78d250cf6350ff4ea89f2f48352380
 
 	@Override
 	public List<Integer> insert(Iterable<ReleaseNotesOperation> attrs) {

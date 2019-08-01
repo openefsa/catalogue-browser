@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 BaseTermGroupCode;BaseTermGroupName;ForbiddenProcessCode;ForbiddenProcessName;OrdCode
 A000L;Cereal grains (and cereal-like grains);A07LG;Flaking;1
 A000L;Cereal grains (and cereal-like grains);A07LH;Flattening / rolling;1
@@ -433,3 +434,440 @@ A04MB;Processed tomato products;A07KJ;Air / heat drying;3
 A04MB;Processed tomato products;A0C0C;Spray drying;3
 A04MB;Processed tomato products;A07KK;Sun drying;3
 A04MB;Processed tomato products;A07JT;Marinating;3
+=======
+BaseTermGroupCode;BaseTermGroupName;ForbiddenProcessCode;ForbiddenProcessName;OrdCode
+A000L;Cereal grains (and cereal-like grains);A07LG;Flaking;1
+A000L;Cereal grains (and cereal-like grains);A07LH;Flattening / rolling;1
+A000L;Cereal grains (and cereal-like grains);A07LL;Puffing / expanding;1
+A000L;Cereal grains (and cereal-like grains);A0C03;Grain milling;1
+A000L;Cereal grains (and cereal-like grains);A0C09;Grain milling - early stages (cleaning);1
+A000L;Cereal grains (and cereal-like grains);A0C0A;Grain milling - flours production;1
+A000L;Cereal grains (and cereal-like grains);A0C0B;Starch production;1
+A000L;Cereal grains (and cereal-like grains);A07LA;Grinding / milling / crushing;1
+A07XJ;Garden vegetables and primary derivatives thereof;A07LN$A07KF;Juicing$Concentration / evaporation;1.2
+A07XJ;Garden vegetables and primary derivatives thereof;A07JT;Marinating;2
+A07XJ;Garden vegetables and primary derivatives thereof;A07KC;Pickling;2
+A07XJ;Garden vegetables and primary derivatives thereof;A0CQZ;Fermentation;2
+A07XJ;Garden vegetables and primary derivatives thereof;A07JY;Yeast fermentation;2
+A07XJ;Garden vegetables and primary derivatives thereof;A07JZ;Bacteria fermentation;2
+A07XJ;Garden vegetables and primary derivatives thereof;A07KA;Mould culturing;2
+A07XJ;Garden vegetables and primary derivatives thereof;A0C6N;Pulping / mashing;3
+A07XJ;Garden vegetables and primary derivatives thereof;A07JP;Preserving with salt;4
+A07XJ;Garden vegetables and primary derivatives thereof;A0F2N;Brining;4
+A07XJ;Garden vegetables and primary derivatives thereof;A07JQ;Preserving with sugars;5
+A07XJ;Garden vegetables and primary derivatives thereof;A07JR;Candying;5
+A07XJ;Garden vegetables and primary derivatives thereof;A07KL;Semi-drying (e.g. Fruits);6
+A07XJ;Garden vegetables and primary derivatives thereof;A07KG;Drying (dehydration);6
+A07XJ;Garden vegetables and primary derivatives thereof;A07KH;Freeze-drying (lyophilisation);6
+A07XJ;Garden vegetables and primary derivatives thereof;A07KJ;Air / heat drying;6
+A07XJ;Garden vegetables and primary derivatives thereof;A0C0C;Spray drying;6
+A07XJ;Garden vegetables and primary derivatives thereof;A07KK;Sun drying;6
+A07XJ;Garden vegetables and primary derivatives thereof;A0BYN;Aseptic filling;7
+A07XJ;Garden vegetables and primary derivatives thereof;A0BYP;Canning / jarring;7
+A011Y;Legumes fresh seeds (beans, peas etc.);A07KL;Semi-drying (e.g. Fruits);1
+A011Y;Legumes fresh seeds (beans, peas etc.);A07KG;Drying (dehydration);1
+A011Y;Legumes fresh seeds (beans, peas etc.);A07KH;Freeze-drying (lyophilisation);1
+A011Y;Legumes fresh seeds (beans, peas etc.);A07KJ;Air / heat drying;1
+A011Y;Legumes fresh seeds (beans, peas etc.);A0C0C;Spray drying;1
+A011Y;Legumes fresh seeds (beans, peas etc.);A07KK;Sun drying;1
+A011Y;Legumes fresh seeds (beans, peas etc.);A0BYN;Aseptic filling;2
+A011Y;Legumes fresh seeds (beans, peas etc.);A0BYP;Canning / jarring;2
+A04RK;Legumes fresh seeds (beans peas etc.);A07LN$A07KF;Juicing$Concentration / evaporation;1.1
+A04RK;Fruit used as fruit;A07JQ;Preserving with sugars;1.2
+A04RK;Fruit used as fruit;A07JR;Candying;3
+A04RK;Fruit used as fruit;A0CQZ;Fermentation;3
+A04RK;Fruit used as fruit;A07JY;Yeast fermentation;2
+A04RK;Fruit used as fruit;A07JZ;Bacteria fermentation;2
+A04RK;Fruit used as fruit;A07KA;Mould culturing;2
+A04RK;Fruit used as fruit;A07KL;Semi-drying (e.g. Fruits);2
+A04RK;Fruit used as fruit;A07KG;Drying (dehydration);4
+A04RK;Fruit used as fruit;A07KH;Freeze-drying (lyophilisation);4
+A04RK;Fruit used as fruit;A07KJ;Air / heat drying;4
+A04RK;Fruit used as fruit;A0C0C;Spray drying;4
+A04RK;Fruit used as fruit;A07KK;Sun drying;4
+A04RK;Fruit used as fruit;A0BYN;Aseptic filling;4
+A04RK;Fruit used as fruit;A0BYP;Canning / jarring;7
+A04RK;Fruit used as fruit;A0CER;Preserving with alcohol;7
+A04RK;Fruit used as fruit;A07JT;Marinating;6
+A04RK;Fruit used as fruit;A07KC;Pickling;5
+A04RK;Fruit used as fruit;A07JP;Preserving with salt;5
+A04RK;Fruit used as fruit;A0F2N;Brining;5
+A04RK;Fruit used as fruit;A0C6N;Pulping / mashing;5
+A0EZP;Fruit/vegetables/plant drinks spreads and related products [NOT REPORTABLE] ;A07LN$A07KF;Juicing$Concentration / evaporation;1.1
+A0EZP;Fruit/vegetables/plant drinks spreads and related products [NOT REPORTABLE] ;A0C6N$A07KF;Pulping / mashing$Concentration / evaporation;1.2
+A0EZP;Fruit/vegetables/plant drinks spreads and related products [NOT REPORTABLE] ;A07MJ$A07KF;Extraction$Concentration / evaporation;1.1
+A0EZP;Fruit/vegetables/plant drinks spreads and related products [NOT REPORTABLE] ;A0BZS$A07KF;Water or steam extraction$Concentration / evaporation;1.1
+A0BY3;Processed or preserved fruits;A07JQ;Preserving with sugars;3
+A0BY3;Processed or preserved fruits;A07JR;Candying;3
+A0BY3;Processed or preserved fruits;A0CQZ;Fermentation;2
+A0BY3;Processed or preserved fruits;A07JY;Yeast fermentation;2
+A0BY3;Processed or preserved fruits;A07JZ;Bacteria fermentation;2
+A0BY3;Processed or preserved fruits;A07KA;Mould culturing;2
+A0BY3;Processed or preserved fruits;A07KL;Semi-drying (e.g. Fruits);4
+A0BY3;Processed or preserved fruits;A07KG;Drying (dehydration);4
+A0BY3;Processed or preserved fruits;A07KH;Freeze-drying (lyophilisation);4
+A0BY3;Processed or preserved fruits;A07KJ;Air / heat drying;4
+A0BY3;Processed or preserved fruits;A0C0C;Spray drying;4
+A0BY3;Processed or preserved fruits;A07KK;Sun drying;4
+A0BY3;Processed or preserved fruits;A0BYN;Aseptic filling;7
+A0BY3;Processed or preserved fruits;A0BYP;Canning / jarring;7
+A0BY3;Processed or preserved fruits;A0CER;Preserving with alcohol;6
+A0BY3;Processed or preserved fruits;A07JT;Marinating;5
+A0BY3;Processed or preserved fruits;A07KC;Pickling;5
+A0BY3;Processed or preserved fruits;A07JP;Preserving with salt;5
+A0BY3;Processed or preserved fruits;A0F2N;Brining;5
+A0BY3;Processed or preserved fruits;A0C6N;Pulping / mashing;8
+A014C;Tree nuts;A0C6N;Pulping / mashing;3
+A014C;Tree nuts;A07JQ;Preserving with sugars;1
+A014C;Tree nuts;A07JR;Candying;1
+A014C;Tree nuts;A07KL;Semi-drying (e.g. Fruits);2
+A014C;Tree nuts;A07KG;Drying (dehydration);2
+A014C;Tree nuts;A07KH;Freeze-drying (lyophilisation);2
+A014C;Tree nuts;A07KJ;Air / heat drying;2
+A014C;Tree nuts;A0C0C;Spray drying;2
+A014C;Tree nuts;A07KK;Sun drying;2
+A01BJ;Primary derivatives from nuts and similar seeds;A0C6N;Pulping / mashing;3
+A01BJ;Primary derivatives from nuts and similar seeds;A07JQ;Preserving with sugars;1
+A01BJ;Primary derivatives from nuts and similar seeds;A07JR;Candying;1
+A01BJ;Primary derivatives from nuts and similar seeds;A07KL;Semi-drying (e.g. Fruits);2
+A01BJ;Primary derivatives from nuts and similar seeds;A07KG;Drying (dehydration);2
+A01BJ;Primary derivatives from nuts and similar seeds;A07KH;Freeze-drying (lyophilisation);2
+A01BJ;Primary derivatives from nuts and similar seeds;A07KJ;Air / heat drying;2
+A01BJ;Primary derivatives from nuts and similar seeds;A0C0C;Spray drying;2
+A01BJ;Primary derivatives from nuts and similar seeds;A07KK;Sun drying;2
+A015E;Oilseeds and oilfruits;A0C02;Oil production;1
+A015E;Oilseeds and oilfruits;A0C06;Oil production - mechanical cold;1
+A015E;Oilseeds and oilfruits;A0C08;Oil production - mechanical warm;1
+A015E;Oilseeds and oilfruits;A0C07;Oil production - solvent based;1
+A015E;Oilseeds and oilfruits;A0PZN;Pressing;2
+A00ZS;Starchy roots and tubers;A07LG;Flaking;2
+A00ZS;Starchy roots and tubers;A07KL;Semi-drying (e.g. Fruits);1
+A00ZS;Starchy roots and tubers;A07KG;Drying (dehydration);1
+A00ZS;Starchy roots and tubers;A07KH;Freeze-drying (lyophilisation);1
+A00ZS;Starchy roots and tubers;A07KJ;Air / heat drying;1
+A00ZS;Starchy roots and tubers;A0C0C;Spray drying;1
+A00ZS;Starchy roots and tubers;A07KK;Sun drying;1
+A010R;Sugar plants;A0C04;Sugar production;1
+A04MA;Aromatic herbs;A07KL;Semi-drying (e.g. Fruits);1
+A04MA;Aromatic herbs;A07KG;Drying (dehydration);1
+A04MA;Aromatic herbs;A07KH;Freeze-drying (lyophilisation);1
+A04MA;Aromatic herbs;A07KJ;Air / heat drying;1
+A04MA;Aromatic herbs;A0C0C;Spray drying;1
+A04MA;Aromatic herbs;A07KK;Sun drying;1
+A04LZ;Aromatic flowers;A07KL;Semi-drying (e.g. Fruits);1
+A04LZ;Aromatic flowers;A07KG;Drying (dehydration);1
+A04LZ;Aromatic flowers;A07KH;Freeze-drying (lyophilisation);1
+A04LZ;Aromatic flowers;A07KJ;Air / heat drying;1
+A04LZ;Aromatic flowers;A0C0C;Spray drying;1
+A04LZ;Aromatic flowers;A07KK;Sun drying;1
+A0EZJ;Processed or preserved herbs, spices and similar;A07KL;Semi-drying (e.g. Fruits);1
+A0EZJ;Processed or preserved herbs, spices and similar;A07KG;Drying (dehydration);1
+A0EZJ;Processed or preserved herbs, spices and similar;A07KH;Freeze-drying (lyophilisation);1
+A0EZJ;Processed or preserved herbs, spices and similar;A07KJ;Air / heat drying;1
+A0EZJ;Processed or preserved herbs, spices and similar;A0C0C;Spray drying;1
+A0EZJ;Processed or preserved herbs, spices and similar;A07KK;Sun drying;1
+A0EYH;Mammals and birds meat;A0BYN;Aseptic filling;4
+A0EYH;Mammals and birds meat;A0BYP;Canning / jarring;4
+A0EYH;Mammals and birds meat;A07JP;Preserving with salt;1
+A0EYH;Mammals and birds meat;A07JV;Smoking;5
+A0EYH;Mammals and birds meat;A16ES;Cold smoking;5
+A0EYH;Mammals and birds meat;A16ET;Hot smoking;5
+A0EYH;Mammals and birds meat;A06TK;Smoke flavour;5
+A0EYH;Mammals and birds meat;A07JT;Marinating;3
+A0EYH;Mammals and birds meat;A07KC;Pickling;3
+A0EYH;Mammals and birds meat;A0CQZ;Fermentation;3
+A0EYH;Mammals and birds meat;A07JY;Yeast fermentation;3
+A0EYH;Mammals and birds meat;A07JZ;Bacteria fermentation;3
+A0EYH;Mammals and birds meat;A07KA;Mould culturing;3
+A0EYH;Mammals and birds meat;A07KL;Semi-drying (e.g. Fruits);2
+A0EYH;Mammals and birds meat;A07KG;Drying (dehydration);2
+A0EYH;Mammals and birds meat;A07KH;Freeze-drying (lyophilisation);2
+A0EYH;Mammals and birds meat;A07KJ;Air / heat drying;2
+A0EYH;Mammals and birds meat;A0C0C;Spray drying;2
+A0EYH;Mammals and birds meat;A07KK;Sun drying;2
+A0EYH;Mammals and birds meat;A07KD;Curing;1
+A0EYH;Mammals and birds meat;A0C6F;Ripening;1
+A01TT;Animal fresh fat tissues;A0BYN;Aseptic filling;4
+A01TT;Animal fresh fat tissues;A0BYP;Canning / jarring;4
+A01TT;Animal fresh fat tissues;A07JP;Preserving with salt;1
+A01TT;Animal fresh fat tissues;A07JV;Smoking;5
+A01TT;Animal fresh fat tissues;A16ES;Cold smoking;5
+A01TT;Animal fresh fat tissues;A16ET;Hot smoking;5
+A01TT;Animal fresh fat tissues;A06TK;Smoke flavour;5
+A01TT;Animal fresh fat tissues;A07JT;Marinating;3
+A01TT;Animal fresh fat tissues;A07KC;Pickling;3
+A01TT;Animal fresh fat tissues;A0CQZ;Fermentation;3
+A01TT;Animal fresh fat tissues;A07JY;Yeast fermentation;3
+A01TT;Animal fresh fat tissues;A07JZ;Bacteria fermentation;3
+A01TT;Animal fresh fat tissues;A07KA;Mould culturing;3
+A01TT;Animal fresh fat tissues;A07KL;Semi-drying (e.g. Fruits);2
+A01TT;Animal fresh fat tissues;A07KG;Drying (dehydration);2
+A01TT;Animal fresh fat tissues;A07KH;Freeze-drying (lyophilisation);2
+A01TT;Animal fresh fat tissues;A07KJ;Air / heat drying;2
+A01TT;Animal fresh fat tissues;A0C0C;Spray drying;2
+A01TT;Animal fresh fat tissues;A07KK;Sun drying;2
+A01TT;Animal fresh fat tissues;A07KD;Curing;1
+A01TT;Animal fresh fat tissues;A0C6F;Ripening;1
+A0BY5;Animal mechanically separated meat (MSM);A0BYN;Aseptic filling;4
+A0BY6;Animal mechanically separated meat (MSM);A0BYP;Canning / jarring;4
+A0BY7;Animal mechanically separated meat (MSM);A07JP;Preserving with salt;1
+A0BY8;Animal mechanically separated meat (MSM);A07JV;Smoking;5
+A0BY9;Animal mechanically separated meat (MSM);A16ES;Cold smoking;5
+A0BY10;Animal mechanically separated meat (MSM);A16ET;Hot smoking;5
+A0BY11;Animal mechanically separated meat (MSM);A06TK;Smoke flavour;5
+A0BY12;Animal mechanically separated meat (MSM);A07JT;Marinating;3
+A0BY13;Animal mechanically separated meat (MSM);A07KC;Pickling;3
+A0BY14;Animal mechanically separated meat (MSM);A0CQZ;Fermentation;3
+A0BY15;Animal mechanically separated meat (MSM);A07JY;Yeast fermentation;3
+A0BY16;Animal mechanically separated meat (MSM);A07JZ;Bacteria fermentation;3
+A0BY17;Animal mechanically separated meat (MSM);A07KA;Mould culturing;3
+A0BY18;Animal mechanically separated meat (MSM);A07KL;Semi-drying (e.g. Fruits);2
+A0BY19;Animal mechanically separated meat (MSM);A07KG;Drying (dehydration);2
+A0BY20;Animal mechanically separated meat (MSM);A07KH;Freeze-drying (lyophilisation);2
+A0BY21;Animal mechanically separated meat (MSM);A07KJ;Air / heat drying;2
+A0BY22;Animal mechanically separated meat (MSM);A0C0C;Spray drying;2
+A0BY23;Animal mechanically separated meat (MSM);A07KK;Sun drying;2
+A0BY24;Animal mechanically separated meat (MSM);A07KD;Curing;1
+A0BY25;Animal mechanically separated meat (MSM);A0C6F;Ripening;1
+A04MQ;Animal offal and other slaughtering products;A0BYN;Aseptic filling;4
+A04MQ;Animal offal and other slaughtering products;A0BYP;Canning / jarring;4
+A04MQ;Animal offal and other slaughtering products;A07JP;Preserving with salt;1
+A04MQ;Animal offal and other slaughtering products;A07JV;Smoking;5
+A04MQ;Animal offal and other slaughtering products;A16ES;Cold smoking;5
+A04MQ;Animal offal and other slaughtering products;A16ET;Hot smoking;5
+A04MQ;Animal offal and other slaughtering products;A06TK;Smoke flavour;5
+A04MQ;Animal offal and other slaughtering products;A07JT;Marinating;3
+A04MQ;Animal offal and other slaughtering products;A07KC;Pickling;3
+A04MQ;Animal offal and other slaughtering products;A0CQZ;Fermentation;3
+A04MQ;Animal offal and other slaughtering products;A07JY;Yeast fermentation;3
+A04MQ;Animal offal and other slaughtering products;A07JZ;Bacteria fermentation;3
+A04MQ;Animal offal and other slaughtering products;A07KA;Mould culturing;3
+A04MQ;Animal offal and other slaughtering products;A07KL;Semi-drying (e.g. Fruits);2
+A04MQ;Animal offal and other slaughtering products;A07KG;Drying (dehydration);2
+A04MQ;Animal offal and other slaughtering products;A07KH;Freeze-drying (lyophilisation);2
+A04MQ;Animal offal and other slaughtering products;A07KJ;Air / heat drying;2
+A04MQ;Animal offal and other slaughtering products;A0C0C;Spray drying;2
+A04MQ;Animal offal and other slaughtering products;A07KK;Sun drying;2
+A04MQ;Animal offal and other slaughtering products;A07KD;Curing;1
+A04MQ;Animal offal and other slaughtering products;A0C6F;Ripening;1
+A0BXT;Processed or preserved meat;A0BYN;Aseptic filling;4
+A0BXT;Processed or preserved meat;A0BYP;Canning / jarring;4
+A0BXT;Processed or preserved meat;A07JP;Preserving with salt;1
+A0BXT;Processed or preserved meat;A07JV;Smoking;5
+A0BXT;Processed or preserved meat;A16ES;Cold smoking;5
+A0BXT;Processed or preserved meat;A16ET;Hot smoking;5
+A0BXT;Processed or preserved meat;A06TK;Smoke flavour;5
+A0BXT;Processed or preserved meat;A07JT;Marinating;3
+A0BXT;Processed or preserved meat;A07KC;Pickling;3
+A0BXT;Processed or preserved meat;A0CQZ;Fermentation;3
+A0BXT;Processed or preserved meat;A07JY;Yeast fermentation;3
+A0BXT;Processed or preserved meat;A07JZ;Bacteria fermentation;3
+A0BXT;Processed or preserved meat;A07KA;Mould culturing;3
+A0BXT;Processed or preserved meat;A07KL;Semi-drying (e.g. Fruits);2
+A0BXT;Processed or preserved meat;A07KG;Drying (dehydration);2
+A0BXT;Processed or preserved meat;A07KH;Freeze-drying (lyophilisation);2
+A0BXT;Processed or preserved meat;A07KJ;Air / heat drying;2
+A0BXT;Processed or preserved meat;A0C0C;Spray drying;2
+A0BXT;Processed or preserved meat;A07KK;Sun drying;2
+A0BXT;Processed or preserved meat;A07KD;Curing;1
+A0BXT;Processed or preserved meat;A0C6F;Ripening;1
+A0EZR;Fish meat and products thereof;A07JV;Smoking;7
+A0EZR;Fish meat and products thereof;A16ES;Cold smoking;7
+A0EZR;Fish meat and products thereof;A16ET;Hot smoking;7
+A0EZR;Fish meat and products thereof;A06TK;Smoke flavour;7
+A0EZR;Fish meat and products thereof;A0CQZ;Fermentation;2
+A0EZR;Fish meat and products thereof;A07JY;Yeast fermentation;2
+A0EZR;Fish meat and products thereof;A07JZ;Bacteria fermentation;2
+A0EZR;Fish meat and products thereof;A07KA;Mould culturing;2
+A0EZR;Fish meat and products thereof;A07JP;Preserving with salt;4
+A0EZR;Fish meat and products thereof;A07KL;Semi-drying (e.g. Fruits);5
+A0EZR;Fish meat and products thereof;A07KG;Drying (dehydration);5
+A0EZR;Fish meat and products thereof;A07KH;Freeze-drying (lyophilisation);5
+A0EZR;Fish meat and products thereof;A07KJ;Air / heat drying;5
+A0EZR;Fish meat and products thereof;A0C0C;Spray drying;5
+A0EZR;Fish meat and products thereof;A07KK;Sun drying;5
+A0EZR;Fish meat and products thereof;A0BYN;Aseptic filling;6
+A0EZR;Fish meat and products thereof;A0BYP;Canning / jarring;6
+A0EZR;Fish meat and products thereof;A07LM;Texturing;1
+A0EZR;Fish meat and products thereof;A0C6N;Pulping / mashing;1
+A0EZR;Fish meat and products thereof;A07JT;Marinating;3
+A0EZR;Fish meat and products thereof;A07KC;Pickling;3
+A0EZQ;Seafood and products thereof;A07JP;Preserving with salt;2
+A0EZQ;Seafood and products thereof;A07KL;Semi-drying (e.g. Fruits);3
+A0EZQ;Seafood and products thereof;A07KG;Drying (dehydration);3
+A0EZQ;Seafood and products thereof;A07KH;Freeze-drying (lyophilisation);3
+A0EZQ;Seafood and products thereof;A07KJ;Air / heat drying;3
+A0EZQ;Seafood and products thereof;A0C0C;Spray drying;3
+A0EZQ;Seafood and products thereof;A07KK;Sun drying;3
+A0EZQ;Seafood and products thereof;A0BYN;Aseptic filling;4
+A0EZQ;Seafood and products thereof;A0BYP;Canning / jarring;4
+A0EZQ;Seafood and products thereof;A07JV;Smoking;5
+A0EZQ;Seafood and products thereof;A16ES;Cold smoking;5
+A0EZQ;Seafood and products thereof;A16ET;Hot smoking;5
+A0EZQ;Seafood and products thereof;A06TK;Smoke flavour;5
+A0EZQ;Seafood and products thereof;A07JT;Marinating;1
+A0EZQ;Seafood and products thereof;A07KC;Pickling;1
+A0BXZ;Milk and milk products (dairy);A07KF;Concentration / evaporation;4
+A0BXZ;Milk and milk products (dairy);A07KM;Condensing milk (concentration + sugars);1
+A0BXZ;Milk and milk products (dairy);A07KL;Semi-drying (e.g. Fruits);1
+A0BXZ;Milk and milk products (dairy);A07KG;Drying (dehydration);1
+A0BXZ;Milk and milk products (dairy);A07KH;Freeze-drying (lyophilisation);1
+A0BXZ;Milk and milk products (dairy);A07KJ;Air / heat drying;1
+A0BXZ;Milk and milk products (dairy);A0C0C;Spray drying;1
+A0BXZ;Milk and milk products (dairy);A07KK;Sun drying;1
+A0BXZ;Milk and milk products (dairy);A0EKQ;Separation (in liquid phase);3
+A0BXZ;Milk and milk products (dairy);A07MC;Centrifugal separation;3
+A0BXZ;Milk and milk products (dairy);A0C0D;Gravitational separation;3
+A0BXZ;Milk and milk products (dairy);A0C6E;Cheesemaking;0
+A0BXZ;Milk and milk products (dairy);A0CQZ;Fermentation;2
+A0BXZ;Milk and milk products (dairy);A07JY;Yeast fermentation;2
+A0BXZ;Milk and milk products (dairy);A07JZ;Bacteria fermentation;2
+A0BXZ;Milk and milk products (dairy);A07KA;Mould culturing;2
+A0BXZ;Milk and milk products (dairy);A07MH;Churning;1
+A0BXZ;Milk and milk products (dairy);A07HJ;Caramelization / browning;1
+A0BXZ;Milk and milk products (dairy);A0F2N;Brining;0
+A0BXZ;Milk and milk products (dairy);A0C6F;Ripening;0
+A031E;Eggs and egg products;A07LC;Removal of external layer;1
+A031E;Eggs and egg products;A07KL;Semi-drying (e.g. Fruits);2
+A031E;Eggs and egg products;A07KG;Drying (dehydration);2
+A031E;Eggs and egg products;A07KH;Freeze-drying (lyophilisation);2
+A031E;Eggs and egg products;A07KJ;Air / heat drying;2
+A031E;Eggs and egg products;A0C0C;Spray drying;2
+A031E;Eggs and egg products;A07KK;Sun drying;2
+A031E;Eggs and egg products;A07GL;Boiling;3
+A031E;Eggs and egg products;A07GR;Frying;3
+A031E;Eggs and egg products;A07GS;Pan frying / shallow frying;3
+A031E;Eggs and egg products;A07GT;Stir frying;3
+A031E;Eggs and egg products;A07GV;Deep frying;3
+A031E;Eggs and egg products;A07LF;Extrusion/extrusion-cooking;3
+A031E;Eggs and egg products;A0BA1;Cooking and similar thermal preparation processes;3
+A031E;Eggs and egg products;A07GF;Blanching;3
+A031E;Eggs and egg products;A07GG;Cooking in water;3
+A031E;Eggs and egg products;A07GH;Poaching;3
+A031E;Eggs and egg products;A07GJ;Simmering;3
+A031E;Eggs and egg products;A07GK;Scalding;3
+A031E;Eggs and egg products;A07GM;Stewing;3
+A031E;Eggs and egg products;A07GN;Bain-marie cooking (in water bath);3
+A031E;Eggs and egg products;A07GP;Steaming;3
+A031E;Eggs and egg products;A07GQ;Pressure cooking;3
+A031E;Eggs and egg products;A07GX;Baking;3
+A031E;Eggs and egg products;A07GY;Roasting;3
+A031E;Eggs and egg products;A0EJY;Grilling/griddling (high temperature cooking);3
+A031E;Eggs and egg products;A07GZ;Broiling/grilling;3
+A031E;Eggs and egg products;A07HA;Griddling;3
+A031E;Eggs and egg products;A07HB;Microwave-cooking;3
+A0ESS;Leaves used for infusions or hot drinks;A07HC;Toasting / coffee roasting;3
+A0ESS;Leaves used for infusions or hot drinks;A07MJ$A07KF;Extraction$Concentration / evaporation;1.1
+A0ESS;Leaves used for infusions or hot drinks;A07KL;Semi-drying (e.g. Fruits);1.2
+A0ESS;Leaves used for infusions or hot drinks;A07KG;Drying (dehydration);2
+A0ESS;Leaves used for infusions or hot drinks;A07KH;Freeze-drying (lyophilisation);2
+A0ESS;Leaves used for infusions or hot drinks;A07KJ;Air / heat drying;2
+A0ESS;Leaves used for infusions or hot drinks;A0C0C;Spray drying;2
+A0ESS;Leaves used for infusions or hot drinks;A07KK;Sun drying;2
+A0ESS;Leaves used for infusions or hot drinks;A07XZ;Instantisation;2
+A0ESS;Leaves used for infusions or hot drinks;A0C0L;Malting;5
+A0ESS;Leaves used for infusions or hot drinks;A0BZN;Pressing;5
+A0ESS;Leaves used for infusions or hot drinks;A0CQZ;Fermentation;5
+A0ESS;Leaves used for infusions or hot drinks;A07JY;Yeast fermentation;4
+A0ESS;Leaves used for infusions or hot drinks;A07JZ;Bacteria fermentation;4
+A0ESS;Leaves used for infusions or hot drinks;A07KA;Mould culturing;4
+A0ESS;Leaves used for infusions or hot drinks;A07MK$A07KF;Brewing / infusion$Concentration / evaporation;4
+A0BYA;Derivatives of coffee, cocoa, tea, herbal infusion materials and similar RPCs;A07HC;Toasting / coffee roasting;3
+A0BYA;Derivatives of coffee, cocoa, tea, herbal infusion materials and similar RPCs;A07MJ$A07KF;Extraction$Concentration / evaporation;1.1
+A0BYA;Derivatives of coffee, cocoa, tea, herbal infusion materials and similar RPCs;A07KL;Semi-drying (e.g. Fruits);2
+A0BYA;Derivatives of coffee, cocoa, tea, herbal infusion materials and similar RPCs;A07KG;Drying (dehydration);2
+A0BYA;Derivatives of coffee, cocoa, tea, herbal infusion materials and similar RPCs;A07KH;Freeze-drying (lyophilisation);2
+A0BYA;Derivatives of coffee, cocoa, tea, herbal infusion materials and similar RPCs;A07KJ;Air / heat drying;2
+A0BYA;Derivatives of coffee, cocoa, tea, herbal infusion materials and similar RPCs;A0C0C;Spray drying;2
+A0BYA;Derivatives of coffee, cocoa, tea, herbal infusion materials and similar RPCs;A07KK;Sun drying;2
+A0BYA;Derivatives of coffee, cocoa, tea, herbal infusion materials and similar RPCs;A07XZ;Instantisation;5
+A0BYA;Derivatives of coffee, cocoa, tea, herbal infusion materials and similar RPCs;A0C0L;Malting;5
+A0BYA;Derivatives of coffee, cocoa, tea, herbal infusion materials and similar RPCs;A0BZN;Pressing;5
+A0BYA;Derivatives of coffee, cocoa, tea, herbal infusion materials and similar RPCs;A0CQZ;Fermentation;4
+A0BYA;Derivatives of coffee, cocoa, tea, herbal infusion materials and similar RPCs;A07JY;Yeast fermentation;4
+A0BYA;Derivatives of coffee, cocoa, tea, herbal infusion materials and similar RPCs;A07JZ;Bacteria fermentation;4
+A0BYA;Derivatives of coffee, cocoa, tea, herbal infusion materials and similar RPCs;A07KA;Mould culturing;4
+A0BYA;Derivatives of coffee, cocoa, tea, herbal infusion materials and similar RPCs;A07MK$A07KF;Brewing / infusion$Concentration / evaporation;1.1
+A0DMX;Tomatoes;A07LN$A07KF;Juicing$Concentration / evaporation;1.1
+A0DMX;Tomatoes;A0C6N$A07KF;Pulping / mashing$Concentration / evaporation;1.2
+A0DMX;Tomatoes;A0BYN;Aseptic filling;1.1
+A0DMX;Tomatoes;A0BYP;Canning / jarring;4
+A0DMX;Tomatoes;A07KL;Semi-drying (e.g. Fruits);4
+A0DMX;Tomatoes;A07KG;Drying (dehydration);3
+A0DMX;Tomatoes;A07KH;Freeze-drying (lyophilisation);3
+A0DMX;Tomatoes;A07KJ;Air / heat drying;3
+A0DMX;Tomatoes;A0C0C;Spray drying;3
+A0DMX;Tomatoes;A07KK;Sun drying;3
+A00HR;Globe tomato;A07LN$A07KF;Juicing$Concentration / evaporation;1.1
+A00HR;Globe tomato;A0C6N$A07KF;Pulping / mashing$Concentration / evaporation;1.2
+A00HR;Globe tomato;A0BYN;Aseptic filling;1.1
+A00HR;Globe tomato;A0BYP;Canning / jarring;4
+A00HR;Globe tomato;A07KL;Semi-drying (e.g. Fruits);4
+A00HR;Globe tomato;A07KG;Drying (dehydration);3
+A00HR;Globe tomato;A07KH;Freeze-drying (lyophilisation);3
+A00HR;Globe tomato;A07KJ;Air / heat drying;3
+A00HR;Globe tomato;A0C0C;Spray drying;3
+A00HR;Globe tomato;A07KK;Sun drying;3
+A00HS;Beefsteak tomato;A07LN$A07KF;Juicing$Concentration / evaporation;1.2
+A00HS;Beefsteak tomato;A0C6N$A07KF;Pulping / mashing$Concentration / evaporation;1.1
+A00HS;Beefsteak tomato;A0BYN;Aseptic filling;4
+A00HS;Beefsteak tomato;A0BYP;Canning / jarring;4
+A00HS;Beefsteak tomato;A07KL;Semi-drying (e.g. Fruits);3
+A00HS;Beefsteak tomato;A07KG;Drying (dehydration);3
+A00HS;Beefsteak tomato;A07KH;Freeze-drying (lyophilisation);3
+A00HS;Beefsteak tomato;A07KJ;Air / heat drying;3
+A00HS;Beefsteak tomato;A0C0C;Spray drying;3
+A00HS;Beefsteak tomato;A07KK;Sun drying;3
+A00HT;Plum tomato;A07LN$A07KF;Juicing$Concentration / evaporation;1.1
+A00HT;Plum tomato;A0C6N$A07KF;Pulping / mashing$Concentration / evaporation;1.2
+A00HT;Plum tomato;A0BYN;Aseptic filling;1.1
+A00HT;Plum tomato;A0BYP;Canning / jarring;4
+A00HT;Plum tomato;A07KL;Semi-drying (e.g. Fruits);4
+A00HT;Plum tomato;A07KG;Drying (dehydration);3
+A00HT;Plum tomato;A07KH;Freeze-drying (lyophilisation);3
+A00HT;Plum tomato;A07KJ;Air / heat drying;3
+A00HT;Plum tomato;A0C0C;Spray drying;3
+A00HT;Plum tomato;A07KK;Sun drying;3
+A00HV;Oxheart tomato;A07LN$A07KF;Juicing$Concentration / evaporation;1.1
+A00HV;Oxheart tomato;A0C6N$A07KF;Pulping / mashing$Concentration / evaporation;1.2
+A00HV;Oxheart tomato;A0BYN;Aseptic filling;1.1
+A00HV;Oxheart tomato;A0BYP;Canning / jarring;4
+A00HV;Oxheart tomato;A07KL;Semi-drying (e.g. Fruits);4
+A00HV;Oxheart tomato;A07KG;Drying (dehydration);3
+A00HV;Oxheart tomato;A07KH;Freeze-drying (lyophilisation);3
+A00HV;Oxheart tomato;A07KJ;Air / heat drying;3
+A00HV;Oxheart tomato;A0C0C;Spray drying;3
+A00HV;Oxheart tomato;A07KK;Sun drying;3
+A00HX;Pear-shaped tomatoes;A07LN$A07KF;Juicing$Concentration / evaporation;1.2
+A00HX;Pear-shaped tomatoes;A0C6N$A07KF;Pulping / mashing$Concentration / evaporation;1.1
+A00HX;Pear-shaped tomatoes;A0BYN;Aseptic filling;4
+A00HX;Pear-shaped tomatoes;A0BYP;Canning / jarring;4
+A00HX;Pear-shaped tomatoes;A07KL;Semi-drying (e.g. Fruits);3
+A00HX;Pear-shaped tomatoes;A07KG;Drying (dehydration);3
+A00HX;Pear-shaped tomatoes;A07KH;Freeze-drying (lyophilisation);3
+A00HX;Pear-shaped tomatoes;A07KJ;Air / heat drying;3
+A00HX;Pear-shaped tomatoes;A0C0C;Spray drying;3
+A00HX;Pear-shaped tomatoes;A07KK;Sun drying;3
+A00HY;Cherry tomatoes;A07LN;Juicing;1.1
+A00HY;Cherry tomatoes;A07KF;Concentration / evaporation;1.2
+A00HY;Cherry tomatoes;A0C6N$A07KF;Pulping / mashing$Concentration / evaporation;1.1
+A00HY;Cherry tomatoes;A0BYN;Aseptic filling;4
+A00HY;Cherry tomatoes;A0BYP;Canning / jarring;4
+A00HY;Cherry tomatoes;A07KL;Semi-drying (e.g. Fruits);3
+A00HY;Cherry tomatoes;A07KG;Drying (dehydration);3
+A00HY;Cherry tomatoes;A07KH;Freeze-drying (lyophilisation);3
+A00HY;Cherry tomatoes;A07KJ;Air / heat drying;3
+A00HY;Cherry tomatoes;A0C0C;Spray drying;3
+A00HY;Cherry tomatoes;A07KK;Sun drying;3
+A04MB;Processed tomato products;A07LN$A07KF;Juicing$Concentration / evaporation;1.1
+A04MB;Processed tomato products;A0C6N$A07KF;Pulping / mashing$Concentration / evaporation;1.2
+A04MB;Processed tomato products;A0BYN;Aseptic filling;1.1
+A04MB;Processed tomato products;A0BYP;Canning / jarring;4
+A04MB;Processed tomato products;A07KL;Semi-drying (e.g. Fruits);4
+A04MB;Processed tomato products;A07KG;Drying (dehydration);3
+A04MB;Processed tomato products;A07KH;Freeze-drying (lyophilisation);3
+A04MB;Processed tomato products;A07KJ;Air / heat drying;3
+A04MB;Processed tomato products;A0C0C;Spray drying;3
+A04MB;Processed tomato products;A07KK;Sun drying;3
+A04MB;Processed tomato products;A07JT;Marinating;3
+>>>>>>> 574ffe363e78d250cf6350ff4ea89f2f48352380

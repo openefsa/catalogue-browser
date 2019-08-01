@@ -65,7 +65,10 @@ public class GlobalPreferenceDAO extends PreferenceDAO {
 			remove ( pref );
 		else
 			insertUpdate( pref );
+<<<<<<< HEAD
 		
+=======
+>>>>>>> 574ffe363e78d250cf6350ff4ea89f2f48352380
 	}
 	
 	

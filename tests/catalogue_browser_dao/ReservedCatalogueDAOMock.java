@@ -66,7 +66,11 @@ public class ReservedCatalogueDAOMock implements CatalogueEntityDAO<ReservedCata
 
 	@Override
 	public ReservedCatalogue getByResultSet(ResultSet rs) throws SQLException {
+<<<<<<< HEAD
 		
+=======
+		// TODO Auto-generated method stub
+>>>>>>> 574ffe363e78d250cf6350ff4ea89f2f48352380
 		return null;
 	}
 
@@ -77,13 +81,21 @@ public class ReservedCatalogueDAOMock implements CatalogueEntityDAO<ReservedCata
 
 	@Override
 	public void setCatalogue(Catalogue catalogue) {
+<<<<<<< HEAD
 		
+=======
+		// TODO Auto-generated method stub
+>>>>>>> 574ffe363e78d250cf6350ff4ea89f2f48352380
 		
 	}
 
 	@Override
 	public List<Integer> insert(Iterable<ReservedCatalogue> attrs) {
+<<<<<<< HEAD
 		
+=======
+		// TODO Auto-generated method stub
+>>>>>>> 574ffe363e78d250cf6350ff4ea89f2f48352380
 		return null;
 	}
 }

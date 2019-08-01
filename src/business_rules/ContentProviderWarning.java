@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package business_rules;
 import java.util.ArrayList;
 
@@ -16,3 +17,23 @@ public class ContentProviderWarning implements IStructuredContentProvider {
 		return l.toArray();
 	}
 }
+=======
+package business_rules;
+import java.util.ArrayList;
+
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.Viewer;
+
+public class ContentProviderWarning implements IStructuredContentProvider {
+
+	public void dispose ( ) {
+	}
+
+	public void inputChanged ( Viewer arg0 , Object arg1 , Object arg2 ) {}
+
+	public Object[] getElements ( Object warnings ) {
+		ArrayList< String > l = (ArrayList< String >) warnings;
+		return l.toArray();
+	}
+}
+>>>>>>> 574ffe363e78d250cf6350ff4ea89f2f48352380

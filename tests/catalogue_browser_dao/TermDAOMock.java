@@ -62,7 +62,11 @@ public class TermDAOMock implements CatalogueEntityDAO<Term> {
 
 	@Override
 	public Term getByResultSet(ResultSet rs) throws SQLException {
+<<<<<<< HEAD
 		
+=======
+		// TODO Auto-generated method stub
+>>>>>>> 574ffe363e78d250cf6350ff4ea89f2f48352380
 		return null;
 	}
 

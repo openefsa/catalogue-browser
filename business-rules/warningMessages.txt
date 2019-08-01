@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Message ID;Trigger Event Description;Text;SemaphoreWarningLevel;TextWarningLevel
 1;if a hierarchy is selected as base term (describe function);Warning: using a hierarchy as a base term is too general, could you be more precise? ;LOW;LOW
 2;if a non-hierarchy is selected as base term (describe function);Base term successfully added ;NONE;NONE
@@ -20,4 +21,28 @@ Message ID;Trigger Event Description;Text;SemaphoreWarningLevel;TextWarningLevel
 19;if one or more source commodities are added to a derivative already having an implicit source commodity (not parent of the added);Risk: use the generic derivative as base term for describing a mixed derivative! ;HIGH;HIGH
 20;if a source is selected for a generic derivative without F27 (neither explicit nor implicit);Risk: it's forbidden to use the source without the (single) source commodity! ;HIGH;HIGH
 21;if wrong term structure or term not found;Error: code not well structured! ;ERROR;ERROR
+=======
+Message ID;Trigger Event Description;Text;SemaphoreWarningLevel;TextWarningLevel
+1;if a hierarchy is selected as base term (describe function);Warning: using a hierarchy as a base term is too general, could you be more precise? ;LOW;LOW
+2;if a non-hierarchy is selected as base term (describe function);Base term successfully added ;NONE;NONE
+3;if a forbidden process is chosen (the derivative should be used);Risk: don't apply a process to a raw commodity! Use the existing derivative instead. ;HIGH;HIGH
+4;if a derivative is described with a process facet with an ordCode value less than the implicit ordCode;Risk: process applied in the wrong order! ;HIGH;HIGH
+5;if an ambiguous term is selected (terms reported in the BR_Exceptions);Warning: an ambiguous term has been selected; please choose a more specific one! ;LOW;LOW
+6;if more than one process with the same ordCode is chosen (mutually exclusive property violated);Risk: these processes cannot be used together! ;HIGH;HIGH
+7;if a base term which does not belong to reporting or exposure hierarchy is selected;Warning: don't use a non reportable term! ;LOW;LOW
+8;if a non exposure hierarchy-term (blue pyramid) is selected as base term (describe);Warning: a non-exposure hierarchy term has been selected! ;LOW;LOW
+9;if an aspecific term is selected (describe);Warning: a non-specific term has been selected! Please choose a more precise one. ;NONE;LOW
+10;if the generic facet Processed (or children) is selected;Warning: a generic process facet has been selected! Please choose a more precise one. ;LOW;LOW
+11;if an ingredient is selected for raw commodity or derivative;Warning: is it a minor ingredient? Please check! ;LOW;LOW
+12;if a single Source Commodity is selected for raw commodity;Risk: for mixed raw commodities only multiple explicit source commodities are allowed! ;HIGH;HIGH
+13;if a source is selected for mixed derivative (having more than one F27.);Risk: source facet not allowed in mixed derivatives! ;HIGH;HIGH
+14;if a source is selected for derivative with only one F27.;Warning: make sure that source is used for better specifying the raw source otherwise is forbidden. ;LOW;LOW
+15;if a base term not valid in the exposure hierarchy is chosen;Risk: the term is not valid for human exposure calculation! ;NONE;HIGH
+16;if a source is selected for composite (c or s);Risk: source not applicable to composite food! ;HIGH;HIGH
+17;if a source commodity is selected for composite (c or s);Risk: source commodity not applicable to composite food! ;HIGH;HIGH
+18;if two processes (implicit or explicit) with decimal ordcode and same integer part are applied (at least one explicit);Risk: use the existing derivative instead of adding the facet! ;HIGH;HIGH
+19;if one or more source commodities are added to a derivative already having an implicit source commodity (not parent of the added);Risk: use the generic derivative as base term for describing a mixed derivative! ;HIGH;HIGH
+20;if a source is selected for a generic derivative without F27 (neither explicit nor implicit);Risk: it's forbidden to use the source without the (single) source commodity! ;HIGH;HIGH
+21;if wrong term structure or term not found;Error: code not well structured! ;ERROR;ERROR
+>>>>>>> 574ffe363e78d250cf6350ff4ea89f2f48352380
 22;if reconstitution is added as process to concentrate, powder or other dehydrated terms;Risk: select the reconstituted version of the product instead! ;HIGH;HIGH
