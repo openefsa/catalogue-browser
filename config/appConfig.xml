@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>Default Properties</comment>
+<entry key="Application.Name">EFSA Catalogue Browser</entry>
+<entry key="Application.Version">1.2.6</entry>
+<entry key="DcfXmlUpdatesCreator.RemotePath">\\fsdama.efsa.eu.int\vol_appSAS_Operational\DataShare\Data\DATA\SSD\METADATA\CAT_BROWSER</entry>
+<entry key="DcfXmlUpdatesCreator.InputFolder">IN</entry>
+<entry key="DcfXmlUpdatesCreator.UpdateFolder">UPDATE</entry>
+<entry key="DcfXmlUpdatesCreator.OutputFolder">OUT</entry>
+</properties>

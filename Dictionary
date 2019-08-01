@@ -1,0 +1,21 @@
+# Here we list the dictionary of the application, that is, the naming conventions and their explanation.
+
+CatalogueObject = base object which is at the base of catalogues, terms, attributes, hierarchies. It contains
+                  all the common information, in order to avoid code repetitions
+Catalogue = object which contains all the below things
+Term = main object of the application, terms represent foods
+Attribute = object which describes a term general characteristic
+Hierarchy = object which contains several terms and group them into a specific hierarchy
+Facet = object which can be added to a term in order to specify the term characteristic with more details
+Implicit facet = a facet which is implicitly contained in a term
+Explicit facet = a facet which is added to a term by a user using the describe function
+Descriptor = For each facet we can select several descriptors, these are the real new specifications of the term
+Applicability = object which represents the relationship between a term and its parent. Also referred as parent term sometimes
+Describe = action which is used to add facets to a term
+Detail level = object which represents how much is detailed the term
+Term type = object which represents the category of a term
+
+Main database = the database which contains all the catalogues metadata and global settings
+Catalogue database = the database of a single catalogue, which contains the catalogue data
+Local catalogue = local version of a catalogue which can be edited without reserving it, 
+but it cannot be uploaded into the dcf
