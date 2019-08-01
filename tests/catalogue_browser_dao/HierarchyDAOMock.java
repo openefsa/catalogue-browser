@@ -13,26 +13,17 @@ import catalogue_object.Hierarchy;
 public class HierarchyDAOMock implements CatalogueEntityDAO<Hierarchy> {
 
 	private Collection<Hierarchy> database;
-<<<<<<< HEAD
 
 	public HierarchyDAOMock() {
 		this.database = new ArrayList<>();
 	}
 
-=======
-	
-	public HierarchyDAOMock() {
-		this.database = new ArrayList<>();
-	}
-	
->>>>>>> 574ffe363e78d250cf6350ff4ea89f2f48352380
 	public void clear() {
 		database.clear();
 	}
 
 	@Override
 	public boolean remove(Hierarchy attr) {
-<<<<<<< HEAD
 
 		Iterator<Hierarchy> iterator = database.iterator();
 
@@ -44,19 +35,6 @@ public class HierarchyDAOMock implements CatalogueEntityDAO<Hierarchy> {
 				iterator.remove();
 		}
 
-=======
-		
-		Iterator<Hierarchy> iterator = database.iterator();
-		
-		while(iterator.hasNext()) {
-			
-			Hierarchy c = iterator.next();
-			
-			if (c.getCode().equals(attr.getCode()))
-				iterator.remove();
-		}
-		
->>>>>>> 574ffe363e78d250cf6350ff4ea89f2f48352380
 		return true;
 	}
 
@@ -84,10 +62,6 @@ public class HierarchyDAOMock implements CatalogueEntityDAO<Hierarchy> {
 
 	@Override
 	public Hierarchy getByResultSet(ResultSet rs) throws SQLException {
-<<<<<<< HEAD
-=======
-		// TODO Auto-generated method stub
->>>>>>> 574ffe363e78d250cf6350ff4ea89f2f48352380
 		return null;
 	}
 
@@ -97,12 +71,8 @@ public class HierarchyDAOMock implements CatalogueEntityDAO<Hierarchy> {
 	}
 
 	@Override
-<<<<<<< HEAD
 	public void setCatalogue(Catalogue catalogue) {
 	}
-=======
-	public void setCatalogue(Catalogue catalogue) {}
->>>>>>> 574ffe363e78d250cf6350ff4ea89f2f48352380
 
 	@Override
 	public List<Integer> insert(Iterable<Hierarchy> attrs) {

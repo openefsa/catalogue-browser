@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 SemaphoreNoWarn = 0;255;0
 SemaphoreLowWarn = 255;255;0
 SemaphoreHighWarn = 255;165;0
@@ -9,15 +8,3 @@ TxtHighWarn = 255;165;0
 TxtErrorWarn = 255;0;0
 ConsoleBG = 0;90;150
 WarnFontSize = 14
-=======
-SemaphoreNoWarn = 0;255;0
-SemaphoreLowWarn = 255;255;0
-SemaphoreHighWarn = 255;165;0
-SemaphoreErrorWarn = 255;0;0
-TxtNoWarn = 0;255;0
-TxtLowWarn = 255;255;0
-TxtHighWarn = 255;165;0
-TxtErrorWarn = 255;0;0
-ConsoleBG = 0;90;150
-WarnFontSize = 14
->>>>>>> 574ffe363e78d250cf6350ff4ea89f2f48352380

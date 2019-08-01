@@ -48,10 +48,6 @@ public class ParentTermDAOMock implements CatalogueRelationDAO<Applicability, Te
 
 	@Override
 	public Applicability getByResultSet(ResultSet rs) throws SQLException {
-<<<<<<< HEAD
-=======
-		// TODO Auto-generated method stub
->>>>>>> 574ffe363e78d250cf6350ff4ea89f2f48352380
 		return null;
 	}
 
@@ -70,55 +66,31 @@ public class ParentTermDAOMock implements CatalogueRelationDAO<Applicability, Te
 
 	@Override
 	public Collection<Applicability> getByA1(Term object) {
-<<<<<<< HEAD
-=======
-		// TODO Auto-generated method stub
->>>>>>> 574ffe363e78d250cf6350ff4ea89f2f48352380
 		return null;
 	}
 
 	@Override
 	public Collection<Applicability> getByA2(Hierarchy object) {
-<<<<<<< HEAD
-=======
-		// TODO Auto-generated method stub
->>>>>>> 574ffe363e78d250cf6350ff4ea89f2f48352380
 		return null;
 	}
 
 	@Override
 	public boolean removeByA1(Term object) {
-<<<<<<< HEAD
-=======
-		// TODO Auto-generated method stub
->>>>>>> 574ffe363e78d250cf6350ff4ea89f2f48352380
 		return false;
 	}
 
 	@Override
 	public boolean removeByA2(Hierarchy object) {
-<<<<<<< HEAD
-=======
-		// TODO Auto-generated method stub
->>>>>>> 574ffe363e78d250cf6350ff4ea89f2f48352380
 		return false;
 	}
 
 	@Override
 	public boolean updateByA1(Term object) {
-<<<<<<< HEAD
-=======
-		// TODO Auto-generated method stub
->>>>>>> 574ffe363e78d250cf6350ff4ea89f2f48352380
 		return false;
 	}
 
 	@Override
 	public boolean updateByA2(Hierarchy object) {
-<<<<<<< HEAD
-=======
-		// TODO Auto-generated method stub
->>>>>>> 574ffe363e78d250cf6350ff4ea89f2f48352380
 		return false;
 	}
 }

@@ -6,10 +6,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import javax.xml.soap.SOAPException;
-<<<<<<< HEAD
 //import javax.xml.soap.SOAPException;
-=======
->>>>>>> 574ffe363e78d250cf6350ff4ea89f2f48352380
 import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.TransformerException;
 

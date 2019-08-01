@@ -96,10 +96,7 @@ public class BaseObject implements Nameable {
 	public String getName() {
 		return name;
 	}
-<<<<<<< HEAD
 
-=======
->>>>>>> 574ffe363e78d250cf6350ff4ea89f2f48352380
 	public String getLabel() {
 		return label;
 	}

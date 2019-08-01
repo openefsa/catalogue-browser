@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 package ui_pending_request_list;
 
 import java.util.ArrayList;
@@ -17,23 +16,3 @@ public class RequestContentProvider implements IStructuredContentProvider {
 		return l.toArray();
 	}
 }
-=======
-package ui_pending_request_list;
-
-import java.util.ArrayList;
-
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.Viewer;
-
-public class RequestContentProvider implements IStructuredContentProvider {
-
-	public void dispose() {}
-
-	public void inputChanged(Viewer arg0, Object arg1, Object arg2) {}
-
-	public Object[] getElements(Object warnings) {
-		ArrayList<String> l = (ArrayList<String>) warnings;
-		return l.toArray();
-	}
-}
->>>>>>> 574ffe363e78d250cf6350ff4ea89f2f48352380

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 eclipse.preferences.version=1
 encoding/<project>=Cp1252
 encoding/SQL=Cp1252
@@ -7,13 +6,3 @@ encoding/log4j-config=Cp1252
 encoding/resources=Cp1252
 encoding/src=Cp1252
 encoding/tests=Cp1252
-=======
-eclipse.preferences.version=1
-encoding/<project>=Cp1252
-encoding/SQL=Cp1252
-encoding/icons=Cp1252
-encoding/log4j-config=Cp1252
-encoding/resources=Cp1252
-encoding/src=Cp1252
-encoding/tests=Cp1252
->>>>>>> 574ffe363e78d250cf6350ff4ea89f2f48352380
