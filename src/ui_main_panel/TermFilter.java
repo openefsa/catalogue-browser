@@ -7,7 +7,7 @@ import java.util.Observable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -58,21 +58,22 @@ public class TermFilter extends Observable {
 	 */
 	public void display(String deprCode, String reprCode, String termCode) {
 
+
+		Composite group = new Composite(parent, SWT.NONE);
+		RowLayout layout = new RowLayout();
+	    layout.center = true;
+		group.setLayout(layout);
+		
 		this.deprCode = deprCode;
 		this.reprCode = reprCode;
 		this.termCode = termCode;
 		
-		Label sep = new Label(parent, SWT.WRAP | SWT.SEPARATOR | SWT.SHADOW_IN | SWT.VERTICAL);
-		GridData layoutData = new GridData();
-		layoutData.heightHint = 25;
-		sep.setLayoutData(layoutData);
-		
 		// Hide
-		Label label= new Label(parent, SWT.NONE);
+		Label label= new Label(group, SWT.NONE);
 		label.setText(Messages.getString("TermFilter.Title"));
 
 		// switch between seeing and not seeing deprecated terms
-		hideDeprecated = new Button(parent, SWT.CHECK);
+		hideDeprecated = new Button(group, SWT.CHECK);
 		hideDeprecated.setEnabled(false);
 		hideDeprecated.setText(Messages.getString("TermFilter.HideDeprecatedTermsButton"));
 
@@ -92,7 +93,7 @@ public class TermFilter extends Observable {
 		});
 
 		// switch between seeing and not seeing reportable terms
-		hideNotInUse = new Button(parent, SWT.CHECK);
+		hideNotInUse = new Button(group, SWT.CHECK);
 		hideNotInUse.setEnabled(false);
 		hideNotInUse.setText(Messages.getString("TermFilter.HideNonReportableTermsButton"));
 
@@ -111,7 +112,7 @@ public class TermFilter extends Observable {
 			}
 		});
 
-		hideTermCode = new Button(parent, SWT.CHECK);
+		hideTermCode = new Button(group, SWT.CHECK);
 		hideTermCode.setEnabled(false);
 		hideTermCode.setText(Messages.getString("TermFilter.HideTermCodesButton"));
 

@@ -6,7 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import catalogue.Catalogue;
-import ict_add_on.ICT;
+import ict_add_on.ICTInstaller;
 import messages.Messages;
 import naming_convention.Headers;
 import progress_bar.IProgressBar;
@@ -144,8 +144,7 @@ public class ExportCatalogueWorkbook {
 			termSheet.write();
 			
 			// copy the new db into the ict main folder
-			ICT ict = new ICT();
-			ict.createDatabase();
+			new ICTInstaller().createDatabase();
 		}
 		
 		// last operation

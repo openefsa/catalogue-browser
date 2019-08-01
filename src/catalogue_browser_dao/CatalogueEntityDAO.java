@@ -13,6 +13,7 @@ import catalogue.Catalogue;
  * insert, remove, update, getById, getByCode, getByResultSet, 
  * getAll methods.
  * @author avonva
+ * 
  *
  * @param <E>
  */

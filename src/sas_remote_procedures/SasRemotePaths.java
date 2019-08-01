@@ -18,19 +18,19 @@ public class SasRemotePaths {
 	 */
 	public static final String XML_UPDATES_CREATOR_INPUT_FOLDER = 
 			XML_UPDATES_CREATOR_PATH + AppConfig.getXmlCreatorInputFolder() + 
-			System.getProperty("file.separator");;
+			System.getProperty("file.separator");
 	
 	/**
 	 * Server folder where the .xml updates files are created
 	 */
 	public static final String XML_UPDATES_CREATOR_UPDATE_FOLDER = 
 			XML_UPDATES_CREATOR_PATH + AppConfig.getXmlCreatorUpdateFolder() + 
-			System.getProperty("file.separator");;
+			System.getProperty("file.separator");
 	
 	/**
 	 * Server folder where the processed .xlsx files are moved
 	 */
 	public static final String XML_UPDATES_CREATOR_OUTPUT_FOLDER = 
 			XML_UPDATES_CREATOR_PATH + AppConfig.getXmlCreatorOutputFolder() + 
-			System.getProperty("file.separator");;
+			System.getProperty("file.separator");
 }

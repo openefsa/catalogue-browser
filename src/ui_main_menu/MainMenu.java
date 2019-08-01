@@ -200,7 +200,7 @@ public class MainMenu extends Observable implements Observer {
 	 * 
 	 * @param loginListener
 	 */
-	public void setDcfListener(MenuListener dcfListener) {
+	public void setLoginListener(MenuListener dcfListener) {
 		this.accountListener = dcfListener;
 	}
 }

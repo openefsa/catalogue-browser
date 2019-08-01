@@ -13,6 +13,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ToolTip;
 
@@ -26,7 +27,7 @@ import ui_main_menu.FileActions;
 
 public class CatalogueLabel implements Observer {
 
-	private Composite composite;
+	private Group composite;
 	private Composite buttonComp;
 	private Button updateBtn;
 	private Label label;
@@ -41,17 +42,18 @@ public class CatalogueLabel implements Observer {
 	 */
 	public CatalogueLabel(final Composite parent) {
 
-		composite = new Composite(parent, SWT.NONE);
+		composite = new Group(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
 
-		GridData gd = new GridData();
+		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false);
 		gd.exclude = true;
 		composite.setVisible(false);
 		composite.setLayoutData(gd);
 
 		// label which shows the label of the current opened catalogue
 		label = new Label(composite, SWT.NONE);
-
+		label.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
 		// set the label font to italic and bold
 		FontData fontData = Display.getCurrent().getSystemFont().getFontData()[0];
 

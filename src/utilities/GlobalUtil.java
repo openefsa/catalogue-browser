@@ -26,6 +26,10 @@ import org.eclipse.swt.widgets.Shell;
 
 import catalogue.Catalogue;
 import catalogue_browser_dao.DatabaseManager;
+import config.AppConfig;
+import dcf_user.User;
+import dcf_user.UserAccessLevel;
+import dcf_user.UserListener;
 import messages.Messages;
 import soap.DetailedSOAPException;
 import soap.SOAPError;
@@ -65,7 +69,7 @@ public final class GlobalUtil {
 	public static final String BUSINESS_RULES_DIR_NAME = "business-rules";
 	public static final String BUSINESS_RULES_DIR_PATH = getBusinessRulesDir();
 
-	// the filename of the warning messages and colors
+	// the filename of the warning messages and colours
 	public static final String WARNING_MESSAGES_FILE = "warningMessages.txt";
 	public static final String WARNING_COLORS_FILE = "warningColors.txt";
 
@@ -98,6 +102,10 @@ public final class GlobalUtil {
 	public static final String ICT_FILE_PATH = ICT_DIR_PATH + ICT_FILE_NAME;
 	public static final String ICT_UPDATE_FILE_PATH = ICT_DIR_PATH + "update.bat";
 
+	public static final String APP_NAME = AppConfig.getAppName();
+	public static final String APP_VERSION = AppConfig.getAppVersion();
+	public static final String APP_TITLE = APP_NAME + " " + APP_VERSION;
+	
 	// private constructor to avoid unnecessary instantiation of the class
     private GlobalUtil() {
         throw new UnsupportedOperationException();
@@ -737,5 +745,39 @@ public final class GlobalUtil {
 			return true;
 
 		return false;
+	}
+	
+	/**
+	 * Method used for updating the name of the shell
+	 * @param shell
+	 */
+	public static void startShellTextUpdate(final Shell shell) {
+
+		// default
+		shell.setText(APP_TITLE + " " + Messages.getString("App.Disconnected"));
+
+		User.getInstance().addUserListener(new UserListener() {
+
+			@Override
+			public void userLevelChanged(UserAccessLevel newLevel) {
+
+				final String connectedAs = newLevel == UserAccessLevel.CATALOGUE_MANAGER
+						? Messages.getString("App.ConnectedCM")
+						: Messages.getString("App.ConnectedDP");
+
+				shell.getDisplay().asyncExec(new Runnable() {
+
+					@Override
+					public void run() {
+						shell.setText(APP_TITLE + " " + connectedAs);
+					}
+				});
+			}
+
+			@Override
+			public void connectionChanged(boolean connected) {
+
+			}
+		});
 	}
 }

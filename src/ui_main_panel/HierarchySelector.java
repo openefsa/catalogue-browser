@@ -16,7 +16,8 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.RowData;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -82,41 +83,43 @@ public class HierarchySelector extends Observable implements Observer {
 	 * Display the hierarchy filter
 	 */
 	public void display() {
-		
-		Label sep = new Label(parent, SWT.WRAP | SWT.SEPARATOR | SWT.SHADOW_IN | SWT.VERTICAL);
-		GridData layoutData = new GridData();
-		layoutData.heightHint = 25;
-		sep.setLayoutData(layoutData);
+
+		Composite group1 = new Composite(parent, SWT.NONE);
+		RowLayout layout = new RowLayout();
+	    layout.center = true;
+		group1.setLayout(layout);
 		
 		// choose
-		Label label = new Label(parent, SWT.NONE);
-		label.setText(Messages.getString("HierarchySelector.Title"));
-		
+		// Label label = new Label(parent, SWT.NONE);
+		// label.setText(Messages.getString("HierarchySelector.Title"));
+
 		// radio button for visualising hierarchies in the combo box
-		hierarchyBtn = new Button(parent, SWT.RADIO);
+		hierarchyBtn = new Button(group1, SWT.RADIO);
 		hierarchyBtn.setText(Messages.getString("HierarchySelector.Hierarchies"));
 		hierarchyBtn.setSelection(true);
 		hierarchyBtn.setEnabled(false);
-		
+
 		// radio button for visualising facets lists in the combo box
-		facetBtn = new Button(parent, SWT.RADIO);
+		facetBtn = new Button(group1, SWT.RADIO);
 		facetBtn.setText(Messages.getString("HierarchySelector.Facets"));
 		facetBtn.setEnabled(false);
-		
-		sep = new Label(parent, SWT.WRAP | SWT.SEPARATOR | SWT.SHADOW_IN | SWT.VERTICAL);
-		sep.setLayoutData(layoutData);
+
+		Composite group2 = new Composite(parent, SWT.NONE);
+		layout = new RowLayout();
+	    layout.center = true;
+		group2.setLayout(layout);
 		
 		// choose
-		Label comboLabel = new Label(parent, SWT.NONE);
-		comboLabel.setText("Root node: ");
-		
-		hierarchyCombo = new ComboViewer(parent, SWT.READ_ONLY);
+		Label comboLabel = new Label(group2, SWT.NONE);
+		comboLabel.setText(Messages.getString("HierarchySelector.Title"));
+
+		hierarchyCombo = new ComboViewer(group2, SWT.READ_ONLY | SWT.DROP_DOWN | SWT.WRAP);
 		hierarchyCombo.setLabelProvider(new LabelProviderProperty());
 		hierarchyCombo.setContentProvider(new ContentProviderProperty());
 		hierarchyCombo.setSorter(new SorterCatalogueObject());
 		hierarchyCombo.getCombo().setEnabled(false);
-		hierarchyCombo.getCombo().setLayoutData(new GridData(120,20));
-		
+		hierarchyCombo.getCombo().setLayoutData(new RowData(200, 15));
+
 		// if a hierarchy is selected from the combo box
 		hierarchyCombo.addSelectionChangedListener(new ISelectionChangedListener() {
 
@@ -231,7 +234,7 @@ public class HierarchySelector extends Observable implements Observer {
 		// (it is useless to have radio buttons if
 		// we have only base hierarchies)
 		boolean radioEnabled = catalogue != null && catalogue.hasAttributeHierarchies();
-		
+
 		hierarchyBtn.setEnabled(radioEnabled);
 		facetBtn.setEnabled(radioEnabled);
 	}
@@ -255,7 +258,7 @@ public class HierarchySelector extends Observable implements Observer {
 
 		hierarchyBtn.setSelection(hierarchy.isHierarchy());
 		facetBtn.setSelection(hierarchy.isFacet());
-		
+
 		// set the first filter
 		setHierarchyFilter(getHierarchyFilter(hierarchy.isFacet()));
 

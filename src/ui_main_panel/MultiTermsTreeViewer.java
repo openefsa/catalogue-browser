@@ -70,13 +70,7 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 			// single selection
 			tree = new TreeViewer(parent, style);
 
-		GridData gridData = new GridData();
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = true;
-
-		tree.getTree().setLayoutData(gridData);
+		tree.getTree().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		contentProvider = new ContentProviderTerm();
 
@@ -84,7 +78,7 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 
 		sorter = new SorterTermViewer();
 
-		// initialize drag n drop listeners
+		// initialise drag n drop listeners
 		drag = new TermTreeDragSourceListener();
 		drop = new TermTreeDropTargetListener(tree);
 
@@ -326,6 +320,7 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 	/**
 	 * Select a term of the tree viewer, expand tree to the selected level
 	 * 
+	 * @author shahaal
 	 * @param term
 	 */
 	public void selectTerm(Nameable term, int level) {
@@ -337,19 +332,20 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 		// if(flag)
 		// tree.getControl().setFocus();
 
-		try {
-			// shahaal dont refresh while expanding for better memory performance
-			tree.getControl().setRedraw(false);
+		// don't refresh while expanding (better performance)
+		tree.getControl().setRedraw(false);
 
-			// expand the tree until the term level
-			tree.expandToLevel(term, level);
-			
-			// select the term
-			tree.setSelection(new StructuredSelection(term));
+		// expand the tree until the term level and load ancestors
+		// tree.expandToLevel(term, level);
 
-		} finally {// Flush all changes at once
-			tree.getControl().setRedraw(true);
-		}
+		// expand the tree until the term level
+		// tree.expandToLevel(level);
+
+		// select the term
+		tree.setSelection(new StructuredSelection(term));
+
+		// refresh after expanding
+		tree.getControl().setRedraw(true);
 	}
 
 	/**
@@ -536,7 +532,7 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 
 			// refresh contents
 			tree.refresh();
-			
+
 		}
 	}
 

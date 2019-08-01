@@ -7,14 +7,13 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 import dcf_user.User;
 import messages.Messages;
-import ui_main_panel.CatalogueBrowserMain;
 import ui_main_panel.FormDcfLogin;
 import ui_main_panel.FormOpenapiLogin;
-import utilities.GlobalUtil;
 
 /**
  * class that allows to login/logout from DCF or OpenApi portal
@@ -117,7 +116,7 @@ public class AccountMenu implements MainMenuItem {
 
 		return loginItem;
 	}
-	
+
 	/**
 	 * Add a menu item which allows to login using the openapi credentials
 	 * 
@@ -132,10 +131,11 @@ public class AccountMenu implements MainMenuItem {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
-				FormOpenapiLogin login = new FormOpenapiLogin(shell, Messages.getString("BrowserMenu.OpenAPILoginWindowTitle"));
+				FormOpenapiLogin login = new FormOpenapiLogin(shell,
+						Messages.getString("BrowserMenu.OpenAPILoginWindowTitle"));
 
 				login.display();
-				
+
 				LoginActions.startLoginThreads(shell, null);
 
 				// disable tools menu until we have
@@ -169,17 +169,15 @@ public class AccountMenu implements MainMenuItem {
 				// logout the user
 				logout();
 
-				// set the text of the shell to default
-				shell.setText(CatalogueBrowserMain.APP_TITLE + " " + Messages.getString("App.Disconnected"));
-				
-				String title = Messages.getString("BrowserMenu.DCFLogoutWindowTitle");
-				String msg = Messages.getString("BrowserMenu.DCFLogout.message");
-
-				GlobalUtil.showDialog(shell, title, msg, SWT.ICON_INFORMATION);
+				// show the logout message
+				MessageBox mb = new MessageBox(shell, SWT.ICON_INFORMATION);
+				mb.setText(Messages.getString("BrowserMenu.DCFLogoutWindowTitle"));
+				mb.setMessage(Messages.getString("BrowserMenu.DCFLogout.message"));
+				mb.open();
 
 				if (listener != null)
 					listener.buttonPressed(logoutItem, LOGOUT_MI, null);
-				
+
 			}
 		});
 
@@ -192,26 +190,26 @@ public class AccountMenu implements MainMenuItem {
 	 * @author shahaal
 	 */
 	private void logout() {
-		
-		//get the user
+
+		// get the user
 		User user = User.getInstance();
-		
+
 		// logout the user
 		user.logout();
 		// remove the credentials from the db
 		user.deleteCredentials();
 		// set the instance at null
 		user.removeUser();
-		
+
 	}
-	
+
 	/**
 	 * Refresh all the menu items contained in the tool menu
 	 */
 	public void refresh() {
 
 		User user = User.getInstance();
-		
+
 		// check if the current catalogue is not empty (has data in it)
 		boolean isLoggedIn = user.isLoggedIn() || user.isLoggedInOpenAPI();
 

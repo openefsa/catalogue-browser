@@ -59,9 +59,9 @@ public class ICTDownloader extends Thread {
 
 			long total = 0;
 
-			LOGGER.info("Starting to download the ICT...");
+			LOGGER.info("Downloading the ICT...");
 			if (progressBar != null)
-				progressBar.setLabel("Downloading the file...");
+				progressBar.setLabel("Downloading the ICT add-on...");
 			
 			while ((count = input.read(data)) != -1) {
 				total += count;

@@ -28,7 +28,7 @@ import catalogue_generator.ThreadFinishedListener;
 import catalogue_object.Term;
 import dcf_user.User;
 import export_catalogue.ExportActions;
-import ict_add_on.ICT;
+import ict_add_on.ICTInstaller;
 import ict_add_on.ICTDownloader;
 import import_catalogue.CatalogueImporter.ImportFileFormat;
 import import_catalogue.CatalogueImporterThread;
@@ -560,10 +560,10 @@ public class ToolsMenu implements MainMenuItem {
 								// load catalogue data in ram
 								mainMenu.getCatalogue().refresh();
 								mainMenu.getCatalogue().open();
-								
+
 								if (listener != null)
 									listener.buttonPressed(importItem, IMPORT_CAT_MI, null);
-								
+
 								// show the message
 								GlobalUtil.showDialog(shell, title, msg, icon);
 
@@ -659,7 +659,6 @@ public class ToolsMenu implements MainMenuItem {
 
 				// instantiate the progress bar
 				FormProgressBar progressbar = new FormProgressBar(shell, Messages.getString("ICT.Title"));
-
 				downloader.setProgressBar(progressbar);
 
 				// when finished
@@ -678,20 +677,23 @@ public class ToolsMenu implements MainMenuItem {
 
 									try {
 										// invoke the ICT installer
-										ICT ict = new ICT();
-										ict.installICT();
-
+										new ICTInstaller().install();
+										
 										// extract the foodex2 catalogue
 										extractCatalogue(installItem, GlobalUtil.ICT_FOODEX2_FILE_PATH, INSTALL_ICT,
 												false);
 
-									} catch (IOException e) {
+										if (listener != null)
+											listener.buttonPressed(installItem, INSTALL_ICT, null);
 
-										GlobalUtil.showDialog(shell, Messages.getString("ICT.Title, Messages"),
-												Messages.getString("ICT.InstallationError"), SWT.ICON_ERROR);
+									} catch (IOException e) {
 										e.printStackTrace();
 									}
 
+								} else {
+									GlobalUtil.showDialog(shell, Messages.getString("ICT.Title"),
+											Messages.getString("ICT.InstallationError"), SWT.ICON_ERROR);
+									e.printStackTrace();
 								}
 
 							}
@@ -699,6 +701,7 @@ public class ToolsMenu implements MainMenuItem {
 					}
 				});
 
+				// start the download process
 				downloader.start();
 
 			}

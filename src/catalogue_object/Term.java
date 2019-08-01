@@ -1374,7 +1374,7 @@ public class Term extends CatalogueObject implements Mappable {
 	}
 
 	/**
-	 * How the term name should be visualized according to its applicability?
+	 * How the term name should be visualised according to its applicability?
 	 * 
 	 * @param hierarchy
 	 * @return
@@ -1603,7 +1603,7 @@ public class Term extends CatalogueObject implements Mappable {
 	 * @return
 	 */
 	public ArrayList<String> getLinksFromNotes(String delim, String notes) {
-
+		
 		ArrayList<String> links = new ArrayList<>(); // it will store all the links which are present in the scopenotes
 
 		int i = 0; // used to count the number of tokens

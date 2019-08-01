@@ -25,247 +25,272 @@ import utilities.GlobalUtil;
 
 /**
  * This class displays a search bar and a table to host the search results.
+ * 
  * @author avonva
  * @author shahaal
  */
 public class SearchPanel implements Observer {
-	
-	private SearchBar searchBar;  // search bar for making searches
-	private TermTable table;    // the table viewer which contains the search results
+
+	private SearchBar searchBar; // search bar for making searches
+	private TermTable table; // the table viewer which contains the search results
 
 	private SearchListener searchListener;
 	private HierarchyChangedListener hierarchyListener;
-	
+
+	private Shell shell;
+	private Menu menu;
+
 	/**
 	 * Constructor, creates the table viewer and its menu (with their listeners)
+	 * 
 	 * @param parent
 	 * @param ReadOnly
 	 * @param listener : called if a menu item is clicked
 	 */
-	public SearchPanel( Composite parent, boolean addGlobalSearch, Catalogue catalogue ) {
-		
+	public SearchPanel(Composite parent, boolean addGlobalSearch, Catalogue catalogue) {
+
+		this.shell = parent.getShell();
+
 		Group searchGroup = new Group(parent, SWT.NONE);
 		searchGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		searchGroup.setLayout(new GridLayout(1, false));
-		
+
 		// create the search bar
-		searchBar = new SearchBar( searchGroup, addGlobalSearch );
-		
+		searchBar = new SearchBar(searchGroup, addGlobalSearch);
+
 		// create the graphics of the search bar
 		searchBar.display();
-		
+
 		// at the beginning we set all disabled (no catalogue is opened)
-		searchBar.setEnabled( false );
-		
+		searchBar.setEnabled(false);
+
 		// table to show the results
-		table = new TermTable( searchGroup, catalogue );
-		
-		searchBar.setListener( new SearchListener() {
-			
+		table = new TermTable(searchGroup, catalogue);
+
+		searchBar.setListener(new SearchListener() {
+
 			@Override
-			public void searchPerformed( SearchEvent event ) {
-				
+			public void searchPerformed(SearchEvent event) {
+
 				table.removeAll();
 
 				// get the search results from the searchBar
-				ArrayList < Term > terms = event.getResults();
+				ArrayList<Term> terms = event.getResults();
 
-				table.setCurrentHierarchy( searchBar.getSearchHierarchy() );
-				
-				// Update the list search input with the 
-				table.setInput( terms );
-				
+				table.setCurrentHierarchy(searchBar.getSearchHierarchy());
+
+				// Update the list search input with the
+				table.setInput(terms);
+
 				// call the caller listener
-				if ( searchListener != null ) {
-					searchListener.searchPerformed( event );
+				if (searchListener != null) {
+					searchListener.searchPerformed(event);
 				}
 			}
 		});
-		
-		table.addMenu( addSearchMenu( parent.getShell(), table ) );
-	}
 
+		// create the menu
+		menu = addSearchMenu(this.shell, table);
+		// add it to the table
+		table.addMenu(menu);
+	}
 
 	/**
 	 * Add a contextual menu to the search results table
+	 * 
 	 * @param parent
 	 * @param tree
 	 * @return
 	 */
-	private Menu addSearchMenu ( Shell parent, final TermTable table ) {
+	private Menu addSearchMenu(Shell parent, final TermTable table) {
 
 		// Right click menu for search results
-		final Menu tableMenu = new Menu( parent.getShell() , SWT.POP_UP );
+		final Menu tableMenu = new Menu(parent.getShell(), SWT.POP_UP);
 
 		// if the menu is shown, add the menu item
 		// we show the applicable hierarchies of the selected term
 		// and if the menu item is pressed a listener is called
 		// to perform external actions (as moving the tree viewer
 		// to the selected term in the selected hierarchy)
-		tableMenu.addListener( SWT.Show, new Listener() {
-			
-			public void handleEvent ( Event event ) {
-				
+		tableMenu.addListener(SWT.Show, new Listener() {
+
+			public void handleEvent(Event event) {
+
 				// dispose the menu items of the menu
-				GlobalUtil.disposeMenuItems ( tableMenu );
+				GlobalUtil.disposeMenuItems(tableMenu);
 
 				// return if the selection is empty
-				if ( table.isSelectionEmpty() )
+				if (table.isSelectionEmpty())
 					return;
-				
+
 				// get selected term
 				final Term selectedTerm = table.getFirstSelectedTerm();
-				
+
 				// create the menu items for the applicable hierarchies
-				
+
 				// get the applicable hierarchies of the term
 				ArrayList<Hierarchy> termApplicableHierarchies = selectedTerm.getApplicableHierarchies();
-				
+
 				// if there are applicable hierarchies then
-				if ( termApplicableHierarchies != null ) {
+				if (termApplicableHierarchies != null) {
 
 					// for each applicable hierarchy
-					for ( int i = 0 ; i < termApplicableHierarchies.size() ; i++ ) {
+					for (int i = 0; i < termApplicableHierarchies.size(); i++) {
 
 						// get the current hierarchy
-						final Hierarchy selectedHierarchy = termApplicableHierarchies.get( i );
-						
-						// shahaal if the term is dismissed in the hierarchy than dont add it to the menu
-						if(selectedTerm.isDismissed(selectedHierarchy)&&searchBar.getNotInUseFlag())
+						final Hierarchy selectedHierarchy = termApplicableHierarchies.get(i);
+
+						// shahaal if the term is dismissed in the hierarchy than dont add it to the
+						// menu
+						if (selectedTerm.isDismissed(selectedHierarchy) && searchBar.getNotInUseFlag())
 							continue;
-						
+
 						// add a menu item for each applicable hierarchy
 						// if a menu item is clicked an external listener is called passing
 						// as parameter the selected hierarchy and the selected term
-						addApplicableHierarchyMI ( tableMenu, selectedHierarchy, selectedTerm );
+						addApplicableHierarchyMI(tableMenu, selectedHierarchy, selectedTerm);
 					}
 				}
 			}
-		} );
+		});
 
 		return tableMenu;
 	}
-	
-	
-	
+
 	/**
-	 * Add to the Menu a menu item which will display an applicable hierarchy
-	 * If the menu item is clicked the external listener is called passing
-	 * the selected term and the selected hierarchy, in order to perform
-	 * external operations based on the menu item selection
+	 * Add to the Menu a menu item which will display an applicable hierarchy If the
+	 * menu item is clicked the external listener is called passing the selected
+	 * term and the selected hierarchy, in order to perform external operations
+	 * based on the menu item selection
+	 * 
 	 * @param menu
 	 * @param currentApplicableHierarchy
 	 * @param selectedTerm
 	 * @return
 	 */
-	private MenuItem addApplicableHierarchyMI ( Menu menu, final Hierarchy currentApplicableHierarchy,
-			final Term selectedTerm ) {
-		
+	private MenuItem addApplicableHierarchyMI(Menu menu, final Hierarchy currentApplicableHierarchy,
+			final Term selectedTerm) {
+
 		// create a menu item named with the current applicable hierarchy name
-		MenuItem mi = new MenuItem( menu , SWT.PUSH );
-		mi.setText( currentApplicableHierarchy.getLabel() );
-		
+		MenuItem mi = new MenuItem(menu, SWT.PUSH);
+		mi.setText(currentApplicableHierarchy.getLabel());
+
 		// if the menu item is pressed, we call the external listener
 		// passing as data the selected term and the selected hierarchy
 		// in an array list. The caller of this class will fill the listener
-		// for example with code for updating the main tree panel position 
+		// for example with code for updating the main tree panel position
 		// of the Catalogue Browser
-		mi.addSelectionListener( new SelectionListener() {
-			
+		mi.addSelectionListener(new SelectionListener() {
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
-				if ( hierarchyListener != null ) {
-					
+				if (hierarchyListener != null) {
+
 					// create the event
 					HierarchyEvent event = new HierarchyEvent();
-					event.setHierarchy( currentApplicableHierarchy );
-					event.setTerm( selectedTerm );
+					event.setHierarchy(currentApplicableHierarchy);
+					event.setTerm(selectedTerm);
 
-					// call the external listener to update the 
+					// call the external listener to update the
 					// main thread
 					hierarchyListener.hierarchyChanged(event);
 				}
 			}
-			
+
 			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {}
-		} );
-		
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+
 		return mi;
-	}
-	
-	/**
-	 * Enable/disable the widget
-	 * @param enabled
-	 */
-	public void setEnabled ( boolean enabled ) {
-		searchBar.setEnabled( enabled );
-		table.setEnabled( enabled );
-	}
-	
-	/**
-	 * Refresh the panel
-	 * @param label
-	 */
-	public void refresh ( boolean label ) {
-		table.refresh ( label );
-	}
-	
-	/**
-	 * Remove all the input
-	 */
-	public void removeAll () {
-		table.removeAll();
-		table.setInput( null );
 	}
 
 	/**
-	 * Add listener to the event: a search was performed
-	 * The listener has in its data the search results
+	 * Enable/disable the widget
+	 * 
+	 * @param enabled
+	 */
+	public void setEnabled(boolean enabled) {
+		searchBar.setEnabled(enabled);
+		table.setEnabled(enabled);
+	}
+
+	/**
+	 * Refresh the panel
+	 * 
+	 * @param label
+	 */
+	public void refresh(boolean label) {
+		table.refresh(label);
+	}
+
+	/**
+	 * Remove all the input
+	 */
+	public void removeAll() {
+		table.removeAll();
+		table.setInput(null);
+	}
+
+	/**
+	 * Add listener to the event: a search was performed The listener has in its
+	 * data the search results
+	 * 
 	 * @param listener
 	 */
-	public void addSearchListener ( SearchListener searchListener ) {
+	public void addSearchListener(SearchListener searchListener) {
 		this.searchListener = searchListener;
 	}
-	
+
 	/**
 	 * Add listener to: a term is selected in the search results table
+	 * 
 	 * @param listener
 	 */
-	public void addSelectionChangedListener ( ISelectionChangedListener listener ) {
-		this.table.addSelectionChangedListener( listener );
+	public void addSelectionChangedListener(ISelectionChangedListener listener) {
+		this.table.addSelectionChangedListener(listener);
 	}
-	
+
 	/**
-	 * Add listener to: a hierarchy is selected from the applicable hierarchies
-	 * of a term using the contextual menu in the search results table.
+	 * Add listener to: a hierarchy is selected from the applicable hierarchies of a
+	 * term using the contextual menu in the search results table.
+	 * 
 	 * @param hierarchyListener
 	 */
 	public void addHierarchyListener(HierarchyChangedListener hierarchyListener) {
 		this.hierarchyListener = hierarchyListener;
 	}
-	
+
 	/**
-	 * Set the search button as the default for the
-	 * input shell.
+	 * Set the search button as the default for the input shell.
+	 * 
 	 * @return
 	 */
-	public void addDefaultButton ( Shell shell ) {
-		shell.setDefaultButton( searchBar.getButton() );
+	public void addDefaultButton(Shell shell) {
+		shell.setDefaultButton(searchBar.getButton());
 	}
-	
-	public void setCatalogue ( Catalogue catalogue ) {
+
+	public void setCatalogue(Catalogue catalogue) {
 		searchBar.setCatalogue(catalogue);
 	}
-	
+
+	/**
+	 * make the menu visible
+	 * 
+	 * @author shahaal
+	 */
+	public void showMenu() {
+		menu.setVisible(true);
+	}
+
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		
+
 		// update the search bar
-		searchBar.update( arg0, arg1 );
-		
+		searchBar.update(arg0, arg1);
+
 		// update table
-		table.update ( arg0, arg1 );
+		table.update(arg0, arg1);
 	}
 }

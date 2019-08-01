@@ -17,6 +17,7 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -99,7 +100,7 @@ public class MainPanel implements Observer {
 	private CatalogueLabel catalogueLabel;
 
 	// nav buttons for previous/next term
-	private TermHistory history;
+	// private TermHistory history;
 
 	// combo box with radio buttons to select the displayed hierarchy
 	private HierarchySelector hierarchySelector;
@@ -697,7 +698,7 @@ public class MainPanel implements Observer {
 		tree.setInput(null);
 
 		// clear the history list
-		history.clear();
+		// history.clear();
 
 		// remove the term from the panel
 		tabPanel.setTerm(null);
@@ -742,17 +743,17 @@ public class MainPanel implements Observer {
 		});
 
 		// I add a sashForm which is a split pane
-		SashForm sashForm = new SashForm(shell, SWT.HORIZONTAL);
+		SashForm sashForm = new SashForm(shell, SWT.NONE);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-
+		sashForm.setSashWidth(2);
+		
 		// left group for catalogue label, search bar and table
-		GridData leftData = new GridData();
+		Composite leftGroup = new Composite(sashForm, SWT.NONE);
+		GridData leftData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		leftData.minimumWidth = 150;
 		leftData.widthHint = 150;
-
-		Composite leftGroup = new Composite(sashForm, SWT.NONE);
-		leftGroup.setLayout(new GridLayout(1, false));
 		leftGroup.setLayoutData(leftData);
+		leftGroup.setLayout(new GridLayout(1, false));
 
 		// add the label which displays the catalogue label
 		addCatalogueLabel(leftGroup);
@@ -761,9 +762,9 @@ public class MainPanel implements Observer {
 		addSearchPanel(leftGroup);
 
 		// group which contains hierarchy selector, tree viewer and tab folder
-		Group rightGroup = new Group(sashForm, SWT.WRAP);
-		rightGroup.setLayout(new GridLayout(1, false));
+		Composite rightGroup = new Composite(sashForm, SWT.NONE);
 		rightGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		rightGroup.setLayout(new GridLayout(1, false));
 
 		// add hierarchy selector and deprecated/non reportable filters
 		addDisplayFilters(rightGroup);
@@ -772,10 +773,10 @@ public class MainPanel implements Observer {
 		addRightSashForm(rightGroup);
 
 		// make the tree viewer observe of the history
-		history.addObserver(tree);
+		// history.addObserver(tree);
 
 		// make the history observe of the tree
-		tree.addObserver(history);
+		// tree.addObserver(history);
 
 		// make the tree viewer observer of the selected hierarchy
 		hierarchySelector.addObserver(tree);
@@ -970,7 +971,7 @@ public class MainPanel implements Observer {
 			}
 		});
 
-		menu.setDcfListener(new MenuListener() {
+		menu.setLoginListener(new MenuListener() {
 
 			@Override
 			public void buttonPressed(MenuItem button, int code, Event event) {
@@ -986,6 +987,9 @@ public class MainPanel implements Observer {
 				default:
 					break;
 				}
+				
+				// update the shell title
+				GlobalUtil.startShellTextUpdate(shell);
 			}
 		});
 
@@ -1055,8 +1059,16 @@ public class MainPanel implements Observer {
 				// return if no selected elements
 				if (selection.isEmpty())
 					return;
-
-				tree.selectTerm((Nameable) selection.getFirstElement());
+				
+				// get the selected term
+				Term selTerm = (Term) selection.getFirstElement();
+				
+				// if it belongs to the selected hierarchy expand it
+				if(selTerm.belongsToHierarchy(hierarchySelector.getSelectedHierarchy()))
+					tree.selectTerm(selTerm);
+				
+				else // else show the menu with the other hierarchies
+					searchPanel.showMenu();
 
 			}
 		});
@@ -1072,13 +1084,16 @@ public class MainPanel implements Observer {
 	 */
 	private void addDisplayFilters(Composite parent) {
 
-		Composite selectionGroup = new Composite(parent, SWT.NONE);
-		selectionGroup.setLayout(new GridLayout(15, false));
-		selectionGroup.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_CENTER | GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL));
+		Group selectionGroup = new Group(parent, SWT.NONE);
+		selectionGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		RowLayout layout = new RowLayout();
+		layout.spacing = 20;
+	    layout.center = true;
+		selectionGroup.setLayout(layout);
 
 		// nav buttons for previous/next term
-		history = new TermHistory(selectionGroup);
-		history.display();
+		// history = new TermHistory(selectionGroup);
+		// history.display();
 		
 		// hierarchy selector (combo box + radio buttons)
 		hierarchySelector = new HierarchySelector(selectionGroup);
@@ -1098,13 +1113,15 @@ public class MainPanel implements Observer {
 	 * @param parent
 	 */
 	private void addRightSashForm(Composite parent) {
-
-		Composite treeGroup = new Composite(parent, SWT.NONE);
-		treeGroup.setLayout(new GridLayout(1, false));
-		treeGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-
-		SashForm sashForm2 = new SashForm(treeGroup, SWT.HORIZONTAL | SWT.SMOOTH);
+		
+		Group group = new Group(parent, SWT.NONE);
+		group.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		group.setLayout(new GridLayout(1, false));
+		
+		SashForm sashForm2 = new SashForm(group, SWT.HORIZONTAL);
 		sashForm2.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		sashForm2.setSashWidth(2);
+		sashForm2.setBackground(sashForm2.getDisplay().getSystemColor(SWT.COLOR_GRAY));
 
 		// get the current catalogue
 		Catalogue catalogue = GlobalManager.getInstance().getCurrentCatalogue();

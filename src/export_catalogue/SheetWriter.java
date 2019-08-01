@@ -121,7 +121,7 @@ public abstract class SheetWriter {
 	}
 
 	/**
-	 * create a dump string of length 4000
+	 * create a dump string of length 4000 useful for not truncating strings in SAS
 	 * 
 	 * @author shahaal
 	 * @return
@@ -129,7 +129,7 @@ public abstract class SheetWriter {
 	private String createDumpString() {
 		String tempValue = "";
 		for (int i = 0; i <= 4000; i++) {
-			tempValue += "a";
+			tempValue += "*";
 		}
 
 		return tempValue;
@@ -149,7 +149,7 @@ public abstract class SheetWriter {
 			return;
 
 		Row row = createRow(sheet);
-		
+
 		// for each header we set the cell value related to it
 		for (String dbColumnName : headers.keySet())
 			// add the cell to the sheet

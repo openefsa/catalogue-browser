@@ -130,17 +130,15 @@ public class FrameTermImplicitFacets implements Observer {
 	 * @author shahaal
 	 */
 	public void refresh() {
-		
-		try {
-			// set redraw to false
-			implicitFacets.getTreeViewer().getControl().setRedraw(false);
-			// make ui changes
-			implicitFacets.getTreeViewer().refresh();
-			implicitFacets.getTreeViewer().expandAll();
-		} finally {
-			// flush changes at once
-			implicitFacets.getTreeViewer().getControl().setRedraw(true);
-		}
+
+		// set redraw to false
+		implicitFacets.getTreeViewer().getControl().setRedraw(false);
+		// make ui changes
+		implicitFacets.getTreeViewer().refresh();
+		implicitFacets.getTreeViewer().expandAll();
+
+		implicitFacets.getTreeViewer().getControl().setRedraw(true);
+
 	}
 
 	/**

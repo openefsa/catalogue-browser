@@ -24,6 +24,7 @@ import catalogue_object.TermAttribute;
  * are their values?
  * 
  * @author avonva
+ * @author shahaal
  *
  */
 public class TermAttributeDAO implements CatalogueRelationDAO<TermAttribute, Term, Attribute> {
@@ -96,14 +97,10 @@ public class TermAttributeDAO implements CatalogueRelationDAO<TermAttribute, Ter
 				if (rs != null) {
 					while (rs.next())
 						ids.add(rs.getInt(1));
-					rs.close();
 				}
 			}
 
-			stmt.close();
-
 			con.commit();
-			con.close();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -171,9 +168,9 @@ public class TermAttributeDAO implements CatalogueRelationDAO<TermAttribute, Ter
 		// get all the parent terms and hierarchies
 		String query = "select * from APP.ATTRIBUTE A inner join APP.TERM_ATTRIBUTE TA on A.ATTR_ID = TA.ATTR_ID";
 
-		try (Connection con = catalogue.getConnection(); PreparedStatement stmt = con.prepareStatement(query);) {
-
-			ResultSet rs = stmt.executeQuery();
+		try (Connection con = catalogue.getConnection();
+				PreparedStatement stmt = con.prepareStatement(query);
+				ResultSet rs = stmt.executeQuery();) {
 
 			while (rs.next()) {
 
@@ -182,11 +179,6 @@ public class TermAttributeDAO implements CatalogueRelationDAO<TermAttribute, Ter
 
 				tas.add(ta);
 			}
-
-			// resolve memory leak
-			rs.close();
-			stmt.close();
-			con.close();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -217,31 +209,28 @@ public class TermAttributeDAO implements CatalogueRelationDAO<TermAttribute, Ter
 			stmt.setInt(1, term.getId());
 
 			// get the results
-			ResultSet rs = stmt.executeQuery();
+			try (ResultSet rs = stmt.executeQuery()) {
 
-			AttributeDAO attrDao = new AttributeDAO(catalogue);
+				AttributeDAO attrDao = new AttributeDAO(catalogue);
 
-			while (rs.next()) {
+				while (rs.next()) {
 
-				// get the attribute
-				Attribute attribute = attrDao.getByResultSet(rs);
+					// get the attribute
+					Attribute attribute = attrDao.getByResultSet(rs);
 
-				// get the term attribute id
-				int id = rs.getInt("TERM_ATTR_ID");
+					// get the term attribute id
+					int id = rs.getInt("TERM_ATTR_ID");
 
-				// get the attribute value
-				String value = rs.getString("ATTR_VALUE");
+					// get the attribute value
+					String value = rs.getString("ATTR_VALUE");
 
-				// create the term attribute with attribute and value
-				TermAttribute attr = new TermAttribute(id, term, attribute, value);
+					// create the term attribute with attribute and value
+					TermAttribute attr = new TermAttribute(id, term, attribute, value);
 
-				// add the attribute
-				attributes.add(attr);
+					// add the attribute
+					attributes.add(attr);
+				}
 			}
-
-			rs.close();
-			stmt.close();
-			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			LOGGER.error("DB error", e);

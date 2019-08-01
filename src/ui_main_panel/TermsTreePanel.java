@@ -6,6 +6,7 @@ import java.util.Observer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -33,11 +34,10 @@ import catalogue_browser_dao.DatabaseManager;
 import catalogue_browser_dao.ForceCatEditDAO;
 import catalogue_browser_dao.ReservedCatDAO;
 import catalogue_browser_dao.TermDAO;
-import catalogue_object.CSVTermsParser;
+import catalogue_object.TxtTermsParser;
 import catalogue_object.Hierarchy;
 import catalogue_object.Nameable;
 import catalogue_object.Term;
-import config.DebugConfig;
 import dcf_user.User;
 import global_manager.GlobalManager;
 import messages.Messages;
@@ -86,6 +86,9 @@ public class TermsTreePanel extends Observable implements Observer {
 	// on terms
 	TermOrderChanger termOrderChanger;
 
+	// describe window
+	private FormTermCoder tcf;
+
 	/**
 	 * Constructor
 	 * 
@@ -106,6 +109,10 @@ public class TermsTreePanel extends Observable implements Observer {
 
 		// add the main tree viewer
 		tree = createTreeViewer(parent);
+
+		// create the describe
+		// tcf = new FormTermCoder(shell, Messages.getString("FormTermCoder.Title"),
+		// this.catalogue);
 
 	}
 
@@ -334,13 +341,13 @@ public class TermsTreePanel extends Observable implements Observer {
 					setTreeFocus();
 			}
 		});
-		
+
 		// single click
 		tree.addSelectionChangedListener(new ISelectionChangedListener() {
 
 			@Override
 			public void selectionChanged(SelectionChangedEvent arg0) {
-				
+
 				// if the selection is empty or bad instance return
 				if (arg0.getSelection().isEmpty() || !(arg0.getSelection() instanceof IStructuredSelection))
 					return;
@@ -353,7 +360,7 @@ public class TermsTreePanel extends Observable implements Observer {
 
 				if (selectionListener != null)
 					selectionListener.selectionChanged(arg0);
-				
+
 			}
 		});
 
@@ -363,15 +370,22 @@ public class TermsTreePanel extends Observable implements Observer {
 			@Override
 			public void doubleClick(DoubleClickEvent arg0) {
 
-				if (!FormTermCoder.instanceExists) {
-					// open the describe form
-					FormTermCoder tcf = new FormTermCoder(shell, Messages.getString("FormTermCoder.Title"), catalogue);
+				// the catalogue doesn't have facet categories return
+				boolean hasFacetCategories = catalogue.hasImplicitFacetCategories() && (tcf == null || tcf.canOpen());
 
-					tcf.setBaseTerm(getFirstSelectedTerm());
+				if (!hasFacetCategories)
+					return;
 
+				// initialise tcf if null
+				if (tcf == null)
+					tcf = new FormTermCoder(shell, Messages.getString("FormTermCoder.Title"), catalogue);
+
+				// set the base term
+				tcf.setBaseTerm(getFirstSelectedTerm());
+
+				// open the window if not opened or null
+				if (tcf.canOpen())
 					tcf.display(catalogue);
-
-				}
 			}
 		});
 
@@ -496,10 +510,8 @@ public class TermsTreePanel extends Observable implements Observer {
 			// new term operation
 			addRootTerm = addNewRootTermMI(termMenu);
 
-			// shahaal add import csv term function
-			if (DebugConfig.betaTest) {
-				addTxtTerms = addImportTermMI(termMenu);
-			}
+			// add import list of terms function
+			addTxtTerms = addImportTermMI(termMenu);
 
 			deprecateTerm = addDeprecateTermMI(termMenu);
 
@@ -627,7 +639,7 @@ public class TermsTreePanel extends Observable implements Observer {
 
 		otherHierarchies.setEnabled(true);
 
-		boolean hasFacetCategories = catalogue.hasImplicitFacetCategories();
+		boolean hasFacetCategories = catalogue.hasImplicitFacetCategories() && (tcf == null || tcf.canOpen());
 
 		// enable describe/recent terms and picklists only if we have facets
 		describe.setEnabled(hasFacetCategories);
@@ -929,15 +941,21 @@ public class TermsTreePanel extends Observable implements Observer {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
-				// open file dialog for csv file
+				String mes = Messages.getString("BrowserTreeMenu.WarningMessage");
+				String title = Messages.getString("BrowserTreeMenu.ShellTitle");
+				
+				// ask the user before continuing the operation
+				boolean confirmation = MessageDialog.openQuestion(shell, title, mes);
 
+				if (!confirmation)
+					return;
+				
 				// create dialog
 				FileDialog fd = new FileDialog(shell, SWT.OPEN);
 
 				// set dialog title
-				fd.setText(Messages.getString("ImportTerms.ImportTermsFromTXT"));
-
-				// set working directory
+				fd.setText(title);
+				
 				// get the working directory from the user preferences
 				fd.setFilterPath(DatabaseManager.MAIN_CAT_DB_FOLDER);
 
@@ -948,23 +966,25 @@ public class TermsTreePanel extends Observable implements Observer {
 				// open dialog a listen to get the selected filename
 				String filename = fd.open();
 
-				if ((filename != null) && (filename.length() > 0)) {
+				if (filename != null && !filename.isEmpty()) {
 
 					GlobalUtil.setShellCursor(shell, SWT.CURSOR_WAIT);
 
 					// parse the file as a csv semicolon separated file
-					CSVTermsParser parse = new CSVTermsParser(catalogue, filename);
+					TxtTermsParser parse = new TxtTermsParser(catalogue, filename);
 
 					// for each term in txt add it
+					int termsAdded = 0;
+					
 					try {
-						int termsAdded = parse.startToImportTerms();
-						String mes = "Imported " + termsAdded + " Terms.";
-						GlobalUtil.showDialog(shell, "Terms From TXT", mes, SWT.ICON_INFORMATION);
+						termsAdded = parse.startToImportTerms();
 					} catch (TermCodeException e1) {
-						LOGGER.error("Something went wrong during the read terms process...");
-						e1.printStackTrace();
+						GlobalUtil.showDialog(shell, title, e1.getMessage(), SWT.ICON_ERROR);
 					}
-
+					
+					mes = "Imported " + termsAdded + " Terms.";
+					GlobalUtil.showDialog(shell, title, mes, SWT.ICON_INFORMATION);
+					
 					GlobalUtil.setShellCursor(shell, SWT.CURSOR_ARROW);
 
 					// refresh tree
@@ -1336,16 +1356,16 @@ public class TermsTreePanel extends Observable implements Observer {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
-				if (!FormTermCoder.instanceExists) {
-					// open the describe form
-					FormTermCoder tcf = new FormTermCoder(shell, Messages.getString("FormTermCoder.Title"), catalogue);
+				// initialise the describe window if null
+				if (tcf == null)
+					tcf = new FormTermCoder(shell, Messages.getString("FormTermCoder.Title"), catalogue);
 
-					tcf.setBaseTerm(getFirstSelectedTerm());
+				// set the base term
+				tcf.setBaseTerm(getFirstSelectedTerm());
 
+				// open the window if not opened or null
+				if (tcf.canOpen())
 					tcf.display(catalogue);
-
-				}
-				// createTreeMenu();
 			}
 
 		});
@@ -1385,7 +1405,43 @@ public class TermsTreePanel extends Observable implements Observer {
 				FormDescribedTerms rdt = new FormDescribedTerms(shell,
 						Messages.getString("BrowserTreeMenu.RecentTermWindowTitle"), catalogue, describedTerms);
 
+				// display the window
 				rdt.display(catalogue);
+
+				// add listener to load button
+				rdt.setLoadListener(new SelectionListener() {
+
+					@Override
+					public void widgetSelected(SelectionEvent arg0) {
+
+						// initialise the describe window if null
+						if (tcf == null)
+							tcf = new FormTermCoder(shell, Messages.getString("FormTermCoder.Title"), catalogue);
+
+						// return if cannot open the describe window
+						if (!tcf.canOpen())
+							return;
+
+						// get the selected term
+						DescribedTerm term = rdt.loadTermInDescribe();
+
+						if (term != null) {
+
+							// load the described term into the describe window
+							tcf.loadDescribedTerm(term);
+
+							// show the window and add the facet
+							tcf.display(catalogue);
+						}
+
+					}
+
+					@Override
+					public void widgetDefaultSelected(SelectionEvent arg0) {
+						// TODO Auto-generated method stub
+
+					}
+				});
 			}
 		});
 
@@ -1469,6 +1525,11 @@ public class TermsTreePanel extends Observable implements Observer {
 		return prefSearchTerm;
 	}
 
+	/**
+	 * set the new catalogue
+	 * 
+	 * @param catalogue
+	 */
 	public void setCatalogue(Catalogue catalogue) {
 		this.catalogue = catalogue;
 	}
@@ -1496,15 +1557,20 @@ public class TermsTreePanel extends Observable implements Observer {
 
 			catalogue = (Catalogue) data;
 
-			if (catalogue != null)
+			if (catalogue != null) {
+				// set the hierarchy of the tree based on the new catalogue
 				tree.setHierarchy(catalogue.getDefaultHierarchy());
+				// initialise the describe window when catalogue is changed
+				if (tcf != null)
+					tcf = null;
+			}
 		}
 
 		// update selected element from history
-		if (o instanceof TermHistory) {
-			Term term = (Term) data;
-			tree.selectTerm(term);
-		}
+		// if (o instanceof TermHistory) {
+		// Term term = (Term) data;
+		// tree.selectTerm(term);
+		// }
 
 	}
 }

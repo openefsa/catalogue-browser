@@ -6,9 +6,11 @@ import java.nio.file.Paths;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import messages.Messages;
 import utilities.GlobalUtil;
 
 /**
@@ -20,22 +22,20 @@ import utilities.GlobalUtil;
  */
 public class BrowserReleaseNotes {
 
-	// title of the shell
-	private static final String SHELL_TITLE = "\nNew in Catalogue browser vers. " + CatalogueBrowserMain.APP_VERSION
-			+ "\n\n";
-
 	private Shell dialog;
 
 	public void display(Shell shell) {
 
-		dialog = new Shell(shell, SWT.SHEET | SWT.APPLICATION_MODAL | SWT.TITLE);
+		dialog = new Shell(shell, SWT.SHEET | SWT.APPLICATION_MODAL | SWT.WRAP | SWT.BORDER | SWT.TITLE);
 		dialog.setSize(720, 500);
+
+		String title = Messages.getString("FromReleaseNotes.Title") + GlobalUtil.APP_VERSION;
+		dialog.setText(title);
+		
 		dialog.setLayout(new FillLayout());
 
-		// read the header
-		dialog.setText(SHELL_TITLE);
-
 		Text textField = new Text(dialog, SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
+		textField.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
 		try {
 			
@@ -49,7 +49,6 @@ public class BrowserReleaseNotes {
 			e.printStackTrace();
 		}
 
-		dialog.pack();
 		dialog.open();
 
 	}

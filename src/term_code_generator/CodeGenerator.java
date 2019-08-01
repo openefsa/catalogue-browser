@@ -320,9 +320,9 @@ public class CodeGenerator {
 		String alphaNumCode = "";
 		String currAlphaNumCode = "";
 		GlobalManager manager = GlobalManager.getInstance();
-		
+
 		// solve memory leak
-		try (Connection con = manager.getCurrentCatalogue().getConnection()){
+		try (Connection con = manager.getCurrentCatalogue().getConnection()) {
 
 			/* get the maximum code according to the specified mask */
 			String sql = "select max(" + sqlVariable + ") as CURR_CODE from APP.TERM";
@@ -330,8 +330,8 @@ public class CodeGenerator {
 			if (sqlConstant.length() > 0) {
 				sql = sql + " where " + sqlConstant;
 			}
-			
-			//solve memory leak
+
+			// solve memory leak
 			try (PreparedStatement codeStmt = con.prepareStatement(sql); ResultSet codeRs = codeStmt.executeQuery()) {
 
 				while (codeRs.next()) {

@@ -224,15 +224,11 @@ public abstract class FormObjectsList<T> {
 		table.setContentProvider( new ObjectContentProvider<T>() );
 
 		// set the layout data for the table (note: these will be used also for the dialog)
-		GridData gridData = new GridData();
+		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gridData.minimumHeight = 250;
 		gridData.heightHint = 300;
 		gridData.widthHint = 600;
 		gridData.minimumWidth = 300;
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = true;
 
 		// set the layout data of the table
 		table.getTable().setLayoutData( gridData );

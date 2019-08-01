@@ -5,13 +5,6 @@ import java.util.ArrayList;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.dnd.Clipboard;
-import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.DragSource;
-import org.eclipse.swt.dnd.DragSourceEvent;
-import org.eclipse.swt.dnd.DragSourceListener;
-import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ModifyEvent;
@@ -19,11 +12,11 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
@@ -58,58 +51,57 @@ import window_restorer.RestoreableWindow;
 public class FormTermCoder {
 
 	private static final String WINDOW_CODE = "FormTermCoder";
-	//shahaal
-	public static Boolean instanceExists = false;
 
 	private RestoreableWindow window;
 
 	// the catalogue we want to use
 	private Catalogue catalogue;
 
-	private Shell _shell;
-	private Shell _dialog;
-	private String _title;
-	private Text fullCode = null;
-	private Text textinterp = null;
-	private boolean _copyImplicit = false; // should the implicit facets be shown?
-	private boolean _enableBR = true; // should the business rules be enabled?
-	private Term _tempTerm = null; // this is the term which is currently created descriptor by descriptor
-	private Term _baseTerm = null; // this is the chosen base term
+	private Shell shell;
+	private Shell dialog;
+	private String title;
+	private Text fullCode;
+	private Text textinterp;
+
+	// initial base term
+	private Term _baseTerm;
+	// term composed
+	private Term _tempTerm;
+
+	private boolean copyImplicit = false; // should the implicit facets be shown?
+	private boolean enableBR = true; // should the business rules be enabled?
 
 	private ArrayList<String> warnings = new ArrayList<>();
 
-	private TableViewer warningsTable = null; // console of the warnings messages
-	private Canvas semaphore = null; // semaphore for the warning messages
-	private WarningUtil warnUtils = null; // object which manages the warnings messages
+	private TableViewer warningsTable;
+	private Canvas semaphore;
+	private WarningUtil warnUtils;
 
 	// public FacetFilter facetFilter = new FacetFilter();
 
-	private Clipboard clipboard;
-
-	private DescribedTerm describedTerm = null; // name of the term selected from the favourite form
+	// name of the term selected from the favourite form
+	private DescribedTerm describedTerm;
 
 	private FrameTermImplicitFacets implicitFacets;
 
-	// start the form
+	// constructor
 	public FormTermCoder(Shell shell, String title, Catalogue catalogue) {
 
-		_shell = shell;
-		_title = title;
+		this.shell = shell;
+		this.title = title;
 
 		this.catalogue = catalogue;
 
 		CataloguePreferenceDAO prefDao = new CataloguePreferenceDAO(catalogue);
 
 		// get the copy implicit facet preference
-		_copyImplicit = prefDao.getPreferenceBoolValue(CataloguePreference.copyImplicitFacets, false);
+		copyImplicit = prefDao.getPreferenceBoolValue(CataloguePreference.copyImplicitFacets, false);
 
 		// get the enable business rules preference if we have the MTX catalogue
 		// this boolean is false if checks are disabled or we are not using the MTX
-		_enableBR = catalogue.isMTXCatalogue()
+		enableBR = catalogue.isMTXCatalogue()
 				&& prefDao.getPreferenceBoolValue(CataloguePreference.enableBusinessRules, false);
 
-		//shahaal var used to check if an instance of the class already exists
-		FormTermCoder.instanceExists = true;
 	}
 
 	/**
@@ -118,7 +110,7 @@ public class FormTermCoder {
 	 * 
 	 * @param describedTerm
 	 */
-	void loadDescribedTerm(DescribedTerm describedTerm) {
+	public void loadDescribedTerm(DescribedTerm describedTerm) {
 
 		this.describedTerm = describedTerm;
 
@@ -154,30 +146,25 @@ public class FormTermCoder {
 	// Show the window and display all the graphical elements
 	public void display(final Catalogue catalogue) {
 
-		// _dialog = new Shell( _shell , SWT.SHELL_TRIM | SWT.APPLICATION_MODAL );
-		// shahaal
-		_dialog = new Shell(_shell, SWT.SHELL_TRIM | SWT.MODELESS);
-		//
+		// _dialog = new Shell( _shell , SWT.SHELL_TRIM | SWT.APPLICATION_MODAL ); // if
+		// not allow surf main page
+		dialog = new Shell(shell, SWT.SHELL_TRIM | SWT.MODELESS);
 
-		_dialog.setImage(
+		dialog.setImage(
 				new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream("Choose.gif")));
-		_dialog.setMaximized(true);
+		dialog.setMaximized(true);
 
-		_dialog.setText(_title);
-		_dialog.setLayout(new GridLayout(1, false));
+		dialog.setText(title);
+		dialog.setLayout(new GridLayout(1, false));
 
-		window = new RestoreableWindow(_dialog, WINDOW_CODE);
+		window = new RestoreableWindow(dialog, WINDOW_CODE);
 
 		// if the dialog is closed => save the described term in the recently used terms
 		// file
-		_dialog.addDisposeListener(new DisposeListener() {
+		dialog.addDisposeListener(new DisposeListener() {
 
 			@Override
 			public void widgetDisposed(DisposeEvent e) {
-
-				// shahaal reset the instance flag
-				FormTermCoder.instanceExists = false;
-				//
 
 				// if there are not facet in the describe => return, nothing to be saved
 				if (fullCode.getText().split("#").length <= 1)
@@ -194,28 +181,27 @@ public class FormTermCoder {
 				recentDao.insert(new DescribedTerm(catalogue, fullCode.getText(), _tempTerm.getInterpretedCode()));
 			}
 		});
-		
+
 		// sash form to resize panels
-		SashForm sashForm = new SashForm(_dialog, SWT.HORIZONTAL);
-
+		SashForm sashForm = new SashForm(dialog, SWT.HORIZONTAL);
+		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		sashForm.setLayout(new GridLayout(1, false));
-		GridData gData = new GridData();
-		gData.grabExcessHorizontalSpace = true;
-		gData.grabExcessVerticalSpace = true;
-		gData.verticalAlignment = SWT.FILL;
-		gData.horizontalAlignment = SWT.FILL;
-		sashForm.setLayoutData(gData);
 
-		// implicit facets tree viewer, we set that new facets will be considered as
-		// explicit
-		implicitFacets = new FrameTermImplicitFacets(sashForm, FacetType.EXPLICIT, catalogue);
+		// the composite which contains the facet groups
+		Group leftSide = new Group(sashForm, SWT.NONE);
+		leftSide.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		leftSide.setLayout(new GridLayout(1, true));
+		leftSide.setText("Facet groups");
+
+		// implicit facets tree viewer, the new facets will be considered as explicit
+		implicitFacets = new FrameTermImplicitFacets(leftSide, FacetType.EXPLICIT, catalogue);
 
 		implicitFacets.setHierarchy(catalogue.getMasterHierarchy());
 
 		implicitFacets.setTerm(_tempTerm);
 
 		implicitFacets.addMenu(); // add the contextual menu
-		
+
 		implicitFacets.addUpdateListener(new Listener() {
 
 			@Override
@@ -232,50 +218,18 @@ public class FormTermCoder {
 			}
 		});
 
-		// the composite which contains: full code, interpreter, semaphore, console
-		// (warning messages)
+		// the composite which contains the described term information
 		Group rightSide = new Group(sashForm, SWT.NONE);
-		rightSide.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
+		rightSide.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		rightSide.setLayout(new GridLayout(1, true));
+		rightSide.setText("Description information");
 
-		/////////////////full code 
+		// full code
 		Label l = new Label(rightSide, SWT.NONE);
 		l.setText(Messages.getString("FormTermCoder.FullCodeLabel"));
 
-		int operations = DND.DROP_MOVE | DND.DROP_COPY;
-		Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
-
-		DragSource srcFull = new DragSource(l, operations);
-		srcFull.setTransfer(types);
-
-		// if the text is dragged => copy it
-		srcFull.addDragListener(new DragSourceListener() {
-
-			public void dragStart(DragSourceEvent event) {
-			}
-
-			public void dragSetData(DragSourceEvent event) {
-				if (TextTransfer.getInstance().isSupportedType(event.dataType)) {
-					event.data = fullCode.getText();
-				}
-			}
-
-			public void dragFinished(DragSourceEvent event) {
-			}
-		});
-
 		fullCode = new Text(rightSide, SWT.BORDER | SWT.READ_ONLY);
-
-		GridData gridData = new GridData();
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = true;
-		gridData.minimumWidth = 200;
-		gridData.minimumHeight=20;
-		gridData.widthHint = 310;
-		gridData.heightHint=20;
-		fullCode.setLayoutData(gridData);
+		fullCode.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
 		// when the full code is modified, then check if some warnings
 		// have to be raised
@@ -289,71 +243,64 @@ public class FormTermCoder {
 
 				// raise warnings if necessary
 				// if the business rules are enabled
-				if (_enableBR)
+				if (enableBR)
 					warnUtils.refreshWarningsTable(currentCode);
 			}
 		});
 
-		// Drag and Drop functionality
-		DragSource source = new DragSource(fullCode, operations);
+		/*
+		 * 
+		 * int operations = DND.DROP_MOVE | DND.DROP_COPY; Transfer[] types = new
+		 * Transfer[] { TextTransfer.getInstance() };
+		 * 
+		 * DragSource srcFull = new DragSource(l, operations);
+		 * srcFull.setTransfer(types);
+		 * 
+		 * // if the text is dragged => copy it srcFull.addDragListener(new
+		 * DragSourceListener() {
+		 * 
+		 * public void dragStart(DragSourceEvent event) { }
+		 * 
+		 * public void dragSetData(DragSourceEvent event) { if
+		 * (TextTransfer.getInstance().isSupportedType(event.dataType)) { event.data =
+		 * fullCode.getText(); } }
+		 * 
+		 * public void dragFinished(DragSourceEvent event) { } });
+		 * 
+		 * // Drag and Drop functionality DragSource source = new DragSource(fullCode,
+		 * operations);
+		 * 
+		 * source.setTransfer(types); source.addDragListener(new DragSourceListener() {
+		 * 
+		 * public void dragStart(DragSourceEvent event) { }
+		 * 
+		 * public void dragSetData(DragSourceEvent event) { if
+		 * (TextTransfer.getInstance().isSupportedType(event.dataType)) { event.data =
+		 * fullCode.getSelectionText(); } }
+		 * 
+		 * public void dragFinished(DragSourceEvent event) { } });
+		 *
+		 */
 
-		source.setTransfer(types);
-		source.addDragListener(new DragSourceListener() {
+		// layout for interpreted and canvas
+		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, false);
+		gridData.heightHint = 100;
+		gridData.minimumHeight = 100;
 
-			public void dragStart(DragSourceEvent event) {
-			}
-
-			public void dragSetData(DragSourceEvent event) {
-				if (TextTransfer.getInstance().isSupportedType(event.dataType)) {
-					event.data = fullCode.getSelectionText();
-				}
-			}
-
-			public void dragFinished(DragSourceEvent event) {
-			}
-		});
-
-		/* intepreted code */
+		// interpreted code
 		Label interp = new Label(rightSide, SWT.NONE);
-		interp.setText(Messages.getString("FormTermCoder.InterpretedCodeLabel")); //$NON-NLS-1$
+		interp.setText(Messages.getString("FormTermCoder.InterpretedCodeLabel"));
 
-		// textinterp = new Text( c , SWT.BORDER | SWT.READ_ONLY | SWT.MULTI |
-		// SWT.H_SCROLL );
-		textinterp = new Text(rightSide,
-				SWT.BORDER | SWT.READ_ONLY | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
-		// textinterp.setText( _tempTerm.getName() );
-		gridData = new GridData();
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = true;
-		gridData.minimumWidth = 200;
-		gridData.widthHint = 310;
-		gridData.heightHint=100;
-		gridData.minimumHeight = 80;
+		// interpreted description
+		textinterp = new Text(rightSide, SWT.BORDER | SWT.READ_ONLY | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
 		textinterp.setLayoutData(gridData);
 
-		////////////////// WARNING COMPOSITE: semaphore + warnings log
-
-		// Semaphore
+		// Semaphore label
 		Label semaphoreLabel = new Label(rightSide, SWT.NONE);
-		semaphoreLabel.setText(Messages.getString("FormTermCoder.OverallWarningLevelLabel")); //$NON-NLS-1$
-		
+		semaphoreLabel.setText(Messages.getString("FormTermCoder.OverallWarningLevelLabel"));
+
 		// create a rectangle
 		semaphore = new Canvas(rightSide, SWT.NONE);
-
-		// layout of the rectangle
-		gridData = new GridData();
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = true;
-		gridData.minimumWidth = 175;
-		gridData.widthHint = 475;
-		gridData.heightHint=50;
-		gridData.minimumHeight = 50;
-		gridData.heightHint = 50;
-
 		semaphore.setLayoutData(gridData);
 
 		// Warning log
@@ -361,71 +308,43 @@ public class FormTermCoder {
 		warningLabel.setText(Messages.getString("FormTermCoder.MessageLogLabel")); //$NON-NLS-1$
 
 		// Table with warnings:
-		warningsTable = new TableViewer(rightSide,
-				SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL | SWT.NONE);
+		warningsTable = new TableViewer(rightSide, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL | SWT.NONE);
+		warningsTable.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		// layout of the rectangle
-		gridData = new GridData();
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = true;
-		gridData.minimumWidth = 300;
-		gridData.widthHint = 450;
-		gridData.heightHint = 450;
-		gridData.minimumHeight = 200;
-
-		warningsTable.getTable().setLayoutData(gridData);
-
-		// Set the content based
+		// set content provider and input
 		warningsTable.setContentProvider(new ContentProviderWarning());
-
 		warningsTable.setInput(warnings);
 
 		warnUtils = new WarningUtil(warningsTable, semaphore);
 
-		// analyze preliminary warnings (for the baseterm)
-		// get the complete code without implicit facets for warning purposes
+		// analyse preliminary warnings (for the base term)
 		String currentCode = _tempTerm.getFullCode(false, true);
 
 		// if the business rules are enabled
-		if (_enableBR)
+		if (enableBR)
 			warnUtils.refreshWarningsTable(currentCode);
 
-		/////////////////Three Buttons = COPY + COPY DESCRIPTION + BOTH
-
-		Group buttonsComposite = new Group(_dialog, SWT.NONE);
-		buttonsComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
+		// composite for last buttons
+		Composite buttonsComposite = new Composite(dialog, SWT.NONE);
+		buttonsComposite.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, false, false));
 		buttonsComposite.setLayout(new GridLayout(3, true));
 
+		// layout for the buttons
+		gridData = new GridData();
+		gridData.minimumWidth = 200;
+		gridData.widthHint = 200;
+
 		Button copy = new Button(buttonsComposite, SWT.PUSH);
-		copy.setText(Messages.getString("FormTermCoder.CopyCodeButton"));
-		gridData = new GridData();
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = true;
 		copy.setLayoutData(gridData);
+		copy.setText(Messages.getString("FormTermCoder.CopyCodeButton"));
 
-		/* setting up copy description(description of code interpreted) */
 		Button copyDesc = new Button(buttonsComposite, SWT.PUSH);
-		copyDesc.setText(Messages.getString("FormTermCoder.CopyDescriptionButton"));
-		gridData = new GridData();
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = true;
 		copyDesc.setLayoutData(gridData);
+		copyDesc.setText(Messages.getString("FormTermCoder.CopyDescriptionButton"));
 
-		/* setting up copy code + description */
 		Button copyCodeDesc = new Button(buttonsComposite, SWT.PUSH);
-		copyCodeDesc.setText(Messages.getString("FormTermCoder.CopyCodeDescrButton"));
-		gridData = new GridData();
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = true;
 		copyCodeDesc.setLayoutData(gridData);
+		copyCodeDesc.setText(Messages.getString("FormTermCoder.CopyCodeDescrButton"));
 
 		// copy button is selected:
 		copy.addSelectionListener(new SelectionAdapter() {
@@ -436,7 +355,7 @@ public class FormTermCoder {
 				ArrayList<Term> sources = new ArrayList<>();
 				sources.add(_tempTerm);
 
-				clip.copyFullCode(sources, _copyImplicit);
+				clip.copyFullCode(sources, copyImplicit);
 			}
 		});
 
@@ -449,7 +368,7 @@ public class FormTermCoder {
 				ArrayList<Term> sources = new ArrayList<>();
 				sources.add(_tempTerm);
 
-				clip.copyDescription(sources, _copyImplicit);
+				clip.copyDescription(sources, copyImplicit);
 
 			}
 		});
@@ -463,7 +382,7 @@ public class FormTermCoder {
 				ArrayList<Term> sources = new ArrayList<>();
 				sources.add(_tempTerm);
 
-				clip.copyFullCodeAndDescription(sources, _copyImplicit);
+				clip.copyFullCodeAndDescription(sources, copyImplicit);
 			}
 		});
 
@@ -472,45 +391,50 @@ public class FormTermCoder {
 
 		sashForm.setWeights(new int[] { 1, 2 });
 
-		_dialog.setMaximized(false);
-		_dialog.pack();
+		dialog.setMaximized(false);
+		dialog.pack();
 
 		// restore previous dimensions of the window
 		window.restore(BrowserWindowPreferenceDao.class);
 		window.saveOnClosure(BrowserWindowPreferenceDao.class);
 
 		// show the window
-		_dialog.open();
+		dialog.open();
 
-		Display d = Display.getCurrent();
-		clipboard = new Clipboard(d);
-		_dialog.addListener(SWT.KeyDown, new Listener() {
+		/*
+		 * clipboard = new Clipboard(Display.getCurrent());
+		 * dialog.addListener(SWT.KeyDown, new Listener() {
+		 * 
+		 * public void handleEvent(Event e) { if (((e.stateMask & SWT.CTRL) == SWT.CTRL)
+		 * && (e.keyCode == 'c')) {
+		 * 
+		 * String content = fullCode.getText(); Point selection =
+		 * fullCode.getSelection(); String data = content.substring(selection.x,
+		 * selection.y);
+		 * 
+		 * if (data.equals("")) { //$NON-NLS-1$ data = content; }
+		 * clipboard.setContents(new Object[] { data }, new Transfer[] {
+		 * TextTransfer.getInstance() }); } } });
+		 */
 
-			public void handleEvent(Event e) {
-				if (((e.stateMask & SWT.CTRL) == SWT.CTRL) && (e.keyCode == 'c')) {
-
-					String content = fullCode.getText();
-					Point selection = fullCode.getSelection();
-					String data = content.substring(selection.x, selection.y);
-
-					if (data.equals("")) { //$NON-NLS-1$
-						data = content;
-					}
-					clipboard.setContents(new Object[] { data }, new Transfer[] { TextTransfer.getInstance() });
-				}
-			}
-		});
-
-		// set the initial text of the textboxes
+		// set the initial text of the text boxes
 		updateTextFields();
 
-		while (!_dialog.isDisposed()) {
-			if (!_dialog.getDisplay().readAndDispatch())
-				_dialog.getDisplay().sleep();
+		while (!dialog.isDisposed()) {
+			if (!dialog.getDisplay().readAndDispatch())
+				dialog.getDisplay().sleep();
 		}
 
-		FormTermCoder.instanceExists = false;
-		_dialog.dispose();
+		dialog.dispose();
+	}
+
+	/**
+	 * return if is possible to open the shell
+	 * 
+	 * @return
+	 */
+	public boolean canOpen() {
+		return dialog == null || dialog.isDisposed();
 	}
 
 	/**
@@ -518,21 +442,29 @@ public class FormTermCoder {
 	 */
 	private void updateTextFields() {
 
-		String newCode = _tempTerm.getFullCode(_copyImplicit, true);
+		String newCode = _tempTerm.getFullCode(copyImplicit, true);
 
-		if (!_dialog.isDisposed()) {
+		if (!dialog.isDisposed()) {
 			fullCode.setText(newCode);
-			textinterp.setText(_tempTerm.getInterpretedCode(_copyImplicit));
+			textinterp.setText(_tempTerm.getInterpretedCode(copyImplicit));
 		}
 	}
 
 	/**
 	 * sets default Button on the GUI.
 	 * 
-	 * @param buttonPush
-	 *            button SWT.Push
+	 * @param buttonPush button SWT.Push
 	 */
 	private void setDefaultButton(Button buttonPush) {
-		_dialog.setDefaultButton(buttonPush);
+		dialog.setDefaultButton(buttonPush);
+	}
+
+	/**
+	 * update the catalogue
+	 * 
+	 * @param catalogue
+	 */
+	public void setCatalogue(Catalogue catalogue) {
+		this.catalogue = catalogue;
 	}
 }

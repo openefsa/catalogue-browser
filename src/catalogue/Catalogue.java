@@ -619,6 +619,25 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	}
 
 	/**
+	 * Get an attribute by its name
+	 * 
+	 * @author shahaal
+	 * @param id
+	 * @return
+	 */
+	public Attribute getAttributeByName(String name) {
+
+		Attribute attr = null;
+
+		for (Attribute a : attributes) {
+			if (a.getName().equals(name))
+				attr = a;
+		}
+
+		return attr;
+	}
+
+	/**
 	 * the method find the implicit facet attribute
 	 * 
 	 * @author shahaal
@@ -995,16 +1014,15 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		// get a new default term
 		Term child = Term.getDefaultTerm(code);
 
-		// ste terms string values
+		// set terms string values
 		child.setName(termExtendedName);
 		child.setFullCodeDescription("");
 		child.setScopenotes(scopeNotes);
 
-		// set term level of detail
-		// E stands for ExtendedTerm
+		// set term level of detail E stands for ExtendedTerm
 		child.setDetailLevelValue("E");
 
-		// split the cientific name
+		// split the scientific name
 		TermAttribute ta = TermAttribute.getDefaultTermAttribute(child);
 		ta.setValue(scientificName);
 
@@ -1015,12 +1033,11 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 			child.addAttribute(taTemp);
 		}
 
-		// insert the new term into the database and get the new term
-		// with the id set
+		// insert the new term into the database and get the id
 		int id = termDao.insert(child);
 		child.setId(id);
 
-		// initialize term attribute dao
+		// initialise term attribute dao
 		TermAttributeDAO taDao = new TermAttributeDAO(this);
 
 		// insert the term attributes of the term
@@ -1029,11 +1046,13 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		ParentTermDAO parentDao = new ParentTermDAO(this);
 
 		/*
-		 * comment for removing specifical auto insertion ONLY for MASTER & BOTANICALS
+		 * comment for removing specific auto insertion ONLY for MASTER & Hierarchy id
+		 * (based on order)
 		 */
 		ArrayList<Hierarchy> hierarchies = new ArrayList<>();
-		hierarchies.add(hierarchy);
-		hierarchies.add(getHierarchyById(9));
+		hierarchies.add(hierarchy);// master
+		// hierarchies.add(getHierarchyById(9));//botanical
+		hierarchies.add(getHierarchyById(11));// source
 
 		for (Hierarchy h : hierarchies) {
 

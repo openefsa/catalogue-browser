@@ -24,6 +24,7 @@ import catalogue_object.Term;
  * the relationship between parent and children in a defined
  * hierarchy is called "Applicability"
  * @author avonva
+ * @author shahaal
  *
  */
 public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, Hierarchy> {
@@ -107,16 +108,11 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 					if ( rs != null ) {
 						while ( rs.next() )
 							ids.add( rs.getInt( 1 ) );
-						rs.close();
 					}
 				}
-				
-				stmt.close();
 			}
 			
 			con.commit();
-			con.close();
-			
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
@@ -298,12 +294,7 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 					Applicability appl = getByResultSet( rs );
 					appls.add( appl );
 				}
-				
-				rs.close();
 			}
-			
-			stmt.close();
-			con.close();
 			
 		} catch ( SQLException e ) {
 			e.printStackTrace();
@@ -425,12 +416,7 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 						children.add( child );
 					
 				}
-				
-				rs.close();
 			}
-			
-			stmt.close();
-			con.close();
 			
 		} catch ( SQLException e ) {
 			e.printStackTrace();
@@ -481,12 +467,7 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 				// Get the max order
 				if ( rs.next() )
 					maxOrder = rs.getInt( "MAX_ORDER" );
-	
-				rs.close();
 			}
-			
-			stmt.close();
-			con.close();
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();

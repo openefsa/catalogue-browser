@@ -18,16 +18,19 @@ import catalogue_browser_dao.DatabaseManager;
 
 /**
  * Data collection table DAO
+ * 
  * @author avonva
+ * @author shahaal
  *
  */
 public class DCTableDAO implements CatalogueEntityDAO<DCTable> {
 
 	private static final Logger LOGGER = LogManager.getLogger(DCTableDAO.class);
-	
+
 	@Override
-	public void setCatalogue(Catalogue catalogue) {}
-	
+	public void setCatalogue(Catalogue catalogue) {
+	}
+
 	@Override
 	public int insert(DCTable dc) {
 
@@ -38,22 +41,17 @@ public class DCTableDAO implements CatalogueEntityDAO<DCTable> {
 		try (Connection con = DatabaseManager.getMainDBConnection();
 				PreparedStatement stmt = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);) {
 
-			stmt.setString( 1, dc.getName() );
+			stmt.setString(1, dc.getName());
 
 			stmt.executeUpdate();
 
-			try(ResultSet rs = stmt.getGeneratedKeys();) {
+			try (ResultSet rs = stmt.getGeneratedKeys();) {
 
-				if ( rs != null && rs.next() ) {
+				if (rs != null && rs.next())
 					id = rs.getInt(1);
-					rs.close();
-				}
 			}
 
-			stmt.close();
-			con.close();
-
-		} catch ( SQLException e ) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			LOGGER.error("DB error", e);
 		}
@@ -69,13 +67,13 @@ public class DCTableDAO implements CatalogueEntityDAO<DCTable> {
 		try (Connection con = DatabaseManager.getMainDBConnection();
 				PreparedStatement stmt = con.prepareStatement(query);) {
 
-			stmt.setInt( 1, dc.getId() );
+			stmt.setInt(1, dc.getId());
 
 			stmt.executeUpdate();
 
 			stmt.close();
 			con.close();
-			
+
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -101,18 +99,13 @@ public class DCTableDAO implements CatalogueEntityDAO<DCTable> {
 		try (Connection con = DatabaseManager.getMainDBConnection();
 				PreparedStatement stmt = con.prepareStatement(query);) {
 
-			stmt.setInt( 1, id );
+			stmt.setInt(1, id);
 
-			try(ResultSet rs = stmt.executeQuery();) {
+			try (ResultSet rs = stmt.executeQuery();) {
 
-				if ( rs.next() )
-					out = getByResultSet( rs );
-	
-				rs.close();
+				if (rs.next())
+					out = getByResultSet(rs);
 			}
-			
-			stmt.close();
-			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			LOGGER.error("DB error", e);
@@ -120,13 +113,14 @@ public class DCTableDAO implements CatalogueEntityDAO<DCTable> {
 
 		return out;
 	}
-	
+
 	/**
 	 * Get the table by its name
+	 * 
 	 * @param name
 	 * @return
 	 */
-	public DCTable getByName ( String name ) {
+	public DCTable getByName(String name) {
 
 		DCTable out = null;
 
@@ -135,18 +129,14 @@ public class DCTableDAO implements CatalogueEntityDAO<DCTable> {
 		try (Connection con = DatabaseManager.getMainDBConnection();
 				PreparedStatement stmt = con.prepareStatement(query);) {
 
-			stmt.setString( 1, name );
+			stmt.setString(1, name);
 
-			try(ResultSet rs = stmt.executeQuery();) {
+			try (ResultSet rs = stmt.executeQuery();) {
 
-				if ( rs.next() )
-					out = getByResultSet( rs );
-	
-				rs.close();
+				if (rs.next())
+					out = getByResultSet(rs);
+
 			}
-			
-			stmt.close();
-			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			LOGGER.error("DB error", e);
@@ -158,48 +148,45 @@ public class DCTableDAO implements CatalogueEntityDAO<DCTable> {
 	@Override
 	public DCTable getByResultSet(ResultSet rs) throws SQLException {
 
-		int id = rs.getInt( "DC_TABLE_ID" );
-		String name = rs.getString( "DC_TABLE_NAME" );
+		int id = rs.getInt("DC_TABLE_ID");
+		String name = rs.getString("DC_TABLE_NAME");
 
-		DCTable table = new DCTable( name );
-		table.setId( id );
+		DCTable table = new DCTable(name);
+		table.setId(id);
 
 		return table;
 	}
 
 	/**
 	 * Check if the table is already present or not in the db
+	 * 
 	 * @param table
 	 * @return
 	 */
-	public boolean contains ( DCTable table ) {
-		
+	public boolean contains(DCTable table) {
+
 		boolean contains = false;
 
 		String query = "select * from APP.DATA_COLLECTION_TABLE where DC_TABLE_NAME = ?";
 
 		try (Connection con = DatabaseManager.getMainDBConnection();
 				PreparedStatement stmt = con.prepareStatement(query);) {
-			
-			stmt.setString( 1, table.getName() );
 
-			try(ResultSet rs = stmt.executeQuery();) {
-			
+			stmt.setString(1, table.getName());
+
+			try (ResultSet rs = stmt.executeQuery();) {
+
 				contains = rs.next();
-				
-				rs.close();
 			}
-			stmt.close();
-			con.close();
 
-		} catch ( SQLException e ) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			LOGGER.error("DB error", e);
 		}
-		
+
 		return contains;
 	}
-	
+
 	@Override
 	public Collection<DCTable> getAll() {
 
@@ -211,12 +198,9 @@ public class DCTableDAO implements CatalogueEntityDAO<DCTable> {
 				PreparedStatement stmt = con.prepareStatement(query);
 				ResultSet rs = stmt.executeQuery();) {
 
-			while ( rs.next() )
-				out.add( getByResultSet( rs ) );
+			while (rs.next())
+				out.add(getByResultSet(rs));
 
-			rs.close();
-			stmt.close();
-			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			LOGGER.error("DB error", e);

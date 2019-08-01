@@ -8,6 +8,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 import catalogue_browser_dao.CatalogueDAO;
@@ -107,7 +108,7 @@ public class FileMenu implements MainMenuItem {
 
 		// add separator
 		new MenuItem(fileMenu, SWT.SEPARATOR);
-		
+
 		// add exit option
 		addExitMI(fileMenu);
 
@@ -226,7 +227,7 @@ public class FileMenu implements MainMenuItem {
 	private MenuItem addDcMI(Menu menu) {
 
 		final MenuItem dc = new MenuItem(menu, SWT.CASCADE);
-		dc.setText(Messages.getString("BrowserMenu.CataloguesRepo"));
+		dc.setText(Messages.getString("BrowserMenu.DataCollectionCmd"));
 
 		// Initialize the menu
 		final Menu selectDcMenu = new Menu(shell, SWT.DROP_DOWN);
@@ -293,6 +294,19 @@ public class FileMenu implements MainMenuItem {
 
 			@Override
 			public void widgetSelected(SelectionEvent event) {
+
+				// warn the user if logged with openapi
+				if (User.getInstance().isAuthWithOpeanAPI()) {
+
+					// if user doesn't want to continue return
+					MessageBox mb = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
+					mb.setText(Messages.getString("FormDCList.Title"));
+					mb.setMessage(Messages.getString("FormDCList.WarnOpenapiUser"));
+
+					if (mb.open() != SWT.YES)
+						return;
+				}
+				// open the data collection selection list
 				FileActions.downloadDC(shell);
 			}
 		});

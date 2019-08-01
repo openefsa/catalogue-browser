@@ -6,101 +6,92 @@ import java.util.Observer;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
-
 import catalogue.Catalogue;
 import catalogue_object.Hierarchy;
-import messages.Messages;
 import ui_main_panel.HierarchySelector;
 
 /**
  * Create a tree with the implicit facets of the selected term in it
+ * 
  * @author avonva
- *
+ * @author shahaal
+ * 
  */
 public class TreeImplicitFacets implements Observer {
 
-	TreeViewer tree;  // tree which contains the implicit facets
+	TreeViewer tree; // tree which contains the implicit facets
 
 	private LabelProviderImplicitFacets labelProvider;
 	private ContentProviderImplicitFacets contentProvider;
-	
+
 	/**
 	 * Get the implicit facets tree viewer
+	 * 
 	 * @return
 	 */
 	public TreeViewer getTreeViewer() {
 		return tree;
 	}
-	
+
 	/**
 	 * Set the current hierarchy
+	 * 
 	 * @param hierarchy
 	 */
-	public void setHierarchy ( Hierarchy hierarchy ) {
-		labelProvider.setCurrentHierarchy( hierarchy );
+	public void setHierarchy(Hierarchy hierarchy) {
+		labelProvider.setCurrentHierarchy(hierarchy);
 	}
-	
+
 	/**
-	 * Constructor, it creates the implicit facet tree viewer in the parent composite
+	 * Constructor, it creates the implicit facet tree viewer in the parent
+	 * composite
+	 * 
 	 * @param parent
 	 */
-	public TreeImplicitFacets( Composite parent, Catalogue catalogue ) {
+	public TreeImplicitFacets(Composite parent, Catalogue catalogue) {
 
-		// create a new group for implicit facets
-		Group groupImplicitFacets = new Group( parent , SWT.NONE );
-		groupImplicitFacets.setText( Messages.getString("TreeImplicitFacets.Title") );
-		groupImplicitFacets.setLayout( new FillLayout() );
+		// instantiate the tree
+		tree = new TreeViewer(parent, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL | SWT.NONE);
 
-		// set the layout data
-		GridData gridData = new GridData();
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = true;
-
-		groupImplicitFacets.setLayoutData( gridData );
-
+		// set the layout of the tree
+		tree.getTree().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-		// istantiate the tree
-		tree = new TreeViewer( groupImplicitFacets , SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL
-				| SWT.H_SCROLL | SWT.NONE );
+		// set the label provider for the facets groups
+		labelProvider = new LabelProviderImplicitFacets(catalogue);
 
-		labelProvider = new LabelProviderImplicitFacets( catalogue );
-		
 		// set the label provider
-		tree.setLabelProvider( labelProvider );
-		
+		tree.setLabelProvider(labelProvider);
+
 		contentProvider = new ContentProviderImplicitFacets();
-		
+
 		// set the content provider
-		tree.setContentProvider( contentProvider );
+		tree.setContentProvider(contentProvider);
 
 		// set how the terms are sorted
-		tree.setSorter( new SorterImplicitFacets() );
+		tree.setSorter(new SorterImplicitFacets());
 
 		// set the initial input
-		tree.setInput( null );
+		tree.setInput(null);
 	}
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		
-		if ( arg0 instanceof HierarchySelector ) {
-			
+
+		if (arg0 instanceof HierarchySelector) {
+
 			Hierarchy selectedHierarchy = ((HierarchySelector) arg0).getSelectedHierarchy();
-			labelProvider.setCurrentHierarchy( selectedHierarchy );
+			labelProvider.setCurrentHierarchy(selectedHierarchy);
 		}
 	}
-	
+
 	/**
 	 * Add double click listener
+	 * 
 	 * @param listener
 	 */
-	public void addDoubleClickListener ( IDoubleClickListener listener ) {
-		tree.addDoubleClickListener( listener );
+	public void addDoubleClickListener(IDoubleClickListener listener) {
+		tree.addDoubleClickListener(listener);
 	}
 }

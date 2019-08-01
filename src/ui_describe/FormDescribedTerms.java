@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -25,8 +23,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
@@ -42,8 +38,8 @@ import window_restorer.RestoreableWindow;
  * Template class used to manage the search terms windows and the Recently
  * described one
  * 
- * @author avonva
  * @author shahaal
+ * @author avonva
  *
  */
 
@@ -54,21 +50,23 @@ public class FormDescribedTerms {
 	private RestoreableWindow window;
 	private static final String WINDOW_CODE = "FormDescribedTerms";
 
-	private Shell _shell;
-	private Shell _dialog;
-	private String _title;
+	private Shell shell;
+	private Shell parent;
+	private String title;
 
 	private TableViewer baseTermsTable; // table which contains all the items
 	private Text searchTextBox = null; // search the keyword in the list
 	private Button findSearch = null; // button to start the search
 	private Button clearSearch = null; // button to clear the search results
 
-	private Catalogue catalogue;
-
 	// ten elements in cache
 	ArrayList<?> describedTerms = new ArrayList<>();
 
 	ViewerFilter searchViewerFilter = null;
+
+	private Button loadButton;
+
+	private SelectionListener loadListener;
 
 	/**
 	 * Constructor
@@ -78,19 +76,18 @@ public class FormDescribedTerms {
 	 * @param filename    the name of the file from which extracting the described
 	 *                    term (recent or favourite)
 	 * @param invertOrder should the order of the term be reversed? (used for
-	 *                    visualizing recent terms starting from the more recent
+	 *                    visualising recent terms starting from the more recent
 	 */
 	public FormDescribedTerms(Shell parentShell, String title, Catalogue catalogue, ArrayList<?> describedTerms) {
 
-		_shell = parentShell;
-		_title = title;
-		this.catalogue = catalogue;
+		shell = parentShell;
+		this.title = title;
 		this.describedTerms = describedTerms;
 	}
 
 	/**
 	 * set a search filter. This is used for searching the selected term in the
-	 * foodex main tree panel across all the element of the favourite picklist. In
+	 * FoodEx2 main tree panel across all the element of the favourite pick list. In
 	 * particular, we search across implicit and explicit facets
 	 * 
 	 * @param filter
@@ -129,81 +126,69 @@ public class FormDescribedTerms {
 	 */
 	public void display(Catalogue catalogue) {
 
-		this.catalogue = catalogue;
-
 		// Set the layout of the form
-		_dialog = new Shell(_shell, SWT.SHELL_TRIM | SWT.APPLICATION_MODAL);
+		parent = new Shell(shell, SWT.SHELL_TRIM | SWT.APPLICATION_MODAL);
 
-		window = new RestoreableWindow(_dialog, WINDOW_CODE);
+		window = new RestoreableWindow(parent, WINDOW_CODE);
 
 		// window icon (on the top left)
 		try {
-			_dialog.setImage(new Image(Display.getCurrent(),
+			parent.setImage(new Image(Display.getCurrent(),
 					this.getClass().getClassLoader().getResourceAsStream("Choose.gif")));
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.error("Cannot get image", e);
 		}
 
-		_dialog.setMaximized(true);
+		parent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		parent.setLayout(new GridLayout(2, true));
+		parent.setText(title);
 
-		_dialog.setText(_title); // window title
-
-		_dialog.setLayout(new GridLayout(2, false)); // layout style
-
-		_dialog.setSize(800, 500); // default size
-
-		GridData gridData = new GridData();
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.grabExcessVerticalSpace = true;
-		gridData.grabExcessHorizontalSpace = true;
-
-		// window layout
-		_dialog.setLayoutData(gridData);
-
-		// composite which contains the base term table
-		Composite baseTermComposite = new Composite(_dialog, SWT.NONE);
-
-		baseTermComposite.setLayout(new GridLayout(1, false));
-		gridData.minimumWidth = 300;
-		gridData.widthHint = 450;
-
-		baseTermComposite.setLayoutData(gridData);
-
-		Group searchComposite = new Group(baseTermComposite, SWT.NONE);
-		searchComposite.setText(Messages.getString("FormRecentlyDescribe.SearchTermTitle"));
+		// search composite
+		Group searchComposite = new Group(parent, SWT.NONE);
+		GridData data = new GridData(SWT.FILL, SWT.FILL, true, false);
+		data.horizontalSpan = 2;
+		searchComposite.setLayoutData(data);
 		searchComposite.setLayout(new GridLayout(3, false));
+		searchComposite.setText(Messages.getString("FormRecentlyDescribe.SearchTermTitle"));
 
 		searchTextBox = new Text(searchComposite, SWT.SEARCH);
-		searchTextBox.setEditable(true);
+		searchTextBox.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		searchTextBox.setMessage(Messages.getString("FormRecentlyDescribe.SearchTip"));
+		searchTextBox.setEditable(true);
+
+		data = new GridData(SWT.FILL, SWT.FILL, false, true);
+		data.minimumWidth = 200;
+		data.widthHint = 200;
 
 		findSearch = new Button(searchComposite, SWT.NONE);
+		findSearch.setLayoutData(data);
 		findSearch.setText(Messages.getString("FormRecentlyDescribe.FindTermsButton"));
 
 		clearSearch = new Button(searchComposite, SWT.NONE);
+		clearSearch.setLayoutData(data);
 		clearSearch.setText(Messages.getString("FormRecentlyDescribe.ClearButton"));
 
-		// label for the base term tables
-		Label baseTermLabel = new Label(baseTermComposite, SWT.NONE);
-		baseTermLabel.setText(_title + ":"); //$NON-NLS-1$
+		// group for the base term tables
+		Group groupTable = new Group(parent, SWT.NONE);
+		groupTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		groupTable.setLayout(new GridLayout(1, false));
+		groupTable.setText(title + ":"); //$NON-NLS-1$
 
-		baseTermsTable = new TableViewer(new Table(baseTermComposite, SWT.BORDER | SWT.VIRTUAL));
+		// initialise the term table
+		baseTermsTable = new TableViewer(new Table(groupTable, SWT.BORDER | SWT.VIRTUAL));
+		baseTermsTable.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		baseTermsTable.getTable().setLinesVisible(true);
 
-		// add the label to the base terms
+		// set the providers
 		baseTermsTable.setLabelProvider(new LabelProviderDescribedTerm(catalogue));
-
-		// set the content provider for the table viewer
 		baseTermsTable.setContentProvider(new ContentProviderDescribedTerms());
 
 		// add the terms to the table viewer
 		baseTermsTable.setInput(describedTerms);
 
-		// make the table stretchable
-		baseTermsTable.getTable().setLayoutData(gridData);
-
 		// TODO finish the method for adding multiple selection + copy and paste option
-		// into the lastsearched window
+		// into the last searched window
 		// baseTermsTable.add
 
 		/* Add the search filter if it was set */
@@ -219,9 +204,11 @@ public class FormDescribedTerms {
 				findSearch.setEnabled(false);
 		}
 
-		// composite of the text boxes and labels
-		Composite codeComposite = new Composite(_dialog, SWT.NONE);
+		// group for the base term tables
+		Group codeComposite = new Group(parent, SWT.NONE);
+		codeComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		codeComposite.setLayout(new GridLayout(1, false));
+		codeComposite.setText(Messages.getString("FormRecentlyDescribe.TermInfo"));
 
 		// label for full code text box
 		Label fullCodeLabel = new Label(codeComposite, SWT.NONE);
@@ -229,6 +216,8 @@ public class FormDescribedTerms {
 
 		// text boxes to show the full code
 		final Text fullCode = new Text(codeComposite, SWT.BORDER | SWT.READ_ONLY | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
+		fullCode.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		fullCode.setEditable(false);
 
 		// label for interpreted text box
 		Label interpLabel = new Label(codeComposite, SWT.NONE);
@@ -237,45 +226,25 @@ public class FormDescribedTerms {
 		// text box for the interpreted code
 		final Text interpretedCode = new Text(codeComposite,
 				SWT.BORDER | SWT.READ_ONLY | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
-
-		// avoid edit mode in the textboxes
-		fullCode.setEditable(false);
+		interpretedCode.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		interpretedCode.setEditable(false);
 
-		GridData gridData2 = new GridData();
-		gridData2.verticalAlignment = SWT.FILL;
-		gridData2.horizontalAlignment = SWT.FILL;
-		gridData2.grabExcessHorizontalSpace = true;
-		gridData2.grabExcessVerticalSpace = true;
-		gridData2.minimumWidth = 400;
-		gridData2.widthHint = 400;
-		gridData2.minimumHeight = 80;
-
-		// set the layout data for the text boxes and for the composite
-		codeComposite.setLayoutData(gridData2);
-		fullCode.setLayoutData(gridData2);
-		interpretedCode.setLayoutData(gridData2);
-
-		// grid data for the composite
-		GridData buttonGD = new GridData();
-		buttonGD.verticalAlignment = SWT.FILL;
-		buttonGD.grabExcessHorizontalSpace = true;
-		buttonGD.minimumWidth = 150;
-
 		// composite which contains the buttons
-		Composite buttonComposite = new Composite(_dialog, SWT.NONE);
-		buttonComposite.setLayoutData(buttonGD);
-		buttonComposite.setLayout(new GridLayout(2, false));
+		Composite buttonComposite = new Composite(parent, SWT.NONE);
+		GridData dataLayout = new GridData(SWT.CENTER, SWT.FILL, true, false);
+		dataLayout.horizontalSpan = 2;
+		buttonComposite.setLayoutData(dataLayout);
+		buttonComposite.setLayout(new GridLayout(2, true));
 
 		// open the recent element in the describe window
-		Button okButton = new Button(buttonComposite, SWT.PUSH);
-		okButton.setText(Messages.getString("FormRecentlyDescribe.LoadButton"));
-		okButton.setLayoutData(buttonGD);
+		loadButton = new Button(buttonComposite, SWT.PUSH);
+		loadButton.setText(Messages.getString("FormRecentlyDescribe.LoadButton"));
+		loadButton.setLayoutData(data);
 
 		// cancel the operation
 		Button cancelButton = new Button(buttonComposite, SWT.PUSH);
 		cancelButton.setText(Messages.getString("FormRecentlyDescribe.CancelButton"));
-		cancelButton.setLayoutData(buttonGD);
+		cancelButton.setLayoutData(data);
 
 		// when an element is selected from the table
 		baseTermsTable.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -294,7 +263,7 @@ public class FormDescribedTerms {
 
 					// if not valid stop
 					if (!describedTerm.isValid()) {
-						GlobalUtil.showErrorDialog(_shell, describedTerm.getCode(),
+						GlobalUtil.showErrorDialog(shell, describedTerm.getCode(),
 								Messages.getString("FormRecentlyDescribe.InvalidTermMessage"));
 						return;
 					}
@@ -348,55 +317,18 @@ public class FormDescribedTerms {
 			}
 		});
 
-		/* LOAD TERM IN DESCRIBE */
-
 		// if ok button is pressed
-		okButton.addSelectionListener(new SelectionListener() {
+		loadButton.addSelectionListener(new SelectionListener() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				openDescribe();
+
+				if (loadListener != null)
+					loadListener.widgetSelected(e);
 			}
 
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-		});
-
-		// create a load term menu item for adding the element in the describe window
-		Menu rightClickMenu = new Menu(_dialog, SWT.POP_UP);
-		MenuItem loadTerm = new MenuItem(rightClickMenu, SWT.PUSH);
-		loadTerm.setText(Messages.getString("FormRecentlyDescribe.LoadMenuItem")); //$NON-NLS-1$
-
-		// add image to "add" button
-		Image addIcon = new Image(Display.getCurrent(),
-				this.getClass().getClassLoader().getResourceAsStream("add-icon.png")); //$NON-NLS-1$
-		loadTerm.setImage(addIcon);
-
-		loadTerm.addSelectionListener(new SelectionListener() {
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				openDescribe();
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-		});
-
-		baseTermsTable.getTable().setMenu(rightClickMenu);
-
-		/**
-		 * double click => load the selected element
-		 * 
-		 * @author shahaal
-		 */
-		baseTermsTable.addDoubleClickListener(new IDoubleClickListener() {
-
-			@Override
-			public void doubleClick(DoubleClickEvent arg0) {
-				openDescribe();
 			}
 		});
 
@@ -405,7 +337,7 @@ public class FormDescribedTerms {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				_dialog.close(); // close the dialog
+				parent.close(); // close the dialog
 			}
 
 			@Override
@@ -413,36 +345,16 @@ public class FormDescribedTerms {
 			}
 		});
 
-		_dialog.setMaximized(false);
-		_dialog.pack();
+		parent.setMaximized(false);
+		parent.pack();
 
 		// restore previous dimensions
 		window.restore(BrowserWindowPreferenceDao.class);
 		window.saveOnClosure(BrowserWindowPreferenceDao.class);
 
 		// show the dialog
-		_dialog.setVisible(true);
+		parent.open();
 
-	}
-
-	/**
-	 * the method is used for opening the describe window
-	 * 
-	 * @author shahaal
-	 */
-	private void openDescribe() {
-
-		if (!FormTermCoder.instanceExists) {
-			if (!baseTermsTable.getSelection().isEmpty()) {
-				IStructuredSelection selection = (IStructuredSelection) baseTermsTable.getSelection();
-
-				// get the selected item
-				DescribedTerm fc = (DescribedTerm) selection.getFirstElement();
-
-				// load in the describe window the selected term
-				loadTermInDescribe(fc);
-			}
-		}
 	}
 
 	/**
@@ -451,31 +363,27 @@ public class FormDescribedTerms {
 	 * 
 	 * @author shahaal
 	 * @param describedTerm
+	 * @return 
 	 */
-	private void loadTermInDescribe(DescribedTerm describedTerm) {
+	public DescribedTerm loadTermInDescribe() {
+
+		// get the selected term
+		IStructuredSelection selection = (IStructuredSelection) baseTermsTable.getSelection();
+
+		// get the selected item
+		DescribedTerm describedTerm = (DescribedTerm) selection.getFirstElement();
 
 		// if not valid stop
 		if (!describedTerm.isValid()) {
-			GlobalUtil.showErrorDialog(_shell, describedTerm.getCode(),
+			GlobalUtil.showErrorDialog(shell, describedTerm.getCode(),
 					Messages.getString("FormRecentlyDescribe.InvalidTermMessage"));
-			return;
+			return null;
 		}
 
-		// open the describe window
-		FormTermCoder tcf = new FormTermCoder(_shell, Messages.getString("FormRecentlyDescribe.DescribeWindowTitle"),
-				catalogue);
-
-		// load the described term into the describe window
-		tcf.loadDescribedTerm(describedTerm);
-
 		// hide the current form
-		_dialog.setVisible(false);
+		parent.dispose();
 
-		// show the window and add the facet
-		tcf.display(catalogue);
-
-		// close the current dialog
-		_dialog.close();
+		return describedTerm;
 
 	}
 
@@ -509,5 +417,14 @@ public class FormDescribedTerms {
 		};
 
 		return filter;
+	}
+
+	/**
+	 * set listener for load term button
+	 * 
+	 * @param actionListener
+	 */
+	public void setLoadListener(SelectionListener actionListener) {
+		this.loadListener = actionListener;
 	}
 }

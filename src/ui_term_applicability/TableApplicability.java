@@ -16,10 +16,8 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -47,7 +45,8 @@ import utilities.GlobalUtil;
  * applicabilities of a term) and its contextual menu
  * 
  * @author avonva
- *
+ * @author shahaal
+ * 
  */
 
 public class TableApplicability {
@@ -154,27 +153,13 @@ public class TableApplicability {
 
 		// set parameters
 		this.parent = parent;
-		// create a group for the applicability
-		Group groupTermApplicability = new Group(parent, SWT.NONE);
-
-		groupTermApplicability.setText(Messages.getString("TableApplicability.Title"));
-		groupTermApplicability.setLayout(new GridLayout(1, false));
-
-		// layout data for the applicability table group
-		GridData gridData = new GridData();
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.minimumHeight = 200;
-		gridData.minimumWidth = 100;
-		gridData.grabExcessHorizontalSpace = false;
-		gridData.grabExcessVerticalSpace = true;
 
 		// create an applicability table
-		applicabilityTable = new TableViewer(groupTermApplicability,
+		applicabilityTable = new TableViewer(parent,
 				SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.NONE);
+		applicabilityTable.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		applicabilityTable.getTable().setHeaderVisible(true);
-		applicabilityTable.getTable().setLayoutData(gridData);
 		applicabilityTable.setContentProvider(new ContentProviderApplicability());
 
 		// Add the "Term" column
@@ -187,11 +172,12 @@ public class TableApplicability {
 
 		// add the "Usage" column and its label provider
 		GlobalUtil.addStandardColumn(applicabilityTable, new UsageColumnLabelProvider(),
-				Messages.getString("TableApplicability.UsageColumn"), 80, SWT.CENTER);
+				Messages.getString("TableApplicability.UsageColumn"), 50, SWT.CENTER);
 
 		// add the "Usage" column and its label provider
 		GlobalUtil.addStandardColumn(applicabilityTable, new UsageColumnOrderProvider(),
-				Messages.getString("TableApplicability.OrderColumn"), 100, SWT.CENTER);
+				Messages.getString("TableApplicability.OrderColumn"), 50, SWT.CENTER);
+
 	}
 
 	/**
@@ -310,10 +296,10 @@ public class TableApplicability {
 	 * @return
 	 */
 	private Menu createApplicabilityMenu() {
-		
+
 		// create menu
 		Menu applicabilityOperationMenu = new Menu(parent.getShell(), SWT.POP_UP);
-		
+
 		// add open item
 		final MenuItem openMI = addOpenApplicabilityMI(applicabilityOperationMenu);
 
@@ -338,13 +324,13 @@ public class TableApplicability {
 
 			@Override
 			public void handleEvent(Event event) {
-				
+
 				User user = User.getInstance();
-				
+
 				boolean editable = user.canEdit(term.getCatalogue());
 				// can modify only if editing and if we have selected some applicabilities
 				boolean selected = !applicabilityTable.getSelection().isEmpty();
-				
+
 				openMI.setEnabled(selected);
 				addHier.setEnabled(editable);
 				addParent.setEnabled(editable);
@@ -376,7 +362,7 @@ public class TableApplicability {
 		openApplicability.addSelectionListener(new SelectionAdapter() {
 
 			public void widgetSelected(SelectionEvent e) {
-				
+
 				if (applicabilityTable.getSelection().isEmpty()
 						|| !(applicabilityTable.getSelection() instanceof IStructuredSelection))
 					return;
@@ -489,7 +475,7 @@ public class TableApplicability {
 	 * @return
 	 */
 	private MenuItem addParentApplMI(Menu menu) {
-		
+
 		MenuItem addParentAppl = new MenuItem(menu, SWT.PUSH);
 		addParentAppl.setText(Messages.getString("TableApplicability.AddParentCmd"));
 
@@ -519,21 +505,20 @@ public class TableApplicability {
 	/**
 	 * Ask to the user to select a term from the list
 	 * 
-	 * @param root
-	 *            the root of the list, set an hierarchies to see its terms, or
-	 *            AvailableHierarchiesTerm to see the hierarchies in which the term
-	 *            is not present
+	 * @param root the root of the list, set an hierarchies to see its terms, or
+	 *             AvailableHierarchiesTerm to see the hierarchies in which the term
+	 *             is not present
 	 * @return
 	 */
 	private Nameable selectTerm(Object root) {
-		
+
 		FormSelectTerm f = new FormSelectTerm(parent.getShell(),
 				Messages.getString("TableApplicability.SelectTermWindowTitle"), term.getCatalogue(), false, true);
 
 		// use the master hierarchy to choose the parent term
 		// then you can select all the other hierarchies with the
 		// guided approach
-		
+
 		if (root instanceof Hierarchy)
 			f.setRootTerm((Hierarchy) root);
 		else if (root instanceof AvailableHierarchiesTerm)
@@ -569,13 +554,13 @@ public class TableApplicability {
 	}
 
 	private void addApplSelectionListener(MenuItem mi, final Object root) {
-		
+
 		// if we add an applicability open the select term form to choose the parent
 		mi.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				
+
 				final Nameable parentTerm = selectTerm(root);
 
 				// if we have selected a term => get all the hierarchies where the parent is
@@ -641,7 +626,7 @@ public class TableApplicability {
 	 * @return
 	 */
 	private Menu createApplicabilityUsageMenu() {
-		
+
 		Menu menu = new Menu(parent.getShell(), SWT.DROP_DOWN);
 
 		final MenuItem reportable = new MenuItem(menu, SWT.RADIO);
@@ -679,7 +664,7 @@ public class TableApplicability {
 
 			@Override
 			public void handleEvent(Event event) {
-				
+
 				if (applicabilityTable.getSelection().isEmpty())
 					return;
 

@@ -52,9 +52,9 @@ public abstract class TermRules {
 	// the message id is given by the order of the event definition. So the message
 	// with id 1 will be hierarchyBaseTerm etc...
 	protected static enum WarningEvent {
-		BR09_HierarchyBaseTerm, // when a hierarchy object is selected as base term
+		HierarchyBaseTerm, // when a hierarchy object is selected as base term
 		BaseTermSuccessfullyAdded, // when a non-hierarchy object is selected as base term
-		BR19_ForbiddenProcess, // when a forbidden process is chosen for the term
+		ForbiddenProcess, // when a forbidden process is chosen for the term
 		WrongProcessOrder, // when a process is added to a derivative and the process ordcode is < than the
 							// implicit ordcode
 		ExceptionTermSelected, // when a term which is contained in the BR_Exceptions is selected for the
@@ -64,22 +64,22 @@ public abstract class TermRules {
 							// selected
 		NoExpHierarchyTerm, // when a hierarchy is chosen as base term, and the hierarchy is not an exposure
 							// hierarchy
-		BR10_NonSpecificTerm, // when a non specific term is chosen to describe
+		NonSpecificTerm, // when a non specific term is chosen to describe
 		GenericProcessing, // when the generic facet "processed" is applied
-		BR12_MinorIngredient, // when an ingredient is selected for raw commodities or derivatives
-		BR01_SingleSourceCommodityToRaw, // when one single source commodity is added to raw commodities
-		BR02_MixedDerivative, // when a source is added to a derivative which has two or more source
+		MinorIngredient, // when an ingredient is selected for raw commodities or derivatives
+		SingleSourceCommodityToRaw, // when one single source commodity is added to raw commodities
+		MixedDerivative, // when a source is added to a derivative which has two or more source
 								// commodities
-		BR13_SourceToDerivative, // when a source is added to a derivative and there is only one source commodity
+		SourceToDerivative, // when a source is added to a derivative and there is only one source commodity
 		NoExposureTerm, // when a non exposure base term is selected
-		BR03_SourceInComposite, // when a source is added to a composite term
-		BR04_SourceCommodityInComposite, // when a source commodity is added to a composite term
+		SourceInComposite, // when a source is added to a composite term
+		SourceCommodityInComposite, // when a source commodity is added to a composite term
 		DecimalForbiddenProcess, // when more than 1 proc with decimal ord code is present (at least one explicit
 									// should be present)
-		BR05_NonGenericDerivativeUsed, // when a derivative with an implicit facet is used to describe mixed derivative
-		BR06_SourceInDerivative, // if a source is added to a derivative without sourcecommodities
-		BR21_Error, // if a code is wrongly structured
-		BR22_ReconstitutionProduct; // when reconstitution is added to concentrate/powder base terms
+		NonGenericDerivativeUsed, // when a derivative with an implicit facet is used to describe mixed derivative
+		SourceInDerivative, // if a source is added to a derivative without sourcecommodities
+		Error, // if a code is wrongly structured
+		ReconstitutionProduct; // when reconstitution is added to concentrate/powder base terms
 	}
 
 	/**
@@ -109,7 +109,7 @@ public abstract class TermRules {
 			Hierarchy expHierarchy = currentCat.getHierarchyByCode("expo");
 
 			if (hierarchies.contains(expHierarchy)) // print the message related to the hierarchy as base term
-				printWarning(WarningEvent.BR09_HierarchyBaseTerm, baseTerm.getCode(), false, stdOut);
+				printWarning(WarningEvent.HierarchyBaseTerm, baseTerm.getCode(), false, stdOut);
 			else // print warning that you are using a non exposure hierarchy term
 				printWarning(WarningEvent.NoExpHierarchyTerm, baseTerm.getCode(), false, stdOut);
 
@@ -150,7 +150,7 @@ public abstract class TermRules {
 			currentFPCodes.add(proc.getForbiddenProcessCode());
 
 		if (currentFPCodes != null && currentFPCodes.contains(facetCode))
-			printWarning(WarningEvent.BR19_ForbiddenProcess, facetCode, false, stdOut);
+			printWarning(WarningEvent.ForbiddenProcess, facetCode, false, stdOut);
 
 	}
 
@@ -470,7 +470,7 @@ public abstract class TermRules {
 
 		// if the term is non-specific rise a warning (semaphore green, text yellow)
 		if (isNonSpecificTerm(term)) {
-			printWarning(WarningEvent.BR10_NonSpecificTerm, term.getCode(), false, stdOut);
+			printWarning(WarningEvent.NonSpecificTerm, term.getCode(), false, stdOut);
 		}
 	}
 
@@ -501,17 +501,23 @@ public abstract class TermRules {
 		// if the base term is a raw commodity or a derivative
 		if (isRawCommodityTerm(baseTerm) || isDerivativeTerm(baseTerm)) {
 
-			// get the ingredient facet category
-			Attribute facetCategory = currentCat.getAttributeById(20);
+			// if the base term is not flavoured and the facet is an ingredient
+			if (!isFlavoured(baseTerm) && isIngredientFacet(facetIndex)) {
 
-			// check if the new facet belongs to the existing implicit facets
-			for (DescriptorTreeItem dti : baseTerm.getInheritedImplicitFacets(facetCategory)) {
-				if (facet.hasAncestor(dti.getTerm(), facetCategory.getHierarchy()))
-					return;
+				// get the ingredient facet category
+				Attribute facetCategory = currentCat.getAttributeById(20);
+
+				// if the implicit facet is parent of the explicit then don't print the warning
+				if (facetCategory != null) {
+					for (DescriptorTreeItem dti : baseTerm.getInheritedImplicitFacets(facetCategory)) {
+						if (facet.hasAncestor(dti.getTerm(), facetCategory.getHierarchy()))
+							return;
+					}
+				}
+
+				// otherwise print the warning
+				printWarning(WarningEvent.MinorIngredient, facet.getCode(), false, stdOut);
 			}
-
-			if (isIngredientFacet(facetIndex)) // if the facet is an ingredient
-				printWarning(WarningEvent.BR12_MinorIngredient, facet.getCode(), false, stdOut);
 		}
 	}
 
@@ -593,7 +599,7 @@ public abstract class TermRules {
 
 		// print warning if only one SC; at least two are required
 		if (sourceCommodityFacetCount == 1)
-			printWarning(WarningEvent.BR01_SingleSourceCommodityToRaw, termsInvolved, false, stdOut);
+			printWarning(WarningEvent.SingleSourceCommodityToRaw, termsInvolved, false, stdOut);
 
 	}
 
@@ -708,21 +714,21 @@ public abstract class TermRules {
 
 		// if we have an implicit sc, an explicit sc and a source
 		if (explicitRestrictedSourceCommCount > 0 && implicitSourceCommCount > 0)
-			printWarning(WarningEvent.BR05_NonGenericDerivativeUsed, termsInvolved, false, stdOut);
+			printWarning(WarningEvent.NonGenericDerivativeUsed, termsInvolved, false, stdOut);
 
 		if (sourceFacetCount > 0) {
 
 			// if source without source commodities
 			if (totalSourceCommCount == 0)
-				printWarning(WarningEvent.BR06_SourceInDerivative, termsInvolved, false, stdOut);
+				printWarning(WarningEvent.SourceInDerivative, termsInvolved, false, stdOut);
 
 			// if more than two source commodities and one source are present => warning
 			if (explicitSourceCommCount >= 2)
-				printWarning(WarningEvent.BR02_MixedDerivative, termsInvolved, false, stdOut);
+				printWarning(WarningEvent.MixedDerivative, termsInvolved, false, stdOut);
 
 			// if one explicit SC is selected -> at least two are required
 			if (explicitRestrictedSourceCommCount + implicitSourceCommCount == 1)
-				printWarning(WarningEvent.BR13_SourceToDerivative, termsInvolved, false, stdOut);
+				printWarning(WarningEvent.SourceToDerivative, termsInvolved, false, stdOut);
 		}
 	}
 
@@ -755,12 +761,20 @@ public abstract class TermRules {
 
 		String conc = "concentrate", powd = "powder", termName = term.getName(), termNote = term.getScopenotes();
 
-		System.out.println("shahaal 1 " + termName + ", " + termNote);
-
 		boolean concentrate = (termName.contains(conc) || termNote.contains(conc));
 		boolean powder = (termName.contains(powd) || termNote.contains(powd));
 
 		return (concentrate || powder);
+	}
+
+	/**
+	 * check if the term is a flavoured term
+	 * 
+	 * @param baseTerm
+	 * @return
+	 */
+	private boolean isFlavoured(Term baseTerm) {
+		return baseTerm.getName().toLowerCase().contains("flavoured");
 	}
 
 	/**
@@ -1252,7 +1266,7 @@ public abstract class TermRules {
 
 		// if a source is added to a composite rise a warning
 		if (isCompositeTerm(baseTerm) && isSourceFacet(facetIndex))
-			printWarning(WarningEvent.BR03_SourceInComposite, facetCode, false, stdOut);
+			printWarning(WarningEvent.SourceInComposite, facetCode, false, stdOut);
 	}
 
 	/**
@@ -1266,7 +1280,7 @@ public abstract class TermRules {
 
 		// if a source commodity is added to a composite rise a warning
 		if (isCompositeTerm(baseTerm) && isSourceCommodityFacet(facetIndex))
-			printWarning(WarningEvent.BR04_SourceCommodityInComposite, facetCode, false, stdOut);
+			printWarning(WarningEvent.SourceCommodityInComposite, facetCode, false, stdOut);
 	}
 
 	/**
@@ -1283,7 +1297,7 @@ public abstract class TermRules {
 		// if reconstitution facet is added to the process group and the term is
 		// concentrate/dehydrated
 		if (facetCode.equals("A07MR") && isProcessFacet(facetIndex) && isConcOrPowdTerm(baseTerm))
-			printWarning(WarningEvent.BR22_ReconstitutionProduct, facetCode, false, stdOut);
+			printWarning(WarningEvent.ReconstitutionProduct, facetCode, false, stdOut);
 
 	}
 
@@ -1297,7 +1311,7 @@ public abstract class TermRules {
 	protected ArrayList<ForbiddenProcess> getImplicitForbiddenProcesses(Term term,
 			ArrayList<ForbiddenProcess> forbiddenProcesses, boolean stdOut) {
 
-		// initialize the output array
+		// initialise the output array
 		ArrayList<ForbiddenProcess> implicitForbiddenProcesses = new ArrayList<>();
 
 		// get the warn group of the term
@@ -1518,7 +1532,7 @@ public abstract class TermRules {
 
 		// if the base term is not in the database
 		if (baseTerm == null) {
-			printWarning(WarningEvent.BR21_Error, "", false, stdOut);
+			printWarning(WarningEvent.Error, baseTermCode, false, stdOut);
 			return;
 		}
 
@@ -1583,7 +1597,7 @@ public abstract class TermRules {
 
 			// if the facet is not present into the database return (for excel macro)
 			if (facet == null) {
-				printWarning(WarningEvent.BR21_Error, "", false, stdOut);
+				printWarning(WarningEvent.Error, facetCode, false, stdOut);
 				return;
 			}
 

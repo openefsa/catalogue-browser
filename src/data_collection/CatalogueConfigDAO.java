@@ -19,6 +19,7 @@ import catalogue_browser_dao.DatabaseManager;
 /**
  * Data collection table DAO
  * @author avonva
+ * @author shahaal
  *
  */
 public class CatalogueConfigDAO implements CatalogueEntityDAO<CatalogueConfiguration> {
@@ -49,12 +50,8 @@ public class CatalogueConfigDAO implements CatalogueEntityDAO<CatalogueConfigura
 	
 				if ( rs != null && rs.next() ) {
 					id = rs.getInt(1);
-					rs.close();
 				}
 			}
-
-			stmt.close();
-			con.close();
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();
@@ -110,12 +107,8 @@ public class CatalogueConfigDAO implements CatalogueEntityDAO<CatalogueConfigura
 
 				if ( rs.next() )
 					out = getByResultSet( rs );
-	
-				rs.close();
 			}
 			
-			stmt.close();
-			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			LOGGER.error("DB error", e);
@@ -152,9 +145,6 @@ public class CatalogueConfigDAO implements CatalogueEntityDAO<CatalogueConfigura
 			while ( rs.next() )
 				out.add( getByResultSet( rs ) );
 
-			rs.close();
-			stmt.close();
-			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			LOGGER.error("DB error", e);
@@ -180,14 +170,8 @@ public class CatalogueConfigDAO implements CatalogueEntityDAO<CatalogueConfigura
 			stmt.setInt( 1, config.getId() );
 
 			try(ResultSet rs = stmt.executeQuery();) {
-			
 				contains = rs.next();
-				
-				rs.close();
 			}
-			
-			stmt.close();
-			con.close();
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();

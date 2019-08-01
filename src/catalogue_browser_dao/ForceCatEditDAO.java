@@ -83,12 +83,7 @@ public class ForceCatEditDAO implements IForcedCatalogueDAO {
 				if ( rs.next() )
 					reserveLevel = ReserveLevel.fromDatabaseKey( 
 							rs.getString( "FORCED_LEVEL" ) );
-				
-				rs.close();
 			}
-
-			stmt.close();
-			con.close();
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();

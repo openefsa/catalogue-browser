@@ -202,8 +202,6 @@ public class DatabaseManager {
 					executor.exec(ClassLoader.getSystemResourceAsStream( "Users" ));
 				}
 			}
-			
-			rs.close();
 		}
 	}
 

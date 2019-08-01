@@ -1,12 +1,10 @@
 package catalogue_generator;
 
 import java.io.FileNotFoundException;
-
 import javax.xml.soap.SOAPException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
@@ -54,12 +52,10 @@ public class CatalogueDownloader extends Thread {
 			downloadAndImport();
 		} catch (SOAPException e) {
 			
-			//shahaal show the error message for openapi users
+			// TODO show an error and force the user to wait 1 minute, then try again to download the catalogue failed
 			if (e instanceof DetailedSOAPException) {
-				
 				String[] warning = GlobalUtil.getSOAPWarning((DetailedSOAPException) e);
-				Display display = new Display();
-				GlobalUtil.showErrorDialog(new Shell(display, SWT.ON_TOP), warning[0], warning[1]);
+				GlobalUtil.showErrorDialog(new Shell(new Display()), warning[0], warning[1]);
 			}
 			
 			e.printStackTrace();

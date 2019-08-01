@@ -19,6 +19,7 @@
 	+ Added back/next term action
 	+ UI improvements to the filter panel
 	+ UI changes to the group components 
+	+ Added facet group id in facet hierarchy
 	
 --- Bugs fixed and other improvements:
 

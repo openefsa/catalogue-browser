@@ -13,7 +13,7 @@ import org.xml.sax.SAXException;
 
 import catalogue.Catalogue;
 import catalogue_generator.ThreadFinishedListener;
-import ict_add_on.ICT;
+import ict_add_on.ICTInstaller;
 import import_catalogue.CatalogueImporter.ImportFileFormat;
 import progress_bar.IProgressBar;
 import utilities.GlobalUtil;
@@ -73,7 +73,7 @@ public class CatalogueImporterThread extends Thread {
 			// if the ICT installed and importing mtx foodex2
 			if (GlobalUtil.isIctInstalled() && isFoodExCatalogue()) {
 				// update ICT db
-				ICT ict = new ICT();
+				ICTInstaller ict = new ICTInstaller();
 				ict.createDatabase();
 			}
 

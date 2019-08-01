@@ -16,6 +16,7 @@ import catalogue_browser_dao.CatalogueEntityDAO;
 /**
  * Dao to communicate with the term type table
  * @author avonva
+ * @author shahaal
  *
  */
 public class TermTypeDAO implements CatalogueEntityDAO<TermType> {
@@ -63,12 +64,7 @@ public class TermTypeDAO implements CatalogueEntityDAO<TermType> {
 					TermType tt = getByResultSet( rs );
 					values.add( tt );
 				}
-	
-				rs.close();
 			}
-			
-			stmt.close();
-			con.close();
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();

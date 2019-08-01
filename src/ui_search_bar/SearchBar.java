@@ -285,10 +285,7 @@ public class SearchBar implements Observer {
 	 * Display the search bar, instantiate the UI
 	 */
 	public void display() {
-
-		GridData gridData = new GridData();
-		gridData.horizontalAlignment = SWT.FILL;
-
+		
 		// Setting the "search" widget
 		Composite searchComposite = new Composite(parent, SWT.NONE);
 
@@ -296,7 +293,7 @@ public class SearchBar implements Observer {
 		int numberOfColumns = addGlobalSearch ? 3 : 4;
 
 		searchComposite.setLayout(new GridLayout(numberOfColumns, false));
-		searchComposite.setLayoutData(gridData);
+		searchComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
 		// Search label
 		Label labelSearch = new Label(searchComposite, SWT.NONE);
@@ -353,11 +350,8 @@ public class SearchBar implements Observer {
 		if (addGlobalSearch) {
 
 			Composite g = new Composite(searchComposite, SWT.NONE);
-			gridData = new GridData();
-			gridData.verticalAlignment = SWT.FILL;
-			gridData.horizontalAlignment = SWT.FILL;
+			GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
 			gridData.horizontalSpan = 3;
-
 			g.setLayoutData(gridData);
 			RowLayout r = new RowLayout();
 			r.justify = true;

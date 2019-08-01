@@ -58,9 +58,6 @@ public class FormSelectTerm implements Observer {
 	private RestoreableWindow window;
 	private static final String WINDOW_CODE = "FormSelectTerm";
 
-	// shahaal
-	public static Boolean instanceExists = false;
-
 	// output list
 	private ArrayList<Term> selectedTerms;
 
@@ -89,6 +86,7 @@ public class FormSelectTerm implements Observer {
 	 * @param shell
 	 * @param title
 	 * @param multiSel true to enable multiple selection of objects
+	 * @wbp.parser.entryPoint
 	 */
 
 	public FormSelectTerm(Shell shell, String title, Catalogue catalogue, boolean enableMultipleSelection,
@@ -107,9 +105,6 @@ public class FormSelectTerm implements Observer {
 		}
 
 		selectedTerms = new ArrayList<>();
-
-		// shahaal var used to check if an instance of the class already exists
-		FormSelectTerm.instanceExists = true;
 	}
 
 	// The following four method are externally used, that is they are called
@@ -200,6 +195,7 @@ public class FormSelectTerm implements Observer {
 		dialog.setMaximized(true);
 
 		dialog.setText(title);
+		dialog.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		dialog.setLayout(new GridLayout(2, false));
 
 		window = new RestoreableWindow(dialog, WINDOW_CODE);
@@ -282,10 +278,10 @@ public class FormSelectTerm implements Observer {
 		dialog.setDefaultButton(searchBar.getButton());
 
 		// add the filters to the tree viewer
-		Composite filterComp = new Composite(dialog, SWT.NONE);
-		filterComp.setLayout(new GridLayout(4, false));
+		//Composite filterComp = new Composite(dialog, SWT.NONE);
+		//filterComp.setLayout(new RowLayout());
 
-		termFilter = new TermFilter(filterComp);
+		termFilter = new TermFilter(dialog);
 		termFilter.display(GlobalPreference.HIDE_DEPR_DESCRIBE, GlobalPreference.HIDE_NOT_REP_DESCRIBE,
 				GlobalPreference.HIDE_TERM_CODE_DESCRIBE);
 		termFilter.setEnabled(true);
@@ -293,6 +289,12 @@ public class FormSelectTerm implements Observer {
 		// open tree viewer with multi selection enabled if required
 		tree = new MultiTermsTreeViewer(dialog, multi, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL, catalogue);
 
+		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		gridData.minimumWidth = 300;
+		gridData.widthHint = 300;
+
+		tree.setLayoutData(gridData);
+		
 		tree.setHierarchy(rootHierarchy);
 
 		// set the input of the tree
@@ -304,22 +306,14 @@ public class FormSelectTerm implements Observer {
 		termFilter.addObserver(tree);
 		termFilter.addObserver(searchBar);
 		termFilter.restoreStatus();
-
-		// Layout settings for term properties
-		GridData gridData = new GridData();
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = true;
-		gridData.minimumHeight = 120;
-		gridData.minimumWidth = 250;
-		gridData.widthHint = 250;
-		gridData.heightHint = 250;
-
+		
 		// Right panel
 		Composite rightPanelComposite = new Composite(dialog, SWT.NONE);
-		rightPanelComposite.setLayout(new GridLayout(1, false));
+		gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		//gridData.minimumWidth = 250;
+		//gridData.widthHint = 250;
 		rightPanelComposite.setLayoutData(gridData);
+		rightPanelComposite.setLayout(new GridLayout(1, false));
 
 		// Add the selected descriptors table
 		// only if multiple selection allowed
@@ -328,50 +322,30 @@ public class FormSelectTerm implements Observer {
 			selectedDescriptors.setCurrentHierarchy(rootHierarchy);
 		}
 
-		// add only scopenotes and implicit attributes
+		// add only scope notes and implicit attributes
 		// of the frame term properties
 		ArrayList<String> properties = new ArrayList<>();
 		properties.add("scopenotes");
 		properties.add("attributes");
 		termPropTab = new FrameTermFields(rightPanelComposite, properties);
 
-		gridData = new GridData();
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = true;
-		gridData.minimumWidth = 500;
-		gridData.widthHint = 300;
-
-		tree.setLayoutData(gridData);
-
 		Composite c2 = new Composite(dialog, SWT.NONE);
-		gridData = new GridData();
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = false;
-		c2.setLayoutData(gridData);
+		GridData data = new GridData(SWT.CENTER, SWT.CENTER, true, false);
+		data.horizontalSpan = 2;
+		c2.setLayoutData(data);
+		c2.setLayout(new GridLayout(2, false));
 
-		c2.setLayout(new GridLayout(2, true));
-
+		GridData btnData = new GridData();
+		btnData.minimumWidth = 200;
+		btnData.widthHint = 200;
+		
 		Button ok = new Button(c2, SWT.PUSH);
 		ok.setText(Messages.getString("FormSelectTerm.OkButton"));
-		gridData = new GridData();
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.horizontalAlignment = SWT.RIGHT;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = false;
-		ok.setLayoutData(gridData);
+		ok.setLayoutData(btnData);
 
 		Button cancel = new Button(c2, SWT.PUSH);
 		cancel.setText(Messages.getString("FormSelectTerm.CancelButton"));
-		gridData = new GridData();
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.horizontalAlignment = SWT.LEFT;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = false;
-		cancel.setLayoutData(gridData);
+		cancel.setLayoutData(btnData);
 
 		// shahaal: if close button is pressed then clear the list of selected items
 		/*

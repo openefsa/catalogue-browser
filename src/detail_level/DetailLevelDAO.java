@@ -59,15 +59,9 @@ public class DetailLevelDAO implements CatalogueEntityDAO<DetailLevelGraphics> {
 			try(ResultSet rs = stmt.executeQuery();) {
 	
 				// get all the detail levels
-				while ( rs.next() ) {
+				while ( rs.next() )
 					values.add( getByResultSet( rs ) );
-				}
-	
-				rs.close();
 			}
-			
-			stmt.close();
-			con.close();
 
 		} catch ( SQLException e ) {
 			e.printStackTrace();

@@ -93,8 +93,7 @@ public class FrameTermFields {
 	 * Set the current catalogue
 	 * 
 	 * @param catalogue
-	 * @param forceRedraw
-	 *            true to redraw in any case the widgets
+	 * @param forceRedraw true to redraw in any case the widgets
 	 */
 	private void setCatalogue(Catalogue newCat) {
 
@@ -128,6 +127,7 @@ public class FrameTermFields {
 
 	/**
 	 * Set the selected term and update the graphics
+	 * 
 	 * @author shahaal
 	 * @author avonva
 	 * @param term
@@ -150,28 +150,18 @@ public class FrameTermFields {
 
 		if (code != null)
 			code.setText(term.getCode());
-		
-		boolean hasImpFacets = !term.getImplicitFacets().isEmpty();
 
-		//full code with baseterm and facets
-		if(fullCode != null) {
-			if(hasImpFacets)
-				fullCode.setText(term.getFullCode(true, true));
-			else 
-				fullCode.setText("");
-		}
-		
+		// full code with base term and facets
+		if (fullCode != null)
+			fullCode.setText(term.getFullCode(true, true));
+
 		if (extName != null)
 			extName.setText(term.getName());
 
-		//show the full code interpretation if the term contains implicit facets
-		if (fullCodeDesc != null) {
-			if(hasImpFacets)
-				fullCodeDesc.setText(term.getInterpretedCode(true));
-			else 
-				fullCodeDesc.setText("");
-		}
-		
+		// show the full code interpretation
+		if (fullCodeDesc != null)
+			fullCodeDesc.setText(term.getInterpretedCode(true));
+
 		if (scopenotes != null)
 			scopenotes.setTerm(term);
 
@@ -273,9 +263,9 @@ public class FrameTermFields {
 		if (code != null)
 			code.setEnabled(enabled);
 
-		if(fullCode != null)
+		if (fullCode != null)
 			fullCode.setEnabled(enabled);
-		
+
 		if (extName != null)
 			extName.setEnabled(enabled);
 
@@ -307,9 +297,9 @@ public class FrameTermFields {
 		if (code != null)
 			code.setText("");
 
-		if(fullCode != null )
+		if (fullCode != null)
 			fullCode.setText("");
-		
+
 		if (extName != null)
 			extName.setText("");
 
@@ -329,10 +319,10 @@ public class FrameTermFields {
 	public void setEditable(boolean editable) {
 		if (extName != null)
 			extName.setEditable(editable);
-		
+
 		if (fullCodeDesc != null)
 			fullCodeDesc.setEditable(editable);
-		
+
 		if (scopenotes != null)
 			scopenotes.setEditable(editable);
 	}
@@ -352,24 +342,23 @@ public class FrameTermFields {
 	public FrameTermFields(Composite parent, ArrayList<String> properties) {
 
 		boolean includeAll = properties.isEmpty();
-		
-		// composite for all the flags, corex and state
-		Composite compFlags = new Composite(parent, SWT.NONE);
-		compFlags.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
-		compFlags.setLayout(new GridLayout(2, true));
+
+		// composite for first fields
+		Composite comp = new Composite(parent, SWT.NONE);
+		comp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		comp.setLayout(new GridLayout(2, true));
 
 		// add the term type
 		if (includeAll || properties.contains("type"))
-			termType = addTermType(compFlags);
+			termType = addTermType(comp);
 
 		// add the detail level
 		if (includeAll || properties.contains("detail"))
-			detailLevel = addDetailLevel(compFlags);
-		
+			detailLevel = addDetailLevel(comp);
 		// add term code
 		if (includeAll || properties.contains("code"))
 			code = addTermCodeTextBox(parent, Messages.getString("TermProperties.TermCodeTitle"));
-		
+
 		// add term code with implicit facets
 		if (includeAll || properties.contains("fullCode"))
 			fullCode = addTermCodeTextBox(parent, Messages.getString("TermProperties.TermCompleteCodeTitle"));
@@ -389,6 +378,7 @@ public class FrameTermFields {
 		// add term attributes table
 		if (includeAll || properties.contains("attributes"))
 			attributes = addTermAttributes(parent);
+
 	}
 
 	/**
@@ -483,7 +473,7 @@ public class FrameTermFields {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 
 				DetailLevelGraphics dlg = (DetailLevelGraphics) selection.getFirstElement();
-				
+
 				String oldValue;
 
 				if (term.getDetailLevel() != null)
@@ -527,6 +517,7 @@ public class FrameTermFields {
 
 	/**
 	 * Add the term code text box into the parent composite
+	 * 
 	 * @author shahaal
 	 * @param parent
 	 * @return
@@ -535,18 +526,14 @@ public class FrameTermFields {
 
 		// create a new group for term code
 		Group groupTermCode = new Group(parent, SWT.NONE);
+		// set the layout data
+		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, false);
+		gridData.horizontalSpan = 2;
+		groupTermCode.setLayoutData(gridData);
+		groupTermCode.setLayout(new FillLayout());
 
 		// set its name and layout
 		groupTermCode.setText(label);
-
-		groupTermCode.setLayout(new FillLayout());
-
-		GridData gridData = new GridData();
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = false;
-		groupTermCode.setLayoutData(gridData);
 
 		// create the text box
 		final Text textTermCode = new Text(groupTermCode, SWT.BORDER | SWT.READ_ONLY);
@@ -587,6 +574,7 @@ public class FrameTermFields {
 
 	/**
 	 * Add the term name text box into the parent composite
+	 * 
 	 * @author shahaal
 	 * @param parent
 	 * @return
@@ -595,16 +583,14 @@ public class FrameTermFields {
 
 		Group groupTermName = new Group(parent, SWT.NONE);
 
+		// set the layout data
+		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, false);
+		gridData.horizontalSpan = 2;
+		groupTermName.setLayoutData(gridData);
+
 		groupTermName.setText(Messages.getString("TermProperties.TermNameTitle"));
 
 		groupTermName.setLayout(new FillLayout());
-
-		GridData gridData = new GridData();
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = false;
-		groupTermName.setLayoutData(gridData);
 
 		final Text textTermName = new Text(groupTermName, SWT.MULTI | SWT.BORDER | SWT.NONE);
 
@@ -708,8 +694,7 @@ public class FrameTermFields {
 	}
 
 	/**
-	 * Add the full term code description text box 
-	 * into the parent composite
+	 * Add the full term code description text box into the parent composite
 	 * 
 	 * @author shahaal
 	 * @param parent
@@ -719,22 +704,19 @@ public class FrameTermFields {
 
 		// create a new group for term code
 		Group groupShortName = new Group(parent, SWT.NONE);
+		// set the layout data
+		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, false);
+		gridData.horizontalSpan = 2;
+		groupShortName.setLayoutData(gridData);
 
 		// set its name and layout
 		groupShortName.setText(Messages.getString("TermProperties.TermFullCodeDesc"));
 
 		groupShortName.setLayout(new FillLayout());
 
-		GridData gridData = new GridData();
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = false;
-		groupShortName.setLayoutData(gridData);
-
 		// create the text box
 		final Text termFullCodeDesc = new Text(groupShortName, SWT.MULTI | SWT.BORDER | SWT.NONE);
-		
+
 		termFullCodeDesc.addFocusListener(new FocusAdapter() {
 
 			@Override
@@ -779,18 +761,15 @@ public class FrameTermFields {
 	private ScopenotesWithLinks addTermScopenotes(final Composite parent) {
 
 		Group groupScopeNotes = new Group(parent, SWT.NONE);
+		// set the layout data
+		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		gridData.minimumHeight = 150;
+		gridData.heightHint = 200;
+		gridData.horizontalSpan = 2;
+		groupScopeNotes.setLayoutData(gridData);
 
 		groupScopeNotes.setText(Messages.getString("TermProperties.ScopenotesTitle"));
 		groupScopeNotes.setLayout(new GridLayout(1, false));
-
-		GridData gridData7 = new GridData();
-		gridData7.verticalAlignment = SWT.FILL;
-		gridData7.horizontalAlignment = SWT.FILL;
-		gridData7.grabExcessHorizontalSpace = true;
-		gridData7.grabExcessVerticalSpace = true;
-		gridData7.minimumHeight = 200;
-		gridData7.heightHint = 300;
-		groupScopeNotes.setLayoutData(gridData7);
 
 		// create scopenotes and links
 		final ScopenotesWithLinks scopenotesLink = new ScopenotesWithLinks(groupScopeNotes);
