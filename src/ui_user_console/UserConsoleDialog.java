@@ -1,25 +1,14 @@
 package ui_user_console;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Dialog;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
-import dcf_log.DcfResponse;
-import dcf_pending_request.PendingRequestMock;
 import pending_request.IPendingRequest;
-import pending_request.PendingRequestStatus;
-import soap.UploadCatalogueFileImpl;
-import ui_console.Console;
 import ui_console.ConsoleMessage;
-import ui_pending_request_list.PendingRequestTable;
 
 public class UserConsoleDialog extends Dialog {
 
@@ -151,6 +140,7 @@ public class UserConsoleDialog extends Dialog {
 		return userConsole;
 	}
 	
+	/*
 	public static void main(String[] args) {
 		Display display = new Display();
 		Shell shell = new Shell(display);
@@ -206,5 +196,5 @@ public class UserConsoleDialog extends Dialog {
 		while(!shell.isDisposed()) {
 			display.readAndDispatch();
 		}
-	}
+	}*/
 }

@@ -45,7 +45,7 @@ public class FormOpenapiLogin {
 	private CredentialListener listener;
 
 	/**
-	 * Initialize the login form with the shell and its title
+	 * Initialise the login form with the shell and its title
 	 * 
 	 * @param shell
 	 * @param title
@@ -71,10 +71,10 @@ public class FormOpenapiLogin {
 		dialog.setLayout(new GridLayout(1, false));
 
 		// add username token text box
-		addCredential(dialog);
+		addCredential();
 
 		// add button to login
-		addLoginButton(dialog);
+		addLoginButton();
 
 		// resize the dialog to the preferred size (the hints)
 		dialog.pack();
@@ -82,6 +82,9 @@ public class FormOpenapiLogin {
 		// show the dialog
 		dialog.setVisible(true);
 		dialog.open();
+
+		// window.restore( BrowserWindowPreferenceDao.class );
+		// window.saveOnClosure( BrowserWindowPreferenceDao.class );
 
 		while (!dialog.isDisposed()) {
 			if (!dialog.getDisplay().readAndDispatch())
@@ -95,17 +98,17 @@ public class FormOpenapiLogin {
 	 * 
 	 * @param parent
 	 */
-	private void addCredential(Shell parent) {
-		
+	private void addCredential() {
+
 		GridData data = new GridData(SWT.FILL, SWT.FILL, true, false);
 		data.minimumWidth = 200;
 		data.minimumHeight = 10;
-		
+
 		// add token
-		Label tokenLabel = new Label(parent, SWT.NONE);
+		Label tokenLabel = new Label(dialog, SWT.NONE);
 		tokenLabel.setText(Messages.getString("FormOpenAPILogin.TokenLabel"));
 
-		tokenText = new Text(parent, SWT.PASSWORD);
+		tokenText = new Text(dialog, SWT.PASSWORD);
 		tokenText.setLayoutData(data);
 
 		// if the password text changes
@@ -126,15 +129,15 @@ public class FormOpenapiLogin {
 	 * @param parent
 	 * @return
 	 */
-	private Button addLoginButton(final Shell parent) {
+	private Button addLoginButton() {
 
-		loginBtn = new Button(parent, SWT.NONE);
+		loginBtn = new Button(dialog, SWT.NONE);
 		loginBtn.setText(Messages.getString("FormDCFLogin.LoginButton"));
 		loginBtn.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
 		loginBtn.setEnabled(false);
 
 		// set as default button the login btn
-		parent.setDefaultButton(loginBtn);
+		dialog.setDefaultButton(loginBtn);
 
 		loginBtn.addSelectionListener(new SelectionAdapter() {
 
@@ -142,7 +145,7 @@ public class FormOpenapiLogin {
 			public void widgetSelected(SelectionEvent e) {
 
 				// wait cursor (we make a 'long' operation)
-				GlobalUtil.setShellCursor(parent, SWT.CURSOR_WAIT);
+				GlobalUtil.setShellCursor(dialog, SWT.CURSOR_WAIT);
 
 				String token = tokenText.getText();
 
@@ -156,7 +159,7 @@ public class FormOpenapiLogin {
 					e1.printStackTrace();
 
 					// reset the original cursor
-					GlobalUtil.setShellCursor(parent, SWT.CURSOR_ARROW);
+					GlobalUtil.setShellCursor(dialog, SWT.CURSOR_ARROW);
 
 					String[] warning = GlobalUtil.getSOAPWarning(e1);
 					GlobalUtil.showErrorDialog(shell, warning[0], warning[1]);
@@ -165,13 +168,14 @@ public class FormOpenapiLogin {
 				}
 
 				// reset the original cursor
-				GlobalUtil.setShellCursor(parent, SWT.CURSOR_ARROW);
+				GlobalUtil.setShellCursor(dialog, SWT.CURSOR_ARROW);
 
+				// check if the credentials are correct or not
 				// check if the credentials are correct or not
 				if (valid) {
 
 					// close the dialog
-					parent.close();
+					dialog.close();
 				} else {
 
 					String logTitle = Messages.getString("FormDCFLogin.ErrorTitle");

@@ -136,6 +136,10 @@ public class AccountMenu implements MainMenuItem {
 
 				login.display();
 
+				// if wrong credentials return
+				if (!login.isValid())
+					return;
+				
 				LoginActions.startLoginThreads(shell, null);
 
 				// disable tools menu until we have

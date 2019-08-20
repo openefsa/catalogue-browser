@@ -113,7 +113,7 @@ public class ContentProviderTerm implements ITreeContentProvider {
 
 	/**
 	 * The getParent method is used to obtain the parent of the given element(arg0).
-	 * The tree viewer calls its content provider’s getParent method when it needs
+	 * The tree viewer calls its content provider's getParent method when it needs
 	 * to reveal collapsed domain objects programmatically and to set the expanded
 	 * state of domain objects. This method should answer the parent of the domain
 	 * object element.

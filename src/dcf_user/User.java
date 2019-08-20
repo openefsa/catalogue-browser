@@ -426,7 +426,7 @@ public class User extends DcfUser {
 	 */
 	public void setLoggedOpenApi(boolean logged) {
 		this.loggedOpenapi = logged;
-
+		
 		for (UserListener l : userLevelListeners)
 			l.connectionChanged(logged);
 	}
@@ -605,7 +605,7 @@ public class User extends DcfUser {
 		setLogged(super.verifiedLogin(Config.getEnvironment(), username, password));
 
 		// if wrong credential => remove them
-		if (logged) {
+		if (this.logged) {
 
 			LOGGER.info(username + " successfully logged in to dcf");
 
@@ -617,7 +617,7 @@ public class User extends DcfUser {
 				saveCredentials(username, password);
 		}
 
-		return logged;
+		return this.logged;
 	}
 
 	/**
@@ -637,7 +637,7 @@ public class User extends DcfUser {
 
 		setLoggedOpenApi(super.verifiedLoginOpenapi(Config.getEnvironment(), username, token, catUsers));
 
-		if (loggedOpenapi) {
+		if (this.loggedOpenapi) {
 
 			LOGGER.info(username + " successfully logged into the portal.");
 
@@ -649,7 +649,7 @@ public class User extends DcfUser {
 				saveCredentials(username, token);
 		}
 
-		return loggedOpenapi;
+		return this.loggedOpenapi;
 	}
 
 	private String[] getSavedCredentials() {

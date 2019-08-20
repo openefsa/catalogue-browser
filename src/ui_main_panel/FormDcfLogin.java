@@ -55,7 +55,7 @@ public class FormDcfLogin {
 	private CredentialListener listener;
 
 	/**
-	 * Initialize the login form with the shell and its title
+	 * Initialise the login form with the shell and its title
 	 * 
 	 * @param shell
 	 * @param title
@@ -98,10 +98,10 @@ public class FormDcfLogin {
 		}
 
 		// add username password text box
-		addCredential(dialog);
+		addCredential();
 
 		// add button to make login
-		addLoginButton(dialog);
+		addLoginButton();
 
 		// resize the dialog to the preferred size (the hints)
 		dialog.pack();
@@ -125,17 +125,17 @@ public class FormDcfLogin {
 	 * 
 	 * @param parent
 	 */
-	private void addCredential(Shell parent) {
+	private void addCredential() {
 
 		GridData data = new GridData(SWT.FILL, SWT.FILL, true, false);
 		data.minimumWidth = 200;
 		data.minimumHeight = 10;
-		
+
 		// add username
-		Label usernameLabel = new Label(parent, SWT.NONE);
+		Label usernameLabel = new Label(dialog, SWT.NONE);
 		usernameLabel.setText(Messages.getString("FormDCFLogin.UsernameLabel"));
 
-		usernameText = new Text(parent, SWT.NONE);
+		usernameText = new Text(dialog, SWT.NONE);
 		usernameText.setLayoutData(data);
 
 		// if the username text changes
@@ -151,10 +151,10 @@ public class FormDcfLogin {
 		});
 
 		// add password
-		Label passwdLabel = new Label(parent, SWT.NONE);
+		Label passwdLabel = new Label(dialog, SWT.NONE);
 		passwdLabel.setText(Messages.getString("FormDCFLogin.PasswordLabel"));
 
-		passwdText = new Text(parent, SWT.PASSWORD);
+		passwdText = new Text(dialog, SWT.PASSWORD);
 		passwdText.setLayoutData(data);
 
 		// if the password text changes
@@ -177,15 +177,15 @@ public class FormDcfLogin {
 	 * @param parent
 	 * @return
 	 */
-	private Button addLoginButton(final Shell parent) {
+	private Button addLoginButton() {
 
-		loginBtn = new Button(parent, SWT.NONE);
+		loginBtn = new Button(dialog, SWT.NONE);
 		loginBtn.setText(Messages.getString("FormDCFLogin.LoginButton"));
 		loginBtn.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
 		loginBtn.setEnabled(false);
 
 		// set as default button the login btn
-		parent.setDefaultButton(loginBtn);
+		dialog.setDefaultButton(loginBtn);
 
 		loginBtn.addSelectionListener(new SelectionAdapter() {
 
@@ -193,7 +193,7 @@ public class FormDcfLogin {
 			public void widgetSelected(SelectionEvent e) {
 
 				// wait cursor (we make a 'long' operation)
-				GlobalUtil.setShellCursor(parent, SWT.CURSOR_WAIT);
+				GlobalUtil.setShellCursor(dialog, SWT.CURSOR_WAIT);
 
 				String username = usernameText.getText();
 				String password = passwdText.getText();
@@ -207,7 +207,7 @@ public class FormDcfLogin {
 					e1.printStackTrace();
 
 					// reset the original cursor
-					GlobalUtil.setShellCursor(parent, SWT.CURSOR_ARROW);
+					GlobalUtil.setShellCursor(dialog, SWT.CURSOR_ARROW);
 
 					String[] warning = GlobalUtil.getSOAPWarning(e1);
 					GlobalUtil.showErrorDialog(shell, warning[0], warning[1]);
@@ -216,13 +216,13 @@ public class FormDcfLogin {
 				}
 
 				// reset the original cursor
-				GlobalUtil.setShellCursor(parent, SWT.CURSOR_ARROW);
+				GlobalUtil.setShellCursor(dialog, SWT.CURSOR_ARROW);
 
 				// check if the credentials are correct or not
 				if (valid) {
 
 					// close the dialog
-					parent.close();
+					dialog.close();
 				} else {
 
 					String logTitle = Messages.getString("FormDCFLogin.ErrorTitle");
