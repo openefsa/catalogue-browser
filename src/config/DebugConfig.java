@@ -6,5 +6,5 @@ public class DebugConfig {
 	public static boolean disableFileFuncs = false;
 	
 	// shahaal activate beta test functions
-	public static boolean betaTest = false;
+	public static boolean betaTest = true;
 }

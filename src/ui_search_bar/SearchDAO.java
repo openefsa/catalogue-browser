@@ -232,9 +232,8 @@ public class SearchDAO {
 				query = query + " " + getLogicalOp(type) + " ";
 
 		}
-
+		
 		// execute the query
-
 		try (Connection con = catalogue.getConnection();
 				PreparedStatement stmt = con.prepareStatement(query);
 				ResultSet rs = stmt.executeQuery();) {
@@ -251,7 +250,7 @@ public class SearchDAO {
 			e.printStackTrace();
 			LOGGER.error("DB error", e);
 		}
-
+		
 		return termIds;
 	}
 
@@ -293,7 +292,7 @@ public class SearchDAO {
 		// vector
 		String query = "select distinct (TERM_ID) from APP.TERM_ATTRIBUTE where ATTR_ID in ( " + attrIds
 				+ ") and TERM_ATTR_ID in ( " + taIds + " )";
-
+		
 		// execute the query
 		try (Connection con = catalogue.getConnection();
 				PreparedStatement stmt = con.prepareStatement(query);
@@ -311,7 +310,7 @@ public class SearchDAO {
 			e.printStackTrace();
 			LOGGER.error("DB error", e);
 		}
-
+		
 		return termIds;
 	}
 

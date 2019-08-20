@@ -462,7 +462,7 @@ public class MainPanel implements Observer {
 				shell.redraw();
 				shell.update();
 				shell.layout();
-				
+
 			}
 		});
 	}
@@ -1095,11 +1095,12 @@ public class MainPanel implements Observer {
 
 		Group filterGroup = new Group(shell, SWT.NONE);
 		filterGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		
 		RowLayout layout = new RowLayout();
-		layout.wrap = true;
-		layout.center = true;
-		filterGroup.setLayout(layout);
-
+	    layout.center = true;
+	    layout.justify = true;
+	    filterGroup.setLayout(layout);
+		
 		// nav buttons for previous/next term
 		// history = new TermHistory(selectionGroup);
 		// history.display();

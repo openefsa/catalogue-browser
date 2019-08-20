@@ -550,7 +550,7 @@ public abstract class TermRules {
 		// populate the explicit facets
 		ArrayList<FacetDescriptor> explicitFacets = new ArrayList<>();
 
-		// tokenise the facets => the implicit are not considered since
+		// tokenize the facets => the implicit are not considered since
 		// raw commodities have their self as source commodity and should not
 		// be taken into account
 		StringTokenizer st = new StringTokenizer(fullFacetCode, "$");
@@ -573,17 +573,24 @@ public abstract class TermRules {
 		// diagnostic string builder
 		StringBuilder sb = new StringBuilder();
 
-		// restrict if explicit is child of an implicit
+		// get the racsource hierarchy
 		Hierarchy hierarchy = currentCat.getHierarchyByCode("racsource");
+
+		// restrict if explicit is child of an implicit
 		for (FacetDescriptor fd : explicitFacets) {
 
+			boolean isSpecification = false;
+
+			// check if the explicit is specification of the implicit
 			for (Term implicit : implicitTerms) {
-				if (fd.getDescriptor().hasAncestor(implicit, hierarchy))
-					continue;
+				if (fd.getDescriptor().hasAncestor(implicit, hierarchy)) {
+					isSpecification = true;
+					break;
+				}
 			}
 
 			// count the number of source commodities facets
-			if (isSourceCommodityFacet(fd.getFacetHeader())) {
+			if (isSourceCommodityFacet(fd.getFacetHeader()) && !isSpecification) {
 				sourceCommodityFacetCount += 1;
 				sb.append(fd.getFacetCode());
 				sb.append(" - ");

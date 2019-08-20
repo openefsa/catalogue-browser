@@ -146,7 +146,7 @@ public class DatabaseManager {
 	 */
 	public static void startMainDB() throws SQLException, IOException {
 
-		try (Connection con = getMainDBConnection();) {
+		try (Connection con = getMainDBConnection()) {
 
 			// load the jdbc driver
 			LOGGER.info("Starting embedded database...");

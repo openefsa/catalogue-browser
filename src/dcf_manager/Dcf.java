@@ -386,7 +386,7 @@ public class Dcf {
 
 		} catch (Exception e) {
 
-			// shahaal show the error message for openapi users
+			// shahaal show the error message for OpenAPI users
 			if (e instanceof DetailedSOAPException) {
 
 				String[] warning = GlobalUtil.getSOAPWarning((DetailedSOAPException) e);

@@ -7,8 +7,8 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-
 import catalogue_object.Mappable;
+import config.DebugConfig;
 import dcf_user.User;
 import progress_bar.IProgressBar;
 import sheet_header.SheetHeader;
@@ -66,7 +66,7 @@ public abstract class SheetWriter {
 
 		// insert the first row with dump string of length 4000
 		// used only by cat managers for not truncating the rest of the data in SAS
-		if (User.getInstance().isCatManager()) {
+		if (User.getInstance().isCatManager() && !DebugConfig.betaTest) {
 			String dump = createDumpString();
 			insertFirstRow(dump);
 		}

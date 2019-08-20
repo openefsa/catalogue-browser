@@ -7,6 +7,7 @@ import java.util.Observable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -56,20 +57,25 @@ public class TermFilter extends Observable {
 	 *                 terms
 	 */
 	public void display(String deprCode, String reprCode, String termCode) {
-		
+
 		this.deprCode = deprCode;
 		this.reprCode = reprCode;
 		this.termCode = termCode;
+
+		// composite to which add the hide options
+		Composite hideComp = new Composite(parent, SWT.NONE);
+		RowLayout layout = new RowLayout();
+	    layout.center = true;
+		hideComp.setLayout(layout);
 		
 		// Hide
-		Label label= new Label(parent, SWT.NONE);
+		Label label = new Label(hideComp, SWT.NONE);
 		label.setText(Messages.getString("TermFilter.Title"));
 
 		// switch between seeing and not seeing deprecated terms
-		hideDeprecated = new Button(parent, SWT.CHECK);
+		hideDeprecated = new Button(hideComp, SWT.CHECK);
 		hideDeprecated.setEnabled(false);
 		hideDeprecated.setText(Messages.getString("TermFilter.HideDeprecatedTermsButton"));
-
 		hideDeprecated.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -86,10 +92,9 @@ public class TermFilter extends Observable {
 		});
 
 		// switch between seeing and not seeing reportable terms
-		hideNotInUse = new Button(parent, SWT.CHECK);
+		hideNotInUse = new Button(hideComp, SWT.CHECK);
 		hideNotInUse.setEnabled(false);
 		hideNotInUse.setText(Messages.getString("TermFilter.HideNonReportableTermsButton"));
-
 		hideNotInUse.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -105,10 +110,9 @@ public class TermFilter extends Observable {
 			}
 		});
 
-		hideTermCode = new Button(parent, SWT.CHECK);
+		hideTermCode = new Button(hideComp, SWT.CHECK);
 		hideTermCode.setEnabled(false);
 		hideTermCode.setText(Messages.getString("TermFilter.HideTermCodesButton"));
-
 		hideTermCode.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

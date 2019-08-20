@@ -178,7 +178,8 @@ public class CatalogueBrowserMain {
 			});
 
 			reauth.start();
-		}
+		}else
+			shell.setEnabled(true);
 
 		// open last catalogue
 		browser.openLastCatalogue();

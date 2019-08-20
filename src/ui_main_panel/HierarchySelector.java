@@ -17,6 +17,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.RowData;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -83,40 +84,53 @@ public class HierarchySelector extends Observable implements Observer {
 	 */
 	public void display() {
 		
+		// composite to which add the select group options
+		Composite selComp = new Composite(parent, SWT.NONE);
+		RowLayout layout = new RowLayout();
+	    layout.center = true;
+		selComp.setLayout(layout);
+		
 		// choose
-		Label label = new Label(parent, SWT.NONE);
+		Label label = new Label(selComp, SWT.NONE);
 		label.setText(Messages.getString("HierarchySelector.Title_1"));
-
+		
 		// radio button for visualising hierarchies in the combo box
-		hierarchyBtn = new Button(parent, SWT.RADIO);
+		hierarchyBtn = new Button(selComp, SWT.RADIO);
 		hierarchyBtn.setText(Messages.getString("HierarchySelector.Hierarchies"));
 		hierarchyBtn.setSelection(true);
 		hierarchyBtn.setEnabled(false);
-
+		
 		// radio button for visualising facets lists in the combo box
-		facetBtn = new Button(parent, SWT.RADIO);
+		facetBtn = new Button(selComp, SWT.RADIO);
 		facetBtn.setText(Messages.getString("HierarchySelector.Facets"));
 		facetBtn.setEnabled(false);
 		
 		// add separator
-		Label sep = new Label(parent, SWT.SEPARATOR | SWT.VERTICAL);
-		sep.setLayoutData(new RowData(10,10));
+		//Label sep = new Label(parent, SWT.SEPARATOR | SWT.VERTICAL);
+		//sep.setLayoutData(new RowData(80,10));
+		
+		// composite to which add the select hierarchy options
+		Composite hierComp = new Composite(parent, SWT.NONE);
+		layout = new RowLayout();
+	    layout.center = true;
+		hierComp.setLayout(layout);
 		
 		// choose
-		Label comboLabel = new Label(parent, SWT.NONE);
+		Label comboLabel = new Label(hierComp, SWT.NONE);
 		comboLabel.setText(Messages.getString("HierarchySelector.Title_2"));
-
-		hierarchyCombo = new ComboViewer(parent, SWT.READ_ONLY | SWT.DROP_DOWN | SWT.WRAP);
+		
+		hierarchyCombo = new ComboViewer(hierComp, SWT.READ_ONLY | SWT.DROP_DOWN | SWT.WRAP);
 		hierarchyCombo.setLabelProvider(new LabelProviderProperty());
 		hierarchyCombo.setContentProvider(new ContentProviderProperty());
 		hierarchyCombo.setSorter(new SorterCatalogueObject());
 		hierarchyCombo.getCombo().setEnabled(false);
-		//hierarchyCombo.getCombo().setLayoutData(new GridData(200, 15));
-		hierarchyCombo.getCombo().setLayoutData(new RowData(200, 15));
-
+		RowData data = new RowData();
+		data.width = 200;
+		hierarchyCombo.getCombo().setLayoutData(data);
+		
 		// add separator
-		sep = new Label(parent, SWT.SEPARATOR | SWT.VERTICAL);
-		sep.setLayoutData(new RowData(10,10));
+		//sep = new Label(parent, SWT.SEPARATOR | SWT.VERTICAL);
+		//sep.setLayoutData(new RowData(80, 10));
 		
 		// if a hierarchy is selected from the combo box
 		hierarchyCombo.addSelectionChangedListener(new ISelectionChangedListener() {

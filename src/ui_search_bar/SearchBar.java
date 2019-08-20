@@ -149,11 +149,11 @@ public class SearchBar implements Observer {
 		String textTyped = textSearch.getText();
 
 		///////// TEXT CLEANER (used in AI browser)
-		// 1-trasform in lower case, 2-remove irrelevant punctation (not numbers!)
-		textTyped = textTyped.replaceAll("\\p{Punct}", " ").toLowerCase();
+		// 1-trasform in lower case, 2-remove irrelevant punctuation (not numbers, '-', '_')
+		textTyped = textTyped.replaceAll("[\\p{Punct}&&[^_-]]+", " ").toLowerCase();
 		// 2-trim all group of spaces generated with a single one
 		textTyped = textTyped.trim().replaceAll("\\s{2,}", " ");
-
+		
 		return textTyped;
 	}
 
