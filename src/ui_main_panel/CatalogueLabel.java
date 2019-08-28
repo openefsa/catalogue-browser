@@ -8,12 +8,16 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ToolTip;
 
 import catalogue.Catalogue;
@@ -33,7 +37,7 @@ import ui_main_menu.FileActions;
  */
 public class CatalogueLabel implements Observer {
 
-	private Composite mainComposite;
+	private Composite leftGroup;
 	private Button btnUpdate;
 	private Label label;
 	private Catalogue catalogue;
@@ -48,16 +52,14 @@ public class CatalogueLabel implements Observer {
 	public CatalogueLabel(final Composite parent) {
 
 		// composite which contains cat name + update panel
-		mainComposite = new Composite(parent, SWT.NONE);
-		mainComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		mainComposite.setLayout(new GridLayout(3, false));
+		leftGroup = new Group(parent, SWT.NONE);
+		leftGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		leftGroup.setLayout(new GridLayout(3, false));
 
-		// label which shows the label of the current opened catalogue
-		label = new Label(mainComposite, SWT.NONE);
+		// label which shows the current opened catalogue
+		label = new Label(leftGroup, SWT.NONE);
 		label.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-
-		// set the label font
-		label.setFont(getLabelFont(4, SWT.ITALIC | SWT.BOLD));
+		label.setFont(getLabelFont(5, SWT.ITALIC | SWT.BOLD));
 
 		// add the update panel
 		addUpdatePanel();
@@ -77,26 +79,35 @@ public class CatalogueLabel implements Observer {
 	private void addUpdatePanel() {
 
 		// tool tip to show when an update of the catalogue is available
-		toolTip = new ToolTip(mainComposite.getShell(), SWT.ICON_INFORMATION | SWT.BALLOON);
+		toolTip = new ToolTip(leftGroup.getShell(), SWT.ICON_INFORMATION | SWT.BALLOON);
 
 		// make it invisible
 		makeUpdateVisible(false);
 
+		Image image = new Image(leftGroup.getDisplay(), ClassLoader.getSystemResourceAsStream("help.png"));
+
 		// label for notifying new catalogue version
-		lblNewVersion = new Label(mainComposite, SWT.NONE);
-		lblNewVersion.setText(Messages.getString("CatalogueLabel.UpdateLabel"));
-		lblNewVersion.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_RED));
-		lblNewVersion.setFont(getLabelFont(2, SWT.BOLD));
+		lblNewVersion = new Label(leftGroup, SWT.NONE);
+		
+		// set the help icon
+		lblNewVersion.setImage(image);
+		
+		// on mouse hover show the tooltip
+		lblNewVersion.addListener(SWT.MouseHover, new Listener() {
+			public void handleEvent(Event e) {
+				open();
+			}
+		});
 
 		// button which allow to download the new version
-		btnUpdate = new Button(mainComposite, SWT.PUSH);
+		btnUpdate = new Button(leftGroup, SWT.PUSH);
 		btnUpdate.setText(Messages.getString("CatalogueLabel.UpdateButton"));
 
 		btnUpdate.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				// download the last catalogue release and open it
-				FileActions.downloadLastVersion(mainComposite.getShell(), catalogue, null);
+				FileActions.downloadLastVersion(leftGroup.getShell(), catalogue, null);
 
 			}
 		});
@@ -169,23 +180,10 @@ public class CatalogueLabel implements Observer {
 
 		toolTip.setText(Messages.getString("CatalogueLabel.ToolTipTitle"));
 		toolTip.setMessage(Messages.getString("CatalogueLabel.ToolTipMessage"));
-		toolTip.setLocation(btnUpdate.toDisplay(16, 16));
+		toolTip.setLocation(lblNewVersion.toDisplay(16, 16));
 		toolTip.setVisible(true);
-		toolTip.setAutoHide(false);
+		toolTip.setAutoHide(true);
 
-		// start auto hide after other 5 seconds
-		Display.getDefault().timerExec(10000, new Runnable() {
-
-			@Override
-			public void run() {
-
-				// if the catalogue was changed or not set or tool tip disposed
-				if (catalogue == null || !current.equals(catalogue.getCode()) || toolTip.isDisposed())
-					return;
-
-				toolTip.setAutoHide(true);
-			}
-		});
 	}
 
 	/**
@@ -210,9 +208,8 @@ public class CatalogueLabel implements Observer {
 		// show update button and tool tip if there is and can update otherwise hide
 		if (canUpdateCatalogue())
 			open();
-		else {
+		else
 			makeUpdateVisible(false);
-		}
 	}
 
 	/**

@@ -1311,9 +1311,10 @@ public abstract class TermRules {
 	 */
 	private void reconstitutionCheck(Term baseTerm, String facetIndex, String facetCode, boolean stdOut) {
 
-		// if reconstitution facet is added to the process group and the term is
-		// concentrate/dehydrated
-		if (facetCode.equals("A07MR") && isProcessFacet(facetIndex) && isConcOrPowdTerm(baseTerm))
+		// if reconstitution(A07MR) or dilution(A07MQ) facet
+		boolean isRecoOrDilu = facetCode.equals("A07MR") || facetCode.equals("A07MQ");
+		// added as process to baseterm that is concentrate/dehydrated
+		if (isRecoOrDilu && isProcessFacet(facetIndex) && isConcOrPowdTerm(baseTerm))
 			printWarning(WarningEvent.ReconstitutionProduct, facetCode, false, stdOut);
 
 	}

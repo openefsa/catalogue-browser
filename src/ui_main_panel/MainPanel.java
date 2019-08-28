@@ -729,22 +729,32 @@ public class MainPanel implements Observer {
 			}
 		});
 
-		// add the label which displays the catalogue label
-		addCatalogueLabel();
-
-		// add hierarchy selector and deprecated/non reportable filters
-		addDisplayFilters();
-
 		// I add a sashForm which is a split pane
 		SashForm sashForm = new SashForm(shell, SWT.NONE);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		sashForm.setSashWidth(2);
 
+		// left group for catalogue label, search bar and table
+		Composite left = new Composite(sashForm, SWT.NONE);
+		left.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true));
+		left.setLayout(new GridLayout(1, false));
+
+		// add the label which displays the catalogue label
+		addCatalogueLabel(left);
+
 		// add the search bar and table
-		addSearchPanel(sashForm);
+		addSearchPanel(left);
+
+		// tree viewer and tab folder
+		Composite right = new Composite(sashForm, SWT.NONE);
+		right.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		right.setLayout(new GridLayout(1, false));
+
+		// add hierarchy selector and deprecated/non reportable filters
+		addDisplayFilters(right);
 
 		// add tree viewer and term tabs
-		addRightSashForm(sashForm);
+		addRightSashForm(right);
 
 		// make the tree viewer observe of the history
 		// history.addObserver(tree);
@@ -785,7 +795,7 @@ public class MainPanel implements Observer {
 
 		// set the weights once all the widgets are inserted
 		// shahaal: increased the width for the search view (second parm from 4 to 3)
-		sashForm.setWeights(new int[] { 1, 3 });
+		sashForm.setWeights(new int[] { 1, 4 });
 	}
 
 	/**
@@ -982,8 +992,8 @@ public class MainPanel implements Observer {
 	 * 
 	 * @param parent
 	 */
-	private void addCatalogueLabel() {
-		catalogueLabel = new CatalogueLabel(shell);
+	private void addCatalogueLabel(Composite comp) {
+		catalogueLabel = new CatalogueLabel(comp);
 	}
 
 	/**
@@ -1091,16 +1101,19 @@ public class MainPanel implements Observer {
 	 * 
 	 * @param parent
 	 */
-	private void addDisplayFilters() {
+	private void addDisplayFilters(Composite comp) {
 
-		Group filterGroup = new Group(shell, SWT.NONE);
-		filterGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		
+		// tree viewer and tab folder
+		Group filterGroup = new Group(comp, SWT.NONE);
+		GridData data = new GridData(SWT.FILL, SWT.FILL, true, false);
+		data.minimumHeight = 35;
+		filterGroup.setLayoutData(data);
 		RowLayout layout = new RowLayout();
-	    layout.center = true;
-	    layout.justify = true;
-	    filterGroup.setLayout(layout);
-		
+		layout.center = true;
+		//layout.justify = true;
+		layout.spacing=50;
+		filterGroup.setLayout(layout);
+
 		// nav buttons for previous/next term
 		// history = new TermHistory(selectionGroup);
 		// history.display();

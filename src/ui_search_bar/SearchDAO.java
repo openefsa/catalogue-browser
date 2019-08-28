@@ -216,8 +216,10 @@ public class SearchDAO {
 		int count = 0;
 		for (String key : keywords) {
 
-			String keyUp = "'" + key.toUpperCase() + "'";
-			String keyLike = "'%" + key.toUpperCase() + "%'";
+			String value = key.toUpperCase();
+
+			String keyUp = "'" + value + "'";
+			String keyLike = "'%" + value + "%'";
 
 			query = query + " ( upper(TERM_EXTENDED_NAME) like " + keyLike;
 			query = query + " or upper(TERM_CODE) = " + keyUp + " ) ";
@@ -232,7 +234,7 @@ public class SearchDAO {
 				query = query + " " + getLogicalOp(type) + " ";
 
 		}
-		
+
 		// execute the query
 		try (Connection con = catalogue.getConnection();
 				PreparedStatement stmt = con.prepareStatement(query);
@@ -250,7 +252,7 @@ public class SearchDAO {
 			e.printStackTrace();
 			LOGGER.error("DB error", e);
 		}
-		
+
 		return termIds;
 	}
 
@@ -292,7 +294,7 @@ public class SearchDAO {
 		// vector
 		String query = "select distinct (TERM_ID) from APP.TERM_ATTRIBUTE where ATTR_ID in ( " + attrIds
 				+ ") and TERM_ATTR_ID in ( " + taIds + " )";
-		
+
 		// execute the query
 		try (Connection con = catalogue.getConnection();
 				PreparedStatement stmt = con.prepareStatement(query);
@@ -310,7 +312,7 @@ public class SearchDAO {
 			e.printStackTrace();
 			LOGGER.error("DB error", e);
 		}
-		
+
 		return termIds;
 	}
 
@@ -377,8 +379,7 @@ public class SearchDAO {
 
 			// search on the term attributes values (we have already filtered
 			// the non relevant term attributes in the join)
-			query.append(" upper( ATTR_VALUE ) like ");
-			query.append(keyLike);
+			query.append(" upper( ATTR_VALUE ) like " + keyLike);
 
 			// go to the next keyword
 			count++;

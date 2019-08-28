@@ -33,8 +33,6 @@ public class CatalogueBrowserMain {
 
 	private static final Logger LOGGER = LogManager.getLogger(CatalogueBrowserMain.class);
 
-	public static long sessionId = System.currentTimeMillis();
-
 	/**
 	 * Main, catalogue browser entry point
 	 * 

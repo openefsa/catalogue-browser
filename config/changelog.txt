@@ -27,7 +27,10 @@
 	+ New BR when reconstitution process is added to concentrated or powder terms
 	+ The term menu when selected from search result now appear automatically if term not present in current hierarchy
 	+ Added ability to see only the term info, without expanding it in the tree, by right clicking on the search results (useful for huge catalogues like PARAM)
-
+	+ Redesigned Search preferences window
+	+ New help icon when catalogues updates are available
+	+ Added ability to show tooltip when hovering mouse on help icon
+	
 --- Bugs fixed and other improvements:
 
     + Fixed bug when ICT files are missing
@@ -84,8 +87,15 @@
 	+ Optimisations to the tab "term naming and definition" in which some widgets were cut when using low resolution display (now is adaptable)
 	+ Optimisations to how the main menu is refreshed after some actions (i.e. install ICT)
 	+ Converted all codeGenerator class and functions to not static
-	+ Fixed bug which was causing the crash of the app if the catalogue tooltip was shown for new update and the user instead close the current catalogue or perform a logout
+	+ Fixed bug which was causing the crash of the app if the catalogue tool tip was shown for new update and the user instead close the current catalogue or perform a logout
 	+ Converted statements to prepared statements (faster)
-	+ Small improvements on how the main shell is shown/disposed removing usless checks
+	+ Small improvements on how the main shell is shown/disposed removing useless checks
 	+ Optimised the number of calls done while restoring and initialising the windows size
 	+ Fixed main panel window not showing title bar when json file not present (due to its dimension values equal to null)
+	+ Fixed list of attributes not scrollable in search preferences window
+	+ Fixed openapi login window which was not refreshing the main ui after first login
+	+ Fixed openapi login window which was calling useless classes when closing the window
+	+ Modified BR for multiple source commodities, now the warning will not appear if a specification of the already present implicit facet is added explicitly
+	+ Term filter group had been modified with 3 specific composites and justified along the horizontal space
+	+ Solved bug in which the cleaning text algorithm in the search field was removing chars useful (i.e. -,_)
+	+ Removed tasks for showing new update tooltip, now it is always visible with an hover mouse on help icon
