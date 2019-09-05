@@ -31,7 +31,7 @@ import catalogue_object.Hierarchy;
 import catalogue_object.Nameable;
 import catalogue_object.Term;
 import dcf_user.User;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import term.LabelProviderTerm;
 import term.TermSubtreeIterator;
 import term_clipboard.TermClipboard;
@@ -163,19 +163,19 @@ public class TableApplicability {
 
 		// Add the "Term" column
 		GlobalUtil.addStandardColumn(applicabilityTable, new TermColumnLabelProvider(catalogue),
-				Messages.getString("TableApplicability.TermColumn"));
+				CBMessages.getString("TableApplicability.TermColumn"));
 
 		// Add the "Hierarchy/Facet" column
 		GlobalUtil.addStandardColumn(applicabilityTable, new HierarchyColumnLabelProvider(),
-				Messages.getString("TableApplicability.HierarchyColumn"), 150, SWT.CENTER);
+				CBMessages.getString("TableApplicability.HierarchyColumn"), 150, SWT.CENTER);
 
 		// add the "Usage" column and its label provider
 		GlobalUtil.addStandardColumn(applicabilityTable, new UsageColumnLabelProvider(),
-				Messages.getString("TableApplicability.UsageColumn"), 50, SWT.CENTER);
+				CBMessages.getString("TableApplicability.UsageColumn"), 50, SWT.CENTER);
 
 		// add the "Usage" column and its label provider
 		GlobalUtil.addStandardColumn(applicabilityTable, new UsageColumnOrderProvider(),
-				Messages.getString("TableApplicability.OrderColumn"), 50, SWT.CENTER);
+				CBMessages.getString("TableApplicability.OrderColumn"), 50, SWT.CENTER);
 
 	}
 
@@ -357,7 +357,7 @@ public class TableApplicability {
 
 		// create open menu item
 		MenuItem openApplicability = new MenuItem(menu, SWT.PUSH);
-		openApplicability.setText(Messages.getString("TableApplicability.OpenCmd")); //$NON-NLS-1$
+		openApplicability.setText(CBMessages.getString("TableApplicability.OpenCmd")); //$NON-NLS-1$
 		openApplicability.addSelectionListener(new SelectionAdapter() {
 
 			public void widgetSelected(SelectionEvent e) {
@@ -403,7 +403,7 @@ public class TableApplicability {
 	private MenuItem addRemoveApplicabilityMI(Menu menu) {
 
 		MenuItem removeApplicability = new MenuItem(menu, SWT.PUSH);
-		removeApplicability.setText(Messages.getString("TableApplicability.RemoveCmd"));
+		removeApplicability.setText(CBMessages.getString("TableApplicability.RemoveCmd"));
 
 		removeApplicability.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -416,8 +416,8 @@ public class TableApplicability {
 				if (appl.getHierarchy().isMaster()) {
 
 					GlobalUtil.showErrorDialog(parent.getShell(),
-							Messages.getString("TableApplicability.RemoveFromMasterTitle"),
-							Messages.getString("TableApplicability.RemoveFromMasterMessage"));
+							CBMessages.getString("TableApplicability.RemoveFromMasterTitle"),
+							CBMessages.getString("TableApplicability.RemoveFromMasterMessage"));
 
 					return;
 				}
@@ -433,8 +433,8 @@ public class TableApplicability {
 				 */
 
 				int val = GlobalUtil.showDialog(parent.getShell(),
-						Messages.getString("TableApplicability.RemoveWarningTitle"),
-						Messages.getString("TableApplicability.RemoveWarningMessage"),
+						CBMessages.getString("TableApplicability.RemoveWarningTitle"),
+						CBMessages.getString("TableApplicability.RemoveWarningMessage"),
 						SWT.YES | SWT.NO | SWT.ICON_WARNING);
 
 				if (val == SWT.YES) {
@@ -476,7 +476,7 @@ public class TableApplicability {
 	private MenuItem addParentApplMI(Menu menu) {
 
 		MenuItem addParentAppl = new MenuItem(menu, SWT.PUSH);
-		addParentAppl.setText(Messages.getString("TableApplicability.AddParentCmd"));
+		addParentAppl.setText(CBMessages.getString("TableApplicability.AddParentCmd"));
 
 		// select the terms in the master hierarchy
 		addApplSelectionListener(addParentAppl, term.getCatalogue().getMasterHierarchy());
@@ -492,7 +492,7 @@ public class TableApplicability {
 	private MenuItem addHierarchyApplMI(Menu menu) {
 
 		MenuItem addHierarchyAppl = new MenuItem(menu, SWT.PUSH);
-		addHierarchyAppl.setText(Messages.getString("TableApplicability.AddHierarchyCmd"));
+		addHierarchyAppl.setText(CBMessages.getString("TableApplicability.AddHierarchyCmd"));
 
 		// select the hierarchies in the available ones
 		// related to the term selected in the constructor
@@ -512,7 +512,7 @@ public class TableApplicability {
 	private Nameable selectTerm(Object root) {
 
 		FormSelectTerm f = new FormSelectTerm(parent.getShell(),
-				Messages.getString("TableApplicability.SelectTermWindowTitle"), term.getCatalogue(), false, true);
+				CBMessages.getString("TableApplicability.SelectTermWindowTitle"), term.getCatalogue(), false, true);
 
 		// use the master hierarchy to choose the parent term
 		// then you can select all the other hierarchies with the
@@ -569,8 +569,8 @@ public class TableApplicability {
 					if (((Term) parentTerm).getNewHierarchies(term).isEmpty()) {
 
 						GlobalUtil.showDialog(parent.getShell(),
-								Messages.getString("TableApplicability.EmptyApplicableHierarchiesTitle"),
-								Messages.getString("TableApplicability.EmptyApplicableHierarchiesMessage"),
+								CBMessages.getString("TableApplicability.EmptyApplicableHierarchiesTitle"),
+								CBMessages.getString("TableApplicability.EmptyApplicableHierarchiesMessage"),
 								SWT.ICON_INFORMATION);
 
 						return;
@@ -629,10 +629,10 @@ public class TableApplicability {
 		Menu menu = new Menu(parent.getShell(), SWT.DROP_DOWN);
 
 		final MenuItem reportable = new MenuItem(menu, SWT.RADIO);
-		reportable.setText(Messages.getString("TableApplicability.ReportableCmd"));
+		reportable.setText(CBMessages.getString("TableApplicability.ReportableCmd"));
 
 		final MenuItem notReportable = new MenuItem(menu, SWT.RADIO);
-		notReportable.setText(Messages.getString("TableApplicability.NonReportableCmd"));
+		notReportable.setText(CBMessages.getString("TableApplicability.NonReportableCmd"));
 
 		reportable.addSelectionListener(new SelectionListener() {
 
@@ -721,7 +721,7 @@ public class TableApplicability {
 	private MenuItem addEditApplicabilityMI(Menu menu) {
 
 		MenuItem editApplicability = new MenuItem(menu, SWT.CASCADE);
-		editApplicability.setText(Messages.getString("TableApplicability.UsageCmd"));
+		editApplicability.setText(CBMessages.getString("TableApplicability.UsageCmd"));
 
 		return editApplicability;
 	}

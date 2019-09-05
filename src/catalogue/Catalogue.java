@@ -46,9 +46,9 @@ import dcf_user.User;
 import detail_level.DetailLevelDAO;
 import detail_level.DetailLevelGraphics;
 import global_manager.GlobalManager;
+import i18n_messages.CBMessages;
 import import_catalogue.CatalogueImporter.ImportFileFormat;
 import import_catalogue.CatalogueImporterThread;
-import messages.Messages;
 import progress_bar.IProgressBar;
 import property.SorterCatalogueObject;
 import soap.UploadCatalogueFileImpl.ReserveLevel;
@@ -782,7 +782,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 
 		detailLevels = detailDao.getAll();
 
-		defaultDetailLevel = new DetailLevelGraphics("", Messages.getString("DetailLevel.DefaultValue"), null);
+		defaultDetailLevel = new DetailLevelGraphics("", CBMessages.getString("DetailLevel.DefaultValue"), null);
 
 		// add void detail level
 		detailLevels.add(defaultDetailLevel);
@@ -806,7 +806,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 
 		termTypes = ttDao.getAll();
 
-		defaultTermType = new TermType(-1, "", Messages.getString("TermType.DefaultValue"));
+		defaultTermType = new TermType(-1, "", CBMessages.getString("TermType.DefaultValue"));
 
 		// add void term type
 		termTypes.add(defaultTermType);

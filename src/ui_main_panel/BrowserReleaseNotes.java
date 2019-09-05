@@ -10,7 +10,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import messages.Messages;
+import i18n_messages.CBMessages;
 import utilities.GlobalUtil;
 
 /**
@@ -29,7 +29,7 @@ public class BrowserReleaseNotes {
 		dialog = new Shell(shell, SWT.SHEET | SWT.APPLICATION_MODAL | SWT.WRAP | SWT.BORDER | SWT.TITLE);
 		dialog.setSize(720, 500);
 
-		String title = Messages.getString("FromReleaseNotes.Title") + GlobalUtil.APP_VERSION;
+		String title = CBMessages.getString("FromReleaseNotes.Title") + GlobalUtil.APP_VERSION;
 		dialog.setText(title);
 		
 		dialog.setLayout(new FillLayout());

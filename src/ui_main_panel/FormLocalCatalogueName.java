@@ -2,7 +2,7 @@ package ui_main_panel;
 
 import org.eclipse.swt.widgets.Shell;
 
-import messages.Messages;
+import i18n_messages.CBMessages;
 import ui_general_graphics.DialogSingleText;
 
 /**
@@ -22,8 +22,8 @@ public class FormLocalCatalogueName {
 	public FormLocalCatalogueName( Shell shell ) {
 
 		dialog = new DialogSingleText( shell, 3 );
-		dialog.setTitle( Messages.getString( "NewLocalCatDialogTitle" ) );
-		dialog.setMessage( Messages.getString( "NewLocalCatDialogMessage" ) );
+		dialog.setTitle( CBMessages.getString( "NewLocalCatDialogTitle" ) );
+		dialog.setMessage( CBMessages.getString( "NewLocalCatDialogMessage" ) );
 		dialog.setWindowCode( WINDOW_CODE );
 	}
 	

@@ -45,7 +45,7 @@ public class DatabaseManager {
 	 * (i.e. the catalogues downloaded from the dcf or the catalogues imported
 	 * through .ecf files)
 	 */
-	public static final String OFFICIAL_CAT_DB_FOLDER = "Database" + System.getProperty("file.separator");
+	public static final String OFFICIAL_CAT_DB_FOLDER = "database" + System.getProperty("file.separator");
 
 	/**
 	 * Where the production catalogues are stored

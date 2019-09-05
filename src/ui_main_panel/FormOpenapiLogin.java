@@ -17,7 +17,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import dcf_user.User;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import soap.DetailedSOAPException;
 import utilities.GlobalUtil;
 
@@ -106,7 +106,7 @@ public class FormOpenapiLogin {
 
 		// add token
 		Label tokenLabel = new Label(dialog, SWT.NONE);
-		tokenLabel.setText(Messages.getString("FormOpenAPILogin.TokenLabel"));
+		tokenLabel.setText(CBMessages.getString("FormOpenAPILogin.TokenLabel"));
 
 		tokenText = new Text(dialog, SWT.PASSWORD);
 		tokenText.setLayoutData(data);
@@ -132,7 +132,7 @@ public class FormOpenapiLogin {
 	private Button addLoginButton() {
 
 		loginBtn = new Button(dialog, SWT.NONE);
-		loginBtn.setText(Messages.getString("FormDCFLogin.LoginButton"));
+		loginBtn.setText(CBMessages.getString("FormDCFLogin.LoginButton"));
 		loginBtn.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
 		loginBtn.setEnabled(false);
 
@@ -178,8 +178,8 @@ public class FormOpenapiLogin {
 					dialog.close();
 				} else {
 
-					String logTitle = Messages.getString("FormDCFLogin.ErrorTitle");
-					String logMessage = Messages.getString("FormDCFLogin.WrongCredentialMessage");
+					String logTitle = CBMessages.getString("FormDCFLogin.ErrorTitle");
+					String logMessage = CBMessages.getString("FormDCFLogin.WrongCredentialMessage");
 
 					// show the dialog to show the login results
 					GlobalUtil.showErrorDialog(shell, logTitle, logMessage);

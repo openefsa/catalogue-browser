@@ -11,7 +11,7 @@ import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueEntityDAO;
 import catalogue_browser_dao.HierarchyDAO;
 import catalogue_object.Hierarchy;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import property.EditingSupportSimpleProperty;
 import property.LabelProviderDCFProperty;
 import utilities.GlobalUtil;
@@ -36,12 +36,12 @@ public class HierarchyEditor extends CatalogueObjectEditor<Hierarchy> {
 		
 		// add code column
 		TableViewerColumn codeCol = GlobalUtil.addStandardColumn( table, new LabelProviderDCFProperty("Code"), 
-				Messages.getString("HierarchyEditor.CodeColumn"), 100 );
+				CBMessages.getString("HierarchyEditor.CodeColumn"), 100 );
 		codeCol.setEditingSupport( new EditingSupportSimpleProperty( table , "Code" ) ); //$NON-NLS-1$
 
 		// add name column
 		TableViewerColumn nameCol = GlobalUtil.addStandardColumn( table, new LabelProviderDCFProperty("Name"), 
-				Messages.getString("HierarchyEditor.NameColumn") );
+				CBMessages.getString("HierarchyEditor.NameColumn") );
 		nameCol.setEditingSupport( new EditingSupportSimpleProperty( table , "Name" ) );
 
 		// add label column
@@ -56,7 +56,7 @@ public class HierarchyEditor extends CatalogueObjectEditor<Hierarchy> {
 
 		// add type column
 		TableViewerColumn typeCol = GlobalUtil.addStandardColumn(table, new LabelProviderDCFProperty("Applicability"), 
-				Messages.getString("HierarchyEditor.ApplicabilityColumn"), 100, SWT.CENTER );
+				CBMessages.getString("HierarchyEditor.ApplicabilityColumn"), 100, SWT.CENTER );
 		typeCol.setEditingSupport( new EditingSupportSimpleProperty( table , "Applicability" ) ); //$NON-NLS-1$
 
 		// add order column
@@ -84,8 +84,8 @@ public class HierarchyEditor extends CatalogueObjectEditor<Hierarchy> {
 		// if so, return false we cannot remove master
 		if ( obj.isMaster() ) {
 			GlobalUtil.showErrorDialog( getShell(),
-					Messages.getString("HierarchyEditor.DeleteHierarchyErrorTitle"), 
-					Messages.getString("HierarchyEditor.DeleteHierarchyErrorMessage"));
+					CBMessages.getString("HierarchyEditor.DeleteHierarchyErrorTitle"), 
+					CBMessages.getString("HierarchyEditor.DeleteHierarchyErrorMessage"));
 			return false;
 		}
 		
@@ -99,8 +99,8 @@ public class HierarchyEditor extends CatalogueObjectEditor<Hierarchy> {
 		if ( obj.isMaster() ) {
 			if ( !obj.isBoth() ) {
 				GlobalUtil.showErrorDialog( getShell(), 
-						Messages.getString("HierarchyEditor.FacetErrorTitle"), 
-						Messages.getString("HierarchyEditor.FacetErrorMessage"));
+						CBMessages.getString("HierarchyEditor.FacetErrorTitle"), 
+						CBMessages.getString("HierarchyEditor.FacetErrorMessage"));
 				return false;
 			}
 		}

@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import catalogue_object.Hierarchy;
 import catalogue_object.Term;
-import messages.Messages;
+import i18n_messages.CBMessages;
 
 /**
  * This form allows selecting one or more hierarchies among the hierarchies which contains the parent
@@ -55,7 +55,7 @@ public class FormSelectApplicableHierarchies {
 		dialog.setImage( new Image( Display.getCurrent() , this.getClass().getClassLoader()
 				.getResourceAsStream( "Choose.gif" ) ) );
 		
-		dialog.setText( Messages.getString( "FormSelectApplicabilityHierarchy.Title" ) );  // window title
+		dialog.setText( CBMessages.getString( "FormSelectApplicabilityHierarchy.Title" ) );  // window title
 		
 		dialog.setLayout( new GridLayout(1, false) );  // layout style
 		
@@ -68,7 +68,7 @@ public class FormSelectApplicableHierarchies {
 		dialog.setLayoutData( gridData );
 		
 		Label label = new Label ( dialog, SWT.NONE );
-		label.setText( Messages.getString("FormSelectApplicabilityHierarchy.Message") );
+		label.setText( CBMessages.getString("FormSelectApplicabilityHierarchy.Message") );
 		
 		final CheckboxTableViewer table = CheckboxTableViewer.newCheckList( dialog, SWT.NONE );
 
@@ -81,7 +81,7 @@ public class FormSelectApplicableHierarchies {
 		table.setAllChecked( true );
 		
 		Button ok = new Button( dialog, SWT.PUSH );
-		ok.setText ( Messages.getString("FormSelectApplicabilityHierarchy.OkButton") );
+		ok.setText ( CBMessages.getString("FormSelectApplicabilityHierarchy.OkButton") );
 		
 		ok.addSelectionListener( new SelectionListener() {
 			

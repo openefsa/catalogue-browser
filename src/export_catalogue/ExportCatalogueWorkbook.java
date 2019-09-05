@@ -6,8 +6,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import catalogue.Catalogue;
+import i18n_messages.CBMessages;
 import ict_add_on.ICTInstaller;
-import messages.Messages;
 import naming_convention.Headers;
 import progress_bar.IProgressBar;
 
@@ -64,7 +64,7 @@ public class ExportCatalogueWorkbook {
 			
 			if ( progressBar != null )
 				catSheet.setProgressBar( progressBar, 20, 
-						Messages.getString( "Export.CatalogueSheet" ) );
+						CBMessages.getString( "Export.CatalogueSheet" ) );
 			
 			catSheet.write();
 		
@@ -76,7 +76,7 @@ public class ExportCatalogueWorkbook {
 			
 			if ( progressBar != null )
 				hierarchySheet.setProgressBar( progressBar, 40, 
-						Messages.getString( "Export.HierarchySheet" ) );
+						CBMessages.getString( "Export.HierarchySheet" ) );
 			
 			hierarchySheet.write();
 			
@@ -88,7 +88,7 @@ public class ExportCatalogueWorkbook {
 			
 			if ( progressBar != null )
 				attrSheet.setProgressBar( progressBar, 60, 
-						Messages.getString( "Export.AttributeSheet" ) );
+						CBMessages.getString( "Export.AttributeSheet" ) );
 			
 			attrSheet.write();
 			
@@ -100,7 +100,7 @@ public class ExportCatalogueWorkbook {
 			
 			if ( progressBar != null )
 				termSheet.setProgressBar( progressBar, 80, 
-						Messages.getString( "Export.TermSheet" ) );
+						CBMessages.getString( "Export.TermSheet" ) );
 			
 			termSheet.write();
 			
@@ -112,7 +112,7 @@ public class ExportCatalogueWorkbook {
 			
 			if ( progressBar != null )
 				noteSheet.setProgressBar( progressBar, 95, 
-						Messages.getString( "Export.NotesSheet" ) );
+						CBMessages.getString( "Export.NotesSheet" ) );
 			
 			noteSheet.write();
 			
@@ -127,7 +127,7 @@ public class ExportCatalogueWorkbook {
 			
 			if ( progressBar != null )
 				attrSheet.setProgressBar( progressBar, 20, 
-						Messages.getString( "Export.AttributeSheet" ) );
+						CBMessages.getString( "Export.AttributeSheet" ) );
 			
 			attrSheet.write();
 			
@@ -139,7 +139,7 @@ public class ExportCatalogueWorkbook {
 			
 			if ( progressBar != null )
 				termSheet.setProgressBar( progressBar, 95, 
-						Messages.getString( "Export.TermSheet" ) );
+						CBMessages.getString( "Export.TermSheet" ) );
 			
 			termSheet.write();
 			
@@ -149,7 +149,7 @@ public class ExportCatalogueWorkbook {
 		
 		// last operation
 		if ( progressBar != null )
-			progressBar.setLabel( Messages.getString( "Export.WriteSheet" ) );
+			progressBar.setLabel( CBMessages.getString( "Export.WriteSheet" ) );
 
 		LOGGER.info ( "Creating excel file" );
 		

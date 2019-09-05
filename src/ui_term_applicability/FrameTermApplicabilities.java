@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import catalogue.Catalogue;
 import catalogue_object.Term;
-import messages.Messages;
+import i18n_messages.CBMessages;
 
 public class FrameTermApplicabilities {
 
@@ -107,7 +107,7 @@ public class FrameTermApplicabilities {
 		Menu menu = new Menu( parent , SWT.POP_UP );
 
 		final MenuItem addTermApplicability = new MenuItem( menu , SWT.PUSH );
-		addTermApplicability.setText( Messages.getString("TreeFacetRestrictions.AddCommand") );
+		addTermApplicability.setText( CBMessages.getString("TreeFacetRestrictions.AddCommand") );
 		
 		addTermApplicability.addSelectionListener( new SelectionAdapter() {
 			@Override
@@ -118,7 +118,7 @@ public class FrameTermApplicabilities {
 		
 		
 		final MenuItem removeTermApplicability = new MenuItem( menu , SWT.PUSH );
-		removeTermApplicability.setText( Messages.getString("TreeFacetRestrictions.RemoveCommand") );
+		removeTermApplicability.setText( CBMessages.getString("TreeFacetRestrictions.RemoveCommand") );
 
 		removeTermApplicability.addSelectionListener( new SelectionAdapter() {
 			@Override

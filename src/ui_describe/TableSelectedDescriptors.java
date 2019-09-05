@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Shell;
 import catalogue.Catalogue;
 import catalogue_object.Hierarchy;
 import catalogue_object.Term;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import ui_search_bar.TermTable;
 
 /**
@@ -53,7 +53,7 @@ public class TableSelectedDescriptors {
 		// If multiple selection, then show the group of selected elements
 		Group selectedElemGroup = new Group(parent, SWT.NONE);
 		selectedElemGroup.setLayout(new FillLayout());
-		selectedElemGroup.setText(Messages.getString("FormSelectTerm.SelectedElemLabel"));
+		selectedElemGroup.setText(CBMessages.getString("FormSelectTerm.SelectedElemLabel"));
 
 		// Data layout for selectedElemGroup
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -212,10 +212,10 @@ public class TableSelectedDescriptors {
 		final Menu menu = new Menu(shell, SWT.POP_UP);
 
 		openItem = new MenuItem(menu, SWT.PUSH);
-		openItem.setText(Messages.getString("FormSelectTerm.OpenCmd"));
+		openItem.setText(CBMessages.getString("FormSelectTerm.OpenCmd"));
 
 		removeItem = new MenuItem(menu, SWT.PUSH);
-		removeItem.setText(Messages.getString("FormSelectTerm.RemoveCmd"));
+		removeItem.setText(CBMessages.getString("FormSelectTerm.RemoveCmd"));
 
 		// set menu item icon
 		Image removeIcon = new Image(Display.getCurrent(),

@@ -29,7 +29,7 @@ import catalogue_browser_dao.TermAttributeDAO;
 import catalogue_object.Term;
 import catalogue_object.TermAttribute;
 import dcf_user.User;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import term_clipboard.TextClipboard;
 import utilities.GlobalUtil;
 
@@ -59,7 +59,7 @@ public class TableImplicitAttributes {
 		group.setLayout(new FillLayout());
 		
 		// set group title
-		group.setText(Messages.getString("TermProperties.ImplicitAttributes"));
+		group.setText(CBMessages.getString("TermProperties.ImplicitAttributes"));
 
 		// create the attribute table
 		table = new TableViewer(group,
@@ -72,11 +72,11 @@ public class TableImplicitAttributes {
 
 		// Add the "Key" column
 		keyCol = GlobalUtil.addStandardColumn(table, new KeyColumnLabelProvider(),
-				Messages.getString("TermProperties.AttributesKeyColumn"), 150);
+				CBMessages.getString("TermProperties.AttributesKeyColumn"), 150);
 
 		// Add the "Value" column
 		valueCol = GlobalUtil.addStandardColumn(table, new ValueColumnLabelProvider(),
-				Messages.getString("TermProperties.AttributesValueColumn"), 300);
+				CBMessages.getString("TermProperties.AttributesValueColumn"), 300);
 	}
 
 	/**
@@ -194,7 +194,7 @@ public class TableImplicitAttributes {
 		Menu menu = new Menu(parent, SWT.NONE);
 
 		MenuItem copyValueMI = new MenuItem(menu, SWT.PUSH);
-		copyValueMI.setText(Messages.getString("implicit.attributes.copy.value"));
+		copyValueMI.setText(CBMessages.getString("implicit.attributes.copy.value"));
 		copyValueMI.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -204,7 +204,7 @@ public class TableImplicitAttributes {
 		});
 
 		MenuItem copyLabelMI = new MenuItem(menu, SWT.PUSH);
-		copyLabelMI.setText(Messages.getString("implicit.attributes.copy.label.value"));
+		copyLabelMI.setText(CBMessages.getString("implicit.attributes.copy.label.value"));
 		copyLabelMI.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -214,7 +214,7 @@ public class TableImplicitAttributes {
 		});
 
 		MenuItem copyCodeMI = new MenuItem(menu, SWT.PUSH);
-		copyCodeMI.setText(Messages.getString("implicit.attributes.copy.code.value"));
+		copyCodeMI.setText(CBMessages.getString("implicit.attributes.copy.code.value"));
 		copyCodeMI.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -308,15 +308,15 @@ public class TableImplicitAttributes {
 				// can add only if there exist generic attributes
 				if (!attrDao.fetchGeneric().isEmpty()) {
 					addMI.setEnabled(true);
-					addMI.setText(Messages.getString("TermProperties.AddCommand"));
+					addMI.setText(CBMessages.getString("TermProperties.AddCommand"));
 				} else
-					addMI.setText(Messages.getString("TermProperties.NoAttributeCommand"));
+					addMI.setText(CBMessages.getString("TermProperties.NoAttributeCommand"));
 
 				// can remove only if the term has generic attributes
 				if (!term.getGenericAttributes().isEmpty())
 					removeMI.setEnabled(true);
 
-				removeMI.setText(Messages.getString("TermProperties.RemoveCommand"));
+				removeMI.setText(CBMessages.getString("TermProperties.RemoveCommand"));
 			}
 		});
 

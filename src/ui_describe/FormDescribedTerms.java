@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Text;
 
 import already_described_terms.DescribedTerm;
 import catalogue.Catalogue;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import session_manager.BrowserWindowPreferenceDao;
 import utilities.GlobalUtil;
 import window_restorer.RestoreableWindow;
@@ -150,11 +150,11 @@ public class FormDescribedTerms {
 		data.horizontalSpan = 2;
 		searchComposite.setLayoutData(data);
 		searchComposite.setLayout(new GridLayout(3, false));
-		searchComposite.setText(Messages.getString("FormRecentlyDescribe.SearchTermTitle"));
+		searchComposite.setText(CBMessages.getString("FormRecentlyDescribe.SearchTermTitle"));
 
 		searchTextBox = new Text(searchComposite, SWT.SEARCH);
 		searchTextBox.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		searchTextBox.setMessage(Messages.getString("SearchBar.SearchTipText"));
+		searchTextBox.setMessage(CBMessages.getString("SearchBar.SearchTipText"));
 		searchTextBox.setEditable(true);
 
 		data = new GridData(SWT.FILL, SWT.FILL, false, true);
@@ -163,11 +163,11 @@ public class FormDescribedTerms {
 
 		findSearch = new Button(searchComposite, SWT.NONE);
 		findSearch.setLayoutData(data);
-		findSearch.setText(Messages.getString("FormRecentlyDescribe.FindTermsButton"));
+		findSearch.setText(CBMessages.getString("FormRecentlyDescribe.FindTermsButton"));
 
 		clearSearch = new Button(searchComposite, SWT.NONE);
 		clearSearch.setLayoutData(data);
-		clearSearch.setText(Messages.getString("FormRecentlyDescribe.ClearButton"));
+		clearSearch.setText(CBMessages.getString("FormRecentlyDescribe.ClearButton"));
 
 		// group for the base term tables
 		Group groupTable = new Group(parent, SWT.NONE);
@@ -208,11 +208,11 @@ public class FormDescribedTerms {
 		Group codeComposite = new Group(parent, SWT.NONE);
 		codeComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		codeComposite.setLayout(new GridLayout(1, false));
-		codeComposite.setText(Messages.getString("FormRecentlyDescribe.TermInfo"));
+		codeComposite.setText(CBMessages.getString("FormRecentlyDescribe.TermInfo"));
 
 		// label for full code text box
 		Label fullCodeLabel = new Label(codeComposite, SWT.NONE);
-		fullCodeLabel.setText(Messages.getString("FormRecentlyDescribe.FullCodeLabel"));
+		fullCodeLabel.setText(CBMessages.getString("FormRecentlyDescribe.FullCodeLabel"));
 
 		// text boxes to show the full code
 		final Text fullCode = new Text(codeComposite, SWT.BORDER | SWT.READ_ONLY | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
@@ -221,7 +221,7 @@ public class FormDescribedTerms {
 
 		// label for interpreted text box
 		Label interpLabel = new Label(codeComposite, SWT.NONE);
-		interpLabel.setText(Messages.getString("FormRecentlyDescribe.InterpretedCodeLabel"));
+		interpLabel.setText(CBMessages.getString("FormRecentlyDescribe.InterpretedCodeLabel"));
 
 		// text box for the interpreted code
 		final Text interpretedCode = new Text(codeComposite,
@@ -238,12 +238,12 @@ public class FormDescribedTerms {
 
 		// open the recent element in the describe window
 		loadButton = new Button(buttonComposite, SWT.PUSH);
-		loadButton.setText(Messages.getString("FormRecentlyDescribe.LoadButton"));
+		loadButton.setText(CBMessages.getString("FormRecentlyDescribe.LoadButton"));
 		loadButton.setLayoutData(data);
 
 		// cancel the operation
 		Button cancelButton = new Button(buttonComposite, SWT.PUSH);
-		cancelButton.setText(Messages.getString("FormRecentlyDescribe.CancelButton"));
+		cancelButton.setText(CBMessages.getString("FormRecentlyDescribe.CancelButton"));
 		cancelButton.setLayoutData(data);
 
 		// when an element is selected from the table
@@ -264,7 +264,7 @@ public class FormDescribedTerms {
 					// if not valid stop
 					if (!describedTerm.isValid()) {
 						GlobalUtil.showErrorDialog(shell, describedTerm.getCode(),
-								Messages.getString("FormRecentlyDescribe.InvalidTermMessage"));
+								CBMessages.getString("FormRecentlyDescribe.InvalidTermMessage"));
 						return;
 					}
 
@@ -376,7 +376,7 @@ public class FormDescribedTerms {
 		// if not valid stop
 		if (!describedTerm.isValid()) {
 			GlobalUtil.showErrorDialog(shell, describedTerm.getCode(),
-					Messages.getString("FormRecentlyDescribe.InvalidTermMessage"));
+					CBMessages.getString("FormRecentlyDescribe.InvalidTermMessage"));
 			return null;
 		}
 

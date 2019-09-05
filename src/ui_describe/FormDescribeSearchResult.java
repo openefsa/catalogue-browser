@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Shell;
 import catalogue.Catalogue;
 import catalogue_object.Hierarchy;
 import catalogue_object.Term;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import ui_search_bar.TermTable;
 
 /**
@@ -110,7 +110,7 @@ public class FormDescribeSearchResult {
 
 		Menu searchMenu = new Menu(dialog, SWT.POP_UP);
 		MenuItem addItem = new MenuItem(searchMenu, SWT.PUSH);
-		addItem.setText(Messages.getString("FormDescribeSearchResult.AddCmd")); //$NON-NLS-1$
+		addItem.setText(CBMessages.getString("FormDescribeSearchResult.AddCmd")); //$NON-NLS-1$
 		Image addIcon = new Image(Display.getCurrent(),
 				this.getClass().getClassLoader().getResourceAsStream("add-icon.png"));
 		addItem.setImage(addIcon);

@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Listener;
 import catalogue.Catalogue;
 import catalogue_object.Hierarchy;
 import global_manager.GlobalManager;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import property.ContentProviderProperty;
 import property.LabelProviderProperty;
 import property.SorterCatalogueObject;
@@ -92,17 +92,17 @@ public class HierarchySelector extends Observable implements Observer {
 		
 		// choose
 		Label label = new Label(selComp, SWT.NONE);
-		label.setText(Messages.getString("HierarchySelector.Title_1"));
+		label.setText(CBMessages.getString("HierarchySelector.Title_1"));
 		
 		// radio button for visualising hierarchies in the combo box
 		hierarchyBtn = new Button(selComp, SWT.RADIO);
-		hierarchyBtn.setText(Messages.getString("HierarchySelector.Hierarchies"));
+		hierarchyBtn.setText(CBMessages.getString("HierarchySelector.Hierarchies"));
 		hierarchyBtn.setSelection(true);
 		hierarchyBtn.setEnabled(false);
 		
 		// radio button for visualising facets lists in the combo box
 		facetBtn = new Button(selComp, SWT.RADIO);
-		facetBtn.setText(Messages.getString("HierarchySelector.Facets"));
+		facetBtn.setText(CBMessages.getString("HierarchySelector.Facets"));
 		facetBtn.setEnabled(false);
 		
 		// add separator
@@ -117,7 +117,7 @@ public class HierarchySelector extends Observable implements Observer {
 		
 		// choose
 		Label comboLabel = new Label(hierComp, SWT.NONE);
-		comboLabel.setText(Messages.getString("HierarchySelector.Title_2"));
+		comboLabel.setText(CBMessages.getString("HierarchySelector.Title_2"));
 		
 		hierarchyCombo = new ComboViewer(hierComp, SWT.READ_ONLY | SWT.DROP_DOWN | SWT.WRAP);
 		hierarchyCombo.setLabelProvider(new LabelProviderProperty());

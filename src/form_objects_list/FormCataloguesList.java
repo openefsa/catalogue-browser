@@ -12,7 +12,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
 import catalogue.Catalogue;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import utilities.GlobalUtil;
 
 
@@ -55,12 +55,12 @@ public class FormCataloguesList extends FormObjectsList<Catalogue> {
 		case "label": 
 			// Add the "Label" column
 			GlobalUtil.addStandardColumn( table, new CatalogueLabelLabelProvider(), 
-					Messages.getString("FormCataloguesList.NameColumn"), 225, true, false ); 
+					CBMessages.getString("FormCataloguesList.NameColumn"), 225, true, false ); 
 			break;
 		case "scopenote": 
 			// Add the "Scopenote" column
 			GlobalUtil.addStandardColumn( table, new CatalogueScopeNoteLabelProvider(), 
-					Messages.getString("FormCataloguesList.ScopenoteColumn"), 300, true, false ); 
+					CBMessages.getString("FormCataloguesList.ScopenoteColumn"), 300, true, false ); 
 			break;
 		case "code_mask": 
 			break;
@@ -73,26 +73,26 @@ public class FormCataloguesList extends FormObjectsList<Catalogue> {
 		case "version": 
 			// Add the "Version" column
 			GlobalUtil.addStandardColumn( table, new CatalogueVersionLabelProvider(),
-					Messages.getString("FormCataloguesList.VersionColumn"), 100, true, false, SWT.CENTER ); 
+					CBMessages.getString("FormCataloguesList.VersionColumn"), 100, true, false, SWT.CENTER ); 
 			break;
 		case "last_update": 
 			break;
 		case "valid_from": 
 			// Add the "Last release" column
 			GlobalUtil.addStandardColumn( table, new CatalogueValidFromLabelProvider(), 
-					Messages.getString("FormCataloguesList.LastReleaseColumn"), 90, true, false, SWT.CENTER ); 
+					CBMessages.getString("FormCataloguesList.LastReleaseColumn"), 90, true, false, SWT.CENTER ); 
 			break;
 		case "valid_to": 
 			break;
 		case "status": 
 			// Add the "Status" column
 			GlobalUtil.addStandardColumn( table, new CatalogueStatusLabelProvider(), 
-					Messages.getString("FormCataloguesList.StatusColumn"), 150, true, false, SWT.CENTER ); 
+					CBMessages.getString("FormCataloguesList.StatusColumn"), 150, true, false, SWT.CENTER ); 
 			break;
 		case "reserve": 
 			// Add the "reserved by" column
 			GlobalUtil.addStandardColumn( table, new CatalogueUsernameLabelProvider(), 
-					Messages.getString("FormCataloguesList.ReserveColumn"), 115, true, false, SWT.CENTER );
+					CBMessages.getString("FormCataloguesList.ReserveColumn"), 115, true, false, SWT.CENTER );
 			break;
 		}
 	}

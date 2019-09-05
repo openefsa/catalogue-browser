@@ -5,7 +5,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Shell;
 
 import dcf_log.DcfLog;
-import messages.Messages;
+import i18n_messages.CBMessages;
 
 public class LogNodesForm {
 	
@@ -21,7 +21,7 @@ public class LogNodesForm {
 	public void open() {
 
 		this.dialog = new Shell( shell , SWT.TITLE | SWT.APPLICATION_MODAL | SWT.SHELL_TRIM );
-		dialog.setText( Messages.getString( "LogNodesForm.Title" ) );
+		dialog.setText( CBMessages.getString( "LogNodesForm.Title" ) );
 		
 		dialog.setLayout(new GridLayout(1, false));
 		

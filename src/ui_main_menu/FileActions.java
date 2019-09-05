@@ -36,9 +36,9 @@ import export_catalogue.ExportActions;
 import form_objects_list.FormCataloguesList;
 import form_objects_list.FormDCTableConfigsList;
 import form_objects_list.FormDataCollectionsList;
+import i18n_messages.CBMessages;
 import import_catalogue.CatalogueImporter.ImportFileFormat;
 import import_catalogue.CatalogueImporterThread;
-import messages.Messages;
 import progress_bar.FormMultipleProgress;
 import progress_bar.FormProgressBar;
 import progress_bar.IProgressBar;
@@ -84,8 +84,8 @@ public class FileActions {
 			CatalogueCreator.newLocalCatalogue(catalogueCode);
 		} catch (DuplicatedCatalogueException exception) {
 
-			GlobalUtil.showErrorDialog(shell, Messages.getString("BrowserMenu.NewLocalCatErrorTitle"),
-					Messages.getString("BrowserMenu.NewLocalCatErrorMessage"));
+			GlobalUtil.showErrorDialog(shell, CBMessages.getString("BrowserMenu.NewLocalCatErrorTitle"),
+					CBMessages.getString("BrowserMenu.NewLocalCatErrorMessage"));
 
 			GlobalUtil.setShellCursor(shell, SWT.CURSOR_ARROW);
 
@@ -103,8 +103,8 @@ public class FileActions {
 		GlobalUtil.setShellCursor(shell, SWT.CURSOR_ARROW);
 
 		// warn user
-		GlobalUtil.showDialog(shell, Messages.getString("NewLocalCat.DoneTitle"),
-				Messages.getString("NewLocalCat.DoneMessage"), SWT.ICON_INFORMATION);
+		GlobalUtil.showDialog(shell, CBMessages.getString("NewLocalCat.DoneTitle"),
+				CBMessages.getString("NewLocalCat.DoneMessage"), SWT.ICON_INFORMATION);
 	}
 
 	/**
@@ -135,8 +135,8 @@ public class FileActions {
 			columns = new String[] { "label", "version", "status" };
 
 		// ask a catalogue
-		Catalogue catalogue = chooseCatalogue(shell, Messages.getString("FormCataloguesList.OpenTitle"), myCatalogues,
-				columns, Messages.getString("FormCataloguesList.OpenCmd"));
+		Catalogue catalogue = chooseCatalogue(shell, CBMessages.getString("FormCataloguesList.OpenTitle"), myCatalogues,
+				columns, CBMessages.getString("FormCataloguesList.OpenCmd"));
 
 		// return if no catalogue selected
 		if (catalogue == null)
@@ -230,7 +230,7 @@ public class FileActions {
 		ExportActions export = new ExportActions();
 
 		// set the progress bar
-		export.setProgressBar(new FormProgressBar(shell, Messages.getString("Export.ProgressBarTitle")));
+		export.setProgressBar(new FormProgressBar(shell, CBMessages.getString("Export.ProgressBarTitle")));
 
 		// export the opened catalogue
 		export.exportAsync(catalogue, GlobalUtil.ICT_FOODEX2_FILE_PATH, false, new ThreadFinishedListener() {
@@ -248,10 +248,10 @@ public class FileActions {
 						int icon;
 
 						if (code == ThreadFinishedListener.OK) {
-							msg = Messages.getString("Export.DoneMessage");
+							msg = CBMessages.getString("Export.DoneMessage");
 							icon = SWT.ICON_INFORMATION;
 						} else {
-							msg = Messages.getString("Export.ErrorMessage");
+							msg = CBMessages.getString("Export.ErrorMessage");
 							icon = SWT.ICON_ERROR;
 						}
 
@@ -270,7 +270,7 @@ public class FileActions {
 		if (catalogue.isDeprecated()) {
 
 			int val = GlobalUtil.showDialog(shell, catalogue.getLabel(),
-					Messages.getString("BrowserMenu.CatalogueDeprecatedMessage"), SWT.ICON_WARNING | SWT.YES | SWT.NO);
+					CBMessages.getString("BrowserMenu.CatalogueDeprecatedMessage"), SWT.ICON_WARNING | SWT.YES | SWT.NO);
 
 			return val;
 		}
@@ -317,8 +317,8 @@ public class FileActions {
 		// if we are not logged in, simply warn the user that we cannot
 		// be sure that this is the last release
 		MessageBox mb = new MessageBox(shell, SWT.ICON_INFORMATION);
-		mb.setText(Messages.getString("BrowserMenu.CatalogueReleaseInfoTitle"));
-		mb.setMessage(Messages.getString("BrowserMenu.CatalogueReleaseInfoMessage"));
+		mb.setText(CBMessages.getString("BrowserMenu.CatalogueReleaseInfoTitle"));
+		mb.setMessage(CBMessages.getString("BrowserMenu.CatalogueReleaseInfoMessage"));
 		mb.open();
 	}
 
@@ -337,7 +337,7 @@ public class FileActions {
 		if (catalogue.isDeprecated()) {
 
 			int val = GlobalUtil.showDialog(shell, catalogue.getLabel(),
-					Messages.getString("BrowserMenu.CatalogueDeprecatedMessage"), SWT.ICON_WARNING | SWT.YES | SWT.NO);
+					CBMessages.getString("BrowserMenu.CatalogueDeprecatedMessage"), SWT.ICON_WARNING | SWT.YES | SWT.NO);
 
 			return val;
 		}
@@ -368,8 +368,8 @@ public class FileActions {
 				// if we are not logged in, simply warn the user that we cannot
 				// be sure that this is the last release
 				MessageBox mb = new MessageBox(shell, SWT.ICON_INFORMATION);
-				mb.setText(Messages.getString("BrowserMenu.CatalogueReleaseInfoTitle"));
-				mb.setMessage(Messages.getString("BrowserMenu.CatalogueReleaseInfoMessage"));
+				mb.setText(CBMessages.getString("BrowserMenu.CatalogueReleaseInfoTitle"));
+				mb.setMessage(CBMessages.getString("BrowserMenu.CatalogueReleaseInfoMessage"));
 				mb.open();
 			}
 		}
@@ -438,8 +438,8 @@ public class FileActions {
 
 		// ask a catalogue
 		Collection<Catalogue> selectedCats = chooseCatalogues(shell,
-				Messages.getString("FormCatalogueList.DownloadTitle"), Dcf.getDownloadableCat(), true, columns,
-				Messages.getString("FormCataloguesList.DownloadCmd"));
+				CBMessages.getString("FormCatalogueList.DownloadTitle"), Dcf.getDownloadableCat(), true, columns,
+				CBMessages.getString("FormCataloguesList.DownloadCmd"));
 
 		// no selection return
 		if (selectedCats == null || selectedCats.isEmpty())
@@ -448,8 +448,8 @@ public class FileActions {
 		if (selectedCats.size() == 1)
 			downloadSingleCat(shell, selectedCats.iterator().next(), null);
 		else
-			downloadCatalogues(shell, Messages.getString("Download.MultiSuccessTitle"),
-					Messages.getString("Download.MultiSuccessMessage"), selectedCats);
+			downloadCatalogues(shell, CBMessages.getString("Download.MultiSuccessTitle"),
+					CBMessages.getString("Download.MultiSuccessMessage"), selectedCats);
 
 	}
 
@@ -463,7 +463,7 @@ public class FileActions {
 
 		// show a progress bar
 		final IProgressBar progressBar = new FormProgressBar(shell,
-				Messages.getString("Download.ProgressDownloadTitle"));
+				CBMessages.getString("Download.ProgressDownloadTitle"));
 
 		// available rma in memory
 		double availableRam = ((com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean())
@@ -508,20 +508,20 @@ public class FileActions {
 						int icon;
 
 						if (value == ThreadFinishedListener.OK) {
-							message = Messages.getString("Download.DownloadSuccessMessage");
+							message = CBMessages.getString("Download.DownloadSuccessMessage");
 							icon = SWT.ICON_INFORMATION;
 						} else if (value == EXCEPTION) {
 							if (e instanceof AttachmentNotFoundException)
-								message = Messages.getString("ExportCatalogue.ErrorMessage");
+								message = CBMessages.getString("ExportCatalogue.ErrorMessage");
 							else if (e instanceof DetailedSOAPException) {
 								message = GlobalUtil.getSOAPWarning((DetailedSOAPException) e)[1];
 							} else {
-								message = Messages.getString("ExportCatalogue.general.error");
+								message = CBMessages.getString("ExportCatalogue.general.error");
 							}
 							icon = SWT.ICON_ERROR;
 							progressBar.close();
 						} else {
-							message = Messages.getString("ExportCatalogue.general.error");
+							message = CBMessages.getString("ExportCatalogue.general.error");
 							icon = SWT.ICON_ERROR;
 							progressBar.close();
 						}
@@ -619,15 +619,15 @@ public class FileActions {
 	public void importCatalogue(Shell shell, final ThreadFinishedListener doneListener) {
 
 		// ask the file to the user
-		String filename = GlobalUtil.showFileDialog(shell, Messages.getString("BrowserMenu.ImportCatalogueCmd"),
+		String filename = GlobalUtil.showFileDialog(shell, CBMessages.getString("BrowserMenu.ImportCatalogueCmd"),
 				new String[] { "*.ecf" }, SWT.OPEN);
 
 		if (filename == null || filename.isEmpty())
 			return;
 
 		// ask for final confirmation
-		int val = GlobalUtil.showDialog(shell, Messages.getString("EcfImport.WarnTitle"),
-				Messages.getString("EcfImport.WarnMessage"), SWT.OK | SWT.CANCEL | SWT.ICON_QUESTION);
+		int val = GlobalUtil.showDialog(shell, CBMessages.getString("EcfImport.WarnTitle"),
+				CBMessages.getString("EcfImport.WarnMessage"), SWT.OK | SWT.CANCEL | SWT.ICON_QUESTION);
 
 		// return if cancel was pressed
 		if (val == SWT.CANCEL)
@@ -635,7 +635,7 @@ public class FileActions {
 
 		CatalogueImporterThread importCat = new CatalogueImporterThread(filename, ImportFileFormat.ECF);
 
-		FormProgressBar progressBar = new FormProgressBar(shell, Messages.getString("EcfImport.ImportEcfBarTitle"));
+		FormProgressBar progressBar = new FormProgressBar(shell, CBMessages.getString("EcfImport.ImportEcfBarTitle"));
 
 		importCat.setProgressBar(progressBar);
 
@@ -660,9 +660,9 @@ public class FileActions {
 		Collections.sort(myCatalogues);
 
 		// ask which catalogues to delete
-		Collection<Catalogue> catalogues = chooseCatalogues(shell, Messages.getString("FormCatalogueList.DeleteTitle"),
+		Collection<Catalogue> catalogues = chooseCatalogues(shell, CBMessages.getString("FormCatalogueList.DeleteTitle"),
 				myCatalogues, true, new String[] { "label", "version", "status" },
-				Messages.getString("FormCatalogueList.DeleteCmd"));
+				CBMessages.getString("FormCatalogueList.DeleteCmd"));
 
 		if (catalogues.isEmpty())
 			return;
@@ -685,22 +685,22 @@ public class FileActions {
 						int icon;
 
 						if (code == ThreadFinishedListener.OK) {
-							msg = Messages.getString("Delete.OkMessage");
+							msg = CBMessages.getString("Delete.OkMessage");
 							icon = SWT.ICON_INFORMATION;
 						} else {
-							msg = Messages.getString("Delete.ErrorMessage");
+							msg = CBMessages.getString("Delete.ErrorMessage");
 							icon = SWT.ICON_WARNING;
 						}
 
 						// warn user
-						GlobalUtil.showDialog(shell, Messages.getString("Delete.Title"), msg, icon);
+						GlobalUtil.showDialog(shell, CBMessages.getString("Delete.Title"), msg, icon);
 					}
 				});
 			}
 		});
 
 		// progress bar for deleting catalogues
-		final FormProgressBar progressBar = new FormProgressBar(shell, Messages.getString("FileMenu.DeleteCatalogue"));
+		final FormProgressBar progressBar = new FormProgressBar(shell, CBMessages.getString("FileMenu.DeleteCatalogue"));
 
 		progressBar.open();
 
@@ -769,15 +769,15 @@ public class FileActions {
 		DCDAO dcDao = new DCDAO();
 
 		// ask for selecting a data collection
-		final DataCollection dc = chooseDC(shell, Messages.getString("FormDCList.OpenTitle"),
-				Messages.getString("FormDCList.OpenCmd"), dcDao.getAll());
+		final DataCollection dc = chooseDC(shell, CBMessages.getString("FormDCList.OpenTitle"),
+				CBMessages.getString("FormDCList.OpenCmd"), dcDao.getAll());
 
 		if (dc == null)
 			return null;
 
 		// show data collection tables and configs
 		// if a data collection is selected
-		DCTableConfig config = chooseConfig(shell, dc.getCode(), Messages.getString("FormDCList.OpenCmd"),
+		DCTableConfig config = chooseConfig(shell, dc.getCode(), CBMessages.getString("FormDCList.OpenCmd"),
 				dc.getTableConfigs());
 
 		return config;
@@ -791,14 +791,14 @@ public class FileActions {
 	public static void downloadDC(final Shell shell) {
 
 		// ask for selecting a data collection
-		final DataCollection dc = chooseDC(shell, Messages.getString("FormDCList.Title"),
-				Messages.getString("FormDCList.DownloadCmd"), Dcf.getDownloadableDC());
+		final DataCollection dc = chooseDC(shell, CBMessages.getString("FormDCList.Title"),
+				CBMessages.getString("FormDCList.DownloadCmd"), Dcf.getDownloadableDC());
 
 		// return if null
 		if (dc == null)
 			return;
 
-		FormProgressBar progressBar = new FormProgressBar(shell, Messages.getString("DCDownload.ProgressBarTitle"));
+		FormProgressBar progressBar = new FormProgressBar(shell, CBMessages.getString("DCDownload.ProgressBarTitle"));
 
 		progressBar.open();
 
@@ -821,13 +821,13 @@ public class FileActions {
 						Collection<Catalogue> catToDownload = dc.getNewCatalogues();
 
 						if (catToDownload.isEmpty()) {
-							GlobalUtil.showDialog(shell, dc.getCode(), Messages.getString("DCDownload.EmptyDC"),
+							GlobalUtil.showDialog(shell, dc.getCode(), CBMessages.getString("DCDownload.EmptyDC"),
 									SWT.ICON_INFORMATION);
 							return;
 						}
 
 						// download the batch of catalogues
-						downloadCatalogues(shell, dc.getCode(), Messages.getString("DCDownload.Success"),
+						downloadCatalogues(shell, dc.getCode(), CBMessages.getString("DCDownload.Success"),
 								catToDownload);
 					}
 				});

@@ -17,7 +17,7 @@ import data_collection.DCDAO;
 import data_collection.DCTableConfig;
 import dcf_manager.Dcf;
 import dcf_user.User;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import utilities.GlobalUtil;
 
 /**
@@ -85,7 +85,7 @@ public class FileMenu implements MainMenuItem {
 		Menu fileMenu = new Menu(menu);
 
 		MenuItem fileItem = new MenuItem(menu, SWT.CASCADE);
-		fileItem.setText(Messages.getString("BrowserMenu.FileMenuName"));
+		fileItem.setText(CBMessages.getString("BrowserMenu.FileMenuName"));
 		fileItem.setMenu(fileMenu);
 
 		// create cat
@@ -131,7 +131,7 @@ public class FileMenu implements MainMenuItem {
 	private MenuItem addNewLocalCatMI(final Menu menu) {
 
 		final MenuItem newFileItem = new MenuItem(menu, SWT.NONE);
-		newFileItem.setText(Messages.getString("BrowserMenu.NewCatalogueCmd"));
+		newFileItem.setText(CBMessages.getString("BrowserMenu.NewCatalogueCmd"));
 
 		// if the new local catalogue button is pressed
 		newFileItem.addSelectionListener(new SelectionAdapter() {
@@ -192,7 +192,7 @@ public class FileMenu implements MainMenuItem {
 	private MenuItem addOpenDBMI(Menu menu) {
 
 		final MenuItem openFileItem = new MenuItem(menu, SWT.NONE);
-		openFileItem.setText(Messages.getString("BrowserMenu.OpenCatalogueCmd"));
+		openFileItem.setText(CBMessages.getString("BrowserMenu.OpenCatalogueCmd"));
 
 		openFileItem.addSelectionListener(new SelectionAdapter() {
 
@@ -227,7 +227,7 @@ public class FileMenu implements MainMenuItem {
 	private MenuItem addDcMI(Menu menu) {
 
 		final MenuItem dc = new MenuItem(menu, SWT.CASCADE);
-		dc.setText(Messages.getString("BrowserMenu.DataCollectionCmd"));
+		dc.setText(CBMessages.getString("BrowserMenu.DataCollectionCmd"));
 
 		// Initialize the menu
 		final Menu selectDcMenu = new Menu(shell, SWT.DROP_DOWN);
@@ -252,7 +252,7 @@ public class FileMenu implements MainMenuItem {
 	private MenuItem addOpenDcMI(Menu menu) {
 
 		final MenuItem openDc = new MenuItem(menu, SWT.NONE);
-		openDc.setText(Messages.getString("BrowserMenu.OpenDcCmd"));
+		openDc.setText(CBMessages.getString("BrowserMenu.OpenDcCmd"));
 
 		openDc.addSelectionListener(new SelectionListener() {
 
@@ -288,7 +288,7 @@ public class FileMenu implements MainMenuItem {
 	private MenuItem addDownloadDcMI(Menu menu) {
 
 		final MenuItem downloadDc = new MenuItem(menu, SWT.NONE);
-		downloadDc.setText(Messages.getString("BrowserMenu.DownloadDcCmd"));
+		downloadDc.setText(CBMessages.getString("BrowserMenu.DownloadDcCmd"));
 
 		downloadDc.addSelectionListener(new SelectionAdapter() {
 
@@ -300,8 +300,8 @@ public class FileMenu implements MainMenuItem {
 
 					// if user doesn't want to continue return
 					MessageBox mb = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
-					mb.setText(Messages.getString("FormDCList.Title"));
-					mb.setMessage(Messages.getString("FormDCList.WarnOpenapiUser"));
+					mb.setText(CBMessages.getString("FormDCList.Title"));
+					mb.setMessage(CBMessages.getString("FormDCList.WarnOpenapiUser"));
 
 					if (mb.open() != SWT.YES)
 						return;
@@ -323,7 +323,7 @@ public class FileMenu implements MainMenuItem {
 	private MenuItem addImportCatalogueMI(final Menu menu) {
 
 		final MenuItem importCatMI = new MenuItem(menu, SWT.PUSH);
-		importCatMI.setText(Messages.getString("BrowserMenu.ImportCatalogueCmd"));
+		importCatMI.setText(CBMessages.getString("BrowserMenu.ImportCatalogueCmd"));
 
 		importCatMI.addSelectionListener(new SelectionListener() {
 
@@ -354,12 +354,12 @@ public class FileMenu implements MainMenuItem {
 								int icon;
 
 								if (code == ThreadFinishedListener.OK) {
-									title = Messages.getString("EcfImport.ImportSuccessTitle");
-									msg = Messages.getString("EcfImport.ImportSuccessMessage");
+									title = CBMessages.getString("EcfImport.ImportSuccessTitle");
+									msg = CBMessages.getString("EcfImport.ImportSuccessMessage");
 									icon = SWT.ICON_INFORMATION;
 								} else {
-									title = Messages.getString("EcfImport.ImportErrorTitle");
-									msg = Messages.getString("EcfImport.ImportErrorMessage");
+									title = CBMessages.getString("EcfImport.ImportErrorTitle");
+									msg = CBMessages.getString("EcfImport.ImportErrorMessage");
 									icon = SWT.ICON_ERROR;
 								}
 
@@ -389,7 +389,7 @@ public class FileMenu implements MainMenuItem {
 	private MenuItem addCloseCatalogueMI(Menu menu) {
 
 		final MenuItem closeCatMI = new MenuItem(menu, SWT.NONE);
-		closeCatMI.setText(Messages.getString("BrowserMenu.CloseCatalogueCmd"));
+		closeCatMI.setText(CBMessages.getString("BrowserMenu.CloseCatalogueCmd"));
 
 		closeCatMI.addSelectionListener(new SelectionListener() {
 
@@ -426,7 +426,7 @@ public class FileMenu implements MainMenuItem {
 	private MenuItem addDeleteCatalogueMI(Menu menu) {
 
 		final MenuItem deleteCatMI = new MenuItem(menu, SWT.NONE);
-		deleteCatMI.setText(Messages.getString("BrowserMenu.DeleteCatalogueCmd"));
+		deleteCatMI.setText(CBMessages.getString("BrowserMenu.DeleteCatalogueCmd"));
 
 		deleteCatMI.addSelectionListener(new SelectionAdapter() {
 
@@ -452,7 +452,7 @@ public class FileMenu implements MainMenuItem {
 	private MenuItem addExitMI(Menu menu) {
 
 		final MenuItem exitItem = new MenuItem(menu, SWT.NONE);
-		exitItem.setText(Messages.getString("BrowserMenu.ExitAppCmd"));
+		exitItem.setText(CBMessages.getString("BrowserMenu.ExitAppCmd"));
 
 		exitItem.addSelectionListener(new SelectionAdapter() {
 
@@ -519,19 +519,19 @@ public class FileMenu implements MainMenuItem {
 
 		// if we are retrieving the catalogues
 		if (Dcf.isGettingUpdates()) {
-			downloadMI.setText(Messages.getString("BrowserMenu.DownloadingUpdatesCmd"));
-			openMI.setText(Messages.getString("BrowserMenu.DownloadingUpdatesCmd"));
-			downloadDcMI.setText(Messages.getString("BrowserMenu.DownloadingUpdatesCmd"));
+			downloadMI.setText(CBMessages.getString("BrowserMenu.DownloadingUpdatesCmd"));
+			openMI.setText(CBMessages.getString("BrowserMenu.DownloadingUpdatesCmd"));
+			downloadDcMI.setText(CBMessages.getString("BrowserMenu.DownloadingUpdatesCmd"));
 		}
 		// if we are getting the user level
 		else if (user.isGettingUserLevel()) {
-			downloadMI.setText(Messages.getString("BrowserMenu.GettingUserLevelCmd"));
-			openMI.setText(Messages.getString("BrowserMenu.OpenCatalogueCmd"));
-			downloadDcMI.setText(Messages.getString("BrowserMenu.GettingUserLevelCmd"));
+			downloadMI.setText(CBMessages.getString("BrowserMenu.GettingUserLevelCmd"));
+			openMI.setText(CBMessages.getString("BrowserMenu.OpenCatalogueCmd"));
+			downloadDcMI.setText(CBMessages.getString("BrowserMenu.GettingUserLevelCmd"));
 		} else {
-			downloadDcMI.setText(Messages.getString("BrowserMenu.DownloadDcCmd"));
-			downloadMI.setText(Messages.getString("BrowserMenu.DownloadCatalogueCmd"));
-			openMI.setText(Messages.getString("BrowserMenu.OpenCatalogueCmd"));
+			downloadDcMI.setText(CBMessages.getString("BrowserMenu.DownloadDcCmd"));
+			downloadMI.setText(CBMessages.getString("BrowserMenu.DownloadCatalogueCmd"));
+			openMI.setText(CBMessages.getString("BrowserMenu.OpenCatalogueCmd"));
 		}
 	}
 }

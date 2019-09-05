@@ -17,7 +17,7 @@ import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_generator.CatalogueDownloader;
 import dcf_manager.Dcf;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import progress_bar.ProgressList;
 import progress_bar.ProgressStep;
 import progress_bar.ProgressStepListener;
@@ -197,7 +197,7 @@ public class DataCollection implements IDcfDataCollection {
 
 		// Insert the data collection in the db
 		list.add( new ProgressStep( "dcInsert", 
-				Messages.getString( "DCDownload.ImportDCStep" ) ) {
+				CBMessages.getString( "DCDownload.ImportDCStep" ) ) {
 
 			@Override
 			public void execute() throws Exception {
@@ -210,7 +210,7 @@ public class DataCollection implements IDcfDataCollection {
 		for ( final DCTable table : tables ) {
 
 			list.add( new ProgressStep( "import_" + table.getName(),
-					Messages.getString( "DCDownload.ImportTablesStep" ) ) {
+					CBMessages.getString( "DCDownload.ImportTablesStep" ) ) {
 
 				@Override
 				public void execute() throws Exception {

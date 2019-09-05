@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 import dcf_user.User;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import ui_main_panel.FormDcfLogin;
 import ui_main_panel.FormOpenapiLogin;
 
@@ -61,7 +61,7 @@ public class AccountMenu implements MainMenuItem {
 		Menu accountMenu = new Menu(menu);
 
 		MenuItem accountItem = new MenuItem(menu, SWT.CASCADE);
-		accountItem.setText(Messages.getString("BrowserMenu.AccountMenuName"));
+		accountItem.setText(CBMessages.getString("BrowserMenu.AccountMenuName"));
 		accountItem.setMenu(accountMenu);
 
 		dcfLoginItem = addDCFLoginMI(accountMenu);
@@ -87,13 +87,13 @@ public class AccountMenu implements MainMenuItem {
 	private MenuItem addDCFLoginMI(Menu menu) {
 
 		final MenuItem loginItem = new MenuItem(menu, SWT.NONE);
-		loginItem.setText(Messages.getString("BrowserMenu.DCFLoginMenuName"));
+		loginItem.setText(CBMessages.getString("BrowserMenu.DCFLoginMenuName"));
 
 		loginItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
-				FormDcfLogin login = new FormDcfLogin(shell, Messages.getString("BrowserMenu.DCFLoginWindowTitle"));
+				FormDcfLogin login = new FormDcfLogin(shell, CBMessages.getString("BrowserMenu.DCFLoginWindowTitle"));
 
 				login.display();
 
@@ -125,14 +125,14 @@ public class AccountMenu implements MainMenuItem {
 	private MenuItem addOpenLoginMI(Menu menu) {
 
 		final MenuItem loginItem = new MenuItem(menu, SWT.NONE);
-		loginItem.setText(Messages.getString("BrowserMenu.OpenAPILoginMenuName"));
+		loginItem.setText(CBMessages.getString("BrowserMenu.OpenAPILoginMenuName"));
 
 		loginItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
 				FormOpenapiLogin login = new FormOpenapiLogin(shell,
-						Messages.getString("BrowserMenu.OpenAPILoginWindowTitle"));
+						CBMessages.getString("BrowserMenu.OpenAPILoginWindowTitle"));
 
 				login.display();
 
@@ -164,7 +164,7 @@ public class AccountMenu implements MainMenuItem {
 	private MenuItem addLogoutMI(Menu menu) {
 
 		final MenuItem logoutItem = new MenuItem(menu, SWT.NONE);
-		logoutItem.setText(Messages.getString("BrowserMenu.LogoutMenuName"));
+		logoutItem.setText(CBMessages.getString("BrowserMenu.LogoutMenuName"));
 
 		logoutItem.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -175,8 +175,8 @@ public class AccountMenu implements MainMenuItem {
 
 				// show the logout message
 				MessageBox mb = new MessageBox(shell, SWT.ICON_INFORMATION);
-				mb.setText(Messages.getString("BrowserMenu.DCFLogoutWindowTitle"));
-				mb.setMessage(Messages.getString("BrowserMenu.DCFLogout.message"));
+				mb.setText(CBMessages.getString("BrowserMenu.DCFLogoutWindowTitle"));
+				mb.setMessage(CBMessages.getString("BrowserMenu.DCFLogout.message"));
 				mb.open();
 
 				if (listener != null)

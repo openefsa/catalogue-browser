@@ -31,7 +31,7 @@ import business_rules.WarningUtil;
 import catalogue.Catalogue;
 import catalogue_object.Applicability;
 import catalogue_object.Term;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import session_manager.BrowserWindowPreferenceDao;
 import term_clipboard.TermClipboard;
 import ui_implicit_facet.FacetType;
@@ -226,7 +226,7 @@ public class FormTermCoder {
 
 		// full code
 		Label l = new Label(rightSide, SWT.NONE);
-		l.setText(Messages.getString("FormTermCoder.FullCodeLabel"));
+		l.setText(CBMessages.getString("FormTermCoder.FullCodeLabel"));
 
 		fullCode = new Text(rightSide, SWT.BORDER | SWT.READ_ONLY);
 		fullCode.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
@@ -289,7 +289,7 @@ public class FormTermCoder {
 
 		// interpreted code
 		Label interp = new Label(rightSide, SWT.NONE);
-		interp.setText(Messages.getString("FormTermCoder.InterpretedCodeLabel"));
+		interp.setText(CBMessages.getString("FormTermCoder.InterpretedCodeLabel"));
 
 		// interpreted description
 		textinterp = new Text(rightSide, SWT.BORDER | SWT.READ_ONLY | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
@@ -297,7 +297,7 @@ public class FormTermCoder {
 
 		// Semaphore label
 		Label semaphoreLabel = new Label(rightSide, SWT.NONE);
-		semaphoreLabel.setText(Messages.getString("FormTermCoder.OverallWarningLevelLabel"));
+		semaphoreLabel.setText(CBMessages.getString("FormTermCoder.OverallWarningLevelLabel"));
 
 		// create a rectangle
 		semaphore = new Canvas(rightSide, SWT.NONE);
@@ -305,7 +305,7 @@ public class FormTermCoder {
 
 		// Warning log
 		Label warningLabel = new Label(rightSide, SWT.NONE);
-		warningLabel.setText(Messages.getString("FormTermCoder.MessageLogLabel")); //$NON-NLS-1$
+		warningLabel.setText(CBMessages.getString("FormTermCoder.MessageLogLabel")); //$NON-NLS-1$
 
 		// Table with warnings:
 		warningsTable = new TableViewer(rightSide, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL | SWT.NONE);
@@ -336,15 +336,15 @@ public class FormTermCoder {
 
 		Button copy = new Button(buttonsComposite, SWT.PUSH);
 		copy.setLayoutData(gridData);
-		copy.setText(Messages.getString("FormTermCoder.CopyCodeButton"));
+		copy.setText(CBMessages.getString("FormTermCoder.CopyCodeButton"));
 
 		Button copyDesc = new Button(buttonsComposite, SWT.PUSH);
 		copyDesc.setLayoutData(gridData);
-		copyDesc.setText(Messages.getString("FormTermCoder.CopyDescriptionButton"));
+		copyDesc.setText(CBMessages.getString("FormTermCoder.CopyDescriptionButton"));
 
 		Button copyCodeDesc = new Button(buttonsComposite, SWT.PUSH);
 		copyCodeDesc.setLayoutData(gridData);
-		copyCodeDesc.setText(Messages.getString("FormTermCoder.CopyCodeDescrButton"));
+		copyCodeDesc.setText(CBMessages.getString("FormTermCoder.CopyCodeDescrButton"));
 
 		// copy button is selected:
 		copy.addSelectionListener(new SelectionAdapter() {

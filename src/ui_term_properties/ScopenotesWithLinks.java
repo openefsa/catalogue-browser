@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Text;
 
 import catalogue_object.Term;
 import global_manager.GlobalManager;
-import messages.Messages;
+import i18n_messages.CBMessages;
 
 /**
  * Class to drawn scopenotes with links This class manages also opening the
@@ -152,25 +152,25 @@ public class ScopenotesWithLinks {
 
 		// Create the buttons, their names and images
 		final MenuItem googleWeb = new MenuItem(scopenotesMenu, SWT.PUSH);
-		googleWeb.setText(Messages.getString("ScopenotesWithLinks.GoogleButton")); //$NON-NLS-1$
+		googleWeb.setText(CBMessages.getString("ScopenotesWithLinks.GoogleButton")); //$NON-NLS-1$
 		Image googleWebIcon = new Image(Display.getCurrent(),
 				this.getClass().getClassLoader().getResourceAsStream("GoogleIcon.png"));
 		googleWeb.setImage(googleWebIcon);
 
 		final MenuItem googleImage = new MenuItem(scopenotesMenu, SWT.PUSH);
-		googleImage.setText(Messages.getString("ScopenotesWithLinks.GoogleImageButton")); //$NON-NLS-1$
+		googleImage.setText(CBMessages.getString("ScopenotesWithLinks.GoogleImageButton")); //$NON-NLS-1$
 		Image googleImageIcon = new Image(Display.getCurrent(),
 				this.getClass().getClassLoader().getResourceAsStream("GoogleImageIcon.png"));
 		googleImage.setImage(googleImageIcon);
 
 		final MenuItem wikipedia = new MenuItem(scopenotesMenu, SWT.PUSH);
-		wikipedia.setText(Messages.getString("ScopenotesWithLinks.WikipediaButton")); //$NON-NLS-1$
+		wikipedia.setText(CBMessages.getString("ScopenotesWithLinks.WikipediaButton")); //$NON-NLS-1$
 		Image wikipediaIcon = new Image(Display.getCurrent(),
 				this.getClass().getClassLoader().getResourceAsStream("WikipediaIcon.png"));
 		wikipedia.setImage(wikipediaIcon);
 
 		final MenuItem googleTranslate = new MenuItem(scopenotesMenu, SWT.PUSH);
-		googleTranslate.setText(Messages.getString("ScopenotesWithLinks.GoogleTranslateButton")); //$NON-NLS-1$
+		googleTranslate.setText(CBMessages.getString("ScopenotesWithLinks.GoogleTranslateButton")); //$NON-NLS-1$
 		Image googleTranslateIcon = new Image(Display.getCurrent(),
 				this.getClass().getClassLoader().getResourceAsStream("GoogleIcon.png"));
 		googleTranslate.setImage(googleTranslateIcon);
@@ -235,14 +235,14 @@ public class ScopenotesWithLinks {
 						}
 
 						// Set the buttons text using the selected text
-						googleWeb.setText(Messages.getString("ScopenotesWithLinks.SearchWord") + subsetSelectedText
-								+ Messages.getString("ScopenotesWithLinks.OnGoogle"));
-						googleImage.setText(Messages.getString("ScopenotesWithLinks.SearchWord") + subsetSelectedText
-								+ Messages.getString("ScopenotesWithLinks.OnGoogleImages"));
-						wikipedia.setText(Messages.getString("ScopenotesWithLinks.SearchWord") + subsetSelectedText
-								+ Messages.getString("ScopenotesWithLinks.OnWikipedia"));
-						googleTranslate.setText(Messages.getString("ScopenotesWithLinks.Translate") + subsetSelectedText
-								+ Messages.getString("ScopenotesWithLinks.WithGoogleTranslate"));
+						googleWeb.setText(CBMessages.getString("ScopenotesWithLinks.SearchWord") + subsetSelectedText
+								+ CBMessages.getString("ScopenotesWithLinks.OnGoogle"));
+						googleImage.setText(CBMessages.getString("ScopenotesWithLinks.SearchWord") + subsetSelectedText
+								+ CBMessages.getString("ScopenotesWithLinks.OnGoogleImages"));
+						wikipedia.setText(CBMessages.getString("ScopenotesWithLinks.SearchWord") + subsetSelectedText
+								+ CBMessages.getString("ScopenotesWithLinks.OnWikipedia"));
+						googleTranslate.setText(CBMessages.getString("ScopenotesWithLinks.Translate") + subsetSelectedText
+								+ CBMessages.getString("ScopenotesWithLinks.WithGoogleTranslate"));
 					}
 				}
 			}

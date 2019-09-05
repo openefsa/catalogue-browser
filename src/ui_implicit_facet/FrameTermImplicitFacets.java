@@ -27,7 +27,7 @@ import catalogue_object.Hierarchy;
 import catalogue_object.Term;
 import catalogue_object.TermAttribute;
 import global_manager.GlobalManager;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import ui_describe.FormSelectTerm;
 
 /**
@@ -212,14 +212,14 @@ public class FrameTermImplicitFacets implements Observer {
 
 		addImplicitFacet
 				.setImage(new Image(Display.getCurrent(), ClassLoader.getSystemResourceAsStream("add-icon.png")));
-		addImplicitFacet.setText(Messages.getString("TreeImplicitFacets.AddCommand"));
+		addImplicitFacet.setText(CBMessages.getString("TreeImplicitFacets.AddCommand"));
 
 		// remove menu item
 		final MenuItem removeImplicitFacet = new MenuItem(implicitFacetOperationMenu, SWT.PUSH);
 
 		removeImplicitFacet
 				.setImage(new Image(Display.getCurrent(), ClassLoader.getSystemResourceAsStream("remove-icon.png")));
-		removeImplicitFacet.setText(Messages.getString("TreeImplicitFacets.RemoveCommand"));
+		removeImplicitFacet.setText(CBMessages.getString("TreeImplicitFacets.RemoveCommand"));
 
 		// set the menu for the tree
 		implicitFacets.getTree().setMenu(implicitFacetOperationMenu);
@@ -430,7 +430,7 @@ public class FrameTermImplicitFacets implements Observer {
 		// shahaal
 		parent.setEnabled(false);
 
-		FormSelectTerm sf = new FormSelectTerm(parent, Messages.getString("Browser.SelectTermWindowTitle"),
+		FormSelectTerm sf = new FormSelectTerm(parent, CBMessages.getString("Browser.SelectTermWindowTitle"),
 				term.getCatalogue(), facetCategory.isRepeatable(), false);
 
 		// set the root term for the form in order to show only

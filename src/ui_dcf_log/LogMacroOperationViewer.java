@@ -5,7 +5,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 import dcf_log.DcfLog;
-import messages.Messages;
+import i18n_messages.CBMessages;
 
 /**
  * Viewer which shows all the Dcf Log generic information,
@@ -31,27 +31,27 @@ public class LogMacroOperationViewer {
 	public void display() {
 		
 		// catalogue code + version
-		String info = Messages.getString("LogMacroOp.Catalogue") + " " +
+		String info = CBMessages.getString("LogMacroOp.Catalogue") + " " +
 				log.getCatalogueCode() + " " + log.getCatalogueVersion();
 		addLabel ( info );
 		
 		// catalogue status
-		info = Messages.getString("LogMacroOp.CatStatus") + " " +
+		info = CBMessages.getString("LogMacroOp.CatStatus") + " " +
 				log.getCatalogueStatus();
 		addLabel ( info );
 		
 		// macro op result
-		info = Messages.getString("LogMacroOp.Result") + " " +
+		info = CBMessages.getString("LogMacroOp.Result") + " " +
 				log.getMacroOpResult();
 		addLabel ( info );
 		
 		// transmission date
-		info = Messages.getString("LogMacroOp.TrxDate") + " " +
+		info = CBMessages.getString("LogMacroOp.TrxDate") + " " +
 				log.getTransmissionDate();
 		addLabel ( info );
 		
 		// processing date
-		info = Messages.getString("LogMacroOp.ProcDate") + " " +
+		info = CBMessages.getString("LogMacroOp.ProcDate") + " " +
 				log.getProcessingDate();
 		addLabel ( info );
 	}

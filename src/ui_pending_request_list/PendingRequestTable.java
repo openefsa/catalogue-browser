@@ -17,7 +17,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
-import messages.Messages;
+import i18n_messages.CBMessages;
 import pending_request.IPendingRequest;
 import pending_request.PendingRequestStatus;
 import ui_pending_request_list.RequestLabelProvider.RequestLabelColumn;
@@ -50,32 +50,32 @@ public class PendingRequestTable extends Composite {
 
 		TableViewerColumn catCodeCol = new TableViewerColumn(table, SWT.NONE);
 		catCodeCol.getColumn().setWidth(140);
-		catCodeCol.getColumn().setText(Messages.getString("request.table.catalogue.header"));
+		catCodeCol.getColumn().setText(CBMessages.getString("request.table.catalogue.header"));
 		catCodeCol.setLabelProvider(new RequestLabelProvider(RequestLabelColumn.CATALOGUE));
 		
 		TableViewerColumn typeCol = new TableViewerColumn(table, SWT.NONE);
 		typeCol.getColumn().setWidth(140);
-		typeCol.getColumn().setText(Messages.getString("request.table.type.header"));
+		typeCol.getColumn().setText(CBMessages.getString("request.table.type.header"));
 		typeCol.setLabelProvider(new RequestLabelProvider(RequestLabelColumn.TYPE));
 		
 		TableViewerColumn statusCol = new TableViewerColumn(table, SWT.NONE);
 		statusCol.getColumn().setWidth(120);
-		statusCol.getColumn().setText(Messages.getString("request.table.status.header"));
+		statusCol.getColumn().setText(CBMessages.getString("request.table.status.header"));
 		statusCol.setLabelProvider(new RequestLabelProvider(RequestLabelColumn.STATUS));
 		
 		TableViewerColumn responseCol = new TableViewerColumn(table, SWT.NONE);
 		responseCol.getColumn().setWidth(95);
-		responseCol.getColumn().setText(Messages.getString("request.table.response.header"));
+		responseCol.getColumn().setText(CBMessages.getString("request.table.response.header"));
 		responseCol.setLabelProvider(new RequestLabelProvider(RequestLabelColumn.RESPONSE));
 		
 		TableViewerColumn relaunchTimeCol = new TableViewerColumn(table, SWT.NONE);
 		relaunchTimeCol.getColumn().setWidth(120);
-		relaunchTimeCol.getColumn().setText(Messages.getString("request.table.relaunch.time.header"));
+		relaunchTimeCol.getColumn().setText(CBMessages.getString("request.table.relaunch.time.header"));
 		relaunchTimeCol.setLabelProvider(new RequestLabelProvider(RequestLabelColumn.RESTART_TIME));
 		
 		TableViewerColumn logCodeCol = new TableViewerColumn(table, SWT.NONE);
 		logCodeCol.getColumn().setWidth(110);
-		logCodeCol.getColumn().setText(Messages.getString("request.table.log.code.header"));
+		logCodeCol.getColumn().setText(CBMessages.getString("request.table.log.code.header"));
 		logCodeCol.setLabelProvider(new RequestLabelProvider(RequestLabelColumn.LOG_CODE));
 		
 		addMenu();
@@ -86,7 +86,7 @@ public class PendingRequestTable extends Composite {
 		Menu menu = new Menu(this);
 		
 		MenuItem relaunch = new MenuItem(menu, SWT.PUSH);
-		relaunch.setText(Messages.getString("request.table.launch.now"));
+		relaunch.setText(CBMessages.getString("request.table.launch.now"));
 		relaunch.setEnabled(false);
 		
 		relaunch.addSelectionListener(new SelectionAdapter() {

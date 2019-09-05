@@ -19,7 +19,7 @@ import catalogue_browser_dao.TermAttributeDAO;
 import catalogue_object.Term;
 import dcf_user.User;
 import global_manager.GlobalManager;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import ui_implicit_facet.FacetDescriptor;
 import ui_implicit_facet.FacetType;
 import ui_implicit_facet.FrameTermImplicitFacets;
@@ -81,7 +81,7 @@ public class TermPropertiesPanel implements Observer {
 	private void addTermPropertyTab(TabFolder parent) {
 
 		TabItem tabNames = new TabItem(parent, SWT.NONE);
-		tabNames.setText(Messages.getString("TermProperties.TabName"));
+		tabNames.setText(CBMessages.getString("TermProperties.TabName"));
 
 		Composite compNames = new Composite(parent, SWT.NONE);
 		compNames.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -105,7 +105,7 @@ public class TermPropertiesPanel implements Observer {
 
 		// create a new tab and set its name
 		TabItem tabApplicability = new TabItem(parent, SWT.NONE);
-		tabApplicability.setText(Messages.getString("TableApplicability.TabName"));
+		tabApplicability.setText(CBMessages.getString("TableApplicability.TabName"));
 
 		Composite compApplicability = new Composite(parent, SWT.NONE);
 		compApplicability.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -170,7 +170,7 @@ public class TermPropertiesPanel implements Observer {
 
 		// add a new tab for implicit facets
 		TabItem tabFacets = new TabItem(parent, SWT.NONE);
-		tabFacets.setText(Messages.getString("TreeImplicitFacets.TabName"));
+		tabFacets.setText(CBMessages.getString("TreeImplicitFacets.TabName"));
 		tabFacets.setData("implicitFacets");
 
 		Composite compImplicitFacets = new Composite(parent, SWT.NONE);

@@ -17,7 +17,7 @@ import org.eclipse.swt.widgets.Shell;
 import catalogue.Catalogue;
 import catalogue_object.Hierarchy;
 import catalogue_object.Term;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import utilities.GlobalUtil;
 
 /**
@@ -212,7 +212,7 @@ public class SearchPanel implements Observer {
 
 		// create a menu item named with the current applicable hierarchy name
 		MenuItem mi = new MenuItem(menu, SWT.PUSH);
-		mi.setText(Messages.getString("SearchBar.ShowTermInfo"));
+		mi.setText(CBMessages.getString("SearchBar.ShowTermInfo"));
 
 		// if the menu item is pressed, we call the external listener
 		// passing as data the selected term. The caller of this class will fill the

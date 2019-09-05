@@ -6,7 +6,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import org.eclipse.swt.widgets.Shell;
 
-import messages.Messages;
+import i18n_messages.CBMessages;
 import utilities.GlobalUtil;
 
 /**
@@ -32,8 +32,8 @@ public class InstanceChecker {
 		} catch (BindException e) {
 			
 			System.err.println("Another instance of the catalogue browser is already running!");
-			GlobalUtil.showErrorDialog(new Shell(), Messages.getString("AlreadyRunning.ErrorTitle"),
-					Messages.getString("AlreadyRunning.ErrorMessage"));
+			GlobalUtil.showErrorDialog(new Shell(), CBMessages.getString("AlreadyRunning.ErrorTitle"),
+					CBMessages.getString("AlreadyRunning.ErrorMessage"));
 			System.exit(1);
 			
 		} catch (IOException e) {

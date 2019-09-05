@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Shell;
 import catalogue_generator.ThreadFinishedListener;
 import dcf_manager.Dcf;
 import dcf_user.User;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import progress_bar.FormProgressBar;
 import ui_main_panel.ShellLocker;
 import utilities.GlobalUtil;
@@ -54,12 +54,12 @@ public class LoginActions {
 
 		// progress bar for the user level (block the user input)
 		final FormProgressBar progressBar = new FormProgressBar(shell,
-				Messages.getString("Login.UserLevelProgressBarTitle"), false, SWT.TITLE | SWT.APPLICATION_MODAL);
+				CBMessages.getString("Login.UserLevelProgressBarTitle"), false, SWT.TITLE | SWT.APPLICATION_MODAL);
 
 		dcf.setProgressBar(progressBar);
 		
-		ShellLocker.setLock(shell, Messages.getString("MainPanel.CannotCloseTitle"),
-				Messages.getString("MainPanel.CannotCloseMessage"));
+		ShellLocker.setLock(shell, CBMessages.getString("MainPanel.CannotCloseTitle"),
+				CBMessages.getString("MainPanel.CannotCloseMessage"));
 
 		dcf.setUserLevel(new ThreadFinishedListener() {
 
@@ -89,18 +89,18 @@ public class LoginActions {
 							try {
 								User.getInstance().startPendingRequests();
 							} catch (SQLException | IOException e) {
-								title = Messages.getString("FormDCFLogin.ErrorTitle");
-								msg = Messages.getString("FormDCFLogin.WrongCredentialMessage");
+								title = CBMessages.getString("FormDCFLogin.ErrorTitle");
+								msg = CBMessages.getString("FormDCFLogin.WrongCredentialMessage");
 								GlobalUtil.showDialog(shell, title, msg, SWT.ICON_ERROR);
 								e.printStackTrace();
 							}
 							
-							title = Messages.getString( "Login.PermissionTitle" );
+							title = CBMessages.getString( "Login.PermissionTitle" );
 							
 							if ( User.getInstance().isCatManager() )
-								msg = Messages.getString("Login.CatalogueManagerMessage");
+								msg = CBMessages.getString("Login.CatalogueManagerMessage");
 							else
-								msg = Messages.getString("Login.DataProviderMessage");
+								msg = CBMessages.getString("Login.DataProviderMessage");
 
 							GlobalUtil.showDialog(shell, title, msg, SWT.ICON_INFORMATION );
 							
@@ -108,8 +108,8 @@ public class LoginActions {
 							if (userLevelListener != null)
 								userLevelListener.handleEvent(null);
 
-							title = Messages.getString("ExportCatalogue.WarningTitle");
-							msg = Messages.getString("ExportCatUsers.WarningMessage");
+							title = CBMessages.getString("ExportCatalogue.WarningTitle");
+							msg = CBMessages.getString("ExportCatUsers.WarningMessage");
 							GlobalUtil.showDialog(shell, title, msg, SWT.ICON_INFORMATION);
 						}
 					}

@@ -9,8 +9,6 @@ import java.util.HashMap;
 import org.eclipse.core.runtime.AssertionFailedException;
 
 import catalogue.Catalogue;
-import catalogue_browser_dao.CatalogueDAO;
-import dcf_manager.Dcf.DcfType;
 
 @Deprecated
 public class TermCodeGenerator {
@@ -39,6 +37,7 @@ public class TermCodeGenerator {
 	 * @return
 	 * @throws SQLException 
 	 */
+	@SuppressWarnings("unused")
 	public String generate() throws SQLException {
 		
 		String lastCode = getLastUsedCode();
@@ -55,7 +54,6 @@ public class TermCodeGenerator {
 
 		// iterate term code mask
 		char[] termCodeMaskElems = termCodeMask.toCharArray();
-		@SuppressWarnings("unused")
 		char[] newTermCode = termCodeMaskElems.clone();
 
 		//newTermCode = increaseCode(newTermCode);
@@ -181,6 +179,7 @@ public class TermCodeGenerator {
 		return lastUsedCode;
 	}
 	
+	/*
 	public static void main(String[] args) throws SQLException {
 		CatalogueDAO dao = new CatalogueDAO();
 		Catalogue catalogue = dao.getLastVersionByCode("MDACC", DcfType.PRODUCTION);
@@ -189,5 +188,5 @@ public class TermCodeGenerator {
 		String last = gen.getLastUsedCode();
 		System.out.println(last);
 		System.out.println(gen.getFirstCode());
-	}
+	}*/
 }

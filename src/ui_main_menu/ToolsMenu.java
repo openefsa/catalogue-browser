@@ -28,12 +28,12 @@ import catalogue_generator.ThreadFinishedListener;
 import catalogue_object.Term;
 import dcf_user.User;
 import export_catalogue.ExportActions;
+import i18n_messages.CBMessages;
 import ict_add_on.ICTInstaller;
 import ict_add_on.ICTDownloader;
 import import_catalogue.CatalogueImporter.ImportFileFormat;
 import import_catalogue.CatalogueImporterThread;
 import import_catalogue.ImportException;
-import messages.Messages;
 import progress_bar.FormProgressBar;
 import sas_remote_procedures.XmlUpdateFile;
 import sas_remote_procedures.XmlUpdateFileDAO;
@@ -133,7 +133,7 @@ public class ToolsMenu implements MainMenuItem {
 	public MenuItem create(Menu menu) {
 
 		MenuItem toolsItem = new MenuItem(menu, SWT.CASCADE);
-		toolsItem.setText(Messages.getString("BrowserMenu.ToolsMenuName"));
+		toolsItem.setText(CBMessages.getString("BrowserMenu.ToolsMenuName"));
 
 		Menu toolsMenu = new Menu(menu);
 
@@ -223,7 +223,7 @@ public class ToolsMenu implements MainMenuItem {
 
 		final MenuItem reserveMI = new MenuItem(menu, SWT.CASCADE);
 
-		reserveMI.setText(Messages.getString("BrowserMenu.Reserve"));
+		reserveMI.setText(CBMessages.getString("BrowserMenu.Reserve"));
 
 		// create menu which hosts major and minor reserve
 		Menu reserveOpMI = new Menu(shell, SWT.DROP_DOWN);
@@ -231,11 +231,11 @@ public class ToolsMenu implements MainMenuItem {
 
 		// major release
 		MenuItem majorMI = new MenuItem(reserveOpMI, SWT.PUSH);
-		majorMI.setText(Messages.getString("BrowserMenu.MajorCmd"));
+		majorMI.setText(CBMessages.getString("BrowserMenu.MajorCmd"));
 
 		// minor release
 		MenuItem minorMI = new MenuItem(reserveOpMI, SWT.PUSH);
-		minorMI.setText(Messages.getString("BrowserMenu.MinorCmd"));
+		minorMI.setText(CBMessages.getString("BrowserMenu.MinorCmd"));
 
 		majorMI.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -266,7 +266,7 @@ public class ToolsMenu implements MainMenuItem {
 
 		final MenuItem unreserveMI = new MenuItem(menu, SWT.PUSH);
 
-		unreserveMI.setText(Messages.getString("BrowserMenu.Unreserve"));
+		unreserveMI.setText(CBMessages.getString("BrowserMenu.Unreserve"));
 		unreserveMI.addSelectionListener(new SelectionListener() {
 
 			@Override
@@ -295,7 +295,7 @@ public class ToolsMenu implements MainMenuItem {
 	private MenuItem addCreateXmlMI(Menu menu) {
 
 		final MenuItem createXmlMI = new MenuItem(menu, SWT.PUSH);
-		createXmlMI.setText(Messages.getString("BrowserMenu.CreateXml"));
+		createXmlMI.setText(CBMessages.getString("BrowserMenu.CreateXml"));
 		createXmlMI.addSelectionListener(new SelectionListener() {
 
 			@Override
@@ -306,13 +306,13 @@ public class ToolsMenu implements MainMenuItem {
 
 					// warn the user, error occurred
 					GlobalUtil.showErrorDialog(shell, incorrectTerm.getCode() + "; " + incorrectTerm.getShortName(true),
-							Messages.getString("Export.DataErrorMessage"));
+							CBMessages.getString("Export.DataErrorMessage"));
 
 					return;
 				}
 
 				FormProgressBar progressBar = new FormProgressBar(shell,
-						Messages.getString("CreateXml.CreateXmlBarTitle"));
+						CBMessages.getString("CreateXml.CreateXmlBarTitle"));
 
 				// ask for the xml creation to the sas server
 				XmlUpdatesFactory xmlCreator = new XmlUpdatesFactory(new XmlUpdateFileDAO());
@@ -327,7 +327,7 @@ public class ToolsMenu implements MainMenuItem {
 						shell.getDisplay().asyncExec(new Runnable() {
 							@Override
 							public void run() {
-								GlobalUtil.showErrorDialog(shell, Messages.getString("CreateXml.ErrorTitle"),
+								GlobalUtil.showErrorDialog(shell, CBMessages.getString("CreateXml.ErrorTitle"),
 										(String) arg0.data);
 							}
 						});
@@ -345,8 +345,8 @@ public class ToolsMenu implements MainMenuItem {
 							@Override
 							public void run() {
 
-								GlobalUtil.showDialog(shell, Messages.getString("CreateXml.SuccessTitle"),
-										Messages.getString("CreateXml.SuccessMessage"), SWT.ICON_INFORMATION);
+								GlobalUtil.showDialog(shell, CBMessages.getString("CreateXml.SuccessTitle"),
+										CBMessages.getString("CreateXml.SuccessMessage"), SWT.ICON_INFORMATION);
 							}
 						});
 					}
@@ -381,7 +381,7 @@ public class ToolsMenu implements MainMenuItem {
 
 		final MenuItem uploadDataMI = new MenuItem(menu, SWT.PUSH);
 
-		uploadDataMI.setText(Messages.getString("BrowserMenu.UploadData"));
+		uploadDataMI.setText(CBMessages.getString("BrowserMenu.UploadData"));
 		uploadDataMI.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -405,7 +405,7 @@ public class ToolsMenu implements MainMenuItem {
 
 		final MenuItem publishMI = new MenuItem(menu, SWT.CASCADE);
 
-		publishMI.setText(Messages.getString("BrowserMenu.Publish"));
+		publishMI.setText(CBMessages.getString("BrowserMenu.Publish"));
 
 		// create menu which hosts major and minor reserve
 		Menu publishOpMI = new Menu(shell, SWT.DROP_DOWN);
@@ -413,11 +413,11 @@ public class ToolsMenu implements MainMenuItem {
 
 		// major release
 		MenuItem majorMI = new MenuItem(publishOpMI, SWT.PUSH);
-		majorMI.setText(Messages.getString("BrowserMenu.PublishMajorCmd"));
+		majorMI.setText(CBMessages.getString("BrowserMenu.PublishMajorCmd"));
 
 		// minor release
 		MenuItem minorMI = new MenuItem(publishOpMI, SWT.PUSH);
-		minorMI.setText(Messages.getString("BrowserMenu.PublishMinorCmd"));
+		minorMI.setText(CBMessages.getString("BrowserMenu.PublishMinorCmd"));
 
 		// publish major
 		majorMI.addSelectionListener(new SelectionAdapter() {
@@ -452,15 +452,15 @@ public class ToolsMenu implements MainMenuItem {
 
 		final MenuItem resetMI = new MenuItem(menu, SWT.PUSH);
 
-		resetMI.setText(Messages.getString("BrowserMenu.Reset"));
+		resetMI.setText(CBMessages.getString("BrowserMenu.Reset"));
 		resetMI.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 
 				// ask for confirmation
-				int val = GlobalUtil.showDialog(shell, Messages.getString("ResetChanges.ConfirmTitle"),
-						Messages.getString("ResetChanges.ConfirmMessage"), SWT.YES | SWT.NO);
+				int val = GlobalUtil.showDialog(shell, CBMessages.getString("ResetChanges.ConfirmTitle"),
+						CBMessages.getString("ResetChanges.ConfirmMessage"), SWT.YES | SWT.NO);
 
 				if (val == SWT.NO)
 					return;
@@ -470,8 +470,8 @@ public class ToolsMenu implements MainMenuItem {
 					DatabaseManager.restoreBackup(mainMenu.getCatalogue());
 				} catch (IOException e) {
 
-					GlobalUtil.showErrorDialog(shell, Messages.getString("ResetChanges.ErrorTitle"),
-							Messages.getString("ResetChanges.ErrorMessage"));
+					GlobalUtil.showErrorDialog(shell, CBMessages.getString("ResetChanges.ErrorTitle"),
+							CBMessages.getString("ResetChanges.ErrorMessage"));
 				}
 
 				if (listener != null)
@@ -492,22 +492,22 @@ public class ToolsMenu implements MainMenuItem {
 	private MenuItem addImportMI(Menu menu) {
 
 		final MenuItem importItem = new MenuItem(menu, SWT.NONE);
-		importItem.setText(Messages.getString("BrowserMenu.ImportCmd"));
+		importItem.setText(CBMessages.getString("BrowserMenu.ImportCmd"));
 
 		importItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
 
 				final String filename = GlobalUtil.showExcelFileDialog(shell,
-						Messages.getString("Import.ImportWindowTitle"), SWT.OPEN);
+						CBMessages.getString("Import.ImportWindowTitle"), SWT.OPEN);
 
 				// return if no filename retrieved
 				if (filename == null || filename.isEmpty())
 					return;
 
 				// ask for final confirmation
-				int val = GlobalUtil.showDialog(shell, Messages.getString("Import.ImportWarningTitle"),
-						Messages.getString("Import.ImportWarningMessage"), SWT.OK | SWT.CANCEL | SWT.ICON_QUESTION);
+				int val = GlobalUtil.showDialog(shell, CBMessages.getString("Import.ImportWarningTitle"),
+						CBMessages.getString("Import.ImportWarningMessage"), SWT.OK | SWT.CANCEL | SWT.ICON_QUESTION);
 
 				// return if cancel was pressed
 				if (val == SWT.CANCEL)
@@ -515,7 +515,7 @@ public class ToolsMenu implements MainMenuItem {
 
 				CatalogueImporterThread importCat = new CatalogueImporterThread(filename, ImportFileFormat.XLSX);
 
-				importCat.setProgressBar(new FormProgressBar(shell, Messages.getString("Import.ImportXlsxBarTitle")));
+				importCat.setProgressBar(new FormProgressBar(shell, CBMessages.getString("Import.ImportXlsxBarTitle")));
 
 				// set the opened catalogue (importing an already existing catalogue)
 				importCat.setOpenedCatalogue(mainMenu.getCatalogue());
@@ -531,13 +531,13 @@ public class ToolsMenu implements MainMenuItem {
 							@Override
 							public void run() {
 
-								String title = Messages.getString("Import.ImportErrorTitle");
-								String msg = Messages.getString("Import.ImportGenericErrorMessage");
+								String title = CBMessages.getString("Import.ImportErrorTitle");
+								String msg = CBMessages.getString("Import.ImportGenericErrorMessage");
 								int icon = SWT.ICON_ERROR;
 
 								if (code == ThreadFinishedListener.OK) {
-									title = Messages.getString("Import.ImportSuccessTitle");
-									msg = Messages.getString("Import.ImportSuccessMessage");
+									title = CBMessages.getString("Import.ImportSuccessTitle");
+									msg = CBMessages.getString("Import.ImportSuccessMessage");
 									icon = SWT.ICON_INFORMATION;
 								} else if (e instanceof ImportException) {
 
@@ -545,14 +545,14 @@ public class ToolsMenu implements MainMenuItem {
 
 									switch (impEx.getCode()) {
 									case "X100":
-										msg = Messages.getString("Import.ImportAppendErrorMessage");
+										msg = CBMessages.getString("Import.ImportAppendErrorMessage");
 										break;
 									case "X101":
 										title = impEx.getData();
-										msg = Messages.getString("Import.ImportStructureErrorMessage");
+										msg = CBMessages.getString("Import.ImportStructureErrorMessage");
 										break;
 									case "X102":
-										msg = Messages.getString("Import.ImportNoMasterErrorMessage");
+										msg = CBMessages.getString("Import.ImportNoMasterErrorMessage");
 										break;
 									}
 								}
@@ -590,7 +590,7 @@ public class ToolsMenu implements MainMenuItem {
 	private MenuItem addExportMI(Menu menu) {
 
 		final MenuItem exportItem = new MenuItem(menu, SWT.NONE);
-		exportItem.setText(Messages.getString("BrowserMenu.ExportCmd"));
+		exportItem.setText(CBMessages.getString("BrowserMenu.ExportCmd"));
 
 		exportItem.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -601,7 +601,7 @@ public class ToolsMenu implements MainMenuItem {
 
 					// warn the user that everything went ok
 					GlobalUtil.showErrorDialog(shell, incorrectTerm.getCode() + "; " + incorrectTerm.getShortName(true),
-							Messages.getString("Export.DataErrorMessage"));
+							CBMessages.getString("Export.DataErrorMessage"));
 
 				}
 
@@ -609,7 +609,7 @@ public class ToolsMenu implements MainMenuItem {
 						+ ".xlsx";
 
 				final String filename = GlobalUtil.showExcelFileDialog(shell,
-						Messages.getString("Export.FileDialogTitle"), defaultFilename, SWT.SAVE);
+						CBMessages.getString("Export.FileDialogTitle"), defaultFilename, SWT.SAVE);
 
 				// return if no filename retrieved
 				if (filename == null || filename.isEmpty())
@@ -637,7 +637,7 @@ public class ToolsMenu implements MainMenuItem {
 
 		final MenuItem installItem = new MenuItem(menu, SWT.NONE);
 
-		installItem.setText(Messages.getString("BrowserMenu.InstallICTCmd"));
+		installItem.setText(CBMessages.getString("BrowserMenu.InstallICTCmd"));
 
 		installItem.addSelectionListener(new SelectionAdapter() {
 
@@ -645,8 +645,8 @@ public class ToolsMenu implements MainMenuItem {
 			public void widgetSelected(SelectionEvent event) {
 
 				// ask the user before continuing the operation
-				boolean confirmation = MessageDialog.openQuestion(shell, Messages.getString("ICT.Title"),
-						Messages.getString("ICT.InstallationMsg"));
+				boolean confirmation = MessageDialog.openQuestion(shell, CBMessages.getString("ICT.Title"),
+						CBMessages.getString("ICT.InstallationMsg"));
 
 				if (!confirmation)
 					return;
@@ -658,7 +658,7 @@ public class ToolsMenu implements MainMenuItem {
 				ICTDownloader downloader = new ICTDownloader();
 
 				// instantiate the progress bar
-				FormProgressBar progressbar = new FormProgressBar(shell, Messages.getString("ICT.Title"));
+				FormProgressBar progressbar = new FormProgressBar(shell, CBMessages.getString("ICT.Title"));
 				downloader.setProgressBar(progressbar);
 
 				// when finished
@@ -691,8 +691,8 @@ public class ToolsMenu implements MainMenuItem {
 									}
 
 								} else {
-									GlobalUtil.showDialog(shell, Messages.getString("ICT.Title"),
-											Messages.getString("ICT.InstallationError"), SWT.ICON_ERROR);
+									GlobalUtil.showDialog(shell, CBMessages.getString("ICT.Title"),
+											CBMessages.getString("ICT.InstallationError"), SWT.ICON_ERROR);
 									e.printStackTrace();
 								}
 
@@ -723,7 +723,7 @@ public class ToolsMenu implements MainMenuItem {
 
 		final MenuItem launchItem = new MenuItem(menu, SWT.NONE);
 
-		launchItem.setText(Messages.getString("BrowserMenu.LaunchICTCmd"));
+		launchItem.setText(CBMessages.getString("BrowserMenu.LaunchICTCmd"));
 
 		launchItem.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -752,7 +752,7 @@ public class ToolsMenu implements MainMenuItem {
 
 		// create a menu item for importing picklists
 		final MenuItem picklistItem = new MenuItem(menu, SWT.CASCADE);
-		picklistItem.setText(Messages.getString("BrowserMenu.ImportPicklistCmd"));
+		picklistItem.setText(CBMessages.getString("BrowserMenu.ImportPicklistCmd"));
 
 		// open a dialog to select a picklist file
 
@@ -765,7 +765,7 @@ public class ToolsMenu implements MainMenuItem {
 				FileDialog fd = new FileDialog(shell, SWT.OPEN);
 
 				// set dialog title
-				fd.setText(Messages.getString("BrowserMenu.ImportPicklistDialogTitle"));
+				fd.setText(CBMessages.getString("BrowserMenu.ImportPicklistDialogTitle"));
 
 				// set working directory
 				// get the working directory from the user preferences
@@ -822,7 +822,7 @@ public class ToolsMenu implements MainMenuItem {
 	private MenuItem addFavouritePicklistMI(Menu menu) {
 
 		final MenuItem picklistItem = new MenuItem(menu, SWT.CASCADE);
-		picklistItem.setText(Messages.getString("BrowserMenu.PicklistCmd"));
+		picklistItem.setText(CBMessages.getString("BrowserMenu.PicklistCmd"));
 
 		// Initialize the menu
 		final Menu selectPicklistMenu = new Menu(shell, SWT.DROP_DOWN);
@@ -898,7 +898,7 @@ public class ToolsMenu implements MainMenuItem {
 
 		final MenuItem picklistItem = new MenuItem(menu, SWT.CASCADE);
 
-		picklistItem.setText(Messages.getString("BrowserMenu.DeletePicklistCmd"));
+		picklistItem.setText(CBMessages.getString("BrowserMenu.DeletePicklistCmd"));
 
 		// Initialize the menu
 		final Menu selectPicklistMenu = new Menu(shell, SWT.DROP_DOWN);
@@ -976,7 +976,7 @@ public class ToolsMenu implements MainMenuItem {
 	private MenuItem addHierarchyEditorMI(Menu menu) {
 
 		final MenuItem hierarchyEditorItem = new MenuItem(menu, SWT.NONE);
-		hierarchyEditorItem.setText(Messages.getString("BrowserMenu.HierarchyEditorCmd"));
+		hierarchyEditorItem.setText(CBMessages.getString("BrowserMenu.HierarchyEditorCmd"));
 
 		// Enable only if there is a catalogue open
 		hierarchyEditorItem.addSelectionListener(new SelectionAdapter() {
@@ -984,7 +984,7 @@ public class ToolsMenu implements MainMenuItem {
 			public void widgetSelected(SelectionEvent event) {
 
 				HierarchyEditor editor = new HierarchyEditor(shell, mainMenu.getCatalogue(),
-						Messages.getString("HierarchyEditor.HierarchyFacetLabel"));
+						CBMessages.getString("HierarchyEditor.HierarchyFacetLabel"));
 				editor.display();
 
 				if (listener != null)
@@ -1006,14 +1006,14 @@ public class ToolsMenu implements MainMenuItem {
 	private MenuItem addAttributeEditorMI(Menu menu) {
 
 		final MenuItem attributeEditorItem = new MenuItem(menu, SWT.NONE);
-		attributeEditorItem.setText(Messages.getString("BrowserMenu.AttributeEditorCmd"));
+		attributeEditorItem.setText(CBMessages.getString("BrowserMenu.AttributeEditorCmd"));
 
 		attributeEditorItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
 
 				AttributeEditor editor = new AttributeEditor(shell, mainMenu.getCatalogue(),
-						Messages.getString("FormAttribute.DialogTitle"));
+						CBMessages.getString("FormAttribute.DialogTitle"));
 				editor.display();
 
 				if (listener != null)
@@ -1036,7 +1036,7 @@ public class ToolsMenu implements MainMenuItem {
 
 		// Search options form
 		final MenuItem searchOptionsItem = new MenuItem(menu, SWT.PUSH);
-		searchOptionsItem.setText(Messages.getString("BrowserMenu.GeneralSearchOptionsCmd"));
+		searchOptionsItem.setText(CBMessages.getString("BrowserMenu.GeneralSearchOptionsCmd"));
 
 		// if search options is clicked
 		searchOptionsItem.addSelectionListener(new SelectionAdapter() {
@@ -1044,7 +1044,7 @@ public class ToolsMenu implements MainMenuItem {
 			public void widgetSelected(SelectionEvent event) {
 
 				// open the form for choosing the search options
-				FormSearchOptions sof = new FormSearchOptions(shell, Messages.getString("SearchOption.Title"),
+				FormSearchOptions sof = new FormSearchOptions(shell, CBMessages.getString("SearchOption.Title"),
 						mainMenu.getCatalogue());
 
 				// display the form
@@ -1070,7 +1070,7 @@ public class ToolsMenu implements MainMenuItem {
 
 		final MenuItem userPrefItem = new MenuItem(menu, SWT.NONE);
 
-		userPrefItem.setText(Messages.getString("BrowserMenu.UserPrefCmd"));
+		userPrefItem.setText(CBMessages.getString("BrowserMenu.UserPrefCmd"));
 
 		userPrefItem.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -1173,27 +1173,27 @@ public class ToolsMenu implements MainMenuItem {
 			if (user.hasPendingRequestsFor(mainMenu.getCatalogue())) {
 
 				if (reserveMI != null) {
-					reserveMI.setText(Messages.getString("Reserve.WaitingResponse"));
+					reserveMI.setText(CBMessages.getString("Reserve.WaitingResponse"));
 					reserveMI.setEnabled(false);
 				}
 
 				if (unreserveMI != null) {
-					unreserveMI.setText(Messages.getString("Reserve.WaitingResponse"));
+					unreserveMI.setText(CBMessages.getString("Reserve.WaitingResponse"));
 					unreserveMI.setEnabled(false);
 				}
 
 				if (publishMI != null) {
-					publishMI.setText(Messages.getString("Reserve.WaitingResponse"));
+					publishMI.setText(CBMessages.getString("Reserve.WaitingResponse"));
 					publishMI.setEnabled(false);
 				}
 
 				if (createXmlMI != null) {
-					createXmlMI.setText(Messages.getString("Reserve.WaitingResponse"));
+					createXmlMI.setText(CBMessages.getString("Reserve.WaitingResponse"));
 					createXmlMI.setEnabled(false);
 				}
 
 				if (uploadDataMI != null) {
-					uploadDataMI.setText(Messages.getString("Reserve.WaitingResponse"));
+					uploadDataMI.setText(CBMessages.getString("Reserve.WaitingResponse"));
 					uploadDataMI.setEnabled(false);
 				}
 
@@ -1217,17 +1217,17 @@ public class ToolsMenu implements MainMenuItem {
 
 				if (reserveMI != null) {
 					// can reserve only if not local and catalogue not reserved
-					reserveMI.setText(Messages.getString("BrowserMenu.Reserve"));
+					reserveMI.setText(CBMessages.getString("BrowserMenu.Reserve"));
 					reserveMI.setEnabled(!isReservedByCurrentUser);
 				}
 
 				if (unreserveMI != null) {
-					unreserveMI.setText(Messages.getString("BrowserMenu.Unreserve"));
+					unreserveMI.setText(CBMessages.getString("BrowserMenu.Unreserve"));
 					unreserveMI.setEnabled(isReservedByCurrentUser);
 				}
 
 				if (uploadDataMI != null) {
-					uploadDataMI.setText(Messages.getString("BrowserMenu.UploadData"));
+					uploadDataMI.setText(CBMessages.getString("BrowserMenu.UploadData"));
 
 					// check if we have already created an xml file for this catalogue
 					XmlUpdateFileDAO xmlDao = new XmlUpdateFileDAO();
@@ -1237,12 +1237,12 @@ public class ToolsMenu implements MainMenuItem {
 				}
 
 				if (createXmlMI != null) {
-					createXmlMI.setText(Messages.getString("BrowserMenu.CreateXml"));
+					createXmlMI.setText(CBMessages.getString("BrowserMenu.CreateXml"));
 					createXmlMI.setEnabled(mainMenu.getCatalogue().isLastRelease() && isReservedByCurrentUser);
 				}
 
 				if (publishMI != null) {
-					publishMI.setText(Messages.getString("BrowserMenu.Publish"));
+					publishMI.setText(CBMessages.getString("BrowserMenu.Publish"));
 					publishMI.setEnabled(!isReservedByCurrentUser);
 				}
 
@@ -1311,8 +1311,8 @@ public class ToolsMenu implements MainMenuItem {
 
 		// ask the reserve description
 		DialogSingleText dialog = new DialogSingleText(shell, 10);
-		dialog.setTitle(Messages.getString("BrowserMenu.ReserveTitle"));
-		dialog.setMessage(Messages.getString("BrowserMenu.ReserveMessage"));
+		dialog.setTitle(CBMessages.getString("BrowserMenu.ReserveTitle"));
+		dialog.setMessage(CBMessages.getString("BrowserMenu.ReserveMessage"));
 
 		return dialog.open();
 	}
@@ -1352,8 +1352,8 @@ public class ToolsMenu implements MainMenuItem {
 
 		String levelLabel = factory.getReserveLabel(level);
 
-		int val = GlobalUtil.showDialog(shell, Messages.getString("warning.title"),
-				Messages.getString("upload.cat.file.confirmation", catCode, levelLabel),
+		int val = GlobalUtil.showDialog(shell, CBMessages.getString("warning.title"),
+				CBMessages.getString("upload.cat.file.confirmation", catCode, levelLabel),
 				SWT.ICON_WARNING | SWT.YES | SWT.NO);
 
 		if (val != SWT.YES)
@@ -1366,7 +1366,7 @@ public class ToolsMenu implements MainMenuItem {
 
 		GlobalUtil.setShellCursor(shell, SWT.CURSOR_WAIT);
 
-		String message = Messages.getString("reserve.sent", catCode, levelLabel);
+		String message = CBMessages.getString("reserve.sent", catCode, levelLabel);
 
 		int colour = SWT.COLOR_DARK_GREEN;
 
@@ -1379,7 +1379,7 @@ public class ToolsMenu implements MainMenuItem {
 			colour = SWT.COLOR_DARK_RED;
 		} catch (SQLException | IOException e) {
 			e.printStackTrace();
-			message = Messages.getString("reserve.error", catCode, levelLabel);
+			message = CBMessages.getString("reserve.error", catCode, levelLabel);
 			colour = SWT.COLOR_DARK_RED;
 		} finally {
 			GlobalUtil.setShellCursor(shell, SWT.CURSOR_ARROW);
@@ -1396,8 +1396,8 @@ public class ToolsMenu implements MainMenuItem {
 
 		String catCode = mainMenu.getCatalogue().getCode();
 
-		int val = GlobalUtil.showDialog(shell, Messages.getString("warning.title"),
-				Messages.getString("upload.cat.file.confirmation", catCode, Messages.getString("unreserve.label")),
+		int val = GlobalUtil.showDialog(shell, CBMessages.getString("warning.title"),
+				CBMessages.getString("upload.cat.file.confirmation", catCode, CBMessages.getString("unreserve.label")),
 				SWT.ICON_WARNING | SWT.YES | SWT.NO);
 
 		if (val != SWT.YES)
@@ -1405,7 +1405,7 @@ public class ToolsMenu implements MainMenuItem {
 
 		GlobalUtil.setShellCursor(shell, SWT.CURSOR_WAIT);
 
-		String message = Messages.getString("unreserve.sent", catCode);
+		String message = CBMessages.getString("unreserve.sent", catCode);
 		int colour = SWT.COLOR_DARK_GREEN;
 
 		Tools tools = new Tools();
@@ -1418,7 +1418,7 @@ public class ToolsMenu implements MainMenuItem {
 			colour = SWT.COLOR_DARK_RED;
 		} catch (SQLException | IOException e) {
 			e.printStackTrace();
-			message = Messages.getString("unreserve.error", catCode);
+			message = CBMessages.getString("unreserve.error", catCode);
 			colour = SWT.COLOR_DARK_RED;
 		} finally {
 			GlobalUtil.setShellCursor(shell, SWT.CURSOR_ARROW);
@@ -1447,14 +1447,14 @@ public class ToolsMenu implements MainMenuItem {
 
 		String levelLabel = factory.getPublishLabel(level);
 
-		int val = GlobalUtil.showDialog(shell, Messages.getString("warning.title"),
-				Messages.getString("upload.cat.file.confirmation", catCode, levelLabel),
+		int val = GlobalUtil.showDialog(shell, CBMessages.getString("warning.title"),
+				CBMessages.getString("upload.cat.file.confirmation", catCode, levelLabel),
 				SWT.ICON_WARNING | SWT.YES | SWT.NO);
 
 		if (val != SWT.YES)
 			return;
 
-		String message = Messages.getString("publish.sent", catCode, levelLabel);
+		String message = CBMessages.getString("publish.sent", catCode, levelLabel);
 		int colour = SWT.COLOR_DARK_GREEN;
 
 		// set wait cursor
@@ -1469,7 +1469,7 @@ public class ToolsMenu implements MainMenuItem {
 			colour = SWT.COLOR_DARK_RED;
 		} catch (SQLException | IOException e) {
 			e.printStackTrace();
-			message = Messages.getString("publish.error", catCode, levelLabel);
+			message = CBMessages.getString("publish.error", catCode, levelLabel);
 			colour = SWT.COLOR_DARK_RED;
 		} finally {
 			GlobalUtil.setShellCursor(shell, SWT.CURSOR_ARROW);
@@ -1487,8 +1487,8 @@ public class ToolsMenu implements MainMenuItem {
 
 		int val = GlobalUtil
 				.showDialog(
-						shell, Messages.getString("warning.title"), Messages.getString("upload.cat.file.confirmation",
-								catCode, Messages.getString("upload.xml.data.label")),
+						shell, CBMessages.getString("warning.title"), CBMessages.getString("upload.cat.file.confirmation",
+								catCode, CBMessages.getString("upload.xml.data.label")),
 						SWT.ICON_WARNING | SWT.YES | SWT.NO);
 
 		if (val != SWT.YES)
@@ -1496,7 +1496,7 @@ public class ToolsMenu implements MainMenuItem {
 
 		int catId = mainMenu.getCatalogue().getId();
 
-		String message = Messages.getString("upload.xml.sent", catCode);
+		String message = CBMessages.getString("upload.xml.sent", catCode);
 		int colour = SWT.COLOR_DARK_GREEN;
 
 		Tools tools = new Tools();
@@ -1508,11 +1508,11 @@ public class ToolsMenu implements MainMenuItem {
 			colour = SWT.COLOR_DARK_RED;
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			message = Messages.getString("upload.xml_not_found.error", catCode);
+			message = CBMessages.getString("upload.xml_not_found.error", catCode);
 			colour = SWT.COLOR_DARK_RED;
 		} catch (IOException e) {
 			e.printStackTrace();
-			message = Messages.getString("upload.xml.error", catCode);
+			message = CBMessages.getString("upload.xml.error", catCode);
 			colour = SWT.COLOR_DARK_RED;
 		} finally {
 			GlobalUtil.setShellCursor(shell, SWT.CURSOR_ARROW);
@@ -1529,7 +1529,7 @@ public class ToolsMenu implements MainMenuItem {
 		ExportActions export = new ExportActions();
 
 		// set the progress bar
-		export.setProgressBar(new FormProgressBar(shell, Messages.getString("Export.ProgressBarTitle")));
+		export.setProgressBar(new FormProgressBar(shell, CBMessages.getString("Export.ProgressBarTitle")));
 
 		// export the opened catalogue
 		export.exportAsync(mainMenu.getCatalogue(), filename, flag, new ThreadFinishedListener() {
@@ -1547,10 +1547,10 @@ public class ToolsMenu implements MainMenuItem {
 						int icon;
 
 						if (code == ThreadFinishedListener.OK) {
-							msg = Messages.getString("Export.DoneMessage");
+							msg = CBMessages.getString("Export.DoneMessage");
 							icon = SWT.ICON_INFORMATION;
 						} else {
-							msg = Messages.getString("Export.ErrorMessage");
+							msg = CBMessages.getString("Export.ErrorMessage");
 							icon = SWT.ICON_ERROR;
 						}
 

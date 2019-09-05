@@ -23,7 +23,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableColumn;
 
 import catalogue.Catalogue;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import session_manager.BrowserWindowPreferenceDao;
 import window_restorer.RestoreableWindow;
 
@@ -66,7 +66,7 @@ public class FormUserPreferences {
 		
 		window = new RestoreableWindow(dialog, WINDOW_CODE);
 		
-		dialog.setText( Messages.getString("FormUserPreferences.OptionsLabel") );
+		dialog.setText( CBMessages.getString("FormUserPreferences.OptionsLabel") );
 		dialog.setSize( 400, 350 );
 		dialog.setLayout( new GridLayout( 1 , false ) );
 		
@@ -117,7 +117,7 @@ public class FormUserPreferences {
 				String value = ( (Preference) arg0 ).getValue();
 				
 				if ( value == null )
-					value = Messages.getString("FormUserPreferences.NotFound");
+					value = CBMessages.getString("FormUserPreferences.NotFound");
 				
 				return value;
 			}
@@ -134,7 +134,7 @@ public class FormUserPreferences {
 		} );
 		
 		TableColumn colCode = viewerColumnCode.getColumn();
-		colCode.setText( Messages.getString("FormUserPreferences.SettingColumn") );
+		colCode.setText( CBMessages.getString("FormUserPreferences.SettingColumn") );
 		colCode.setWidth( 200 );
 		colCode.setResizable( true );
 		colCode.setMoveable( false );
@@ -154,7 +154,7 @@ public class FormUserPreferences {
 		
 		TableViewerColumn viewerColumnName = new TableViewerColumn( table , SWT.NONE );
 		TableColumn colName = viewerColumnName.getColumn();
-		colName.setText( Messages.getString("FormUserPreferences.ValueColumn") );
+		colName.setText( CBMessages.getString("FormUserPreferences.ValueColumn") );
 		colName.setWidth( 250 );
 		colName.setResizable( true );
 		colName.setMoveable( false );
@@ -285,7 +285,7 @@ public class FormUserPreferences {
 		c.setLayout( new GridLayout( 2 , false ) );
 
 		Button bOk = new Button( c , SWT.PUSH );
-		bOk.setText( Messages.getString("FormUserPreferences.OkButton") ); //$NON-NLS-1$
+		bOk.setText( CBMessages.getString("FormUserPreferences.OkButton") ); //$NON-NLS-1$
 		bOk.pack();
 		gridData = new GridData();
 		gridData.verticalAlignment = SWT.FILL;
@@ -295,7 +295,7 @@ public class FormUserPreferences {
 		bOk.setLayoutData( gridData );
 
 		Button bCancel = new Button( c , SWT.PUSH );
-		bCancel.setText( Messages.getString("FormUserPreferences.CancelButton") ); //$NON-NLS-1$
+		bCancel.setText( CBMessages.getString("FormUserPreferences.CancelButton") ); //$NON-NLS-1$
 		bCancel.pack();
 		gridData = new GridData();
 		gridData.verticalAlignment = SWT.FILL;

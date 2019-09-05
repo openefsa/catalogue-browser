@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import dcf_log.DcfLog;
 import dcf_log.LogNode;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import utilities.GlobalUtil;
 
 /**
@@ -42,17 +42,17 @@ public class LogNodesTableViewer {
 		
 		GlobalUtil.addStandardColumn( table, 
 				new LogNodeLabelProvider( LogNodeLabelProvider.NAME ), 
-				Messages.getString( "LogNodesTable.Name" ), 
+				CBMessages.getString( "LogNodesTable.Name" ), 
 				100, true, false, SWT.CENTER );
 		
 		GlobalUtil.addStandardColumn( table, 
 				new LogNodeLabelProvider( LogNodeLabelProvider.RESULT ), 
-				Messages.getString( "LogNodesTable.Result" ), 
+				CBMessages.getString( "LogNodesTable.Result" ), 
 				100, true, false, SWT.CENTER );
 		
 		GlobalUtil.addStandardColumn( table, 
 				new LogNodeLabelProvider( LogNodeLabelProvider.OP_LOG ), 
-				Messages.getString( "LogNodesTable.OpLog" ), 
+				CBMessages.getString( "LogNodesTable.OpLog" ), 
 				600, true, false, SWT.LEFT );
 		
 		table.getTable().setHeaderVisible( true );

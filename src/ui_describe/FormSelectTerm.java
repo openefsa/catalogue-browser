@@ -35,7 +35,7 @@ import catalogue_object.GlobalTerm;
 import catalogue_object.Hierarchy;
 import catalogue_object.Nameable;
 import catalogue_object.Term;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import session_manager.BrowserWindowPreferenceDao;
 import ui_main_panel.MultiTermsTreeViewer;
 import ui_main_panel.TermFilter;
@@ -100,7 +100,7 @@ public class FormSelectTerm implements Observer {
 		this.flag = flag; // flag is used for knowing if coming from the operability tab in the main page
 
 		// default title
-		this.title = Messages.getString("FormSelectTerm.DialogTitle");
+		this.title = CBMessages.getString("FormSelectTerm.DialogTitle");
 
 		if (title == null || title.length() > 0) {
 			this.title = title;
@@ -225,15 +225,15 @@ public class FormSelectTerm implements Observer {
 				if (searchResults.isEmpty()) {
 
 					MessageBox mb = new MessageBox(dialog, SWT.OK);
-					mb.setText(Messages.getString("FormSelectTerm.SearchResultTitle"));
-					mb.setMessage(Messages.getString("FormSelectTerm.SearchResultMessage"));
+					mb.setText(CBMessages.getString("FormSelectTerm.SearchResultTitle"));
+					mb.setMessage(CBMessages.getString("FormSelectTerm.SearchResultMessage"));
 					mb.open();
 					return;
 				}
 
 				// show results
 				FormDescribeSearchResult resultsForm = new FormDescribeSearchResult(dialog,
-						Messages.getString("FormSelectTerm.SearchResultWindowTitle"), rootHierarchy, searchResults);
+						CBMessages.getString("FormSelectTerm.SearchResultWindowTitle"), rootHierarchy, searchResults);
 
 				resultsForm.setHideDeprecated(termFilter.isHidingDeprecated());
 				resultsForm.setHideNotInUse(termFilter.isHidingNotReportable());
@@ -341,11 +341,11 @@ public class FormSelectTerm implements Observer {
 		btnData.widthHint = 200;
 
 		Button ok = new Button(c2, SWT.PUSH);
-		ok.setText(Messages.getString("FormSelectTerm.OkButton"));
+		ok.setText(CBMessages.getString("FormSelectTerm.OkButton"));
 		ok.setLayoutData(btnData);
 
 		Button cancel = new Button(c2, SWT.PUSH);
-		cancel.setText(Messages.getString("FormSelectTerm.CancelButton"));
+		cancel.setText(CBMessages.getString("FormSelectTerm.CancelButton"));
 		cancel.setLayoutData(btnData);
 
 		// shahaal: if close button is pressed then clear the list of selected items

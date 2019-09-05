@@ -1,6 +1,5 @@
 package ui_main_panel;
 
-import messages.Messages;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
@@ -8,6 +7,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
 import catalogue.Catalogue;
+import i18n_messages.CBMessages;
 
 /**
  * Dialog to warn the user that a old version of the selected catalogue is used
@@ -49,10 +49,10 @@ public class OldCatalogueReleaseDialog {
 
 		// set the text elements
 		String[] commands = new String[] { 
-				Messages.getString("OldCatalogueReleaseDialog.OkCmd"), 
-				Messages.getString("OldCatalogueReleaseDialog.CancelCmd") };
-		String title = Messages.getString("OldCatalogueReleaseDialog.Title");
-		String text = Messages.getString("OldCatalogueReleaseDialog.Message");
+				CBMessages.getString("OldCatalogueReleaseDialog.OkCmd"), 
+				CBMessages.getString("OldCatalogueReleaseDialog.CancelCmd") };
+		String title = CBMessages.getString("OldCatalogueReleaseDialog.Title");
+		String text = CBMessages.getString("OldCatalogueReleaseDialog.Message");
 
 		// create the dialog
 		dialog = new MessageDialog( shell, title, null, text, 

@@ -31,7 +31,7 @@ import data_collection.DCTableConfig;
 import dcf_log.DcfResponse;
 import dcf_pending_request.PendingRequestActionsListener;
 import global_manager.GlobalManager;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import pending_request.IPendingRequest;
 import pending_request.PendingRequestStatus;
 import pending_request.PendingRequestStatusChangedEvent;
@@ -155,31 +155,31 @@ public class MainPanel implements Observer {
 
 						switch (action) {
 						case LIV_IMPORT_STARTED:
-							text = Messages.getString("liv.downloading", catCode);
+							text = CBMessages.getString("liv.downloading", catCode);
 							colour = SWT.COLOR_DARK_GREEN;
 							break;
 						case LIV_IMPORTED:
-							text = Messages.getString("liv.imported", catCode, livVersion);
+							text = CBMessages.getString("liv.imported", catCode, livVersion);
 							colour = SWT.COLOR_DARK_GREEN;
 							break;
 						case TEMP_CAT_CONFIRMED:
-							text = Messages.getString("temp.confirmed", catCode, oldVersion, version);
+							text = CBMessages.getString("temp.confirmed", catCode, oldVersion, version);
 							colour = SWT.COLOR_DARK_GREEN;
 							break;
 						case TEMP_CAT_CREATED:
-							text = Messages.getString("temp.created", catCode, oldVersion, version);
+							text = CBMessages.getString("temp.created", catCode, oldVersion, version);
 							colour = SWT.COLOR_DARK_YELLOW;
 							break;
 						case TEMP_CAT_INVALIDATED_LIV:
-							text = Messages.getString("temp.inv.liv", catCode, oldVersion, version);
+							text = CBMessages.getString("temp.inv.liv", catCode, oldVersion, version);
 							colour = SWT.COLOR_DARK_RED;
 							break;
 						case TEMP_CAT_INVALIDATED_NO_RESERVE:
-							text = Messages.getString("temp.inv.reserve", catCode, oldVersion, version);
+							text = CBMessages.getString("temp.inv.reserve", catCode, oldVersion, version);
 							colour = SWT.COLOR_DARK_RED;
 							break;
 						case NEW_INTERNAL_VERSION_CREATED:
-							text = Messages.getString("new.internal.version", catCode, oldVersion, version);
+							text = CBMessages.getString("new.internal.version", catCode, oldVersion, version);
 							colour = SWT.COLOR_DARK_GREEN;
 							break;
 						default:
@@ -202,8 +202,8 @@ public class MainPanel implements Observer {
 					@Override
 					public void run() {
 						if (newStatus == WorkerStatus.ONGOING) {
-							ShellLocker.setLock(shell, Messages.getString("MainPanel.CannotCloseTitle"),
-									Messages.getString("MainPanel.CannotCloseMessage"));
+							ShellLocker.setLock(shell, CBMessages.getString("MainPanel.CannotCloseTitle"),
+									CBMessages.getString("MainPanel.CannotCloseMessage"));
 						} else {
 							ShellLocker.removeLock(shell);
 						}
@@ -243,7 +243,7 @@ public class MainPanel implements Observer {
 						public void run() {
 
 							ConsoleMessage message = new ConsoleMessage(event.getPendingRequest().getType() + " "
-									+ catalogueCode + " " + Messages.getString("pending.request.error"), SWT.COLOR_RED);
+									+ catalogueCode + " " + CBMessages.getString("pending.request.error"), SWT.COLOR_RED);
 
 							addMessageToConsole(message);
 						}
@@ -714,7 +714,7 @@ public class MainPanel implements Observer {
 	private void addWidgets(Composite parent) {
 
 		this.userConsole = new UserConsoleDialog(shell, SWT.RESIZE | SWT.DIALOG_TRIM);
-		this.userConsole.setText(Messages.getString("user.console.title"));
+		this.userConsole.setText(CBMessages.getString("user.console.title"));
 
 		if (shell.getImage() != null)
 			this.userConsole.setImage(shell.getImage());
@@ -825,14 +825,14 @@ public class MainPanel implements Observer {
 
 					if (targetCat == null) {
 						GlobalUtil.showErrorDialog(shell, config.getConfig().getCatalogueCode(),
-								Messages.getString("FormConfigList.CatNotPresentError"));
+								CBMessages.getString("FormConfigList.CatNotPresentError"));
 						return;
 					}
 
 					if (hierarchy == null) {
 						GlobalUtil.showErrorDialog(shell,
 								config.getConfig().getCatalogueCode() + " - " + config.getConfig().getHierarchyCode(),
-								Messages.getString("FormConfigList.HierNotPresentError"));
+								CBMessages.getString("FormConfigList.HierNotPresentError"));
 						return;
 					}
 
@@ -1035,8 +1035,8 @@ public class MainPanel implements Observer {
 				// if empty warn the user
 				if (event.getResults().isEmpty()) {
 
-					GlobalUtil.showDialog(shell, Messages.getString("Browser.SearchResultTitle"),
-							Messages.getString("Browser.SearchResultMessage"), SWT.OK);
+					GlobalUtil.showDialog(shell, CBMessages.getString("Browser.SearchResultTitle"),
+							CBMessages.getString("Browser.SearchResultMessage"), SWT.OK);
 				}
 			}
 		});

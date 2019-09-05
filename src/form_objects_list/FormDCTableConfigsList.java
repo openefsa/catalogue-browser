@@ -9,7 +9,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
 import data_collection.DCTableConfig;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import utilities.GlobalUtil;
 
 /**
@@ -37,27 +37,27 @@ public class FormDCTableConfigsList extends FormObjectsList<DCTableConfig> {
 		case TABLE_NAME:
 			GlobalUtil.addStandardColumn( table, 
 					new DCTableConfigLabelProvider(key), 
-					Messages.getString("FormConfigList.NameColumn"), 
+					CBMessages.getString("FormConfigList.NameColumn"), 
 					200, true, false ); 
 			break;
 			
 		case VARIABLE_NAME: 
 			GlobalUtil.addStandardColumn( table, 
 					new DCTableConfigLabelProvider(key),
-					Messages.getString("FormConfigList.VariableColumn"), 
+					CBMessages.getString("FormConfigList.VariableColumn"), 
 					200, true, false ); 
 			break;
 			
 		case CAT_CODE: 
 			GlobalUtil.addStandardColumn( table, 
 					new DCTableConfigLabelProvider(key),
-					Messages.getString("FormConfigList.CatalogueColumn"), 200, true, false ); 
+					CBMessages.getString("FormConfigList.CatalogueColumn"), 200, true, false ); 
 			break;
 			
 		case HIER_CODE: 
 			GlobalUtil.addStandardColumn( table, 
 					new DCTableConfigLabelProvider(key),
-					Messages.getString("FormConfigList.HierarchyColumn"), 
+					CBMessages.getString("FormConfigList.HierarchyColumn"), 
 					200, true, false ); 
 			break;
 		default:

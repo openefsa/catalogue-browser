@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import catalogue_browser_dao.CatalogueEntityDAO;
 import catalogue_object.SortableCatalogueObject;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import property.ContentProviderProperty;
 import property.LabelProviderProperty;
 import property.SorterDCFProperty;
@@ -81,7 +81,7 @@ public abstract class CatalogueObjectEditor<T extends SortableCatalogueObject> {
 
 		// add button
 		final Button commandAdd = new Button( commands , SWT.TOGGLE );
-		commandAdd.setText( Messages.getString("Editor.AddCmd") );
+		commandAdd.setText( CBMessages.getString("Editor.AddCmd") );
 		gridData = new GridData();
 		gridData.verticalAlignment = SWT.TOP;
 		gridData.horizontalAlignment = SWT.LEFT;
@@ -91,7 +91,7 @@ public abstract class CatalogueObjectEditor<T extends SortableCatalogueObject> {
 
 		// remove button
 		final Button commandRemove = new Button( commands , SWT.TOGGLE );
-		commandRemove.setText( Messages.getString("Editor.RemoveCmd") );
+		commandRemove.setText( CBMessages.getString("Editor.RemoveCmd") );
 		gridData = new GridData();
 		gridData.verticalAlignment = SWT.TOP;
 		gridData.horizontalAlignment = SWT.LEFT;
@@ -101,7 +101,7 @@ public abstract class CatalogueObjectEditor<T extends SortableCatalogueObject> {
 
 		// move up button
 		Button bUp = new Button( commands , SWT.PUSH );
-		bUp.setText( Messages.getString("Editor.MoveUpCmd") );
+		bUp.setText( CBMessages.getString("Editor.MoveUpCmd") );
 		bUp.pack();
 		gridData = new GridData();
 		gridData.verticalAlignment = SWT.FILL;
@@ -112,7 +112,7 @@ public abstract class CatalogueObjectEditor<T extends SortableCatalogueObject> {
 
 		// move down button
 		Button bDown = new Button( commands , SWT.PUSH );
-		bDown.setText( Messages.getString("Editor.MoveDownCmd") );
+		bDown.setText( CBMessages.getString("Editor.MoveDownCmd") );
 		bDown.pack();
 		gridData = new GridData();
 		gridData.verticalAlignment = SWT.FILL;
@@ -163,7 +163,7 @@ public abstract class CatalogueObjectEditor<T extends SortableCatalogueObject> {
 
 		// ok button
 		Button okBtn = new Button( c , SWT.PUSH );
-		okBtn.setText( Messages.getString("Editor.OkButton") );
+		okBtn.setText( CBMessages.getString("Editor.OkButton") );
 		okBtn.pack();
 		gridData = new GridData();
 		gridData.verticalAlignment = SWT.FILL;
@@ -174,7 +174,7 @@ public abstract class CatalogueObjectEditor<T extends SortableCatalogueObject> {
 
 		// cancel button
 		Button cancelBtn = new Button( c , SWT.PUSH );
-		cancelBtn.setText( Messages.getString("Editor.CancelButton") );
+		cancelBtn.setText( CBMessages.getString("Editor.CancelButton") );
 		cancelBtn.pack();
 		gridData = new GridData();
 		gridData.verticalAlignment = SWT.FILL;
@@ -251,8 +251,8 @@ public abstract class CatalogueObjectEditor<T extends SortableCatalogueObject> {
 				if ( table.getSelection().isEmpty() ) {
 
 					GlobalUtil.showErrorDialog( shell, 
-							Messages.getString("Editor.ErrorTitle"), 
-							Messages.getString("Editor.ErrorMessage"));
+							CBMessages.getString("Editor.ErrorTitle"), 
+							CBMessages.getString("Editor.ErrorMessage"));
 					return;
 				}
 
@@ -267,8 +267,8 @@ public abstract class CatalogueObjectEditor<T extends SortableCatalogueObject> {
 
 				// Are you sure you want to delete the obj? 
 				int val = GlobalUtil.showDialog( shell, 
-						Messages.getString("Editor.DeleteWarningTitle"), 
-						Messages.getString("Editor.DeleteWarningMessage"), 
+						CBMessages.getString("Editor.DeleteWarningTitle"), 
+						CBMessages.getString("Editor.DeleteWarningMessage"), 
 						SWT.YES | SWT.NO );
 
 				// return if we want to cancel the operation
@@ -386,8 +386,8 @@ public abstract class CatalogueObjectEditor<T extends SortableCatalogueObject> {
 				// if a duplicate is found I show the error
 				if ( doubleCode ) {
 					GlobalUtil.showErrorDialog( shell, 
-							Messages.getString("Editor.DuplicatedCodesTitle"), 
-							Messages.getString("Editor.DuplicatedCodesMessage"));
+							CBMessages.getString("Editor.DuplicatedCodesTitle"), 
+							CBMessages.getString("Editor.DuplicatedCodesMessage"));
 					return;
 				}
 				

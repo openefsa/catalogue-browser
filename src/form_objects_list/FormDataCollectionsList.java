@@ -12,7 +12,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
 import data_collection.DataCollection;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import utilities.GlobalUtil;
 
 /**
@@ -46,22 +46,22 @@ public class FormDataCollectionsList extends FormObjectsList<DataCollection> {
 		case CODE:
 			// Add the "Label" column
 			GlobalUtil.addStandardColumn( table, new DCLabelProvider(key), 
-					Messages.getString("FormDCList.CodeColumn"), 200, true, false ); 
+					CBMessages.getString("FormDCList.CodeColumn"), 200, true, false ); 
 			break;
 		case DESCRIPTION: 
 			// Add the "Scopenote" column
 			GlobalUtil.addStandardColumn( table, new DCLabelProvider(key),
-					Messages.getString("FormDCList.DescriptionColumn"), 300, true, false ); 
+					CBMessages.getString("FormDCList.DescriptionColumn"), 300, true, false ); 
 			break;
 		case ACTIVE_FROM: 
 			// Add the "Scopenote" column
 			GlobalUtil.addStandardColumn( table, new DCLabelProvider(key),
-					Messages.getString("FormDCList.ActiveFromColumn"), 120, true, false ); 
+					CBMessages.getString("FormDCList.ActiveFromColumn"), 120, true, false ); 
 			break;
 		case ACTIVE_TO: 
 			// Add the "Scopenote" column
 			GlobalUtil.addStandardColumn( table, new DCLabelProvider(key),
-					Messages.getString("FormDCList.ActiveToColumn"), 120, true, false ); 
+					CBMessages.getString("FormDCList.ActiveToColumn"), 120, true, false ); 
 			break;
 		default:
 			break;

@@ -17,7 +17,7 @@ import catalogue_object.Nameable;
 import catalogue_object.Term;
 import detail_level.DetailLevelDAO;
 import detail_level.DetailLevelGraphics;
-import messages.Messages;
+import i18n_messages.CBMessages;
 
 /**
  * This class load all the visualization Label in GUI TableView to view the
@@ -194,14 +194,14 @@ public class LabelProviderTerm extends LabelProvider implements IFontProvider {
 			
 			// if deprecated add the deprecated flag
 			if ( t.isDeprecated() )
-				flag = flag + Messages.getString("LabelProviderTerm.DeprecatedFlag");
+				flag = flag + CBMessages.getString("LabelProviderTerm.DeprecatedFlag");
 			
 			else if ( t.isDismissed( currentHierarchy ) )
-				flag = flag + Messages.getString("LabelProviderTerm.DismissedFlag");
+				flag = flag + CBMessages.getString("LabelProviderTerm.DismissedFlag");
 			
 			// if non reportable add the non reportable flag
 			else if ( !t.isReportable( currentHierarchy ) )
-				flag = flag + Messages.getString("LabelProviderTerm.NotReportableFlag");
+				flag = flag + CBMessages.getString("LabelProviderTerm.NotReportableFlag");
 
 			// term name + term flag
 			text = t.getShortName( true ) + " " + flag;
@@ -213,7 +213,7 @@ public class LabelProviderTerm extends LabelProvider implements IFontProvider {
 			text = t.getLabel();
 		}
 		else {
-			text = Messages.getString("LabelProviderTerm.NameNotAvailable");
+			text = CBMessages.getString("LabelProviderTerm.NameNotAvailable");
 		}
 		
 		return text;

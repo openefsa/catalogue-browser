@@ -6,7 +6,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import dcf_user.User;
-import messages.Messages;
+import i18n_messages.CBMessages;
 
 /**
  * View menu in the main menu
@@ -48,7 +48,7 @@ public class ViewMenu implements MainMenuItem {
 	public MenuItem create(Menu menu) {
 
 		viewItem = new MenuItem(menu, SWT.CASCADE);
-		viewItem.setText(Messages.getString("BrowserMenu.ViewMenuName"));
+		viewItem.setText(CBMessages.getString("BrowserMenu.ViewMenuName"));
 
 		Menu editMenu = new Menu(menu);
 
@@ -68,7 +68,7 @@ public class ViewMenu implements MainMenuItem {
 
 	private MenuItem addConsoleMI(Menu menu) {
 		MenuItem show = new MenuItem(menu, SWT.NONE);
-		show.setText(Messages.getString("view.show.user.console"));
+		show.setText(CBMessages.getString("view.show.user.console"));
 		show.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -88,7 +88,7 @@ public class ViewMenu implements MainMenuItem {
 	private MenuItem addExpandMI(Menu menu) {
 
 		final MenuItem expandItem = new MenuItem(menu, SWT.NONE);
-		expandItem.setText(Messages.getString("BrowserMenu.ExpandNodeCmd"));
+		expandItem.setText(CBMessages.getString("BrowserMenu.ExpandNodeCmd"));
 		expandItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -111,7 +111,7 @@ public class ViewMenu implements MainMenuItem {
 	private MenuItem addCollapseSingleNodeMI(Menu menu) {
 
 		final MenuItem collapseSingleItem = new MenuItem(menu, SWT.NONE);
-		collapseSingleItem.setText(Messages.getString("BrowserMenu.CollapseNodeCmd"));
+		collapseSingleItem.setText(CBMessages.getString("BrowserMenu.CollapseNodeCmd"));
 		collapseSingleItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -133,7 +133,7 @@ public class ViewMenu implements MainMenuItem {
 	private MenuItem addCollapseAllMI(Menu menu) {
 
 		final MenuItem collapseItem = new MenuItem(menu, SWT.NONE);
-		collapseItem.setText(Messages.getString("BrowserMenu.CollapseTreeCmd"));
+		collapseItem.setText(CBMessages.getString("BrowserMenu.CollapseTreeCmd"));
 
 		collapseItem.addSelectionListener(new SelectionAdapter() {
 			@Override

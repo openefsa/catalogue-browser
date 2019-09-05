@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 
 import catalogue.Catalogue;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import session_manager.BrowserWindowPreferenceDao;
 import ui_search_bar.SearchOptionDAO;
 import utilities.GlobalUtil;
@@ -65,7 +65,7 @@ public class FormSearchOptions {
 		SearchOptionDAO optDao = new SearchOptionDAO(catalogue);
 
 		// table used to show term types
-		final OptionTable typeTable = new OptionTable(dialog, Messages.getString("FormSearchOptions.TermType"),
+		final OptionTable typeTable = new OptionTable(dialog, CBMessages.getString("FormSearchOptions.TermType"),
 				optDao.getByType(OptionType.TERM_TYPE));
 
 		// when a check box changes its state, check if it is correct
@@ -79,8 +79,8 @@ public class FormSearchOptions {
 					// warning! you cannot remove all the term types,
 					// otherwise no term will be found with the search
 
-					GlobalUtil.showErrorDialog(dialog, Messages.getString("FormSearchOptions.NoTermTypeErrorTitle"),
-							Messages.getString("FormSearchOptions.NoTermTypeErrorMessage"));
+					GlobalUtil.showErrorDialog(dialog, CBMessages.getString("FormSearchOptions.NoTermTypeErrorTitle"),
+							CBMessages.getString("FormSearchOptions.NoTermTypeErrorMessage"));
 
 					return false;
 				}
@@ -90,7 +90,7 @@ public class FormSearchOptions {
 		});
 
 		// table used to show implicit attributes
-		new OptionTable(dialog, Messages.getString("FormSearchOptions.ImplicitAttribute"),
+		new OptionTable(dialog, CBMessages.getString("FormSearchOptions.ImplicitAttribute"),
 				optDao.getByType(OptionType.ATTRIBUTE));
 
 		dialog.pack();

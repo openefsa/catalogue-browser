@@ -1,5 +1,4 @@
 package ui_describe;
-import messages.Messages;
 import org.eclipse.swt.graphics.Image;
 
 import already_described_terms.DescribedTerm;
@@ -7,6 +6,7 @@ import already_described_terms.PicklistTerm;
 import catalogue.Catalogue;
 import catalogue_browser_dao.TermDAO;
 import global_manager.GlobalManager;
+import i18n_messages.CBMessages;
 import term.LabelProviderTerm;
 
 /**
@@ -54,6 +54,6 @@ public class LabelProviderDescribedTerm extends LabelProviderTerm {
 			return describedTerm.getLabel();
 		}
 		
-		return Messages.getString("LabelProviderRecentlyTerm.NameNotAvailable"); //$NON-NLS-1$
+		return CBMessages.getString("LabelProviderRecentlyTerm.NameNotAvailable"); //$NON-NLS-1$
 	}
 }

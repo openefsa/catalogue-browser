@@ -3,7 +3,7 @@ package ui_console;
 import org.eclipse.swt.SWT;
 
 import dcf_log.DcfResponse;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import soap.UploadCatalogueFileImpl.PublishLevel;
 import soap.UploadCatalogueFileImpl.ReserveLevel;
 
@@ -25,16 +25,16 @@ public class ConsoleMessageFactory {
 	}
 	
 	public ConsoleMessage getRestartedUnreserveMessage() {
-		return this.getRestartedMessage(Messages.getString("unreserve.label"));
+		return this.getRestartedMessage(CBMessages.getString("unreserve.label"));
 	}
 	
 	public ConsoleMessage getRestartedXmlDataMessage() {
-		return this.getRestartedMessage(Messages.getString("upload.xml.data.label"));
+		return this.getRestartedMessage(CBMessages.getString("upload.xml.data.label"));
 	}
 	
 	private ConsoleMessage getRestartedMessage(String operation) {
 		return new ConsoleMessage(
-				Messages.getString("upload.cat.file.relaunched", catalogueCode, operation),
+				CBMessages.getString("upload.cat.file.relaunched", catalogueCode, operation),
 				SWT.COLOR_DARK_YELLOW);
 	}
 	
@@ -50,16 +50,16 @@ public class ConsoleMessageFactory {
 	}
 	
 	public ConsoleMessage getQueuedUnreserveMessage() {
-		return this.getQueuedMessage(Messages.getString("unreserve.label"));
+		return this.getQueuedMessage(CBMessages.getString("unreserve.label"));
 	}
 	
 	public ConsoleMessage getQueuedXmlDataMessage() {
-		return this.getQueuedMessage(Messages.getString("upload.xml.data.label"));
+		return this.getQueuedMessage(CBMessages.getString("upload.xml.data.label"));
 	}
 	
 	private ConsoleMessage getQueuedMessage(String operation) {
 		return new ConsoleMessage(
-				Messages.getString("upload.cat.file.queued", catalogueCode, operation),
+				CBMessages.getString("upload.cat.file.queued", catalogueCode, operation),
 				SWT.COLOR_DARK_YELLOW);
 	}
 	
@@ -68,9 +68,9 @@ public class ConsoleMessageFactory {
 		String levelLabel = null;
 		
 		if (level == ReserveLevel.MINOR)
-			levelLabel = Messages.getString("reserve.minor.label");
+			levelLabel = CBMessages.getString("reserve.minor.label");
 		else if (level == ReserveLevel.MAJOR)
-			levelLabel = Messages.getString("");
+			levelLabel = CBMessages.getString("");
 		
 		return levelLabel;
 	}
@@ -80,9 +80,9 @@ public class ConsoleMessageFactory {
 		String levelLabel = null;
 		
 		if (level == PublishLevel.MINOR)
-			levelLabel = Messages.getString("publish.minor.label");
+			levelLabel = CBMessages.getString("publish.minor.label");
 		else if (level == PublishLevel.MAJOR)
-			levelLabel = Messages.getString("publish.major.label");
+			levelLabel = CBMessages.getString("publish.major.label");
 		
 		return levelLabel;
 	}
@@ -96,15 +96,15 @@ public class ConsoleMessageFactory {
 
 		switch (response) {
 		case ERROR:
-			msg = Messages.getString("reserve.error", catalogueCode, levelLabel);
+			msg = CBMessages.getString("reserve.error", catalogueCode, levelLabel);
 			color = SWT.COLOR_DARK_RED;
 			break;
 		case AP:
-			msg = Messages.getString("reserve.ap.response", catalogueCode, levelLabel);
+			msg = CBMessages.getString("reserve.ap.response", catalogueCode, levelLabel);
 			color = SWT.COLOR_DARK_RED;
 			break;
 		case OK:
-			msg = Messages.getString("reserve.success", catalogueCode, levelLabel);
+			msg = CBMessages.getString("reserve.success", catalogueCode, levelLabel);
 			color = SWT.COLOR_DARK_GREEN;
 			break;
 		default:
@@ -121,15 +121,15 @@ public class ConsoleMessageFactory {
 		
 		switch (response) {
 		case ERROR:
-			msg = Messages.getString("unreserve.error", catalogueCode);
+			msg = CBMessages.getString("unreserve.error", catalogueCode);
 			color = SWT.COLOR_DARK_RED;
 			break;
 		case AP:
-			msg = Messages.getString("unreserve.ap.response", catalogueCode);
+			msg = CBMessages.getString("unreserve.ap.response", catalogueCode);
 			color = SWT.COLOR_DARK_RED;
 			break;
 		case OK:
-			msg = Messages.getString("unreserve.success", catalogueCode);
+			msg = CBMessages.getString("unreserve.success", catalogueCode);
 			color = SWT.COLOR_DARK_GREEN;
 			break;
 		default:
@@ -146,15 +146,15 @@ public class ConsoleMessageFactory {
 		
 		switch (response) {
 		case ERROR:
-			msg = Messages.getString("upload.xml.error", catalogueCode);
+			msg = CBMessages.getString("upload.xml.error", catalogueCode);
 			color = SWT.COLOR_DARK_RED;
 			break;
 		case AP:
-			msg = Messages.getString("upload.xml.ap.response", catalogueCode);
+			msg = CBMessages.getString("upload.xml.ap.response", catalogueCode);
 			color = SWT.COLOR_DARK_RED;
 			break;
 		case OK:
-			msg = Messages.getString("upload.xml.success", catalogueCode);
+			msg = CBMessages.getString("upload.xml.success", catalogueCode);
 			color = SWT.COLOR_DARK_GREEN;
 			break;
 		default:
@@ -173,15 +173,15 @@ public class ConsoleMessageFactory {
 		
 		switch (response) {
 		case ERROR:
-			msg = Messages.getString("publish.error", catalogueCode, levelLabel);
+			msg = CBMessages.getString("publish.error", catalogueCode, levelLabel);
 			color = SWT.COLOR_DARK_RED;
 			break;
 		case AP:
-			msg = Messages.getString("publish.ap.response", catalogueCode, levelLabel);
+			msg = CBMessages.getString("publish.ap.response", catalogueCode, levelLabel);
 			color = SWT.COLOR_DARK_RED;
 			break;
 		case OK:
-			msg = Messages.getString("publish.success", catalogueCode, levelLabel);
+			msg = CBMessages.getString("publish.success", catalogueCode, levelLabel);
 			color = SWT.COLOR_DARK_GREEN;
 			break;
 		default:

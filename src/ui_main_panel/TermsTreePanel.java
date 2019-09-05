@@ -40,7 +40,7 @@ import catalogue_object.Nameable;
 import catalogue_object.Term;
 import dcf_user.User;
 import global_manager.GlobalManager;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import soap.UploadCatalogueFileImpl.ReserveLevel;
 import term_clipboard.TermClipboard;
 import term_clipboard.TermOrderChanger;
@@ -378,7 +378,7 @@ public class TermsTreePanel extends Observable implements Observer {
 
 				// initialise tcf if null
 				if (tcf == null)
-					tcf = new FormTermCoder(shell, Messages.getString("FormTermCoder.Title"), catalogue);
+					tcf = new FormTermCoder(shell, CBMessages.getString("FormTermCoder.Title"), catalogue);
 
 				// set the base term
 				tcf.setBaseTerm(getFirstSelectedTerm());
@@ -601,13 +601,13 @@ public class TermsTreePanel extends Observable implements Observer {
 		// refresh deprecate term text
 		if (getFirstSelectedTerm().isDeprecated()) {
 
-			deprecateTerm.setText(Messages.getString("BrowserTreeMenu.RemoveDeprecation"));
+			deprecateTerm.setText(CBMessages.getString("BrowserTreeMenu.RemoveDeprecation"));
 
 			// allow only if the term has not deprecated parents
 			// allow only for major releases
 			deprecateTerm.setEnabled(canEditMajor && !getFirstSelectedTerm().hasDeprecatedParents());
 		} else {
-			deprecateTerm.setText(Messages.getString("BrowserTreeMenu.DeprecateTerm"));
+			deprecateTerm.setText(CBMessages.getString("BrowserTreeMenu.DeprecateTerm"));
 
 			// allow only if the term has all the subtree deprecated, allow only for
 			// major releases
@@ -656,9 +656,9 @@ public class TermsTreePanel extends Observable implements Observer {
 
 		// search term in picklist, update text and enable
 		prefSearchTerm.setEnabled(hasFacetCategories && prefDao.hasFavouritePicklist());
-		prefSearchTerm.setText(Messages.getString("BrowserTreeMenu.SearchTermInPicklistPt1")
+		prefSearchTerm.setText(CBMessages.getString("BrowserTreeMenu.SearchTermInPicklistPt1")
 				+ getFirstSelectedTerm().getTruncatedName(10, true)
-				+ Messages.getString("BrowserTreeMenu.SearchTermInPicklistPt2"));
+				+ CBMessages.getString("BrowserTreeMenu.SearchTermInPicklistPt2"));
 	}
 
 	/*
@@ -679,7 +679,7 @@ public class TermsTreePanel extends Observable implements Observer {
 		// Change hierarchy menu item of the menu when right clicking item in the main
 		// tree
 		final MenuItem changeHierarchy = new MenuItem(menu, SWT.CASCADE);
-		changeHierarchy.setText(Messages.getString("BrowserTreeMenu.SeeInOtherHierarchiesCmd"));
+		changeHierarchy.setText(CBMessages.getString("BrowserTreeMenu.SeeInOtherHierarchiesCmd"));
 
 		// Initialize the menu"
 		final Menu changeHierarchyMenu = new Menu(shell, SWT.DROP_DOWN);
@@ -753,7 +753,7 @@ public class TermsTreePanel extends Observable implements Observer {
 	private MenuItem addTermMoveUpMI(Menu menu) {
 
 		MenuItem termMoveUp = new MenuItem(menu, SWT.NONE);
-		termMoveUp.setText(Messages.getString("BrowserTreeMenu.MoveUpCmd")); //$NON-NLS-1$
+		termMoveUp.setText(CBMessages.getString("BrowserTreeMenu.MoveUpCmd")); //$NON-NLS-1$
 
 		termMoveUp.addSelectionListener(new SelectionAdapter() {
 
@@ -785,7 +785,7 @@ public class TermsTreePanel extends Observable implements Observer {
 	private MenuItem addTermMoveDownMI(Menu menu) {
 
 		MenuItem termMoveDown = new MenuItem(menu, SWT.NONE);
-		termMoveDown.setText(Messages.getString("BrowserTreeMenu.MoveDownCmd")); //$NON-NLS-1$
+		termMoveDown.setText(CBMessages.getString("BrowserTreeMenu.MoveDownCmd")); //$NON-NLS-1$
 
 		termMoveDown.addSelectionListener(new SelectionAdapter() {
 
@@ -817,7 +817,7 @@ public class TermsTreePanel extends Observable implements Observer {
 	private MenuItem addTermLevelUpMI(Menu menu) {
 
 		MenuItem termMoveLevelUp = new MenuItem(menu, SWT.NONE);
-		termMoveLevelUp.setText(Messages.getString("BrowserTreeMenu.MoveLevelUpCmd")); //$NON-NLS-1$
+		termMoveLevelUp.setText(CBMessages.getString("BrowserTreeMenu.MoveLevelUpCmd")); //$NON-NLS-1$
 
 		termMoveLevelUp.addSelectionListener(new SelectionAdapter() {
 
@@ -848,7 +848,7 @@ public class TermsTreePanel extends Observable implements Observer {
 	private MenuItem addNewTermMI(Menu menu) {
 
 		MenuItem termAdd = new MenuItem(menu, SWT.NONE);
-		termAdd.setText(Messages.getString("BrowserTreeMenu.AddNewTermCmd"));
+		termAdd.setText(CBMessages.getString("BrowserTreeMenu.AddNewTermCmd"));
 
 		termAdd.addSelectionListener(new SelectionAdapter() {
 
@@ -890,7 +890,7 @@ public class TermsTreePanel extends Observable implements Observer {
 	private MenuItem addNewRootTermMI(Menu menu) {
 
 		MenuItem termAdd = new MenuItem(menu, SWT.NONE);
-		termAdd.setText(Messages.getString("BrowserTreeMenu.AddNewRootTermCmd"));
+		termAdd.setText(CBMessages.getString("BrowserTreeMenu.AddNewRootTermCmd"));
 
 		termAdd.addSelectionListener(new SelectionAdapter() {
 
@@ -934,15 +934,15 @@ public class TermsTreePanel extends Observable implements Observer {
 	private MenuItem addImportTermMI(Menu menu) {
 
 		MenuItem termAdd = new MenuItem(menu, SWT.NONE);
-		termAdd.setText(Messages.getString("BrowserTreeMenu.AddImportTermsTxt"));
+		termAdd.setText(CBMessages.getString("BrowserTreeMenu.AddImportTermsTxt"));
 
 		termAdd.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
-				String mes = Messages.getString("BrowserTreeMenu.WarningMessage");
-				String title = Messages.getString("BrowserTreeMenu.ShellTitle");
+				String mes = CBMessages.getString("BrowserTreeMenu.WarningMessage");
+				String title = CBMessages.getString("BrowserTreeMenu.ShellTitle");
 				
 				// ask the user before continuing the operation
 				boolean confirmation = MessageDialog.openQuestion(shell, title, mes);
@@ -1024,8 +1024,8 @@ public class TermsTreePanel extends Observable implements Observer {
 				e.printStackTrace();
 				LOGGER.error("Max term code reached", e);
 
-				GlobalUtil.showErrorDialog(shell, Messages.getString("NewTerm.MaxCodeReachedTitle"),
-						Messages.getString("NewTerm.MaxCodeReachedMessage"));
+				GlobalUtil.showErrorDialog(shell, CBMessages.getString("NewTerm.MaxCodeReachedTitle"),
+						CBMessages.getString("NewTerm.MaxCodeReachedMessage"));
 
 				String code = askTermCode();
 
@@ -1044,8 +1044,8 @@ public class TermsTreePanel extends Observable implements Observer {
 		TermDAO termDao = new TermDAO(catalogue);
 
 		DialogSingleText dialog = new DialogSingleText(shell, 1);
-		dialog.setTitle(Messages.getString("NewTerm.Title"));
-		dialog.setMessage(Messages.getString("NewTerm.Message"));
+		dialog.setTitle(CBMessages.getString("NewTerm.Title"));
+		dialog.setMessage(CBMessages.getString("NewTerm.Message"));
 		String code = dialog.open();
 
 		if (code == null)
@@ -1054,8 +1054,8 @@ public class TermsTreePanel extends Observable implements Observer {
 		// check if the selected code is already present or not in the db
 		if (termDao.getByCode(code) != null) {
 
-			GlobalUtil.showErrorDialog(shell, Messages.getString("NewTerm.DoubleCodeTitle"),
-					Messages.getString("NewTerm.DoubleCodeMessage"));
+			GlobalUtil.showErrorDialog(shell, CBMessages.getString("NewTerm.DoubleCodeTitle"),
+					CBMessages.getString("NewTerm.DoubleCodeMessage"));
 			return null;
 		}
 
@@ -1072,7 +1072,7 @@ public class TermsTreePanel extends Observable implements Observer {
 	private MenuItem addDeprecateTermMI(Menu menu) {
 
 		MenuItem deprecateTerm = new MenuItem(menu, SWT.NONE);
-		deprecateTerm.setText(Messages.getString("BrowserTreeMenu.DeprecateTerm"));
+		deprecateTerm.setText(CBMessages.getString("BrowserTreeMenu.DeprecateTerm"));
 
 		deprecateTerm.addSelectionListener(new SelectionListener() {
 
@@ -1119,7 +1119,7 @@ public class TermsTreePanel extends Observable implements Observer {
 	private MenuItem addCutBranchMI(Menu menu) {
 
 		MenuItem cutTerm = new MenuItem(menu, SWT.NONE);
-		cutTerm.setText(Messages.getString("BrowserTreeMenu.CutCmd"));
+		cutTerm.setText(CBMessages.getString("BrowserTreeMenu.CutCmd"));
 
 		cutTerm.addSelectionListener(new SelectionAdapter() {
 
@@ -1145,7 +1145,7 @@ public class TermsTreePanel extends Observable implements Observer {
 	private MenuItem addCopyNodeMI(Menu menu) {
 
 		MenuItem copyNode = new MenuItem(menu, SWT.NONE);
-		copyNode.setText(Messages.getString("BrowserTreeMenu.CopyNodeCmd"));
+		copyNode.setText(CBMessages.getString("BrowserTreeMenu.CopyNodeCmd"));
 
 		copyNode.addSelectionListener(new SelectionAdapter() {
 
@@ -1171,7 +1171,7 @@ public class TermsTreePanel extends Observable implements Observer {
 	private MenuItem addCopyBranchMI(Menu menu) {
 
 		MenuItem copyBranch = new MenuItem(menu, SWT.NONE);
-		copyBranch.setText(Messages.getString("BrowserTreeMenu.CopyBranchCmd"));
+		copyBranch.setText(CBMessages.getString("BrowserTreeMenu.CopyBranchCmd"));
 
 		copyBranch.addSelectionListener(new SelectionAdapter() {
 
@@ -1197,7 +1197,7 @@ public class TermsTreePanel extends Observable implements Observer {
 	private MenuItem addPasteMI(Menu menu) {
 
 		MenuItem pasteTerm = new MenuItem(menu, SWT.NONE);
-		pasteTerm.setText(Messages.getString("BrowserTreeMenu.PasteCmd"));
+		pasteTerm.setText(CBMessages.getString("BrowserTreeMenu.PasteCmd"));
 		pasteTerm.setEnabled(false);
 
 		pasteTerm.addSelectionListener(new SelectionAdapter() {
@@ -1233,7 +1233,7 @@ public class TermsTreePanel extends Observable implements Observer {
 	private MenuItem addPasteRootMI(Menu menu) {
 
 		MenuItem pasteTerm = new MenuItem(menu, SWT.NONE);
-		pasteTerm.setText(Messages.getString("BrowserTreeMenu.PasteRootCmd"));
+		pasteTerm.setText(CBMessages.getString("BrowserTreeMenu.PasteRootCmd"));
 		pasteTerm.setEnabled(false);
 
 		pasteTerm.addSelectionListener(new SelectionAdapter() {
@@ -1269,7 +1269,7 @@ public class TermsTreePanel extends Observable implements Observer {
 
 		/* setting copy only code in menu item */
 		MenuItem copycode = new MenuItem(menu, SWT.NONE);
-		copycode.setText(Messages.getString("BrowserTreeMenu.CopyCmd"));
+		copycode.setText(CBMessages.getString("BrowserTreeMenu.CopyCmd"));
 
 		copycode.addSelectionListener(new SelectionAdapter() {
 
@@ -1296,7 +1296,7 @@ public class TermsTreePanel extends Observable implements Observer {
 
 		/* setting copy and name in menu item */
 		MenuItem copyCodeName = new MenuItem(menu, SWT.NONE);
-		copyCodeName.setText(Messages.getString("BrowserTreeMenu.CopyCodeNameCmd"));
+		copyCodeName.setText(CBMessages.getString("BrowserTreeMenu.CopyCodeNameCmd"));
 
 		copyCodeName.addSelectionListener(new SelectionAdapter() {
 
@@ -1321,7 +1321,7 @@ public class TermsTreePanel extends Observable implements Observer {
 	private MenuItem addCopyTermFullcodeMI(Menu menu) {
 
 		MenuItem fullCopyTerm = new MenuItem(menu, SWT.NONE);
-		fullCopyTerm.setText(Messages.getString("BrowserTreeMenu.CopyFullCodeNameCmd"));
+		fullCopyTerm.setText(CBMessages.getString("BrowserTreeMenu.CopyFullCodeNameCmd"));
 
 		fullCopyTerm.addSelectionListener(new SelectionAdapter() {
 
@@ -1348,7 +1348,7 @@ public class TermsTreePanel extends Observable implements Observer {
 
 		MenuItem describeTerm = new MenuItem(menu, SWT.NONE);
 
-		describeTerm.setText(Messages.getString("BrowserTreeMenu.DescribeCmd"));
+		describeTerm.setText(CBMessages.getString("BrowserTreeMenu.DescribeCmd"));
 
 		// if describe is clicked and not describe instance exists
 		describeTerm.addSelectionListener(new SelectionAdapter() {
@@ -1358,7 +1358,7 @@ public class TermsTreePanel extends Observable implements Observer {
 
 				// initialise the describe window if null
 				if (tcf == null)
-					tcf = new FormTermCoder(shell, Messages.getString("FormTermCoder.Title"), catalogue);
+					tcf = new FormTermCoder(shell, CBMessages.getString("FormTermCoder.Title"), catalogue);
 
 				// set the base term
 				tcf.setBaseTerm(getFirstSelectedTerm());
@@ -1382,7 +1382,7 @@ public class TermsTreePanel extends Observable implements Observer {
 	private MenuItem addRecentlyDescribedTermsMI(Menu menu) {
 
 		final MenuItem recentlyDescribeTerm = new MenuItem(menu, SWT.NONE);
-		recentlyDescribeTerm.setText(Messages.getString("BrowserTreeMenu.RecentTermCmd"));
+		recentlyDescribeTerm.setText(CBMessages.getString("BrowserTreeMenu.RecentTermCmd"));
 
 		recentlyDescribeTerm.addSelectionListener(new SelectionAdapter() {
 
@@ -1403,7 +1403,7 @@ public class TermsTreePanel extends Observable implements Observer {
 
 				// show the window which allows to retrieve the last ten described terms
 				FormDescribedTerms rdt = new FormDescribedTerms(shell,
-						Messages.getString("BrowserTreeMenu.RecentTermWindowTitle"), catalogue, describedTerms);
+						CBMessages.getString("BrowserTreeMenu.RecentTermWindowTitle"), catalogue, describedTerms);
 
 				// display the window
 				rdt.display(catalogue);
@@ -1416,7 +1416,7 @@ public class TermsTreePanel extends Observable implements Observer {
 
 						// initialise the describe window if null
 						if (tcf == null)
-							tcf = new FormTermCoder(shell, Messages.getString("FormTermCoder.Title"), catalogue);
+							tcf = new FormTermCoder(shell, CBMessages.getString("FormTermCoder.Title"), catalogue);
 
 						// return if cannot open the describe window
 						if (!tcf.canOpen())
@@ -1456,7 +1456,7 @@ public class TermsTreePanel extends Observable implements Observer {
 	private MenuItem addFavouritePicklistMI(Menu menu) {
 
 		MenuItem picklistMenuItem = new MenuItem(menu, SWT.NONE);
-		picklistMenuItem.setText(Messages.getString("BrowserTreeMenu.PicklistCmd"));
+		picklistMenuItem.setText(CBMessages.getString("BrowserTreeMenu.PicklistCmd"));
 
 		picklistMenuItem.addSelectionListener(new SelectionAdapter() {
 
@@ -1470,7 +1470,7 @@ public class TermsTreePanel extends Observable implements Observer {
 
 				// show the window which shows all the terms of a favourite pick list
 				FormDescribedTerms rdt = new FormDescribedTerms(shell,
-						Messages.getString("BrowserTreeMenu.PicklistWindowTitle"), catalogue, picklist.getTerms());
+						CBMessages.getString("BrowserTreeMenu.PicklistWindowTitle"), catalogue, picklist.getTerms());
 
 				rdt.display(catalogue);
 			}
@@ -1493,7 +1493,7 @@ public class TermsTreePanel extends Observable implements Observer {
 		// the selectedTerm as implicit or explicit facets
 
 		MenuItem prefSearchTerm = new MenuItem(menu, SWT.NONE);
-		prefSearchTerm.setText(Messages.getString("BrowserTreeMenu.SearchTermInPicklistCmd")); //$NON-NLS-1$
+		prefSearchTerm.setText(CBMessages.getString("BrowserTreeMenu.SearchTermInPicklistCmd")); //$NON-NLS-1$
 
 		prefSearchTerm.addSelectionListener(new SelectionListener() {
 
@@ -1509,7 +1509,7 @@ public class TermsTreePanel extends Observable implements Observer {
 
 				// show the window which shows all the terms of a favourite pick list
 				FormDescribedTerms rdt = new FormDescribedTerms(shell,
-						Messages.getString("BrowserTreeMenu.PicklistWindowTitle"), catalogue,
+						CBMessages.getString("BrowserTreeMenu.PicklistWindowTitle"), catalogue,
 						pickDao.searchTermInPicklist(picklist, getFirstSelectedTerm()));
 
 				rdt.display(catalogue);

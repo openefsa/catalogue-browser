@@ -28,7 +28,7 @@ import data_transformation.BooleanConverter;
 import data_transformation.DateTrimmer;
 import data_transformation.ValuesGrouper;
 import global_manager.GlobalManager;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import naming_convention.SpecialValues;
 import term.TermSubtreeIterator;
 import ui_implicit_facet.ComparatorAlphaFacetDescriptor;
@@ -1657,8 +1657,8 @@ public class Term extends CatalogueObject implements Mappable {
 		term.setCode(code);
 
 		// default names and scopenotes
-		term.setName(Messages.getString("BrowserTreeMenu.NewTermDefaultName") + code);
-		term.setFullCodeDescription(Messages.getString("BrowserTreeMenu.NewTermDefaultName") + code);
+		term.setName(CBMessages.getString("BrowserTreeMenu.NewTermDefaultName") + code);
+		term.setFullCodeDescription(CBMessages.getString("BrowserTreeMenu.NewTermDefaultName") + code);
 		term.setScopenotes("");
 
 		// default the term is not deprecated

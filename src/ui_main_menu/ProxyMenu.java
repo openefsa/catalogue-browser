@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
-import messages.Messages;
+import i18n_messages.CBMessages;
 import user_interface.ProxySettingsDialog;
 
 public class ProxyMenu implements MainMenuItem {
@@ -26,7 +26,7 @@ public class ProxyMenu implements MainMenuItem {
 		
 		MenuItem item = new MenuItem(menu , SWT.PUSH);
 
-		item.setText(Messages.getString("proxy.config.menu"));
+		item.setText(CBMessages.getString("proxy.config.menu"));
 		item.addSelectionListener(new SelectionAdapter() {
 
 			@Override

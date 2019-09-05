@@ -16,8 +16,8 @@ import catalogue_generator.ThreadFinishedListener;
 import converter.ExceptionConverter;
 import dcf_user.ReauthThread;
 import dcf_user.User;
+import i18n_messages.CBMessages;
 import instance_checker.InstanceChecker;
-import messages.Messages;
 import soap.DetailedSOAPException;
 import ui_main_menu.LoginActions;
 import utilities.GlobalUtil;
@@ -51,8 +51,8 @@ public class CatalogueBrowserMain {
 
 			String trace = ExceptionConverter.getStackTrace(e);
 
-			GlobalUtil.showErrorDialog(new Shell(), Messages.getString("Generic.ErrorTitle"),
-					Messages.getString("Generic.ErrorMessage") + trace);
+			GlobalUtil.showErrorDialog(new Shell(), CBMessages.getString("Generic.ErrorTitle"),
+					CBMessages.getString("Generic.ErrorMessage") + trace);
 		}
 	}
 
@@ -82,8 +82,8 @@ public class CatalogueBrowserMain {
 			started = true;
 		} catch (SQLException e1) {
 			e1.printStackTrace();
-			GlobalUtil.showErrorDialog(new Shell(), Messages.getString("DBOpened.ErrorTitle"),
-					Messages.getString("DBOpened.ErrorMessage"));
+			GlobalUtil.showErrorDialog(new Shell(), CBMessages.getString("DBOpened.ErrorTitle"),
+					CBMessages.getString("DBOpened.ErrorMessage"));
 			return;
 		}
 
@@ -154,8 +154,8 @@ public class CatalogueBrowserMain {
 								// stored credentials are not valid refresh ui
 								browser.refresh();
 
-								GlobalUtil.showErrorDialog(shell, Messages.getString("Reauth.title.error"),
-										Messages.getString("Reauth.message.error"));
+								GlobalUtil.showErrorDialog(shell, CBMessages.getString("Reauth.title.error"),
+										CBMessages.getString("Reauth.message.error"));
 								break;
 							default:
 								// other exception

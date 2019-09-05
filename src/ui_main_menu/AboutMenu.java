@@ -8,7 +8,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
-import messages.Messages;
+
+import i18n_messages.CBMessages;
 import ui_licence.FormBrowser;
 import ui_licence.FormBrowserLicence;
 import ui_main_panel.BrowserReleaseNotes;
@@ -34,7 +35,7 @@ public class AboutMenu implements MainMenuItem {
 	public MenuItem create(Menu menu) {
 
 		MenuItem helpItem = new MenuItem(menu, SWT.CASCADE);
-		helpItem.setText(Messages.getString("BrowserMenu.AboutMenuName"));
+		helpItem.setText(CBMessages.getString("BrowserMenu.AboutMenuName"));
 
 		Menu helpMenu = new Menu(menu);
 		helpItem.setMenu(helpMenu);
@@ -63,13 +64,13 @@ public class AboutMenu implements MainMenuItem {
 	private void addDerbyLicenceMI(Menu menu) {
 
 		MenuItem derbyItem = new MenuItem(menu, SWT.NONE);
-		derbyItem.setText(Messages.getString("BrowserMenu.ApacheLicenceCmd"));
+		derbyItem.setText(CBMessages.getString("BrowserMenu.ApacheLicenceCmd"));
 
 		derbyItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
-				FormBrowser bf = new FormBrowser(Messages.getString("BrowserMenu.ApacheLicenceWindowTitle"),
+				FormBrowser bf = new FormBrowser(CBMessages.getString("BrowserMenu.ApacheLicenceWindowTitle"),
 						this.getClass().getClassLoader().getResourceAsStream("DerbyNotice.txt"));
 
 				bf.display(shell);
@@ -86,7 +87,7 @@ public class AboutMenu implements MainMenuItem {
 	private void addFoodexLicenceMI(Menu menu) {
 
 		MenuItem aboutItem = new MenuItem(menu, SWT.NONE);
-		aboutItem.setText(Messages.getString("BrowserMenu.Licence"));
+		aboutItem.setText(CBMessages.getString("BrowserMenu.Licence"));
 
 		aboutItem.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -106,7 +107,7 @@ public class AboutMenu implements MainMenuItem {
 
 		MenuItem notesItem = new MenuItem(menu, SWT.NONE);
 
-		notesItem.setText(Messages.getString("BrowserMenu.ViewReleaseNotes"));
+		notesItem.setText(CBMessages.getString("BrowserMenu.ViewReleaseNotes"));
 
 		notesItem.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -128,7 +129,7 @@ public class AboutMenu implements MainMenuItem {
 
 		MenuItem notesItem = new MenuItem(menu, SWT.NONE);
 
-		notesItem.setText(Messages.getString("BrowserMenu.ViewBrowserReleaseNotes"));
+		notesItem.setText(CBMessages.getString("BrowserMenu.ViewBrowserReleaseNotes"));
 
 		notesItem.addSelectionListener(new SelectionAdapter() {
 			@Override

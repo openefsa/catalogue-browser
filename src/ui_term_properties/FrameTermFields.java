@@ -32,7 +32,7 @@ import dcf_user.User;
 import detail_level.ContentProviderDetailLevel;
 import detail_level.DetailLevelGraphics;
 import detail_level.LabelProviderDetailLevel;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import naming_convention.SpecialValues;
 import term_type.ContentProviderTermType;
 import term_type.LabelProviderTermType;
@@ -360,11 +360,11 @@ public class FrameTermFields {
 
 		// add term code
 		if (includeAll || properties.contains("code"))
-			code = addTermCodeTextBox(parent, Messages.getString("TermProperties.TermCodeTitle"));
+			code = addTermCodeTextBox(parent, CBMessages.getString("TermProperties.TermCodeTitle"));
 
 		// add term code with implicit facets
 		if (includeAll || properties.contains("fullCode"))
-			fullCode = addTermCodeTextBox(parent, Messages.getString("TermProperties.TermCompleteCodeTitle"));
+			fullCode = addTermCodeTextBox(parent, CBMessages.getString("TermProperties.TermCompleteCodeTitle"));
 
 		// add term extended name
 		if (includeAll || properties.contains("extname"))
@@ -392,7 +392,7 @@ public class FrameTermFields {
 	 */
 	private ComboTextBox addTermType(Composite parent) {
 
-		ComboTextBox termType = new ComboTextBox(parent, Messages.getString("TermProperties.TermTypeTitle"));
+		ComboTextBox termType = new ComboTextBox(parent, CBMessages.getString("TermProperties.TermTypeTitle"));
 
 		termType.setLabelProvider(new LabelProviderTermType());
 		termType.setContentProvider(new ContentProviderTermType());
@@ -460,7 +460,7 @@ public class FrameTermFields {
 	 */
 	private ComboTextBox addDetailLevel(Composite parent) {
 
-		ComboTextBox detailLevel = new ComboTextBox(parent, Messages.getString("TermProperties.DetailLevelTitle"));
+		ComboTextBox detailLevel = new ComboTextBox(parent, CBMessages.getString("TermProperties.DetailLevelTitle"));
 
 		detailLevel.setLabelProvider(new LabelProviderDetailLevel());
 		detailLevel.setContentProvider(new ContentProviderDetailLevel());
@@ -585,7 +585,7 @@ public class FrameTermFields {
 		groupTermName.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		groupTermName.setLayout(new FillLayout());
 
-		groupTermName.setText(Messages.getString("TermProperties.TermNameTitle"));
+		groupTermName.setText(CBMessages.getString("TermProperties.TermNameTitle"));
 
 		groupTermName.setLayout(new FillLayout());
 
@@ -605,8 +605,8 @@ public class FrameTermFields {
 
 					// if the text is null then I have to raise an error,
 					// the old text has to be resumed
-					GlobalUtil.showErrorDialog(parent.getShell(), Messages.getString("TermProperties.InputErrorTitle"),
-							Messages.getString("TermProperties.InputErrorMessage"));
+					GlobalUtil.showErrorDialog(parent.getShell(), CBMessages.getString("TermProperties.InputErrorTitle"),
+							CBMessages.getString("TermProperties.InputErrorMessage"));
 
 					// restore previous value
 					textTermName.setText(term.getName());
@@ -626,8 +626,8 @@ public class FrameTermFields {
 				// be used
 				if (!termDao.isTermNameUnique(term.getCode(), textTermName.getText(), true)) {
 
-					GlobalUtil.showErrorDialog(parent.getShell(), Messages.getString("TermProperties.InputErrorTitle"),
-							Messages.getString("TermProperties.InputErrorMessage2"));
+					GlobalUtil.showErrorDialog(parent.getShell(), CBMessages.getString("TermProperties.InputErrorTitle"),
+							CBMessages.getString("TermProperties.InputErrorMessage2"));
 
 					textTermName.setText(term.getName());
 
@@ -705,7 +705,7 @@ public class FrameTermFields {
 		groupShortName.setLayout(new FillLayout());
 
 		// set its name and layout
-		groupShortName.setText(Messages.getString("TermProperties.TermFullCodeDesc"));
+		groupShortName.setText(CBMessages.getString("TermProperties.TermFullCodeDesc"));
 
 		groupShortName.setLayout(new FillLayout());
 
@@ -760,7 +760,7 @@ public class FrameTermFields {
 		groupScopeNotes.setLayout(new GridLayout(1, false));
 
 		// set group title
-		groupScopeNotes.setText(Messages.getString("TermProperties.ScopenotesTitle"));
+		groupScopeNotes.setText(CBMessages.getString("TermProperties.ScopenotesTitle"));
 
 		// create scopenotes and links
 		final ScopenotesWithLinks scopenotesLink = new ScopenotesWithLinks(groupScopeNotes);

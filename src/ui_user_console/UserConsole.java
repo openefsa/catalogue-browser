@@ -6,7 +6,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 
-import messages.Messages;
+import i18n_messages.CBMessages;
 import pending_request.IPendingRequest;
 import sas_remote_procedures.XmlChangesService;
 import soap.UploadCatalogueFileImpl;
@@ -42,11 +42,11 @@ public class UserConsole extends Composite {
 		
 		// assign composites to tabs
 		TabItem consoleTab = new TabItem(tabs, SWT.NONE);
-		consoleTab.setText(Messages.getString("console.tab.title"));
+		consoleTab.setText(CBMessages.getString("console.tab.title"));
 		consoleTab.setControl(console);
 		
 		TabItem requestsTab = new TabItem(tabs, SWT.NONE);
-		requestsTab.setText(Messages.getString("requests.tab.title"));
+		requestsTab.setText(CBMessages.getString("requests.tab.title"));
 		requestsTab.setControl(requestTable);
 		
 		requestTable.addRelaunchListener(new PendingRequestTableRelaunchListener() {

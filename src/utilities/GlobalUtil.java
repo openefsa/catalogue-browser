@@ -29,7 +29,7 @@ import config.AppConfig;
 import dcf_user.User;
 import dcf_user.UserAccessLevel;
 import dcf_user.UserListener;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import soap.DetailedSOAPException;
 import soap.SOAPError;
 
@@ -90,7 +90,7 @@ public final class GlobalUtil {
 	public static final String CHECK_DIR_PATH = getCheckDir();
 	public static final String ICT_DIR_NAME = "Interpreting_Tool";
 	public static final String ICT_DIR_PATH = getIctDir();
-	public static final String ICT_DATABASE_DIR_NAME = "Database";
+	public static final String ICT_DATABASE_DIR_NAME = "database";
 	public static final String ICT_DATABASE_DIR_PATH = getIctDatabaseDir();
 	public static final String ICT_MAIN_CAT_DB_NAME = "MAIN_CATS_DB";
 	public static final String ICT_MAIN_CAT_DB_PATH = getIctMainCatDbDir();
@@ -666,25 +666,25 @@ public final class GlobalUtil {
 		
 		switch (error) {
 		case QUOTA_EXCEEDED:
-			title = Messages.getString("error.title");
-			message = Messages.getString("starter.week.message");
+			title = CBMessages.getString("error.title");
+			message = CBMessages.getString("starter.week.message");
 			break;
 		case TOO_MANY_REQUESTS:
-			title = Messages.getString("warning.title");
-			message = Messages.getString("starter.minute.message");
+			title = CBMessages.getString("warning.title");
+			message = CBMessages.getString("starter.minute.message");
 			break;
 		case MESSAGE_SEND_FAILED:
-			title = Messages.getString("error.title");
-			message = Messages.getString("send.message.failed");
+			title = CBMessages.getString("error.title");
+			message = CBMessages.getString("send.message.failed");
 			break;
 		case UNAUTHORIZED:
 		case FORBIDDEN:
-			title = Messages.getString("error.title");
-			message = Messages.getString("wrong.credentials");
+			title = CBMessages.getString("error.title");
+			message = CBMessages.getString("wrong.credentials");
 			break;
 		case NO_CONNECTION:
-			title = Messages.getString("error.title");
-			message = Messages.getString("no.connection");
+			title = CBMessages.getString("error.title");
+			message = CBMessages.getString("no.connection");
 			break;
 		default:
 			break;
@@ -753,7 +753,7 @@ public final class GlobalUtil {
 	public static void startShellTextUpdate(final Shell shell) {
 
 		// default
-		shell.setText(APP_TITLE + " " + Messages.getString("App.Disconnected"));
+		shell.setText(APP_TITLE + " " + CBMessages.getString("App.Disconnected"));
 
 		User.getInstance().addUserListener(new UserListener() {
 
@@ -761,8 +761,8 @@ public final class GlobalUtil {
 			public void userLevelChanged(UserAccessLevel newLevel) {
 
 				final String connectedAs = newLevel == UserAccessLevel.CATALOGUE_MANAGER
-						? Messages.getString("App.ConnectedCM")
-						: Messages.getString("App.ConnectedDP");
+						? CBMessages.getString("App.ConnectedCM")
+						: CBMessages.getString("App.ConnectedDP");
 
 				shell.getDisplay().asyncExec(new Runnable() {
 

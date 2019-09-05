@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import catalogue.AttachmentNotFoundException;
 import catalogue.Catalogue;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import progress_bar.FormProgressBar;
 import progress_bar.IProgressBar;
 import soap.DetailedSOAPException;
@@ -82,7 +82,7 @@ public class CatalogueDownloader extends Thread {
 
 		// show the progress bar
 		if ( progressBar != null ) {
-			progressBar.setLabel( Messages.getString( "DownloadCatalogue.ProgressBarDownload" ) );
+			progressBar.setLabel( CBMessages.getString( "DownloadCatalogue.ProgressBarDownload" ) );
 			progressBar.addProgress( 10 );
 		}
 

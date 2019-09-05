@@ -1,6 +1,5 @@
 package ui_general_graphics;
 import org.eclipse.swt.SWT;
-import messages.Messages;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Rectangle;
@@ -12,12 +11,15 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Text;
+
+import i18n_messages.CBMessages;
+
 import org.eclipse.swt.widgets.Shell;
 
 public class FormPassword {
 	Shell			_shell;
 
-	private String	title	= Messages.getString("FormPassword.DialogTitle"); //$NON-NLS-1$
+	private String	title	= CBMessages.getString("FormPassword.DialogTitle"); //$NON-NLS-1$
 	private Shell	dialog;
 	private String	_password = ""; // Initialize to avoid null pointer exception if no password is inserted //$NON-NLS-1$
 	private Text	passwordText;
@@ -46,7 +48,7 @@ public class FormPassword {
 		dialog.setLayout( new GridLayout( 1 , false ) );
 
 		Group pwdGroup = new Group( dialog , SWT.NONE );
-		pwdGroup.setText( Messages.getString("FormPassword.DialogSubtitle") ); //$NON-NLS-1$
+		pwdGroup.setText( CBMessages.getString("FormPassword.DialogSubtitle") ); //$NON-NLS-1$
 		pwdGroup.setLayout( new FillLayout() );
 
 		passwordText = new Text( pwdGroup , SWT.PASSWORD | SWT.SINGLE | SWT.BORDER );
@@ -80,7 +82,7 @@ public class FormPassword {
 		gridData.grabExcessHorizontalSpace = false;
 		gridData.grabExcessVerticalSpace = false;
 		ok.setLayoutData( gridData );
-		ok.setText( Messages.getString("FormPassword.OkButton") ); //$NON-NLS-1$
+		ok.setText( CBMessages.getString("FormPassword.OkButton") ); //$NON-NLS-1$
 		ok.pack();
 
 		final Button cancel = new Button( grpButton , SWT.TOGGLE );
@@ -90,7 +92,7 @@ public class FormPassword {
 		gridData.grabExcessHorizontalSpace = false;
 		gridData.grabExcessVerticalSpace = false;
 		cancel.setLayoutData( gridData );
-		cancel.setText( Messages.getString("FormPassword.CancelButton") ); //$NON-NLS-1$
+		cancel.setText( CBMessages.getString("FormPassword.CancelButton") ); //$NON-NLS-1$
 		cancel.pack();
 
 		dialog.pack();

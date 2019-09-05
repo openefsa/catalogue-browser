@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import messages.Messages;
+import i18n_messages.CBMessages;
 import session_manager.BrowserWindowPreferenceDao;
 import window_restorer.RestoreableWindow;
 
@@ -25,8 +25,8 @@ public class DialogSingleText extends Dialog {
 	private Shell shell;
 	private String message;
 	private int minLength;
-	private String okText = Messages.getString( "DialogSingleText.Ok" );
-	private String cancelText = Messages.getString( "DialogSingleText.Cancel" );;
+	private String okText = CBMessages.getString( "DialogSingleText.Ok" );
+	private String cancelText = CBMessages.getString( "DialogSingleText.Cancel" );;
 	private String input;
 
 	/**

@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Label;
 
 import catalogue_object.Hierarchy;
 import catalogue_object.Term;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import user_preferences.GlobalPreferenceDAO;
 import user_preferences.Preference;
 import user_preferences.PreferenceNotFoundException;
@@ -70,12 +70,12 @@ public class TermFilter extends Observable {
 		
 		// Hide
 		Label label = new Label(hideComp, SWT.NONE);
-		label.setText(Messages.getString("TermFilter.Title"));
+		label.setText(CBMessages.getString("TermFilter.Title"));
 
 		// switch between seeing and not seeing deprecated terms
 		hideDeprecated = new Button(hideComp, SWT.CHECK);
 		hideDeprecated.setEnabled(false);
-		hideDeprecated.setText(Messages.getString("TermFilter.HideDeprecatedTermsButton"));
+		hideDeprecated.setText(CBMessages.getString("TermFilter.HideDeprecatedTermsButton"));
 		hideDeprecated.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -94,7 +94,7 @@ public class TermFilter extends Observable {
 		// switch between seeing and not seeing reportable terms
 		hideNotInUse = new Button(hideComp, SWT.CHECK);
 		hideNotInUse.setEnabled(false);
-		hideNotInUse.setText(Messages.getString("TermFilter.HideNonReportableTermsButton"));
+		hideNotInUse.setText(CBMessages.getString("TermFilter.HideNonReportableTermsButton"));
 		hideNotInUse.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -112,7 +112,7 @@ public class TermFilter extends Observable {
 
 		hideTermCode = new Button(hideComp, SWT.CHECK);
 		hideTermCode.setEnabled(false);
-		hideTermCode.setText(Messages.getString("TermFilter.HideTermCodesButton"));
+		hideTermCode.setText(CBMessages.getString("TermFilter.HideTermCodesButton"));
 		hideTermCode.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

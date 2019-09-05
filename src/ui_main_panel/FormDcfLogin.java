@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Text;
 
 import config.Config;
 import dcf_user.User;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import soap.DetailedSOAPException;
 import utilities.GlobalUtil;
 
@@ -85,7 +85,7 @@ public class FormDcfLogin {
 
 			Label dcfTypeLabel = new Label(dialog, SWT.CENTER);
 
-			String dcfTypeText = Messages.getString("BrowserMenu.DCFLoginTest");
+			String dcfTypeText = CBMessages.getString("BrowserMenu.DCFLoginTest");
 			dcfTypeLabel.setText(dcfTypeText);
 
 			// set the label font to italic and bold
@@ -133,7 +133,7 @@ public class FormDcfLogin {
 
 		// add username
 		Label usernameLabel = new Label(dialog, SWT.NONE);
-		usernameLabel.setText(Messages.getString("FormDCFLogin.UsernameLabel"));
+		usernameLabel.setText(CBMessages.getString("FormDCFLogin.UsernameLabel"));
 
 		usernameText = new Text(dialog, SWT.NONE);
 		usernameText.setLayoutData(data);
@@ -152,7 +152,7 @@ public class FormDcfLogin {
 
 		// add password
 		Label passwdLabel = new Label(dialog, SWT.NONE);
-		passwdLabel.setText(Messages.getString("FormDCFLogin.PasswordLabel"));
+		passwdLabel.setText(CBMessages.getString("FormDCFLogin.PasswordLabel"));
 
 		passwdText = new Text(dialog, SWT.PASSWORD);
 		passwdText.setLayoutData(data);
@@ -180,7 +180,7 @@ public class FormDcfLogin {
 	private Button addLoginButton() {
 
 		loginBtn = new Button(dialog, SWT.NONE);
-		loginBtn.setText(Messages.getString("FormDCFLogin.LoginButton"));
+		loginBtn.setText(CBMessages.getString("FormDCFLogin.LoginButton"));
 		loginBtn.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
 		loginBtn.setEnabled(false);
 
@@ -225,8 +225,8 @@ public class FormDcfLogin {
 					dialog.close();
 				} else {
 
-					String logTitle = Messages.getString("FormDCFLogin.ErrorTitle");
-					String logMessage = Messages.getString("FormDCFLogin.WrongCredentialMessage");
+					String logTitle = CBMessages.getString("FormDCFLogin.ErrorTitle");
+					String logMessage = CBMessages.getString("FormDCFLogin.WrongCredentialMessage");
 
 					// show the dialog to show the login results
 					GlobalUtil.showErrorDialog(shell, logTitle, logMessage);

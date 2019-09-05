@@ -10,7 +10,7 @@ import catalogue.Catalogue;
 import catalogue_object.Attribute;
 import catalogue_object.Hierarchy;
 import catalogue_object.Nameable;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import term.LabelProviderTerm;
 
 public class LabelProviderImplicitFacets implements ILabelProvider {
@@ -94,7 +94,7 @@ public class LabelProviderImplicitFacets implements ILabelProvider {
 					// return the term label
 					return _termLabelProvider.getText( term );
 				} else
-					return Messages.getString("LabelProviderImplicitFacet.ErrorName1");
+					return CBMessages.getString("LabelProviderImplicitFacet.ErrorName1");
 
 			} else {
 				
@@ -107,7 +107,7 @@ public class LabelProviderImplicitFacets implements ILabelProvider {
 			}
 		}
 		
-		return Messages.getString("LabelProviderImplicitFacet.ErrorName2"); //$NON-NLS-1$
+		return CBMessages.getString("LabelProviderImplicitFacet.ErrorName2"); //$NON-NLS-1$
 	}
 
 }

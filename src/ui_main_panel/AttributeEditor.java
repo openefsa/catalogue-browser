@@ -11,7 +11,7 @@ import catalogue.Catalogue;
 import catalogue_browser_dao.AttributeDAO;
 import catalogue_browser_dao.CatalogueEntityDAO;
 import catalogue_object.Attribute;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import property.EditingSupportSimpleProperty;
 import property.LabelProviderDCFProperty;
 import utilities.GlobalUtil;
@@ -36,12 +36,12 @@ public class AttributeEditor extends CatalogueObjectEditor<Attribute> {
 		
 		// add code column
 		TableViewerColumn codeCol = GlobalUtil.addStandardColumn( table, new LabelProviderDCFProperty("Code"), 
-				Messages.getString("HierarchyEditor.CodeColumn"), 100 );
+				CBMessages.getString("HierarchyEditor.CodeColumn"), 100 );
 		codeCol.setEditingSupport( new EditingSupportSimpleProperty( table , "Code" ) );
 
 		// add name column
 		TableViewerColumn nameCol = GlobalUtil.addStandardColumn( table, new LabelProviderDCFProperty("Name"), 
-				Messages.getString("HierarchyEditor.NameColumn") );
+				CBMessages.getString("HierarchyEditor.NameColumn") );
 		nameCol.setEditingSupport( new EditingSupportSimpleProperty( table , "Name" ) );
 
 		// add label column
@@ -76,7 +76,7 @@ public class AttributeEditor extends CatalogueObjectEditor<Attribute> {
 
 		// add type column
 		TableViewerColumn typeCol = GlobalUtil.addStandardColumn(table, new LabelProviderDCFProperty("Type"), 
-				Messages.getString("HierarchyEditor.TypeColumn"), 100, SWT.CENTER );
+				CBMessages.getString("HierarchyEditor.TypeColumn"), 100, SWT.CENTER );
 		typeCol.setEditingSupport( new EditingSupportSimpleProperty( table , "Type" ) );
 
 		// add Maxlength column

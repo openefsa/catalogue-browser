@@ -15,7 +15,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-import messages.Messages;
+import i18n_messages.CBMessages;
 import utilities.GlobalUtil;
 
 /**
@@ -47,16 +47,16 @@ public class FormBrowserLicence {
 		startupWindow.setSize(image.getBounds().width + 15, 500);
 
 		Label l = new Label(startupWindow, SWT.NONE);
-		l.setText(Messages.getString("Startup.AppVersion") + " " + GlobalUtil.APP_VERSION);
+		l.setText(CBMessages.getString("Startup.AppVersion") + " " + GlobalUtil.APP_VERSION);
 
 		l.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 
 		Label l3 = new Label(startupWindow, SWT.NONE);
-		l3.setText(Messages.getString("Startup.EFSACopyright"));
+		l3.setText(CBMessages.getString("Startup.EFSACopyright"));
 		l3.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 
 		Label l4 = new Label(startupWindow, SWT.NONE);
-		l4.setText(Messages.getString("Startup.LicenceStmt"));
+		l4.setText(CBMessages.getString("Startup.LicenceStmt"));
 		l4.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 
 		StyledText t1 = new StyledText(startupWindow, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);

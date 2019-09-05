@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
-import messages.Messages;
+import i18n_messages.CBMessages;
 import session_manager.BrowserWindowPreferenceDao;
 import ui_general_graphics.TableResizer;
 import window_restorer.RestoreableWindow;
@@ -42,8 +42,8 @@ public abstract class FormObjectsList<T> {
 	private static final String OK_KEY = "okButton"; 
 	private static final String CANCEL_KEY = "cancelButton";
 	
-	private String okButtonText = Messages.getString("FormCataloguesList.DownloadCmd");
-	private String cancelButtonText = Messages.getString("FormCataloguesList.CancelCmd");
+	private String okButtonText = CBMessages.getString("FormCataloguesList.DownloadCmd");
+	private String cancelButtonText = CBMessages.getString("FormCataloguesList.CancelCmd");
 
 	private String title;                        // shell title
 	private Shell shell;                         // parent shell
@@ -410,8 +410,8 @@ public abstract class FormObjectsList<T> {
 
 			// warn the user
 			MessageBox mb = new MessageBox ( dialog, SWT.ICON_WARNING );
-			mb.setText( Messages.getString("FormObjList.WarningTitle") );
-			mb.setMessage( Messages.getString("FormObjList.WarningMessage") );
+			mb.setText( CBMessages.getString("FormObjList.WarningTitle") );
+			mb.setMessage( CBMessages.getString("FormObjList.WarningMessage") );
 			mb.open();
 
 			return;

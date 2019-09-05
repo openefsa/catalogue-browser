@@ -15,7 +15,7 @@ import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueEntityDAO;
 import catalogue_generator.ThreadFinishedListener;
 import export_catalogue.ExportActions;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import progress_bar.FormProgressBar;
 import progress_bar.IProgressBar;
 import utilities.GlobalUtil;
@@ -76,7 +76,7 @@ public class XmlUpdatesFactory {
 			public void finished(Thread thread, int code, Exception exception) {
 
 				if ( code != ThreadFinishedListener.OK ) {
-					abort( Messages.getString( "XmlChangesCreator.ExportAbort" ) );
+					abort( CBMessages.getString( "XmlChangesCreator.ExportAbort" ) );
 					return;
 				}
 				
@@ -227,7 +227,7 @@ public class XmlUpdatesFactory {
 					" in " + newFile + ". Aborting operation...";
 			
 			LOGGER.error( error );
-			abort( Messages.getString( "XmlChangesCreator.RenameAbort" ) );
+			abort( CBMessages.getString( "XmlChangesCreator.RenameAbort" ) );
 		}
 		
 		return success;

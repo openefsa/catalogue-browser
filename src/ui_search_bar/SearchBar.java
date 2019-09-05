@@ -26,7 +26,7 @@ import catalogue.Catalogue;
 import catalogue_object.Hierarchy;
 import catalogue_object.Term;
 import global_manager.GlobalManager;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import ui_main_panel.HierarchySelector;
 import ui_main_panel.TermFilter;
 import user_preferences.CataloguePreference;
@@ -288,7 +288,7 @@ public class SearchBar implements Observer {
 
 		// Search label
 		Label labelSearch = new Label(searchComposite, SWT.NONE);
-		labelSearch.setText(Messages.getString("SearchBar.SearchLabel"));
+		labelSearch.setText(CBMessages.getString("SearchBar.SearchLabel"));
 
 		// Search text box (where you write keywords)
 		textSearch = addSearchTextBox(searchComposite);
@@ -357,7 +357,7 @@ public class SearchBar implements Observer {
 			buttonSearch = new Button(searchComposite, SWT.PUSH);// searchGroup
 
 		buttonSearch.setAlignment(SWT.CENTER);
-		buttonSearch.setText(Messages.getString("SearchBar.GoButton"));
+		buttonSearch.setText(CBMessages.getString("SearchBar.GoButton"));
 		buttonSearch.setEnabled(false); // until a keyword is added, disabled
 		buttonSearch.pack();
 
@@ -406,10 +406,10 @@ public class SearchBar implements Observer {
 	private void addGlobalSearch(Composite parent) {
 
 		localSearch = new Button(parent, SWT.RADIO);
-		localSearch.setText(Messages.getString("SearchBar.SearchCurrentButton"));
+		localSearch.setText(CBMessages.getString("SearchBar.SearchCurrentButton"));
 
 		globalSearch = new Button(parent, SWT.RADIO);
-		globalSearch.setText(Messages.getString("SearchBar.SearchDictionaryButton"));
+		globalSearch.setText(CBMessages.getString("SearchBar.SearchDictionaryButton"));
 
 		/* setting local/global search */
 		localSearch.setSelection(true);
@@ -443,7 +443,7 @@ public class SearchBar implements Observer {
 	private Text addSearchTextBox(Composite parent) {
 
 		Text textSearch = new Text(parent, SWT.BORDER);
-		textSearch.setMessage(Messages.getString("SearchBar.SearchTipText"));
+		textSearch.setMessage(CBMessages.getString("SearchBar.SearchTipText"));
 
 		GridData gridData = new GridData();
 		gridData.verticalAlignment = SWT.CENTER;
@@ -464,15 +464,15 @@ public class SearchBar implements Observer {
 	private Combo addSearchOptions(Composite parent) {
 
 		Combo comboOptSearch = new Combo(parent, SWT.READ_ONLY);
-		String items[] = { Messages.getString("SearchBar.SearchOption1"), Messages.getString("SearchBar.SearchOption2"),
-				Messages.getString("SearchBar.SearchOption3") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		String items[] = { CBMessages.getString("SearchBar.SearchOption1"), CBMessages.getString("SearchBar.SearchOption2"),
+				CBMessages.getString("SearchBar.SearchOption3") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		comboOptSearch.setItems(items);
 		comboOptSearch.select(0);
 		comboOptSearch.pack();
-		comboOptSearch.setToolTipText(Messages.getString("SearchBar.SearchTip1") //$NON-NLS-1$
-				+ Messages.getString("SearchBar.SearchTip2") //$NON-NLS-1$
-				+ Messages.getString("SearchBar.SearchTip3") //$NON-NLS-1$
-				+ Messages.getString("SearchBar.SearchTip4")); //$NON-NLS-1$
+		comboOptSearch.setToolTipText(CBMessages.getString("SearchBar.SearchTip1") //$NON-NLS-1$
+				+ CBMessages.getString("SearchBar.SearchTip2") //$NON-NLS-1$
+				+ CBMessages.getString("SearchBar.SearchTip3") //$NON-NLS-1$
+				+ CBMessages.getString("SearchBar.SearchTip4")); //$NON-NLS-1$
 
 		return comboOptSearch;
 	}

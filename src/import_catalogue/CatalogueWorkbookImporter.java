@@ -29,7 +29,7 @@ import catalogue_object.Attribute;
 import catalogue_object.Hierarchy;
 import catalogue_object.Term;
 import catalogue_object.TermAttribute;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import naming_convention.Headers;
 import open_xml_reader.ResultDataSet;
 import open_xml_reader.WorkbookReader;
@@ -141,7 +141,7 @@ public class CatalogueWorkbookImporter {
 			LOGGER.info("Import catalogue sheet");
 
 			if (progressBar != null)
-				progressBar.setLabel(Messages.getString("Import.Catalogue"));
+				progressBar.setLabel(CBMessages.getString("Import.Catalogue"));
 
 			catImp = importCatalogueSheet(workbookReader);
 
@@ -155,32 +155,32 @@ public class CatalogueWorkbookImporter {
 			LOGGER.info("Import hierarchy sheet");
 
 			if (progressBar != null)
-				progressBar.setLabel(Messages.getString("Import.Hierarchy"));
+				progressBar.setLabel(CBMessages.getString("Import.Hierarchy"));
 
 			importHierarchySheet(workbookReader, importedCat, catExcelCode);
 
 			// import attributes
 			LOGGER.info("Import attribute sheet");
 			if (progressBar != null)
-				progressBar.setLabel(Messages.getString("Import.Attribute"));
+				progressBar.setLabel(CBMessages.getString("Import.Attribute"));
 			importAttributeSheet(workbookReader, importedCat);
 
 			// import terms
 			LOGGER.info("Import term sheet");
 			if (progressBar != null)
-				progressBar.setLabel(Messages.getString("Import.Term"));
+				progressBar.setLabel(CBMessages.getString("Import.Term"));
 			termImp = importTermSheet(workbookReader, importedCat);
 
 			// import term attributes and parent
 			LOGGER.info("Import term attributes and parents sheet");
 			if (progressBar != null)
-				progressBar.setLabel(Messages.getString("Import.TermAttrParent"));
+				progressBar.setLabel(CBMessages.getString("Import.TermAttrParent"));
 			importTermRelations(workbookReader, importedCat, termImp.getNewCodes());
 
 			// import the release note sheet
 			LOGGER.info("Import release notes sheet");
 			if (progressBar != null)
-				progressBar.setLabel(Messages.getString("Import.ReleaseNotes"));
+				progressBar.setLabel(CBMessages.getString("Import.ReleaseNotes"));
 			importReleaseNotes(workbookReader, importedCat);
 
 			// close the connection with excel reader
@@ -190,7 +190,7 @@ public class CatalogueWorkbookImporter {
 			// after having imported the excel, we can insert the default preferences
 			LOGGER.info("Creating default preferences");
 			if (progressBar != null)
-				progressBar.setLabel(Messages.getString("Import.Preferences"));
+				progressBar.setLabel(CBMessages.getString("Import.Preferences"));
 
 			CataloguePreferenceDAO prefDao = new CataloguePreferenceDAO(importedCat);
 			prefDao.insertDefaultPreferences();

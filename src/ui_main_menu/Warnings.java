@@ -4,7 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
 import dcf_user.User.CatalogueStatus;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import utilities.GlobalUtil;
 
 /**
@@ -28,26 +28,26 @@ public class Warnings {
 	 */
 	public boolean reserve(CatalogueStatus problem) {
 		
-		String title = Messages.getString("Reserve.NotAllowedTitle");
+		String title = CBMessages.getString("Reserve.NotAllowedTitle");
 		String msg = null;
 		
 		boolean showMessage = true;
 		
 		switch (problem) {
 		case RESERVED_BY_OTHER:
-			msg = Messages.getString("Reserve.ReservedByOther");
+			msg = CBMessages.getString("Reserve.ReservedByOther");
 			break;
 		case NOT_LAST_VERSION:
-			msg = Messages.getString("Reserve.NotLast");
+			msg = CBMessages.getString("Reserve.NotLast");
 			break;
 		case DEPRECATED:
-			msg = Messages.getString("Reserve.Deprecated");
+			msg = CBMessages.getString("Reserve.Deprecated");
 			break;
 		case LOCAL:
-			msg = Messages.getString("Reserve.Local");
+			msg = CBMessages.getString("Reserve.Local");
 			break;
 		case INV_VERSION:
-			msg = Messages.getString("Reserve.Invalid");
+			msg = CBMessages.getString("Reserve.Invalid");
 			break;
 		default:
 			showMessage = false;
@@ -67,7 +67,7 @@ public class Warnings {
 	 */
 	public boolean publish (CatalogueStatus problem) {
 		
-		String title = Messages.getString("Publish.NotAllowedTitle");
+		String title = CBMessages.getString("Publish.NotAllowedTitle");
 		String msg = null;
 		
 		boolean showMessage = true;
@@ -75,19 +75,19 @@ public class Warnings {
 		switch (problem) {
 		case RESERVED_BY_CURRENT:
 		case RESERVED_BY_OTHER:
-			msg = Messages.getString("Publish.Reserved");
+			msg = CBMessages.getString("Publish.Reserved");
 			break;
 		case NOT_LAST_VERSION:
-			msg = Messages.getString("Publish.NotLast");
+			msg = CBMessages.getString("Publish.NotLast");
 			break;
 		case DEPRECATED:
-			msg = Messages.getString("Publish.Deprecated");
+			msg = CBMessages.getString("Publish.Deprecated");
 			break;
 		case LOCAL:
-			msg = Messages.getString("Publish.Local");
+			msg = CBMessages.getString("Publish.Local");
 			break;
 		case INV_VERSION:
-			msg = Messages.getString("Publish.Invalid");
+			msg = CBMessages.getString("Publish.Invalid");
 			break;
 		default:
 			showMessage = false;

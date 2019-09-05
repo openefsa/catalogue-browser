@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Shell;
 import catalogue.Catalogue;
 import catalogue.ReleaseNotes;
 import catalogue.ReleaseNotesOperation;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import utilities.GlobalUtil;
 
 /**
@@ -34,7 +34,7 @@ import utilities.GlobalUtil;
  */
 public class FormReleaseNotes {
 
-	private static final String UNKNOWN_VALUE = Messages.getString("FormReleaseNotes.Unknown");
+	private static final String UNKNOWN_VALUE = CBMessages.getString("FormReleaseNotes.Unknown");
 
 	private Shell shell;
 	private Shell dialog;
@@ -52,8 +52,8 @@ public class FormReleaseNotes {
 
 		// set the dialog title
 		ReleaseNotes rn = catalogue.getReleaseNotes();
-		dialog.setText(Messages.getString("FormReleaseNotes.ReleaseDate") + " " + getValue(rn.getDate()) + " "
-				+ Messages.getString("FormReleaseNotes.ReleaseVersion") + " " + getValue(rn.getInternalVersion()));
+		dialog.setText(CBMessages.getString("FormReleaseNotes.ReleaseDate") + " " + getValue(rn.getDate()) + " "
+				+ CBMessages.getString("FormReleaseNotes.ReleaseVersion") + " " + getValue(rn.getInternalVersion()));
 
 		// set the dialog layout
 		dialog.setLayout(new FillLayout());
@@ -63,11 +63,11 @@ public class FormReleaseNotes {
 		layout.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		Label description = new Label(layout, SWT.NONE);
-		description.setText(Messages.getString("FormReleaseNotes.Description") + " " + getValue(rn.getDescription()));
+		description.setText(CBMessages.getString("FormReleaseNotes.Description") + " " + getValue(rn.getDescription()));
 
 		Label internalVersionNote = new Label(layout, SWT.NONE);
 		internalVersionNote.setText(
-				Messages.getString("FormReleaseNotes.InternalNote") + " " + getValue(rn.getInternalVersionNote()));
+				CBMessages.getString("FormReleaseNotes.InternalNote") + " " + getValue(rn.getInternalVersionNote()));
 
 		TableViewer table = addReleaseNotesTable(layout);
 		table.setInput(rn.getOperations());
@@ -104,13 +104,13 @@ public class FormReleaseNotes {
 
 		// Add columns
 		GlobalUtil.addStandardColumn(table, new NotesLabelProvider(NotesLabelProvider.NAME),
-				Messages.getString("FormReleaseNotes.NameColumn"), 150, true, false);
+				CBMessages.getString("FormReleaseNotes.NameColumn"), 150, true, false);
 
 		GlobalUtil.addStandardColumn(table, new NotesLabelProvider(NotesLabelProvider.DATE),
-				Messages.getString("FormReleaseNotes.DateColumn"), 100, true, false);
+				CBMessages.getString("FormReleaseNotes.DateColumn"), 100, true, false);
 
 		GlobalUtil.addStandardColumn(table, new NotesLabelProvider(NotesLabelProvider.INFO),
-				Messages.getString("FormReleaseNotes.InfoColumn"), 300, true, false);
+				CBMessages.getString("FormReleaseNotes.InfoColumn"), 300, true, false);
 
 		// make the columns names visible
 		table.getTable().setHeaderVisible(true);

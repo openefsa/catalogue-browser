@@ -25,7 +25,7 @@ import dcf_user.User;
 import dcf_user.UserAccessLevel;
 import dcf_user.UserListener;
 import global_manager.GlobalManager;
-import messages.Messages;
+import i18n_messages.CBMessages;
 import ui_main_menu.FileActions;
 
 /**
@@ -101,7 +101,7 @@ public class CatalogueLabel implements Observer {
 
 		// button which allow to download the new version
 		btnUpdate = new Button(leftGroup, SWT.PUSH);
-		btnUpdate.setText(Messages.getString("CatalogueLabel.UpdateButton"));
+		btnUpdate.setText(CBMessages.getString("CatalogueLabel.UpdateButton"));
 
 		btnUpdate.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -154,7 +154,7 @@ public class CatalogueLabel implements Observer {
 		this.catalogue = catalogue;
 
 		if (catalogue == null)
-			label.setText(Messages.getString("CatalogueLabel.EmptyLabel"));
+			label.setText(CBMessages.getString("CatalogueLabel.EmptyLabel"));
 		else if (catalogue.isLocal())
 			label.setText(catalogue.getLabel());
 		else
@@ -178,8 +178,8 @@ public class CatalogueLabel implements Observer {
 		if (catalogue == null || !current.equals(catalogue.getCode()) || toolTip.isDisposed())
 			return;
 
-		toolTip.setText(Messages.getString("CatalogueLabel.ToolTipTitle"));
-		toolTip.setMessage(Messages.getString("CatalogueLabel.ToolTipMessage"));
+		toolTip.setText(CBMessages.getString("CatalogueLabel.ToolTipTitle"));
+		toolTip.setMessage(CBMessages.getString("CatalogueLabel.ToolTipMessage"));
 		toolTip.setLocation(lblNewVersion.toDisplay(16, 16));
 		toolTip.setVisible(true);
 		toolTip.setAutoHide(true);
