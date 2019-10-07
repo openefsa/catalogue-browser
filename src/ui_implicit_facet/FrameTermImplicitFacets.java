@@ -331,7 +331,7 @@ public class FrameTermImplicitFacets implements Observer {
 		// If we actually have selected a facet category we can compute the real number
 		// of descriptors under that folder. If instead we have selected a facet
 		// descriptor we can only say that there is at least one descriptor in the
-		// selected facet category! (it is sufficent for the addable/removable check)
+		// selected facet category! (it is sufficient for the addable/removable check)
 
 		// if we selected a facet category ( i.e. yellow folder )
 		if (facetCategory instanceof Attribute) {
@@ -341,18 +341,14 @@ public class FrameTermImplicitFacets implements Observer {
 			// count the descriptors
 			descriptorsCount = baseTerm.getDescriptorsByCategory((Attribute) facetCategory, true).size();
 
-			// shahaal: add the impl facets
-			descriptorsCount += baseTerm.getInheritedImplicitFacets((Attribute) facetCategory).size();
-
 		} else {
-			// Author: shahaal
 			// if we selected a facet descriptor we get the cardinality from the attribute
 			// contained into the
 			// descriptor, which is the facet category
-			cardinality = ((DescriptorTreeItem) facetCategory).getDescriptor().getFacetCategory()
-					.getSingleOrRepeatable();
-
-			// cardinality = "single";
+			cardinality = ((DescriptorTreeItem) facetCategory).getDescriptor().getFacetCategory().getSingleOrRepeatable();
+			
+			//cardinality = "single";
+			
 			// we have at least one descriptor
 			descriptorsCount = 1;
 

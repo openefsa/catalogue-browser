@@ -40,10 +40,10 @@ public abstract class CatalogueObjectEditor<T extends SortableCatalogueObject> {
 
 	/**
 	 * Initialize the editor variables
+	 * 
 	 * @param shell parent shell
 	 */
-	public CatalogueObjectEditor( Shell shell, String windowCode, ArrayList<T> objects, 
-			String title ) {
+	public CatalogueObjectEditor(Shell shell, String windowCode, ArrayList<T> objects, String title) {
 		this.shell = shell;
 		this.windowCode = windowCode;
 		this.objects = objects;
@@ -57,201 +57,199 @@ public abstract class CatalogueObjectEditor<T extends SortableCatalogueObject> {
 	public void display() {
 
 		// new form
-		dialog = new Shell( shell, SWT.SHELL_TRIM | SWT.APPLICATION_MODAL );
+		dialog = new Shell(shell, SWT.SHELL_TRIM | SWT.APPLICATION_MODAL);
 
-		dialog.setText( title );
-		dialog.setSize( 600, 400 );
-		dialog.setLayout( new GridLayout( 1 , false ) );
-		
+		dialog.setText(title);
+		dialog.setSize(600, 400);
+		dialog.setLayout(new GridLayout(1, false));
+
 		window = new RestoreableWindow(dialog, windowCode);
 
-		Group g = new Group( dialog , SWT.NONE );
-		g.setLayout( new GridLayout( 1 , false ) );
+		Group g = new Group(dialog, SWT.NONE);
+		g.setLayout(new GridLayout(1, false));
 
-		Composite commands = new Composite( g , SWT.NONE );
+		Composite commands = new Composite(g, SWT.NONE);
 
 		GridData gridData = new GridData();
 		gridData.verticalAlignment = SWT.TOP;
 		gridData.horizontalAlignment = SWT.FILL;
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.grabExcessVerticalSpace = false;
-		commands.setLayoutData( gridData );
+		commands.setLayoutData(gridData);
 
-		commands.setLayout( new GridLayout( 4 , false ) );
+		commands.setLayout(new GridLayout(4, false));
 
 		// add button
-		final Button commandAdd = new Button( commands , SWT.TOGGLE );
-		commandAdd.setText( CBMessages.getString("Editor.AddCmd") );
+		final Button commandAdd = new Button(commands, SWT.TOGGLE);
+		commandAdd.setText(CBMessages.getString("Editor.AddCmd"));
 		gridData = new GridData();
 		gridData.verticalAlignment = SWT.TOP;
 		gridData.horizontalAlignment = SWT.LEFT;
 		gridData.grabExcessHorizontalSpace = false;
 		gridData.grabExcessVerticalSpace = false;
-		commandAdd.setLayoutData( gridData );
+		commandAdd.setLayoutData(gridData);
 
 		// remove button
-		final Button commandRemove = new Button( commands , SWT.TOGGLE );
-		commandRemove.setText( CBMessages.getString("Editor.RemoveCmd") );
+		final Button commandRemove = new Button(commands, SWT.TOGGLE);
+		commandRemove.setText(CBMessages.getString("Editor.RemoveCmd"));
 		gridData = new GridData();
 		gridData.verticalAlignment = SWT.TOP;
 		gridData.horizontalAlignment = SWT.LEFT;
 		gridData.grabExcessHorizontalSpace = false;
 		gridData.grabExcessVerticalSpace = false;
-		commandRemove.setLayoutData( gridData );
+		commandRemove.setLayoutData(gridData);
 
 		// move up button
-		Button bUp = new Button( commands , SWT.PUSH );
-		bUp.setText( CBMessages.getString("Editor.MoveUpCmd") );
+		Button bUp = new Button(commands, SWT.PUSH);
+		bUp.setText(CBMessages.getString("Editor.MoveUpCmd"));
 		bUp.pack();
 		gridData = new GridData();
 		gridData.verticalAlignment = SWT.FILL;
 		gridData.horizontalAlignment = SWT.FILL;
 		gridData.grabExcessHorizontalSpace = false;
 		gridData.grabExcessVerticalSpace = true;
-		bUp.setLayoutData( gridData );
+		bUp.setLayoutData(gridData);
 
 		// move down button
-		Button bDown = new Button( commands , SWT.PUSH );
-		bDown.setText( CBMessages.getString("Editor.MoveDownCmd") );
+		Button bDown = new Button(commands, SWT.PUSH);
+		bDown.setText(CBMessages.getString("Editor.MoveDownCmd"));
 		bDown.pack();
 		gridData = new GridData();
 		gridData.verticalAlignment = SWT.FILL;
 		gridData.horizontalAlignment = SWT.FILL;
 		gridData.grabExcessHorizontalSpace = false;
 		gridData.grabExcessVerticalSpace = true;
-		bDown.setLayoutData( gridData );
+		bDown.setLayoutData(gridData);
 
 		commands.pack();
 
 		// table which shows the objects
-		final TableViewer table = new TableViewer( g , SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION );
-		table.getTable().setHeaderVisible( true );
+		final TableViewer table = new TableViewer(g, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
+		table.getTable().setHeaderVisible(true);
 
-		table.setContentProvider( new ContentProviderProperty() );
-		table.setLabelProvider( new LabelProviderProperty() );
-		table.setSorter( new SorterDCFProperty() );
+		table.setContentProvider(new ContentProviderProperty());
+		table.setLabelProvider(new LabelProviderProperty());
+		table.setSorter(new SorterDCFProperty());
 
 		// create the table columns
-		createColumns ( table );
+		createColumns(table);
 
 		// set the table input
-		table.setInput( objects );
-		
-		gridData = new GridData();
-		gridData.verticalAlignment = SWT.FILL;
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = true;
-		table.getTable().setLayoutData( gridData );
+		table.setInput(objects);
 
 		gridData = new GridData();
 		gridData.verticalAlignment = SWT.FILL;
 		gridData.horizontalAlignment = SWT.FILL;
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.grabExcessVerticalSpace = true;
-		g.setLayoutData( gridData );
-		
-		
-		Composite c = new Composite( dialog , SWT.NONE );
+		table.getTable().setLayoutData(gridData);
+
+		gridData = new GridData();
+		gridData.verticalAlignment = SWT.FILL;
+		gridData.horizontalAlignment = SWT.FILL;
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.grabExcessVerticalSpace = true;
+		g.setLayoutData(gridData);
+
+		Composite c = new Composite(dialog, SWT.NONE);
 		gridData = new GridData();
 		gridData.verticalAlignment = SWT.CENTER;
 		gridData.horizontalAlignment = SWT.CENTER;
 		gridData.grabExcessHorizontalSpace = true;
-		c.setLayoutData( gridData );
+		c.setLayoutData(gridData);
 
-		c.setLayout( new GridLayout( 2 , false ) );
+		c.setLayout(new GridLayout(2, false));
 
 		// ok button
-		Button okBtn = new Button( c , SWT.PUSH );
-		okBtn.setText( CBMessages.getString("Editor.OkButton") );
+		Button okBtn = new Button(c, SWT.PUSH);
+		okBtn.setText(CBMessages.getString("Editor.OkButton"));
 		okBtn.pack();
 		gridData = new GridData();
 		gridData.verticalAlignment = SWT.FILL;
 		gridData.horizontalAlignment = SWT.FILL;
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.grabExcessVerticalSpace = true;
-		okBtn.setLayoutData( gridData );
+		okBtn.setLayoutData(gridData);
 
 		// cancel button
-		Button cancelBtn = new Button( c , SWT.PUSH );
-		cancelBtn.setText( CBMessages.getString("Editor.CancelButton") );
+		Button cancelBtn = new Button(c, SWT.PUSH);
+		cancelBtn.setText(CBMessages.getString("Editor.CancelButton"));
 		cancelBtn.pack();
 		gridData = new GridData();
 		gridData.verticalAlignment = SWT.FILL;
 		gridData.horizontalAlignment = SWT.FILL;
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.grabExcessVerticalSpace = true;
-		cancelBtn.setLayoutData( gridData );
+		cancelBtn.setLayoutData(gridData);
 		c.pack();
 
-
 		// add listeners
-		setAddListener ( commandAdd, table, objects );
-		setRemoveListener ( commandRemove, table );
-		setOkListener ( okBtn, table, objects );
-		setCancelListener ( cancelBtn, dialog );
-		setMoveListener ( bUp, table, objects, true );
-		setMoveListener ( bDown, table, objects, false );
+		setAddListener(commandAdd, table, objects);
+		setRemoveListener(commandRemove, table);
+		setOkListener(okBtn, table, objects);
+		setCancelListener(cancelBtn, dialog);
+		setMoveListener(bUp, table, objects, true);
+		setMoveListener(bDown, table, objects, false);
 
-		dialog.setMaximized( false );
+		dialog.setMaximized(false);
 		dialog.pack();
 
 		// restore window dimensions to previous
-		window.restore( BrowserWindowPreferenceDao.class );
-		window.saveOnClosure( BrowserWindowPreferenceDao.class );
+		window.restore(BrowserWindowPreferenceDao.class);
+		window.saveOnClosure(BrowserWindowPreferenceDao.class);
 
 		dialog.open();
 
-		while ( !dialog.isDisposed() ) {
-			if ( !dialog.getDisplay().readAndDispatch() )
+		while (!dialog.isDisposed()) {
+			if (!dialog.getDisplay().readAndDispatch())
 				dialog.getDisplay().sleep();
 		}
 
 		dialog.dispose();
 	}
-	
+
 	public Shell getShell() {
 		return shell;
 	}
 
 	/**
 	 * Add the add listener to the add button
+	 * 
 	 * @param addBtn
 	 * @param table
 	 */
-	private void setAddListener ( Button addBtn, final TableViewer table,
-			final Collection<T> objs ) {
+	private void setAddListener(Button addBtn, final TableViewer table, final Collection<T> objs) {
 
 		// if the add button is pressed
-		addBtn.addSelectionListener( new SelectionAdapter() {
+		addBtn.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected ( SelectionEvent event ) {
+			public void widgetSelected(SelectionEvent event) {
 
 				// create a default object and add it
 				T obj = createNewObject();
-				objs.add ( obj );
+				objs.add(obj);
 				table.refresh();
 			}
-		} );
+		});
 	}
 
 	/**
 	 * Set the remove listener to the remove button
+	 * 
 	 * @param removeBtn
 	 * @param table
 	 */
-	private void setRemoveListener ( Button removeBtn, final TableViewer table ) {
+	private void setRemoveListener(Button removeBtn, final TableViewer table) {
 
 		// if the remove button is pressed
-		removeBtn.addSelectionListener( new SelectionAdapter() {
+		removeBtn.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected ( SelectionEvent event ) {
+			public void widgetSelected(SelectionEvent event) {
 
 				// if empty selection then return
-				if ( table.getSelection().isEmpty() ) {
+				if (table.getSelection().isEmpty()) {
 
-					GlobalUtil.showErrorDialog( shell, 
-							CBMessages.getString("Editor.ErrorTitle"), 
+					GlobalUtil.showErrorDialog(shell, CBMessages.getString("Editor.ErrorTitle"),
 							CBMessages.getString("Editor.ErrorMessage"));
 					return;
 				}
@@ -262,146 +260,144 @@ public abstract class CatalogueObjectEditor<T extends SortableCatalogueObject> {
 				T selectedObj = (T) selection.getFirstElement();
 
 				// return if cannot remove object
-				if ( !canRemove( selectedObj ) )
+				if (!canRemove(selectedObj))
 					return;
 
-				// Are you sure you want to delete the obj? 
-				int val = GlobalUtil.showDialog( shell, 
-						CBMessages.getString("Editor.DeleteWarningTitle"), 
-						CBMessages.getString("Editor.DeleteWarningMessage"), 
-						SWT.YES | SWT.NO );
+				// Are you sure you want to delete the obj?
+				int val = GlobalUtil.showDialog(shell, CBMessages.getString("Editor.DeleteWarningTitle"),
+						CBMessages.getString("Editor.DeleteWarningMessage"), SWT.YES | SWT.NO);
 
 				// return if we want to cancel the operation
-				if ( val == SWT.NO )
+				if (val == SWT.NO)
 					return;
 
 				// remove the object from the current list
-				objects.remove( selectedObj );
+				objects.remove(selectedObj);
 				table.refresh();
 
 				// add the objects into the list of objs to be removed
 				// but only if it is an object we already added in the DB
-				if ( selectedObj.getId() != -1 )
-					objectsToRemove.add( selectedObj );
+				if (selectedObj.getId() != -1)
+					objectsToRemove.add(selectedObj);
 			}
-		} );
+		});
 	}
-	
+
 	/**
 	 * Set the move up/down listener
+	 * 
 	 * @param button the button which adds the listener
-	 * @param table the table which contains the objects
-	 * @param objs the table objects
+	 * @param table  the table which contains the objects
+	 * @param objs   the table objects
 	 * @param moveUp true for move up, false for move down
 	 */
-	private void setMoveListener ( Button button, final TableViewer table, 
-			final ArrayList<T> objs, final boolean moveUp ) {
-		
-		button.addSelectionListener( new SelectionAdapter() {
+	private void setMoveListener(Button button, final TableViewer table, final ArrayList<T> objs,
+			final boolean moveUp) {
+
+		button.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected ( SelectionEvent event ) {
+			public void widgetSelected(SelectionEvent event) {
 
 				// order elements
-				Collections.sort( objects, new SorterDCFProperty() );
-				
+				Collections.sort(objects, new SorterDCFProperty());
+
 				// get the table selection and get first element
 				IStructuredSelection selection = (IStructuredSelection) table.getSelection();
-				
+
 				// return if no selection
-				if ( selection.isEmpty() )
+				if (selection.isEmpty())
 					return;
-				
+
 				T current = (T) selection.getFirstElement();
 				T target = null;
-				
-				// find the target
-				for ( int i = 0; i < objs.size(); ++i ) {
 
-					if ( moveUp ) {
-						
+				// find the target
+				for (int i = 0; i < objs.size(); ++i) {
+
+					if (moveUp) {
+
 						// get the previous element
-						if ( objs.get( i ).equals( current ) && i > 0 ) {
-							target = objs.get( i - 1 );
+						if (objs.get(i).equals(current) && i > 0) {
+							target = objs.get(i - 1);
 							break;
 						}
-					}
-					else if ( !moveUp ) {
+					} else if (!moveUp) {
 						// get the next element
-						if ( objs.get( i ).equals( current ) && i < objs.size() - 1 ) {
-							target = objs.get( i + 1 );
+						if (objs.get(i).equals(current) && i < objs.size() - 1) {
+							target = objs.get(i + 1);
 							break;
 						}
 					}
 				}
-				
+
 				// if something found go on and swap
-				if ( target == null )
+				if (target == null)
 					return;
 
 				// swap orders
 				int cOrder = current.getOrder();
-				current.setOrder( target.getOrder() );
-				target.setOrder( cOrder );
-				
+				current.setOrder(target.getOrder());
+				target.setOrder(cOrder);
+
 				// refresh the visualization
 				table.refresh();
 			}
-		} );
+		});
 	}
-	
+
 	/**
 	 * Ok listener for the ok button
+	 * 
 	 * @param okBtn
 	 * @param table
 	 * @param objs
 	 */
-	private void setOkListener ( Button okBtn, final TableViewer table, 
-			final Collection<T> objs ) {
+	private void setOkListener(Button okBtn, final TableViewer table, final Collection<T> objs) {
 
-		// if the ok button is pressed we perform the insertions/updates and remotions of hierarchies
-		okBtn.addSelectionListener( new SelectionAdapter() {
+		// if the ok button is pressed we perform the insertions/updates and remotions
+		// of hierarchies
+		okBtn.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected ( SelectionEvent event ) {
+			public void widgetSelected(SelectionEvent event) {
 
 				// first I have to check that no duplicated code is present
 				boolean doubleCode = false;
-				
+
 				// double codes? check this
-				for ( T obj1 : objs ) {
-					
+				for (T obj1 : objs) {
+
 					int occurrences = 0;
-					
-					for ( T obj2 : objs ) {
-						if ( obj1.getCode().equals( obj2.getCode() ) )
+
+					for (T obj2 : objs) {
+						if (obj1.getCode().equals(obj2.getCode()))
 							occurrences++;
 					}
-					
+
 					// if two or more equal codes => error
-					if ( occurrences >= 2 ) {
+					if (occurrences >= 2) {
 						doubleCode = true;
 						break;
 					}
 				}
 
 				// if a duplicate is found I show the error
-				if ( doubleCode ) {
-					GlobalUtil.showErrorDialog( shell, 
-							CBMessages.getString("Editor.DuplicatedCodesTitle"), 
+				if (doubleCode) {
+					GlobalUtil.showErrorDialog(shell, CBMessages.getString("Editor.DuplicatedCodesTitle"),
 							CBMessages.getString("Editor.DuplicatedCodesMessage"));
 					return;
 				}
-				
+
 				// validate objects
 				boolean goOn = true;
-				for ( T obj : objs ) {
-					if ( !validateObject(obj) ) {
+				for (T obj : objs) {
+					if (!validateObject(obj)) {
 						goOn = false;
 						break;
 					}
 				}
-				
+
 				// stop if needed and reset the table content
-				if ( !goOn ) {
+				if (!goOn) {
 					objects = reset();
 					table.refresh();
 					return;
@@ -410,87 +406,89 @@ public abstract class CatalogueObjectEditor<T extends SortableCatalogueObject> {
 				CatalogueEntityDAO<T> dao = getDao();
 
 				// Remove all the object which need to be removed
-				for ( T obj : objectsToRemove ) 
-					dao.remove( obj );
-				
+				for (T obj : objectsToRemove)
+					dao.remove(obj);
+
 				// insert or update all the new/updated hierarchies
-				for ( T obj : objs ) {
-					
-					// convention, if id = -1 then it 
+				for (T obj : objs) {
+
+					// convention, if id = -1 then it
 					// is a new object for the database
-					if ( obj.getId() == -1 ) {
-						int dbId = dao.insert( obj );
+					if (obj.getId() == -1) {
+						int dbId = dao.insert(obj);
 						obj.setId(dbId);
-					}
-					else
-						dao.update( obj );
+					} else
+						dao.update(obj);
 				}
 
 				refresh();
 				dialog.close();
 			}
-		} );
+		});
 	}
-	
+
 	/**
 	 * Cancel listener for cancel button
+	 * 
 	 * @param cancelBtn
 	 * @param dialog
 	 */
-	private void setCancelListener ( Button cancelBtn, final Shell dialog ) {
-		
+	private void setCancelListener(Button cancelBtn, final Shell dialog) {
+
 		// if the cancel button is pressed close the dialog
-		cancelBtn.addSelectionListener( new SelectionAdapter() {
+		cancelBtn.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected ( SelectionEvent event ) {
+			public void widgetSelected(SelectionEvent event) {
 				dialog.close();
 			}
-		} );
+		});
 	}
 
 	/**
 	 * Create the table columns
+	 * 
 	 * @param table
 	 */
-	public abstract void createColumns ( TableViewer table );
+	public abstract void createColumns(TableViewer table);
 
 	/**
 	 * Create a new object and add it to the db
 	 */
-	public abstract T createNewObject ();
+	public abstract T createNewObject();
 
 	/**
 	 * Check if the selected object can be removed or not
+	 * 
 	 * @param obj
 	 * @return
 	 */
-	public abstract boolean canRemove ( T obj );
-	
+	public abstract boolean canRemove(T obj);
+
 	/**
-	 * Validate an object, can this object be used and possibly
-	 * added to the catalogue objects?
+	 * Validate an object, can this object be used and possibly added to the
+	 * catalogue objects?
+	 * 
 	 * @param obj
 	 * @return
 	 */
-	public abstract boolean validateObject ( T obj );
-	
+	public abstract boolean validateObject(T obj);
+
 	/**
-	 * Refresh action called at the end of the process,
-	 * after calling the ok button.
+	 * Refresh action called at the end of the process, after calling the ok button.
 	 */
 	public abstract void refresh();
-	
+
 	/**
 	 * Reset the content of the table if
-	 * {@link #validateObject(SortableCatalogueObject)}
-	 * is not passed
-	 * @return the list of objects which will
-	 * reset the table content
+	 * {@link #validateObject(SortableCatalogueObject)} is not passed
+	 * 
+	 * @return the list of objects which will reset the table content
 	 */
 	public abstract ArrayList<T> reset();
-	
+
 	/**
 	 * Get the object dao
+	 * 
 	 * @return
 	 */
 	public abstract CatalogueEntityDAO<T> getDao();

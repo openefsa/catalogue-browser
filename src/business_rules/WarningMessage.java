@@ -121,7 +121,7 @@ public class WarningMessage {
 
 			// 12 message
 			sb.append("12;if a single source commodity is selected for raw commodity;"
-					+ "Risk: only multiple source commodities are allowed for mixed raw commodities! ;HIGH;HIGH");
+					+ "Risk: only multiple explicit source commodities are allowed for mixed raw commodities! ;HIGH;HIGH");
 			sb.append("\r\n");
 
 			// 13 message

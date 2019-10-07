@@ -91,10 +91,10 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 
 				if (rs.next())
 					id = rs.getInt(1);
-				
+
 				rs.close();
 			}
-			
+
 			stmt.close();
 			con.close();
 
@@ -169,13 +169,13 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 				// get the count of the picklist
 				if (rs.next())
 					count = rs.getInt(1);
-				
+
 				rs.close();
 			}
 
 			stmt.close();
 			con.close();
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			LOGGER.error("DB error", e);
@@ -250,12 +250,12 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 			try (ResultSet rs = stmt.executeQuery();) {
 
 				// create the picklist
-				if (rs.next()) 
+				if (rs.next())
 					picklist = getByResultSet(rs);
-				
+
 				rs.close();
 			}
-			
+
 			stmt.close();
 			con.close();
 
@@ -322,7 +322,7 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 				// add the picklist to the output list
 				picklists.add(picklist);
 			}
-			
+
 			rs.close();
 			stmt.close();
 			con.close();
@@ -358,7 +358,7 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 			rs.close();
 			stmt.close();
 			con.close();
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			LOGGER.error("DB error", e);
@@ -399,10 +399,10 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 					PicklistTerm term = new PicklistTerm(catalogue, level, code, label);
 					terms.add(term);
 				}
-				
+
 				rs.close();
 			}
-			
+
 			stmt.close();
 			con.close();
 
@@ -471,7 +471,7 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 
 			stmt.close();
 			con.close();
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			LOGGER.error("DB error", e);
@@ -508,7 +508,7 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 
 	@Override
 	public Picklist getById(int id) {
-		
+
 		return null;
 	}
 
@@ -531,7 +531,7 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 
 	@Override
 	public List<Integer> insert(Iterable<Picklist> attrs) {
-		
+
 		return null;
 	}
 

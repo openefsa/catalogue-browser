@@ -243,7 +243,8 @@ public class MainPanel implements Observer {
 						public void run() {
 
 							ConsoleMessage message = new ConsoleMessage(event.getPendingRequest().getType() + " "
-									+ catalogueCode + " " + CBMessages.getString("pending.request.error"), SWT.COLOR_RED);
+									+ catalogueCode + " " + CBMessages.getString("pending.request.error"),
+									SWT.COLOR_RED);
 
 							addMessageToConsole(message);
 						}
@@ -795,7 +796,7 @@ public class MainPanel implements Observer {
 
 		// set the weights once all the widgets are inserted
 		// shahaal: increased the width for the search view (second parm from 4 to 3)
-		sashForm.setWeights(new int[] { 1, 4 });
+		sashForm.setWeights(new int[] { 2, 5 });
 	}
 
 	/**
@@ -1110,8 +1111,8 @@ public class MainPanel implements Observer {
 		filterGroup.setLayoutData(data);
 		RowLayout layout = new RowLayout();
 		layout.center = true;
-		//layout.justify = true;
-		layout.spacing=50;
+		// layout.justify = true;
+		layout.spacing = 50;
 		filterGroup.setLayout(layout);
 
 		// nav buttons for previous/next term

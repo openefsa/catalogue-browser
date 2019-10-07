@@ -1,101 +1,14 @@
 --- New Features: 
 
-	+ Recompiled using Maven technology
-	+ New progress bar while downloading ICT
-	+ Added new "Account" drop-down button on Main menu
-	+ Added ability to login using the token provided by the OpenAPI portal
-	+ Added ability to log out from DCF/OpenAPI
-	+ Added function for auto importing terms from external files (beta tester or cat manager)
-	+ New algorithm for checking the parent hierarchy when using the auto import terms function
-	+ Added ability to capture code errors when using the auto import terms function
-	+ Added Windows 10 compatibility (internal users)
-	+ BR 11 now doesn't print the warning message if adding a facet which is more specific than the already existing implicit one
-	+ Added warning messages for OpenAPI users (calls per minute/week)
-	+ Different optimisations and consistency improvements to the UI
-	+ Performance improvements on applying the BRs in the Describe window 
-	+ Optimisations of the export process while installing the ICT
-	+ ICT installation procedure redesigned
-	+ Redesigned main menu
-	+ Redesigned term information panel
-	+ Added back/next term action (only beta testers)
-	+ UI changes to the group components 
-	+ Added facet group id in facet hierarchy
-	+ Updated jre to Java SE 8u221
-	+ Redesigned UI for Catalogue label, Filters and New update ToolTip
-	+ UI locked during first loading operations (it prevent unexpected closure)
-	+ Business Rules now are shared between CB and ICT
-	+ New BR when reconstitution process is added to concentrated or powder terms
-	+ The term menu when selected from search result now appear automatically if term not present in current hierarchy
-	+ Added ability to see only the term info, without expanding it in the tree, by right clicking on the search results (useful for huge catalogues like PARAM)
-	+ Redesigned Search preferences window
-	+ New help icon when catalogues updates are available
-	+ Added ability to show tooltip when hovering mouse on help icon
++ This version contains mainly bugs fixed
 	
 --- Bugs fixed and other improvements:
 
-    + Fixed bug when ICT files are missing
-    + Solved bug which was recreating ICT database even if not using the MTX catalogue
-	+ Added links to new ICT version (include auto-update checker)
-	+ All files related to ICT has been moved into the related folder
-	+ Solved bug which was showing in the search panel terms not in use
-	+ New global variable for checking if the ICT is correctly installed
-	+ Business Rules aligned with the ICT
-	+ Semaphore levels and warning messages aligned with ICT
-	+ Fixed "Disconnected" message not appearing when the logout is performed
-	+ ICT database automatically updated when new version of MTX is available
-	+ Added dump row for 'term' sheet when exporting a catalogue (only for catalogue managers)
-	+ The ICT required folders now are created only when the user install the ICT
-    + Solved UI refresh bug when the user perform a logout from DCF
-	+ Removed useless classes and files from the package
-	+ Removed unused jar libraries
-	+ Solved bug showing update ICT db message even if catalogue != MTX
-	+ Cat browser memory management improvements (memory leaks like buffer opened but not closed, db connections and URL connections)
-	+ Removed useless static methods/variables which are not removed from the GC
-	+ Removed the remember me option from login
-	+ The login window now: wrap the content, is not resizable, appears in a fixed position
-	+ Fixed bug in which the ICT db is not updated if updating from CB
-	+ Added ability to update ICT db even if updating MTX in offline mode
-	+ Fixed bug in which the download of the ICT followed by its installation were giving thread errors
-	+ Merged function for the export catalogue process used from different methods into the ToolsMenu class
-	+ Fixed bug which was allowing to add terms to facet groups with single cardinality (single and double click)
-	+ Better throw and catch of the soap errors during the login action (both dcf and openapi)
-	+ Fixed bug that caused the application to crash when the json, containing pages dimensions, was not properly structured
-	+ Fixed bug which was returning wrong point dimension when using single screen resulting in main panel appearing outside of the user view
-    + Solved bug which was showing not in use terms into the search results even if the not in use check was enabled
-    + Fixed bug which was truncated information on sas by adding a first row with length 4000 when exporting a catalogue
-    + Fixed the "disconnect" message which was not appearing in the shell when performed logout and other optimisations to the logout process
-    + Fixed the bug with the reserve and un-reserve function for catalogue managers
-    + Warning colours for semaphore and text are now aligned between CB and ICT
-    + Added BR 21 (Wrong structured code)
-    + Optimisations to forms, SWT widgets and reading writing data to file
-    + Optimisations to the Changelog class
-    + Fixed bug related with progress bar not correctly showing the messages + other optimisation and fixes to the layout
-    + Fixed BR 12 which was printing warning even if multiple terms present in f27
-    + Optimisations to the search bar
-    + Optimisations to the tree view by disabling the redraw at each expand/collapse action
-    + Fixed bug for Cat managers which were receiving the upload to DCF successful message even if was not written
-    + Fixed bug raised when multiple terms are selected in describe window + improved performances when redrawing the tree after adding the terms
-    + Fixed bug when importing cat in xml (related with poi jar not update to latest v.4.0.0 containing a special function)
-    + Added ability to check if the catalogue to import present errors or not
-	+ Optimisation on importing ecf catalogues
-	+ Optimisation on importing excel catalogues
-	+ Fixed bug when new update available and user click on file before 10 sec
-	+ Removed all useless database result sets and connection closures from CB (are called automatically)
-	+ Fixed statements which were returning value before connection was closed
-	+ Fixed Ingredient BR in order to not show warning when flavour ingredient is added to terms which contains Flavoured as name
-	+ Optimisations to the describe and recently describe term pages (removed static instances, forced user to use only a single describe window, disabled options on right click term in tree for describe and recently if describe window is open)
-	+ Optimisations to the tab "term naming and definition" in which some widgets were cut when using low resolution display (now is adaptable)
-	+ Optimisations to how the main menu is refreshed after some actions (i.e. install ICT)
-	+ Converted all codeGenerator class and functions to not static
-	+ Fixed bug which was causing the crash of the app if the catalogue tool tip was shown for new update and the user instead close the current catalogue or perform a logout
-	+ Converted statements to prepared statements (faster)
-	+ Small improvements on how the main shell is shown/disposed removing useless checks
-	+ Optimised the number of calls done while restoring and initialising the windows size
-	+ Fixed main panel window not showing title bar when json file not present (due to its dimension values equal to null)
-	+ Fixed list of attributes not scrollable in search preferences window
-	+ Fixed openapi login window which was not refreshing the main ui after first login
-	+ Fixed openapi login window which was calling useless classes when closing the window
-	+ Modified BR for multiple source commodities, now the warning will not appear if a specification of the already present implicit facet is added explicitly
-	+ Term filter group had been modified with 3 specific composites and justified along the horizontal space
-	+ Solved bug in which the cleaning text algorithm in the search field was removing chars useful (i.e. -,_)
-	+ Removed tasks for showing new update tooltip, now it is always visible with an hover mouse on help icon
+	+ Fixed bug in which was not possible to add facets to specific facet groups
++ Fixed Catalogue title not shown properly in small screens
++ Fixed business rules warnings not shown properly because of the presence of delimiters
++ Changed TEXT widget to LINK one in order to allow the links in the changelog
+	
+--- Changes in the previous versions:
+
++ Check the official <a href="Latest-Changes">wiki page</a> for further information

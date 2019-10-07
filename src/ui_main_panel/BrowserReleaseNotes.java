@@ -7,9 +7,12 @@ import java.nio.file.Paths;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.program.Program;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
-
+import config.AppConfig;
 import i18n_messages.CBMessages;
 import utilities.GlobalUtil;
 
@@ -31,20 +34,32 @@ public class BrowserReleaseNotes {
 
 		String title = CBMessages.getString("FromReleaseNotes.Title") + GlobalUtil.APP_VERSION;
 		dialog.setText(title);
-		
+
 		dialog.setLayout(new FillLayout());
 
-		Text textField = new Text(dialog, SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
-		textField.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		
+		Link link = new Link(dialog, SWT.NONE);
+		link.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+		// Text textField = new Text(dialog, SWT.READ_ONLY | SWT.V_SCROLL |
+		// SWT.H_SCROLL);
+		// textField.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
 		try {
-			
-			//read all the lines in the changelog file
+
+			// read all the lines in the changelog file
 			String content = new String(Files.readAllBytes(Paths.get(GlobalUtil.CHANGELOG_PATH)));
-			
-			//print the content into the text field
-			textField.setText(content); 
-			
+
+			// print the content into the text field
+			link.setText(content);
+			// textField.setText(content);
+
+			// add selection listener to the link
+			link.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event event) {
+					Program.launch(AppConfig.getHelpRepositoryURL()+event.text);
+				}
+			});
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

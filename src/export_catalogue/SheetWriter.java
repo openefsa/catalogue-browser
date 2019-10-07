@@ -8,8 +8,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import catalogue_object.Mappable;
-import config.DebugConfig;
-import dcf_user.User;
 import progress_bar.IProgressBar;
 import sheet_header.SheetHeader;
 
@@ -64,12 +62,29 @@ public abstract class SheetWriter {
 		// insert headers
 		insertHeaders(sheet);
 
-		// insert the first row with dump string of length 4000
-		// used only by cat managers for not truncating the rest of the data in SAS
-		if (User.getInstance().isCatManager() && !DebugConfig.betaTest) {
-			String dump = createDumpString();
-			insertFirstRow(dump);
-		}
+		// insert the data into the sheet
+		insertData(sheet);
+	}
+
+	/**
+	 * Write into the sheet the headers and the data This is the main process added
+	 * also the first record with length 4000
+	 * 
+	 * @author shahaal
+	 */
+	public void writeWithDump() {
+
+		// prepare the headers
+		headers = getHeaders();
+
+		// insert headers
+		insertHeaders(sheet);
+
+		// create the dump string with length 4000
+		String dump = createDumpString();
+		
+		// insert the dump string as first record in the external file
+		insertFirstRow(dump);
 
 		// insert the data into the sheet
 		insertData(sheet);
@@ -182,9 +197,9 @@ public abstract class SheetWriter {
 	 * the displayed title.
 	 * 
 	 * @param progressBar, the progress bar which is displayed in the main UI
-	 * @param maxFill, the maximum relative amount that this sheet can be add to the
-	 *        progress bar
-	 * @param label, the label which will be displayed
+	 * @param maxFill,     the maximum relative amount that this sheet can be add to
+	 *                     the progress bar
+	 * @param label,       the label which will be displayed
 	 */
 	public void setProgressBar(IProgressBar progressBar, int maxFill, String label) {
 		this.progressBar = progressBar;
@@ -197,8 +212,8 @@ public abstract class SheetWriter {
 	 * maximum relative amount of progress that this sheet can achieve.
 	 * 
 	 * @param progressBar, the progress bar which is displayed in the main UI
-	 * @param maxFill, the maximum relative amount that this sheet can be add to the
-	 *        progress bar
+	 * @param maxFill,     the maximum relative amount that this sheet can be add to
+	 *                     the progress bar
 	 */
 	public void setProgressBar(IProgressBar progressBar, int maxFill) {
 		this.setProgressBar(progressBar, maxFill, "");
@@ -208,8 +223,8 @@ public abstract class SheetWriter {
 	 * Create a new cell in the sheet.
 	 * 
 	 * @param columIndex, index of the column in which the cell is created
-	 * @param row, row where the cell is created
-	 * @param value, cell value
+	 * @param row,        row where the cell is created
+	 * @param value,      cell value
 	 * @return
 	 */
 	public Cell createCell(int columnIndex, Row row, String value) {
@@ -226,8 +241,8 @@ public abstract class SheetWriter {
 	 * Create a new cell in the sheet.
 	 * 
 	 * @param headerName, name of the column in which the cell is created
-	 * @param row, row where the cell is created
-	 * @param value, cell value
+	 * @param row,        row where the cell is created
+	 * @param value,      cell value
 	 * @return
 	 */
 	public Cell createCell(String columnLabel, Row row, String value) {

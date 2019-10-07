@@ -18,7 +18,7 @@
 	<build>
 
 		<sourceDirectory>src</sourceDirectory>
-		<testSourceDirectory>tests</testSourceDirectory>
+		<testSourceDirectory>test</testSourceDirectory>
 		<resources>
 			<resource>
 				<directory>src</directory>
@@ -83,59 +83,6 @@
 	</build>
 
 	<dependencies>
-		<dependency>
-			<groupId>catalogue_converter_xml_to_xlsx</groupId>
-			<artifactId>catalogue_converter_xml_to_xlsx</artifactId>
-			<version>[1.0.0,)</version>
-		</dependency>
-		<dependency>
-			<groupId>DCF_webservice_framework</groupId>
-			<artifactId>DCF_webservice_framework</artifactId>
-			<version>[1.0.0,)</version>
-		</dependency>
-		<dependency>
-			<groupId>progress_bar</groupId>
-			<artifactId>progress_bar</artifactId>
-			<version>[1.0.0,)</version>
-		</dependency>
-		<dependency>
-			<groupId>window_size_save_and_restore</groupId>
-			<artifactId>window_size_save_and_restore</artifactId>
-			<version>[1.0.0,)</version>
-		</dependency>
-		<dependency>
-			<groupId>open_xml_reader</groupId>
-			<artifactId>open_xml_reader</artifactId>
-			<version>[1.0.0,)</version>
-		</dependency>
-		<dependency>
-			<groupId>version_manager</groupId>
-			<artifactId>VersionManager</artifactId>
-			<version>[1.0.0,)</version>
-		</dependency>
-		<dependency>
-			<groupId>java_exception_manager</groupId>
-			<artifactId>java_exception_manager</artifactId>
-			<version>[1.0.0,)</version>
-		</dependency>
-		<dependency>
-			<groupId>HttpManager_GUI</groupId>
-			<artifactId>HttpManager_GUI</artifactId>
-			<version>[1.0.0,)</version>
-		</dependency>
-		<!-- uncomment for swt 32bit <dependency> <groupId> org.eclipse.swt </groupId> 
-			<artifactId>swt32</artifactId> <version>[3.7.1,)</version> </dependency> -->
-		<!-- uncomment for swt 64bit -->
-		<dependency>
-			<groupId> org.eclipse.swt</groupId>
-			<artifactId>swt64</artifactId>
-			<version>[3.7.1,)</version>
-		</dependency>
-		<dependency>
-			<groupId> org.eclipse.jface</groupId>
-			<artifactId>jface</artifactId>
-			<version>[3.7.0,)</version>
-		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>

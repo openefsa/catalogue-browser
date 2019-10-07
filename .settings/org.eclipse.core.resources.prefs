@@ -4,4 +4,4 @@ encoding/SQL=Cp1252
 encoding/icons=Cp1252
 encoding/log4j-config=Cp1252
 encoding/src=Cp1252
-encoding/tests=Cp1252
+encoding/test=Cp1252

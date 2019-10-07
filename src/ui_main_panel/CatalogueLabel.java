@@ -58,7 +58,7 @@ public class CatalogueLabel implements Observer {
 
 		// label which shows the current opened catalogue
 		label = new Label(leftGroup, SWT.NONE);
-		label.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		label.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		label.setFont(getLabelFont(5, SWT.ITALIC | SWT.BOLD));
 
 		// add the update panel
@@ -80,19 +80,21 @@ public class CatalogueLabel implements Observer {
 
 		// tool tip to show when an update of the catalogue is available
 		toolTip = new ToolTip(leftGroup.getShell(), SWT.ICON_INFORMATION | SWT.BALLOON);
-
+		toolTip.setData(new GridData(SWT.FILL, SWT.FILL, false, false));
+		
 		// make it invisible
 		makeUpdateVisible(false);
 
 		Image image = new Image(leftGroup.getDisplay(), ClassLoader.getSystemResourceAsStream("help.png"));
-
+		
 		// label for notifying new catalogue version
 		lblNewVersion = new Label(leftGroup, SWT.NONE);
+		lblNewVersion.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
 		
 		// set the help icon
 		lblNewVersion.setImage(image);
 		
-		// on mouse hover show the tooltip
+		// on mouse hover show the tool tip
 		lblNewVersion.addListener(SWT.MouseHover, new Listener() {
 			public void handleEvent(Event e) {
 				open();
@@ -102,7 +104,8 @@ public class CatalogueLabel implements Observer {
 		// button which allow to download the new version
 		btnUpdate = new Button(leftGroup, SWT.PUSH);
 		btnUpdate.setText(CBMessages.getString("CatalogueLabel.UpdateButton"));
-
+		btnUpdate.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
+		
 		btnUpdate.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {

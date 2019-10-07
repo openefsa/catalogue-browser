@@ -301,6 +301,7 @@ public abstract class TermRules {
 	 * are taken into account. NOTE: if only implicit facets have these properties,
 	 * then no warning are risen.
 	 * 
+	 * @TODO this method and its sub modules has to be optimised
 	 * @param implicitProcesses
 	 * @param explicitProcesses
 	 */
@@ -310,25 +311,23 @@ public abstract class TermRules {
 		// only check for derivatives
 		if (!isDerivativeTerm(baseTerm))
 			return;
-
+		
 		// if there are not implicit or explicit processes
 		if (implicitProcesses == null || explicitProcesses == null)
 			return;
-
-		/*
-		 * HOW THIS CHECK WORKS: 1 - retrieve the processes (implicit and explicit ones)
-		 * which have a decimal ord code 2 - compute the max integer part of these ord
-		 * codes. For example if we have: 1.1, 1.2, 2.1, 3.1 the maximum integer part
-		 * would be 3 (this is done to iterate over all the integer between 1 and the
-		 * maximum) 3 - Iterate for each integer between 1 and the maximum integer: 1.
-		 * Get all the processes (implicit and explicit ones) with the integer part
-		 * equal to the current one 2. get the unique ord codes of the implicit and of
-		 * the explicit processes 3. get all the unique ord codes taking account both
-		 * implicit and explicit processes (in order to check if a warning has to be
-		 * risen) 4. rise a warning if at least 2 fract ord code with the same integer
-		 * part are added, and they are not only implicit facets (in fact, in this case
-		 * the base term is a derivative which has both the processes and no warn has to
-		 * be risen)
+		
+		/* HOW THIS CHECK WORKS: 
+		 * 1 - retrieve the processes (implicit and explicit ones) which have a decimal ord code 
+		 * 2 - compute the max integer part of these ord codes. For example if we have: 1.1, 1.2, 2.1, 3.1 the 
+		 *     maximum integer part would be 3 (this is done to iterate over all the integer between 1 and the maximum)
+		 * 3 - Iterate for each integer between 1 and the maximum integer:
+		 *        1. Get all the processes (implicit and explicit ones) with the integer part equal to the current one
+		 *        2. get the unique ord codes of the implicit and of the explicit processes
+		 *        3. get all the unique ord codes taking account both implicit and explicit processes (in order to check
+		 *           if a warning has to be risen)
+		 *        4. rise a warning if at least 2 fract ord code with the same integer part are added, and they are not
+		 *           only implicit facets (in fact, in this case the base term is a derivative which has both the 
+		 *           processes and no warn has to be risen)
 		 */
 
 		// get the ord codes of the processes with decimal ord code
@@ -352,7 +351,7 @@ public abstract class TermRules {
 				maxValue = integerPart;
 			}
 		}
-
+		
 		// for each integer ( 1,2,3...), check the fract part
 		for (int i = 1; i <= maxValue; i++) {
 
@@ -412,9 +411,10 @@ public abstract class TermRules {
 			// exclusive warning is risen
 			// if no facets are implicit but the user add more than one explicit => warning
 
-			boolean flag = (impOrd.size() > 0 && expOrd.size() > 0);
+			boolean firstCheck = (uniqueImpl.size() > 0 && uniqueExpl.size() > 0 );
+			boolean secondCheck = (uniqueImpl.size() == 0 && uniqueExpl.size() > 1) ;
 
-			if (flag && uniqueAllCodes.size() > 1) {
+			if ((firstCheck || secondCheck) && uniqueAllCodes.size() > 1) {
 
 				// get all the codes of the processes involved
 				StringBuilder sb = new StringBuilder();
@@ -1592,7 +1592,7 @@ public abstract class TermRules {
 		// implicit facets of the base term
 		ArrayList<ForbiddenProcess> implicit = getImplicitForbiddenProcesses(baseTerm, forbiddenProcesses, stdOut);
 
-		// tokenise the rest of the full code to get all the facets codes separately
+		// tokenize the rest of the full code to get all the facets codes separately
 		StringTokenizer st = new StringTokenizer(fullFacetsCodes, "$");
 
 		// get all the facets codes parsing the fullFacetsCodes
@@ -1624,6 +1624,12 @@ public abstract class TermRules {
 			if (fromICT) {
 				// get the facet category
 				Attribute facetCategory = currentCat.getAttributeByCode(facetIndex);
+
+				// if the facet group doesnt exists
+				if (facetCategory == null) {
+					// TODO add facet group id doesn't exists error in warnings
+					// printWarning(WarningEvent.GROUP_ID_NOT_EXISTS, facetCode, false, stdOut);
+				} else
 				// if the facet doesn't belong to that category print warning
 				if (!facet.belongsToHierarchy(facetCategory.getHierarchy()))
 					printWarning(WarningEvent.Error, facetCode, false, stdOut);
@@ -1683,7 +1689,7 @@ public abstract class TermRules {
 						// if the added process is a son of one of the implicit process
 						// add it but remove the implicit, in order to ignore it
 						if (descendant.hasAncestor(ancestor, currentCat.getHierarchyByCode("process"))) {
-
+							
 							isAncestor = true;
 
 							// add since we want to check only the forbidden processes mutually exclusivity
@@ -1697,9 +1703,8 @@ public abstract class TermRules {
 					}
 
 					// if no relation => add the process without taking care of implicit processes
-					if (!isAncestor)
+					if (!isAncestor) 
 						explicit.add(currentFP.get(index));
-
 				}
 			}
 		}
