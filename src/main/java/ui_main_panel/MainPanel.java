@@ -795,7 +795,7 @@ public class MainPanel implements Observer {
 		termFilter.restoreStatus();
 
 		// set the weights once all the widgets are inserted
-		// shahaal: increased the width for the search view (second parm from 4 to 3)
+		// increased the width for the search view (second parm from 4 to 3)
 		sashForm.setWeights(new int[] { 2, 5 });
 	}
 

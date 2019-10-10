@@ -81,7 +81,7 @@ public class PendingRequestActionsTest {
 		this.catalogueCode = "AMRPROG";  // needed this code for using also test-files, do not change
 		this.username = "avonva";
 		
-		User.getInstance().login("avonva", "Ab123456");
+		User.getInstance().login("username", "general_pswd");
 		
 		this.backup = new CatalogueBackupMock();
 		this.catDao = new CatalogueDAOMock();

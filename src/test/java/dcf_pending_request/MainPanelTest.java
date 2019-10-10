@@ -41,7 +41,7 @@ public class MainPanelTest {
 		
 		this.catalogueCode = "AMRPROG";
 		
-		User.getInstance().login("avonva", "Ab123456");
+		User.getInstance().login("username", "general_pswd");
 	}
 	
 	@Test

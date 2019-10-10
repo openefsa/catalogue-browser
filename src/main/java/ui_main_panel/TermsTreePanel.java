@@ -170,7 +170,6 @@ public class TermsTreePanel extends Observable implements Observer {
 		Menu menu = null;
 
 		// set the menu if no empty selection
-		// Author: shahaal
 		if (tree.isSelectionEmpty())
 			menu = createEmptyMenu();
 		// if the menu is not set yet, create it
@@ -333,7 +332,7 @@ public class TermsTreePanel extends Observable implements Observer {
 		// allow drag n drop
 		tree.addDragAndDrop();
 
-		// shahaal: set the focus when enter the tree
+		// set the focus when enter the tree
 		// check before if the search field is not selected
 		tree.getTreeViewer().getTree().addListener(SWT.MouseEnter, new Listener() {
 			public void handleEvent(Event event) {
@@ -364,7 +363,7 @@ public class TermsTreePanel extends Observable implements Observer {
 			}
 		});
 
-		// shahaal: double click on the term for directly opening the describe window
+		// double click on the term for directly opening the describe window
 		tree.addDoubleClickListener(new IDoubleClickListener() {
 
 			@Override
@@ -460,8 +459,7 @@ public class TermsTreePanel extends Observable implements Observer {
 	 */
 	public Menu createTreeMenu() {
 
-		// shahaal: This will prevent accidental stacktrace error in case of closing the
-		// app when
+		// This will prevent accidental stacktrace error in case of closing the app when
 		// the describe window is open
 
 		/* Menu for the tree */
@@ -571,7 +569,7 @@ public class TermsTreePanel extends Observable implements Observer {
 		if (addTerm != null)
 			addTerm.setEnabled(!isSelectionEmpty() && canAddTerm);
 
-		// shahaal enable is it is possible to add term
+		// enable is it is possible to add term
 		if (addTxtTerms != null)
 			addTxtTerms.setEnabled(canAddTerm);
 

@@ -396,7 +396,7 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 	public void collapseToLevel(Nameable term, int level) {
 
 		try {
-			// shahaal dont refresh while expanding for better memory performance
+			// dont refresh while expanding for better memory performance
 			tree.getControl().setRedraw(false);
 
 			// collapse the tree until the term level

@@ -179,8 +179,7 @@ public class FormSelectTerm implements Observer {
 	 */
 	public void display() {
 
-		// shahaal if coming from reportability tab then dont let the user to surf the
-		// main page
+		// if coming from reportability tab then dont let the user to surf the main page
 		if (flag)
 			dialog = new Shell(shell, SWT.SHELL_TRIM | SWT.APPLICATION_MODAL);
 		// otherwise u are coming from the describe window
@@ -348,7 +347,7 @@ public class FormSelectTerm implements Observer {
 		cancel.setText(CBMessages.getString("FormSelectTerm.CancelButton"));
 		cancel.setLayoutData(btnData);
 
-		// shahaal: if close button is pressed then clear the list of selected items
+		// if close button is pressed then clear the list of selected items
 		/*
 		 * dialog.addListener(SWT.Close, new Listener() {
 		 * 
@@ -456,7 +455,6 @@ public class FormSelectTerm implements Observer {
 
 		dialog.open();
 
-		// Author: shahaal
 		while (!dialog.isDisposed()) {
 			if (!dialog.getDisplay().readAndDispatch())
 				dialog.getDisplay().sleep();
@@ -528,7 +526,7 @@ public class FormSelectTerm implements Observer {
 	 */
 	private void setOutput() {
 
-		// shahaal clear terms added from search results
+		// clear terms added from search results
 		selectedTerms.clear();
 
 		if (multi) {

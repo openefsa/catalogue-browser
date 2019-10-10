@@ -241,7 +241,7 @@ public class FrameTermImplicitFacets implements Observer {
 			}
 		});
 
-		// shahaal: double click on the term for directly opening add term window
+		// double click on the term for directly opening add term window
 		implicitFacets.addDoubleClickListener(new IDoubleClickListener() {
 
 			@Override
@@ -257,7 +257,7 @@ public class FrameTermImplicitFacets implements Observer {
 			}
 		});
 
-		// shahaal: listener called when click on add menu item
+		// listener called when click on add menu item
 		addImplicitFacet.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -422,7 +422,6 @@ public class FrameTermImplicitFacets implements Observer {
 		// open a form to select descriptors. In particular we enable the multiple
 		// selection only if the facet category is repeatable (cardinality 0 or + )
 
-		// shahaal
 		parent.setEnabled(false);
 
 		FormSelectTerm sf = new FormSelectTerm(parent, CBMessages.getString("Browser.SelectTermWindowTitle"),
@@ -495,7 +494,7 @@ public class FrameTermImplicitFacets implements Observer {
 		if (updateListener != null) {
 			updateListener.handleEvent(new Event());
 		}
-		// shahaal
+		
 		if (!parent.isDisposed())
 			parent.setEnabled(true);
 

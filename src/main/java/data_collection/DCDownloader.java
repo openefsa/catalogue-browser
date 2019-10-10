@@ -92,7 +92,7 @@ public class DCDownloader extends Thread {
 
 		} catch (SOAPException e) {
 
-			//shahaal show the error message for openapi users
+			// show the error message for openapi users
 			if (e instanceof DetailedSOAPException) {
 
 				String[] warning = GlobalUtil.getSOAPWarning((DetailedSOAPException) e);

@@ -655,7 +655,7 @@ public class FrameTermFields {
 			}
 		});
 
-		// shahaal: Enable the focus select all function
+		// Enable the focus select all function
 		textTermName.addFocusListener(new FocusListener() {
 
 			@Override
@@ -677,7 +677,7 @@ public class FrameTermFields {
 			}
 		});
 
-		// shahaal: Enable the ctrl-a key combination
+		// Enable the ctrl-a key combination
 		textTermName.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
