@@ -21,3 +21,5 @@ Message ID;Trigger Event Description;Text;SemaphoreWarningLevel;TextWarningLevel
 20;if a source is selected for a generic derivative without F27 (neither explicit nor implicit);Risk: it's forbidden to use the source without the (single) source commodity!;HIGH;HIGH
 21;if wrong term structure or term not found;Error: code not well structured!;ERROR;ERROR
 22;if reconstitution is added as process to concentrate, powder or other dehydrated terms;Risk: select the reconstituted version of the product instead!;HIGH;HIGH
+23;if the facet group id doesn't exists;Error: the facet group id has not been found!;ERROR;ERROR
+24;if the facet doesn't belong to the group hierarchy;Error: the facet has not been found under the specified group id!;ERROR;ERROR

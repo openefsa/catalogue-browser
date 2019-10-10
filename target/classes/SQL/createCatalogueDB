@@ -1,0 +1,215 @@
+-- this script is used to create a catalogue DB
+
+-- ### DATABASE ENTITIES ### --
+
+-- term table, it stores all the information related to the catalogue terms
+create table APP.TERM(
+
+	TERM_ID integer not null primary key generated always as identity ( start with 1, increment by 1 ),
+	TERM_CODE varchar(40) not null unique,
+	TERM_EXTENDED_NAME varchar(3000) not null,
+	TERM_SHORT_NAME varchar(300),
+	TERM_SCOPENOTE varchar(3000),
+	TERM_VERSION varchar(100),
+	TERM_LAST_UPDATE timestamp,
+	TERM_VALID_FROM timestamp,
+	TERM_VALID_TO timestamp,
+	TERM_DEPRECATED boolean default false,
+	TERM_STATUS varchar(300)
+);
+
+-- hierarchy table, it stores all the information related to the catalogue hierarchies
+create table APP.HIERARCHY(
+
+	HIERARCHY_ID integer not null primary key generated always as identity ( start with 1, increment by 1 ),
+	HIERARCHY_CODE varchar(40) not null unique,
+	HIERARCHY_NAME varchar(300) not null,
+	HIERARCHY_LABEL varchar(300),
+	HIERARCHY_SCOPENOTE varchar(3000),
+	HIERARCHY_APPLICABILITY varchar(300),
+	HIERARCHY_ORDER integer,
+	HIERARCHY_VERSION varchar(100),
+	HIERARCHY_LAST_UPDATE timestamp,
+	HIERARCHY_VALID_FROM timestamp,
+	HIERARCHY_VALID_TO timestamp,
+	HIERARCHY_STATUS varchar(300),
+	HIERARCHY_DEPRECATED boolean default false,
+	HIERARCHY_GROUPS varchar(1000),
+	HIERARCHY_IS_MASTER boolean not null
+);
+
+-- attribute table, it stores all the information related to the catalogue attributes
+create table APP.ATTRIBUTE (
+
+	ATTR_ID integer not null primary key generated always as identity ( start with 1, increment by 1 ),
+	ATTR_CODE varchar(40) not null unique,
+	ATTR_NAME varchar(300) not null,
+	ATTR_LABEL varchar(300),
+	ATTR_SCOPENOTE varchar(4000),
+	ATTR_REPORTABLE varchar(1),
+	ATTR_VISIBLE boolean,
+	ATTR_SEARCHABLE boolean,
+	ATTR_ORDER integer,
+	ATTR_TYPE varchar(40),
+	ATTR_MAX_LENGTH integer,
+	ATTR_PRECISION integer,
+	ATTR_SCALE integer,
+	ATTR_CAT_CODE varchar(40),
+	ATTR_SINGLE_REPEATABLE varchar(40),
+	ATTR_INHERITANCE varchar(1),
+	ATTR_UNIQUENESS boolean,
+	ATTR_TERM_CODE_ALIAS boolean,
+	ATTR_VERSION varchar(100),
+	ATTR_LAST_UPDATE timestamp,
+	ATTR_VALID_FROM timestamp,
+	ATTR_VALID_TO timestamp,
+	ATTR_DEPRECATED boolean default false,
+	ATTR_STATUS varchar(300)
+);
+	
+	
+	
+	
+	
+
+-- ### DATABASE RELATIONSHIPS ### --
+
+-- Relation between term and attribute. It represents which attributes belong to each term
+-- and set the attribute value. Since an attribute can have several assignments for each term, we
+-- put attr_value in the primary key, in order to allow multiple records to each (term, attr).
+-- NOTE: if the attribute has  ATTR_SINGLE_REPEATABLE as SINGLE this table must contain only
+-- one record for each term related to that attribute (otherwise error).
+
+
+create table APP.TERM_ATTRIBUTE (
+	TERM_ATTR_ID integer not null primary key generated always as identity ( start with 1, increment by 1 ),
+	TERM_ID integer,
+	ATTR_ID integer,
+	ATTR_VALUE varchar(1000)
+);
+
+-- set the foreign keys for TERM_ATTRIBUTES table
+alter table APP.TERM_ATTRIBUTE add foreign key ( TERM_ID ) references APP.TERM ( TERM_ID );
+alter table APP.TERM_ATTRIBUTE add foreign key ( ATTR_ID ) references APP.ATTRIBUTE ( ATTR_ID );
+
+
+
+-- Relation between term and hierarchy. Which term belongs to which hierarchy? Which is the term parent in a hierarchy? 
+-- Is the term reportable in this hierarchy? How the children of a term are ordered in a hierarchy?
+-- This table answers these questions.
+
+create table APP.PARENT_TERM (
+
+	TERM_ID integer,
+	HIERARCHY_ID integer,
+	PARENT_TERM_ID integer,
+	TERM_FLAG boolean,
+	TERM_ORDER integer,
+	TERM_REPORTABLE boolean,
+	
+	-- set the primary key
+	primary key ( TERM_ID, HIERARCHY_ID )
+);
+
+-- set the foreign keys for PARENT_TERM table
+alter table APP.PARENT_TERM add foreign key ( TERM_ID ) references APP.TERM ( TERM_ID );
+alter table APP.PARENT_TERM add foreign key ( PARENT_TERM_ID ) references APP.TERM ( TERM_ID );
+alter table APP.PARENT_TERM add foreign key ( HIERARCHY_ID ) references APP.HIERARCHY ( HIERARCHY_ID );
+
+
+
+-- Type of term table (State flag) retrieved from the termType attribute scopenotes, parsing the syntax:
+-- scopenote$value=description$value=description$...
+
+-- table of state flags (term types), each catalogue has its own definition
+create table APP.TERM_TYPE (
+
+	TERM_TYPE_ID integer not null primary key generated always as identity (start with 1, increment by 1),
+	
+	-- its code (h, m, f...)
+	TERM_TYPE_CODE varchar(50),
+	
+	-- the human readable name
+	TERM_TYPE_LABEL varchar(500)
+);
+
+-- add the unique contraint to the code field
+alter table APP.TERM_TYPE add constraint term_type_code_unique unique ( TERM_TYPE_CODE );
+
+-- table to save the catalogue release note information
+create table APP.RELEASE_NOTES_OP (
+
+ 	-- id of the term type
+	OP_ID integer not null primary key generated always as identity (start with 1, increment by 1),
+	OP_NAME varchar(300),
+	OP_DATE timestamp,
+	OP_INFO varchar(300),
+	OP_GROUP_ID integer not null -- group the operations into the operationsDetails groups
+);
+
+-- This table is used to store the recently described terms separately for each catalogue
+create table APP.RECENT_TERM (
+	RECENT_TERM_ID integer not null primary key generated always as identity (start with 1, increment by 1),
+	RECENT_TERM_CODE varchar(3000),  -- the term code with the explicit facets
+	RECENT_TERM_LABEL varchar(3000)  -- term name (it will be the interpreted code)
+);
+
+
+-- this table contains the code of the imported picklist
+create table APP.PICKLIST (
+	PICKLIST_ID integer not null primary key generated always as identity (start with 1, increment by 1),
+	PICKLIST_CODE varchar(3000)   -- picklist code (its filename)
+);
+
+-- add the unique contraint to the code field
+alter table APP.PICKLIST add constraint picklist_code_unique unique ( PICKLIST_CODE );
+
+
+
+-- This table is used to store the picklist terms separately for each catalogue
+create table APP.PICKLIST_TERM (
+	PICKLIST_TERM_ID integer not null primary key generated always as identity (start with 1, increment by 1),
+	PICKLIST_TERM_LEVEL integer,       -- the term level of indentation (visualization purposes)
+	PICKLIST_TERM_CODE varchar(3000),  -- the term code with the explicit facets
+	PICKLIST_BASETERM_CODE varchar(100), -- the base term code (used for easily join tables)
+	PICKLIST_TERM_LABEL varchar(3000), -- term name (it will be the interpreted code)
+	PICKLIST_ID integer                -- the picklist which owns this term
+);
+
+-- set the foreign key for the picklist id
+alter table APP.PICKLIST_TERM add foreign key ( PICKLIST_ID ) references APP.PICKLIST ( PICKLIST_ID );
+
+
+-- This table stores all the user preferences related to a single catalogue. We use the logic key value
+create table APP.PREFERENCE (
+	PREFERENCE_ID integer not null primary key generated always as identity (start with 1, increment by 1),
+	PREFERENCE_KEY varchar(500),    -- key of the preference
+	PREFERENCE_TYPE varchar(500),   -- type of the preference (integer, string, boolean)
+	PREFERENCE_VALUE varchar(3000), -- value of the preference
+	PREFERENCE_EDITABLE boolean     -- can the user edit the preference in the browser?
+);
+
+-- add the unique contraint to the key field
+alter table APP.PREFERENCE add constraint preference_key_unique unique ( PREFERENCE_KEY );
+
+
+-- table to host the search options
+-- VERY IMPORTANT NOTE: no integrity check is performed on the OBJ_ID, since
+-- the table can host in general every type of object (as term types and attributes)
+-- therefore make sure that the OBJ_ID is consistent and it is contained in the
+-- table referred by OBJ_TYPE. For example, if we have as OBJ_TYPE the value
+-- termType, then we have to make sure that the OBJ_ID
+-- is contained in the table TERM_TYPE!
+-- However, if you want to extend the search options to additional fields you have
+-- also to extend the OptionType enum and the search in order to allow 
+-- searching the new additional fields.
+create table APP.SEARCH_OPT (
+
+ 	-- id of the term type
+	OBJ_ID integer not null,
+	OBJ_TYPE varchar(100) not null,
+	SEARCH_OPT_ENABLED boolean not null,
+	
+	-- we can have the same id for different object types
+	primary key ( OBJ_ID, OBJ_TYPE )
+);

@@ -1,7 +1,7 @@
 eclipse.preferences.version=1
+encoding//src/main/java=Cp1252
+encoding//src/main/resources=Cp1252
+encoding//src/test/java=Cp1252
+encoding//src/test/resources=Cp1252
 encoding/<project>=Cp1252
-encoding/SQL=Cp1252
-encoding/icons=Cp1252
-encoding/log4j-config=Cp1252
 encoding/src=Cp1252
-encoding/test=Cp1252

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="business-rules"/>
-	<classpathentry kind="src" path="config"/>
-	<classpathentry kind="src" path="icons"/>
-	<classpathentry kind="src" path="log4j-config"/>
-	<classpathentry kind="src" path="SQL"/>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry excluding="icons/|SQL/" kind="src" path="src/main/resources"/>
+	<classpathentry kind="src" path="src/main/resources/icons"/>
+	<classpathentry kind="src" path="src/main/resources/SQL"/>
+	<classpathentry kind="src" path="src/test/java"/>
+	<classpathentry kind="src" path="src/test/resources"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
@@ -23,8 +22,10 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/VersionManager"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Window size save and restore"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ZipManager"/>
-	<classpathentry kind="var" path="JFace"/>
-	<classpathentry kind="var" path="SWT"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

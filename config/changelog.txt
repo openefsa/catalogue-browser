@@ -8,6 +8,8 @@
 + Fixed Catalogue title not shown properly in small screens
 + Fixed business rules warnings not shown properly because of the presence of delimiters
 + Changed TEXT widget to LINK one in order to allow the links in the changelog
++ Added licenses
++ New source code structure following Maven standard
 	
 --- Changes in the previous versions:
 
