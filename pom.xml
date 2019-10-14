@@ -2,8 +2,8 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>CBMaven</groupId>
-	<artifactId>CBMaven</artifactId>
+	<groupId>CatalogueBrowser</groupId>
+	<artifactId>CatalogueBrowser</artifactId>
 	<version>1.2.7</version>
 
 	<properties>
@@ -83,21 +83,14 @@
 		-->
 		<dependency>
 			<groupId>swt</groupId>
-			<artifactId>swt_x64</artifactId>
+			<artifactId>swt_x32</artifactId><!-- <artifactId>swt_x32/x64</artifactId> -->
 			<version>3.7.1</version>
 		</dependency>
-		<!-- 
-		<dependency>
-			<groupId>swt</groupId>
-			<artifactId>swt_x32</artifactId>
-			<version>3.7.1</version>
-		</dependency>
-		 --><dependency>
+		 <dependency>
 			<groupId>jface</groupId>
 		  	<artifactId>jface</artifactId>
 		  	<version>3.7.0</version>
 		</dependency>
-		 
 		<dependency>
 			<groupId>catalogue_converter_xml_to_xlsx</groupId>
 			<artifactId>catalogue_converter_xml_to_xlsx</artifactId>

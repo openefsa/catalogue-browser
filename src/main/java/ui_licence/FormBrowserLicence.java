@@ -27,8 +27,8 @@ import utilities.GlobalUtil;
 public class FormBrowserLicence {
 
 	private static final Logger LOGGER = LogManager.getLogger(FormBrowserLicence.class);
-	private static final String LICENSE = "LICENSE.txt";
-	private final String licenseNotFound = "The file LICENSE.TXT was not found.";
+	private static final String LICENSE = "LICENSE";
+	private final String licenseNotFound = "The file LICENSE was not found.";
 
 	private Shell startupWindow;
 
