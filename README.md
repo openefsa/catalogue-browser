@@ -1,9 +1,10 @@
+![European Food Safety Authority](http://www.efsa.europa.eu/profiles/efsa/themes/responsive_efsa/logo.png)
+
 # Catalogue browser
 The catalogue browser is a Java-based application that allows the use and reading of the catalogues released by EFSA in the Data Collection Framework. More specifically, the application allows the user to download one or more catalogues of interest from those available on the DCF and then be able to consult the data within it using the graphical interface. In addition, the tool allows also the encoding of terms, present within the database, in alphanumeric codes to which facets (descriptive terms) can be concatenated.
 
 <p align="center">
     <img src="src/main/resources/icons/Catalogue-browser.gif" alt="CatalogueBrowser icon"/>
-    <img src="http://www.efsa.europa.eu/profiles/efsa/themes/responsive_efsa/logo.png" alt="European Food Safety Authority"/>
 </p>
 
 # Dependencies
