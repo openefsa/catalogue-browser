@@ -126,7 +126,7 @@ public class DatabaseManager {
 		// set a "create" connection
 		try (Connection con = DriverManager.getConnection(createMainDBURL());
 				SQLExecutor executor = new SQLExecutor(con);) {
-			executor.exec(ClassLoader.getSystemResourceAsStream("SQL/createMainDB"));
+			executor.exec(ClassLoader.getSystemResourceAsStream("createMainDB"));
 		}
 
 		// insert the default preferences into the main
@@ -205,7 +205,7 @@ public class DatabaseManager {
 				// set a "create" connection
 				try (Connection con = DriverManager.getConnection(getMainDBURL());
 						SQLExecutor executor = new SQLExecutor(con);) {
-					executor.exec(ClassLoader.getSystemResourceAsStream("SQL/Users"));
+					executor.exec(ClassLoader.getSystemResourceAsStream("Users"));
 				}
 			}
 
@@ -542,7 +542,7 @@ public class DatabaseManager {
 			// otherwise the database will not be created
 
 			// create the catalogue db structure
-			executor.exec(ClassLoader.getSystemResourceAsStream("SQL/createCatalogueDB"));
+			executor.exec(ClassLoader.getSystemResourceAsStream("createCatalogueDB"));
 
 			// close the connection
 			con.close();

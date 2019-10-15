@@ -151,7 +151,7 @@ public class FormTermCoder {
 		dialog = new Shell(shell, SWT.SHELL_TRIM | SWT.MODELESS);
 
 		dialog.setImage(new Image(Display.getCurrent(),
-				this.getClass().getClassLoader().getResourceAsStream("icons/Choose.gif")));
+				this.getClass().getClassLoader().getResourceAsStream("Choose.gif")));
 		dialog.setMaximized(true);
 
 		dialog.setText(title);

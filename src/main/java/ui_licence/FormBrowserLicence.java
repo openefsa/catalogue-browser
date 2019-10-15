@@ -42,7 +42,7 @@ public class FormBrowserLicence {
 
 		Label label = new Label(startupWindow, SWT.CENTER);
 		Image image = new Image(startupWindow.getDisplay(),
-				getClass().getClassLoader().getResourceAsStream("icons/Catalogue-browser.gif"));
+				getClass().getClassLoader().getResourceAsStream("Catalogue-browser.gif"));
 		label.setImage(image);
 
 		startupWindow.setSize(image.getBounds().width + 15, 500);

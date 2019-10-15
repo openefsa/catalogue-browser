@@ -134,7 +134,7 @@ public class FormDescribedTerms {
 		// window icon (on the top left)
 		try {
 			parent.setImage(new Image(Display.getCurrent(),
-					this.getClass().getClassLoader().getResourceAsStream("icons/Choose.gif")));
+					this.getClass().getClassLoader().getResourceAsStream("Choose.gif")));
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.error("Cannot get image", e);

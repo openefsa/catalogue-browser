@@ -83,7 +83,7 @@ public class LabelProviderTerm extends LabelProvider implements IFontProvider {
 
 			try {
 				cache = new Image(Display.getCurrent(),
-						this.getClass().getClassLoader().getResourceAsStream("icons/" +imageName));
+						this.getClass().getClassLoader().getResourceAsStream(imageName));
 			} catch (Exception e) {
 				e.printStackTrace();
 				LOGGER.error("Cannot get image", e);
@@ -142,7 +142,7 @@ public class LabelProviderTerm extends LabelProvider implements IFontProvider {
 
 				// otherwise create a new image and add it to the cache
 				image = new Image(Display.getCurrent(),
-						this.getClass().getClassLoader().getResourceAsStream("icons/"+dlg.getImageName()));
+						this.getClass().getClassLoader().getResourceAsStream(dlg.getImageName()));
 
 				images.add(new ImageCache(dlg.getImageName(), image));
 

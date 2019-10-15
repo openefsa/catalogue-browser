@@ -191,7 +191,7 @@ public class FormSelectTerm implements Observer {
 		dialog.forceActive();
 
 		dialog.setImage(
-				new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream("icons/Choose.gif")));
+				new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream("Choose.gif")));
 		dialog.setMaximized(true);
 
 		dialog.setText(title);

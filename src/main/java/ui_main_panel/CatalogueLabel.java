@@ -85,7 +85,7 @@ public class CatalogueLabel implements Observer {
 		// make it invisible
 		makeUpdateVisible(false);
 
-		Image image = new Image(leftGroup.getDisplay(), ClassLoader.getSystemResourceAsStream("icons/help.png"));
+		Image image = new Image(leftGroup.getDisplay(), ClassLoader.getSystemResourceAsStream("help.png"));
 		
 		// label for notifying new catalogue version
 		lblNewVersion = new Label(leftGroup, SWT.NONE);

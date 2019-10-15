@@ -42,7 +42,7 @@ public class LabelProviderDetailLevel implements ILabelProvider {
 		// try to get the image from the main folder
 		Image image = null;
 		try {
-			image = new Image( Display.getCurrent() , this.getClass().getClassLoader().getResourceAsStream("icons/"+detailLevel.getImageName() ) );
+			image = new Image( Display.getCurrent() , this.getClass().getClassLoader().getResourceAsStream(detailLevel.getImageName() ) );
 		} catch ( Exception e ) {
 			LOGGER.error( "Cannot find icons", e );
 		}

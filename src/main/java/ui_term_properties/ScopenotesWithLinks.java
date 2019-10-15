@@ -154,25 +154,25 @@ public class ScopenotesWithLinks {
 		final MenuItem googleWeb = new MenuItem(scopenotesMenu, SWT.PUSH);
 		googleWeb.setText(CBMessages.getString("ScopenotesWithLinks.GoogleButton")); //$NON-NLS-1$
 		Image googleWebIcon = new Image(Display.getCurrent(),
-				this.getClass().getClassLoader().getResourceAsStream("icons/GoogleIcon.png"));
+				this.getClass().getClassLoader().getResourceAsStream("GoogleIcon.png"));
 		googleWeb.setImage(googleWebIcon);
 
 		final MenuItem googleImage = new MenuItem(scopenotesMenu, SWT.PUSH);
 		googleImage.setText(CBMessages.getString("ScopenotesWithLinks.GoogleImageButton")); //$NON-NLS-1$
 		Image googleImageIcon = new Image(Display.getCurrent(),
-				this.getClass().getClassLoader().getResourceAsStream("icons/GoogleImageIcon.png"));
+				this.getClass().getClassLoader().getResourceAsStream("GoogleImageIcon.png"));
 		googleImage.setImage(googleImageIcon);
 
 		final MenuItem wikipedia = new MenuItem(scopenotesMenu, SWT.PUSH);
 		wikipedia.setText(CBMessages.getString("ScopenotesWithLinks.WikipediaButton")); //$NON-NLS-1$
 		Image wikipediaIcon = new Image(Display.getCurrent(),
-				this.getClass().getClassLoader().getResourceAsStream("icons/WikipediaIcon.png"));
+				this.getClass().getClassLoader().getResourceAsStream("WikipediaIcon.png"));
 		wikipedia.setImage(wikipediaIcon);
 
 		final MenuItem googleTranslate = new MenuItem(scopenotesMenu, SWT.PUSH);
 		googleTranslate.setText(CBMessages.getString("ScopenotesWithLinks.GoogleTranslateButton")); //$NON-NLS-1$
 		Image googleTranslateIcon = new Image(Display.getCurrent(),
-				this.getClass().getClassLoader().getResourceAsStream("icons/GoogleIcon.png"));
+				this.getClass().getClassLoader().getResourceAsStream("GoogleIcon.png"));
 		googleTranslate.setImage(googleTranslateIcon);
 
 		// Associate the menu to the textScopenotes

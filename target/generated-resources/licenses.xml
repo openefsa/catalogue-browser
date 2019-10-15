@@ -58,6 +58,7 @@
           <name>MIT License</name>
           <url>http://opensource.org/licenses/MIT</url>
           <distribution>repo</distribution>
+          <file>mit license - mit.html</file>
         </license>
       </licenses>
     </dependency>
@@ -83,6 +84,7 @@
           <name>BSD License</name>
           <url>http://opensource.org/licenses/BSD-3-Clause</url>
           <distribution>repo</distribution>
+          <file>bsd license - bsd-3-clause.html</file>
         </license>
       </licenses>
     </dependency>
@@ -361,6 +363,7 @@
           <name>New BSD License</name>
           <url>http://www.opensource.org/licenses/bsd-license.php</url>
           <distribution>repo</distribution>
+          <file>new bsd license - bsd-license.html</file>
         </license>
       </licenses>
     </dependency>
@@ -373,6 +376,7 @@
           <name>New BSD License</name>
           <url>http://www.opensource.org/licenses/bsd-license.php</url>
           <distribution>repo</distribution>
+          <file>new bsd license - bsd-license.html</file>
         </license>
       </licenses>
     </dependency>
@@ -402,6 +406,7 @@
         <license>
           <name>MIT License</name>
           <url>http://www.opensource.org/licenses/mit-license.php</url>
+          <file>mit license - mit-license.html</file>
         </license>
         <license>
           <name>LGPL</name>
@@ -503,6 +508,7 @@
           <name>MIT License</name>
           <url>http://www.opensource.org/licenses/mit-license.php</url>
           <distribution>repo</distribution>
+          <file>mit license - mit-license.html</file>
         </license>
       </licenses>
     </dependency>
@@ -529,7 +535,15 @@
     </dependency>
     <dependency>
       <groupId>swt</groupId>
-      <artifactId>swt_x32</artifactId>
+      <artifactId>swt</artifactId>
+      <version>3.7.0.x32</version>
+      <licenses>
+        <!-- No license information available. -->
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>swt</groupId>
+      <artifactId>swt_x64</artifactId>
       <version>3.7.1</version>
       <licenses>
         <!-- No license information available. -->

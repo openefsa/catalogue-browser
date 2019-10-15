@@ -219,7 +219,7 @@ public class TableSelectedDescriptors {
 
 		// set menu item icon
 		Image removeIcon = new Image(Display.getCurrent(),
-				this.getClass().getClassLoader().getResourceAsStream("icons/remove-icon.png"));
+				this.getClass().getClassLoader().getResourceAsStream("remove-icon.png"));
 		removeItem.setImage(removeIcon);
 		removeItem.setEnabled(false);
 

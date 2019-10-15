@@ -77,7 +77,7 @@ public class FormDescribeSearchResult {
 		
 		// window icon (on the top left)
 		dialog.setImage(
-				new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream("icons/Choose.gif")));
+				new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream("Choose.gif")));
 
 		dialog.setMaximized(true);
 		dialog.setText(title); // window title
@@ -112,7 +112,7 @@ public class FormDescribeSearchResult {
 		MenuItem addItem = new MenuItem(searchMenu, SWT.PUSH);
 		addItem.setText(CBMessages.getString("FormDescribeSearchResult.AddCmd")); //$NON-NLS-1$
 		Image addIcon = new Image(Display.getCurrent(),
-				this.getClass().getClassLoader().getResourceAsStream("icons/add-icon.png"));
+				this.getClass().getClassLoader().getResourceAsStream("add-icon.png"));
 		addItem.setImage(addIcon);
 
 		// Set the menu

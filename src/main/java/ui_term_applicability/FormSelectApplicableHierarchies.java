@@ -55,7 +55,7 @@ public class FormSelectApplicableHierarchies {
 
 		// window icon (on the top left)
 		dialog.setImage(new Image(Display.getCurrent(),
-				this.getClass().getClassLoader().getResourceAsStream("icons/Choose.gif")));
+				this.getClass().getClassLoader().getResourceAsStream("Choose.gif")));
 
 		dialog.setText(CBMessages.getString("FormSelectApplicabilityHierarchy.Title")); // window title
 

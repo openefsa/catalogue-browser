@@ -211,14 +211,14 @@ public class FrameTermImplicitFacets implements Observer {
 		final MenuItem addImplicitFacet = new MenuItem(implicitFacetOperationMenu, SWT.PUSH);
 
 		addImplicitFacet
-				.setImage(new Image(Display.getCurrent(), ClassLoader.getSystemResourceAsStream("icons/add-icon.png")));
+				.setImage(new Image(Display.getCurrent(), ClassLoader.getSystemResourceAsStream("add-icon.png")));
 		addImplicitFacet.setText(CBMessages.getString("TreeImplicitFacets.AddCommand"));
 
 		// remove menu item
 		final MenuItem removeImplicitFacet = new MenuItem(implicitFacetOperationMenu, SWT.PUSH);
 
 		removeImplicitFacet
-				.setImage(new Image(Display.getCurrent(), ClassLoader.getSystemResourceAsStream("icons/remove-icon.png")));
+				.setImage(new Image(Display.getCurrent(), ClassLoader.getSystemResourceAsStream("remove-icon.png")));
 		removeImplicitFacet.setText(CBMessages.getString("TreeImplicitFacets.RemoveCommand"));
 
 		// set the menu for the tree

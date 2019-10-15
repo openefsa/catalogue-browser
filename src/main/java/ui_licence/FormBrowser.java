@@ -41,7 +41,7 @@ public class FormBrowser {
 		dialog = new Shell(shell, SWT.SHEET | SWT.APPLICATION_MODAL | SWT.WRAP | SWT.BORDER | SWT.TITLE);
 
 		dialog.setImage(
-				new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream("icons/Print24.gif")));
+				new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream("Print24.gif")));
 
 		dialog.setSize(720, 500);
 
