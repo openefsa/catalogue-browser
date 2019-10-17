@@ -5,7 +5,6 @@
 	<groupId>openefsa</groupId>
 	<artifactId>efsa.catalogue-browser</artifactId>
 	<version>1.2.7</version>
-	<packaging>pom</packaging>
 
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
@@ -15,16 +14,27 @@
 		<!-- <jface.version>3.7.0</jface.version> -->
 	</properties>
 
-	<!-- <dependencyManagement> <dependencies> <dependency> <groupId>swt</groupId> 
-		<artifactId>swt</artifactId> <version>${swt.version}</version> </dependency> 
-		<dependency> <groupId>jface</groupId> <artifactId>jface</artifactId> <version>${jface.version}</version> 
-		</dependency> </dependencies> </dependencyManagement> -->
+	<!-- 
+	<dependencyManagement> 
+		<dependencies> 
+			<dependency> 
+				<groupId>swt</groupId> 
+				<artifactId>swt</artifactId> 
+				<version>${swt.version}</version> 
+			</dependency> 
+			<dependency> 
+				<groupId>jface</groupId> 
+				<artifactId>jface</artifactId> 
+				<version>${jface.version}</version> 
+			</dependency> 
+		</dependencies> 
+	</dependencyManagement> -->
 
 	<dependencies>
 		<dependency>
 			<groupId>swt</groupId>
 			<artifactId>swt</artifactId>
-			<version>3.7.0.x32</version> <!-- <version>3.7.0.x32</version> -->
+			<version>3.7.0.x64</version> <!-- <version>3.7.0.x64</version> -->
 		</dependency>
 		<dependency>
 			<groupId>jface</groupId>
@@ -92,62 +102,67 @@
 			<artifactId>derby</artifactId>
 			<version>10.14.2.0</version>
 		</dependency>
-		<!-- <dependency> <groupId>com.sun.xml.ws</groupId> <artifactId>jaxws-ri</artifactId> 
-			<version>[2.3.2,)</version> <type>pom</type> </dependency> -->
+		<!-- 
+		<dependency> 
+			<groupId>com.sun.xml.ws</groupId> 
+			<artifactId>jaxws-ri</artifactId> 
+			<version>[2.3.2,)</version> 
+			<type>pom</type> 
+		</dependency> 
+		-->
 		<dependency>
-			<groupId>catalogue_converter_xml_to_xlsx</groupId>
-			<artifactId>catalogue_converter_xml_to_xlsx</artifactId>
-			<version>[1.0.0,)</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>DCF_webservice_framework</groupId>
-			<artifactId>DCF_webservice_framework</artifactId>
-			<version>[1.0.0,)</version>
-		</dependency>
-		<dependency>
-			<groupId>HttpManager</groupId>
-			<artifactId>HttpManager</artifactId>
+			<groupId>openefsa</groupId>
+			<artifactId>catalogue-xml-to-xlsx</artifactId>
 			<version>[1.0.0,)</version>
 		</dependency>
 		<dependency>
-			<groupId>HttpManager_GUI</groupId>
-			<artifactId>HttpManager_GUI</artifactId>
+			<groupId>openefsa</groupId>
+			<artifactId>dcf-webservice-framework</artifactId>
 			<version>[1.0.0,)</version>
 		</dependency>
 		<dependency>
-			<groupId>java_exception_manager</groupId>
-			<artifactId>java_exception_manager</artifactId>
+			<groupId>openefsa</groupId>
+			<artifactId>exceptions-manager</artifactId>
 			<version>[1.0.0,)</version>
 		</dependency>
 		<dependency>
-			<groupId>open_xml_reader</groupId>
-			<artifactId>open_xml_reader</artifactId>
+			<groupId>openefsa</groupId>
+			<artifactId>http-manager</artifactId>
 			<version>[1.0.0,)</version>
 		</dependency>
 		<dependency>
-			<groupId>progress_bar</groupId>
-			<artifactId>progress_bar</artifactId>
+			<groupId>openefsa</groupId>
+			<artifactId>http-manager-gui</artifactId>
 			<version>[1.0.0,)</version>
 		</dependency>
 		<dependency>
-			<groupId>SQL_statements_executor</groupId>
-			<artifactId>SQL_statements_executor</artifactId>
+			<groupId>openefsa</groupId>
+			<artifactId>open-xml-reader</artifactId>
 			<version>[1.0.0,)</version>
 		</dependency>
 		<dependency>
-			<groupId>version_manager</groupId>
-			<artifactId>VersionManager</artifactId>
+			<groupId>openefsa</groupId>
+			<artifactId>progress-bar</artifactId>
 			<version>[1.0.0,)</version>
 		</dependency>
 		<dependency>
-			<groupId>window_size_save_and_restore</groupId>
-			<artifactId>window_size_save_and_restore</artifactId>
+			<groupId>openefsa</groupId>
+			<artifactId>sql-script-executor</artifactId>
 			<version>[1.0.0,)</version>
 		</dependency>
 		<dependency>
-			<groupId>ZipManager</groupId>
-			<artifactId>ZipManager</artifactId>
+			<groupId>openefsa</groupId>
+			<artifactId>version-manager</artifactId>
+			<version>[1.0.0,)</version>
+		</dependency>
+		<dependency>
+			<groupId>openefsa</groupId>
+			<artifactId>window-size-save-restore</artifactId>
+			<version>[1.0.0,)</version>
+		</dependency>
+		<dependency>
+			<groupId>openefsa</groupId>
+			<artifactId>zip-manager</artifactId>
 			<version>[1.0.0,)</version>
 		</dependency>
 	</dependencies>
@@ -206,6 +221,9 @@
 						<goals>
 							<goal>aggregate-download-licenses</goal>
 						</goals>
+						<configuration>
+							<licensesOutputDirectory>third-party-license</licensesOutputDirectory>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>

@@ -37,6 +37,7 @@ public abstract class QuickImporter {
 	 * 
 	 * @author shahaal
 	 * @author avonva
+	 * 
 	 * @throws CloneNotSupportedException
 	 * @throws XMLStreamException
 	 * @throws IOException
@@ -52,9 +53,9 @@ public abstract class QuickImporter {
 
 		ResultDataSet fetched = null;
 
-		//resolve memory leak
+		// resolve memory leak
 		try {
-			
+
 			fetched = workbookReader.next();
 
 			// read the first batch

@@ -5,8 +5,8 @@ import java.util.Map;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import dcf_log.DcfResponse;
 import dcf_user.User;
@@ -26,7 +26,7 @@ public class MainPanelTest {
 	private MainPanel panel;
 	private String catalogueCode;
 	
-	@Before
+	@BeforeEach
 	public void init() {
 		
 		display = new Display();
