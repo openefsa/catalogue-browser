@@ -2,79 +2,55 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>openefsa</groupId>
-	<artifactId>efsa.catalogue-browser</artifactId>
-	<version>1.2.7</version>
+	<parent>
+		<groupId>openefsa</groupId>
+		<artifactId>all-projects</artifactId>
+		<version>${global.version}</version>
+	</parent>
+	<artifactId>catalogue-browser</artifactId>
 
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.build.sourceEncoding>Cp1252</project.build.sourceEncoding>
-		<!-- <swt.version>3.7.0.x64</swt.version> <swt.version>3.7.1.x32</swt.version> -->
-		<!-- <jface.version>3.7.0</jface.version> -->
 	</properties>
-
-	<!-- 
-	<dependencyManagement> 
-		<dependencies> 
-			<dependency> 
-				<groupId>swt</groupId> 
-				<artifactId>swt</artifactId> 
-				<version>${swt.version}</version> 
-			</dependency> 
-			<dependency> 
-				<groupId>jface</groupId> 
-				<artifactId>jface</artifactId> 
-				<version>${jface.version}</version> 
-			</dependency> 
-		</dependencies> 
-	</dependencyManagement> -->
 
 	<dependencies>
 		<dependency>
 			<groupId>swt</groupId>
 			<artifactId>swt</artifactId>
-			<version>3.7.0.x64</version> <!-- <version>3.7.0.x64</version> -->
 		</dependency>
 		<dependency>
 			<groupId>jface</groupId>
 			<artifactId>jface</artifactId>
-			<version>3.7.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
-			<version>[4.0.0,)</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
-			<version>[4.0.0,)</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml-schemas</artifactId>
-			<version>[4.0.0,)</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>[2.6,)</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
-			<version>[2.12.1,)</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			<version>[2.12.1,)</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.core</groupId>
 			<artifactId>org.eclipse.core.commands</artifactId>
-			<version>[3.6.0,)</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.platform</groupId>
@@ -102,84 +78,85 @@
 			<artifactId>derby</artifactId>
 			<version>10.14.2.0</version>
 		</dependency>
-		<!-- 
-		<dependency> 
-			<groupId>com.sun.xml.ws</groupId> 
-			<artifactId>jaxws-ri</artifactId> 
-			<version>[2.3.2,)</version> 
-			<type>pom</type> 
-		</dependency> 
-		-->
 		<dependency>
 			<groupId>openefsa</groupId>
 			<artifactId>catalogue-xml-to-xlsx</artifactId>
-			<version>[1.0.0,)</version>
+			<version>${global.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>openefsa</groupId>
 			<artifactId>dcf-webservice-framework</artifactId>
-			<version>[1.0.0,)</version>
+			<version>${global.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>openefsa</groupId>
 			<artifactId>exceptions-manager</artifactId>
-			<version>[1.0.0,)</version>
+			<version>${global.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>openefsa</groupId>
 			<artifactId>http-manager</artifactId>
-			<version>[1.0.0,)</version>
+			<version>${global.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>openefsa</groupId>
 			<artifactId>http-manager-gui</artifactId>
-			<version>[1.0.0,)</version>
+			<version>${global.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>openefsa</groupId>
 			<artifactId>open-xml-reader</artifactId>
-			<version>[1.0.0,)</version>
+			<version>${global.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>openefsa</groupId>
 			<artifactId>progress-bar</artifactId>
-			<version>[1.0.0,)</version>
+			<version>${global.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>openefsa</groupId>
 			<artifactId>sql-script-executor</artifactId>
-			<version>[1.0.0,)</version>
+			<version>${global.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>openefsa</groupId>
 			<artifactId>version-manager</artifactId>
-			<version>[1.0.0,)</version>
+			<version>${global.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>openefsa</groupId>
 			<artifactId>window-size-save-restore</artifactId>
-			<version>[1.0.0,)</version>
+			<version>${global.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>openefsa</groupId>
 			<artifactId>zip-manager</artifactId>
-			<version>[1.0.0,)</version>
+			<version>${global.version}</version>
 		</dependency>
 	</dependencies>
 
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<testSourceDirectory>src/test/java</testSourceDirectory>
-		
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
 				<includes>
-					<include>**/*</include>
+					<include>**/*.*</include>
 				</includes>
 			</resource>
+			<resource>
+				<directory>src/main/resources/icons</directory>
+			</resource>
+			<resource>
+				<directory>src/main/resources/sql</directory>
+			</resource>
 		</resources>
-
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+			</testResource>
+		</testResources>
 		<plugins>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -211,23 +188,6 @@
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<version>2.22.2</version>
 			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>license-maven-plugin</artifactId>
-				<version>2.0.0</version>
-				<executions>
-					<execution>
-						<id>aggregate-download-licenses</id>
-						<goals>
-							<goal>aggregate-download-licenses</goal>
-						</goals>
-						<configuration>
-							<licensesOutputDirectory>third-party-license</licensesOutputDirectory>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
 	</build>
-
 </project>
