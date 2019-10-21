@@ -8,29 +8,38 @@ The catalogue browser is a Java-based application that allows the use and readin
 </p>
 
 # Dependencies
-The project needs the following projects to work properly:
-* https://github.com/openefsa/CatalogueXmlToXlsx
-* https://github.com/openefsa/Dcf-webservice-framework
-* https://github.com/openefsa/http-manager
-* https://github.com/openefsa/http-manager-gui
-* https://github.com/openefsa/java-exception-to-string
-* https://github.com/openefsa/Open-xml-reader
-* https://github.com/openefsa/Progress-bar
-* https://github.com/openefsa/sql-script-executor
-* https://github.com/openefsa/version-manager
-* https://github.com/openefsa/java-swt-window-size-save-and-restore
-* https://github.com/openefsa/zip-manager
+All project dependencies are listed in the [pom.xml](https://github.com/openefsa/catalogue-browser/blob/master/pom.xml) file.
 
-## Import the project in Eclipse IDE
-In order to import the Catalogue browser project correctly into the Eclipse development environment, it is necessary to download the Catalogue browser together with all its dependencies. Next, in order to allow an easy import into the IDE, extract all the zip packets inside the eclipse workspace. 
-At this stage you can simply open the IDE and and import all the projects just extracted one by one.
+## Import the project
+In order to import the project correctly into the integrated development environment (e.g. Eclipse), it is necessary to download the Catalogue browser together with all its dependencies.
+The Catalogue browser and all its dependencies are based on the concept of "project object model" and hence Apache Maven is used for the specific purpose.
+In order to correctly import the project into the IDE it is firstly required to create a parent POM Maven project (check the following [link](https://maven.apache.org/guides/introduction/introduction-to-the-pom.html) for further information). 
+Once the parent project has been created add the project and all the dependencies as "modules" into the pom.xml file as shown below: 
 
-_Note that the Catalogue browser and its dependencies make use of the Maven technology which automatically download and set up all the jar files useful for the proper functioning of the tool._
+	<modules>
 
-The only projects which require to manually configure a library into the build path are the **Catalogue browser** and the **HttpManager GUI** projects which are making use of the **Jface** jar file downloadable from the following [link](http://www.java2s.com/Code/JarDownload/org.eclipse/org.eclipse.jface-3.8.jar.zip).
+		<!-- catalogue browser modules -->
+		<module>catalogue-browser</module>
+		<module>catalogue-xml-to-xlsx</module>
+		<module>open-xml-reader</module>
+		<module>dcf-webservice-framework</module>
+		<module>exceptions-manager</module>
+		<module>http-manager</module>
+		<module>http-manager-gui</module>
+		<module>progress-bar</module>
+		<module>sql-script-executor</module>
+		<module>version-manager</module>
+		<module>window-size-save-restore</module>
+		<module>zip-manager</module>
+		
+	</modules>
+	
+Next, close the IDE and extract all the zip packets inside the parent project.
+At this stage you can simply open the IDE and import back the parent project which will automatically import also the Catalogue browser and all its dependencies.
 
-For further information on how to use the tool and how to correctly install it in your local computer refer to the wiki page.
+_Please note that the "SWT.jar" and the "Jface.jar" libraries must be downloaded and installed manually in the Maven local repository since are custom versions used in the tool ((install 3rd party jars)[https://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html]). 
+Download the exact version by checking the Catalogue browser pom.xml file._
 
 ### Notes for developers
-Do NOT change the business_rules package name, since the Batch checking tool uses it to make the checks.
+Please note that the "business_rules" and the "config" folders are used by the tool and hence errors occur if missing.
 
