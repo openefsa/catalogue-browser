@@ -16,7 +16,7 @@ All project dependencies are listed in the [pom.xml](https://github.com/openefsa
 In order to import the project correctly into the integrated development environment (e.g. Eclipse), it is necessary to download the Catalogue browser together with all its dependencies.
 The Catalogue browser and all its dependencies are based on the concept of "project object model" and hence Apache Maven is used for the specific purpose.
 In order to correctly import the project into the IDE it is firstly required to create a parent POM Maven project (check the following [link](https://maven.apache.org/guides/introduction/introduction-to-the-pom.html) for further information). 
-Once the parent project has been created add the project and all the dependencies as "modules" into the pom.xml file as shown below: 
+Once the parent project has been created add the project and all the dependencies as "modules" into the pom.xml file as shown below (comment not required modules): 
 
 	<project xmlns="http://maven.apache.org/POM/4.0.0"
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
