@@ -150,7 +150,7 @@ Once the parent project has been created add the project and all the dependencie
 Next, close the IDE and extract all the zip packets inside the parent project.
 At this stage you can simply open the IDE and import back the parent project which will automatically import also the Catalogue browser and all its dependencies.
 
-_Please note that the "SWT.jar" and the "Jface.jar" libraries must be downloaded and installed manually in the Maven local repository since are custom versions used in the tool ((install 3rd party jars)[https://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html]). 
+_Please note that the "SWT (swt_3.7.1.v3738a.jar)" and the "JFace (org.eclipse.jface_3.7.0.I20110522-1430.jar)" libraries must be downloaded and installed manually in the Maven local repository since are custom versions used in the tool ((install 3rd party jars)[https://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html]). 
 Download the exact version by checking the Catalogue browser pom.xml file._
 
 ### Notes for developers
