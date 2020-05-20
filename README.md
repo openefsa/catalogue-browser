@@ -37,8 +37,8 @@ Below are listed the additional projects that can be downloaded from the OpenEFS
 	</modules>
 	
 
-_Please note that the "SWT.jar" and the "Jface.jar" libraries must be downloaded and installed manually in the Maven local repository since are custom versions used in the tool ((install 3rd party jars)[https://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html]). 
-Download the exact version by checking the Catalogue browser pom.xml file._
+Please note that the "SWT.jar" and the "Jface.jar" libraries must be downloaded and installed manually in the Maven local repository since are custom versions used in the tool ((install 3rd party jars)[https://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html]). 
+Download the exact version by checking the Catalogue browser pom.xml file.
 
 ### Notes for developers
 Please note that the "business_rules" and the "config" folders are used by the tool and hence errors occur if missing.
