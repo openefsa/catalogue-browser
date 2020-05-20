@@ -75,10 +75,6 @@ public final class GlobalUtil {
 	// the filename of the file which contains the business rule for the describe
 	public static final String BUSINESS_RULES_FILE = "BR_Data.csv";
 
-	// the filename of the file which contains the business rule EXCEPTIONS for the
-	// describe
-	public static final String BUSINESS_RULES_EX_FILE = "BR_Exceptions.csv";
-
 	// change log file
 	public final static String CHANGELOG_PATH = getConfigDir() + "changelog.txt";
 	// flag for change log
@@ -198,15 +194,6 @@ public final class GlobalUtil {
 	 */
 	public static String getBRData() {
 		return getBusinessRulesDir() + BUSINESS_RULES_FILE;
-	}
-
-	/**
-	 * Get the business rules exception filename
-	 * 
-	 * @return
-	 */
-	public static String getBRExceptions() {
-		return getBusinessRulesDir() + BUSINESS_RULES_EX_FILE;
 	}
 
 	/**

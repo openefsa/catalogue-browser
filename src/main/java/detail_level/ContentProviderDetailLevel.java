@@ -12,6 +12,7 @@ public class ContentProviderDetailLevel implements IStructuredContentProvider {
 
 	public void inputChanged ( Viewer arg0 , Object arg1 , Object arg2 ) {}
 
+	@SuppressWarnings("unchecked")
 	public Object[] getElements ( Object list ) {
 		ArrayList< DetailLevelGraphics > l = (ArrayList< DetailLevelGraphics >) list;
 		return l.toArray();

@@ -43,12 +43,8 @@ public class WarningUtil extends TermRules {
 	// semaphore
 	private Canvas semaphore;
 
-	// maintain the current warningLevel, which is the highest warning level
-	// in the warning log
+	// maintain the current warningLevel
 	private WarningLevel currentWarningLevel = WarningLevel.NONE;
-
-	// load the colour options for the warning console and messages
-	private WarningOptions warnOptions;
 
 	/**
 	 * constructor
@@ -67,6 +63,7 @@ public class WarningUtil extends TermRules {
 		// get the current catalogue
 		currentCat = manager.getCurrentCatalogue();
 
+		// TODO load file data only once
 		loadFileData();
 	}
 
@@ -79,23 +76,22 @@ public class WarningUtil extends TermRules {
 
 	/**
 	 * Refresh the warning table, that is, remove all the warnings and recompute
-	 * them starting from the fullCode of the term. Examples of full code: A0DPP or
+	 * them starting from the fullCode of the term. 
+	 * Examples of full code: 
+	 * A0DPP or
 	 * A0DPP#F01.A0FGM or A0DPP#F01.A0FGM$F04.A000J
 	 * 
-	 * @param fullCode: the full code of a term (IMPORTANT: without the implicit
-	 *        facets code if enabled!)
+	 * @param fullCode: the full code of a term (IMPORTANT: without the implicit facets code if enabled!)
 	 */
 	public void refreshWarningsTable(String fullCode) {
 
 		//////////////////// GRAPHICS UPDATE
-
 		// reset the warning messages and level
 		resetWarningState();
 		// refresh the graphics ( font and colours )
 		refreshWarningTableGraphics();
 
 		//////////////////// CHECKS
-		
 		// execute all the warning checks
 		performWarningChecks(fullCode, false, false);
 	}
@@ -106,7 +102,6 @@ public class WarningUtil extends TermRules {
 	private void resetWarningState() {
 		// remove all the warnings
 		warningsTable.getTable().removeAll();
-
 		// reset the current warning level
 		currentWarningLevel = WarningLevel.NONE;
 	}
@@ -155,7 +150,7 @@ public class WarningUtil extends TermRules {
 		// CSV line semicolon separated
 		// do not print the base term successfully added warning! It is useless for the
 		// excel macro
-		if (stdOut && event != WarningEvent.BaseTermSuccessfullyAdded) {
+		if (stdOut && event != WarningEvent.BR22) {
 
 			StringBuilder sb = new StringBuilder();
 			sb.append(message);
@@ -235,7 +230,7 @@ public class WarningUtil extends TermRules {
 			// update the currentWarningLevel
 			currentWarningLevel = semaphoreLevel;
 
-			// change the color of the semaphore
+			// change the colour of the semaphore
 			semaphore.setBackground(warningColor);
 		}
 	}

@@ -41,6 +41,8 @@ public class MainMenu extends Observable implements Observer {
 	MenuListener accountListener;
 	MenuListener openapiListener;
 
+	private ProxyMenu proxy;
+
 	/**
 	 * Initialise the main menu
 	 * 
@@ -80,7 +82,8 @@ public class MainMenu extends Observable implements Observer {
 		// about menu with licenses
 		about = new AboutMenu(this, mainMenu);
 
-		new ProxyMenu(mainMenu, mainMenu.getShell());
+		// panel which allow changing proxy settings
+		proxy = new ProxyMenu(mainMenu, mainMenu.getShell());
 
 		// account menu for login/logout DCF
 		account = new AccountMenu(this, mainMenu);
@@ -108,6 +111,7 @@ public class MainMenu extends Observable implements Observer {
 				view.refresh();
 				tools.refresh();
 				about.refresh();
+				proxy.refresh();
 				account.refresh();
 			}
 		});

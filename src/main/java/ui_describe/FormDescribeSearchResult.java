@@ -43,14 +43,10 @@ public class FormDescribeSearchResult {
 	/**
 	 * Constructor, display the search results passed in the input.
 	 * 
-	 * @param parentShell
-	 *            parent widget
-	 * @param title
-	 *            title of the window
-	 * @param hierarchy
-	 *            the hierarchy used to compute reportability of terms
-	 * @param searchResults
-	 *            array of terms which needs to be shown
+	 * @param parentShell   parent widget
+	 * @param title         title of the window
+	 * @param hierarchy     the hierarchy used to compute reportability of terms
+	 * @param searchResults array of terms which needs to be shown
 	 */
 	public FormDescribeSearchResult(Shell parentShell, String title, Hierarchy hierarchy,
 			ArrayList<Term> searchResults) {
@@ -70,14 +66,15 @@ public class FormDescribeSearchResult {
 
 		/**
 		 * Set the layout of the form
+		 * 
 		 * @author shahaal
 		 */
-		//dialog = new Shell( shell , SWT.SHELL_TRIM | SWT.APPLICATION_MODAL );
+		// dialog = new Shell( shell , SWT.SHELL_TRIM | SWT.APPLICATION_MODAL );
 		dialog = new Shell(shell, SWT.SHELL_TRIM | SWT.MODELESS);
-		
+
 		// window icon (on the top left)
-		dialog.setImage(
-				new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream("Choose.gif")));
+		dialog.setImage(new Image(Display.getCurrent(),
+				FormDescribedTerms.class.getClassLoader().getResourceAsStream("Choose.gif")));
 
 		dialog.setMaximized(true);
 		dialog.setText(title); // window title
@@ -112,7 +109,7 @@ public class FormDescribeSearchResult {
 		MenuItem addItem = new MenuItem(searchMenu, SWT.PUSH);
 		addItem.setText(CBMessages.getString("FormDescribeSearchResult.AddCmd")); //$NON-NLS-1$
 		Image addIcon = new Image(Display.getCurrent(),
-				this.getClass().getClassLoader().getResourceAsStream("add-icon.png"));
+				FormDescribedTerms.class.getClassLoader().getResourceAsStream("add-icon.png"));
 		addItem.setImage(addIcon);
 
 		// Set the menu
@@ -139,9 +136,9 @@ public class FormDescribeSearchResult {
 			if (!dialog.getDisplay().readAndDispatch())
 				dialog.getDisplay().sleep();
 		}
-		
+
 		dialog.dispose();
-		
+
 	}
 
 	public void setHideDeprecated(boolean hide) {

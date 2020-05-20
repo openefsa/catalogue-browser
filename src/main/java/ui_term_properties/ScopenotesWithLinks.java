@@ -39,7 +39,12 @@ import i18n_messages.CBMessages;
 
 public class ScopenotesWithLinks {
 
-	private final static String linkDelim = "£";
+	protected static final String GOOGLE_WEB = "https://www.google.com/#q=";
+	protected static final String GOOGLE_IMAGE = "https://www.google.com/search?tbm=isch&q=";
+	protected static final String WIKI = "https://en.wikipedia.org/wiki/";
+	protected static final String GOOGLE_TRANSLATE = "https://translate.google.it/#en/it/";
+
+	protected static final String linkDelim = "£";
 
 	Point backupScopenotesSelection = null; // Backup of scopenotetext selection
 	int backupScopenotesCaretPosition = -1; // Backup of caret position for scopenotes, used in the paste function
@@ -95,22 +100,13 @@ public class ScopenotesWithLinks {
 	}
 
 	/**
-	 * Get the text box for the links of the scopenotes
-	 * 
-	 * @return
-	 */
-	public Link getLinkScopenotes() {
-		return linkScopenotes;
-	}
-
-	/**
 	 * Constructor, create scopenotes and links Create also the scopenotes
 	 * contextual menu with the button for searching on the web the words
 	 * 
 	 * @param parent
 	 */
 	public ScopenotesWithLinks(final Composite parent) {
-		
+
 		// ### Scope notes ###
 		textScopenotes = new Text(parent, SWT.BORDER | SWT.WRAP | SWT.MULTI | SWT.V_SCROLL | SWT.NONE);
 		textScopenotes.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -120,7 +116,7 @@ public class ScopenotesWithLinks {
 		// Create the Link textbox
 		linkScopenotes = new Link(parent, SWT.BORDER);
 		linkScopenotes.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		
+
 		// Listener to open clicked URLs
 		linkScopenotes.addSelectionListener(new SelectionListener() {
 
@@ -147,33 +143,24 @@ public class ScopenotesWithLinks {
 		 * ==============================================================
 		 */
 
+		Display display = parent.getDisplay();
+		ClassLoader classLoader = ScopenotesWithLinks.class.getClassLoader();
+
 		// Right click menu for search results
 		final Menu scopenotesMenu = new Menu(parent.getShell(), SWT.POP_UP);
-
+		
 		// Create the buttons, their names and images
 		final MenuItem googleWeb = new MenuItem(scopenotesMenu, SWT.PUSH);
-		googleWeb.setText(CBMessages.getString("ScopenotesWithLinks.GoogleButton")); //$NON-NLS-1$
-		Image googleWebIcon = new Image(Display.getCurrent(),
-				this.getClass().getClassLoader().getResourceAsStream("GoogleIcon.png"));
-		googleWeb.setImage(googleWebIcon);
+		googleWeb.setImage(new Image(display, classLoader.getResourceAsStream("GoogleIcon.png")));
 
 		final MenuItem googleImage = new MenuItem(scopenotesMenu, SWT.PUSH);
-		googleImage.setText(CBMessages.getString("ScopenotesWithLinks.GoogleImageButton")); //$NON-NLS-1$
-		Image googleImageIcon = new Image(Display.getCurrent(),
-				this.getClass().getClassLoader().getResourceAsStream("GoogleImageIcon.png"));
-		googleImage.setImage(googleImageIcon);
+		googleImage.setImage(new Image(display, classLoader.getResourceAsStream("GoogleImageIcon.png")));
 
 		final MenuItem wikipedia = new MenuItem(scopenotesMenu, SWT.PUSH);
-		wikipedia.setText(CBMessages.getString("ScopenotesWithLinks.WikipediaButton")); //$NON-NLS-1$
-		Image wikipediaIcon = new Image(Display.getCurrent(),
-				this.getClass().getClassLoader().getResourceAsStream("WikipediaIcon.png"));
-		wikipedia.setImage(wikipediaIcon);
+		wikipedia.setImage(new Image(display, classLoader.getResourceAsStream("WikipediaIcon.png")));
 
 		final MenuItem googleTranslate = new MenuItem(scopenotesMenu, SWT.PUSH);
-		googleTranslate.setText(CBMessages.getString("ScopenotesWithLinks.GoogleTranslateButton")); //$NON-NLS-1$
-		Image googleTranslateIcon = new Image(Display.getCurrent(),
-				this.getClass().getClassLoader().getResourceAsStream("GoogleIcon.png"));
-		googleTranslate.setImage(googleTranslateIcon);
+		googleTranslate.setImage(new Image(display, classLoader.getResourceAsStream("GoogleIcon.png")));
 
 		// Associate the menu to the textScopenotes
 		textScopenotes.setMenu(scopenotesMenu);
@@ -213,6 +200,7 @@ public class ScopenotesWithLinks {
 					String selectedText = textScopenotes.getSelectionText();
 					boolean enableMenu = !selectedText.isEmpty();
 
+					scopenotesMenu.setVisible(enableMenu);
 					googleWeb.setEnabled(enableMenu);
 					googleImage.setEnabled(enableMenu);
 					wikipedia.setEnabled(enableMenu);
@@ -235,14 +223,13 @@ public class ScopenotesWithLinks {
 						}
 
 						// Set the buttons text using the selected text
-						googleWeb.setText(CBMessages.getString("ScopenotesWithLinks.SearchWord") + subsetSelectedText
-								+ CBMessages.getString("ScopenotesWithLinks.OnGoogle"));
-						googleImage.setText(CBMessages.getString("ScopenotesWithLinks.SearchWord") + subsetSelectedText
-								+ CBMessages.getString("ScopenotesWithLinks.OnGoogleImages"));
-						wikipedia.setText(CBMessages.getString("ScopenotesWithLinks.SearchWord") + subsetSelectedText
-								+ CBMessages.getString("ScopenotesWithLinks.OnWikipedia"));
-						googleTranslate.setText(CBMessages.getString("ScopenotesWithLinks.Translate") + subsetSelectedText
-								+ CBMessages.getString("ScopenotesWithLinks.WithGoogleTranslate"));
+						googleWeb.setText(CBMessages.getString("ScopenotesWithLinks.GoogleButton", subsetSelectedText));
+						googleImage.setText(
+								CBMessages.getString("ScopenotesWithLinks.GoogleImageButton", subsetSelectedText));
+						wikipedia.setText(
+								CBMessages.getString("ScopenotesWithLinks.WikipediaButton", subsetSelectedText));
+						googleTranslate.setText(
+								CBMessages.getString("ScopenotesWithLinks.GoogleTranslateButton", subsetSelectedText));
 					}
 				}
 			}
@@ -283,7 +270,7 @@ public class ScopenotesWithLinks {
 						robot = new Robot();
 
 						// Get the position of the right clicked event in the monitor
-						Point mouseLocation = parent.getShell().getDisplay().getCursorLocation();
+						Point mouseLocation = display.getCursorLocation();
 
 						// Move the mouse in that position and make a left click simulation
 						robot.mouseMove(mouseLocation.x, mouseLocation.y);
@@ -313,15 +300,8 @@ public class ScopenotesWithLinks {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-
-				// Get selected scopenotes text
-				String selectedText = textScopenotes.getSelectionText();
-
-				// If it is not empty
-				if (!selectedText.isEmpty()) {
-					// Search on google, open the default browser
-					org.eclipse.swt.program.Program.launch("https://www.google.com/#q=" + selectedText); //$NON-NLS-1$
-				}
+				// launch the google web link
+				launchLink(GOOGLE_WEB);
 			}
 
 			@Override
@@ -334,15 +314,8 @@ public class ScopenotesWithLinks {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-
-				// Get scopenotes selected text
-				String selectedText = textScopenotes.getSelectionText();
-
-				// If it is not empty
-				if (!selectedText.isEmpty()) {
-					// Search on google image, open the default browser
-					org.eclipse.swt.program.Program.launch("https://www.google.com/search?tbm=isch&q=" + selectedText); //$NON-NLS-1$
-				}
+				// launch the google img link
+				launchLink(GOOGLE_IMAGE);
 			}
 
 			@Override
@@ -355,15 +328,8 @@ public class ScopenotesWithLinks {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-
-				// Get scopenotes selected text
-				String selectedText = textScopenotes.getSelectionText();
-
-				// If it is not empty
-				if (!selectedText.isEmpty()) {
-					// Search on wikipedia, open the default browser
-					org.eclipse.swt.program.Program.launch("https://en.wikipedia.org/wiki/" + selectedText); //$NON-NLS-1$
-				}
+				// launch the wiki link
+				launchLink(WIKI);
 			}
 
 			@Override
@@ -376,15 +342,8 @@ public class ScopenotesWithLinks {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-
-				// Get scopenotes selected text
-				String selectedText = textScopenotes.getSelectionText();
-
-				// If it is not empty
-				if (!selectedText.isEmpty()) {
-					// open the default browser and translate with google translate
-					org.eclipse.swt.program.Program.launch("https://translate.google.it/#en/it/" + selectedText);
-				}
+				// launch the google translate link
+				launchLink(GOOGLE_TRANSLATE);
 			}
 
 			@Override
@@ -395,12 +354,30 @@ public class ScopenotesWithLinks {
 	}
 
 	/**
+	 * method used to launch the link with input informaion
+	 * 
+	 * @author shahaal
+	 * @param link
+	 */
+	private void launchLink(String link) {
+
+		// Get scopenotes selected text
+		String selectedText = textScopenotes.getSelectionText();
+
+		// If it is not empty
+		if (!selectedText.isEmpty()) {
+			// open the default browser and translate with google translate
+			org.eclipse.swt.program.Program.launch(link + selectedText);
+		}
+	}
+
+	/**
 	 * Count the number of word selected with the mouse
 	 * 
 	 * @param selectedText
 	 * @return
 	 */
-	public static int wordSelectedCount(String selectedText) {
+	private int wordSelectedCount(String selectedText) {
 
 		// word delimiters
 		String delimiters = " \n\t"; //$NON-NLS-1$
@@ -426,7 +403,7 @@ public class ScopenotesWithLinks {
 	 * @param position
 	 * @return
 	 */
-	private static int retrieveWordOnTheRight(String text, int position) {
+	private int retrieveWordOnTheRight(String text, int position) {
 
 		if (position == text.length()) {
 			return position;
@@ -465,7 +442,7 @@ public class ScopenotesWithLinks {
 	 * @param position
 	 * @return
 	 */
-	private static int retrieveWordOnTheLeft(String text, int position) {
+	private int retrieveWordOnTheLeft(String text, int position) {
 
 		if (position == 0) {
 			return (position);
@@ -507,7 +484,7 @@ public class ScopenotesWithLinks {
 	 * @param caretPosition
 	 * @return
 	 */
-	public static int[] getWordBounds(String text, int caretPosition) {
+	private int[] getWordBounds(String text, int caretPosition) {
 
 		// Left and right cursors
 		int leftPosition = caretPosition;

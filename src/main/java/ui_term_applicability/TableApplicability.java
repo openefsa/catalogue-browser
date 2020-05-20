@@ -281,6 +281,7 @@ public class TableApplicability {
 		public void inputChanged(Viewer arg0, Object arg1, Object arg2) {
 		}
 
+		@SuppressWarnings("unchecked")
 		public Object[] getElements(Object applicabilities) {
 			Collection<Applicability> apps = (Collection<Applicability>) applicabilities;
 			return apps.toArray();
@@ -512,28 +513,30 @@ public class TableApplicability {
 	private Nameable selectTerm(Object root) {
 
 		FormSelectTerm f = new FormSelectTerm(parent.getShell(),
-				CBMessages.getString("TableApplicability.SelectTermWindowTitle"), term.getCatalogue(), false, true);
+				CBMessages.getString("TableApplicability.SelectTermWindowTitle"), term.getCatalogue(), false);
 
 		// use the master hierarchy to choose the parent term
 		// then you can select all the other hierarchies with the
 		// guided approach
 
-		if (root instanceof Hierarchy)
+		if (root instanceof Hierarchy) {
 			f.setRootTerm((Hierarchy) root);
-		else if (root instanceof AvailableHierarchiesTerm)
+		}
+		else if (root instanceof AvailableHierarchiesTerm) {
 			f.setRootTerm((AvailableHierarchiesTerm) root);
-		else {
+		} else {
 			LOGGER.error("Applicability: Cannot set FormSelectTerm.setRootTerm "
 					+ "with an object which is not Hierarchy or " + "AvailableHierarchiesTerm. Object:" + root);
 			return null;
 		}
-
+		
 		f.display();
 
 		// return if nothing was selected
-		if (f.getSelectedTerms() == null || f.getSelectedTerms().isEmpty())
+		if (f.getSelectedTerms() == null || f.getSelectedTerms().isEmpty()) {
 			return null;
-
+		}
+		
 		Nameable parentTerm = (Nameable) f.getSelectedTerms().get(0);
 		return parentTerm;
 	}
@@ -561,9 +564,9 @@ public class TableApplicability {
 			public void widgetSelected(SelectionEvent e) {
 
 				final Nameable parentTerm = selectTerm(root);
-
+				
 				// if we have selected a term => get all the hierarchies where the parent is
-				// presnet but the child not and add the applicabilities
+				// present but the child not and add the applicabilities
 				if (parentTerm instanceof Term) {
 
 					if (((Term) parentTerm).getNewHierarchies(term).isEmpty()) {

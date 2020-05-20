@@ -1,5 +1,6 @@
 package ui_main_panel;
 
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -54,19 +55,17 @@ public class TermPropertiesPanel implements Observer {
 	private HierarchyChangedListener usageListener;
 
 	/**
-	 * Initialise the panel and display it
+	 * Initialize the panel and display it
 	 * 
 	 * @param parent
 	 */
 	public TermPropertiesPanel(Composite parent, Catalogue catalogue) {
-
+		// set the catalogue
 		this.catalogue = catalogue;
-
 		// Create a tab folder into the form
 		TabFolder folder = new TabFolder(parent, SWT.NONE);
 		folder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		folder.setLayout(new GridLayout(1, false));
-
 		// add tabs into the tab folder parent
 		addTermPropertyTab(folder);
 		addFacetTab(folder);
@@ -85,11 +84,11 @@ public class TermPropertiesPanel implements Observer {
 
 		Composite compNames = new Composite(parent, SWT.NONE);
 		compNames.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		compNames.setLayout(new GridLayout(1, false));
+		compNames.setLayout(new GridLayout(2, true));
 
 		tabNames.setControl(compNames);
 
-		// create the first tab with code, names, scopenotes, attributes...
+		// initialize the empty tab.
 		propTab = new FrameTermFields(compNames);
 
 		// disable tab 1 at the beginning (no catalogue is open)
@@ -173,16 +172,16 @@ public class TermPropertiesPanel implements Observer {
 		tabFacets.setText(CBMessages.getString("TreeImplicitFacets.TabName"));
 		tabFacets.setData("implicitFacets");
 
-		Composite compImplicitFacets = new Composite(parent, SWT.NONE);
-		compImplicitFacets.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		compImplicitFacets.setLayout(new GridLayout(1, false));
+		Composite compFacets = new Composite(parent, SWT.NONE);
+		compFacets.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		compFacets.setLayout(new GridLayout(1, false));
 
-		tabFacets.setControl(compImplicitFacets);
+		tabFacets.setControl(compFacets);
 
 		// create the tab 3 with implicit facets
 		// we set that new facets which will be added are considered as implicit facets
 		// and not as explicit (as in the describe)
-		facetTab = new FrameTermImplicitFacets(compImplicitFacets, FacetType.IMPLICIT, catalogue);
+		facetTab = new FrameTermImplicitFacets(compFacets, FacetType.IMPLICIT, catalogue);
 
 		// if a facet is added in the implicit facet tab
 		facetTab.addAddDescriptorListener(new Listener() {
@@ -199,6 +198,8 @@ public class TermPropertiesPanel implements Observer {
 				// add the term attribute descriptor in the db
 				TermAttributeDAO taDao = new TermAttributeDAO(catalogue);
 
+				// TODO: shahaal to check if term is missing information used to update the
+				// catalogue, check the called function
 				// update the term attributes of the term
 				taDao.updateByA1(descriptor.getTerm());
 
@@ -234,17 +235,15 @@ public class TermPropertiesPanel implements Observer {
 		parent.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-
-				Object data = parent.getSelection()[0].getData();
-
+				// get the name of the selected tab
+				Object data = e.item.getData();
+				// make it visible if selected implicit facets tab
 				if (data != null && data.equals("implicitFacets")) {
-
-					// we have selected the implicit facet tab
 					facetTab.setTerm(term);
 					facetTab.setVisible(true);
-
 				} else
 					facetTab.setVisible(false);
+
 			}
 		});
 	}
@@ -322,10 +321,8 @@ public class TermPropertiesPanel implements Observer {
 	 */
 	public void setEnabled(boolean enabled) {
 
-		if (!enabled) {
-
+		if (!enabled)
 			resetInput();
-		}
 
 		propTab.setEnabled(enabled);
 	}
@@ -334,10 +331,25 @@ public class TermPropertiesPanel implements Observer {
 	 * Reset the input of the tab
 	 */
 	public void resetInput() {
-
 		propTab.reset();
 		applTab.setTerm(null);
 		facetTab.setTerm(null);
+	}
+
+	/**
+	 * method used to rebuild the property table when a new catalogue is opened
+	 * 
+	 * @author shahaal
+	 */
+	public void rebuildPropTab() {
+		// set the new catalogue
+		propTab.setCatalogue(this.catalogue);
+		// dispose all widgets
+		propTab.disposePropChildren();
+		// rebuild the properties based on catalogue
+		ArrayList<String> properties = propTab.rebuildProperties();
+		// build all widgets
+		propTab.buildWidgets(properties);
 	}
 
 	/**
@@ -354,9 +366,7 @@ public class TermPropertiesPanel implements Observer {
 	 */
 	public void refresh() {
 
-		User user = User.getInstance();
-
-		boolean editMode = catalogue != null && user.canEdit(catalogue);
+		boolean editMode = catalogue != null && User.getInstance().canEdit(catalogue);
 
 		// make editable only if editing mode
 		propTab.setTerm(term);
@@ -387,10 +397,9 @@ public class TermPropertiesPanel implements Observer {
 
 		// get updates on the selected catalogue
 		if (arg0 instanceof GlobalManager && arg1 instanceof Catalogue) {
-
 			this.catalogue = (Catalogue) arg1;
-
 			resetInput();
+			rebuildPropTab();
 		}
 
 		// get updates on the selected term
@@ -402,7 +411,6 @@ public class TermPropertiesPanel implements Observer {
 
 		// pass the update to the facet tab
 		facetTab.update(arg0, arg1);
-
 	}
 
 }

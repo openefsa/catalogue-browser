@@ -1,18 +1,11 @@
 package ui_main_menu;
 
+import java.io.File;
 import java.io.IOException;
-import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-
-import javax.management.AttributeNotFoundException;
-import javax.management.InstanceNotFoundException;
-import javax.management.MBeanException;
-import javax.management.MBeanServer;
-import javax.management.MalformedObjectNameException;
-import javax.management.ObjectName;
-import javax.management.ReflectionException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,6 +20,7 @@ import org.w3c.dom.DOMException;
 import catalogue.AttachmentNotFoundException;
 import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
+import catalogue_browser_dao.DatabaseManager;
 import catalogue_generator.CatalogueCreator;
 import catalogue_generator.CatalogueDestroyer;
 import catalogue_generator.CatalogueDownloader;
@@ -43,6 +37,7 @@ import export_catalogue.ExportActions;
 import form_objects_list.FormCataloguesList;
 import form_objects_list.FormDCTableConfigsList;
 import form_objects_list.FormDataCollectionsList;
+import global_manager.GlobalManager;
 import i18n_messages.CBMessages;
 import import_catalogue.CatalogueImporter.ImportFileFormat;
 import import_catalogue.CatalogueImporterThread;
@@ -66,6 +61,10 @@ import utilities.GlobalUtil;
 public class FileActions {
 
 	private static final Logger LOGGER = LogManager.getLogger(FileActions.class);
+
+	private final int minimumMemory = 400;
+
+	private Listener listener;
 
 	/**
 	 * Ask to the user the new catalogue code and create a new local catalogue.
@@ -122,7 +121,7 @@ public class FileActions {
 	 * @param catalogue
 	 * @return true if the catalogue was opened
 	 */
-	public static void openCatalogue(final Shell shell, final Listener listener) {
+	public void openCatalogue(final Shell shell, final Listener listener) {
 
 		// get all the catalogues downloaded in the pc
 		CatalogueDAO catDao = new CatalogueDAO();
@@ -189,7 +188,7 @@ public class FileActions {
 	 * @param catalogue
 	 * @param listener
 	 */
-	public static void downloadLastVersion(final Shell shell, Catalogue catalogue, final Listener listener) {
+	public void downloadLastVersion(final Shell shell, Catalogue catalogue, final Listener listener) {
 
 		final Catalogue lastRelease = catalogue.getLastRelease();
 
@@ -388,12 +387,14 @@ public class FileActions {
 
 	/**
 	 * Ask to the user to select a catalogue from the {@code input} list.
+	 * if the catalogue is already opened warn the user and avoid to re-open
 	 * 
+	 * @author shahaal
 	 * @param shell
-	 * @param title    title of the form
-	 * @param input    list of choosable catalogues
-	 * @param multiSel can we select multiple catalogues?
-	 * @param columns  table columns to show
+	 * @param title
+	 * @param input
+	 * @param columns
+	 * @param okText
 	 * @return
 	 */
 	private static Catalogue chooseCatalogue(Shell shell, String title, Collection<Catalogue> input, String[] columns,
@@ -404,7 +405,17 @@ public class FileActions {
 		if (objs == null || objs.isEmpty())
 			return null;
 
-		return objs.iterator().next();
+		// get the selected catalogue
+		Catalogue selectedCat = objs.iterator().next();
+		// warn user if current catalogue is equal to selected one
+		Catalogue currentCat = GlobalManager.getInstance().getCurrentCatalogue();
+		if (currentCat!=null && selectedCat.sameAs(currentCat)) {
+			String msg = CBMessages.getString("BrowserMenu.OpenCatalogueWarningMsg");
+			GlobalUtil.showDialog(shell, title, msg, SWT.ICON_WARNING);
+			return null;
+		}
+		
+		return selectedCat;
 	}
 
 	/**
@@ -440,7 +451,7 @@ public class FileActions {
 	 * @throws DOMException
 	 * @throws Exception
 	 */
-	public static void downloadCatalogue(final Shell shell) {
+	public void downloadCatalogue(final Shell shell) {
 
 		// get a catalogue from the dcf ones
 		String[] columns = { "label", "version", "status", "valid_from", "scopenote" };
@@ -468,45 +479,32 @@ public class FileActions {
 	 * @param shell
 	 * @param catalogue
 	 */
-	private static void downloadSingleCat(final Shell shell, final Catalogue catalogue, final Listener listener) {
+	private void downloadSingleCat(final Shell shell, final Catalogue catalogue, final Listener listener) {
 
 		// show a progress bar
 		final IProgressBar progressBar = new FormProgressBar(shell,
 				CBMessages.getString("Download.ProgressDownloadTitle"));
 
-		long availableMemory = 0;
-		int dataSize = 1024 * 1024;
-		// perform some analysis on the memory available before starting the download
-		// process
-		try {
-			MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
-			Object attribute2 = mBeanServer.getAttribute(new ObjectName("java.lang", "type", "OperatingSystem"),
-					"FreePhysicalMemorySize");
-			availableMemory = Long.parseLong(attribute2.toString()) / dataSize;
-		} catch (InstanceNotFoundException | AttributeNotFoundException | MalformedObjectNameException
-				| ReflectionException | MBeanException e) {
-			e.printStackTrace();
-			LOGGER.error("Something went wrong while getting the memory information.", e);
-		}
+		Runtime run = Runtime.getRuntime();
+		// calculate the used memory
+		long used = run.totalMemory() - run.freeMemory();
+		// get the available max memory of the JVM in MB
+		long freeMemory = (run.maxMemory() - used) / (1024 * 1024);
 
-		// max memory dedicated to the jvm in MB divided by the minimum required
-		long requiredHeap = (Runtime.getRuntime().maxMemory() / dataSize)/3 ;
-		
 		// check if there is available memory
-		if (availableMemory <= requiredHeap) {
-			
-			String msg = CBMessages.getString("Download.MemoryFull") 
-					+ "- Available memory in RAM: " + availableMemory + "MB\n" 
-					+ "- Required memory: " + requiredHeap + "MB\n"
-					+ "Do you want to continue ?";
+		if (freeMemory <= minimumMemory) {
+			// get title and message for dialog
+			String msg = CBMessages.getString("Download.MemoryFull", freeMemory);
 			String title = CBMessages.getString("Download.ProgressDownloadTitle");
-			
 			// if negative answer return
 			if (!MessageDialog.openConfirm(shell, title, msg))
 				return;
-
 		}
-		
+
+		// warn the user if to keep only the last version and hence remove the other
+		// versions (TODO to be completed)
+		// removeOldVersions(shell, catalogue);
+
 		// start downloading the catalogue
 		CatalogueDownloader catDown = new CatalogueDownloader(catalogue);
 
@@ -566,6 +564,42 @@ public class FileActions {
 		});
 
 		catDown.start();
+
+	}
+
+	/**
+	 * method used for removing all old versions of a catalogue
+	 * 
+	 * @author shahaal
+	 */
+	@SuppressWarnings("unused")
+	private void removeOldVersions(final Shell shell, Catalogue catalogue) {
+
+		// get the production folder
+		File[] productionFolder = new File(DatabaseManager.PRODUCTION_CAT_DB_FOLDER).listFiles();
+		// iterate the folders
+		for (File file : productionFolder) {
+			// if there is a already a version of the catalogue to download
+			if (file.isDirectory() && file.getName().equals("CAT_" + catalogue.getName() + "_DB")) {
+				String title = "Replace catalogues";
+				String msg = "Do you want to replace the exsitings catalogues with the latest version?";
+				// if negative answer return
+				if (!MessageDialog.openConfirm(shell, title, msg))
+					return;
+
+				// close the current catalogue using the exsisting close cat function
+				if (listener != null)
+					listener.handleEvent(null);
+
+				// warn the user if to keep only the last version and remove the older ones
+				try {
+					GlobalUtil.deleteFileCascade(file);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+
+			}
+		}
 
 	}
 
@@ -665,11 +699,64 @@ public class FileActions {
 	}
 
 	/**
+	 * delete a specific catalogue
+	 * 
+	 * @param shell
+	 */
+	public static void deleteCatalogue(final Shell shell, final Catalogue cat) {
+
+		// create a list of the catalogue in order to call the cat destroyer
+		ArrayList<Catalogue> catList = new ArrayList<Catalogue>(Arrays.asList(cat));
+
+		// invoke deleter thread for catalogues
+		CatalogueDestroyer deleter = new CatalogueDestroyer(catList);
+
+		// when finished
+		deleter.setDoneListener(new ThreadFinishedListener() {
+
+			@Override
+			public void finished(Thread thread, final int code, Exception e) {
+
+				shell.getDisplay().asyncExec(new Runnable() {
+
+					@Override
+					public void run() {
+
+						String msg;
+						int icon;
+
+						if (code == ThreadFinishedListener.OK) {
+							msg = CBMessages.getString("Delete.OkMessage");
+							icon = SWT.ICON_INFORMATION;
+						} else {
+							msg = CBMessages.getString("Delete.ErrorMessage");
+							icon = SWT.ICON_WARNING;
+						}
+
+						// warn user
+						GlobalUtil.showDialog(shell, CBMessages.getString("Delete.Title"), msg, icon);
+					}
+				});
+			}
+		});
+
+		// progress bar for deleting catalogues
+		final FormProgressBar progressBar = new FormProgressBar(shell,
+				CBMessages.getString("FileMenu.DeleteCatalogue"));
+
+		progressBar.open();
+
+		deleter.setProgressBar(progressBar);
+
+		deleter.start();
+	}
+
+	/**
 	 * Ask to the user which catalogues he wants to delete and delete them.
 	 * 
 	 * @param shell
 	 */
-	public static void deleteCatalogue(final Shell shell) {
+	public void deleteCatalogues(final Shell shell) {
 
 		final CatalogueDAO catDao = new CatalogueDAO();
 
@@ -784,7 +871,7 @@ public class FileActions {
 	 * 
 	 * @param shell
 	 */
-	public static DCTableConfig openDC(Shell shell) {
+	public DCTableConfig openDC(Shell shell) {
 
 		DCDAO dcDao = new DCDAO();
 
@@ -808,7 +895,7 @@ public class FileActions {
 	 * 
 	 * @param shell
 	 */
-	public static void downloadDC(final Shell shell) {
+	public void downloadDC(final Shell shell) {
 
 		// ask for selecting a data collection
 		final DataCollection dc = chooseDC(shell, CBMessages.getString("FormDCList.Title"),
@@ -855,5 +942,14 @@ public class FileActions {
 		});
 
 		downloader.start();
+	}
+
+	/**
+	 * listener called when need to close the current catalogue
+	 * 
+	 * @param menuListener
+	 */
+	public void addCloseCatalogueListener(Listener listener) {
+		this.listener = listener;
 	}
 }

@@ -3,11 +3,15 @@ package ui_implicit_facet;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+
 import catalogue.Catalogue;
 import catalogue_object.Hierarchy;
 import ui_main_panel.HierarchySelector;
@@ -20,11 +24,13 @@ import ui_main_panel.HierarchySelector;
  * 
  */
 public class TreeImplicitFacets implements Observer {
-
-	TreeViewer tree; // tree which contains the implicit facets
+	// tree which contains the implicit facets
+	TreeViewer tree; 
 
 	private LabelProviderImplicitFacets labelProvider;
 	private ContentProviderImplicitFacets contentProvider;
+
+	private Listener addDoubleClickListener;
 
 	/**
 	 * Get the implicit facets tree viewer
@@ -51,15 +57,15 @@ public class TreeImplicitFacets implements Observer {
 	 * @param parent
 	 */
 	public TreeImplicitFacets(Composite parent, Catalogue catalogue) {
-
+		
 		// instantiate the tree
 		tree = new TreeViewer(parent, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL | SWT.NONE);
 
 		// set the layout of the tree
 		tree.getTree().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		
+
 		// set the label provider for the facets groups
-		labelProvider = new LabelProviderImplicitFacets(catalogue);
+		labelProvider = new LabelProviderImplicitFacets();
 
 		// set the label provider
 		tree.setLabelProvider(labelProvider);
@@ -74,6 +80,28 @@ public class TreeImplicitFacets implements Observer {
 
 		// set the initial input
 		tree.setInput(null);
+
+		// add double click listener to the implicit facets tree
+		tree.addDoubleClickListener(new IDoubleClickListener() {
+			
+			@Override
+			public void doubleClick(DoubleClickEvent arg0) {
+				// call the add listener if it was set
+				if (addDoubleClickListener != null) {
+					addDoubleClickListener.handleEvent(new Event());
+				}
+				
+			}
+		});
+	}
+
+	/**
+	 * add double click listener
+	 * 
+	 * @param listener
+	 */
+	public void addDoubleClickListener(Listener listener) {
+		this.addDoubleClickListener = listener;
 	}
 
 	@Override
@@ -83,14 +111,5 @@ public class TreeImplicitFacets implements Observer {
 			Hierarchy selectedHierarchy = ((HierarchySelector) arg0).getSelectedHierarchy();
 			labelProvider.setCurrentHierarchy(selectedHierarchy);
 		}
-	}
-
-	/**
-	 * Add double click listener
-	 * 
-	 * @param listener
-	 */
-	public void addDoubleClickListener(IDoubleClickListener listener) {
-		tree.addDoubleClickListener(listener);
 	}
 }

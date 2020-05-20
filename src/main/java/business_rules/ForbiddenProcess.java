@@ -30,11 +30,11 @@ public class ForbiddenProcess {
 
 	// getter methods
 
-	public String getBaseTermGroupCode() {
+	public String getGroupCode() {
 		return baseTermGroupCode;
 	}
 
-	public String getForbiddenProcessCode() {
+	public String getCode() {
 		return forbiddenProcessCode;
 	}
 

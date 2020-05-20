@@ -219,7 +219,7 @@ public class Term extends CatalogueObject implements Mappable {
 	 * recursive method which uses the tree structure!
 	 * 
 	 * @param facet, the facet category we considered in this step
-	 * @param term, the term we selected to see its implicit facets
+	 * @param term,  the term we selected to see its implicit facets
 	 * @return
 	 */
 	private ArrayList<DescriptorTreeItem> getImplicitFacetsTree(Attribute facetCategory,
@@ -439,7 +439,7 @@ public class Term extends CatalogueObject implements Mappable {
 			if (!notUsed.contains(appl.getHierarchy()))
 				inUse.add(appl);
 		}
-		
+
 		return inUse;
 	}
 
@@ -581,7 +581,7 @@ public class Term extends CatalogueObject implements Mappable {
 		default:
 			break;
 		}
-		
+
 		// if we have a parametrized attribute
 		if (key.contains("attribute_")) {
 
@@ -627,7 +627,7 @@ public class Term extends CatalogueObject implements Mappable {
 	 * Get the parent field related to the current hierarchy retrieved from the key
 	 * string.
 	 * 
-	 * @param key, key which contains the hierarchy code
+	 * @param key,   key which contains the hierarchy code
 	 * @param field, field which is being analyzed
 	 * @return
 	 */
@@ -707,13 +707,13 @@ public class Term extends CatalogueObject implements Mappable {
 	}
 
 	/**
-	 * Set the full term interpretation (the term extended description)
+	 * Set the label of the term to display in tree
 	 * 
 	 * @author shahaal
-	 * @param fullCodeDescription
+	 * @param displayAs
 	 */
-	public void setFullCodeDescription(String fullCodeDescription) {
-		setLabel(fullCodeDescription);
+	public void setDisplayAs(String displayAs) {
+		setLabel(displayAs);
 	}
 
 	/**
@@ -872,7 +872,37 @@ public class Term extends CatalogueObject implements Mappable {
 			interpCode.append(", ");
 			interpCode.append(fd.getFacetCategory().getHierarchy().getLabel().toUpperCase());
 			interpCode.append(" = ");
-			interpCode.append(fd.getDescriptor().getShortName(true));
+			interpCode.append(catalogue.getTermByCode(fd.getFacetCode()).getName());
+		}
+
+		return interpCode.toString();
+	}
+	
+	/**
+	 * Get the extended term name with implicit facets (also inherited)
+	 * 
+	 * @author shahaal
+	 * @return
+	 */
+	public String getInterpretedExtendedName() {
+
+		// the first element of the interpreted code is the base term name
+		StringBuilder interpCode = new StringBuilder();
+
+		interpCode.append(this.getName());
+
+		ArrayList<FacetDescriptor> facets = getFacets(true);
+		
+		// order the facets
+		Collections.sort(facets, new ComparatorFacetDescriptor());
+
+		// then we add all the implicit facets codes comma separated
+		// FACET_HIERARCHY = FacetName, ...
+		for (FacetDescriptor fd : facets) {
+			interpCode.append(", ");
+			interpCode.append(fd.getFacetCategory().getHierarchy().getLabel().toUpperCase());
+			interpCode.append(" = ");
+			interpCode.append(catalogue.getTermByCode(fd.getFacetCode()).getName());
 		}
 
 		return interpCode.toString();
@@ -895,11 +925,12 @@ public class Term extends CatalogueObject implements Mappable {
 		// for each facet descriptor we search for the descriptors of a single category
 		for (FacetDescriptor descriptor : implicitFacets) {
 
-			// if we do not want the implicit facets => skip implicit
-			if (!implicit && descriptor.getFacetType() == FacetType.IMPLICIT)
-				continue;
-			
+			// continue if facet category is null
 			if (descriptor.getFacetCategory() == null)
+				continue;
+
+			// skip if dont want implicit facets
+			if (!implicit && descriptor.getFacetType() == FacetType.IMPLICIT)
 				continue;
 
 			// check if correct facet category and add it
@@ -943,6 +974,7 @@ public class Term extends CatalogueObject implements Mappable {
 	 * 
 	 * @param ta
 	 */
+	@SuppressWarnings("unlikely-arg-type")
 	public void removeAttribute(TermAttribute ta) {
 
 		termAttributes.remove(ta);
@@ -964,12 +996,13 @@ public class Term extends CatalogueObject implements Mappable {
 	 * 
 	 * @param fd
 	 */
+	@SuppressWarnings("unlikely-arg-type")
 	public void addImplicitFacet(FacetDescriptor fd) {
 
 		// return if the implicit facet was already added
 		if (termAttributes.contains(fd))
 			return;
-		
+
 		termAttributes.add(fd.getTermAttribute());
 		implicitFacets.add(fd);
 	}
@@ -1036,6 +1069,7 @@ public class Term extends CatalogueObject implements Mappable {
 	 * 
 	 * @param ta
 	 */
+	@SuppressWarnings("unlikely-arg-type")
 	public void removeTermAttribute(TermAttribute ta) {
 
 		for (int i = 0; i < termAttributes.size(); i++) {
@@ -1064,8 +1098,8 @@ public class Term extends CatalogueObject implements Mappable {
 	 * applicability also in the catalogue database
 	 * 
 	 * @param appl
-	 * @param      permanent, true = save the applicability into the catalogue
-	 *             database, default is false
+	 * @param permanent, true = save the applicability into the catalogue database,
+	 *                   default is false
 	 * @return true if the applicability was added successfully
 	 */
 	public boolean addApplicability(Applicability appl, boolean permanent) {
@@ -1103,7 +1137,7 @@ public class Term extends CatalogueObject implements Mappable {
 	 * Remove an applicability from the term
 	 * 
 	 * @param appl
-	 * @param      permanent, should the db be updated?
+	 * @param permanent, should the db be updated?
 	 */
 	public void removeApplicability(Applicability appl, boolean permanent) {
 
@@ -1120,7 +1154,7 @@ public class Term extends CatalogueObject implements Mappable {
 	 * Remove an applicability from the term
 	 * 
 	 * @param appl
-	 * @param      permanent, should the db be updated?
+	 * @param permanent, should the db be updated?
 	 */
 	public void removeApplicability(Hierarchy hierarchy, boolean permanent) {
 
@@ -1603,7 +1637,7 @@ public class Term extends CatalogueObject implements Mappable {
 	 * @return
 	 */
 	public ArrayList<String> getLinksFromNotes(String delim, String notes) {
-		
+
 		ArrayList<String> links = new ArrayList<>(); // it will store all the links which are present in the scopenotes
 
 		int i = 0; // used to count the number of tokens
@@ -1658,7 +1692,7 @@ public class Term extends CatalogueObject implements Mappable {
 
 		// default names and scopenotes
 		term.setName(CBMessages.getString("BrowserTreeMenu.NewTermDefaultName") + code);
-		term.setFullCodeDescription(CBMessages.getString("BrowserTreeMenu.NewTermDefaultName") + code);
+		term.setDisplayAs(CBMessages.getString("BrowserTreeMenu.NewTermDefaultName") + code);
 		term.setScopenotes("");
 
 		// default the term is not deprecated
@@ -1965,7 +1999,7 @@ public class Term extends CatalogueObject implements Mappable {
 	 * Get the nearest above/below sibling
 	 * 
 	 * @param hierarchy
-	 * @param           above, should be the above sibling or the below sibling?
+	 * @param above,    should be the above sibling or the below sibling?
 	 * @return
 	 */
 	private Term getNearestSibling(Hierarchy hierarchy, boolean above) {

@@ -45,6 +45,7 @@ public class ContentProviderTerm implements ITreeContentProvider {
 	 * 
 	 * @param arg0 is the parent element
 	 */
+	@SuppressWarnings("unchecked")
 	public Object[] getChildren(Object arg0) {
 
 		ArrayList<CatalogueObject> elem = new ArrayList<>();

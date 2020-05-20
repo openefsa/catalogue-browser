@@ -15,7 +15,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
@@ -29,6 +28,7 @@ import i18n_messages.CBMessages;
  * the applicability addition.
  * 
  * @author avonva
+ * @author shahaal
  *
  */
 public class FormSelectApplicableHierarchies {
@@ -54,8 +54,8 @@ public class FormSelectApplicableHierarchies {
 		final Shell dialog = new Shell(parent.getShell(), SWT.SHELL_TRIM | SWT.APPLICATION_MODAL);
 
 		// window icon (on the top left)
-		dialog.setImage(new Image(Display.getCurrent(),
-				this.getClass().getClassLoader().getResourceAsStream("Choose.gif")));
+		dialog.setImage(new Image(dialog.getDisplay(),
+				FormSelectApplicableHierarchies.class.getClassLoader().getResourceAsStream("Choose.gif")));
 
 		dialog.setText(CBMessages.getString("FormSelectApplicabilityHierarchy.Title")); // window title
 
@@ -141,6 +141,7 @@ public class FormSelectApplicableHierarchies {
 		public void inputChanged(Viewer arg0, Object arg1, Object arg2) {
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public Object[] getElements(Object arg0) {
 

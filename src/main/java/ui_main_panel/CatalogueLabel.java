@@ -81,19 +81,19 @@ public class CatalogueLabel implements Observer {
 		// tool tip to show when an update of the catalogue is available
 		toolTip = new ToolTip(leftGroup.getShell(), SWT.ICON_INFORMATION | SWT.BALLOON);
 		toolTip.setData(new GridData(SWT.FILL, SWT.FILL, false, false));
-		
+
 		// make it invisible
 		makeUpdateVisible(false);
 
 		Image image = new Image(leftGroup.getDisplay(), ClassLoader.getSystemResourceAsStream("help.png"));
-		
+
 		// label for notifying new catalogue version
 		lblNewVersion = new Label(leftGroup, SWT.NONE);
 		lblNewVersion.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
-		
+
 		// set the help icon
 		lblNewVersion.setImage(image);
-		
+
 		// on mouse hover show the tool tip
 		lblNewVersion.addListener(SWT.MouseHover, new Listener() {
 			public void handleEvent(Event e) {
@@ -105,13 +105,12 @@ public class CatalogueLabel implements Observer {
 		btnUpdate = new Button(leftGroup, SWT.PUSH);
 		btnUpdate.setText(CBMessages.getString("CatalogueLabel.UpdateButton"));
 		btnUpdate.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
-		
+
 		btnUpdate.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				// download the last catalogue release and open it
-				FileActions.downloadLastVersion(leftGroup.getShell(), catalogue, null);
-
+				new FileActions().downloadLastVersion(leftGroup.getShell(), catalogue, null);
 			}
 		});
 
@@ -133,7 +132,6 @@ public class CatalogueLabel implements Observer {
 			public void userLevelChanged(UserAccessLevel newLevel) {
 
 				Display.getDefault().asyncExec(new Runnable() {
-
 					@Override
 					public void run() {
 						// refresh the label and the update button
@@ -256,7 +254,7 @@ public class CatalogueLabel implements Observer {
 			else
 				this.catalogue = null;
 
-			this.toolTip.setVisible(false);
+			// this.toolTip.setVisible(false);
 
 			// update the catalogue label
 			refresh();

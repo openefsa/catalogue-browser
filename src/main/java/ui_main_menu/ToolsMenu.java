@@ -1077,7 +1077,7 @@ public class ToolsMenu implements MainMenuItem {
 			public void widgetSelected(SelectionEvent event) {
 
 				FormUserPreferences e = new FormUserPreferences(shell, mainMenu.getCatalogue());
-				e.Display();
+				e.display();
 
 				if (listener != null)
 					listener.buttonPressed(userPrefItem, USER_PREF_MI, null);

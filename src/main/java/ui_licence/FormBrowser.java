@@ -13,7 +13,6 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 public class FormBrowser {
@@ -40,8 +39,7 @@ public class FormBrowser {
 
 		dialog = new Shell(shell, SWT.SHEET | SWT.APPLICATION_MODAL | SWT.WRAP | SWT.BORDER | SWT.TITLE);
 
-		dialog.setImage(
-				new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream("Print24.gif")));
+		dialog.setImage(new Image(dialog.getDisplay(), FormBrowser.class.getClassLoader().getResourceAsStream("Print24.gif")));
 
 		dialog.setSize(720, 500);
 

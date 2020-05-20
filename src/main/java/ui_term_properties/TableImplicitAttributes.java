@@ -14,11 +14,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -38,11 +37,12 @@ import utilities.GlobalUtil;
  * methods We can also edit the attributes (add-remove) using a contextual menu
  * 
  * @author avonva
+ * @author shahaal
  *
  */
 public class TableImplicitAttributes {
 
-	private Composite parent;
+	private Shell shell;
 
 	private TableViewer table;
 	private TableViewerColumn keyCol;
@@ -51,19 +51,13 @@ public class TableImplicitAttributes {
 
 	public TableImplicitAttributes(Composite parent) {
 
-		this.parent = parent;
-
-		// create a group for the attributes
-		Group group = new Group(parent, SWT.NONE);
-		group.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		group.setLayout(new FillLayout());
-		
-		// set group title
-		group.setText(CBMessages.getString("TermProperties.ImplicitAttributes"));
+		this.shell = parent.getShell();
 
 		// create the attribute table
-		table = new TableViewer(group,
+		table = new TableViewer(parent,
 				SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.NONE);
+		table.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		table.getTable().setLayout(new GridLayout(1, false));
 
 		// make headers visible
 		table.getTable().setHeaderVisible(true);
@@ -109,7 +103,7 @@ public class TableImplicitAttributes {
 		if (table.getTable().getMenu() != null)
 			table.getTable().getMenu().dispose();
 
-		Menu menu = createMenu(parent.getShell(), table);
+		Menu menu = createMenu(shell, table);
 		table.getTable().setMenu(menu);
 
 		// add editing support only if possible
@@ -179,7 +173,7 @@ public class TableImplicitAttributes {
 			texts.add(text);
 		}
 
-		TextClipboard textClipboard = new TextClipboard(parent.getDisplay());
+		TextClipboard textClipboard = new TextClipboard(shell.getDisplay());
 		textClipboard.copy(texts);
 	}
 

@@ -32,10 +32,10 @@ public class LabelProviderTerm extends LabelProvider implements IFontProvider {
 
 	private ArrayList<DetailLevelGraphics> detailLevels;
 
-	private static Image facetFolder;
-	private static Image hierarchyFolder;
-	private static Image folder;
-	private static ArrayList<ImageCache> images = new ArrayList<>();
+	private final Image facetFolder;
+	private final Image hierarchyFolder;
+	private final Image folder;
+	private ArrayList<ImageCache> images = new ArrayList<>();
 
 	// currently selected hierarchy
 	private Hierarchy currentHierarchy;
@@ -51,7 +51,7 @@ public class LabelProviderTerm extends LabelProvider implements IFontProvider {
 	}
 
 	/**
-	 * Inizialize the label provider and make it aware of the catalogue we are
+	 * Initialize the label provider and make it aware of the catalogue we are
 	 * working with
 	 * 
 	 * @param catalogue
@@ -64,9 +64,9 @@ public class LabelProviderTerm extends LabelProvider implements IFontProvider {
 		detailLevels = detailDao.getAll();
 
 		// load images
-		hierarchyFolder = getImage("HierarchyFolder.ico", hierarchyFolder);
-		facetFolder = getImage("FacetFolder.ico", facetFolder);
-		folder = getImage("Folder.gif", folder);
+		hierarchyFolder = getImage("HierarchyFolder.ico", null);
+		facetFolder = getImage("FacetFolder.ico", null);
+		folder = getImage("Folder.gif", null);
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class LabelProviderTerm extends LabelProvider implements IFontProvider {
 
 			try {
 				cache = new Image(Display.getCurrent(),
-						this.getClass().getClassLoader().getResourceAsStream(imageName));
+						LabelProviderTerm.class.getClassLoader().getResourceAsStream(imageName));
 			} catch (Exception e) {
 				e.printStackTrace();
 				LOGGER.error("Cannot get image", e);
@@ -109,6 +109,7 @@ public class LabelProviderTerm extends LabelProvider implements IFontProvider {
 	/**
 	 * Get the image related to a term
 	 */
+	@SuppressWarnings("unlikely-arg-type")
 	public Image getImage(Object term) {
 
 		if (term instanceof Term) {
@@ -142,7 +143,7 @@ public class LabelProviderTerm extends LabelProvider implements IFontProvider {
 
 				// otherwise create a new image and add it to the cache
 				image = new Image(Display.getCurrent(),
-						this.getClass().getClassLoader().getResourceAsStream(dlg.getImageName()));
+						LabelProviderTerm.class.getClassLoader().getResourceAsStream(dlg.getImageName()));
 
 				images.add(new ImageCache(dlg.getImageName(), image));
 

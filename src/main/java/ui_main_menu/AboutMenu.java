@@ -71,7 +71,7 @@ public class AboutMenu implements MainMenuItem {
 			public void widgetSelected(SelectionEvent e) {
 
 				FormBrowser bf = new FormBrowser(CBMessages.getString("BrowserMenu.ApacheLicenceWindowTitle"),
-						this.getClass().getClassLoader().getResourceAsStream("DerbyNotice.txt"));
+						AboutMenu.class.getClassLoader().getResourceAsStream("DerbyNotice.txt"));
 
 				bf.display(shell);
 			}
@@ -122,6 +122,7 @@ public class AboutMenu implements MainMenuItem {
 
 	/**
 	 * Add the browser release notes menu item
+	 * 
 	 * @author shahaal
 	 * @param menu
 	 */
@@ -137,10 +138,10 @@ public class AboutMenu implements MainMenuItem {
 
 				BrowserReleaseNotes changelog = new BrowserReleaseNotes();
 				changelog.display(shell);
-				
+
 			}
 		});
-		
+
 	}
 
 	@Override

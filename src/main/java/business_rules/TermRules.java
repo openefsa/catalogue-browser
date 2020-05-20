@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,11 +27,10 @@ import naming_convention.Headers;
 import ui_implicit_facet.DescriptorTreeItem;
 import ui_implicit_facet.FacetDescriptor;
 import ui_implicit_facet.FacetType;
-import utilities.GlobalUtil;
 
 /**
  * The TermRules class provide all the business rules applied to FoodEx2 terms
- * v.2.0 16-05-2019
+ * v.2.1 29-11-2019
  * 
  * @author shahaal
  *
@@ -44,49 +44,62 @@ public abstract class TermRules {
 	// list of all the processes which may cause a warning
 	protected ArrayList<ForbiddenProcess> forbiddenProcesses;
 
+	// load the colour options for the warning console and messages
+	protected WarningOptions warnOptions;
+
 	// load into memory all the warning messages from the text file
 	protected ArrayList<WarningMessage> warningMessages;
 
-	// Enum type: it identifies the warning messages events (i.e. which message
-	// should be shown in a determined event?)
-	// the message id is given by the order of the event definition. So the message
-	// with id 1 will be hierarchyBaseTerm etc...
+	/**
+	 * Enum type: identify the warning messages to print
+	 * 
+	 * CB 			-> rule applied only to CB
+	 * ICT 			-> rule applied only to ICT 
+	 * DCF 			-> rule applied only to DCF
+	 * DEPRECATED 	-> rule not in use
+	 * 
+	 * BR01: For mixed raw commodities only multiple explicit source commodities are allowed 
+	 * BR02: The source facet is not allowed in mixed derivatives 
+	 * BR03: The source facet is not allowed in composite food 
+	 * BR04: The source commodity facet is not allowed in composite food 
+	 * BR05: Source commodities which are not children of the implicit one are not allowed (use the generic derivative for describing a mixed derivative) 
+	 * BR06: The source facet is not allowed for derivatives without the (single) source commodity 
+	 * BR07: DCF - Reporting more than one facet is forbidden for this category 
+	 * BR08: DCF - The use of not reportable terms is forbidden
+	 * BR09: The use of hierarchies as base term is discouraged 
+	 * BR10: The use of non-specific terms is discouraged 
+	 * BR11: The use of generic terms is discouraged 
+	 * BR12: Ingredient facet can only be used as minor ingredient for derivatives 
+	 * BR13: The source facet is allowed for derivatives with only one source commodity just for better specifying the raw source 
+	 * BR14: ICT/DCF - Some explicit descriptors were added twice for the same facet category
+	 * BR15: DCF - The facet is already implicitly present in the baseterm
+	 * BR16: Reporting facets less detailed than the implicit facets is discouraged 
+	 * BR17: Reporting a facet as base term is forbidden
+	 * BR18: The use of ambiguous terms is discouraged 
+	 * BR19: The reported processes cannot be applied to the raw commodity (use the existing derivative) 
+	 * BR20: The reported term cannot be used since it is deprecated 
+	 * BR21: DEPRECATED - The selected term cannot be used since has been dismissed
+	 * BR22: CB/ICT - Base term successfully added 
+	 * BR23: CB/ICT - The selected processes cannot be used together 
+	 * BR24: CB/ICT - The base term selected cannot be reported 
+	 * BR25: CB/ICT - A non-exposure hierarchy term has been selected 
+	 * BR26: CB/ICT - The term selected is not valid for human exposure calculation 
+	 * BR27: CB/ICT - Use the existing derivative instead of adding the facet 
+	 * BR28: CB/ICT - Select the reconstituted version of the product instead 
+	 * BR29: ONLY ICT - The code does not follow the required structure or is misspelled 
+	 * BR30: ONLY ICT - The category does not exist 
+	 * BR31: ONLY ICT - The facet has not been found in the category
+	 * 
+	 * @author shahaal
+	 *
+	 */
 	protected static enum WarningEvent {
-		HierarchyBaseTerm, // when a hierarchy object is selected as base term
-		BaseTermSuccessfullyAdded, // when a non-hierarchy object is selected as base term
-		ForbiddenProcess, // when a forbidden process is chosen for the term
-		WrongProcessOrder, // when a process is added to a derivative and the process ordcode is < than the
-							// implicit ordcode
-		ExceptionTermSelected, // when a term which is contained in the BR_Exceptions is selected for the
-								// describe function (they are ambiguous)
-		MutuallyExPropertyViolated, // when more than one process with the same ord code is chosen
-		NoRepNoExpBaseTerm, // when a base term which does not belong to reporting or exposure hierarchy is
-							// selected
-		NoExpHierarchyTerm, // when a hierarchy is chosen as base term, and the hierarchy is not an exposure
-							// hierarchy
-		NonSpecificTerm, // when a non specific term is chosen to describe
-		GenericProcessing, // when the generic facet "processed" is applied
-		MinorIngredient, // when an ingredient is selected for raw commodities or derivatives
-		SingleSourceCommodityToRaw, // when one single source commodity is added to raw commodities
-		MixedDerivative, // when a source is added to a derivative which has two or more source
-							// commodities
-		SourceToDerivative, // when a source is added to a derivative and there is only one source commodity
-		NoExposureTerm, // when a non exposure base term is selected
-		SourceInComposite, // when a source is added to a composite term
-		SourceCommodityInComposite, // when a source commodity is added to a composite term
-		DecimalForbiddenProcess, // when more than 1 proc with decimal ord code is present (at least one explicit
-									// should be present)
-		NonGenericDerivativeUsed, // when a derivative with an implicit facet is used to describe mixed derivative
-		SourceInDerivative, // if a source is added to a derivative without sourcecommodities
-		Error, // if a code is wrongly structured
-		ReconstitutionProduct, // when reconstitution is added to concentrate/powder base terms
-		GroupIdNotExists, // when the group id doesn't exists
-		FacetNotFound; // when the facet has not been found in the group id
+		BR01, BR02, BR03, BR04, BR05, BR06, BR07, BR08, BR09, BR10, BR11, BR12, BR13, BR14, BR15, BR16, BR17, BR18,
+		BR19, BR20, BR21, BR22, BR23, BR24, BR25, BR26, BR27, BR28, BR29, BR30, BR31
 	}
 
 	/**
-	 * Enum type for identifing the level of warnings NONE: no warning LOW: soft
-	 * warning HIGH: hard warning ERROR: error warning
+	 * Enum type: identify the level of warning
 	 * 
 	 * @author shahaal
 	 *
@@ -96,168 +109,159 @@ public abstract class TermRules {
 	}
 
 	/**
-	 * FIRST WARNING CHECK Check if the base term is a hierarchy. If it is, rise a
+	 * BR09 - BR22 - BR25
+	 * Check if the base term is a hierarchy. If it is, rise a
 	 * warning (discourage its use) Check also if the hierarchy is an exposure
 	 * hierarchy or not and rise a warning if it is a non exposure hierarchy
+	 * 
+	 * @param bt
+	 * @param stdOut
 	 */
-	protected void hierarchyAsBasetermCheck(Term baseTerm, boolean stdOut) {
-
+	protected void hierarchyAsBasetermCheck(Term bt, boolean stdOut) {
+		
 		// if the base term is a hierarchy
-		if (baseTerm.getDetailLevel().isHierarchyDetailLevel()) {
+		if (bt.getDetailLevel().isHierarchyDetailLevel()) {
 
-			ArrayList<Hierarchy> hierarchies = baseTerm.getApplicableHierarchies();
-
-			// if the term is not in the exposure hierarchy
+			// get the exposure hierarchy
 			Hierarchy expHierarchy = currentCat.getHierarchyByCode("expo");
-
-			if (hierarchies.contains(expHierarchy)) // print the message related to the hierarchy as base term
-				printWarning(WarningEvent.HierarchyBaseTerm, baseTerm.getCode(), false, stdOut);
-			else // print warning that you are using a non exposure hierarchy term
-				printWarning(WarningEvent.NoExpHierarchyTerm, baseTerm.getCode(), false, stdOut);
-
-			return;
+			
+			if (bt.belongsToHierarchy(expHierarchy)) 
+				// print the message related to the hierarchy as base term
+				printWarning(WarningEvent.BR09, bt.getCode(), false, stdOut);
+			else 
+				// print warning that you are using a non exposure hierarchy term
+				printWarning(WarningEvent.BR25, bt.getCode(), false, stdOut);
 		}
-
-		// print the message base term successfully added if no warnings
-		printWarning(WarningEvent.BaseTermSuccessfullyAdded, baseTerm.getCode(), false, stdOut);
+		else
+			// print the message base term successfully added if no warnings
+			printWarning(WarningEvent.BR22, bt.getCode(), false, stdOut);
 
 	}
 
 	/**
-	 * SECOND WARNING CHECK Raise a warning if the user select a raw commodity and
+	 * BR19
+	 * Raise a warning if the user select a raw commodity and
 	 * uses the describe function to create a derivative which is already present in
 	 * the main list. In particular, the following code checks if the term belongs
 	 * to one of the warn groups. If this is the case, it checks if any of the
 	 * processes, which are added to the base term, generate a derivative term which
-	 * is already present in the main list. ONLY FOR RAW COMMODITIES
+	 * is already present in the main list. 
+	 * ONLY FOR RAW COMMODITIES
 	 * 
-	 * @param baseTerm   the base term selected with the describe button
-	 * @param facetIndex
-	 * @param facetCode
+	 * @param bt
+	 * @param fcIndex
+	 * @param fcCode
 	 */
-	protected void forbiddenProcessForRawCommodityCheck(Term baseTerm, String facetIndex, String facetCode,
-			boolean stdOut) {
+	protected void checkFpForRawCommodity(Term bt, String fcIndex, String fcCode, boolean stdOut) {
 
-		// return if the base term is not a raw commodity ( no check has to be done )
-		// of if the facet is not a process
-		if (!isRawCommodityTerm(baseTerm) || !isProcessFacet(facetIndex))
+		// return if base term is not a raw commodity or if facet is not a process
+		if (!isRawCommodityTerm(bt) || !isProcessFacet(fcIndex))
 			return;
 
-		ArrayList<String> currentFPCodes = new ArrayList<>();
+		// get the forbidden processes of the base term
+		ArrayList<ForbiddenProcess> fps = getForbiddenProcesses(bt, forbiddenProcesses, stdOut);
 
-		ArrayList<ForbiddenProcess> forbProcesses = getCurrentForbiddenProcesses(baseTerm, forbiddenProcesses, stdOut);
+		// get all the codes for the forbidden processes
+		ArrayList<String> currentFPCodes = fps.stream().map(fp -> fp.getCode()).collect(Collectors.toCollection(ArrayList::new));
 
-		// get all the forbidden processes codes (NOT ord code!)
-		for (ForbiddenProcess proc : forbProcesses)
-			currentFPCodes.add(proc.getForbiddenProcessCode());
-
-		if (currentFPCodes != null && currentFPCodes.contains(facetCode))
-			printWarning(WarningEvent.ForbiddenProcess, facetCode, false, stdOut);
+		// print warning if explicit facet is forbidden
+		if (currentFPCodes != null && currentFPCodes.contains(fcCode))
+			printWarning(WarningEvent.BR19, fcCode, false, stdOut);
 
 	}
 
 	/**
-	 * THIRD WARNING CHECK Raise a warning if the user add to a derivative product
-	 * an explicit process which owns a top down order (ordCode) which is less than
-	 * the minimum of the ordCodes of the implicit processes facets (this is because
-	 * we want to reflect the logic of processes applicability)
+	 * BR16
+	 * Raise a warning if the user add to a derivative product an explicit process which 
+	 * owns a top down order (ordCode) which is less than the minimum of the ordCodes of 
+	 * the implicit processes facets (this is because we want to reflect the logic of processes applicability)
 	 * 
-	 * @param baseTerm
-	 * @param facetIndex
-	 * @param facetCode
+	 * @param bt
+	 * @param fcIndex
+	 * @param fcCode
 	 */
-	protected void forbiddenProcessesOrderForDerivativesCheck(Term baseTerm, String facetIndex, String facetCode,
-			boolean stdOut) {
+	protected void checkFpOrderForDerivatives(Term bt, String fcIndex, String fcCode,boolean stdOut) {
 
-		// return if the base term is not a derivative ( no check has to be done )
-		// return if the current facet is not a process
-		if (!isDerivativeTerm(baseTerm) || !isProcessFacet(facetIndex))
+		// return if the base term is not a derivative and facet is not a process
+		if (!isDerivativeTerm(bt) || !isProcessFacet(fcIndex))
 			return;
 
 		// get the forbidden processes related to the baseTerm
-		ArrayList<ForbiddenProcess> currentFP = getCurrentForbiddenProcesses(baseTerm, forbiddenProcesses, stdOut);
+		ArrayList<ForbiddenProcess> currentFP = getForbiddenProcesses(bt, forbiddenProcesses, stdOut);
 
-		// get all the processes codes (NOT ord code!)
-		ArrayList<String> currentFPCodes = new ArrayList<>();
-		for (ForbiddenProcess proc : currentFP)
-			currentFPCodes.add(proc.getForbiddenProcessCode());
-
-		// get the implicit processes of the base term
-		ArrayList<ForbiddenProcess> implicitProcesses = getImplicitForbiddenProcesses(baseTerm, forbiddenProcesses,
-				stdOut);
+		// get all the codes for the forbidden processes
+		ArrayList<String> currentFPCodes = currentFP.stream().map(fp -> fp.getCode()).collect(Collectors.toCollection(ArrayList::new));
+		
+		// get the forbidden implicit processes of the base term
+		ArrayList<ForbiddenProcess> implicitProcesses = getImplicitForbiddenProcesses(bt, forbiddenProcesses, stdOut);
 
 		// get the minimum ord code of the implicit processes
 		double minImplicitOrdCode = getMinOrdCode(implicitProcesses);
 
-		// the position of the process facet which is just added by the user
-		// return -1 if the element is not found
-		int index = currentFPCodes.indexOf(facetCode);
+		// get the position of the explicit process facet (-1 if not found)
+		int index = currentFPCodes.indexOf(fcCode);
 
-		// if the process facet is found then check if its ord code is less than the
-		// minimum implicit ord code
+		// if process facet found then check if ordCode is less than the minimum implicit ordCode
 		if (currentFPCodes != null && index != -1) {
-
 			// get the ordCode of the just applied process
 			double currentOrdCode = currentFP.get(index).getOrdCode();
-
-			// if the current ord code of the applied process is less than or equal to the
-			// min ord code of the implicit processes
-			// raise a warning
-			if (currentOrdCode < minImplicitOrdCode) {
-				printWarning(WarningEvent.WrongProcessOrder, facetCode, false, stdOut);
-			}
-
+			// if the ordCode is <= to the minOrd of the implicit process than raise a warning
+			if (currentOrdCode <= minImplicitOrdCode)
+				printWarning(WarningEvent.BR16, fcCode, false, stdOut);
 		}
 	}
 
 	/**
-	 * FOURTH WARNING CHECK Check if more than one process with the same ord code is
-	 * chosen
+	 * BR23 
+	 * Check if more than one process with the same ordCode is chosen
 	 * 
-	 * @param addedProcesses the list of processes that were added to the base term
-	 *                       by the user (with describe)
+	 * @param bt
+	 * @param impProcesses
+	 * @param expProcesses
+	 * @param stdOut
 	 */
-	protected void mutuallyExclusiveCheck(Term baseTerm, ArrayList<ForbiddenProcess> implicitProcesses,
-			ArrayList<ForbiddenProcess> explicitProcesses, boolean stdOut) {
+	protected void mutuallyExclusiveCheck(Term bt, ArrayList<ForbiddenProcess> impProcesses,
+			ArrayList<ForbiddenProcess> expProcesses, boolean stdOut) {
 
 		// Return if null parameters
-		if (explicitProcesses == null || implicitProcesses == null)
+		if (expProcesses == null || impProcesses == null)
 			return;
 
-		// if no explicit process are present return! In fact, the implicit processes
-		// alone
-		// do not have to be checked
-		// if the base term is not a derivative return, this check is only for
-		// derivatives
-		if (explicitProcesses.isEmpty() || !isDerivativeTerm(baseTerm))
+		// if no explicit process or basterm not derivative return (the implicit processes
+		// alone do not have to be checked)
+		if (expProcesses.isEmpty() || !isDerivativeTerm(bt))
 			return;
 
 		// create a unique list of processes (used later)
 		ArrayList<ForbiddenProcess> allProcess = new ArrayList<>();
-		allProcess.addAll(explicitProcesses);
-		allProcess.addAll(implicitProcesses);
+		allProcess.addAll(expProcesses);
+		allProcess.addAll(impProcesses);
 
-		// get all the ord codes starting from the forbidden processes
-		// both explicit and implicit ones
+		// get all the ordCodes starting from the forbidden processes
 		ArrayList<Double> ordCodes = new ArrayList<>();
 
 		// the 0 items are treated separately, in particular
 		// we can use different 0 items together without
 		// incurring in the mutually exclusive problem
 		// therefore we exclude them from this check
-
-		for (ForbiddenProcess proc : explicitProcesses)
-			if (proc.getOrdCode() != 0)
-				ordCodes.add(proc.getOrdCode());
+		for (ForbiddenProcess proc : expProcesses) {
+			double ordCode = proc.getOrdCode();
+			if ( ordCode != 0)
+				ordCodes.add(ordCode);
 			else
-				allProcess.remove(proc); // if it is 0 remove from the all process
-
-		for (ForbiddenProcess proc : implicitProcesses)
-			if (proc.getOrdCode() != 0)
-				ordCodes.add(proc.getOrdCode());
+				// if it is 0 remove from the all process
+				allProcess.remove(proc); 
+		}
+		
+		for (ForbiddenProcess proc : impProcesses) {
+			double ordCode = proc.getOrdCode();
+			if (ordCode != 0)
+				ordCodes.add(ordCode);
 			else
-				allProcess.remove(proc); // if it is 0 remove from the all process
-
+				// if it is 0 remove from the all process
+				allProcess.remove(proc); 
+		}
+		
 		// get all the distinct ord codes and see if there are duplicates
 		// if this is the case print a warning! You have violated the mutually exclusive
 		// property
@@ -280,7 +284,7 @@ public abstract class TermRules {
 
 					// if the process owns the same ord code add its code to the warning string
 					if (ordCodes.get(i) == ordCode)
-						sb.append(allProcess.get(i).getForbiddenProcessCode());
+						sb.append(allProcess.get(i).getCode());
 
 					// unless the last process code is appended, add a - to separate the processes
 					// codes
@@ -290,47 +294,37 @@ public abstract class TermRules {
 				}
 
 				// print the warning
-				printWarning(WarningEvent.MutuallyExPropertyViolated, sb.toString(), false, stdOut);
+				printWarning(WarningEvent.BR23, sb.toString(), false, stdOut);
 			}
 		}
 	}
 
 	/**
-	 * FIFTH WARNING CHECK Check if processes with ord code x.1, x.2, x.3 ... are
+	 * BR27
+	 * Check if processes with ordCode x.1, x.2, x.3 ... are
 	 * added to the baseterm. If multiple processes of this type with the same
 	 * integer part are added, then rise a warning! These processes create another
 	 * derivative which is already present in the list. Also the implicit processes
 	 * are taken into account. NOTE: if only implicit facets have these properties,
 	 * then no warning are risen.
 	 * 
-	 * @TODO this method and its sub modules has to be optimised
+	 * @TODO this method and its sub modules has to be optimized
+	 * 
+	 * @param bt
 	 * @param implicitProcesses
 	 * @param explicitProcesses
+	 * @param stdOut
 	 */
-	protected void decimalOrderCheck(Term baseTerm, ArrayList<ForbiddenProcess> implicitProcesses,
+	protected void decimalOrderCheck(Term bt, ArrayList<ForbiddenProcess> implicitProcesses,
 			ArrayList<ForbiddenProcess> explicitProcesses, boolean stdOut) {
 
 		// only check for derivatives
-		if (!isDerivativeTerm(baseTerm))
+		if (!isDerivativeTerm(bt))
 			return;
-		
+
 		// if there are not implicit or explicit processes
 		if (implicitProcesses == null || explicitProcesses == null)
 			return;
-		
-		/* HOW THIS CHECK WORKS: 
-		 * 1 - retrieve the processes (implicit and explicit ones) which have a decimal ord code 
-		 * 2 - compute the max integer part of these ord codes. For example if we have: 1.1, 1.2, 2.1, 3.1 the 
-		 *     maximum integer part would be 3 (this is done to iterate over all the integer between 1 and the maximum)
-		 * 3 - Iterate for each integer between 1 and the maximum integer:
-		 *        1. Get all the processes (implicit and explicit ones) with the integer part equal to the current one
-		 *        2. get the unique ord codes of the implicit and of the explicit processes
-		 *        3. get all the unique ord codes taking account both implicit and explicit processes (in order to check
-		 *           if a warning has to be risen)
-		 *        4. rise a warning if at least 2 fract ord code with the same integer part are added, and they are not
-		 *           only implicit facets (in fact, in this case the base term is a derivative which has both the 
-		 *           processes and no warn has to be risen)
-		 */
 
 		// get the ord codes of the processes with decimal ord code
 		ArrayList<Double> decimalImplicitOrdCodes = getDecimalOrdCodes(implicitProcesses);
@@ -353,7 +347,7 @@ public abstract class TermRules {
 				maxValue = integerPart;
 			}
 		}
-		
+
 		// for each integer ( 1,2,3...), check the fract part
 		for (int i = 1; i <= maxValue; i++) {
 
@@ -395,13 +389,11 @@ public abstract class TermRules {
 				}
 			}
 
-			// get only the distinct ord codes of implicit and explicit processes
+			// get only the distinct ordodes of implicit and explicit processes
 			Set<Integer> uniqueExpl = new HashSet<Integer>(expOrd);
 			Set<Integer> uniqueImpl = new HashSet<Integer>(impOrd);
 
-			// get all the ord codes related to the processes involved (implicit and
-			// explicit) and
-			// take only the distinct ones
+			// take distinc values of all ordCodes (implicit and explicit) 
 			ArrayList<Integer> allOrdCodes = new ArrayList<>();
 			allOrdCodes.addAll(uniqueExpl);
 			allOrdCodes.addAll(uniqueImpl);
@@ -413,8 +405,8 @@ public abstract class TermRules {
 			// exclusive warning is risen
 			// if no facets are implicit but the user add more than one explicit => warning
 
-			boolean firstCheck = (uniqueImpl.size() > 0 && uniqueExpl.size() > 0 );
-			boolean secondCheck = (uniqueImpl.size() == 0 && uniqueExpl.size() > 1) ;
+			boolean firstCheck = (uniqueImpl.size() > 0 && uniqueExpl.size() > 0);
+			boolean secondCheck = (uniqueImpl.size() == 0 && uniqueExpl.size() > 1);
 
 			if ((firstCheck || secondCheck) && uniqueAllCodes.size() > 1) {
 
@@ -423,128 +415,127 @@ public abstract class TermRules {
 
 				// in the exp processes with ord code with decimal and integer part = i
 				for (int j = 0; j < decimalExplicitProcesses.size(); j++) {
-					sb.append(decimalExplicitProcesses.get(j).getForbiddenProcessCode());
+					sb.append(decimalExplicitProcesses.get(j).getCode());
 					if (j < decimalExplicitProcesses.size() - 1 && decimalExplicitProcesses.size() > 0)
 						sb.append(" - ");
 				}
 
 				// in the imp processes with ord code with decimal and integer part = i
 				for (int j = 0; j < decimalImplicitProcesses.size(); j++) {
-					sb.append(decimalImplicitProcesses.get(j).getForbiddenProcessCode());
+					sb.append(decimalImplicitProcesses.get(j).getCode());
 					if (j < decimalImplicitProcesses.size() - 1 && decimalImplicitProcesses.size() > 0)
 						sb.append(" - ");
 				}
 
 				// warning: these processes generate a derivative which is already existing
-				printWarning(WarningEvent.DecimalForbiddenProcess, sb.toString(), false, stdOut);
+				printWarning(WarningEvent.BR27, sb.toString(), false, stdOut);
 			}
 		}
 	}
 
+	
 	/**
-	 * SIXTH WARNING CHECK Check if the selected baseTerm belongs to the reporting
-	 * hierarchy or to the exposure hierarchy. If not => warning you are using a non
-	 * reportable term.
+	 * BR24
+	 * Check if the selected term belongs to the reporting and the exposure hierarchy
+	 * If not => warning you are using a non reportable term.
 	 * 
-	 * @param baseTerm
+	 * @param bt
+	 * @param stdOut
 	 */
-	protected void noRepNoExpHierarchyCheck(Term baseTerm, boolean stdOut) {
+	protected void noRepNoExpHierarchyCheck(Term bt, boolean stdOut) {
 
-		// get all the applicable hierarchies for the selected base term
-		ArrayList<Hierarchy> hierarchies = baseTerm.getApplicableHierarchies();
-
+		// get the reporting and the exposure hierarchies
 		Hierarchy reportingHierarchy = currentCat.getHierarchyByCode(Headers.REPORT);
 		Hierarchy exposureHierarchy = currentCat.getHierarchyByCode(Headers.EXPO);
-
-		// if the term does not belong to both reporting and exposure hierarchy =>
-		// warning
-		if (!hierarchies.contains(reportingHierarchy) && !hierarchies.contains(exposureHierarchy))
-			printWarning(WarningEvent.NoRepNoExpBaseTerm, baseTerm.getCode(), false, stdOut);
+		
+		// if term does not belong to both reporting and exposure hierarchy rise warning
+		if (!bt.belongsToHierarchy(reportingHierarchy) && !bt.belongsToHierarchy(exposureHierarchy))
+			printWarning(WarningEvent.BR24, bt.getCode(), false, stdOut);
 
 	}
 
 	/**
-	 * SEVENTH CHECK Check if a non-specific term is selected
+	 * BR10
+	 * Check if a non-specific term is selected
 	 * 
-	 * @param term
+	 * @param bt
+	 * @param stdOut
 	 */
-	protected void nonSpecificTermCheck(Term term, boolean stdOut) {
-
-		// if the term is non-specific rise a warning (semaphore green, text yellow)
-		if (isNonSpecificTerm(term)) {
-			printWarning(WarningEvent.NonSpecificTerm, term.getCode(), false, stdOut);
-		}
+	protected void nonSpecificTermCheck(Term bt, boolean stdOut) {
+		if (isNonSpecificTerm(bt))
+			printWarning(WarningEvent.BR10, bt.getCode(), false, stdOut);
 	}
 
 	/**
-	 * EIGHT CHECK Check if the "processed" facet is selected or not
+	 * BR11
+	 * Check if the "processed" facet is generic
 	 * 
 	 * @param facet
+	 * @param stdOut
 	 */
 	protected void genericProcessedFacetCheck(Term facet, boolean stdOut) {
-
-		// if the selected facet is "Processed", which is under generic process facets
-		if (isGenericProcessFacet(facet)) {
-			// rise a warning, could you be more precise?
-			printWarning(WarningEvent.GenericProcessing, facet.getCode(), false, stdOut);
-		}
+		if (isGenericProcessFacet(facet)) 
+			printWarning(WarningEvent.BR11, facet.getCode(), false, stdOut);
+		
 	}
 
 	/**
-	 * NINTH CHECK Check if the user added an ingredient to a raw commodity or to a
+	 * BR12
+	 * Check if the user added an ingredient to a raw commodity or to a
 	 * derivative
 	 * 
-	 * @param baseTerm
+	 * @param bt
 	 * @param facetIndex
-	 * @param facetCode
+	 * @param facet
+	 * @param stdOut
 	 */
-	protected void minorIngredientCheck(Term baseTerm, String facetIndex, Term facet, boolean stdOut) {
+	protected void minorIngredientCheck(Term bt, String facetIndex, Term facet, boolean stdOut) {
 
-		// if the base term is a raw commodity or a derivative
-		if (isRawCommodityTerm(baseTerm) || isDerivativeTerm(baseTerm)) {
-
-			// if the base term is not flavoured and the facet is an ingredient
-			if (!isFlavoured(baseTerm) && isIngredientFacet(facetIndex)) {
-
+		// rule valid only for raw commodities or derivatives
+		if (isRawCommodityTerm(bt) || isDerivativeTerm(bt)) {
+		
+			// if the baseterm is not flavored and the facet is an ingredient
+			if (!isFlavoured(bt) && isIngredientFacet(facetIndex)) {
+				
 				// get the ingredient facet category
 				Attribute facetCategory = currentCat.getAttributeById(20);
-
-				// if the implicit facet is parent of the explicit then don't print the warning
+	
+				// if the explicit facet is more detailed than the implicit don't print the warning
 				if (facetCategory != null) {
-					for (DescriptorTreeItem dti : baseTerm.getInheritedImplicitFacets(facetCategory)) {
+					for (DescriptorTreeItem dti : bt.getInheritedImplicitFacets(facetCategory)) {
 						if (facet.hasAncestor(dti.getTerm(), facetCategory.getHierarchy()))
 							return;
 					}
 				}
-
+	
 				// otherwise print the warning
-				printWarning(WarningEvent.MinorIngredient, facet.getCode(), false, stdOut);
+				printWarning(WarningEvent.BR12, facet.getCode(), false, stdOut);
 			}
 		}
 	}
 
 	/**
-	 * TENTH CHECK Check if the user added a source to a derivative or to a raw
-	 * commodity
+	 * BR01
+	 * Check if the user adds a source-commodity facet which is not specifying the already present implicit one
 	 * 
-	 * @param baseTerm
-	 * @param facetIndex
-	 * @param facetCode
+	 * @param bt
+	 * @param allFacets
+	 * @param stdOut
 	 */
-	protected void sourceCommodityRawCheck(Term baseTerm, String fullFacetCode, boolean stdOut) {
+	protected void sourceCommodityRawCheck(Term bt, String allFacets, boolean stdOut) {
 
 		// if the base term is not a raw commodity no checks have to be done
-		if (!isRawCommodityTerm(baseTerm))
+		if (!isRawCommodityTerm(bt))
 			return;
 
 		// count the source commodity
 		int sourceCommodityFacetCount = 0;
 
-		ArrayList<FacetDescriptor> implicitFacets = baseTerm.getFacets(true);
+		ArrayList<FacetDescriptor> implicitFacets = bt.getFacets(true);
 
 		TermDAO termDao = new TermDAO(currentCat);
 		ArrayList<Term> implicitTerms = new ArrayList<>();
-
+		
 		// add implicit facets of the term
 		for (FacetDescriptor fd : implicitFacets)
 			implicitTerms.add(termDao.getByCode(fd.getFacetCode()));
@@ -552,10 +543,10 @@ public abstract class TermRules {
 		// populate the explicit facets
 		ArrayList<FacetDescriptor> explicitFacets = new ArrayList<>();
 
-		// tokenize the facets => the implicit are not considered since
+		// split facets => the implicit are not considered since
 		// raw commodities have their self as source commodity and should not
 		// be taken into account
-		StringTokenizer st = new StringTokenizer(fullFacetCode, "$");
+		StringTokenizer st = new StringTokenizer(allFacets, "$");
 
 		// for each explicit facet
 		while (st.hasMoreTokens()) {
@@ -606,34 +597,35 @@ public abstract class TermRules {
 		if (sourceCommodityFacetCount > 0)
 			termsInvolved = termsInvolved.substring(0, termsInvolved.length() - " - ".length());
 
-		// print warning if only one SC; at least two are required
-		if (sourceCommodityFacetCount == 1)
-			printWarning(WarningEvent.SingleSourceCommodityToRaw, termsInvolved, false, stdOut);
+		// warn user if adding an explicit facet which is not better specifying the already present implicit one
+		if (sourceCommodityFacetCount > 0)
+			printWarning(WarningEvent.BR01, termsInvolved, false, stdOut);
 
 	}
 
 	/**
-	 * ELEVENTH CHECK, check if a source is added to derivative. If a source
+	 * BR02 - BR05 - BR06 - BR13
+	 * check if a source is added to derivative. If a source
 	 * commodity is already specified then the source must be used only to specify
 	 * better the source commodity. If more than one source commodity is already
 	 * specified, then a source cannot be used. Warnings are raised in the warning
 	 * situations.
 	 * 
-	 * @param baseTerm
-	 * @param fullFacetCode
+	 * @param bt
+	 * @param allFacets
 	 */
-	protected void sourceCommodityDerivativeCheck(Term baseTerm, String fullFacetCode, boolean stdOut) {
+	protected void sourceCommodityDerivativeCheck(Term bt, String allFacets, boolean stdOut) {
 
-		// if the base term is not a derivative no checks have to be done
-		if (!isDerivativeTerm(baseTerm))
+		// rule only applicable to derivatives
+		if (!isDerivativeTerm(bt))
 			return;
 
-		ArrayList<FacetDescriptor> implicitFacets = baseTerm.getFacets(true);
+		ArrayList<FacetDescriptor> implicitFacets = bt.getFacets(true);
 		ArrayList<Term> implicitTerms = new ArrayList<>();
 
 		int implicitSourceCommCount, explicitSourceCommCount, explicitRestrictedSourceCommCount, sourceFacetCount;
 
-		// initialise the counters
+		// initialize the counters
 		implicitSourceCommCount = explicitSourceCommCount = explicitRestrictedSourceCommCount = sourceFacetCount = 0;
 
 		// string builder for generating the diagnostic string
@@ -662,7 +654,7 @@ public abstract class TermRules {
 		}
 
 		// check explicit facets
-		StringTokenizer st = new StringTokenizer(fullFacetCode, "$");
+		StringTokenizer st = new StringTokenizer(allFacets, "$");
 
 		ArrayList<FacetDescriptor> explicitFacets = new ArrayList<>();
 
@@ -733,38 +725,111 @@ public abstract class TermRules {
 
 		// if we have an implicit sc, an explicit sc and a source
 		if (explicitRestrictedSourceCommCount > 0 && implicitSourceCommCount > 0)
-			printWarning(WarningEvent.NonGenericDerivativeUsed, termsInvolved, false, stdOut);
+			printWarning(WarningEvent.BR05, termsInvolved, false, stdOut);
 
 		if (sourceFacetCount > 0) {
 
 			// if source without source commodities
 			if (totalSourceCommCount == 0)
-				printWarning(WarningEvent.SourceInDerivative, termsInvolved, false, stdOut);
+				printWarning(WarningEvent.BR06, termsInvolved, false, stdOut);
 
 			// if more than two source commodities and one source are present => warning
 			if (explicitSourceCommCount >= 2)
-				printWarning(WarningEvent.MixedDerivative, termsInvolved, false, stdOut);
+				printWarning(WarningEvent.BR02, termsInvolved, false, stdOut);
 
 			// if one explicit SC is selected -> at least two are required
 			if (explicitRestrictedSourceCommCount + implicitSourceCommCount == 1)
-				printWarning(WarningEvent.SourceToDerivative, termsInvolved, false, stdOut);
+				printWarning(WarningEvent.BR13, termsInvolved, false, stdOut);
 		}
 	}
 
 	/**
-	 * 12th CHECK Check if the term is in the exposure hierarchy and it is not a
-	 * feed term. If not, rise a warning
+	 * BR26
+	 * the rule rises a warning when the baseterm selected does not belong to the exposure and it is not a feed
 	 * 
 	 * @param baseTerm
+	 * @param stdOut
 	 */
 	protected void exposureHierarchyCheck(Term baseTerm, boolean stdOut) {
 
+		// get the exposure hierarchy
 		Hierarchy exposureHierarchy = currentCat.getHierarchyByCode("expo");
 
-		// if the term is not in the exposure hierarchy and is not a feed
-		if (!isFeedTerm(baseTerm) && !baseTerm.getApplicableHierarchies().contains(exposureHierarchy))
-			printWarning(WarningEvent.NoExposureTerm, baseTerm.getCode(), false, stdOut);
+		// if the term is not in exposure and is not a feed rise warning
+		if (!isFeedTerm(baseTerm) && !baseTerm.belongsToHierarchy(exposureHierarchy))
+			printWarning(WarningEvent.BR26, baseTerm.getCode(), false, stdOut);
 
+	}
+
+	/**
+	 * BR28
+	 * Check if a reconstitution process facet is added to concentrate/dehydrated
+	 * term
+	 * 
+	 * @param bt
+	 * @param facetIndex
+	 * @param facetCode
+	 */
+	private void reconstitutionCheck(Term bt, String facetIndex, String facetCode, boolean stdOut) {
+		
+		// if the explicit facet is a process and the baseterm is concentrate or powder
+		if(isProcessFacet(facetIndex) && isConcOrPowdTerm(bt)) {
+			// if the explicit facet is reconstitution(A07MR) or dilution(A07MQ) 
+			if (facetCode.equals("A07MR") || facetCode.equals("A07MQ"))
+				printWarning(WarningEvent.BR28, facetCode, false, stdOut);
+		}
+	}
+
+	/**
+	 * BR18
+	 * if the term is non-specific rise a warning
+	 * 
+	 * @param bt
+	 * @param stdOut
+	 */
+	private void isAmbiguous(Term bt, boolean stdOut) {
+		if (bt.getCode().equals("A00HQ")) 
+			printWarning(WarningEvent.BR18, bt.getCode(), false, stdOut);
+	}
+
+	/**
+	 * BR20
+	 * check if the base term is deprecated
+	 * 
+	 * @param bt
+	 * @param stdOut
+	 */
+	private void isDeprecated(Term bt, boolean stdOut) {
+		if (bt.isDeprecated()) {
+			printWarning(WarningEvent.BR20, bt.getCode(), false, stdOut);
+		}
+	}
+
+	/**
+	 * BR21
+	 * check if the base term is dismissed
+	 * 
+	 * @param bt
+	 * @param stdOut
+	 * @deprecated
+	 */
+	@SuppressWarnings("unused")
+	private void isDismissed(Term bt, boolean stdOut) {
+		if (bt.isDismissed(currentCat.getDefaultHierarchy()))
+			printWarning(WarningEvent.BR20, bt.getCode(), false, stdOut);
+	}
+
+	/**
+	 * BR17
+	 * check if the base term is a facet
+	 * 
+	 * @param bt
+	 * @param stdOut
+	 */
+	private void isFacet(Term bt, boolean stdOut) {
+		if (bt.getTermType().getValue().equals("f")) {
+			printWarning(WarningEvent.BR17, bt.getCode(), false, stdOut);
+		}
 	}
 
 	// ######### TERM/FACET BOOLEAN CHECKS ##############
@@ -772,7 +837,6 @@ public abstract class TermRules {
 	/**
 	 * check if the base term is concentrate or powder
 	 * 
-	 * @author shahaal
 	 * @param term
 	 * @return
 	 */
@@ -787,7 +851,7 @@ public abstract class TermRules {
 	}
 
 	/**
-	 * check if the term is a flavoured term
+	 * check if the term is a flavored term
 	 * 
 	 * @param baseTerm
 	 * @return
@@ -896,27 +960,6 @@ public abstract class TermRules {
 		return (term.getTermType().getValue().equals("s") || term.getTermType().getValue().equals("c"));
 	}
 
-	protected boolean isExceptionalTerm(Term term) {
-
-		// load exceptions terms and their forbidden processes
-		ArrayList<ForbiddenProcess> exceptionForbiddenProcesses = loadForbiddenProcesses(GlobalUtil.getBRExceptions());
-
-		// if the base term is an exception then it is itself the warn group
-		return (isWarnGroup(term.getCode(), exceptionForbiddenProcesses));
-	}
-
-	/**
-	 * Check if the base term is an exceptional term
-	 * 
-	 * @param baseTerm
-	 * @param stdOut
-	 */
-	protected void exceptionTermCheck(Term baseTerm, boolean stdOut) {
-		// print warning message, ambiguous element selected
-		if (isExceptionalTerm(baseTerm))
-			printWarning(WarningEvent.ExceptionTermSelected, baseTerm.getCode(), false, stdOut);
-	}
-
 	/**
 	 * Check if the selected term identified by the groupCode is one of the warn
 	 * groups ( i.e. a group which could raise a warning defined in BR_Data.csv or
@@ -934,7 +977,7 @@ public abstract class TermRules {
 		// get all the warn groups codes
 		ArrayList<String> warnGroupsCodes = new ArrayList<>();
 		for (int i = 0; i < forbiddenProcesses.size(); i++) {
-			warnGroupsCodes.add(forbiddenProcesses.get(i).getBaseTermGroupCode());
+			warnGroupsCodes.add(forbiddenProcesses.get(i).getGroupCode());
 		}
 
 		// get the unique codes set (delete duplicates)
@@ -962,9 +1005,12 @@ public abstract class TermRules {
 		double minOrdCode = Double.MAX_VALUE;
 
 		// get the minimum ordCode of the forbidden processes
-		for (ForbiddenProcess proc : forbiddenProcesses) {
-			if (proc.getOrdCode() < minOrdCode)
-				minOrdCode = proc.getOrdCode(); // update the minimum ord code
+		for (ForbiddenProcess fp : forbiddenProcesses) {
+			// get the ordCode of the forbidden facet
+			double fpCode = fp.getOrdCode();
+			// update the less than the current one
+			if ( fpCode < minOrdCode)
+				minOrdCode = fpCode;
 		}
 
 		// If no process is found => then set to 0 the minimum value
@@ -975,8 +1021,7 @@ public abstract class TermRules {
 	}
 
 	/**
-	 * Retrieve the ordCodes with decimal points starting from the forbidden
-	 * processes
+	 * Retrieve the ordCodes with decimal points starting from the forbidden processes
 	 * 
 	 * @param forbiddenProcesses
 	 * @return
@@ -990,18 +1035,17 @@ public abstract class TermRules {
 		// prepare output vector
 		ArrayList<Double> decimalOrdCodes = new ArrayList<>();
 
-		// search for decimal ord codes
-		for (int i = 0; i < forbiddenProcesses.size(); i++) {
-
-			double currentOrdCode = forbiddenProcesses.get(i).getOrdCode();
-
-			// if the integer version of the ord code lost a bit of information => it is a
+		// search for decimal ord codes in forbidden processes
+		for (ForbiddenProcess fp : forbiddenProcesses) {
+			// get the ordCode of the process
+			double currentOrdCode = fp.getOrdCode();
+			// if the integer version of the ordCode lost a bit of information => it is a
 			// decimal ordcode
 			if (((int) currentOrdCode) != currentOrdCode)
 				decimalOrdCodes.add(currentOrdCode);
 		}
 
-		return (decimalOrdCodes);
+		return decimalOrdCodes;
 	}
 
 	/**
@@ -1019,18 +1063,17 @@ public abstract class TermRules {
 		// prepare output vector
 		ArrayList<ForbiddenProcess> decimalProcess = new ArrayList<>();
 
-		// search for decimal ord codes
-		for (int i = 0; i < forbiddenProcesses.size(); i++) {
-
-			double currentOrdCode = forbiddenProcesses.get(i).getOrdCode();
-
+		// search for decimal ord codes in forbidden processes
+		for (ForbiddenProcess fp : forbiddenProcesses) {
+			// get the ordCode of the process
+			double currentOrdCode = fp.getOrdCode();
 			// if the integer version of the ord code lost a bit of information => it is a
 			// decimal ordcode
 			if (((int) currentOrdCode) != currentOrdCode)
-				decimalProcess.add(forbiddenProcesses.get(i));
+				decimalProcess.add(fp);
 		}
 
-		return (decimalProcess);
+		return decimalProcess;
 	}
 
 	/**
@@ -1091,24 +1134,22 @@ public abstract class TermRules {
 	protected ArrayList<ForbiddenProcess> loadForbiddenProcesses(String filename) {
 
 		try {
-
+			// initialize the array of forbidden processes
 			ArrayList<ForbiddenProcess> forbiddenProcesses = new ArrayList<>();
 
-			// FileReader reads text files in the default encoding.
-			FileReader fileReader = new FileReader(filename);
+			// read the file
+			BufferedReader bufferedReader = new BufferedReader(new FileReader(filename));
 
-			// Always wrap FileReader in BufferedReader.
-			BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-			String line;
-			int lineCount = 0;
+			// skip the header
+			boolean skipFirstLine = true;
 
 			// while there is a line to be red
+			String line;
 			while ((line = bufferedReader.readLine()) != null) {
 
-				// Skip the headers
-				if (lineCount == 0) {
-					lineCount++;
+				// Skip the header
+				if (skipFirstLine) {
+					skipFirstLine=false;
 					continue;
 				}
 
@@ -1127,29 +1168,20 @@ public abstract class TermRules {
 				// token related to the forbidden process name, it is useless for the checks
 				st.nextToken();
 
-				// get the ord code (an ord code could be also with decimals to manage some
-				// particular situations)
-				try {
-					// create the forbidden process with the retrieved information and
-					// add it to the array list
-					double ordCode = Double.parseDouble(st.nextToken());
-					forbiddenProcesses.add(new ForbiddenProcess(baseTermGroupCode, forbiddenProcessCode, ordCode));
-				} catch (Exception e) {
-					LOGGER.error(" Error: no double format found in " + filename + "! line: " + lineCount, e);
-				}
+				// get the ordCode (ordCode could be also decimals useful for particular situations)
+				double ordCode = Double.parseDouble(st.nextToken());
+				
+				// create the forbidden process with the retrieved information
+				forbiddenProcesses.add(new ForbiddenProcess(baseTermGroupCode, forbiddenProcessCode, ordCode));
 
-				// next line
-				lineCount++;
 			}
 
-			// Close the connection
+			// close the connection and return the array
 			bufferedReader.close();
-
-			return (forbiddenProcesses);
+			return forbiddenProcesses;
 
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.err.println("ERROR!\n" + e.getMessage());
+			// print error and return null if error occurred
 			LOGGER.error(filename + " not found or parsing errors.", e);
 			return null;
 		}
@@ -1165,11 +1197,9 @@ public abstract class TermRules {
 	 */
 	protected ArrayList<WarningMessage> loadWarningMessages(String filename) {
 		try {
-
 			File file = new File(filename);
-			if (!file.exists()) {
+			if (!file.exists())
 				WarningMessage.createDefaultWarningMessagesFile(filename);
-			}
 
 			ArrayList<WarningMessage> warningMessages = new ArrayList<>();
 
@@ -1179,18 +1209,20 @@ public abstract class TermRules {
 			// Always wrap FileReader in BufferedReader.
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
 
-			String line;
-			int lineCount = 0;
+			// skip the header
+			boolean skipFirstLine = true;
 
 			// while there is a line to be red
+			String line;
 			while ((line = bufferedReader.readLine()) != null) {
-				// skip headers
-				if (lineCount == 0) {
-					lineCount++;
+
+				// Skip the header
+				if (skipFirstLine) {
+					skipFirstLine=false;
 					continue;
 				}
 
-				// analyze the line tokens
+				// Analyze the line tokens
 				StringTokenizer st = new StringTokenizer(line, ";");
 
 				// parse the string, get the message id
@@ -1242,12 +1274,8 @@ public abstract class TermRules {
 					textWarningLevel = WarningLevel.ERROR;
 				}
 
-				// create a warning message object with the message id and the content of the
-				// message (the next token)
+				// create a warning message with id and content 
 				warningMessages.add(new WarningMessage(messageId, message, warningLevel, textWarningLevel));
-
-				// new line
-				lineCount++;
 			}
 
 			// sort the warning messages using their ID
@@ -1265,7 +1293,8 @@ public abstract class TermRules {
 
 			// Close the connection
 			bufferedReader.close();
-
+			for(WarningMessage wm : warningMessages)
+				System.err.println(wm.getId() + ", " + wm.getMessage());
 			return (warningMessages);
 
 		} catch (Exception e) {
@@ -1285,7 +1314,7 @@ public abstract class TermRules {
 
 		// if a source is added to a composite rise a warning
 		if (isCompositeTerm(baseTerm) && isSourceFacet(facetIndex))
-			printWarning(WarningEvent.SourceInComposite, facetCode, false, stdOut);
+			printWarning(WarningEvent.BR03, facetCode, false, stdOut);
 	}
 
 	/**
@@ -1299,50 +1328,32 @@ public abstract class TermRules {
 
 		// if a source commodity is added to a composite rise a warning
 		if (isCompositeTerm(baseTerm) && isSourceCommodityFacet(facetIndex))
-			printWarning(WarningEvent.SourceCommodityInComposite, facetCode, false, stdOut);
+			printWarning(WarningEvent.BR04, facetCode, false, stdOut);
 	}
 
-	/**
-	 * Check if a reconstitution process facet is added to concentrate/dehydrated
-	 * term
-	 * 
-	 * @author shahaal
-	 * @param baseTerm
-	 * @param facetIndex
-	 * @param facetCode
-	 */
-	private void reconstitutionCheck(Term baseTerm, String facetIndex, String facetCode, boolean stdOut) {
-
-		// if reconstitution(A07MR) or dilution(A07MQ) facet
-		boolean isRecoOrDilu = facetCode.equals("A07MR") || facetCode.equals("A07MQ");
-		// added as process to baseterm that is concentrate/dehydrated
-		if (isRecoOrDilu && isProcessFacet(facetIndex) && isConcOrPowdTerm(baseTerm))
-			printWarning(WarningEvent.ReconstitutionProduct, facetCode, false, stdOut);
-
-	}
-
+	
 	/**
 	 * Get the implicit forbidden processes of a term
 	 * 
-	 * @param term,               the term to analyze
-	 * @param forbiddenProcesses, the processes which are considered as forbidden
+	 * @param term,               
+	 * @param forbiddenProcesses
 	 * @return
 	 */
-	protected ArrayList<ForbiddenProcess> getImplicitForbiddenProcesses(Term term,
+	protected ArrayList<ForbiddenProcess> getImplicitForbiddenProcesses(Term bt,
 			ArrayList<ForbiddenProcess> forbiddenProcesses, boolean stdOut) {
 
-		// initialise the output array
+		// initialize the output array
 		ArrayList<ForbiddenProcess> implicitForbiddenProcesses = new ArrayList<>();
 
 		// get the warn group of the term
-		Term warnGroup = getWarnGroup(term, stdOut);
+		Term warnGroup = getWarnGroup(bt, stdOut);
 
 		// if it is not a warn group => no forbidden processes are defined
 		if (warnGroup == null)
 			return implicitForbiddenProcesses;
 
 		// get the full code of the term
-		String fullCode = term.getFullCode(true, true);
+		String fullCode = bt.getFullCode(true, true);
 
 		// if there are not facets, return (it is only the base term)
 		if (fullCode.split("#").length < 2)
@@ -1351,23 +1362,22 @@ public abstract class TermRules {
 		// parse the facet codes
 		StringTokenizer st = new StringTokenizer(fullCode.split("#")[1], "$");
 
+		// iterate the facets
 		while (st.hasMoreTokens()) {
-
 			// get the entire
 			String fullFacetCode = st.nextToken();
-
 			// split the facet code
 			String[] codeSplit = fullFacetCode.split("\\.");
-
 			// retrieve the interesting information
 			String implicitFacetIndex = codeSplit[0];
 			String implicitFacetCode = codeSplit[1];
 
 			// if the facet is a process
 			if (implicitFacetIndex.equals("F28")) {
-				for (ForbiddenProcess proc : getCurrentForbiddenProcesses(term, forbiddenProcesses, stdOut)) {
-					// if a dangerous process, insert it in the array
-					if (proc.getForbiddenProcessCode().equals(implicitFacetCode))
+				// iterate the forbidden processes of the term
+				for (ForbiddenProcess proc : getForbiddenProcesses(bt, forbiddenProcesses, stdOut)) {
+					// if there is an implicit facet which is forbidden then add it
+					if (proc.getCode().equals(implicitFacetCode))
 						implicitForbiddenProcesses.add(proc);
 				}
 			}
@@ -1380,70 +1390,55 @@ public abstract class TermRules {
 	 * This method retrieves the forbidden processes related to a single warn group,
 	 * which is given as input
 	 * 
-	 * @param term,               the warnGroup
-	 * @param forbiddenProcesses, the considered forbidden processes
+	 * @param bt
+	 * @param fps
+	 * @param stdOut
 	 * @return
 	 */
-	private ArrayList<ForbiddenProcess> getCurrentForbiddenProcesses(Term baseTerm,
-			ArrayList<ForbiddenProcess> forbiddenProcesses, boolean stdOut) {
+	private ArrayList<ForbiddenProcess> getForbiddenProcesses(Term bt,
+			ArrayList<ForbiddenProcess> fps, boolean stdOut) {
 
 		// get the warnGroup related to the chosen base term
-		Term warnGroup = getWarnGroup(baseTerm, stdOut);
+		Term warnGroup = getWarnGroup(bt, stdOut);
 
 		// return if the term is not a warn group or if there are no forbidden processes
-		if (forbiddenProcesses == null || warnGroup == null)
+		if (fps == null || warnGroup == null)
 			return null;
 
 		// output array
 		ArrayList<ForbiddenProcess> currentFP = new ArrayList<>();
 
 		// for each forbidden process
-		for (int i = 0; i < forbiddenProcesses.size(); i++) {
-
-			// if the warn group term related to the current forbidden process is actually
-			// the warn group of the baseTerm
-			if (forbiddenProcesses.get(i).getBaseTermGroupCode().equals(warnGroup.getCode())) {
-
+		for (ForbiddenProcess fp : fps) {
+			// if the warn group related to the current forbidden process is actually the warn group of the baseTerm
+			if (fp.getGroupCode().equals(warnGroup.getCode()))
 				// add the related process to the forbidden processes
-				currentFP.add(forbiddenProcesses.get(i));
-			}
+				currentFP.add(fp);
 		}
 
-		return (currentFP);
+		return currentFP;
 	}
 
 	/**
 	 * Check if the selected term belongs to a warn group ( i.e. a group which could
-	 * raise a warning defined in BR_Data.csv or BR_Exceptions.csv )
+	 * raise a warning defined in BR_Data.csv)
 	 * 
-	 * @param baseTerm
-	 * @return the parent which is a warnGroup, otherwise null
-	 * @throws InterruptedException
+	 * @param bt
+	 * @param stdOut
+	 * @return
 	 */
-	private Term getWarnGroup(Term baseTerm, boolean stdOut) {
-
-		// for exceptional terms get exceptions business rules
-		if (isExceptionalTerm(baseTerm)) {
-
-			// load exceptions terms and their forbidden processes
-			forbiddenProcesses = loadForbiddenProcesses(GlobalUtil.getBRExceptions());
-
-			return baseTerm;
-		}
-
-		// set the start element for the parent search
-		Term parent = baseTerm;
+	private Term getWarnGroup(Term bt, boolean stdOut) {
 
 		// start to go up in the tree, parent by parent
-		while (parent != null) {
+		while (bt != null) {
 
 			// if the parent is a warn group => break cycle and return the warn group
-			if (isWarnGroup(parent.getCode(), forbiddenProcesses))
-				return (parent);
+			if (isWarnGroup(bt.getCode(), forbiddenProcesses))
+				return (bt);
 
 			// get the parent of the current term and continue the loop, we use the
 			// reporting hierarchy for warnings
-			parent = parent.getParent(currentCat.getHierarchyByCode("report"));
+			bt = bt.getParent(currentCat.getHierarchyByCode("report"));
 		}
 
 		// if no warn group is discovered, then return null
@@ -1454,12 +1449,11 @@ public abstract class TermRules {
 	 * Print the warning messages
 	 * 
 	 * @param event
-	 * @param postMessageString
-	 * @param attachDatetime
+	 * @param postMessage
+	 * @param dateTime
 	 * @param stdOut
 	 */
-	protected abstract void printWarning(WarningEvent event, String postMessageString, boolean attachDatetime,
-			boolean stdOut);
+	protected abstract void printWarning(WarningEvent event, String postMessage, boolean dateTime, boolean stdOut);
 
 	/**
 	 * get the warning level of the semaphore
@@ -1486,28 +1480,18 @@ public abstract class TermRules {
 	 * excel files for macros)
 	 * 
 	 * @param event
-	 * @param postMessageString
-	 * @param attachDatetime
-	 * @return
-	 */
-	/**
-	 * Create the message string to be printed into the console (or to be used in
-	 * excel files for macros)
-	 * 
-	 * @param event
-	 * @param postMessageString, string to be printed between brackets after the
-	 *                           warning
+	 * @param postMessageString, string between brackets after the warning
 	 * @param attachDatetime
 	 * @return
 	 */
 	protected String createMessage(WarningEvent event, String postMessageString, boolean attachDatetime) {
 
-		// get the message from the arraylist of warning messages
+		// get the message from the array list of warning messages
 		// ( it uses the eventID to retrieve the related message which has as ID the
 		// same as the eventID,
 		// we can do this thanks to the pre-sorting action made when the messages are
 		// loaded
-
+		
 		String message = warningMessages.get(event.ordinal()).getMessage();
 
 		// attach title
@@ -1553,7 +1537,7 @@ public abstract class TermRules {
 
 		// if the base term is not in the database
 		if (baseTerm == null) {
-			printWarning(WarningEvent.Error, baseTermCode, false, stdOut);
+			printWarning(WarningEvent.BR29, baseTermCode, false, stdOut);
 			return;
 		}
 
@@ -1571,8 +1555,16 @@ public abstract class TermRules {
 		// check if an non specific base term is selected
 		nonSpecificTermCheck(baseTerm, stdOut);
 
-		// check if an exceptional term is selected as base term
-		exceptionTermCheck(baseTerm, stdOut);
+		isAmbiguous(baseTerm, stdOut);
+
+		// check if the baseterm is deprecated
+		isDeprecated(baseTerm, stdOut);
+
+		// check if the base term is dismissed
+		// isDismissed(baseTerm, stdOut);
+
+		// check if baseterm type is f
+		isFacet(baseTerm, stdOut);
 
 		// return if there is nothing else to parse (i.e. no facets)
 		if (splits.length < 2)
@@ -1594,7 +1586,7 @@ public abstract class TermRules {
 		// implicit facets of the base term
 		ArrayList<ForbiddenProcess> implicit = getImplicitForbiddenProcesses(baseTerm, forbiddenProcesses, stdOut);
 
-		// tokenize the rest of the full code to get all the facets codes separately
+		// tokenise the rest of the full code to get all the facets codes separately
 		StringTokenizer st = new StringTokenizer(fullFacetsCodes, "$");
 
 		// get all the facets codes parsing the fullFacetsCodes
@@ -1618,29 +1610,25 @@ public abstract class TermRules {
 
 			// if the facet is not present into the database return (for excel macro)
 			if (facet == null) {
-				printWarning(WarningEvent.Error, facetCode, false, stdOut);
+				printWarning(WarningEvent.BR29, facetCode, false, stdOut);
 				return;
-			}
-
-			// only if running from ict check if facet belongs to facet category
-			if (fromICT) {
+			}else if (fromICT) {
 				// get the facet category
 				Attribute facetCategory = currentCat.getAttributeByCode(facetIndex);
 
-				// if the facet group doesnt exists
 				if (facetCategory == null)
-					printWarning(WarningEvent.GroupIdNotExists, facetCode, false, stdOut);
-				
-				// if the facet doesn't belong to that category hierarchy
-				if (facetCategory!=null && !facet.belongsToHierarchy(facetCategory.getHierarchy()))
-					printWarning(WarningEvent.FacetNotFound, facetCode, false, stdOut);
+					// if the facet category does not exists
+					printWarning(WarningEvent.BR30, facetCode, false, stdOut);
+				else if(!facet.belongsToHierarchy(facetCategory.getHierarchy()))
+					// if facet does not belong to facet category
+					printWarning(WarningEvent.BR31, facetCode, false, stdOut);
 			}
 
 			if (warnGroup) {
 				// check if a forbidden process is used or raw commodities
-				forbiddenProcessForRawCommodityCheck(baseTerm, facetIndex, facetCode, stdOut);
+				checkFpForRawCommodity(baseTerm, facetIndex, facetCode, stdOut);
 				// check if the order of processes is violated for derivatives
-				forbiddenProcessesOrderForDerivativesCheck(baseTerm, facetIndex, facetCode, stdOut);
+				checkFpOrderForDerivatives(baseTerm, facetIndex, facetCode, stdOut);
 			}
 
 			// check if the generic process facet is selected
@@ -1663,14 +1651,13 @@ public abstract class TermRules {
 
 				// get all the forbidden processes related to the base term
 				// (defined in the BR_Data.csv or BR_exceptions.csv)
-				ArrayList<ForbiddenProcess> currentFP = getCurrentForbiddenProcesses(baseTerm, forbiddenProcesses,
-						stdOut);
+				ArrayList<ForbiddenProcess> currentFP = getForbiddenProcesses(baseTerm, forbiddenProcesses, stdOut);
 
 				// get the forbidden processes codes (NOT ord code!) related to the base term
 				ArrayList<String> currentFPCodes = new ArrayList<>();
 
 				for (ForbiddenProcess proc : currentFP)
-					currentFPCodes.add(proc.getForbiddenProcessCode());
+					currentFPCodes.add(proc.getCode());
 
 				// if the process just added is present into the current forbidden processes
 				if (currentFPCodes.contains(facetCode)) {
@@ -1684,13 +1671,13 @@ public abstract class TermRules {
 					for (ForbiddenProcess proc : implicit) {
 
 						// get the facet terms related to the forbidden processes codes
-						Term ancestor = termDao.getByCode(proc.getForbiddenProcessCode());
-						Term descendant = termDao.getByCode(currentFP.get(index).getForbiddenProcessCode());
+						Term ancestor = termDao.getByCode(proc.getCode());
+						Term descendant = termDao.getByCode(currentFP.get(index).getCode());
 
 						// if the added process is a son of one of the implicit process
 						// add it but remove the implicit, in order to ignore it
 						if (descendant.hasAncestor(ancestor, currentCat.getHierarchyByCode("process"))) {
-							
+
 							isAncestor = true;
 
 							// add since we want to check only the forbidden processes mutually exclusivity
@@ -1704,7 +1691,7 @@ public abstract class TermRules {
 					}
 
 					// if no relation => add the process without taking care of implicit processes
-					if (!isAncestor) 
+					if (!isAncestor)
 						explicit.add(currentFP.get(index));
 				}
 			}

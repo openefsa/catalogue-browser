@@ -51,6 +51,7 @@ public class FileMenu implements MainMenuItem {
 	private MenuItem downloadMI;
 	private MenuItem closeMI;
 	private MenuItem deleteMI;
+	private FileActions action;
 
 	/**
 	 * Set the listener to the file menu
@@ -80,6 +81,16 @@ public class FileMenu implements MainMenuItem {
 	 * @param menu
 	 */
 	public MenuItem create(Menu menu) {
+
+		// initialize the action class
+		action = new FileActions();
+		action.addCloseCatalogueListener(new Listener() {
+
+			@Override
+			public void handleEvent(Event arg0) {
+				closeCatalogue();
+			}
+		});
 
 		// create FILE Menu and its sub menu items
 		Menu fileMenu = new Menu(menu);
@@ -140,7 +151,6 @@ public class FileMenu implements MainMenuItem {
 			public void widgetSelected(SelectionEvent event) {
 
 				// create a new local catalogue
-				FileActions action = new FileActions();
 				action.createNewLocalCatalogue(mainMenu.getShell());
 
 				if (listener != null)
@@ -167,8 +177,8 @@ public class FileMenu implements MainMenuItem {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-
-				FileActions.downloadCatalogue(shell);
+				// initialize the class and download the catalogue
+				action.downloadCatalogue(shell);
 
 				if (listener != null)
 					listener.buttonPressed(loadCatalogueItem, DOWNLOAD_CAT_MI, null);
@@ -199,13 +209,13 @@ public class FileMenu implements MainMenuItem {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
 
-				FileActions.openCatalogue(shell, new Listener() {
+				action.openCatalogue(shell, new Listener() {
 
 					@Override
 					public void handleEvent(Event arg0) {
 						// refresh main menu
 						mainMenu.refresh();
-						
+
 						if (listener != null) {
 							listener.buttonPressed(openFileItem, OPEN_CAT_MI, arg0);
 						}
@@ -261,7 +271,7 @@ public class FileMenu implements MainMenuItem {
 
 				// open a data collection and possibly open
 				// a configuration
-				DCTableConfig config = FileActions.openDC(shell);
+				DCTableConfig config = action.openDC(shell);
 
 				if (config == null)
 					return;
@@ -307,7 +317,7 @@ public class FileMenu implements MainMenuItem {
 						return;
 				}
 				// open the data collection selection list
-				FileActions.downloadDC(shell);
+				action.downloadDC(shell);
 			}
 		});
 
@@ -332,8 +342,6 @@ public class FileMenu implements MainMenuItem {
 
 				if (listener != null)
 					listener.buttonPressed(importCatMI, IMPORT_CAT_MI, null);
-
-				FileActions action = new FileActions();
 
 				action.importCatalogue(shell, new ThreadFinishedListener() {
 
@@ -395,18 +403,7 @@ public class FileMenu implements MainMenuItem {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-
-				if (listener != null)
-					listener.buttonPressed(closeCatMI, CLOSE_CAT_MI, null);
-
-				if (mainMenu.getCatalogue() == null)
-					return;
-
-				mainMenu.getCatalogue().close();
-
-				// refresh UI
-				mainMenu.refresh();
-
+				closeCatalogue();
 			}
 
 			@Override
@@ -415,6 +412,30 @@ public class FileMenu implements MainMenuItem {
 		});
 
 		return closeCatMI;
+	}
+
+	/**
+	 * method used for closing a catalogue
+	 * 
+	 * @author shahaal
+	 * @param closeCatMI
+	 */
+	protected void closeCatalogue() {
+
+		// update the main UI
+		if (listener != null)
+			listener.buttonPressed(null, CLOSE_CAT_MI, null);
+
+		// return if current cat is null
+		if (mainMenu.getCatalogue() == null)
+			return;
+
+		// close the catalogue
+		mainMenu.getCatalogue().close();
+
+		// refresh UI
+		mainMenu.refresh();
+
 	}
 
 	/**
@@ -434,7 +455,7 @@ public class FileMenu implements MainMenuItem {
 			public void widgetSelected(SelectionEvent event) {
 
 				// ask and delete catalogues
-				FileActions.deleteCatalogue(shell);
+				action.deleteCatalogues(shell);
 
 				if (listener != null)
 					listener.buttonPressed(deleteCatMI, DELETE_CAT_MI, null);

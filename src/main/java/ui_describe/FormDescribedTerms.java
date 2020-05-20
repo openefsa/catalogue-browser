@@ -20,7 +20,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -71,12 +70,12 @@ public class FormDescribedTerms {
 	/**
 	 * Constructor
 	 * 
-	 * @param             parentShell, the shell of the form which calls this form
-	 * @param             title, the shell title
-	 * @param filename    the name of the file from which extracting the described
-	 *                    term (recent or favourite)
-	 * @param invertOrder should the order of the term be reversed? (used for
-	 *                    visualising recent terms starting from the more recent
+	 * @param parentShell, the shell of the form which calls this form
+	 * @param title,       the shell title
+	 * @param filename     the name of the file from which extracting the described
+	 *                     term (recent or favourite)
+	 * @param invertOrder  should the order of the term be reversed? (used for
+	 *                     visualising recent terms starting from the more recent
 	 */
 	public FormDescribedTerms(Shell parentShell, String title, Catalogue catalogue, ArrayList<?> describedTerms) {
 
@@ -133,8 +132,8 @@ public class FormDescribedTerms {
 
 		// window icon (on the top left)
 		try {
-			parent.setImage(new Image(Display.getCurrent(),
-					this.getClass().getClassLoader().getResourceAsStream("Choose.gif")));
+			parent.setImage(
+					new Image(parent.getDisplay(), FormDescribedTerms.class.getClassLoader().getResourceAsStream("Choose.gif")));
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.error("Cannot get image", e);
@@ -363,7 +362,7 @@ public class FormDescribedTerms {
 	 * 
 	 * @author shahaal
 	 * @param describedTerm
-	 * @return 
+	 * @return
 	 */
 	public DescribedTerm loadTermInDescribe() {
 

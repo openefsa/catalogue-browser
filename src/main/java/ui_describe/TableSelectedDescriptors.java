@@ -8,10 +8,9 @@ import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Listener;
@@ -30,6 +29,7 @@ import ui_search_bar.TermTable;
  * (multiple selection case only)
  * 
  * @author avonva
+ * @author shahaal
  *
  */
 public class TableSelectedDescriptors {
@@ -52,22 +52,17 @@ public class TableSelectedDescriptors {
 
 		// If multiple selection, then show the group of selected elements
 		Group selectedElemGroup = new Group(parent, SWT.NONE);
-		selectedElemGroup.setLayout(new FillLayout());
-		selectedElemGroup.setText(CBMessages.getString("FormSelectTerm.SelectedElemLabel"));
-
-		// Data layout for selectedElemGroup
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-		gridData.minimumHeight = 120;
-		gridData.minimumWidth = 200;
-		gridData.widthHint = 400;
-		gridData.heightHint = 120;
-
-		// set the height of the table
+		gridData.horizontalSpan = 2;
 		selectedElemGroup.setLayoutData(gridData);
+		selectedElemGroup.setLayout(new GridLayout());
+		
+		selectedElemGroup.setText(CBMessages.getString("FormSelectTerm.SelectedElemLabel"));
 
 		// Create table viewer for displaying selected terms
 		table = new TermTable(selectedElemGroup, catalogue);
-
+		table.getTable().getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
 		// add the menu to the table
 		table.addMenu(createMenu(parent.getShell(), table));
 
@@ -218,8 +213,8 @@ public class TableSelectedDescriptors {
 		removeItem.setText(CBMessages.getString("FormSelectTerm.RemoveCmd"));
 
 		// set menu item icon
-		Image removeIcon = new Image(Display.getCurrent(),
-				this.getClass().getClassLoader().getResourceAsStream("remove-icon.png"));
+		Image removeIcon = new Image(shell.getDisplay(),
+				TableSelectedDescriptors.class.getClassLoader().getResourceAsStream("remove-icon.png"));
 		removeItem.setImage(removeIcon);
 		removeItem.setEnabled(false);
 

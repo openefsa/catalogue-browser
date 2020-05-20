@@ -101,7 +101,7 @@ public class CatalogueBrowserMain {
 		final Shell shell = new Shell(display);
 
 		// set the application image into the shell
-		shell.setImage(new Image(display, ClassLoader.getSystemResourceAsStream("Foodex2.ico")));
+		shell.setImage(new Image(display, CatalogueBrowserMain.class.getClassLoader().getResourceAsStream("Foodex2.ico")));
 		shell.setFullScreen(true);
 
 		// update the title of the shell

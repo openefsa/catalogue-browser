@@ -12,6 +12,7 @@ public class ContentProviderDescribedTerms implements IStructuredContentProvider
 
 	public void inputChanged ( Viewer arg0 , Object arg1 , Object arg2 ) {}
 
+	@SuppressWarnings("unchecked")
 	public Object[] getElements ( Object fullCodes ) {
 		
 		ArrayList< DescribedTerm > l = (ArrayList< DescribedTerm >) fullCodes;

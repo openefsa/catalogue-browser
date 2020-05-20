@@ -16,7 +16,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Listener;
@@ -57,6 +56,7 @@ import ui_search_bar.SearchEvent;
 import ui_search_bar.SearchListener;
 import ui_search_bar.SearchPanel;
 import ui_user_console.UserConsoleDialog;
+import user_preferences.CataloguePreference;
 import user_preferences.CataloguePreferenceDAO;
 import user_preferences.GlobalPreference;
 import user_preferences.GlobalPreferenceDAO;
@@ -71,10 +71,10 @@ import window_restorer.RestoreableWindow;
  * to select the current hierarchy or facet list...
  * 
  * @author Shahaj Alban
- * @author Thomas Milani(documentation)
  * @author Avon Valentino
+ * @author Thomas Milani(documentation)
  * 
- * @version 0.2.1
+ * @version 1.3.8
  */
 public class MainPanel implements Observer {
 
@@ -112,6 +112,8 @@ public class MainPanel implements Observer {
 	private TermPropertiesPanel tabPanel;
 
 	private UserConsoleDialog userConsole;
+
+	private CataloguePreferenceDAO prefDao;
 
 	public MainPanel(Shell shell, IBrowserPendingRequestWorker requestWorker) {
 		this.shell = shell;
@@ -398,30 +400,14 @@ public class MainPanel implements Observer {
 	 * 
 	 * @param catalogue
 	 */
-	public void refresh(final Catalogue catalogue) {
+	public void refresh(Catalogue catalogue) {
+		// redraw menus in the ui
+		catalogueLabel.setText(catalogue);
+		menu.setCatalogue(catalogue);
+		prefDao = new CataloguePreferenceDAO(catalogue);
+		// refresh the UI
+		refresh();
 
-		// redraw menus in the ui thread ( we use async exec since
-		// this method is potentially called by threads not in the UI )
-		Display.getDefault().asyncExec(new Runnable() {
-
-			@Override
-			public void run() {
-
-				catalogueLabel.setText(catalogue);
-				menu.setCatalogue(catalogue);
-
-				refresh();
-
-				Display.getDefault().update();
-
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-					LOGGER.error("Cannot stop thread", e);
-				}
-			}
-		});
 	}
 
 	/**
@@ -432,11 +418,9 @@ public class MainPanel implements Observer {
 
 		// redraw menus in the ui thread ( we use async exec since
 		// this method is potentially called by threads not in the UI )
-		Display.getDefault().asyncExec(new Runnable() {
-
+		shell.getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-
 				if (shell.isDisposed())
 					return;
 
@@ -463,8 +447,8 @@ public class MainPanel implements Observer {
 				shell.redraw();
 				shell.update();
 				shell.layout();
-
 			}
+
 		});
 	}
 
@@ -493,8 +477,6 @@ public class MainPanel implements Observer {
 			return;
 
 		// save main panel state
-		CataloguePreferenceDAO prefDao = new CataloguePreferenceDAO(current);
-
 		prefDao.saveMainPanelState(hierarchySelector.getSelectedHierarchy(), tree.getFirstSelectedTerm());
 	}
 
@@ -506,9 +488,7 @@ public class MainPanel implements Observer {
 	 * @throws PreferenceNotFoundException
 	 */
 	private Hierarchy getLastHierarchy(Catalogue catalogue) throws PreferenceNotFoundException {
-
-		CataloguePreferenceDAO prefDao = new CataloguePreferenceDAO(catalogue);
-
+		
 		Hierarchy lastHierarchy = null;
 
 		// first try to load the last hierarchy
@@ -525,9 +505,7 @@ public class MainPanel implements Observer {
 	 * @throws PreferenceNotFoundException
 	 */
 	private Term getLastTerm(Catalogue catalogue) throws PreferenceNotFoundException {
-
-		CataloguePreferenceDAO prefDao = new CataloguePreferenceDAO(catalogue);
-
+		
 		Term lastTerm = null;
 
 		// first try to load the last hierarchy
@@ -669,10 +647,16 @@ public class MainPanel implements Observer {
 		tree.setInput(hierarchy);
 
 		// recover the last selected term if present
-		try {
-			Term lastTerm = getLastTerm(catalogue);
-			tree.selectTerm(lastTerm);
-		} catch (PreferenceNotFoundException e) {
+		boolean restoreLastTerm = prefDao.getPreferenceBoolValue(CataloguePreference.enableBusinessRules, false);
+
+		// if the restore last selected term is enabled 
+		if (restoreLastTerm) {
+			try {
+				Term lastTerm = getLastTerm(catalogue);
+				tree.selectTerm(lastTerm);
+			} catch (PreferenceNotFoundException e) {
+				e.printStackTrace();
+			}
 		}
 
 	}
@@ -737,7 +721,7 @@ public class MainPanel implements Observer {
 
 		// left group for catalogue label, search bar and table
 		Composite left = new Composite(sashForm, SWT.NONE);
-		left.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true));
+		left.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		left.setLayout(new GridLayout(1, false));
 
 		// add the label which displays the catalogue label
@@ -856,10 +840,8 @@ public class MainPanel implements Observer {
 					break;
 
 				case FileMenu.OPEN_CAT_MI:
-
+					// remove input from ui
 					removeData();
-
-					refresh();
 
 					// get the selected catalogue
 					Catalogue catalogue = (Catalogue) event.data;
@@ -879,8 +861,6 @@ public class MainPanel implements Observer {
 
 					removeData();
 					enableUI(false);
-
-					refresh();
 
 					break;
 
@@ -1010,8 +990,7 @@ public class MainPanel implements Observer {
 		// left group for catalogue label, search bar and table
 		Group leftGroup = new Group(parent, SWT.NONE);
 		GridData leftData = new GridData(SWT.FILL, SWT.FILL, true, true);
-		leftData.minimumWidth = 150;
-		leftData.widthHint = 150;
+		leftData.minimumWidth = 200;
 		leftGroup.setLayoutData(leftData);
 		leftGroup.setLayout(new GridLayout(1, false));
 
@@ -1109,8 +1088,6 @@ public class MainPanel implements Observer {
 		filterGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		RowLayout layout = new RowLayout();
 		layout.center = true;
-		// layout.justify = true;
-		layout.spacing = 50;
 		filterGroup.setLayout(layout);
 
 		// nav buttons for previous/next term
@@ -1143,6 +1120,7 @@ public class MainPanel implements Observer {
 
 		SashForm sashForm2 = new SashForm(rightGroup, SWT.HORIZONTAL);
 		sashForm2.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		sashForm2.setLayout(new GridLayout(1, false));
 		sashForm2.setSashWidth(2);
 		sashForm2.setBackground(sashForm2.getDisplay().getSystemColor(SWT.COLOR_GRAY));
 
@@ -1227,8 +1205,8 @@ public class MainPanel implements Observer {
 			@Override
 			public void handleEvent(Event event) {
 				Term term = (Term) event.data;
+				// here the new short name is acceptable
 				tree.refresh(term);
-
 				searchPanel.refresh(true);
 			}
 		});
@@ -1240,19 +1218,13 @@ public class MainPanel implements Observer {
 	public void update(Observable arg0, Object arg1) {
 
 		// refresh ui if the current catalogue changed
-		if (arg0 instanceof GlobalManager) {
-			if (arg1 instanceof Catalogue) {
-				refresh();
-			}
-		}
-
-		else if (arg1 instanceof Catalogue) {
+		if (arg1 instanceof Catalogue) {
 			refresh((Catalogue) arg1);
 		}
 
 		// refresh UI if the current catalogue reserve level was changed
 		// or if refresh is required
-		else if (arg1 instanceof ReserveLevel || arg0 instanceof MainMenu) {
+		if (arg1 instanceof ReserveLevel || arg0 instanceof MainMenu) {
 			refresh();
 		}
 	}

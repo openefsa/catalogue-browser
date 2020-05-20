@@ -17,7 +17,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -136,7 +135,7 @@ public class FormTermCoder {
 		_tempTerm = new Term(catalogue);
 		_tempTerm.setCode(_baseTerm.getCode());
 		_tempTerm.setName(_baseTerm.getName());
-		_tempTerm.setFullCodeDescription(_baseTerm.getShortName(true));
+		_tempTerm.setDisplayAs(_baseTerm.getShortName(true));
 
 		// to be working the tempTerm is added as child of baseTerm only in memory
 		Applicability app = new Applicability(_tempTerm, _baseTerm, catalogue.getMasterHierarchy(), 1, true);
@@ -150,8 +149,7 @@ public class FormTermCoder {
 		// not allow surf main page
 		dialog = new Shell(shell, SWT.SHELL_TRIM | SWT.MODELESS);
 
-		dialog.setImage(new Image(Display.getCurrent(),
-				this.getClass().getClassLoader().getResourceAsStream("Choose.gif")));
+		dialog.setImage(new Image(dialog.getDisplay(), FormTermCoder.class.getClassLoader().getResourceAsStream("Choose.gif")));
 		dialog.setMaximized(true);
 
 		dialog.setText(title);

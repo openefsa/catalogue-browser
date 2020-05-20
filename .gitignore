@@ -1,1 +1,11 @@
 /target/
+
+/database/
+/logs/
+/preferences/
+
+
+/temp/
+
+/derby.log
+/Documentation/CatalogueBrowser_business_rules.xlsx

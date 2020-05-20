@@ -22,7 +22,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Listener;
@@ -91,13 +90,11 @@ public class FormSelectTerm implements Observer {
 	 * @wbp.parser.entryPoint
 	 */
 
-	public FormSelectTerm(Shell shell, String title, Catalogue catalogue, boolean enableMultipleSelection,
-			boolean flag) {
+	public FormSelectTerm(Shell shell, String title, Catalogue catalogue, boolean enableMultipleSelection) {
 
 		this.shell = shell;
 		this.catalogue = catalogue;
 		this.multi = enableMultipleSelection;
-		this.flag = flag; // flag is used for knowing if coming from the operability tab in the main page
 
 		// default title
 		this.title = CBMessages.getString("FormSelectTerm.DialogTitle");
@@ -179,7 +176,7 @@ public class FormSelectTerm implements Observer {
 	 */
 	public void display() {
 
-		// if coming from reportability tab then dont let the user to surf the main page
+		// if coming from reportability tab then don't let the user to surf the main page
 		if (flag)
 			dialog = new Shell(shell, SWT.SHELL_TRIM | SWT.APPLICATION_MODAL);
 		// otherwise u are coming from the describe window
@@ -191,7 +188,7 @@ public class FormSelectTerm implements Observer {
 		dialog.forceActive();
 
 		dialog.setImage(
-				new Image(Display.getCurrent(), this.getClass().getClassLoader().getResourceAsStream("Choose.gif")));
+				new Image(dialog.getDisplay(), FormSelectTerm.class.getClassLoader().getResourceAsStream("Choose.gif")));
 		dialog.setMaximized(true);
 
 		dialog.setText(title);
@@ -289,7 +286,7 @@ public class FormSelectTerm implements Observer {
 		Composite comp = new Composite(dialog, SWT.NONE);
 		comp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		comp.setLayout(new GridLayout(1, false));
-		
+
 		// add inner group for facets
 		Group facetsGroup = new Group(comp, SWT.NONE);
 		facetsGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -314,7 +311,7 @@ public class FormSelectTerm implements Observer {
 		// Right panel
 		Composite rightPanel = new Composite(dialog, SWT.NONE);
 		rightPanel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		rightPanel.setLayout(new GridLayout(1, false));
+		rightPanel.setLayout(new GridLayout(2, true));
 
 		// Add the selected descriptors table only if multiple selection allowed
 		if (multi) {
@@ -326,7 +323,9 @@ public class FormSelectTerm implements Observer {
 		ArrayList<String> properties = new ArrayList<>();
 		properties.add("scopenotes");
 		properties.add("attributes");
-		termPropTab = new FrameTermFields(rightPanel, properties);
+
+		termPropTab = new FrameTermFields(rightPanel);
+		termPropTab.buildWidgets(properties);
 
 		// add composite which contains the buttons
 		Composite c2 = new Composite(dialog, SWT.NONE);
@@ -347,19 +346,12 @@ public class FormSelectTerm implements Observer {
 		cancel.setText(CBMessages.getString("FormSelectTerm.CancelButton"));
 		cancel.setLayoutData(btnData);
 
-		// if close button is pressed then clear the list of selected items
-		/*
-		 * dialog.addListener(SWT.Close, new Listener() {
-		 * 
-		 * @Override public void handleEvent(Event arg0) { selectedTerms.clear(); } });
-		 */
-
 		// if ok button is pressed
 		ok.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				// set the output list
 				setOutput();
-
+				// kill shell
 				dialog.close();
 			}
 		});
@@ -459,6 +451,7 @@ public class FormSelectTerm implements Observer {
 			if (!dialog.getDisplay().readAndDispatch())
 				dialog.getDisplay().sleep();
 		}
+
 		dialog.dispose();
 
 	}
@@ -541,12 +534,8 @@ public class FormSelectTerm implements Observer {
 			if (selectedTerms.isEmpty() && !tree.isSelectionEmpty()) {
 				selectedTerms.add(tree.getFirstSelectedTerm());
 			}
-		} else {
-
-			// add the selected term if it was set
-			if (!tree.isSelectionEmpty()) {
-				selectedTerms.add(tree.getFirstSelectedTerm());
-			}
+		} else if (!tree.isSelectionEmpty()) {
+			selectedTerms.add(tree.getFirstSelectedTerm());
 		}
 	}
 

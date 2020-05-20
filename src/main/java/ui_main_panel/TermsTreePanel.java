@@ -365,26 +365,9 @@ public class TermsTreePanel extends Observable implements Observer {
 
 		// double click on the term for directly opening the describe window
 		tree.addDoubleClickListener(new IDoubleClickListener() {
-
 			@Override
 			public void doubleClick(DoubleClickEvent arg0) {
-
-				// the catalogue doesn't have facet categories return
-				boolean hasFacetCategories = catalogue.hasImplicitFacetCategories() && (tcf == null || tcf.canOpen());
-
-				if (!hasFacetCategories)
-					return;
-
-				// initialise tcf if null
-				if (tcf == null)
-					tcf = new FormTermCoder(shell, CBMessages.getString("FormTermCoder.Title"), catalogue);
-
-				// set the base term
-				tcf.setBaseTerm(getFirstSelectedTerm());
-
-				// open the window if not opened or null
-				if (tcf.canOpen())
-					tcf.display(catalogue);
+				openDescribeWindow();
 			}
 		});
 
@@ -941,19 +924,19 @@ public class TermsTreePanel extends Observable implements Observer {
 
 				String mes = CBMessages.getString("BrowserTreeMenu.WarningMessage");
 				String title = CBMessages.getString("BrowserTreeMenu.ShellTitle");
-				
+
 				// ask the user before continuing the operation
 				boolean confirmation = MessageDialog.openQuestion(shell, title, mes);
 
 				if (!confirmation)
 					return;
-				
+
 				// create dialog
 				FileDialog fd = new FileDialog(shell, SWT.OPEN);
 
 				// set dialog title
 				fd.setText(title);
-				
+
 				// get the working directory from the user preferences
 				fd.setFilterPath(DatabaseManager.MAIN_CAT_DB_FOLDER);
 
@@ -973,16 +956,16 @@ public class TermsTreePanel extends Observable implements Observer {
 
 					// for each term in txt add it
 					int termsAdded = 0;
-					
+
 					try {
 						termsAdded = parse.startToImportTerms();
 					} catch (TermCodeException e1) {
 						GlobalUtil.showDialog(shell, title, e1.getMessage(), SWT.ICON_ERROR);
 					}
-					
+
 					mes = "Imported " + termsAdded + " Terms.";
 					GlobalUtil.showDialog(shell, title, mes, SWT.ICON_INFORMATION);
-					
+
 					GlobalUtil.setShellCursor(shell, SWT.CURSOR_ARROW);
 
 					// refresh tree
@@ -1353,23 +1336,37 @@ public class TermsTreePanel extends Observable implements Observer {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-
-				// initialise the describe window if null
-				if (tcf == null)
-					tcf = new FormTermCoder(shell, CBMessages.getString("FormTermCoder.Title"), catalogue);
-
-				// set the base term
-				tcf.setBaseTerm(getFirstSelectedTerm());
-
-				// open the window if not opened or null
-				if (tcf.canOpen())
-					tcf.display(catalogue);
+				openDescribeWindow();
 			}
 
 		});
 
 		describeTerm.setEnabled(false);
 		return describeTerm;
+	}
+
+	/**
+	 * method used for checking the catalogue and if MTX open the describe window
+	 * 
+	 */
+	protected void openDescribeWindow() {
+
+		// return if non mtx catalogue
+		if (!catalogue.isMTXCatalogue()) {
+			showCatalogueError();
+			return;
+		}
+
+		// initialize the describe window if null
+		if (tcf == null)
+			tcf = new FormTermCoder(shell, CBMessages.getString("FormTermCoder.Title"), catalogue);
+
+		// set the base term
+		tcf.setBaseTerm(getFirstSelectedTerm());
+
+		// open the window if not opened or null
+		if (tcf.canOpen())
+			tcf.display(catalogue);
 	}
 
 	/**
@@ -1386,6 +1383,12 @@ public class TermsTreePanel extends Observable implements Observer {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+
+				// return if non mtx catalogue
+				if (!catalogue.isMTXCatalogue()) {
+					showCatalogueError();
+					return;
+				}
 
 				RecentTermDAO recentDao = new RecentTermDAO(catalogue);
 
@@ -1436,7 +1439,6 @@ public class TermsTreePanel extends Observable implements Observer {
 
 					@Override
 					public void widgetDefaultSelected(SelectionEvent arg0) {
-						
 
 					}
 				});
@@ -1444,6 +1446,14 @@ public class TermsTreePanel extends Observable implements Observer {
 		});
 
 		return recentlyDescribeTerm;
+	}
+
+	/**
+	 * method used to show warning regarding the catalogue currently in use
+	 */
+	protected void showCatalogueError() {
+		GlobalUtil.showDialog(shell, CBMessages.getString("TableFacetApplicability.AddFacetWarningTitle"),
+				CBMessages.getString("TableFacetApplicability.AddFacetWarningMessage"), SWT.ICON_WARNING);
 	}
 
 	/**

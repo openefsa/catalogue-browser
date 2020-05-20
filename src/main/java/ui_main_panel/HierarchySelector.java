@@ -87,7 +87,8 @@ public class HierarchySelector extends Observable implements Observer {
 		// composite to which add the select group options
 		Composite selComp = new Composite(parent, SWT.NONE);
 		RowLayout layout = new RowLayout();
-	    layout.center = true;
+		layout.center = true;
+		layout.marginRight = 20;
 		selComp.setLayout(layout);
 		
 		// choose
@@ -113,6 +114,7 @@ public class HierarchySelector extends Observable implements Observer {
 		Composite hierComp = new Composite(parent, SWT.NONE);
 		layout = new RowLayout();
 	    layout.center = true;
+	    layout.marginRight = 20;
 		hierComp.setLayout(layout);
 		
 		// choose
@@ -125,7 +127,7 @@ public class HierarchySelector extends Observable implements Observer {
 		hierarchyCombo.setSorter(new SorterCatalogueObject());
 		hierarchyCombo.getCombo().setEnabled(false);
 		RowData data = new RowData();
-		data.width = 200;
+		data.width = 150;
 		hierarchyCombo.getCombo().setLayoutData(data);
 		
 		// add separator
@@ -257,6 +259,7 @@ public class HierarchySelector extends Observable implements Observer {
 	 * @param hierarchy
 	 * @return false if the hierarchy was not changed true otherwise
 	 */
+	@SuppressWarnings("unchecked")
 	public boolean setSelection(Hierarchy hierarchy) {
 
 		Collection<Hierarchy> input = (Collection<Hierarchy>) hierarchyCombo.getInput();

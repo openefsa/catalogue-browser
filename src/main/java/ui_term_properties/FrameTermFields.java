@@ -8,13 +8,12 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Listener;
@@ -53,16 +52,34 @@ public class FrameTermFields {
 
 	private ComboTextBox termType;
 	private ComboTextBox detailLevel;
-	private Text code;
-	private Text fullCode;
-	private Text extName;
-	private Text fullCodeDesc;
+	private Text termCode;
+	private Text termExtCode;
+	private Text termName;
+	private Text termExtName;
+	private Text termDisplayAs;
 	private ScopenotesWithLinks scopenotes;
 	private TableImplicitAttributes attributes;
 
 	private Listener updateListener = null; // listener called when a term property is updated and saved
 
 	private Term term;
+
+	/**
+	 * group component titles
+	 */
+	final String gr1 = "group1";
+	final String gr2 = "group2";
+	final String termTypeTitle = CBMessages.getString("TermProperties.TermTypeTitle");
+	final String detailLevelTitle = CBMessages.getString("TermProperties.DetailLevelTitle");
+	final String termCodeTitle = CBMessages.getString("TermProperties.TermCodeTitle");
+	final String termExtCodeTitle = CBMessages.getString("TermProperties.TermFullCodeTitle");
+	final String termNameTitle = CBMessages.getString("TermProperties.TermNameTitle");
+	final String termExtNameTitle = CBMessages.getString("TermProperties.TermFullNameTitle");
+	final String termDisplayAsTitle = CBMessages.getString("TermProperties.TermDisplayAsTitle");
+	final String scopenoteTitle = CBMessages.getString("TermProperties.ScopenotesTitle");
+	final String implAttrTitle = CBMessages.getString("TermProperties.ImplicitAttributes");
+
+	private Composite parent;
 
 	/**
 	 * set the listener which is called when a term property is updated and saved
@@ -89,22 +106,29 @@ public class FrameTermFields {
 	}
 
 	/**
-	 * Set the current catalogue
+	 * update the current catalogue
 	 * 
-	 * @param catalogue
-	 * @param forceRedraw true to redraw in any case the widgets
+	 * @author shahaal
+	 * @param newCat
 	 */
-	private void setCatalogue(Catalogue newCat) {
+	public void setCatalogue(Catalogue newCat) {
 
-		// avoid resetting the same catalogue (avoid
-		// recreating widgets!)
-		if (catalogue != null && newCat.getCode().equals(catalogue.getCode())
-				&& newCat.getVersion().equals(catalogue.getVersion()))
-			return;
+		// redraw combobox widgets only when different combobox
+		if (!isSameCatalogue(newCat))
+			redraw();
 
 		this.catalogue = newCat;
+	}
 
-		redraw();
+	/**
+	 * return true if the current catalogue is the same type as new one
+	 * 
+	 * @author shahaal
+	 * @param newCat
+	 * @return
+	 */
+	public boolean isSameCatalogue(Catalogue newCat) {
+		return (catalogue != null && newCat.sameAs(catalogue));
 	}
 
 	/**
@@ -122,6 +146,7 @@ public class FrameTermFields {
 
 		if (detailLevel != null)
 			detailLevel.setCatalogue(catalogue);
+
 	}
 
 	/**
@@ -131,6 +156,7 @@ public class FrameTermFields {
 	 * @author avonva
 	 * @param term
 	 */
+	@SuppressWarnings("unlikely-arg-type")
 	public void setTerm(Term term) {
 
 		if (term == null) {
@@ -147,89 +173,82 @@ public class FrameTermFields {
 		// update also the catalogue
 		setCatalogue(term.getCatalogue());
 
-		if (code != null)
-			code.setText(term.getCode());
-		
-		// full code with base term and facets
-		if (fullCode != null)
-			fullCode.setText(term.getFullCode(true, true));
-
-		if (extName != null)
-			extName.setText(term.getName());
-
-		// show the full code interpretation
-		if (fullCodeDesc != null)
-			fullCodeDesc.setText(term.getInterpretedCode(true));
-
-		if (scopenotes != null)
-			scopenotes.setTerm(term);
-
-		if (attributes != null)
-			attributes.setTerm(term);
-
-		// refresh elements according to the contents
-
-		// get the current catalogue
-		Catalogue currentCat = term.getCatalogue();
-
-		if (detailLevel != null) {
-
-			// if the catalogue contains the detail level attribute
-			if (currentCat.hasDetailLevelAttribute()) {
-
-				// get all the detail levels and set them as input
-				detailLevel.setInput(currentCat.getDetailLevels());
-
-				int index;
-
-				// if the term has got a detail level set
-				if (term.getDetailLevel() != null)
-					// get the index of the current level of detail
-					index = currentCat.getDetailLevels().indexOf(term.getDetailLevel());
-				else
-					// otherwise, get the default detail level from the catalogue
-					index = currentCat.getDetailLevels().indexOf(currentCat.getDefaultDetailLevel());
-
-				// set the selection accordingly
-				detailLevel.setSelection(new StructuredSelection(currentCat.getDetailLevels().get(index)));
-
-				detailLevel.setText(currentCat.getDetailLevels().get(index).getLabel());
-			} else {
-				detailLevel.setEnabled(false);
-			}
-		}
-
 		if (termType != null) {
-
-			if (currentCat.hasTermTypeAttribute()) {
-
-				termType.setInput(currentCat.getTermTypes());
+			if (catalogue.hasTermTypeAttribute()) {
+				termType.setInput(catalogue.getTermTypes());
 
 				// get the index of the current term type
 				int index;
 
 				if (term.getTermType() != null) {
 					// get the index of the current term type
-					index = currentCat.getTermTypes().indexOf(term.getTermType());
+					index = catalogue.getTermTypes().indexOf(term.getTermType());
 				} else
 					// get the default term type
-					index = currentCat.getTermTypes().indexOf(currentCat.getDefaultTermType());
+					index = catalogue.getTermTypes().indexOf(catalogue.getDefaultTermType());
 
 				// set the selection accordingly
 				if (index == -1 && term.getTermType() != null) {
 					termType.setText("INVALID CODE: " + term.getTermType().getValue());
-				} else if (currentCat.getTermTypes().size() > index && index >= 0) {
+				} else if (catalogue.getTermTypes().size() > index && index >= 0) {
 
-					termType.setSelection(new StructuredSelection(currentCat.getTermTypes().get(index)));
+					termType.setSelection(new StructuredSelection(catalogue.getTermTypes().get(index)));
 
-					termType.setText(currentCat.getTermTypes().get(index).getLabel());
+					termType.setText(catalogue.getTermTypes().get(index).getLabel());
 				}
-			}
-
-			else {
+			} else {
 				termType.setEnabled(false);
 			}
 		}
+
+		// refresh elements according to the contents
+		if (detailLevel != null) {
+			if (catalogue.hasDetailLevelAttribute()) {
+
+				// get all the detail levels and set them as input
+				detailLevel.setInput(catalogue.getDetailLevels());
+
+				int index;
+
+				// if the term has got a detail level set
+				if (term.getDetailLevel() != null)
+					// get the index of the current level of detail
+					index = catalogue.getDetailLevels().indexOf(term.getDetailLevel());
+				else
+					// otherwise, get the default detail level from the catalogue
+					index = catalogue.getDetailLevels().indexOf(catalogue.getDefaultDetailLevel());
+
+				// set the selection accordingly
+				detailLevel.setSelection(new StructuredSelection(catalogue.getDetailLevels().get(index)));
+
+				detailLevel.setText(catalogue.getDetailLevels().get(index).getLabel());
+			} else {
+				detailLevel.setEnabled(false);
+			}
+		}
+
+		if (termCode != null)
+			termCode.setText(term.getCode());
+
+		// full code with base term and facets
+		if (isWidgetAvailable(termExtCode))
+			termExtCode.setText(term.getFullCode(true, true));
+
+		if (termName != null)
+			termName.setText(term.getName());
+
+		// show the full code interpretation
+		if (isWidgetAvailable(termExtName))
+			termExtName.setText(term.getInterpretedExtendedName());
+
+		if (isWidgetAvailable(termDisplayAs))
+			termDisplayAs.setText(term.getShortName(false));
+
+		if (scopenotes != null)
+			scopenotes.setTerm(term);
+
+		if (attributes != null)
+			attributes.setTerm(term);
 
 		refresh();
 	}
@@ -259,23 +278,38 @@ public class FrameTermFields {
 		if (detailLevel != null)
 			detailLevel.setEnabled(enabled);
 
-		if (code != null)
-			code.setEnabled(enabled);
+		if (termCode != null)
+			termCode.setEnabled(enabled);
 
-		if (fullCode != null)
-			fullCode.setEnabled(enabled);
+		if (isWidgetAvailable(termExtCode))
+			termExtCode.setEnabled(enabled);
 
-		if (extName != null)
-			extName.setEnabled(enabled);
+		if (termName != null)
+			termName.setEnabled(enabled);
 
-		if (fullCodeDesc != null)
-			fullCodeDesc.setEnabled(enabled);
+		if (isWidgetAvailable(termExtName))
+			termExtName.setEnabled(enabled);
+
+		if (isWidgetAvailable(termDisplayAs))
+			termDisplayAs.setEnabled(enabled);
 
 		if (scopenotes != null)
 			scopenotes.setEnabled(enabled);
 
 		if (attributes != null)
 			attributes.setEnabled(enabled);
+	}
+
+	/**
+	 * check if the widget that can be disposed is available or not (termExtCode,
+	 * termExtName, termDisplayAs)
+	 * 
+	 * @author shahaal
+	 * @param widget
+	 * @return
+	 */
+	private boolean isWidgetAvailable(Text widget) {
+		return widget != null && !widget.isDisposed();
 	}
 
 	/**
@@ -293,17 +327,20 @@ public class FrameTermFields {
 			detailLevel.setText("");
 		}
 
-		if (code != null)
-			code.setText("");
+		if (termCode != null)
+			termCode.setText("");
 
-		if (fullCode != null)
-			fullCode.setText("");
+		if (isWidgetAvailable(termExtCode))
+			termExtCode.setText("");
 
-		if (extName != null)
-			extName.setText("");
+		if (termName != null)
+			termName.setText("");
 
-		if (fullCodeDesc != null)
-			fullCodeDesc.setText("");
+		if (isWidgetAvailable(termExtName))
+			termExtName.setText("");
+
+		if (isWidgetAvailable(termDisplayAs))
+			termDisplayAs.setText("");
 
 		if (scopenotes != null)
 			scopenotes.setTerm(null);
@@ -316,18 +353,15 @@ public class FrameTermFields {
 	 * Make editable extended name, short name and scopenotes
 	 */
 	public void setEditable(boolean editable) {
-		if (extName != null)
-			extName.setEditable(editable);
 
-		if (fullCodeDesc != null)
-			fullCodeDesc.setEditable(editable);
+		if (termName != null)
+			termName.setEditable(editable);
+
+		if (isWidgetAvailable(termDisplayAs))
+			termDisplayAs.setEditable(editable);
 
 		if (scopenotes != null)
 			scopenotes.setEditable(editable);
-	}
-
-	public FrameTermFields(Composite parent) {
-		this(parent, new ArrayList<String>());
 	}
 
 	/**
@@ -338,49 +372,8 @@ public class FrameTermFields {
 	 * 
 	 * @param parent
 	 */
-	public FrameTermFields(Composite parent, ArrayList<String> properties) {
-
-		boolean includeAll = properties.isEmpty();
-
-		// add composite with two fields only if required type and detail
-		if (includeAll || (properties.contains("type") && properties.contains("detail"))) {
-
-			// composite for term type and term detail
-			Composite comp = new Composite(parent, SWT.NONE);
-			comp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-			comp.setLayout(new GridLayout(2, true));
-
-			// add the term type
-			termType = addTermType(comp);
-
-			// add the detail level
-			detailLevel = addDetailLevel(comp);
-		}
-
-		// add term code
-		if (includeAll || properties.contains("code"))
-			code = addTermCodeTextBox(parent, CBMessages.getString("TermProperties.TermCodeTitle"));
-		
-		// add term code with implicit facets
-		if (includeAll || properties.contains("fullCode"))
-			fullCode = addTermCodeTextBox(parent, CBMessages.getString("TermProperties.TermCompleteCodeTitle"));
-
-		// add term extended name
-		if (includeAll || properties.contains("extname"))
-			extName = addTermNameTextBox(parent);
-
-		// add term short name
-		if (includeAll || properties.contains("fullCodeDesc"))
-			fullCodeDesc = addFullCodeDescTextBox(parent);
-
-		// add term scope notes and links
-		if (includeAll || properties.contains("scopenotes"))
-			scopenotes = addTermScopenotes(parent);
-
-		// add term attributes table
-		if (includeAll || properties.contains("attributes"))
-			attributes = addTermAttributes(parent);
-
+	public FrameTermFields(Composite parent) {
+		this.parent = parent;
 	}
 
 	/**
@@ -391,7 +384,10 @@ public class FrameTermFields {
 	 */
 	private ComboTextBox addTermType(Composite parent) {
 
-		ComboTextBox termType = new ComboTextBox(parent, CBMessages.getString("TermProperties.TermTypeTitle"));
+		// create the component group
+		Group group = createGroup(parent, 1, termTypeTitle, false);
+
+		ComboTextBox termType = new ComboTextBox(group, gr1);
 
 		termType.setLabelProvider(new LabelProviderTermType());
 		termType.setContentProvider(new ContentProviderTermType());
@@ -400,11 +396,14 @@ public class FrameTermFields {
 
 			public void selectionChanged(SelectionChangedEvent event) {
 
+				// get the object selection
+				Object sel = event.getSelection();
+
 				// if the selection is empty return
-				if (event.getSelection().isEmpty() || !(event.getSelection() instanceof IStructuredSelection))
+				if (sel == null || !(sel instanceof IStructuredSelection))
 					return;
 
-				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+				IStructuredSelection selection = (IStructuredSelection) sel;
 
 				// get the selected term type
 				TermType tt = (TermType) selection.getFirstElement();
@@ -459,7 +458,10 @@ public class FrameTermFields {
 	 */
 	private ComboTextBox addDetailLevel(Composite parent) {
 
-		ComboTextBox detailLevel = new ComboTextBox(parent, CBMessages.getString("TermProperties.DetailLevelTitle"));
+		// create the component group
+		Group group = createGroup(parent, 1, detailLevelTitle, false);
+
+		ComboTextBox detailLevel = new ComboTextBox(group, gr2);
 
 		detailLevel.setLabelProvider(new LabelProviderDetailLevel());
 		detailLevel.setContentProvider(new ContentProviderDetailLevel());
@@ -524,40 +526,16 @@ public class FrameTermFields {
 	 * @param parent
 	 * @return
 	 */
-	private Text addTermCodeTextBox(Composite parent, String label) {
+	private Text addTermCode(Composite parent, String label) {
 
-		// create a new group for term code
-		Group groupTermCode = new Group(parent, SWT.NONE);
-		groupTermCode.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		groupTermCode.setLayout(new FillLayout());
-
-		// set its name and layout
-		groupTermCode.setText(label);
+		// create the component group
+		Group group = createGroup(parent, 2, label, false);
 
 		// create the text box
-		final Text textTermCode = new Text(groupTermCode, SWT.BORDER | SWT.READ_ONLY);
+		final Text textTermCode = new Text(group, SWT.BORDER | SWT.READ_ONLY);
+		textTermCode.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		textTermCode.addFocusListener(new FocusListener() {
-
-			@Override
-			public void focusLost(FocusEvent arg0) {
-				parent.getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						textTermCode.clearSelection();
-					}
-				});
-			}
-
-			@Override
-			public void focusGained(FocusEvent arg0) {
-				parent.getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						textTermCode.selectAll();
-					}
-				});
-			}
-		});
-
+		// add listener when pressed ctrl+a
 		textTermCode.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -578,26 +556,19 @@ public class FrameTermFields {
 	 * @param parent
 	 * @return
 	 */
-	private Text addTermNameTextBox(Composite parent) {
+	private Text addTermName(Composite parent) {
 
-		Group groupTermName = new Group(parent, SWT.NONE);
-		groupTermName.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		groupTermName.setLayout(new FillLayout());
+		// create the component group
+		Group group = createGroup(parent, 2, termNameTitle, false);
 
-		groupTermName.setText(CBMessages.getString("TermProperties.TermNameTitle"));
+		final Text textTermName = new Text(group, SWT.MULTI | SWT.BORDER | SWT.NONE);
+		textTermName.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		groupTermName.setLayout(new FillLayout());
-
-		final Text textTermName = new Text(groupTermName, SWT.MULTI | SWT.BORDER | SWT.NONE);
-
+		// Enable the focus select all function
 		textTermName.addFocusListener(new FocusAdapter() {
-
 			@Override
-			public void focusLost(FocusEvent e) {
-
-				User user = User.getInstance();
-
-				if (term == null || !user.canEdit(term.getCatalogue()))
+			public void focusLost(FocusEvent arg0) {
+				if (term == null || !User.getInstance().canEdit(term.getCatalogue()))
 					return;
 
 				if ((textTermName.getText() == null) || (textTermName.getText().isEmpty())) {
@@ -622,21 +593,17 @@ public class FrameTermFields {
 
 				TermDAO termDao = new TermDAO(currentCat);
 
-				// if the text already exists in the database it cannot
-				// be used
+				// if new name already exists in db it cannot be used
 				if (!termDao.isTermNameUnique(term.getCode(), textTermName.getText(), true)) {
-
+					// show error dialog
 					GlobalUtil.showErrorDialog(parent.getShell(),
 							CBMessages.getString("TermProperties.InputErrorTitle"),
 							CBMessages.getString("TermProperties.InputErrorMessage2"));
-
+					// set the original term name
 					textTermName.setText(term.getName());
-
 					return;
 
 				}
-
-				// here the new name is acceptable
 
 				// set the new name
 				term.setName(textTermName.getText());
@@ -652,28 +619,10 @@ public class FrameTermFields {
 
 				// call the listener
 				callUpdateListener(term);
-			}
-		});
 
-		// Enable the focus select all function
-		textTermName.addFocusListener(new FocusListener() {
+				// update the fields
+				setTerm(term);
 
-			@Override
-			public void focusLost(FocusEvent arg0) {
-				parent.getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						textTermName.clearSelection();
-					}
-				});
-			}
-
-			@Override
-			public void focusGained(FocusEvent arg0) {
-				parent.getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						textTermName.selectAll();
-					}
-				});
 			}
 		});
 
@@ -692,39 +641,61 @@ public class FrameTermFields {
 	}
 
 	/**
-	 * Add the full term code description text box into the parent composite
+	 * Add the extended term interpretation field into the parent composite
 	 * 
 	 * @author shahaal
 	 * @param parent
 	 * @return
 	 */
-	private Text addFullCodeDescTextBox(Composite parent) {
+	private Text addTermExtendedName(final Composite parent) {
 
-		// create a new group for term code
-		Group groupShortName = new Group(parent, SWT.NONE);
-		groupShortName.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		groupShortName.setLayout(new FillLayout());
-
-		// set its name and layout
-		groupShortName.setText(CBMessages.getString("TermProperties.TermFullCodeDesc"));
-
-		groupShortName.setLayout(new FillLayout());
+		// create the component group
+		Group group = createGroup(parent, 2, termExtNameTitle, false);
 
 		// create the text box
-		final Text termFullCodeDesc = new Text(groupShortName, SWT.MULTI | SWT.BORDER | SWT.NONE);
+		final Text termExtNameText = new Text(group, SWT.MULTI | SWT.BORDER | SWT.READ_ONLY);
+		termExtNameText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		termFullCodeDesc.addFocusListener(new FocusAdapter() {
+		// Enable the ctrl-a key combination
+		termExtNameText.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.stateMask == SWT.CTRL && e.keyCode == 'a') {
+					termExtNameText.selectAll();
+					e.doit = false;
+				}
+			}
+		});
+
+		return termExtNameText;
+	}
+
+	/**
+	 * Add the display as field into the parent composite
+	 * 
+	 * @author shahaal
+	 * @param parent
+	 * @return
+	 */
+	private Text addTermDisplayAs(final Composite parent) {
+
+		// create the component group
+		Group group = createGroup(parent, 2, termDisplayAsTitle, false);
+
+		// create the text box
+		final Text termDisplayAsText = new Text(group, SWT.MULTI | SWT.BORDER | SWT.READ_ONLY);
+		termDisplayAsText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+		termDisplayAsText.addFocusListener(new FocusAdapter() {
 
 			@Override
 			public void focusLost(FocusEvent e) {
 
-				User user = User.getInstance();
-
-				if (term == null || !user.canEdit(term.getCatalogue()))
+				if (term == null || !User.getInstance().canEdit(term.getCatalogue()))
 					return;
 
 				// return if the name does not change at all
-				if (termFullCodeDesc.getText().equals(term.getInterpretedCode(true)))
+				if (termDisplayAsText.getText().equals(term.getShortName(false)))
 					return;
 
 				// if the text already exists in the database it cannot
@@ -732,10 +703,8 @@ public class FrameTermFields {
 				// get the current catalogue
 				TermDAO termDao = new TermDAO(term.getCatalogue());
 
-				// here the new short name is acceptable
-
-				// set the code description (including implicit facets)
-				term.setFullCodeDescription(termFullCodeDesc.getText());
+				// set the new name
+				term.setDisplayAs(termDisplayAsText.getText());
 
 				// update the term in the DB
 				termDao.update(term);
@@ -745,7 +714,7 @@ public class FrameTermFields {
 			}
 		});
 
-		return termFullCodeDesc;
+		return termDisplayAsText;
 	}
 
 	/**
@@ -756,18 +725,15 @@ public class FrameTermFields {
 	 */
 	private ScopenotesWithLinks addTermScopenotes(final Composite parent) {
 
-		Group groupScopeNotes = new Group(parent, SWT.NONE);
-		groupScopeNotes.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		groupScopeNotes.setLayout(new GridLayout(1, false));
-
-		// set group title
-		groupScopeNotes.setText(CBMessages.getString("TermProperties.ScopenotesTitle"));
+		// create the component group
+		Group group = createGroup(parent, 2, scopenoteTitle, true);
 
 		// create scopenotes and links
-		final ScopenotesWithLinks scopenotesLink = new ScopenotesWithLinks(groupScopeNotes);
+		final ScopenotesWithLinks scopenotesLink = new ScopenotesWithLinks(group);
 
 		// add scopenotes into the UI
 		final Text textScopenotes = scopenotesLink.getTextScopenotes();
+		textScopenotes.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		// When the focus on the textScopenotes is lost this function is called
 		textScopenotes.addFocusListener(new FocusAdapter() {
@@ -813,9 +779,120 @@ public class FrameTermFields {
 	 * @param parent
 	 * @return
 	 */
-	private TableImplicitAttributes addTermAttributes(Composite parent) {
+	private TableImplicitAttributes addTermAttributes(final Composite parent) {
+		// create the component group
+		Group group = createGroup(parent, 2, implAttrTitle, true);
 
-		final TableImplicitAttributes termAttrTable = new TableImplicitAttributes(parent);
+		final TableImplicitAttributes termAttrTable = new TableImplicitAttributes(group);
 		return termAttrTable;
+	}
+
+	/**
+	 * create group ui component
+	 * 
+	 * @author shahaal
+	 * @param parent
+	 * @param span
+	 * @param title
+	 * @return
+	 */
+	private Group createGroup(final Composite parent, int span, String title, boolean extVertically) {
+		// create the group with style parameters
+		Group group = new Group(parent, SWT.NONE);
+		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, extVertically);
+		gridData.horizontalSpan = span;
+		group.setLayoutData(gridData);
+		group.setLayout(new GridLayout(1, false));
+		// set group title
+		group.setText(title);
+
+		return group;
+	}
+
+	public void buildWidgets(ArrayList<String> properties) {
+		
+		boolean includeAll = properties.isEmpty();
+
+		// add the term type
+		if (includeAll || properties.contains("type"))
+			termType = addTermType(parent);
+
+		// add the detail level
+		if (includeAll || properties.contains("detail"))
+			detailLevel = addDetailLevel(parent);
+
+		// add term code
+		if (includeAll || properties.contains("code"))
+			termCode = addTermCode(parent, termCodeTitle);
+
+		// add term code with implicit facets
+		if (includeAll || properties.contains("extcode"))
+			termExtCode = addTermCode(parent, termExtCodeTitle);
+
+		// add term name
+		if (includeAll || properties.contains("name"))
+			termName = addTermName(parent);
+
+		// add term extended name
+		if (includeAll || properties.contains("extname"))
+			termExtName = addTermExtendedName(parent);
+
+		// add term display as (old short name)
+		if (includeAll || properties.contains("shortname"))
+			termDisplayAs = addTermDisplayAs(parent);
+
+		// add term scope notes and links
+		if (includeAll || properties.contains("scopenotes"))
+			scopenotes = addTermScopenotes(parent);
+
+		// add term attributes table
+		if (includeAll || properties.contains("attributes"))
+			attributes = addTermAttributes(parent);
+
+		parent.layout(true, true);
+	}
+
+	/**
+	 * rebuild the properties to be added to the ui based on the catalogue type
+	 * 
+	 * @author shahaal
+	 * @return
+	 */
+	public ArrayList<String> rebuildProperties() {
+		// add only specific attributes based on current catalogue
+		ArrayList<String> properties = new ArrayList<>();
+		// add default widgets
+		properties.add("type");
+		properties.add("detail");
+		properties.add("code");
+		properties.add("name");
+		properties.add("scopenotes");
+		properties.add("attributes");
+
+		// if no catalogue is opened return default properties
+		if (catalogue == null)
+			return properties;
+
+		// if mtx add ext name and ext code
+		if (catalogue.isMTXCatalogue()) {
+			properties.add("extcode");
+			properties.add("extname");
+		} else {
+			// otherwise add only display as
+			properties.add("shortname");
+		}
+
+		return properties;
+	}
+
+	/**
+	 * dispose all children of given composite
+	 * 
+	 * @author shahaal
+	 * @param comp
+	 */
+	public void disposePropChildren() {
+		for (Control control : parent.getChildren())
+			control.dispose();
 	}
 }

@@ -11,12 +11,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.StringTokenizer;
-
 import javax.xml.soap.SOAPException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import catalogue_browser_dao.AttributeDAO;
 import catalogue_browser_dao.CatalogueDAO;
 import catalogue_browser_dao.DatabaseManager;
@@ -240,7 +238,6 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 
 		// thread to load small data
 		Thread baseThread = new Thread(new Runnable() {
-
 			@Override
 			public void run() {
 				refreshHierarchies();
@@ -253,7 +250,6 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 
 		// Thread to load terms
 		Thread termThread = new Thread(new Runnable() {
-
 			@Override
 			public void run() {
 				refreshTerms();
@@ -276,7 +272,6 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 
 		// refresh applicabilities and term attributes in parallel
 		Thread applThread = new Thread(new Runnable() {
-
 			@Override
 			public void run() {
 				refreshApplicabities();
@@ -284,7 +279,6 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		});
 
 		Thread taThread = new Thread(new Runnable() {
-
 			@Override
 			public void run() {
 				refreshTermAttributes();
@@ -552,6 +546,10 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 */
 	public Hierarchy getMasterHierarchy() {
 
+		// return if hierarchies is null
+		if(hierarchies==null || hierarchies.isEmpty())
+			return null;
+		
 		// get the master hierarchy from the hierarchies list
 		for (Hierarchy hierarchy : hierarchies) {
 
@@ -648,7 +646,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	public Attribute getAttributeByCode(String code) {
 
 		Attribute attr = null;
-		
+
 		for (Attribute a : attributes) {
 			if (a.getCode().equals(code))
 				attr = a;
@@ -1037,7 +1035,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 
 		// set terms string values
 		child.setName(termExtendedName);
-		child.setFullCodeDescription("");
+		child.setDisplayAs("");
 		child.setScopenotes(scopeNotes);
 
 		// set term level of detail E stands for ExtendedTerm
@@ -2024,7 +2022,10 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * @return
 	 */
 	public boolean isMTXCatalogue() {
-		return getCode().equals("MTX") || (isLocal() && getCode().contains("MTX_"));
+		Hierarchy h = getDefaultHierarchy();
+		boolean hasReporting = h!=null && h.toString().contains("Reporting hierarchy");
+		boolean containsMTX = getCode().equals("MTX") || (isLocal() && getCode().contains("MTX_"));
+		return  containsMTX || hasReporting;
 	}
 
 	/**

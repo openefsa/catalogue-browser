@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -13,14 +12,12 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
-
 import catalogue.Catalogue;
 import catalogue_object.Attribute;
 import catalogue_object.Hierarchy;
@@ -29,9 +26,10 @@ import catalogue_object.TermAttribute;
 import global_manager.GlobalManager;
 import i18n_messages.CBMessages;
 import ui_describe.FormSelectTerm;
+import utilities.GlobalUtil;
 
 /**
- * The third tab of the main page of the foodex browser. It includes the
+ * The second tab of the main page of the foodex browser. It includes the
  * implicit facets tree. This tab is also used into the describe window to add
  * new facets
  * 
@@ -41,21 +39,20 @@ import ui_describe.FormSelectTerm;
 public class FrameTermImplicitFacets implements Observer {
 
 	private Composite parent;
-	private Term term; // the considered term
-	private TreeImplicitFacets implicitFacets; // tree which shows the facet of a term
-	private boolean visible; // the tab is shown to the user?
+	private Term term;
+	private TreeImplicitFacets implicitFacets;
+	private boolean visible;
 
 	// the type of facets (implicit/explicit) which are added with an Add operation,
 	// we use this to create explicit facets into the describe and implicit facets
 	// in the editing mode instead
 	private FacetType newFacetType;
-
-	private Listener addDescriptorListener; // called each time that a facet is added (if multiple, it is called
-											// multiple times)
-
-	private Listener removeDescriptorListener; // called each time that a facet is removed
-	private Listener updateListener; // called at the end of an adding operation, useful if we have to do something
-										// only once in multiple selection cases
+	// called each time a facet is added (if multiple, it is called multiple times)
+	private Listener addDescriptorListener;
+	// called each time that a facet is removed
+	private Listener removeDescriptorListener;
+	// called at the end of an adding operation, useful if we have to do something
+	private Listener updateListener;
 
 	private Attribute facetCategory;
 
@@ -91,9 +88,8 @@ public class FrameTermImplicitFacets implements Observer {
 	 * @param term
 	 */
 	public void setTerm(Term term) {
-
 		this.term = term;
-		implicitFacets.getTreeViewer().setInput(term);
+		getTreeViewer().setInput(term);
 		refresh();
 	}
 
@@ -110,18 +106,20 @@ public class FrameTermImplicitFacets implements Observer {
 	 * Add the contextual menu to the tree
 	 */
 	public void addMenu() {
-		addImplicitFacetsMenu(parent.getShell(), implicitFacets.getTreeViewer());
+		addFacetCategoryMenu(parent);
 	}
 
 	/**
 	 * Remove the contextual menu from the tree viewer
 	 */
 	public void removeMenu() {
-
-		if (implicitFacets.getTreeViewer().getTree().getMenu() != null)
-			implicitFacets.getTreeViewer().getTree().getMenu().dispose();
-
-		implicitFacets.getTreeViewer().getTree().setMenu(null);
+		// get the tree
+		Tree tree = getTree();
+		// if menu is not null than dispose
+		if (tree.getMenu() != null)
+			tree.getMenu().dispose();
+		// reset menu
+		tree.setMenu(null);
 	}
 
 	/**
@@ -130,15 +128,12 @@ public class FrameTermImplicitFacets implements Observer {
 	 * @author shahaal
 	 */
 	public void refresh() {
-
-		// set redraw to false
-		implicitFacets.getTreeViewer().getControl().setRedraw(false);
-		// make ui changes
-		implicitFacets.getTreeViewer().refresh();
-		implicitFacets.getTreeViewer().expandAll();
-
-		implicitFacets.getTreeViewer().getControl().setRedraw(true);
-
+		// get the tree
+		TreeViewer tree = getTreeViewer();
+		// refresh tree
+		tree.refresh();
+		// expand all nodes
+		tree.expandAll();
 	}
 
 	/**
@@ -189,7 +184,6 @@ public class FrameTermImplicitFacets implements Observer {
 
 		this.parent = parent;
 		this.newFacetType = newFacetType;
-
 		// add the implicit facets list in the tab
 		implicitFacets = new TreeImplicitFacets(parent, catalogue);
 
@@ -203,229 +197,173 @@ public class FrameTermImplicitFacets implements Observer {
 	 * @param implicitFacets
 	 * @return
 	 */
-	private Menu addImplicitFacetsMenu(final Shell parent, final TreeViewer implicitFacets) {
+	private Menu addFacetCategoryMenu(final Composite parent) {
 
-		// create the menu
-		Menu implicitFacetOperationMenu = new Menu(parent, SWT.POP_UP);
+		// create the category menu
+		Menu categoryMenu = new Menu(parent.getShell(), SWT.POP_UP);
+		// initialize the add inner item
+		final MenuItem addItem = new MenuItem(categoryMenu, SWT.PUSH);
+		addItem.setImage(new Image(parent.getDisplay(), ClassLoader.getSystemResourceAsStream("add-icon.png")));
+		addItem.setText(CBMessages.getString("TreeImplicitFacets.AddCommand"));
+		// initialize the remove inner item
+		final MenuItem removeItem = new MenuItem(categoryMenu, SWT.PUSH);
+		removeItem.setImage(new Image(parent.getDisplay(), ClassLoader.getSystemResourceAsStream("remove-icon.png")));
+		removeItem.setText(CBMessages.getString("TreeImplicitFacets.RemoveCommand"));
 
-		final MenuItem addImplicitFacet = new MenuItem(implicitFacetOperationMenu, SWT.PUSH);
-
-		addImplicitFacet
-				.setImage(new Image(Display.getCurrent(), ClassLoader.getSystemResourceAsStream("add-icon.png")));
-		addImplicitFacet.setText(CBMessages.getString("TreeImplicitFacets.AddCommand"));
-
-		// remove menu item
-		final MenuItem removeImplicitFacet = new MenuItem(implicitFacetOperationMenu, SWT.PUSH);
-
-		removeImplicitFacet
-				.setImage(new Image(Display.getCurrent(), ClassLoader.getSystemResourceAsStream("remove-icon.png")));
-		removeImplicitFacet.setText(CBMessages.getString("TreeImplicitFacets.RemoveCommand"));
-
+		// get the tree viewer
+		TreeViewer tree = getTreeViewer();
 		// set the menu for the tree
-		implicitFacets.getTree().setMenu(implicitFacetOperationMenu);
+		tree.getTree().setMenu(categoryMenu);
 
 		// set the listener
-		implicitFacetOperationMenu.addListener(SWT.Show, new Listener() {
-
+		categoryMenu.addListener(SWT.Show, new Listener() {
 			public void handleEvent(Event event) {
-				// return if no term selected or empty selection
-				if (term == null || implicitFacets.getSelection().isEmpty())
-					return;
-
-				Object selectedElem = ((IStructuredSelection) implicitFacets.getSelection()).getFirstElement();
-
-				boolean[] enables = isAddableRemovable(term, selectedElem);
-
-				addImplicitFacet.setEnabled(enables[0]);
-				removeImplicitFacet.setEnabled(enables[1]);
-			}
-		});
-
-		// double click on the term for directly opening add term window
-		implicitFacets.addDoubleClickListener(new IDoubleClickListener() {
-
-			@Override
-			public void doubleClick(DoubleClickEvent arg0) {
-
-				Object selectedElem = ((IStructuredSelection) implicitFacets.getSelection()).getFirstElement();
-
-				boolean[] enables = isAddableRemovable(term, selectedElem);
-
-				// if it is possible to add terms
-				if (enables[0])
-					addTermsToSelection(parent, implicitFacets);
+				// get the flags for the selected term
+				boolean[] flags = checkSelection(tree.getSelection());
+				// set the menu items based on flags
+				addItem.setEnabled(flags[0]);
+				removeItem.setEnabled(flags[1]);
 			}
 		});
 
 		// listener called when click on add menu item
-		addImplicitFacet.addSelectionListener(new SelectionAdapter() {
+		addItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				addTermsToSelection(parent, implicitFacets);
+				// set selected term to the new window
+				addToSelectedCategory(parent.getShell(), tree.getSelection());
 			}
+		});
 
+		// add the double click listener on the tree treated as add button
+		implicitFacets.addDoubleClickListener(new Listener() {
+			@Override
+			public void handleEvent(Event e) {
+				// if in edit mode enable double click
+				if (categoryMenu != null)
+					addToSelectedCategory(parent.getShell(), tree.getSelection());
+			}
 		});
 
 		// add the remove option
-		removeImplicitFacet.addSelectionListener(new SelectionAdapter() {
+		removeItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-
-				// return if empty selection
-				if (implicitFacets.getSelection().isEmpty())
-					return;
-
-				// get the selected tree item from the implicit facet tree
-				// ( we can have only selected a descriptor tree item, since remove is disabled
-				// for
-				// facet categories )
-				DescriptorTreeItem treeItem = (DescriptorTreeItem) ((IStructuredSelection) (implicitFacets
-						.getSelection())).getFirstElement();
-
-				// remove the descriptor contained in the selected tree node from the implicit
-				// facets
-				term.removeImplicitFacet(treeItem.getDescriptor());
-
-				// update table input
-				setTerm(term);
-
-				// call the remove listener if it was set
-				if (removeDescriptorListener != null) {
-
-					// set as event data the removed attribute
-					Event event = new Event();
-					event.data = treeItem.getDescriptor();
-
-					removeDescriptorListener.handleEvent(event);
-				}
-
-				// call the update listener if remove process if finished
-				if (updateListener != null) {
-					updateListener.handleEvent(new Event());
-				}
-
+				removeFromSelectedCategory(parent.getShell(), tree.getSelection());
 			}
 		});
 
-		return implicitFacetOperationMenu;
+		return categoryMenu;
 	}
 
 	/**
-	 * Check if we can add or remove a term from the describe list.
+	 * method used for checking if it is possible to add or remove term to the
+	 * selection
 	 * 
-	 * @return boolean array, first => can we add one term?, second => can we remove
-	 *         one term?, third => can we add more than one term?
+	 * @param sel
+	 * @return
+	 */
+	protected boolean[] checkSelection(ISelection sel) {
+		// return if no term selected or empty selection
+		if (term == null || sel.isEmpty())
+			return null;
+		// get the array with flags (add, remove, multiple)
+		return isAddableRemovable(term, ((IStructuredSelection) sel).getFirstElement());
+	}
+
+	/**
+	 * Check if we can add or remove a term from the describe list
+	 * 
+	 * @param baseTerm
+	 * @param facetCategory
+	 * @return
 	 */
 	public boolean[] isAddableRemovable(Term baseTerm, Object facetCategory) {
 
-		boolean isAddable = false;
-		boolean isRemovable = false;
-		boolean isMultipleAddable = false;
+		// define the flag variables
+		boolean isAddable, isMultipleAddable, isRemovable = false;
 
+		// facet category cardinality
 		String cardinality = null;
 
-		// count the number of descriptors which are under the same facet category
+		// number of facets under the facet category
 		int descriptorsCount = -1;
 
-		// Here we count the number of descriptors related to the chosen category.
-		// If we actually have selected a facet category we can compute the real number
-		// of descriptors under that folder. If instead we have selected a facet
-		// descriptor we can only say that there is at least one descriptor in the
-		// selected facet category! (it is sufficient for the addable/removable check)
+		/**
+		 * Count the number of descriptors related to the category. If facet category is
+		 * selected count the real number of facets. If facet selected than there is at
+		 * least one item in facet category (sufficient for add/remove check).
+		 */
 
-		// if we selected a facet category ( i.e. yellow folder )
+		// if facet category is selected
 		if (facetCategory instanceof Attribute) {
+			// cast the facet category
+			Attribute fc = (Attribute) facetCategory;
 			// get the cardinality
-			cardinality = ((Attribute) facetCategory).getSingleOrRepeatable();
-
+			cardinality = fc.getSingleOrRepeatable();
 			// count the descriptors
-			descriptorsCount = baseTerm.getDescriptorsByCategory((Attribute) facetCategory, true).size();
-
+			descriptorsCount = baseTerm.getDescriptorsByCategory(fc, true).size();
 		} else {
-			// if we selected a facet descriptor we get the cardinality from the attribute
-			// contained into the
-			// descriptor, which is the facet category
-			cardinality = ((DescriptorTreeItem) facetCategory).getDescriptor().getFacetCategory().getSingleOrRepeatable();
-			
-			//cardinality = "single";
-			
-			// we have at least one descriptor
+			// if facet selected get the cardinality from its facet category
+			DescriptorTreeItem fc = (DescriptorTreeItem) facetCategory;
+			// get the cardinality
+			cardinality = fc.getDescriptor().getFacetCategory().getSingleOrRepeatable();
+			// we have at least one facet (since facet has been selected)
 			descriptorsCount = 1;
 
-			// allow removing descriptors only if we selected a descriptor
-			// We cannot remove a facet category!
-			// Moreover we can remove a facet only if it is not inherited!
-			// To remove an inherited facet we have to go back to the original parent which
-			// owns that facet and remove it
-			isRemovable = !((DescriptorTreeItem) facetCategory).isInherited();
-			//
+			/**
+			 * Allow removing only if a facet is selected (not facet category). In addition
+			 * only non inherited facets can be removed (to remove an inherited facet we
+			 * have to go back to the original parent which owns that facet and remove it).
+			 */
+			isRemovable = !fc.isInherited();
 		}
 
-		// get the attribute cardinality and evaluate the addability/removability
-		switch (cardinality) {
-
-		// if single cardinality ( zero or one descriptor allowed )
-		case Attribute.cardinalitySingle:
-			// allow adding descriptors only if others are not already present
-			if (descriptorsCount == 0)
-				isAddable = true;
-			break;
-
-		// if repeatable cardinality ( zero or more descriptors )
-		case Attribute.cardinalityRepeatable:
-			// allow adding descriptors without limitations
-			isAddable = true;
-			isMultipleAddable = true;
-			break;
-
-		default:
-			isAddable = false;
-			isRemovable = false;
-			isMultipleAddable = false;
-			break;
-		}
+		// if single cardinality (0 or 1 descriptor allowed) or repeatable
+		isAddable = ((cardinality.equals(Attribute.cardinalitySingle) && descriptorsCount == 0)
+				|| cardinality.equals(Attribute.cardinalityRepeatable));
+		// allow adding descriptors without limitations
+		isMultipleAddable = cardinality.equals(Attribute.cardinalityRepeatable);
 
 		// Return embedded results
-		boolean results[] = { isAddable, isRemovable, isMultipleAddable };
-
-		return (results);
-	}
-
-	@Override
-	public void update(Observable o, Object arg) {
-		// forward update to the table
-		implicitFacets.update(o, arg);
+		return new boolean[] { isAddable, isRemovable, isMultipleAddable };
 	}
 
 	/**
-	 * method used to create the window which show all the possible terms which
-	 * could be added to the group selected
+	 * allow user to add facets to the selected category
 	 * 
-	 * @author shahaal
 	 * @param parent
-	 * @param implicitFacets
+	 * @param sel
 	 */
-	public void addTermsToSelection(final Shell parent, final TreeViewer implicitFacets) {
+	public void addToSelectedCategory(Shell parent, final ISelection sel) {
 
 		// return if empty selection
-		if (implicitFacets.getSelection().isEmpty())
+		if (sel.isEmpty())
 			return;
 
 		// get the selected element ( facet category or descriptor )
-		Object selectedElem = ((IStructuredSelection) (implicitFacets.getSelection())).getFirstElement();
+		Object selectedElem = ((IStructuredSelection) (sel)).getFirstElement();
 
-		if (selectedElem instanceof Attribute) // if we have selected the facet category simply cast it
+		if (selectedElem instanceof Attribute) 
+			// if we have selected the facet category simply cast it
 			facetCategory = (Attribute) selectedElem;
 		else // if we have selected a descriptor get the category from it
 			facetCategory = ((DescriptorTreeItem) selectedElem).getDescriptor().getFacetCategory();
-
-		// open a form to select descriptors. In particular we enable the multiple
-		// selection only if the facet category is repeatable (cardinality 0 or + )
-
-		parent.setEnabled(false);
-
+		
+		// return if non MTX catalogue or non editable cat
+		Catalogue cat = facetCategory.getCatalogue();
+		if (!cat.isMTXCatalogue()) {
+			GlobalUtil.showDialog(parent, CBMessages.getString("TableFacetApplicability.AddFacetWarningTitle"),
+					CBMessages.getString("TableFacetApplicability.AddFacetWarningMessage"), SWT.ICON_WARNING);
+			return;
+		}
+		
+		/**
+		 * open a form to select descriptors. In particular we enable the multiple
+		 * selection only if the facet category is repeatable (cardinality 0 or + )
+		 */
 		FormSelectTerm sf = new FormSelectTerm(parent, CBMessages.getString("Browser.SelectTermWindowTitle"),
-				term.getCatalogue(), facetCategory.isRepeatable(), false);
+				term.getCatalogue(), facetCategory.isRepeatable());
 
 		// set the root term for the form in order to show only
 		// the facet related to the facet category
@@ -437,6 +375,7 @@ public class FrameTermImplicitFacets implements Observer {
 			// if we have the inherited implicit facet
 			// (it can be only one, cardinality is single)
 			ArrayList<DescriptorTreeItem> inh = term.getInheritedImplicitFacets(facetCategory);
+			
 			if (!inh.isEmpty()) {
 
 				// then we can only specify better the inherited
@@ -480,23 +419,55 @@ public class FrameTermImplicitFacets implements Observer {
 
 			// call the add listener if it was set
 			if (addDescriptorListener != null) {
-
 				// set as event data the new attribute
 				Event event = new Event();
 				event.data = attr;
-
 				addDescriptorListener.handleEvent(event);
 			}
-
 		}
 
 		// call the update listener if add process if finished
+		if (updateListener != null)
+			updateListener.handleEvent(new Event());
+
+	}
+
+	/**
+	 * allow user to remove explicit facets to the selected category
+	 * 
+	 * @param parent
+	 * @param sel
+	 */
+	protected void removeFromSelectedCategory(Shell parent2, ISelection selectedElem) {
+
+		// return if empty selection
+		if (selectedElem.isEmpty())
+			return;
+		// get the selected tree item from the implicit facet tree
+		// (we can have only remove a descriptor tree item not a facet categories )
+		DescriptorTreeItem treeItem = (DescriptorTreeItem) ((IStructuredSelection) selectedElem).getFirstElement();
+		// remove the descriptor in the selected tree node
+		term.removeImplicitFacet(treeItem.getDescriptor());
+		// update table input
+		setTerm(term);
+
+		// call the remove listener if it was set
+		if (removeDescriptorListener != null) {
+			// set as event data the removed attribute
+			Event event = new Event();
+			event.data = treeItem.getDescriptor();
+			removeDescriptorListener.handleEvent(event);
+		}
+
+		// call the update listener if remove process if finished
 		if (updateListener != null) {
 			updateListener.handleEvent(new Event());
 		}
-		
-		if (!parent.isDisposed())
-			parent.setEnabled(true);
+	}
 
+	@Override
+	public void update(Observable o, Object arg) {
+		// forward update to the table
+		implicitFacets.update(o, arg);
 	}
 }

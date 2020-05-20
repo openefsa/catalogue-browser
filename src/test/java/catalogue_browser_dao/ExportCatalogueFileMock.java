@@ -5,6 +5,6 @@ import java.io.File;
 public class ExportCatalogueFileMock {
 
 	public File exportLastInternalVersion() {
-		return new File(getClass().getResource("resources/lastInternalVersion.xml").getFile());
+		return new File(ExportCatalogueFileMock.class.getClass().getResource("resources/lastInternalVersion.xml").getFile());
 	}
 }

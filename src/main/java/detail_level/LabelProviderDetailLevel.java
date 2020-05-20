@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.Display;
 public class LabelProviderDetailLevel implements ILabelProvider {
 
 	private static final Logger LOGGER = LogManager.getLogger(LabelProviderDetailLevel.class);
-	
+
 	@Override
 	public String getText(Object attr) {
 
@@ -21,10 +21,12 @@ public class LabelProviderDetailLevel implements ILabelProvider {
 	}
 
 	@Override
-	public void addListener(ILabelProviderListener arg0) {}
+	public void addListener(ILabelProviderListener arg0) {
+	}
 
 	@Override
-	public void dispose() {}
+	public void dispose() {
+	}
 
 	@Override
 	public boolean isLabelProperty(Object arg0, String arg1) {
@@ -32,21 +34,23 @@ public class LabelProviderDetailLevel implements ILabelProvider {
 	}
 
 	@Override
-	public void removeListener(ILabelProviderListener arg0) {}
+	public void removeListener(ILabelProviderListener arg0) {
+	}
 
 	@Override
 	public Image getImage(Object attr) {
-		
+
 		DetailLevelGraphics detailLevel = (DetailLevelGraphics) attr;
 
 		// try to get the image from the main folder
 		Image image = null;
 		try {
-			image = new Image( Display.getCurrent() , this.getClass().getClassLoader().getResourceAsStream(detailLevel.getImageName() ) );
-		} catch ( Exception e ) {
-			LOGGER.error( "Cannot find icons", e );
+			image = new Image(Display.getCurrent(),
+					LabelProviderDetailLevel.class.getClassLoader().getResourceAsStream(detailLevel.getImageName()));
+		} catch (Exception e) {
+			LOGGER.error("Cannot find icons", e);
 		}
-		
+
 		return image;
 	}
 }

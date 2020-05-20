@@ -42,7 +42,7 @@ public class FormBrowserLicence {
 
 		Label label = new Label(startupWindow, SWT.CENTER);
 		Image image = new Image(startupWindow.getDisplay(),
-				getClass().getClassLoader().getResourceAsStream("Catalogue-browser.gif"));
+				FormBrowserLicence.class.getClassLoader().getResourceAsStream("Catalogue-browser.gif"));
 		label.setImage(image);
 
 		startupWindow.setSize(image.getBounds().width + 15, 500);
@@ -76,7 +76,7 @@ public class FormBrowserLicence {
 		startupWindow.open();
 
 	}
-	
+
 	/**
 	 * Read the licence text file to display it
 	 * 

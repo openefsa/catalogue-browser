@@ -1,16 +1,12 @@
---- New Features: 
 
-+ This version contains mainly bugs fixed
-	
---- Bugs fixed and other improvements:
+-------------- What's new in this version:
++ Added new exceptions to the BR data file
++ BR exceptions removed from business rules
++ Added flag in options for not restoring last selected term
 
-	+ Fixed bug in which was not possible to add facets to specific facet groups
-+ Fixed Catalogue title not shown properly in small screens
-+ Fixed business rules warnings not shown properly because of the presence of delimiters
-+ Changed TEXT widget to LINK one in order to allow the links in the changelog
-+ New folder organisation for resources, tests and licenses
-+ New source code structure following Maven standard
-	
---- Changes in the previous versions:
+-------------- Bugs fixed and other improvements:
++ Optimisations to the Term properties tab
++ Optimisations to the Options panel
 
+-------------- Changes in the previous versions:
 + Check the official <a href="Latest-Changes">wiki page</a> for further information

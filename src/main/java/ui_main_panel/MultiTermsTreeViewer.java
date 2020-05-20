@@ -27,7 +27,6 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
@@ -341,27 +340,20 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 		// if(flag)
 		// tree.getControl().setFocus();
 
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				try {
-					// don't refresh while expanding (better performance)
-					tree.getControl().setRedraw(false);
+		try {
+			// don't refresh while expanding (better performance)
+			tree.getControl().setRedraw(false);
 
-					// expand the tree until the term level and load ancestors
-					// tree.expandToLevel(term, level);
+			// expand the tree until the term level and load ancestors
+			tree.expandToLevel(term, level);
+			
+			// select the term
+			tree.setSelection(new StructuredSelection(term));
 
-					tree.setExpandedElements(new Object[] { term });
-					
-					// select the term
-					tree.setSelection(new StructuredSelection(term));
-
-				} finally {
-					// refresh after expanding
-					tree.getControl().setRedraw(true);
-				}
-
-			}
-		});
+		} finally {
+			// refresh after expanding
+			tree.getControl().setRedraw(true);
+		}
 
 	}
 
@@ -371,7 +363,6 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 	 * @param level
 	 */
 	public void expandSelectedTerms(int level) {
-
 		for (Nameable term : getSelectedTerms())
 			selectTerm(term, level);
 	}
@@ -784,7 +775,6 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 			int i1 = 0;
 			String s1 = "";
 			try {
-				// System.out.println("getting the sorting code of "+t1.getName());
 				i1 = t1.getOrder(hierarchy);
 			} catch (Exception e) {
 				try {

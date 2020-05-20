@@ -243,6 +243,7 @@ public abstract class CatalogueObjectEditor<T extends SortableCatalogueObject> {
 
 		// if the remove button is pressed
 		removeBtn.addSelectionListener(new SelectionAdapter() {
+			@SuppressWarnings("unchecked")
 			@Override
 			public void widgetSelected(SelectionEvent event) {
 
@@ -295,6 +296,7 @@ public abstract class CatalogueObjectEditor<T extends SortableCatalogueObject> {
 			final boolean moveUp) {
 
 		button.addSelectionListener(new SelectionAdapter() {
+			@SuppressWarnings("unchecked")
 			@Override
 			public void widgetSelected(SelectionEvent event) {
 

@@ -7,7 +7,6 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
-import catalogue.Catalogue;
 import catalogue_object.Attribute;
 import catalogue_object.Hierarchy;
 import catalogue_object.Nameable;
@@ -18,7 +17,7 @@ public class LabelProviderImplicitFacets implements ILabelProvider {
 
 	private static final Logger LOGGER = LogManager.getLogger(LabelProviderImplicitFacets.class);
 
-	LabelProviderTerm _termLabelProvider;
+	LabelProviderTerm termLabelProvider;
 	Image facetCategoryImage = null;
 
 	/**
@@ -27,16 +26,16 @@ public class LabelProviderImplicitFacets implements ILabelProvider {
 	 * @param hierarchy
 	 */
 	public void setCurrentHierarchy(Hierarchy hierarchy) {
-		_termLabelProvider.setCurrentHierarchy(hierarchy);
+		termLabelProvider.setCurrentHierarchy(hierarchy);
 	}
 
-	public LabelProviderImplicitFacets(Catalogue catalogue) {
+	public LabelProviderImplicitFacets() {
 
-		_termLabelProvider = new LabelProviderTerm();
+		termLabelProvider = new LabelProviderTerm();
 
 		try {
 			facetCategoryImage = new Image(Display.getCurrent(),
-					this.getClass().getClassLoader().getResourceAsStream("FacetFolder.ico"));
+					LabelProviderImplicitFacets.class.getClassLoader().getResourceAsStream("FacetFolder.ico"));
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.error("Cannot get image", e);
@@ -69,7 +68,7 @@ public class LabelProviderImplicitFacets implements ILabelProvider {
 			if (arg0 instanceof DescriptorTreeItem) {
 				DescriptorTreeItem np = (DescriptorTreeItem) arg0;
 				Nameable t = np.getTerm();
-				return _termLabelProvider.getImage(t);
+				return termLabelProvider.getImage(t);
 			}
 
 			// for facet category we use the facet folder image
@@ -94,7 +93,7 @@ public class LabelProviderImplicitFacets implements ILabelProvider {
 
 				if (term != null) {
 					// return the term label
-					return _termLabelProvider.getText(term);
+					return termLabelProvider.getText(term);
 				} else
 					return CBMessages.getString("LabelProviderImplicitFacet.ErrorName1");
 
