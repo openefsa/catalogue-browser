@@ -1293,8 +1293,7 @@ public abstract class TermRules {
 
 			// Close the connection
 			bufferedReader.close();
-			for(WarningMessage wm : warningMessages)
-				System.err.println(wm.getId() + ", " + wm.getMessage());
+			
 			return (warningMessages);
 
 		} catch (Exception e) {
