@@ -1197,9 +1197,11 @@ public abstract class TermRules {
 	 */
 	protected ArrayList<WarningMessage> loadWarningMessages(String filename) {
 		try {
+
 			File file = new File(filename);
-			if (!file.exists())
+			if (!file.exists()) {
 				WarningMessage.createDefaultWarningMessagesFile(filename);
+			}
 
 			ArrayList<WarningMessage> warningMessages = new ArrayList<>();
 
@@ -1293,7 +1295,6 @@ public abstract class TermRules {
 
 			// Close the connection
 			bufferedReader.close();
-			
 			return (warningMessages);
 
 		} catch (Exception e) {
@@ -1490,7 +1491,7 @@ public abstract class TermRules {
 		// same as the eventID,
 		// we can do this thanks to the pre-sorting action made when the messages are
 		// loaded
-		
+
 		String message = warningMessages.get(event.ordinal()).getMessage();
 
 		// attach title
@@ -1611,7 +1612,10 @@ public abstract class TermRules {
 			if (facet == null) {
 				printWarning(WarningEvent.BR29, facetCode, false, stdOut);
 				return;
-			}else if (fromICT) {
+			}
+
+			// only if running from ict check if facet belongs to facet category
+			if (fromICT) {
 				// get the facet category
 				Attribute facetCategory = currentCat.getAttributeByCode(facetIndex);
 
