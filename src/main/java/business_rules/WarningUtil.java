@@ -90,7 +90,7 @@ public class WarningUtil extends TermRules {
 		resetWarningState();
 		// refresh the graphics ( font and colours )
 		refreshWarningTableGraphics();
-
+		
 		//////////////////// CHECKS
 		// execute all the warning checks
 		performWarningChecks(fullCode, false, false);
@@ -220,7 +220,7 @@ public class WarningUtil extends TermRules {
 			rgb = warnOptions.getTxtErrorRGB();
 			txtColor = new Color(device, rgb[0], rgb[1], rgb[2]);
 		}
-
+		
 		// update the text colour accordingly to the warning colour
 		warningsTable.getTable().getItems()[lastElementIndex].setForeground(txtColor);
 
@@ -248,9 +248,8 @@ public class WarningUtil extends TermRules {
 			WarningOptions options = new WarningOptions();
 
 			File file = new File(filename);
-			if (!file.exists()) {
+			if (!file.exists())
 				options.createDefaultWarnColorOptionsFile(filename);
-			}
 
 			// FileReader reads text files in the default encoding.
 			FileReader fileReader = new FileReader(filename);

@@ -1199,9 +1199,8 @@ public abstract class TermRules {
 		try {
 
 			File file = new File(filename);
-			if (!file.exists()) {
+			if (!file.exists())
 				WarningMessage.createDefaultWarningMessagesFile(filename);
-			}
 
 			ArrayList<WarningMessage> warningMessages = new ArrayList<>();
 

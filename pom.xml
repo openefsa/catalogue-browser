@@ -12,7 +12,35 @@
 		<project.build.sourceEncoding>Cp1252</project.build.sourceEncoding>
 	</properties>
 
+	<repositories>
+		<repository>
+			<id>maven-eclipse-repo</id>
+			<url>http://maven-eclipse.github.io/maven</url>
+		</repository>
+		<repository>
+			<id>545ch4</id>
+			<url>https://raw.githubusercontent.com/545ch4/maven-eclipse.github.io/master/maven</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
+		<dependency>
+			<groupId>org.eclipse.swt</groupId>
+			<artifactId>org.eclipse.swt.win32.win32.x86</artifactId>
+			<version>4.6.1</version>
+			<!-- To use the debug jar, add this -->
+			<classifier>debug</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.swt</groupId>
+			<artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
+			<version>4.6.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jface</groupId>
+			<artifactId>org.eclipse.jface</artifactId>
+			<version>3.11.0</version>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>

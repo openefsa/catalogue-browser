@@ -125,9 +125,16 @@ public class WarningOptions {
 			// string builder to build the string ( or simply a string can be used... )
 			StringBuilder sb = new StringBuilder();
 
-			sb.append("SemaphoreNoWarn = 0;255;0\r\n" + "SemaphoreLowWarn = 255;255;0\r\n"
-					+ "SemaphoreHighWarn = 255;0;0\r\n" + "TxtNoWarn = 0;255;0\r\n" + "TxtLowWarn = 255;255;0\r\n"
-					+ "TxtHighWarn = 255;0;0\r\n" + "ConsoleBG = 0;90;150\r\n" + "WarnFontSize = 14\r\n");
+			sb.append("SemaphoreNoWarn = 0;255;0\r\n" 
+					+ "SemaphoreLowWarn = 255;255;0\r\n"
+					+ "SemaphoreHighWarn = 255;165;0\r\n"
+					+ "SemaphoreErrorWarn = 255;0;0\r\n"
+					+ "TxtNoWarn = 0;255;0\r\n" 
+					+ "TxtLowWarn = 255;255;0\r\n"
+					+ "TxtHighWarn = 255;165;0\r\n" 
+					+ "TxtErrorWarn = 255;0;0\r\n"
+					+ "ConsoleBG = 0;90;150\r\n" 
+					+ "WarnFontSize = 14\r\n");
 
 			// write the string
 			out.write(sb.toString());
