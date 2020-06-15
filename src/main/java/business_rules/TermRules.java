@@ -642,8 +642,9 @@ public abstract class TermRules {
 
 			if (isSourceCommodityFacet(header))
 				implicitSourceCommCount++;
-			else if (isSourceFacet(header))
-				sourceFacetCount++;
+			// TODO commented since implicit source should not be counted
+			//else if (isSourceFacet(header))
+			//	sourceFacetCount++;
 			else
 				continue;
 
@@ -734,7 +735,7 @@ public abstract class TermRules {
 				printWarning(WarningEvent.BR06, termsInvolved, false, stdOut);
 
 			// if more than two source commodities and one source are present => warning
-			if (explicitSourceCommCount >= 2)
+			if (explicitSourceCommCount > 2)
 				printWarning(WarningEvent.BR02, termsInvolved, false, stdOut);
 
 			// if one explicit SC is selected -> at least two are required

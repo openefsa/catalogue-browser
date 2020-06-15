@@ -1856,7 +1856,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 			if (!notUsed.contains(temp))
 				notUsed.add(temp);
 		}
-
+		
 		return notUsed;
 	}
 
@@ -2135,7 +2135,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 			@Override
 			public void finished(Thread thread, int code, Exception exception) {
 
-				// remove temporary file if needed
+				// TODO remove temporary downloaded xml file if needed
 				try {
 					GlobalUtil.deleteFileCascade(file);
 				} catch (IOException e) {
