@@ -205,8 +205,8 @@ public abstract class TermRules {
 		if (currentFPCodes != null && index != -1) {
 			// get the ordCode of the just applied process
 			double currentOrdCode = currentFP.get(index).getOrdCode();
-			// if the ordCode is <= to the minOrd of the implicit process than raise a warning
-			if (currentOrdCode <= minImplicitOrdCode)
+			// TODO raise BR warning only and only if the ordCode < minOrd
+			if (currentOrdCode < minImplicitOrdCode)
 				printWarning(WarningEvent.BR16, fcCode, false, stdOut);
 		}
 	}
