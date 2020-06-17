@@ -583,7 +583,7 @@ public class FrameTermFields {
 					textTermName.setText(term.getName());
 					return;
 				}
-
+				
 				// return if the name does not change at all
 				if (textTermName.getText().equals(term.getName()))
 					return;
@@ -607,7 +607,8 @@ public class FrameTermFields {
 
 				// set the new name
 				term.setName(textTermName.getText());
-
+				term.setLabel(textTermName.getText());
+				
 				// update the term in the DB
 				termDao.update(term);
 
