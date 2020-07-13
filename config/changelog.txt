@@ -3,6 +3,7 @@
 + Added new exceptions to the BR data file
 + BR exceptions removed from business rules
 + Added flag in options for not restoring last selected term
++ Business rules have been modified
 
 -------------- Bugs fixed and other improvements:
 + Optimisations to the Term properties tab

@@ -28,5 +28,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/window-size-save-restore"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/zip-manager"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
+	<classpathentry kind="var" path="JFace"/>
+	<classpathentry kind="var" path="SWT"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

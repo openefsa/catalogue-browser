@@ -16,14 +16,12 @@ import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import catalogue.Catalogue;
 import catalogue_browser_dao.TermDAO;
 import catalogue_object.Attribute;
 import catalogue_object.Hierarchy;
 import catalogue_object.Term;
 import catalogue_object.TermAttribute;
-import naming_convention.Headers;
 import ui_implicit_facet.DescriptorTreeItem;
 import ui_implicit_facet.FacetDescriptor;
 import ui_implicit_facet.FacetType;
@@ -53,46 +51,11 @@ public abstract class TermRules {
 	/**
 	 * Enum type: identify the warning messages to print
 	 * 
-	 * CB 			-> rule applied only to CB
-	 * ICT 			-> rule applied only to ICT 
-	 * DCF 			-> rule applied only to DCF
-	 * DEPRECATED 	-> rule not in use
-	 * 
-	 * BR01: For mixed raw commodities only multiple explicit source commodities are allowed 
-	 * BR02: The source facet is not allowed in mixed derivatives 
-	 * BR03: The source facet is not allowed in composite food 
-	 * BR04: The source commodity facet is not allowed in composite food 
-	 * BR05: Source commodities which are not children of the implicit one are not allowed (use the generic derivative for describing a mixed derivative) 
-	 * BR06: The source facet is not allowed for derivatives without the (single) source commodity 
-	 * BR07: DCF - Reporting more than one facet is forbidden for this category 
-	 * BR08: DCF - The use of not reportable terms is forbidden
-	 * BR09: The use of hierarchies as base term is discouraged 
-	 * BR10: The use of non-specific terms is discouraged 
-	 * BR11: The use of generic terms is discouraged 
-	 * BR12: Ingredient facet can only be used as minor ingredient for derivatives 
-	 * BR13: The source facet is allowed for derivatives with only one source commodity just for better specifying the raw source 
-	 * BR14: ICT/DCF - Some explicit descriptors were added twice for the same facet category
-	 * BR15: DCF - The facet is already implicitly present in the baseterm
-	 * BR16: Reporting facets less detailed than the implicit facets is discouraged 
-	 * BR17: Reporting a facet as base term is forbidden
-	 * BR18: The use of ambiguous terms is discouraged 
-	 * BR19: The reported processes cannot be applied to the raw commodity (use the existing derivative) 
-	 * BR20: The reported term cannot be used since it is deprecated 
-	 * BR21: DEPRECATED - The selected term cannot be used since has been dismissed
-	 * BR22: CB/ICT - Base term successfully added 
-	 * BR23: CB/ICT - The selected processes cannot be used together 
-	 * BR24: CB/ICT - The base term selected cannot be reported 
-	 * BR25: CB/ICT - A non-exposure hierarchy term has been selected 
-	 * BR26: CB/ICT - The term selected is not valid for human exposure calculation 
-	 * BR27: CB/ICT - Use the existing derivative instead of adding the facet 
-	 * BR28: CB/ICT - Select the reconstituted version of the product instead 
-	 * BR29: ONLY ICT - The code does not follow the required structure or is misspelled 
-	 * BR30: ONLY ICT - The category does not exist 
-	 * BR31: ONLY ICT - The facet has not been found in the category
+	 * Check in doc/CatalogueBrowser_business_rules_v2.xlsx
 	 * 
 	 * @author shahaal
 	 *
-	 */
+	 */	
 	protected static enum WarningEvent {
 		BR01, BR02, BR03, BR04, BR05, BR06, BR07, BR08, BR09, BR10, BR11, BR12, BR13, BR14, BR15, BR16, BR17, BR18,
 		BR19, BR20, BR21, BR22, BR23, BR24, BR25, BR26, BR27, BR28, BR29, BR30, BR31
@@ -107,69 +70,352 @@ public abstract class TermRules {
 	protected enum WarningLevel {
 		NONE, LOW, HIGH, ERROR
 	}
+	
+	/**
+	 * BR01
+	 * Check if the user adds a source-commodity facet which is not specifying the already present implicit one
+	 * 
+	 * @param bt
+	 * @param allFacets
+	 * @param stdOut
+	 */
+	protected void sourceCommodityRawCheck(Term bt, String allFacets, boolean stdOut) {
+
+		// if the base term is not a raw commodity no checks have to be done
+		if (!isRawCommodityTerm(bt))
+			return;
+
+		// count the source commodity
+		int sourceCommodityFacetCount = 0;
+
+		ArrayList<FacetDescriptor> implicitFacets = bt.getFacets(true);
+
+		TermDAO termDao = new TermDAO(currentCat);
+		ArrayList<Term> implicitTerms = new ArrayList<>();
+		
+		// add implicit facets of the term
+		for (FacetDescriptor fd : implicitFacets)
+			implicitTerms.add(termDao.getByCode(fd.getFacetCode()));
+
+		// populate the explicit facets
+		ArrayList<FacetDescriptor> explicitFacets = new ArrayList<>();
+
+		// split facets => the implicit are not considered since
+		// raw commodities have their self as source commodity and should not
+		// be taken into account
+		StringTokenizer st = new StringTokenizer(allFacets, "$");
+
+		// for each explicit facet
+		while (st.hasMoreTokens()) {
+
+			String code = st.nextToken();
+
+			// split the facet in facet header and facet code
+			String[] split = splitFacetFullCode(code);
+
+			Term term = termDao.getByCode(split[1]);
+
+			FacetDescriptor fd = new FacetDescriptor(term, new TermAttribute(term, null, code), FacetType.EXPLICIT);
+
+			explicitFacets.add(fd);
+		}
+
+		// diagnostic string builder
+		StringBuilder sb = new StringBuilder();
+
+		// get the racsource hierarchy
+		Hierarchy hierarchy = currentCat.getHierarchyByCode("racsource");
+
+		// restrict if explicit is child of an implicit
+		for (FacetDescriptor fd : explicitFacets) {
+			// check if the explicit is specification of the implicit
+			boolean isSpecification = false;
+			
+			for (Term implicit : implicitTerms) {
+				if (fd.getDescriptor().hasAncestor(implicit, hierarchy)) {
+					isSpecification = true;
+					break;
+				}
+			}
+			// check if the explicit facet is specification of the bt
+			isSpecification = isSpecification || fd.getDescriptor().hasAncestor(bt, hierarchy);
+			// count the number of source commodities facets
+			if (isSourceCommodityFacet(fd.getFacetHeader()) && !isSpecification  ) {
+				sourceCommodityFacetCount += 1;
+				sb.append(fd.getFacetCode());
+				sb.append(" - ");
+			}
+		}
+
+		// get all the involved terms
+		String termsInvolved = sb.toString();
+
+		// if # of explicit source commodities that are not specifying implicit facets > 0 than raise warning
+		if (sourceCommodityFacetCount > 0) {
+			// remove the last " - " if present (i.e. at least one source c. was added)
+			termsInvolved = termsInvolved.substring(0, termsInvolved.length() - " - ".length());
+			// warn user if adding an explicit facet which is not better specifying the already present implicit one
+			printWarning(WarningEvent.BR01, termsInvolved, false, stdOut);
+		}	
+
+	}
 
 	/**
-	 * BR09 - BR22 - BR25
-	 * Check if the base term is a hierarchy. If it is, rise a
-	 * warning (discourage its use) Check also if the hierarchy is an exposure
-	 * hierarchy or not and rise a warning if it is a non exposure hierarchy
+	 * BR03
+	 * Check if a source is added to a composite food
+	 * 
+	 * @param baseTerm
+	 * @param facetIndex
+	 * @param facetCode
+	 */
+	private void sourceInCompositeCheck(Term baseTerm, String facetIndex, String facetCode, boolean stdOut) {
+		if (isCompositeTerm(baseTerm) && isSourceFacet(facetIndex))
+			printWarning(WarningEvent.BR03, facetCode, false, stdOut);
+	}
+	
+	/**
+	 * 
+	 * BR04
+	 * Check if a source commodity is added to a composite food
+	 * 
+	 * @param baseTerm
+	 * @param facetIndex
+	 * @param facetCode
+	 */
+	private void sourceCommodityInCompositeCheck(Term baseTerm, String facetIndex, String facetCode, boolean stdOut) {
+		if (isCompositeTerm(baseTerm) && isSourceCommodityFacet(facetIndex))
+			printWarning(WarningEvent.BR04, facetCode, false, stdOut);
+	}
+
+	/**
+	 * BR05 - BR06 - BR07
+	 * check if a source is added to derivative. If a source
+	 * commodity is already specified then the source must be used only to specify
+	 * better the source commodity. If more than one source commodity is already
+	 * specified, then a source cannot be used. Warnings are raised in the warning
+	 * situations.
+	 * 
+	 * @param bt
+	 * @param allFacets
+	 */
+	protected void sourceCommodityDerivativeCheck(Term bt, String allFacets, boolean stdOut) {
+
+		// rule only applicable to derivatives
+		if (!isDerivativeTerm(bt))
+			return;
+
+		ArrayList<FacetDescriptor> implicitFacets = bt.getFacets(true);
+		ArrayList<Term> implicitTerms = new ArrayList<>();
+
+		int implicitSourceCommCount, explicitSourceCommCount, explicitRestrictedSourceCommCount, sourceFacetCount;
+
+		// initialize the counters
+		implicitSourceCommCount = explicitSourceCommCount = explicitRestrictedSourceCommCount = sourceFacetCount = 0;
+
+		// string builder for generating the diagnostic string
+		StringBuilder sb = new StringBuilder();
+
+		TermDAO termDao = new TermDAO(currentCat);
+
+		// check implicit facets
+		for (FacetDescriptor fd : implicitFacets) {
+
+			implicitTerms.add(termDao.getByCode(fd.getFacetCode()));
+
+			String header = fd.getFacetHeader();
+
+			if (isSourceCommodityFacet(header))
+				implicitSourceCommCount++;
+			else
+				continue;
+
+			// append for diagnostic
+			sb.append(fd.getFacetCode());
+			sb.append(" - ");
+
+		}
+
+		// check explicit facets
+		StringTokenizer st = new StringTokenizer(allFacets, "$");
+
+		ArrayList<FacetDescriptor> explicitFacets = new ArrayList<>();
+
+		// for each facet
+		while (st.hasMoreTokens()) {
+
+			String code = st.nextToken();
+
+			// split the facet in facet header and facet code
+			String[] split = splitFacetFullCode(code);
+
+			Term term = termDao.getByCode(split[1]);
+
+			FacetDescriptor fd = new FacetDescriptor(term, new TermAttribute(term, null, code), FacetType.EXPLICIT);
+
+			explicitFacets.add(fd);
+		}
+
+		// count for explicit facets
+		for (FacetDescriptor fd : explicitFacets) {
+
+			boolean skip = false;
+
+			Hierarchy hierarchy = currentCat.getHierarchyByCode("racsource");
+			for (Term implicit : implicitTerms) {
+				if (fd.getDescriptor().hasAncestor(implicit, hierarchy)) {
+					skip = true;
+					break;
+				}
+			}
+
+			String header = fd.getFacetHeader();
+
+			// count the number of source commodities facets
+			if (isSourceCommodityFacet(header)) {
+
+				// if restricted
+				if (skip)
+					explicitRestrictedSourceCommCount++;
+				else
+					explicitSourceCommCount++;
+
+				// append for diagnostic
+				sb.append(fd.getFacetCode());
+				sb.append(" - ");
+
+			}
+
+			if (isSourceFacet(header)) {
+
+				sourceFacetCount++;
+
+				// append for diagnostic
+				sb.append(fd.getFacetCode());
+				sb.append(" - ");
+			}
+		}
+
+		int totalSourceCommCount = explicitSourceCommCount + implicitSourceCommCount;
+
+		// get all the involved terms
+		String termsInvolved = sb.toString();
+
+		// remove the last " - " if present (i.e. at least one element between source
+		// and source c. was added)
+		if (sourceFacetCount > 0 || totalSourceCommCount > 0)
+			termsInvolved = termsInvolved.substring(0, termsInvolved.length() - " - ".length());
+
+		// if we have an implicit sc, an explicit sc and a source
+		if (explicitRestrictedSourceCommCount > 0 && implicitSourceCommCount > 0)
+			printWarning(WarningEvent.BR05, termsInvolved, false, stdOut);
+
+		int implAndSpecifications = explicitRestrictedSourceCommCount + implicitSourceCommCount;
+		
+		// if one or more sources are present
+		if (sourceFacetCount > 0) {
+			
+			// if source without source commodities
+			if (totalSourceCommCount == 0)
+				printWarning(WarningEvent.BR06, termsInvolved, false, stdOut);
+			
+			// check if user is adding multiple sc (note that specification of already present are treated differently)
+			if((implAndSpecifications==0 && explicitSourceCommCount>1) || 
+					(implAndSpecifications>2 && explicitSourceCommCount == 0) ||
+					(implAndSpecifications>0 && explicitSourceCommCount>0)) {
+				printWarning(WarningEvent.BR07, termsInvolved, false, stdOut);
+			}
+		}
+	}
+	
+	/**
+	 * BR08
+	 * Warn user if selected a not reportable term as base term if the term is reportable
+	 * 
+	 * @param term
+	 * @param stdOut
+	 */
+	protected void isNotReportable(Term term, boolean stdOut) {
+		if(!term.isReportable(currentCat.getDefaultHierarchy())) {
+			printWarning(WarningEvent.BR08, term.getCode(), false, stdOut);
+		}
+	}
+	
+	/**
+	 * BR10
+	 * Check if a non-specific term is selected
 	 * 
 	 * @param bt
 	 * @param stdOut
 	 */
-	protected void hierarchyAsBasetermCheck(Term bt, boolean stdOut) {
-		
-		// if the base term is a hierarchy
-		if (bt.getDetailLevel().isHierarchyDetailLevel()) {
-
-			// get the exposure hierarchy
-			Hierarchy expHierarchy = currentCat.getHierarchyByCode("expo");
-			
-			if (bt.belongsToHierarchy(expHierarchy)) 
-				// print the message related to the hierarchy as base term
-				printWarning(WarningEvent.BR09, bt.getCode(), false, stdOut);
-			else 
-				// print warning that you are using a non exposure hierarchy term
-				printWarning(WarningEvent.BR25, bt.getCode(), false, stdOut);
-		}
-		else
-			// print the message base term successfully added if no warnings
-			printWarning(WarningEvent.BR22, bt.getCode(), false, stdOut);
-
+	protected void nonSpecificTermCheck(Term bt, boolean stdOut) {
+		if (isNonSpecificTerm(bt))
+			printWarning(WarningEvent.BR10, bt.getCode(), false, stdOut);
 	}
 
 	/**
-	 * BR19
-	 * Raise a warning if the user select a raw commodity and
-	 * uses the describe function to create a derivative which is already present in
-	 * the main list. In particular, the following code checks if the term belongs
-	 * to one of the warn groups. If this is the case, it checks if any of the
-	 * processes, which are added to the base term, generate a derivative term which
-	 * is already present in the main list. 
-	 * ONLY FOR RAW COMMODITIES
+	 * BR11
+	 * Check if the "processed" facet is generic
 	 * 
-	 * @param bt
-	 * @param fcIndex
-	 * @param fcCode
+	 * @param facet
+	 * @param stdOut
 	 */
-	protected void checkFpForRawCommodity(Term bt, String fcIndex, String fcCode, boolean stdOut) {
-
-		// return if base term is not a raw commodity or if facet is not a process
-		if (!isRawCommodityTerm(bt) || !isProcessFacet(fcIndex))
-			return;
-
-		// get the forbidden processes of the base term
-		ArrayList<ForbiddenProcess> fps = getForbiddenProcesses(bt, forbiddenProcesses, stdOut);
-
-		// get all the codes for the forbidden processes
-		ArrayList<String> currentFPCodes = fps.stream().map(fp -> fp.getCode()).collect(Collectors.toCollection(ArrayList::new));
-
-		// print warning if explicit facet is forbidden
-		if (currentFPCodes != null && currentFPCodes.contains(fcCode))
-			printWarning(WarningEvent.BR19, fcCode, false, stdOut);
-
+	protected void genericProcessedFacetCheck(Term facet, boolean stdOut) {
+		if (isGenericProcessFacet(facet)) 
+			printWarning(WarningEvent.BR11, facet.getCode(), false, stdOut);
+		
 	}
 
+	/**
+	 * BR12
+	 * Check if the user added an ingredient to a raw commodity or to a
+	 * derivative
+	 * 
+	 * @param bt
+	 * @param facetIndex
+	 * @param facet
+	 * @param stdOut
+	 */
+	protected void minorIngredientCheck(Term bt, String facetIndex, Term facet, boolean stdOut) {
+
+		// rule valid only for raw commodities or derivatives
+		if (isRawCommodityTerm(bt) || isDerivativeTerm(bt)) {
+		
+			// if the baseterm is not flavored and the facet is an ingredient
+			if (!isFlavoured(bt) && isIngredientFacet(facetIndex)) {
+				
+				// get the ingredient facet category
+				Attribute facetCategory = currentCat.getAttributeById(20);
+	
+				// if the explicit facet is more detailed than the implicit don't print the warning
+				if (facetCategory != null) {
+					for (DescriptorTreeItem dti : bt.getInheritedImplicitFacets(facetCategory)) {
+						if (facet.hasAncestor(dti.getTerm(), facetCategory.getHierarchy()))
+							return;
+					}
+				}
+	
+				// otherwise print the warning
+				printWarning(WarningEvent.BR12, facet.getCode(), false, stdOut);
+			}
+		}
+	}
+	
+	/**
+	 * BR13
+	 * Check if a physical state facet is added to rpc term
+	 * 
+	 * @param bt
+	 * @param allFacets
+	 * @param stdOut
+	 */
+	protected void physicalStateRawCheck(Term bt, String fcIndex, String fcCode, boolean stdOut) {
+		if (isRawCommodityTerm(bt) 
+				&& isPhysicalStateFacet(fcIndex) 
+				&& isForbiddenPhysicalState(fcCode)) {
+			printWarning(WarningEvent.BR13, fcCode, false, stdOut);
+		}
+	}
+	
 	/**
 	 * BR16
 	 * Raise a warning if the user add to a derivative product an explicit process which 
@@ -210,9 +456,108 @@ public abstract class TermRules {
 				printWarning(WarningEvent.BR16, fcCode, false, stdOut);
 		}
 	}
+	
+	/**
+	 * BR17
+	 * check if the base term is a facet
+	 * 
+	 * @param bt
+	 * @param stdOut
+	 */
+	private void isFacet(Term bt, boolean stdOut) {
+		if (bt.getTermType().getValue().equals("f")) {
+			printWarning(WarningEvent.BR17, bt.getCode(), false, stdOut);
+		}
+	}
+	
+	/**
+	 * BR19
+	 * Raise a warning if the user select a raw commodity and
+	 * uses the describe function to create a derivative which is already present in
+	 * the main list. In particular, the following code checks if the term belongs
+	 * to one of the warn groups. If this is the case, it checks if any of the
+	 * processes, which are added to the base term, generate a derivative term which
+	 * is already present in the main list. 
+	 * ONLY FOR RAW COMMODITIES
+	 * 
+	 * @param bt
+	 * @param fcIndex
+	 * @param fcCode
+	 */
+	protected void checkFpForRawCommodity(Term bt, String fcIndex, String fcCode, boolean stdOut) {
+
+		// return if base term is not a raw commodity or if facet is not a process
+		if (!isRawCommodityTerm(bt) || !isProcessFacet(fcIndex))
+			return;
+
+		// get the forbidden processes of the base term
+		ArrayList<ForbiddenProcess> fps = getForbiddenProcesses(bt, forbiddenProcesses, stdOut);
+
+		// get all the codes for the forbidden processes
+		ArrayList<String> currentFPCodes = fps.stream().map(fp -> fp.getCode()).collect(Collectors.toCollection(ArrayList::new));
+
+		// print warning if explicit facet is forbidden
+		if (currentFPCodes != null && currentFPCodes.contains(fcCode))
+			printWarning(WarningEvent.BR19, fcCode, false, stdOut);
+
+	}
 
 	/**
-	 * BR23 
+	 * BR20
+	 * check if the base term is deprecated
+	 * 
+	 * @param bt
+	 * @param stdOut
+	 */
+	private void isDeprecated(Term bt, boolean stdOut) {
+		if (bt.isDeprecated()) {
+			printWarning(WarningEvent.BR20, bt.getCode(), false, stdOut);
+		}
+	}
+
+	/**
+	 * BR21
+	 * check if the base term is dismissed
+	 * 
+	 * @param bt
+	 * @param stdOut
+	 */
+	private void isDismissed(Term bt, boolean stdOut) {
+		if (bt.isDismissed(currentCat.getDefaultHierarchy()))
+			printWarning(WarningEvent.BR21, bt.getCode(), false, stdOut);
+	}
+	
+	/**
+	 * BR22 - BR23 - BR24
+	 * Check if the base term is a hierarchy. If it is, rise a
+	 * warning (discourage its use) Check also if the hierarchy is an exposure
+	 * hierarchy or not and rise a warning if it is a non exposure hierarchy
+	 * 
+	 * @param bt
+	 * @param stdOut
+	 */
+	protected void hierarchyAsBasetermCheck(Term bt, boolean stdOut) {
+		
+		// if the base term is a hierarchy
+		if (bt.getDetailLevel().isHierarchyDetailLevel()) {
+
+			// get the exposure hierarchy
+			Hierarchy expHierarchy = currentCat.getHierarchyByCode("expo");
+			
+			if (bt.belongsToHierarchy(expHierarchy)) 
+				// print the message related to the hierarchy as base term
+				printWarning(WarningEvent.BR23, bt.getCode(), false, stdOut);
+			else 
+				// print warning that you are using a non exposure hierarchy term
+				printWarning(WarningEvent.BR24, bt.getCode(), false, stdOut);
+		} else
+			// print the message base term successfully added if no warnings
+			printWarning(WarningEvent.BR22, bt.getCode(), false, stdOut);
+
+	}
+	
+	/**
+	 * BR26
 	 * Check if more than one process with the same ordCode is chosen
 	 * 
 	 * @param bt
@@ -294,7 +639,7 @@ public abstract class TermRules {
 				}
 
 				// print the warning
-				printWarning(WarningEvent.BR23, sb.toString(), false, stdOut);
+				printWarning(WarningEvent.BR26, sb.toString(), false, stdOut);
 			}
 		}
 	}
@@ -433,335 +778,6 @@ public abstract class TermRules {
 		}
 	}
 
-	
-	/**
-	 * BR24
-	 * Check if the selected term belongs to the reporting and the exposure hierarchy
-	 * If not => warning you are using a non reportable term.
-	 * 
-	 * @param bt
-	 * @param stdOut
-	 */
-	protected void noRepNoExpHierarchyCheck(Term bt, boolean stdOut) {
-
-		// get the reporting and the exposure hierarchies
-		Hierarchy reportingHierarchy = currentCat.getHierarchyByCode(Headers.REPORT);
-		Hierarchy exposureHierarchy = currentCat.getHierarchyByCode(Headers.EXPO);
-		
-		// if term does not belong to both reporting and exposure hierarchy rise warning
-		if (!bt.belongsToHierarchy(reportingHierarchy) && !bt.belongsToHierarchy(exposureHierarchy))
-			printWarning(WarningEvent.BR24, bt.getCode(), false, stdOut);
-
-	}
-
-	/**
-	 * BR10
-	 * Check if a non-specific term is selected
-	 * 
-	 * @param bt
-	 * @param stdOut
-	 */
-	protected void nonSpecificTermCheck(Term bt, boolean stdOut) {
-		if (isNonSpecificTerm(bt))
-			printWarning(WarningEvent.BR10, bt.getCode(), false, stdOut);
-	}
-
-	/**
-	 * BR11
-	 * Check if the "processed" facet is generic
-	 * 
-	 * @param facet
-	 * @param stdOut
-	 */
-	protected void genericProcessedFacetCheck(Term facet, boolean stdOut) {
-		if (isGenericProcessFacet(facet)) 
-			printWarning(WarningEvent.BR11, facet.getCode(), false, stdOut);
-		
-	}
-
-	/**
-	 * BR12
-	 * Check if the user added an ingredient to a raw commodity or to a
-	 * derivative
-	 * 
-	 * @param bt
-	 * @param facetIndex
-	 * @param facet
-	 * @param stdOut
-	 */
-	protected void minorIngredientCheck(Term bt, String facetIndex, Term facet, boolean stdOut) {
-
-		// rule valid only for raw commodities or derivatives
-		if (isRawCommodityTerm(bt) || isDerivativeTerm(bt)) {
-		
-			// if the baseterm is not flavored and the facet is an ingredient
-			if (!isFlavoured(bt) && isIngredientFacet(facetIndex)) {
-				
-				// get the ingredient facet category
-				Attribute facetCategory = currentCat.getAttributeById(20);
-	
-				// if the explicit facet is more detailed than the implicit don't print the warning
-				if (facetCategory != null) {
-					for (DescriptorTreeItem dti : bt.getInheritedImplicitFacets(facetCategory)) {
-						if (facet.hasAncestor(dti.getTerm(), facetCategory.getHierarchy()))
-							return;
-					}
-				}
-	
-				// otherwise print the warning
-				printWarning(WarningEvent.BR12, facet.getCode(), false, stdOut);
-			}
-		}
-	}
-
-	/**
-	 * BR01
-	 * Check if the user adds a source-commodity facet which is not specifying the already present implicit one
-	 * 
-	 * @param bt
-	 * @param allFacets
-	 * @param stdOut
-	 */
-	protected void sourceCommodityRawCheck(Term bt, String allFacets, boolean stdOut) {
-
-		// if the base term is not a raw commodity no checks have to be done
-		if (!isRawCommodityTerm(bt))
-			return;
-
-		// count the source commodity
-		int sourceCommodityFacetCount = 0;
-
-		ArrayList<FacetDescriptor> implicitFacets = bt.getFacets(true);
-
-		TermDAO termDao = new TermDAO(currentCat);
-		ArrayList<Term> implicitTerms = new ArrayList<>();
-		
-		// add implicit facets of the term
-		for (FacetDescriptor fd : implicitFacets)
-			implicitTerms.add(termDao.getByCode(fd.getFacetCode()));
-
-		// populate the explicit facets
-		ArrayList<FacetDescriptor> explicitFacets = new ArrayList<>();
-
-		// split facets => the implicit are not considered since
-		// raw commodities have their self as source commodity and should not
-		// be taken into account
-		StringTokenizer st = new StringTokenizer(allFacets, "$");
-
-		// for each explicit facet
-		while (st.hasMoreTokens()) {
-
-			String code = st.nextToken();
-
-			// split the facet in facet header and facet code
-			String[] split = splitFacetFullCode(code);
-
-			Term term = termDao.getByCode(split[1]);
-
-			FacetDescriptor fd = new FacetDescriptor(term, new TermAttribute(term, null, code), FacetType.EXPLICIT);
-
-			explicitFacets.add(fd);
-		}
-
-		// diagnostic string builder
-		StringBuilder sb = new StringBuilder();
-
-		// get the racsource hierarchy
-		Hierarchy hierarchy = currentCat.getHierarchyByCode("racsource");
-
-		// restrict if explicit is child of an implicit
-		for (FacetDescriptor fd : explicitFacets) {
-
-			boolean isSpecification = false;
-
-			// check if the explicit is specification of the implicit
-			for (Term implicit : implicitTerms) {
-				if (fd.getDescriptor().hasAncestor(implicit, hierarchy)) {
-					isSpecification = true;
-					break;
-				}
-			}
-
-			// count the number of source commodities facets
-			if (isSourceCommodityFacet(fd.getFacetHeader()) && !isSpecification) {
-				sourceCommodityFacetCount += 1;
-				sb.append(fd.getFacetCode());
-				sb.append(" - ");
-			}
-		}
-
-		// get all the involved terms
-		String termsInvolved = sb.toString();
-
-		// remove the last " - " if present (i.e. at least one source c. was added)
-		if (sourceCommodityFacetCount > 0)
-			termsInvolved = termsInvolved.substring(0, termsInvolved.length() - " - ".length());
-
-		// warn user if adding an explicit facet which is not better specifying the already present implicit one
-		if (sourceCommodityFacetCount > 0)
-			printWarning(WarningEvent.BR01, termsInvolved, false, stdOut);
-
-	}
-
-	/**
-	 * BR02 - BR05 - BR06 - BR13
-	 * check if a source is added to derivative. If a source
-	 * commodity is already specified then the source must be used only to specify
-	 * better the source commodity. If more than one source commodity is already
-	 * specified, then a source cannot be used. Warnings are raised in the warning
-	 * situations.
-	 * 
-	 * @param bt
-	 * @param allFacets
-	 */
-	protected void sourceCommodityDerivativeCheck(Term bt, String allFacets, boolean stdOut) {
-
-		// rule only applicable to derivatives
-		if (!isDerivativeTerm(bt))
-			return;
-
-		ArrayList<FacetDescriptor> implicitFacets = bt.getFacets(true);
-		ArrayList<Term> implicitTerms = new ArrayList<>();
-
-		int implicitSourceCommCount, explicitSourceCommCount, explicitRestrictedSourceCommCount, sourceFacetCount;
-
-		// initialize the counters
-		implicitSourceCommCount = explicitSourceCommCount = explicitRestrictedSourceCommCount = sourceFacetCount = 0;
-
-		// string builder for generating the diagnostic string
-		StringBuilder sb = new StringBuilder();
-
-		TermDAO termDao = new TermDAO(currentCat);
-
-		// check implicit facets
-		for (FacetDescriptor fd : implicitFacets) {
-
-			implicitTerms.add(termDao.getByCode(fd.getFacetCode()));
-
-			String header = fd.getFacetHeader();
-
-			if (isSourceCommodityFacet(header))
-				implicitSourceCommCount++;
-			// TODO commented since implicit source should not be counted
-			//else if (isSourceFacet(header))
-			//	sourceFacetCount++;
-			else
-				continue;
-
-			// append for diagnostic
-			sb.append(fd.getFacetCode());
-			sb.append(" - ");
-
-		}
-
-		// check explicit facets
-		StringTokenizer st = new StringTokenizer(allFacets, "$");
-
-		ArrayList<FacetDescriptor> explicitFacets = new ArrayList<>();
-
-		// for each facet
-		while (st.hasMoreTokens()) {
-
-			String code = st.nextToken();
-
-			// split the facet in facet header and facet code
-			String[] split = splitFacetFullCode(code);
-
-			Term term = termDao.getByCode(split[1]);
-
-			FacetDescriptor fd = new FacetDescriptor(term, new TermAttribute(term, null, code), FacetType.EXPLICIT);
-
-			explicitFacets.add(fd);
-		}
-
-		// count for explicit facets
-		for (FacetDescriptor fd : explicitFacets) {
-
-			boolean skip = false;
-
-			Hierarchy hierarchy = currentCat.getHierarchyByCode("racsource");
-			for (Term implicit : implicitTerms) {
-				if (fd.getDescriptor().hasAncestor(implicit, hierarchy)) {
-					skip = true;
-					break;
-				}
-			}
-
-			String header = fd.getFacetHeader();
-
-			// count the number of source commodities facets
-			if (isSourceCommodityFacet(header)) {
-
-				// if restricted
-				if (!skip)
-					explicitRestrictedSourceCommCount++;
-
-				explicitSourceCommCount++;
-
-				// append for diagnostic
-				sb.append(fd.getFacetCode());
-				sb.append(" - ");
-
-			}
-
-			if (isSourceFacet(header)) {
-
-				sourceFacetCount++;
-
-				// append for diagnostic
-				sb.append(fd.getFacetCode());
-				sb.append(" - ");
-			}
-		}
-
-		int totalSourceCommCount = explicitSourceCommCount + implicitSourceCommCount;
-
-		// get all the involved terms
-		String termsInvolved = sb.toString();
-
-		// remove the last " - " if present (i.e. at least one element between source
-		// and source c. was added)
-		if (sourceFacetCount > 0 || totalSourceCommCount > 0)
-			termsInvolved = termsInvolved.substring(0, termsInvolved.length() - " - ".length());
-
-		// if we have an implicit sc, an explicit sc and a source
-		if (explicitRestrictedSourceCommCount > 0 && implicitSourceCommCount > 0)
-			printWarning(WarningEvent.BR05, termsInvolved, false, stdOut);
-
-		if (sourceFacetCount > 0) {
-
-			// if source without source commodities
-			if (totalSourceCommCount == 0)
-				printWarning(WarningEvent.BR06, termsInvolved, false, stdOut);
-
-			// if more than two source commodities and one source are present => warning
-			if (explicitSourceCommCount > 2)
-				printWarning(WarningEvent.BR02, termsInvolved, false, stdOut);
-
-			// if one explicit SC is selected -> at least two are required
-			if (explicitRestrictedSourceCommCount + implicitSourceCommCount == 1)
-				printWarning(WarningEvent.BR13, termsInvolved, false, stdOut);
-		}
-	}
-
-	/**
-	 * BR26
-	 * the rule rises a warning when the baseterm selected does not belong to the exposure and it is not a feed
-	 * 
-	 * @param baseTerm
-	 * @param stdOut
-	 */
-	protected void exposureHierarchyCheck(Term baseTerm, boolean stdOut) {
-
-		// get the exposure hierarchy
-		Hierarchy exposureHierarchy = currentCat.getHierarchyByCode("expo");
-
-		// if the term is not in exposure and is not a feed rise warning
-		if (!isFeedTerm(baseTerm) && !baseTerm.belongsToHierarchy(exposureHierarchy))
-			printWarning(WarningEvent.BR26, baseTerm.getCode(), false, stdOut);
-
-	}
-
 	/**
 	 * BR28
 	 * Check if a reconstitution process facet is added to concentrate/dehydrated
@@ -781,57 +797,6 @@ public abstract class TermRules {
 		}
 	}
 
-	/**
-	 * BR18
-	 * if the term is non-specific rise a warning
-	 * 
-	 * @param bt
-	 * @param stdOut
-	 */
-	private void isAmbiguous(Term bt, boolean stdOut) {
-		if (bt.getCode().equals("A00HQ")) 
-			printWarning(WarningEvent.BR18, bt.getCode(), false, stdOut);
-	}
-
-	/**
-	 * BR20
-	 * check if the base term is deprecated
-	 * 
-	 * @param bt
-	 * @param stdOut
-	 */
-	private void isDeprecated(Term bt, boolean stdOut) {
-		if (bt.isDeprecated()) {
-			printWarning(WarningEvent.BR20, bt.getCode(), false, stdOut);
-		}
-	}
-
-	/**
-	 * BR21
-	 * check if the base term is dismissed
-	 * 
-	 * @param bt
-	 * @param stdOut
-	 * @deprecated
-	 */
-	@SuppressWarnings("unused")
-	private void isDismissed(Term bt, boolean stdOut) {
-		if (bt.isDismissed(currentCat.getDefaultHierarchy()))
-			printWarning(WarningEvent.BR20, bt.getCode(), false, stdOut);
-	}
-
-	/**
-	 * BR17
-	 * check if the base term is a facet
-	 * 
-	 * @param bt
-	 * @param stdOut
-	 */
-	private void isFacet(Term bt, boolean stdOut) {
-		if (bt.getTermType().getValue().equals("f")) {
-			printWarning(WarningEvent.BR17, bt.getCode(), false, stdOut);
-		}
-	}
 
 	// ######### TERM/FACET BOOLEAN CHECKS ##############
 
@@ -882,16 +847,6 @@ public abstract class TermRules {
 	}
 
 	/**
-	 * check if the term is a feed term
-	 * 
-	 * @param term
-	 * @return
-	 */
-	private boolean isFeedTerm(Term term) {
-		return (term.getName().contains("(feed)"));
-	}
-
-	/**
 	 * Check if the term is a non-specific term
 	 * 
 	 * @param term
@@ -899,6 +854,16 @@ public abstract class TermRules {
 	 */
 	private boolean isNonSpecificTerm(Term term) {
 		return (term.getDetailLevel().getValue().equals("P"));
+	}
+	
+	/**
+	 * Check if the facet is a physical state facet
+	 * 
+	 * @param facetIndex
+	 * @return
+	 */
+	private boolean isPhysicalStateFacet(String facetIndex) {
+		return (facetIndex.equals("F03"));
 	}
 
 	/**
@@ -929,6 +894,30 @@ public abstract class TermRules {
 	 */
 	private boolean isGenericProcessFacet(Term facet) {
 		return (facet.getCode().equals("A0C0R") || facet.getCode().equals("A0CHR") || facet.getCode().equals("A0CHS"));
+	}
+	
+	/**
+	 * check if forbidden physical state is applied to rpc
+	 * 
+	 * A06JD    Powder
+	 * A07Y3    Coarse powder
+	 * A07Y2    Fine powder
+	 * A06JG    Puree-type
+	 * A06JF    Paste
+	 * A06JE    coarse paste / minced
+	 * A07Y4    Fine paste
+	 * 
+	 * @param facetCode
+	 * @return
+	 */
+	private boolean isForbiddenPhysicalState(String facetCode) {
+		return (facetCode.equals("A06JD") || 
+				facetCode.equals("A07Y3") ||
+				facetCode.equals("A07Y2") ||
+				facetCode.equals("A06JG") ||
+				facetCode.equals("A06JF") ||
+				facetCode.equals("A06JE") ||
+				facetCode.equals("A07Y4"));
 	}
 
 	/**
@@ -1303,34 +1292,6 @@ public abstract class TermRules {
 		}
 	}
 
-	/**
-	 * Check if a source is added to a composite food
-	 * 
-	 * @param baseTerm
-	 * @param facetIndex
-	 * @param facetCode
-	 */
-	private void sourceInCompositeCheck(Term baseTerm, String facetIndex, String facetCode, boolean stdOut) {
-
-		// if a source is added to a composite rise a warning
-		if (isCompositeTerm(baseTerm) && isSourceFacet(facetIndex))
-			printWarning(WarningEvent.BR03, facetCode, false, stdOut);
-	}
-
-	/**
-	 * Check if a source commodity is added to a composite food
-	 * 
-	 * @param baseTerm
-	 * @param facetIndex
-	 * @param facetCode
-	 */
-	private void sourceCommodityInCompositeCheck(Term baseTerm, String facetIndex, String facetCode, boolean stdOut) {
-
-		// if a source commodity is added to a composite rise a warning
-		if (isCompositeTerm(baseTerm) && isSourceCommodityFacet(facetIndex))
-			printWarning(WarningEvent.BR04, facetCode, false, stdOut);
-	}
-
 	
 	/**
 	 * Get the implicit forbidden processes of a term
@@ -1546,22 +1507,17 @@ public abstract class TermRules {
 		// check if the base term is a hierarchy or not
 		hierarchyAsBasetermCheck(baseTerm, stdOut);
 
-		// check if the baseTerm belongs to the reporting or the exposure hierarchy
-		noRepNoExpHierarchyCheck(baseTerm, stdOut);
-
-		// check if the base term belongs to the exposure hierarchy or not
-		exposureHierarchyCheck(baseTerm, stdOut);
-
 		// check if an non specific base term is selected
 		nonSpecificTermCheck(baseTerm, stdOut);
 
-		isAmbiguous(baseTerm, stdOut);
-
+		// check if term is not reportable in dft hierarchy
+		isNotReportable(baseTerm, stdOut);
+		
 		// check if the baseterm is deprecated
 		isDeprecated(baseTerm, stdOut);
 
 		// check if the base term is dismissed
-		// isDismissed(baseTerm, stdOut);
+		isDismissed(baseTerm, stdOut);
 
 		// check if baseterm type is f
 		isFacet(baseTerm, stdOut);
@@ -1634,6 +1590,9 @@ public abstract class TermRules {
 				checkFpOrderForDerivatives(baseTerm, facetIndex, facetCode, stdOut);
 			}
 
+			// check if term is not reportable in dft hierarchy
+			isNotReportable(facet, stdOut);
+			
 			// check if the generic process facet is selected
 			genericProcessedFacetCheck(facet, stdOut);
 
@@ -1649,6 +1608,9 @@ public abstract class TermRules {
 			// check if reconstitution process is added to concentrate or powder terms
 			reconstitutionCheck(baseTerm, facetIndex, facetCode, stdOut);
 
+			// check if forbidden physical state facet is added to rpc
+			physicalStateRawCheck(baseTerm, facetIndex, facetCode, stdOut);
+			
 			// if it is indeed a warn group
 			if (warnGroup) {
 
