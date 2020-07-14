@@ -783,9 +783,7 @@ public class FrameTermFields {
 	private TableImplicitAttributes addTermAttributes(final Composite parent) {
 		// create the component group
 		Group group = createGroup(parent, 2, implAttrTitle, true);
-
-		final TableImplicitAttributes termAttrTable = new TableImplicitAttributes(group);
-		return termAttrTable;
+		return new TableImplicitAttributes(group);
 	}
 
 	/**
@@ -803,7 +801,7 @@ public class FrameTermFields {
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, extVertically);
 		gridData.horizontalSpan = span;
 		group.setLayoutData(gridData);
-		group.setLayout(new GridLayout(1, false));
+		group.setLayout(new GridLayout(1, true));
 		// set group title
 		group.setText(title);
 
