@@ -11,6 +11,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.xmlbeans.impl.soap.SOAPConnection;
 import org.apache.xmlbeans.impl.soap.SOAPConnectionFactory;
 import org.apache.xmlbeans.impl.soap.SOAPException;
@@ -100,12 +101,12 @@ public final class GlobalUtil {
 	public static final String APP_NAME = AppConfig.getAppName();
 	public static final String APP_VERSION = AppConfig.getAppVersion();
 	public static final String APP_TITLE = APP_NAME + " " + APP_VERSION;
-	
+
 	// private constructor to avoid unnecessary instantiation of the class
-    private GlobalUtil() {
-        throw new UnsupportedOperationException();
-    }
-    
+	private GlobalUtil() {
+		throw new UnsupportedOperationException();
+	}
+
 	/**
 	 * Set the working directory where the directories should be searched.
 	 * 
@@ -281,10 +282,23 @@ public final class GlobalUtil {
 	}
 
 	/**
+	 * remove preferences folder
+	 * 
+	 */
+	public static final void removePreferencesFolder() {
+
+		try {
+			FileUtils.deleteDirectory(new File(getPrefDir()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
 	 * prepare the ICT folders and check if old versions installed
 	 */
 	public final static void createIctFolders() {
-		
+
 		// create check folder
 		if (!fileExists(CHECK_DIR_PATH)) {
 			new File(CHECK_DIR_PATH).mkdir();
@@ -299,19 +313,19 @@ public final class GlobalUtil {
 		if (!fileExists(ICT_DATABASE_DIR_PATH)) {
 			new File(ICT_DATABASE_DIR_PATH).mkdir();
 		}
-		
+
 	}
 
 	/**
 	 * Add a column to the parentTable
 	 * 
 	 * @param parentTable
-	 * @param             labelProvider, the column label provider which has to be
-	 *                    used for the column
-	 * @param             name, the name of the column
-	 * @param             width, the width of the column
-	 * @param             resizable, if the column is resizable
-	 * @param             moveable, if the column is moveable
+	 * @param labelProvider, the column label provider which has to be used for the
+	 *                       column
+	 * @param name,          the name of the column
+	 * @param width,         the width of the column
+	 * @param resizable,     if the column is resizable
+	 * @param moveable,      if the column is moveable
 	 * @return
 	 */
 	public static TableViewerColumn addStandardColumn(TableViewer parentTable, ColumnLabelProvider labelProvider,
@@ -556,10 +570,6 @@ public final class GlobalUtil {
 		}
 
 		Files.delete(Paths.get(directory.getAbsolutePath()));
-
-		// delete the directory
-		// if ( !directory.delete() )
-		// throw new FileNotFoundException( "Failed to delete file: " + directory );
 	}
 
 	/**
@@ -650,7 +660,7 @@ public final class GlobalUtil {
 		String title = null;
 		String message = null;
 		SOAPError error = e.getError();
-		
+
 		switch (error) {
 		case QUOTA_EXCEEDED:
 			title = CBMessages.getString("error.title");
@@ -716,7 +726,7 @@ public final class GlobalUtil {
 
 		return fileMoved;
 	}
-	
+
 	/**
 	 * the method check if ict files are present
 	 * 
@@ -732,9 +742,10 @@ public final class GlobalUtil {
 
 		return false;
 	}
-	
+
 	/**
 	 * Method used for updating the name of the shell
+	 * 
 	 * @param shell
 	 */
 	public static void startShellTextUpdate(final Shell shell) {

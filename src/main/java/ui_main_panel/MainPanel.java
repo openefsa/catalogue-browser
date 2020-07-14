@@ -5,6 +5,7 @@ import java.util.Observer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -884,6 +885,18 @@ public class MainPanel implements Observer {
 					break;
 				case ViewMenu.COLLAPSE_TREE_MI:
 					tree.collapseAll();
+					break;
+				case ViewMenu.RESET_VIEW_PREFERENCES_MI:
+					// ask the user before continuing the operation
+					boolean confirmation = MessageDialog.openQuestion(shell, CBMessages.getString("BrowserMenu.ResetPreferencesCmd"),
+							CBMessages.getString("BrowserMenu.ResetPreferencesCmd.message"));
+
+					if (confirmation) {
+						//remove preferences folder and close the tool
+						GlobalUtil.removePreferencesFolder();
+						menu.getShell().close();
+					}
+					
 					break;
 				default:
 					break;

@@ -4,6 +4,7 @@
 + BR exceptions removed from business rules
 + Added flag in options for not restoring last selected term
 + Business rules have been modified
++ Added reset preferences menu item under view
 
 -------------- Bugs fixed and other improvements:
 + Optimisations to the Term properties tab

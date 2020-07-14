@@ -418,43 +418,25 @@ public abstract class TermRules {
 	
 	/**
 	 * BR16
-	 * Raise a warning if the user add to a derivative product an explicit process which 
-	 * owns a top down order (ordCode) which is less than the minimum of the ordCodes of 
-	 * the implicit processes facets (this is because we want to reflect the logic of processes applicability)
+	 * Raise a warning if the user add an explicit facet which 
+	 * is parent of the already present implicit facets
 	 * 
 	 * @param bt
 	 * @param fcIndex
 	 * @param fcCode
 	 */
-	protected void checkFpOrderForDerivatives(Term bt, String fcIndex, String fcCode,boolean stdOut) {
-
-		// return if the base term is not a derivative and facet is not a process
-		if (!isDerivativeTerm(bt) || !isProcessFacet(fcIndex))
-			return;
-
-		// get the forbidden processes related to the baseTerm
-		ArrayList<ForbiddenProcess> currentFP = getForbiddenProcesses(bt, forbiddenProcesses, stdOut);
-
-		// get all the codes for the forbidden processes
-		ArrayList<String> currentFPCodes = currentFP.stream().map(fp -> fp.getCode()).collect(Collectors.toCollection(ArrayList::new));
+	protected void checkIfExplicitLessDetailed(Term bt, Term fc,boolean stdOut) {
+		// get all implicit facets of the base term
+		ArrayList<FacetDescriptor> implicitFacets = bt.getFacets(true);
 		
-		// get the forbidden implicit processes of the base term
-		ArrayList<ForbiddenProcess> implicitProcesses = getImplicitForbiddenProcesses(bt, forbiddenProcesses, stdOut);
-
-		// get the minimum ord code of the implicit processes
-		double minImplicitOrdCode = getMinOrdCode(implicitProcesses);
-
-		// get the position of the explicit process facet (-1 if not found)
-		int index = currentFPCodes.indexOf(fcCode);
-
-		// if process facet found then check if ordCode is less than the minimum implicit ordCode
-		if (currentFPCodes != null && index != -1) {
-			// get the ordCode of the just applied process
-			double currentOrdCode = currentFP.get(index).getOrdCode();
-			// TODO raise BR warning only and only if the ordCode < minOrd
-			if (currentOrdCode < minImplicitOrdCode)
-				printWarning(WarningEvent.BR16, fcCode, false, stdOut);
+		// check for each implicit facets if the explicit is parent
+		for(FacetDescriptor fd : implicitFacets) {
+			if (fc.belongsToHierarchy(fd.getFacetCategory().getHierarchy())) {
+				printWarning(WarningEvent.BR16, fc.getCode(), false, stdOut);
+				break;
+			}
 		}
+		
 	}
 	
 	/**
@@ -564,6 +546,7 @@ public abstract class TermRules {
 	 * @param impProcesses
 	 * @param expProcesses
 	 * @param stdOut
+	 * @deprecated
 	 */
 	protected void mutuallyExclusiveCheck(Term bt, ArrayList<ForbiddenProcess> impProcesses,
 			ArrayList<ForbiddenProcess> expProcesses, boolean stdOut) {
@@ -975,39 +958,6 @@ public abstract class TermRules {
 
 		// return true if the group is one of the warn groups
 		return uniqueGroupsCodes.contains(groupCode);
-	}
-
-	/**
-	 * Retrieve the minimum ord code contained in the array list of forbidden
-	 * processes
-	 * 
-	 * @param forbiddenProcesses
-	 * @return
-	 */
-	private double getMinOrdCode(ArrayList<ForbiddenProcess> forbiddenProcesses) {
-
-		// if no processes
-		if (forbiddenProcesses == null)
-			return 0;
-
-		// set the min to the maximum double value in order to be sure to update minimum
-		// values correctly
-		double minOrdCode = Double.MAX_VALUE;
-
-		// get the minimum ordCode of the forbidden processes
-		for (ForbiddenProcess fp : forbiddenProcesses) {
-			// get the ordCode of the forbidden facet
-			double fpCode = fp.getOrdCode();
-			// update the less than the current one
-			if ( fpCode < minOrdCode)
-				minOrdCode = fpCode;
-		}
-
-		// If no process is found => then set to 0 the minimum value
-		if (minOrdCode == Double.MAX_VALUE)
-			minOrdCode = 0;
-
-		return minOrdCode;
 	}
 
 	/**
@@ -1587,7 +1537,7 @@ public abstract class TermRules {
 				// check if a forbidden process is used or raw commodities
 				checkFpForRawCommodity(baseTerm, facetIndex, facetCode, stdOut);
 				// check if the order of processes is violated for derivatives
-				checkFpOrderForDerivatives(baseTerm, facetIndex, facetCode, stdOut);
+				checkIfExplicitLessDetailed(baseTerm, facet, stdOut);
 			}
 
 			// check if term is not reportable in dft hierarchy
@@ -1674,7 +1624,7 @@ public abstract class TermRules {
 			// check ord code are correct (no implicit ord code >= explicit ord codes)
 			decimalOrderCheck(baseTerm, implicit, explicit, stdOut);
 			// check if the mutually exclusive property is violated
-			mutuallyExclusiveCheck(baseTerm, explicit, implicit, stdOut);
+			// mutuallyExclusiveCheck(baseTerm, explicit, implicit, stdOut);
 		}
 	}
 
