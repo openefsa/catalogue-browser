@@ -293,6 +293,19 @@ public final class GlobalUtil {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * remove ICT folder
+	 * 
+	 */
+	public static final void removeICTFolder() {
+
+		try {
+			FileUtils.deleteDirectory(new File(ICT_DIR_PATH));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * prepare the ICT folders and check if old versions installed

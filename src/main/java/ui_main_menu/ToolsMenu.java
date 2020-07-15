@@ -105,6 +105,7 @@ public class ToolsMenu implements MainMenuItem {
 
 	private MenuItem installIctMI; // install the ict tool
 	private MenuItem launchIctMI; // launch ICT tool
+	private MenuItem reInstallIctMI; // reinstall ICT
 
 	/**
 	 * Tools menu in main menu
@@ -166,10 +167,12 @@ public class ToolsMenu implements MainMenuItem {
 		if (mainMenu.getCatalogue() != null && mainMenu.getCatalogue().isMTXCatalogue()) {
 
 			// check if ict file is present
-			if (GlobalUtil.isIctInstalled())
+			if (GlobalUtil.isIctInstalled()) {
 				launchIctMI = addLaunchIct(toolsMenu);
-			else
+				reInstallIctMI = addReInstallIct(toolsMenu);
+			} else {
 				installIctMI = addInstallIct(toolsMenu);
+			}
 		}
 
 		// add import picklist
@@ -648,67 +651,8 @@ public class ToolsMenu implements MainMenuItem {
 
 			@Override
 			public void widgetSelected(SelectionEvent event) {
-
-				// ask the user before continuing the operation
-				boolean confirmation = MessageDialog.openQuestion(shell, CBMessages.getString("ICT.Title"),
-						CBMessages.getString("ICT.InstallationMsg"));
-
-				if (!confirmation)
-					return;
-
-				// create first the required folders
-				GlobalUtil.createIctFolders();
-
-				// invoke the ICT downloader
-				ICTDownloader downloader = new ICTDownloader();
-
-				// instantiate the progress bar
-				FormProgressBar progressbar = new FormProgressBar(shell, CBMessages.getString("ICT.Title"));
-				downloader.setProgressBar(progressbar);
-
-				// when finished
-				downloader.setDoneListener(new ThreadFinishedListener() {
-
-					@Override
-					public void finished(Thread thread, final int code, Exception e) {
-
-						shell.getDisplay().asyncExec(new Runnable() {
-
-							@Override
-							public void run() {
-
-								// if download ok then continue with installation else warn the user
-								if (code == ThreadFinishedListener.OK) {
-
-									try {
-										// invoke the ICT installer
-										new ICTInstaller().install();
-
-										// extract the foodex2 catalogue
-										extractCatalogue(installItem, GlobalUtil.ICT_FOODEX2_FILE_PATH, INSTALL_ICT,
-												false);
-
-										if (listener != null)
-											listener.buttonPressed(installItem, INSTALL_ICT, null);
-
-									} catch (IOException e) {
-										e.printStackTrace();
-									}
-
-								} else {
-									GlobalUtil.showDialog(shell, CBMessages.getString("ICT.Title"),
-											CBMessages.getString("ICT.InstallationError"), SWT.ICON_ERROR);
-									e.printStackTrace();
-								}
-
-							}
-						});
-					}
-				});
-
-				// start the download process
-				downloader.start();
-
+				// clean install ICT
+				installICT(installItem, false);
 			}
 		});
 
@@ -745,6 +689,103 @@ public class ToolsMenu implements MainMenuItem {
 		launchItem.setEnabled(false);
 
 		return launchItem;
+	}
+	
+	/**
+	 * Add a menu item which allows to reinstall the ICT tool
+	 * 
+	 * @author shahaal
+	 * @param menu
+	 */
+	private MenuItem addReInstallIct(Menu menu) {
+
+		final MenuItem reinstallItem = new MenuItem(menu, SWT.NONE);
+
+		reinstallItem.setText(CBMessages.getString("BrowserMenu.ReinstallICTCmd"));
+
+		reinstallItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				// reinstall ICT
+				installICT(reinstallItem, true);
+			}
+		});
+
+		// enable according to the operation status
+		reinstallItem.setEnabled(false);
+
+		return reinstallItem;
+	}
+	
+	/**
+	 * this method allows to download latest version of ict
+	 * 
+	 */
+	private void installICT(MenuItem menuItem, boolean reinstall) {
+		// ask the user before continuing the operation
+		boolean confirmation = MessageDialog.openQuestion(shell, CBMessages.getString("ICT.Title"),
+				CBMessages.getString("ICT.InstallationMsg"));
+
+		if (!confirmation)
+			return;
+		
+		// remove first all content of the folder if reinstall is needed
+		if(reinstall)
+			GlobalUtil.removeICTFolder();
+		
+		// create first the required folders
+		GlobalUtil.createIctFolders();
+
+		// invoke the ICT downloader
+		ICTDownloader downloader = new ICTDownloader();
+
+		// instantiate the progress bar
+		FormProgressBar progressbar = new FormProgressBar(shell, CBMessages.getString("ICT.Title"));
+		downloader.setProgressBar(progressbar);
+
+		// when finished
+		downloader.setDoneListener(new ThreadFinishedListener() {
+
+			@Override
+			public void finished(Thread thread, final int code, Exception e) {
+
+				shell.getDisplay().asyncExec(new Runnable() {
+
+					@Override
+					public void run() {
+
+						// if download ok then continue with installation else warn the user
+						if (code == ThreadFinishedListener.OK) {
+
+							try {
+								// invoke the ICT installer
+								new ICTInstaller().install();
+
+								// extract the foodex2 catalogue
+								extractCatalogue(menuItem, GlobalUtil.ICT_FOODEX2_FILE_PATH, INSTALL_ICT,
+										false);
+
+								if (listener != null)
+									listener.buttonPressed(menuItem, INSTALL_ICT, null);
+
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+
+						} else {
+							GlobalUtil.showDialog(shell, CBMessages.getString("ICT.Title"),
+									CBMessages.getString("ICT.InstallationError"), SWT.ICON_ERROR);
+							e.printStackTrace();
+						}
+
+					}
+				});
+			}
+		});
+
+		// start the download process
+		downloader.start();
+
 	}
 
 	/**
@@ -1166,8 +1207,10 @@ public class ToolsMenu implements MainMenuItem {
 			if (installIctMI != null)
 				installIctMI.setEnabled(!ict);
 
-			if (launchIctMI != null)
+			if (launchIctMI != null && reInstallIctMI != null) {
 				launchIctMI.setEnabled(ict);
+				reInstallIctMI.setEnabled(ict);
+			}
 		}
 
 		importPicklistMI.setEnabled(hasFacets);
@@ -1300,8 +1343,10 @@ public class ToolsMenu implements MainMenuItem {
 				if (installIctMI != null)
 					installIctMI.setEnabled(true);
 
-				if (launchIctMI != null)
+				if (launchIctMI != null && reInstallIctMI != null) {
 					launchIctMI.setEnabled(true);
+					reInstallIctMI.setEnabled(true);
+				}
 			}
 		}
 	}
