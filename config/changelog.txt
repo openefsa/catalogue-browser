@@ -4,7 +4,8 @@
 + BR exceptions removed from business rules
 + Added flag in options for not restoring last selected term
 + Business rules have been modified
-+ Added reset preferences menu item under view
++ Added dix multiple screens issue under tools
++ Added Reinstall ICT option under tools
 
 -------------- Bugs fixed and other improvements:
 + Optimisations to the Term properties tab
