@@ -59,139 +59,38 @@ public class WarningMessage {
 
 			StringBuilder sb = new StringBuilder();
 
-			sb.append("Message ID;Trigger Event Description;Text;SemaphoreWarningLevel;TextWarningLevel");
-			sb.append("\r\n");
-
-			// first message
-			sb.append(
-					"1;if a single Source Commodity is selected for raw commodity;BR01> For mixed raw commodities only multiple explicit source commodities are allowed;HIGH;HIGH");
-			sb.append("\r\n");
-
-			// second message
-			sb.append(
-					"2;if a source is selected for mixed derivative (having more than one F27.);BR02> The source facet is not allowed in mixed derivatives;HIGH;HIGH");
-			sb.append("\r\n");
-
-			// third message
-			sb.append(
-					"3;if a source is selected for composite (c or s);BR03> The source facet is not allowed in composite food;HIGH;HIGH");
-			sb.append("\r\n");
-
-			// fourth message
-			sb.append(
-					"4;if a source commodity is selected for composite (c or s);BR04> The source commodity facet is not allowed in composite food;HIGH;HIGH");
-			sb.append("\r\n");
-
-			// fifth message
-			sb.append("5;if one or more source commodities are added to a derivative already having an implicit source commodity (not parent of the added);BR05> Source commodities which are not children of the implicit one are not allowed (use the generic derivative for describing a mixed derivative);HIGH;HIGH");
-			sb.append("\r\n");
-
-			// sixth message
-			sb.append(
-					"6;if a source is selected for a generic derivative without F27 (neither explicit nor implicit);BR06> The source facet is not allowed for derivatives without the (single) source commodity;HIGH;HIGH");
-			sb.append("\r\n");
-
-			// seventh message
-			sb.append("7;(ONLY DCF)if more than one explicit facet is added to a group with single cardinality;BR07> Reporting more than one facet is forbidden for this category;HIGH;HIGH");
-			sb.append("\r\n");
-
-			// eight message
-			sb.append("8;this rule is applied on the ui of the CB;BR08> under development;HIGH;HIGH");
-			sb.append("\r\n");
-
-			// ninth message
-			sb.append("9;if a hierarchy is selected as base term (describe function);BR09> The use of hierarchies as base term is discouraged;LOW;LOW");
-			sb.append("\r\n");
-
-			// tenth message
-			sb.append("10;if non-specific term is selected (describe);BR10> The use of non-specific terms is discouraged;NONE;LOW");
-			sb.append("\r\n");
-
-			// eleventh message
-			sb.append("11;if the generic facet Processed (or children) is selected;BR11> The use of generic terms is discouraged;LOW;LOW");
-			sb.append("\r\n");
-
-			// 12 message
-			sb.append("12;if an ingredient is selected for raw commodity or derivative;BR12> Ingredient facet can only be used as minor ingredient for derivatives;LOW;LOW");
-			sb.append("\r\n");
-
-			// 13 message
-			sb.append("13;if a source is selected for derivative with only one F27.;BR13> The source facet is allowed for derivatives with only one source commodity just for better specifying the raw source;LOW;LOW");
-			sb.append("\r\n");
-
-			// 14 message
-			sb.append("14;under development;BR14> under development;HIGH;HIGH");
-			sb.append("\r\n");
-
-			// 15 message
-			sb.append("15;if the user add an already existing implicit to the baseterm;BR15> The facet is already implicitly present in the baseterm. Please remove it;HIGH;HIGH");
-			sb.append("\r\n");
-
-			// 16 message
-			sb.append("16;if a derivative is described with a process facet with an ordCode value less than the implicit ordCode;BR16> Reporting facets less detailed than the implicit facets is discouraged;HIGH;HIGH");
-			sb.append("\r\n");
-
-			// 17 message
-			sb.append("17;if a facet is selected as baseterm is not valid;BR17> Reporting a facet as base term is forbidden;HIGH;HIGH");
-			sb.append("\r\n");
-
-			// 18 message
-			sb.append(
-					"18;if an ambiguous term is selected (terms reported in the BR_Exceptions);BR18> The use of ambiguous terms is discouraged;LOW;LOW");
-			sb.append("\r\n");
-
-			// 19 message
-			sb.append(
-					"19;if a forbidden process is chosen (the derivative should be used);BR19> The reported processes cannot be applied to the raw commodity (use the existing derivative);HIGH;HIGH");
-			sb.append("\r\n");
-
-			sb.append(
-					"20;if a deprecated term has been chosen;BR20> The selected term cannot be used since it is deprecated;HIGH;HIGH");
-			sb.append("\r\n");
-
-			sb.append(
-					"21;(DEPRECATED)if a dismissed term has been chosen;BR21> The selected term cannot be used since has been dismissed;HIGH;HIGH");
-			sb.append("\r\n");
-			
-			sb.append(
-					"22;(ONLY CB) if a non-hierarchy is selected as base term (describe function);BR22> Base term successfully added;NONE;NONE");
-			sb.append("\r\n");
-			
-			sb.append(
-					"23;(ONLY CB) if more than one process with the same ordCode is chosen (mutually exclusive property violated);BR23> The selected processes cannot be used together;HIGH;HIGH");
-			sb.append("\r\n");
-			
-			sb.append(
-					"24;(ONLY CB) if a base term which does not belong to reporting or exposure hierarchy is selected;BR24> The term selected cannot be reported;LOW;LOW");
-			sb.append("\r\n");
-			
-			sb.append(
-					"25;(ONLY CB) if a non exposure hierarchy-term (blue pyramid) is selected as base term (describe);BR25> A non-exposure hierarchy term has been selected;LOW;LOW");
-			sb.append("\r\n");
-			
-			sb.append(
-					"26;(ONLY CB) if a base term not valid in the exposure hierarchy is chosen;BR26> The term selected is not valid for human exposure calculation;NONE;HIGH");
-			sb.append("\r\n");
-			
-			sb.append(
-					"27;(ONLY CB) if two processes (implicit or explicit) with decimal ordcode and same integer part are applied (at least one explicit);BR27> Use the existing derivative instead of adding the facet;HIGH;HIGH");
-			sb.append("\r\n");
-			
-			sb.append(
-					"28;(ONLY CB) if reconstitution is added as process to concentrate, powder or other dehydrated terms;BR28> Select the reconstituted version of the product instead;HIGH;HIGH");
-			sb.append("\r\n");
-			
-			sb.append(
-					"29;(ONLY ICT) if wrong term structure or term not found;BR29> The code does not follow the required structure or is misspelled;ERROR;ERROR");
-			sb.append("\r\n");
-			
-			sb.append(
-					"30;(ONLY ICT)if the facet group id doesn't exists;BR30> The category does not exist;ERROR;ERROR");
-			sb.append("\r\n");
-			
-			sb.append(
-					"31;(ONLY ICT)if the facet doesn't belong to the group hierarchy;BR31> The facet has not been found in the category;ERROR;ERROR");
-			sb.append("\r\n");
+			sb.append("Message ID;Trigger Event Description;Text;SemaphoreWarningLevel;TextWarningLevel\r\n"
+					+ "1;if the added explicit f27 is not children of the already present implicit facet or it is not children of the bt than  raise warning;BR01> For mixed raw primary commodity terms it is only allowed to add under F27 source-commodities children of the already present implicit facet.;HIGH;HIGH\r\n"
+					+ "2;empty;BR02> Empty;NONE;NONE\r\n"
+					+ "3;if a source is selected for composite terms (c=aggregated or s=simple);BR03> The F01 source facet is not allowed in composite food. Choose instead an F04 ingredient facet.;HIGH;HIGH\r\n"
+					+ "4;if a source commodity is selected for composite (c=aggregated or s=simple);BR04> The F27 source-commodities facet is not allowed in composite food. Choose instead an F04 ingredient facet.;HIGH;HIGH\r\n"
+					+ "5;for derivative terms it is only allowed to add explicit facets which better define the already resent f27 implicit one;BR05> The F27 source-commodities facet which are not better specifing the alredy present implicit one are not allowed. Start from the generic derivative term instead.;HIGH;HIGH\r\n"
+					+ "6;if a source is selected for a generic derivative without F27 (neither explicit nor implicit);BR06> The F01 source facet is only allowed in derivatives with an F27 source-commodities facet implicitly present.;HIGH;HIGH\r\n"
+					+ "7;if a source is selected for mixed derivative having more than one F27;BR07> The F01 source facet can only be populated for derivatives having a single F27 source-commodities facet.;HIGH;HIGH\r\n"
+					+ "8;the use of not reportable terms is forbidden;BR08> The use of not reportable terms is forbidden.;HIGH;HIGH\r\n"
+					+ "9;empty;BR09> Empty;NONE;NONE\r\n"
+					+ "10;if non-specific term is selected;BR10> The use of non-specific terms as base term is discouraged.;NONE;LOW\r\n"
+					+ "11;if the generic facet Processed (or children) is selected;BR11> The use of generic terms under F28 process facet is discouraged.;LOW;LOW\r\n"
+					+ "12;if an ingredient is selected for raw commodity or derivative;BR12> The F04 ingredient facet can only be used as a minor ingredient to derivative or raw primary commodity terms.;LOW;LOW\r\n"
+					+ "13;if a physical state facet is added to a food rpc term;BR13> The F03 physical state facet reported creates a new derivative nature and therefore cannot be applied to raw primary commodity.;HIGH;HIGH\r\n"
+					+ "14;this br is only applied on ICT and DCF;BR14> This br is only applied on ICT and DCF.;HIGH;HIGH\r\n"
+					+ "15;this br is only applied on DCF;BR15> This br is only applied on DCF.;LOW;LOW\r\n"
+					+ "16;if a derivative is described with a process facet with an ordCode value less than the implicit ordCode;BR16> Reporting facets less detailed than the implicit facets is discouraged.;HIGH;HIGH\r\n"
+					+ "17;if a facet is selected as base term;BR17> Reporting facets as base term is forbidden.;HIGH;HIGH\r\n"
+					+ "18;empty;BR18> Empty;NONE;NONE\r\n"
+					+ "19;if a forbidden process is chosen (the derivative should be used);BR19> Processes that create a new derivative nature cannot be applied to raw commodity base terms. Start from the exsisting derivative base term instead.;HIGH;HIGH\r\n"
+					+ "20;if a deprecated term has been chosen;BR20> The selected term cannot be used since it is deprecated.;HIGH;HIGH\r\n"
+					+ "21;if a dismissed term has been chosen;BR21> The selected term cannot be used since it is dismissed.;HIGH;HIGH\r\n"
+					+ "22;if a non-hierarchy is selected as base term;BR22> Base term successfully added.;NONE;NONE\r\n"
+					+ "23;if a hierarchy is selected as base term;BR23>  The use of hierarchy terms as base term is discouraged.;LOW;LOW\r\n"
+					+ "24;if a hierarchy which does not belong to the exposure is selected as base term;BR24> The hierarchy term selected does not belong to the exposure hierarchy.;LOW;LOW\r\n"
+					+ "25;it is not allowed to add more than one explicit facet  to a facet category with single cardinality;BR25> Reporting more than one facet is forbidden for this category.;HIGH;HIGH\r\n"
+					+ "26;if more than one process with the same ordCode is chosen (mutually exclusive property violated);BR26> The selected processes cannot be used together for derivative base term.;HIGH;HIGH\r\n"
+					+ "27;if two processes (implicit or explicit) with decimal ordcode and same integer part are applied (at least one explicit);BR27> Processes that create a new derivative nature cannot be applied to exsisting derivative base terms. Start from a different derivative base term instead.;HIGH;HIGH\r\n"
+					+ "28;if reconstitution is added as process to concentrate, powder or other dehydrated terms;BR28> Processes that create a new derivative nature cannot be applied to exsisting derivative base terms. Start from the reconstituted/diluted term instead.;HIGH;HIGH\r\n"
+					+ "29;if wrong term structure or term not found;BR29> The code does not follow the required structure or is misspelled.;ERROR;ERROR\r\n"
+					+ "30;if the facet group id doesn't exists;BR30> The category does not exist.;ERROR;ERROR\r\n"
+					+ "31;if the facet doesn't belong to the group hierarchy;BR31> The facet is not valid for the facet category.;ERROR;ERROR\r\n");
 
 			out.write(sb.toString());
 			out.close();

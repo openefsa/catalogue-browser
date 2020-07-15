@@ -19,7 +19,7 @@ import utilities.GlobalUtil;
 public class AppConfig {
 
 	private static final Logger LOGGER = LogManager.getLogger(AppConfig.class);
-
+	
 	private static final String APP_NAME_PROPERTY = "Application.Name";
 	private static final String APP_VERSION_PROPERTY = "Application.Version";
 	private static final String DCF_XML_CREATOR = "DcfXmlUpdatesCreator.RemotePath";
