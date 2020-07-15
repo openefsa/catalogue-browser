@@ -19,7 +19,6 @@ public class ViewMenu implements MainMenuItem {
 	public static final int EXPAND_MI = 0;
 	public static final int COLLAPSE_NODE_MI = 1;
 	public static final int COLLAPSE_TREE_MI = 2;
-	public static final int RESET_VIEW_PREFERENCES_MI = 3;
 
 	private MenuListener listener;
 
@@ -56,7 +55,6 @@ public class ViewMenu implements MainMenuItem {
 		addExpandMI(editMenu);
 		addCollapseSingleNodeMI(editMenu);
 		addCollapseAllMI(editMenu);
-		addResetViewPreferencesMI(editMenu);
 		
 		if (User.getInstance().isCatManager())
 			addConsoleMI(editMenu);
@@ -125,29 +123,6 @@ public class ViewMenu implements MainMenuItem {
 		});
 
 		return collapseSingleItem;
-	}
-
-	/**
-	 * Menu item which allow to reset default window preferences of the tool
-	 * 
-	 * @param menu
-	 * @return
-	 */
-	private MenuItem addResetViewPreferencesMI (Menu menu) {
-		
-		final MenuItem resetViewItem = new MenuItem(menu, SWT.NONE);
-		resetViewItem.setText(CBMessages.getString("BrowserMenu.ResetPreferencesCmd"));
-		resetViewItem.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-
-				// call the button listener if it was set
-				if (listener != null)
-					listener.buttonPressed(resetViewItem, RESET_VIEW_PREFERENCES_MI, null);
-			}
-		});
-
-		return resetViewItem;
 	}
 	
 	/**

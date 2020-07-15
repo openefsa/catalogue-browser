@@ -489,7 +489,7 @@ public class MainPanel implements Observer {
 	 * @throws PreferenceNotFoundException
 	 */
 	private Hierarchy getLastHierarchy(Catalogue catalogue) throws PreferenceNotFoundException {
-		
+
 		Hierarchy lastHierarchy = null;
 
 		// first try to load the last hierarchy
@@ -506,7 +506,7 @@ public class MainPanel implements Observer {
 	 * @throws PreferenceNotFoundException
 	 */
 	private Term getLastTerm(Catalogue catalogue) throws PreferenceNotFoundException {
-		
+
 		Term lastTerm = null;
 
 		// first try to load the last hierarchy
@@ -650,7 +650,7 @@ public class MainPanel implements Observer {
 		// recover the last selected term if present
 		boolean restoreLastTerm = prefDao.getPreferenceBoolValue(CataloguePreference.enableBusinessRules, false);
 
-		// if the restore last selected term is enabled 
+		// if the restore last selected term is enabled
 		if (restoreLastTerm) {
 			try {
 				Term lastTerm = getLastTerm(catalogue);
@@ -886,18 +886,6 @@ public class MainPanel implements Observer {
 				case ViewMenu.COLLAPSE_TREE_MI:
 					tree.collapseAll();
 					break;
-				case ViewMenu.RESET_VIEW_PREFERENCES_MI:
-					// ask the user before continuing the operation
-					boolean confirmation = MessageDialog.openQuestion(shell, CBMessages.getString("BrowserMenu.ResetPreferencesCmd"),
-							CBMessages.getString("BrowserMenu.ResetPreferencesCmd.message"));
-
-					if (confirmation) {
-						//remove preferences folder and close the tool
-						GlobalUtil.removePreferencesFolder();
-						menu.getShell().close();
-					}
-					
-					break;
 				default:
 					break;
 				}
@@ -935,14 +923,24 @@ public class MainPanel implements Observer {
 					// refresh the tools item menu when ict download and install is completed
 					refresh();
 					break;
-
 				case ToolsMenu.HIER_EDITOR_MI:
 				case ToolsMenu.ATTR_EDITOR_MI:
 					// refresh
 					tabPanel.setTerm(tree.getFirstSelectedTerm());
 					refresh();
 					break;
+				case ToolsMenu.RESET_VIEW_PREFERENCES_MI:
+					// ask the user before continuing the operation
+					boolean confirmation = MessageDialog.openQuestion(shell,
+							CBMessages.getString("BrowserMenu.ResetPreferencesCmd"),
+							CBMessages.getString("BrowserMenu.ResetPreferencesCmd.message"));
 
+					if (confirmation) {
+						// remove preferences folder and close the tool
+						GlobalUtil.removePreferencesFolder();
+						menu.getShell().close();
+					}
+					break;
 				default:
 					break;
 				}

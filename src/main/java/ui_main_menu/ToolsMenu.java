@@ -76,6 +76,7 @@ public class ToolsMenu implements MainMenuItem {
 	public static final int CREATE_XML_MI = 13;
 	public static final int DELETE_PICKLIST_MI = 14;
 	public static final int INSTALL_ICT = 15;
+	public static final int RESET_VIEW_PREFERENCES_MI = 16;
 
 	private MenuListener listener;
 
@@ -100,6 +101,7 @@ public class ToolsMenu implements MainMenuItem {
 	private MenuItem attributeEditMI;
 	private MenuItem searchOptMI;
 	private MenuItem userPrefMI;
+	private MenuItem fixScreensIssue;
 
 	private MenuItem installIctMI; // install the ict tool
 	private MenuItem launchIctMI; // launch ICT tool
@@ -197,6 +199,9 @@ public class ToolsMenu implements MainMenuItem {
 
 		// general user preferences
 		userPrefMI = addUserPreferencesMI(toolsMenu);
+
+		// fix multiple screens issue
+		fixScreensIssue = addFixMultipleScreensMI(toolsMenu);
 
 		// called when the tools menu is shown
 		toolsMenu.addListener(SWT.Show, new Listener() {
@@ -678,7 +683,7 @@ public class ToolsMenu implements MainMenuItem {
 									try {
 										// invoke the ICT installer
 										new ICTInstaller().install();
-										
+
 										// extract the foodex2 catalogue
 										extractCatalogue(installItem, GlobalUtil.ICT_FOODEX2_FILE_PATH, INSTALL_ICT,
 												false);
@@ -1090,6 +1095,31 @@ public class ToolsMenu implements MainMenuItem {
 	}
 
 	/**
+	 * Add a menu item which allows to reset default window preferences of the tool
+	 * 
+	 * @param menu
+	 * @return
+	 */
+	private MenuItem addFixMultipleScreensMI(Menu menu) {
+
+		final MenuItem resetViewPreferencesItem = new MenuItem(menu, SWT.NONE);
+		resetViewPreferencesItem.setText(CBMessages.getString("BrowserMenu.ResetPreferencesCmd"));
+		resetViewPreferencesItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+
+				// call the button listener if it was set
+				if (listener != null)
+					listener.buttonPressed(resetViewPreferencesItem, RESET_VIEW_PREFERENCES_MI, null);
+			}
+		});
+
+		resetViewPreferencesItem.setEnabled(false);
+
+		return resetViewPreferencesItem;
+	}
+
+	/**
 	 * Refresh all the menu items contained in the tool menu
 	 */
 	public void refresh() {
@@ -1149,6 +1179,7 @@ public class ToolsMenu implements MainMenuItem {
 
 		searchOptMI.setEnabled(searchPrefEnabled);
 		userPrefMI.setEnabled(true);
+		fixScreensIssue.setEnabled(true);
 
 		// if editing modify also editing buttons
 		if (user.canEdit(mainMenu.getCatalogue())) {
@@ -1485,11 +1516,9 @@ public class ToolsMenu implements MainMenuItem {
 
 		String catCode = mainMenu.getCatalogue().getCode();
 
-		int val = GlobalUtil
-				.showDialog(
-						shell, CBMessages.getString("warning.title"), CBMessages.getString("upload.cat.file.confirmation",
-								catCode, CBMessages.getString("upload.xml.data.label")),
-						SWT.ICON_WARNING | SWT.YES | SWT.NO);
+		int val = GlobalUtil.showDialog(shell, CBMessages.getString("warning.title"), CBMessages
+				.getString("upload.cat.file.confirmation", catCode, CBMessages.getString("upload.xml.data.label")),
+				SWT.ICON_WARNING | SWT.YES | SWT.NO);
 
 		if (val != SWT.YES)
 			return;
