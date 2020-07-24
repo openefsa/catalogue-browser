@@ -155,17 +155,17 @@ public class FrameTermImplicitFacets implements Observer {
 	}
 
 	/**
-	 * Remove (into the facet category) the ancestor of the new facet added; note
-	 * that the method is applied to all the facets (implicit and explicit)
+	 * Remove (into the facet category) the explicit ancestor of already present
+	 * implicit facet
 	 * 
 	 * @author shahaal
 	 * @return
 	 */
 	private void checkAncestors(Term descriptor) {
-
 		for (FacetDescriptor fd : term.getDescriptorsByCategory(facetCategory, true)) {
-			if (descriptor.hasAncestor(fd.getDescriptor(), facetCategory.getHierarchy()))
+			if (descriptor.hasAncestor(fd.getDescriptor(), facetCategory.getHierarchy())) {
 				term.removeImplicitFacet(fd);
+			}
 		}
 
 	}
@@ -344,12 +344,12 @@ public class FrameTermImplicitFacets implements Observer {
 		// get the selected element ( facet category or descriptor )
 		Object selectedElem = ((IStructuredSelection) (sel)).getFirstElement();
 
-		if (selectedElem instanceof Attribute) 
+		if (selectedElem instanceof Attribute)
 			// if we have selected the facet category simply cast it
 			facetCategory = (Attribute) selectedElem;
 		else // if we have selected a descriptor get the category from it
 			facetCategory = ((DescriptorTreeItem) selectedElem).getDescriptor().getFacetCategory();
-		
+
 		// return if non MTX catalogue or non editable cat
 		Catalogue cat = facetCategory.getCatalogue();
 		if (!cat.isMTXCatalogue()) {
@@ -357,7 +357,7 @@ public class FrameTermImplicitFacets implements Observer {
 					CBMessages.getString("TableFacetApplicability.AddFacetWarningMessage"), SWT.ICON_WARNING);
 			return;
 		}
-		
+
 		/**
 		 * open a form to select descriptors. In particular we enable the multiple
 		 * selection only if the facet category is repeatable (cardinality 0 or + )
@@ -375,7 +375,7 @@ public class FrameTermImplicitFacets implements Observer {
 			// if we have the inherited implicit facet
 			// (it can be only one, cardinality is single)
 			ArrayList<DescriptorTreeItem> inh = term.getInheritedImplicitFacets(facetCategory);
-			
+
 			if (!inh.isEmpty()) {
 
 				// then we can only specify better the inherited
@@ -394,6 +394,9 @@ public class FrameTermImplicitFacets implements Observer {
 
 		// get the current catalogue
 		Catalogue currentCat = manager.getCurrentCatalogue();
+
+		// TODO remove parents of more specific explicit facets
+		// checkExplicitAncestors(sf.getSelectedTerms());
 
 		// for each selected descriptor we add it
 		for (Term descriptor : sf.getSelectedTerms()) {

@@ -388,7 +388,7 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 
 			try (ResultSet rs = stmt.executeQuery();) {
 
-				// for each picklist term
+				// for each pick-list term
 				while (rs.next()) {
 
 					int level = rs.getInt("PICKLIST_TERM_LEVEL");

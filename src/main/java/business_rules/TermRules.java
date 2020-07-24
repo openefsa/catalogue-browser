@@ -305,8 +305,8 @@ public abstract class TermRules {
 		if (sourceFacetCount > 0 || totalSourceCommCount > 0)
 			termsInvolved = termsInvolved.substring(0, termsInvolved.length() - " - ".length());
 
-		// if we have an implicit sc, an explicit sc and a source
-		if (explicitRestrictedSourceCommCount > 0 && implicitSourceCommCount > 0)
+		// if we have an implicit sc, an explicit sc and not a source
+		if (explicitSourceCommCount > 0 && implicitSourceCommCount > 0)
 			printWarning(WarningEvent.BR05, termsInvolved, false, stdOut);
 
 		int implAndSpecifications = explicitRestrictedSourceCommCount + implicitSourceCommCount;
@@ -425,13 +425,25 @@ public abstract class TermRules {
 	 * @param fcIndex
 	 * @param fcCode
 	 */
-	protected void checkIfExplicitLessDetailed(Term bt, Term fc,boolean stdOut) {
+	protected void checkIfExplicitLessDetailed(Term bt, String facetIndex, Term fc,boolean stdOut) {
 		// get all implicit facets of the base term
 		ArrayList<FacetDescriptor> implicitFacets = bt.getFacets(true);
 		
 		// check for each implicit facets if the explicit is parent
 		for(FacetDescriptor fd : implicitFacets) {
-			if (fc.belongsToHierarchy(fd.getFacetCategory().getHierarchy())) {
+			// get the facet category to which appertain the implicit facet
+			Attribute fcCat = fd.getFacetCategory();
+			// skip implicit facets of different facet categories
+			if (!fcCat.getCode().equals(facetIndex))
+				continue;
+			// get the implicit term info
+			Term implTerm = currentCat.getTermByCode(fd.getFacetCode());
+			// get category hierarchy
+			Hierarchy h = fcCat.getHierarchy();
+			// two terms are siblings if have same parent
+			boolean areSiblings = (fc.getParent(h)==implTerm.getParent(h));
+			// if the explicit has not ancestor the implicit and they are not siblings
+			if (!fc.hasAncestor(implTerm, h)&&!areSiblings) {
 				printWarning(WarningEvent.BR16, fc.getCode(), false, stdOut);
 				break;
 			}
@@ -1537,7 +1549,7 @@ public abstract class TermRules {
 				// check if a forbidden process is used or raw commodities
 				checkFpForRawCommodity(baseTerm, facetIndex, facetCode, stdOut);
 				// check if the order of processes is violated for derivatives
-				checkIfExplicitLessDetailed(baseTerm, facet, stdOut);
+				checkIfExplicitLessDetailed(baseTerm, facetIndex, facet, stdOut);
 			}
 
 			// check if term is not reportable in dft hierarchy

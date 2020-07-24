@@ -877,7 +877,7 @@ public class Term extends CatalogueObject implements Mappable {
 
 		return interpCode.toString();
 	}
-	
+
 	/**
 	 * Get the extended term name with implicit facets (also inherited)
 	 * 
@@ -892,7 +892,7 @@ public class Term extends CatalogueObject implements Mappable {
 		interpCode.append(this.getName());
 
 		ArrayList<FacetDescriptor> facets = getFacets(true);
-		
+
 		// order the facets
 		Collections.sort(facets, new ComparatorFacetDescriptor());
 
@@ -2029,7 +2029,7 @@ public class Term extends CatalogueObject implements Mappable {
 					}
 				}
 			} else {
-
+				
 				// if the order is greater than this term order, save the sibling
 				if (siblingOrder > this.getApplicability(hierarchy).getOrder())
 

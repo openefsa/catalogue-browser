@@ -441,7 +441,7 @@ public class FormTermCoder {
 	private void updateTextFields() {
 
 		String newCode = _tempTerm.getFullCode(copyImplicit, true);
-
+		
 		if (!dialog.isDisposed()) {
 			fullCode.setText(newCode);
 			textinterp.setText(_tempTerm.getInterpretedCode(copyImplicit));
