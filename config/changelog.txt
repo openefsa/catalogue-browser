@@ -1,11 +1,10 @@
 
 -------------- What's new in this version:
-+ Added new exceptions to the BR data file
-+ BR exceptions removed from business rules
-+ Added flag in options for not restoring last selected term
-+ Business rules have been modified
-+ Added dix multiple screens issue under tools
-+ Added Reinstall ICT option under tools
++ Updated BRs data file
++ Different changes to the Business rules
++ Added option for not restoring last selected term
++ Added fix multiple screens issue
++ Added Reinstall ICT option
 
 -------------- Bugs fixed and other improvements:
 + Optimisations to the Term properties tab

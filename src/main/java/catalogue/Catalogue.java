@@ -1089,28 +1089,6 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 
 		}
 
-		/*
-		 * uncomment for adding the term to each hierarchy which contains the term's
-		 * parent Term parentTerm = (Term) parent;
-		 * 
-		 * for(Hierarchy h : getHierarchies()) {
-		 * 
-		 * if(parentTerm.belongsToHierarchy(h)) {
-		 * 
-		 * System.out.println("shahaal adding "+h);
-		 * 
-		 * // get the first available order integer under the parent term // in the
-		 * selected hierarchy int order = parentDao.getNextAvailableOrder( parent, h );
-		 * 
-		 * // create the term applicability for the term in the selected hierarchy // we
-		 * set the new term as child of the selected term // we set it to reportable as
-		 * default Applicability appl = new Applicability( child, parent, h, order, true
-		 * );
-		 * 
-		 * // add permanently the new applicability to the child child.addApplicability(
-		 * appl, true ); } }
-		 */
-
 		// update the involved terms in RAM
 		termDao.update(child);
 

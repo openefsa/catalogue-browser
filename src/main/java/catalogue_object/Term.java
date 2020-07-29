@@ -1895,7 +1895,40 @@ public class Term extends CatalogueObject implements Mappable {
 
 		normalizeLevel(terms, hierarchy);
 	}
+	
+	/**
+	 * get the term level of detail in the tree
+	 * 
+	 * @param term
+	 * @param hierarchy
+	 * @return
+	 * @unused
+	 */
+	public int getLevelInTree(Hierarchy hierarchy) {
+		// min level of detail
+		int level=1;
+		
+		// get the parent
+		Term parent = this.getParent(hierarchy);
 
+		// do until root
+		while (parent != null) {
+			// increment level
+			level+=1;
+			// get the next parent
+			parent = parent.getParent(hierarchy);
+		}
+
+		return level;
+	}
+
+	/**
+	 * 
+	 * @param termsOnLevel
+	 * @param hierarchy
+	 * @return
+	 * @unused
+	 */
 	public List<Term> orderLevel(List<Term> termsOnLevel, final Hierarchy hierarchy) {
 
 		// sort terms by order

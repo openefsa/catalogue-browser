@@ -524,8 +524,7 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 	@Override
 	public void update(Observable arg0, Object arg1) {
 
-		// if the check boxes for visualizing
-		// terms are changed
+		// if the check boxes for visualizing terms are changed
 		if (arg0 instanceof TermFilter) {
 
 			boolean hideDeprecated = ((TermFilter) arg0).isHidingDeprecated();
@@ -535,7 +534,8 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 			// update content provider settings
 			contentProvider.setHideDeprecated(hideDeprecated);
 			contentProvider.setHideNotUse(hideNotInUse);
-
+			
+			// update label provider settings
 			labelProvider.setHideCode(hideTermCode);
 
 			// refresh contents
