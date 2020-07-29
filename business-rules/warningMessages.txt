@@ -3,7 +3,7 @@ Message ID;Trigger Event Description;Text;SemaphoreWarningLevel;TextWarningLevel
 2;empty;BR02> Empty;NONE;NONE
 3;if a source is selected for composite terms (c=aggregated or s=simple);BR03> The F01 source facet is not allowed in composite food. Choose instead an F04 ingredient facet.;HIGH;HIGH
 4;if a source commodity is selected for composite (c=aggregated or s=simple);BR04> The F27 source-commodities facet is not allowed in composite food. Choose instead an F04 ingredient facet.;HIGH;HIGH
-5;for derivative terms it is only allowed to add explicit facets which better define the already resent f27 implicit one;BR05> The F27 source-commodities facet which are not better specifing the alredy present implicit one are not allowed. Start from the generic derivative term instead.;HIGH;HIGH
+5;for derivative terms it is only allowed to add explicit facets which better define the already resent f27 implicit one;BR05> The F27 source-commodities facet which are not better specifing the already present implicit one are not allowed. Start from the generic derivative term instead.;HIGH;HIGH
 6;if a source is selected for a generic derivative without F27 (neither explicit nor implicit);BR06> The F01 source facet is only allowed in derivatives with an F27 source-commodities facet implicitly present.;HIGH;HIGH
 7;if a source is selected for mixed derivative having more than one F27;BR07> The F01 source facet can only be populated for derivatives having a single F27 source-commodities facet.;HIGH;HIGH
 8;the use of not reportable terms is forbidden;BR08> The use of not reportable terms is forbidden.;HIGH;HIGH

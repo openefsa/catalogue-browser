@@ -443,7 +443,7 @@ public abstract class TermRules {
 			// two terms are siblings if have same parent
 			boolean areSiblings = (fc.getParent(h)==implTerm.getParent(h));
 			// if the explicit has not ancestor the implicit and they are not siblings
-			if (!fc.hasAncestor(implTerm, h)&&!areSiblings) {
+			if (implTerm.hasAncestor(fc, h)&&!areSiblings) {
 				printWarning(WarningEvent.BR16, fc.getCode(), false, stdOut);
 				break;
 			}
