@@ -65,7 +65,7 @@ public class TermPropertiesPanel implements Observer {
 		// Create a tab folder into the form
 		TabFolder folder = new TabFolder(parent, SWT.NONE);
 		folder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		folder.setLayout(new GridLayout(1, false));
+		folder.setLayout(new GridLayout(1, true));
 		// add tabs into the tab folder parent
 		addTermPropertyTab(folder);
 		addFacetTab(folder);
