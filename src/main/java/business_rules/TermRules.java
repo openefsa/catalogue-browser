@@ -1452,9 +1452,12 @@ public abstract class TermRules {
 	 * @param fromICT
 	 */
 	protected void performWarningChecks(String fullCode, boolean stdOut, boolean fromICT) {
-
+		
+		// force code to upper case
+		fullCode = fullCode.toUpperCase();
+		
 		////////////////// RETRIEVE BASE TERM FROM FULL CODE
-
+		
 		// split the full code in order to get the base term code and the facets
 		String[] splits = fullCode.split("#");
 
@@ -1548,13 +1551,13 @@ public abstract class TermRules {
 			if (fromICT) {
 				// get the facet category
 				Attribute facetCategory = currentCat.getAttributeByCode(facetIndex);
-
-				if (facetCategory == null)
+				if (facetCategory == null) {
 					// if the facet category does not exists
-					printWarning(WarningEvent.BR30, facetCode, false, stdOut);
-				else if(!facet.belongsToHierarchy(facetCategory.getHierarchy()))
+					printWarning(WarningEvent.BR30, facetIndex, false, stdOut);
+				} else if(!facet.belongsToHierarchy(facetCategory.getHierarchy())) {
 					// if facet does not belong to facet category
 					printWarning(WarningEvent.BR31, facetCode, false, stdOut);
+				}
 			}
 
 			if (warnGroup) {
