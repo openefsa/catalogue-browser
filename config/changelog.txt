@@ -9,6 +9,7 @@
 -------------- Bugs fixed and other improvements:
 + Optimisations to the Term properties tab
 + Optimisations to the Options panel
++ Fixed bug causing the check of the code twice
 
 -------------- Changes in the previous versions:
 + Check the official <a href="Latest-Changes">wiki page</a> for further information
