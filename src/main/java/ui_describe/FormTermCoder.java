@@ -241,8 +241,9 @@ public class FormTermCoder {
 
 				// raise warnings if necessary
 				// if the business rules are enabled
-				if (enableBR)
+				if (enableBR) {
 					warnUtils.refreshWarningsTable(currentCode);
+				}
 			}
 		});
 
@@ -314,14 +315,7 @@ public class FormTermCoder {
 		warningsTable.setInput(warnings);
 
 		warnUtils = new WarningUtil(warningsTable, semaphore);
-
-		// analyse preliminary warnings (for the base term)
-		String currentCode = _tempTerm.getFullCode(false, true);
-
-		// if the business rules are enabled
-		if (enableBR)
-			warnUtils.refreshWarningsTable(currentCode);
-
+		
 		// composite for last buttons
 		Composite buttonsComposite = new Composite(dialog, SWT.NONE);
 		buttonsComposite.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, false, false));

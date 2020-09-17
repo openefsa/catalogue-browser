@@ -47,7 +47,9 @@ public abstract class TermRules {
 
 	// load into memory all the warning messages from the text file
 	protected ArrayList<WarningMessage> warningMessages;
-
+	
+	protected boolean btCorrect = false;
+	
 	/**
 	 * Enum type: identify the warning messages to print
 	 * 
@@ -335,6 +337,10 @@ public abstract class TermRules {
 	 * @param stdOut
 	 */
 	protected void isNotReportable(Term term, boolean stdOut) {
+		// skip the rule if the term is dismissed
+		if (term.isDismissed(currentCat.getDefaultHierarchy()))
+			return;
+		
 		if(!term.isReportable(currentCat.getDefaultHierarchy())) {
 			printWarning(WarningEvent.BR08, term.getCode(), false, stdOut);
 		}
@@ -522,7 +528,7 @@ public abstract class TermRules {
 	}
 	
 	/**
-	 * BR22 - BR23 - BR24
+	 * BR23 - BR24
 	 * Check if the base term is a hierarchy. If it is, rise a
 	 * warning (discourage its use) Check also if the hierarchy is an exposure
 	 * hierarchy or not and rise a warning if it is a non exposure hierarchy
@@ -531,23 +537,18 @@ public abstract class TermRules {
 	 * @param stdOut
 	 */
 	protected void hierarchyAsBasetermCheck(Term bt, boolean stdOut) {
-		
 		// if the base term is a hierarchy
 		if (bt.getDetailLevel().isHierarchyDetailLevel()) {
-
 			// get the exposure hierarchy
 			Hierarchy expHierarchy = currentCat.getHierarchyByCode("expo");
-			
-			if (bt.belongsToHierarchy(expHierarchy)) 
+			if (bt.belongsToHierarchy(expHierarchy)) {
 				// print the message related to the hierarchy as base term
 				printWarning(WarningEvent.BR23, bt.getCode(), false, stdOut);
-			else 
+			} else {
 				// print warning that you are using a non exposure hierarchy term
 				printWarning(WarningEvent.BR24, bt.getCode(), false, stdOut);
-		} else
-			// print the message base term successfully added if no warnings
-			printWarning(WarningEvent.BR22, bt.getCode(), false, stdOut);
-
+			}
+		}
 	}
 	
 	/**
@@ -1377,7 +1378,13 @@ public abstract class TermRules {
 	 * @param stdOut
 	 */
 	protected abstract void printWarning(WarningEvent event, String postMessage, boolean dateTime, boolean stdOut);
-
+	
+	/**
+	 * Check if high warnings are present
+	 */
+	protected abstract boolean highWarningsPresent();
+	
+	
 	/**
 	 * get the warning level of the semaphore
 	 * 
@@ -1466,24 +1473,29 @@ public abstract class TermRules {
 
 		////////////////// MAKE SOME WARNING CHECKS AND WARN THE USER IF NECESSARY
 
-		// check if the base term is a hierarchy or not
-		hierarchyAsBasetermCheck(baseTerm, stdOut);
-
+		// check if term is not re-portable in dft hierarchy
+		isNotReportable(baseTerm, stdOut);
+		
 		// check if an non specific base term is selected
 		nonSpecificTermCheck(baseTerm, stdOut);
 
-		// check if term is not reportable in dft hierarchy
-		isNotReportable(baseTerm, stdOut);
+		// check if base term type is f
+		isFacet(baseTerm, stdOut);
 		
-		// check if the baseterm is deprecated
+		// check if the base term is deprecated
 		isDeprecated(baseTerm, stdOut);
 
 		// check if the base term is dismissed
 		isDismissed(baseTerm, stdOut);
-
-		// check if baseterm type is f
-		isFacet(baseTerm, stdOut);
-
+		
+		// check if the base term is a hierarchy or not
+		hierarchyAsBasetermCheck(baseTerm, stdOut);
+		
+		// print successful added bt when high warnings are not present
+		if (!fromICT && !highWarningsPresent()) {
+			printWarning(WarningEvent.BR22, baseTermCode, false, stdOut);
+		}
+		
 		// return if there is nothing else to parse (i.e. no facets)
 		if (splits.length < 2)
 			return;
@@ -1552,8 +1564,8 @@ public abstract class TermRules {
 				checkIfExplicitLessDetailed(baseTerm, facetIndex, facet, stdOut);
 			}
 
-			// check if term is not reportable in dft hierarchy
-			isNotReportable(facet, stdOut);
+			// VALID ONLY FOR BT: check if term is not reportable in dft hierarchy
+			// isNotReportable(facet, stdOut);
 			
 			// check if the generic process facet is selected
 			genericProcessedFacetCheck(facet, stdOut);
@@ -1604,15 +1616,11 @@ public abstract class TermRules {
 						// if the added process is a son of one of the implicit process
 						// add it but remove the implicit, in order to ignore it
 						if (descendant.hasAncestor(ancestor, currentCat.getHierarchyByCode("process"))) {
-
 							isAncestor = true;
-
 							// add since we want to check only the forbidden processes mutually exclusivity
 							explicit.add(currentFP.get(index));
-
 							// remove the implicit
 							implicit.remove(proc);
-
 							break;
 						}
 					}

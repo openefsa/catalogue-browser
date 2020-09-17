@@ -1,12 +1,12 @@
 Message ID;Trigger Event Description;Text;SemaphoreWarningLevel;TextWarningLevel
-1;if the added explicit f27 is not children of the already present implicit facet or it is not children of the bt than  raise warning;BR01> For mixed raw primary commodity terms it is only allowed to add under F27 source-commodities children of the already present implicit facet.;HIGH;HIGH
+1;if the added explicit f27 is not children of the already present implicit facet or it is not children of the bt than raise warning;BR01> For mixed raw primary commodity terms it is only allowed to add under F27 source-commodities children of the already present implicit facet.;HIGH;HIGH
 2;empty;BR02> Empty;NONE;NONE
 3;if a source is selected for composite terms (c=aggregated or s=simple);BR03> The F01 source facet is not allowed in composite food. Choose instead an F04 ingredient facet.;HIGH;HIGH
 4;if a source commodity is selected for composite (c=aggregated or s=simple);BR04> The F27 source-commodities facet is not allowed in composite food. Choose instead an F04 ingredient facet.;HIGH;HIGH
 5;for derivative terms it is only allowed to add explicit facets which better define the already resent f27 implicit one;BR05> The F27 source-commodities facet which are not better specifing the already present implicit one are not allowed. Start from the generic derivative term instead.;HIGH;HIGH
 6;if a source is selected for a generic derivative without F27 (neither explicit nor implicit);BR06> The F01 source facet is only allowed in derivatives with an F27 source-commodities facet implicitly present.;HIGH;HIGH
 7;if a source is selected for mixed derivative having more than one F27;BR07> The F01 source facet can only be populated for derivatives having a single F27 source-commodities facet.;HIGH;HIGH
-8;the use of not reportable terms is forbidden;BR08> The use of not reportable terms is forbidden.;HIGH;HIGH
+8;the use of not reportable terms in reporting is forbidden;BR08> The use of this term is forbidden in the reporting hierarchy.;HIGH;HIGH
 9;empty;BR09> Empty;NONE;NONE
 10;if non-specific term is selected;BR10> The use of non-specific terms as base term is discouraged.;NONE;LOW
 11;if the generic facet Processed (or children) is selected;BR11> The use of generic terms under F28 process facet is discouraged.;LOW;LOW
@@ -22,7 +22,7 @@ Message ID;Trigger Event Description;Text;SemaphoreWarningLevel;TextWarningLevel
 21;if a dismissed term has been chosen;BR21> The selected term cannot be used since it is dismissed.;HIGH;HIGH
 22;if a non-hierarchy is selected as base term;BR22> Base term successfully added.;NONE;NONE
 23;if a hierarchy is selected as base term;BR23>  The use of hierarchy terms as base term is discouraged.;LOW;LOW
-24;if a hierarchy which does not belong to the exposure is selected as base term;BR24> The hierarchy term selected does not belong to the exposure hierarchy.;LOW;LOW
+24;if a hierarchy which does not belong to the exposure is selected as base term;BR24> The hierarchy term selected does not belong to the exposure hierarchy.;HIGH;HIGH
 25;it is not allowed to add more than one explicit facet  to a facet category with single cardinality;BR25> Reporting more than one facet is forbidden for this category.;HIGH;HIGH
 26;if more than one process with the same ordCode is chosen (mutually exclusive property violated);BR26> The selected processes cannot be used together for derivative base term.;HIGH;HIGH
 27;if two processes (implicit or explicit) with decimal ordcode and same integer part are applied (at least one explicit);BR27> Processes that create a new derivative nature cannot be applied to exsisting derivative base terms. Start from a different derivative base term instead.;HIGH;HIGH

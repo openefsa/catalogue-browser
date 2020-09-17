@@ -76,12 +76,11 @@ public class WarningUtil extends TermRules {
 
 	/**
 	 * Refresh the warning table, that is, remove all the warnings and recompute
-	 * them starting from the fullCode of the term. 
-	 * Examples of full code: 
-	 * A0DPP or
+	 * them starting from the fullCode of the term. Examples of full code: A0DPP or
 	 * A0DPP#F01.A0FGM or A0DPP#F01.A0FGM$F04.A000J
 	 * 
-	 * @param fullCode: the full code of a term (IMPORTANT: without the implicit facets code if enabled!)
+	 * @param fullCode: the full code of a term (IMPORTANT: without the implicit
+	 *                  facets code if enabled!)
 	 */
 	public void refreshWarningsTable(String fullCode) {
 
@@ -90,7 +89,7 @@ public class WarningUtil extends TermRules {
 		resetWarningState();
 		// refresh the graphics ( font and colours )
 		refreshWarningTableGraphics();
-		
+
 		//////////////////// CHECKS
 		// execute all the warning checks
 		performWarningChecks(fullCode, false, false);
@@ -130,13 +129,12 @@ public class WarningUtil extends TermRules {
 	 * message Update the current warning level to the highest retrieved until now
 	 * Update the semaphore and text accordingly to the warning level
 	 * 
-	 * @param event: the event which causes the printWarning
+	 * @param event:             the event which causes the printWarning
 	 * @param postMessageString: a string which is attached to the end of the
-	 *        message (used for additional info)
-	 * @param attachDatetime: should the datetime be attached at the end of the
-	 *        message?
+	 *                           message (used for additional info)
+	 * @param attachDatetime:    should the datetime be attached at the end of the
+	 *                           message?
 	 */
-
 	protected void printWarning(WarningEvent event, String postMessageString, boolean attachDatetime, boolean stdOut) {
 
 		// create the warning message to be printed
@@ -145,24 +143,6 @@ public class WarningUtil extends TermRules {
 		// get the warning levels for making colours
 		WarningLevel semaphoreLevel = getSemaphoreLevel(event);
 		WarningLevel textWarningLevel = getTextLevel(event);
-
-		// if the message should be printed into the standard output
-		// CSV line semicolon separated
-		// do not print the base term successfully added warning! It is useless for the
-		// excel macro
-		if (stdOut && event != WarningEvent.BR22) {
-
-			StringBuilder sb = new StringBuilder();
-			sb.append(message);
-			sb.append(";");
-			sb.append(semaphoreLevel.toString());
-			sb.append(";");
-			sb.append(textWarningLevel.toString());
-
-			// print the line
-			System.out.print(sb.toString() + "|");
-			return;
-		}
 
 		// if graphical object are not used
 		if (warningsTable == null || semaphore == null)
@@ -220,19 +200,24 @@ public class WarningUtil extends TermRules {
 			rgb = warnOptions.getTxtErrorRGB();
 			txtColor = new Color(device, rgb[0], rgb[1], rgb[2]);
 		}
-		
+
 		// update the text colour accordingly to the warning colour
 		warningsTable.getTable().getItems()[lastElementIndex].setForeground(txtColor);
 
 		// if the warning level of this message is greater than or equal the previous
 		if (semaphoreLevel.ordinal() >= currentWarningLevel.ordinal()) {
-
 			// update the currentWarningLevel
 			currentWarningLevel = semaphoreLevel;
-
 			// change the colour of the semaphore
 			semaphore.setBackground(warningColor);
 		}
+	}
+	
+	/**
+	 * check if high warnings are present
+	 */
+	protected boolean highWarningsPresent() {
+		return currentWarningLevel.ordinal()>1;
 	}
 
 	/**
