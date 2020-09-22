@@ -1567,7 +1567,7 @@ public abstract class TermRules {
 				checkIfExplicitLessDetailed(baseTerm, facetIndex, facet, stdOut);
 			}
 
-			// VALID ONLY FOR BT: check if term is not reportable in dft hierarchy
+			// VALID ONLY FOR BT: check if term is not re-portable in default hierarchy
 			// isNotReportable(facet, stdOut);
 			
 			// check if the generic process facet is selected
