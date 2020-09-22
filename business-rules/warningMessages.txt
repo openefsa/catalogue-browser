@@ -6,7 +6,7 @@ Message ID;Trigger Event Description;Text;SemaphoreWarningLevel;TextWarningLevel
 5;for derivative terms it is only allowed to add explicit facets which better define the already resent f27 implicit one;BR05> The F27 source-commodities facet which are not better specifing the already present implicit one are not allowed. Start from the generic derivative term instead.;HIGH;HIGH
 6;if a source is selected for a generic derivative without F27 (neither explicit nor implicit);BR06> The F01 source facet is only allowed in derivatives with an F27 source-commodities facet implicitly present.;HIGH;HIGH
 7;if a source is selected for mixed derivative having more than one F27;BR07> The F01 source facet can only be populated for derivatives having a single F27 source-commodities facet.;HIGH;HIGH
-8;the use of not reportable terms in reporting is forbidden;BR08> The use of this term is forbidden in the reporting hierarchy.;HIGH;HIGH
+8;the use of not re-portable terms in reporting is forbidden (the rule is skipped if the term is dismissed);BR08> The use of this term is forbidden in the reporting hierarchy.;HIGH;HIGH
 9;empty;BR09> Empty;NONE;NONE
 10;if non-specific term is selected;BR10> The use of non-specific terms as base term is discouraged.;NONE;LOW
 11;if the generic facet Processed (or children) is selected;BR11> The use of generic terms under F28 process facet is discouraged.;LOW;LOW
@@ -20,7 +20,7 @@ Message ID;Trigger Event Description;Text;SemaphoreWarningLevel;TextWarningLevel
 19;if a forbidden process is chosen (the derivative should be used);BR19> Processes that create a new derivative nature cannot be applied to raw commodity base terms. Start from the exsisting derivative base term instead.;HIGH;HIGH
 20;if a deprecated term has been chosen;BR20> The selected term cannot be used since it is deprecated.;HIGH;HIGH
 21;if a dismissed term has been chosen;BR21> The selected term cannot be used since it is dismissed.;HIGH;HIGH
-22;if a non-hierarchy is selected as base term;BR22> Base term successfully added.;NONE;NONE
+22;if a non-hierarchy is selected as base term (message not shown if high warn to bt is present);BR22> Base term successfully added.;NONE;NONE
 23;if a hierarchy is selected as base term;BR23>  The use of hierarchy terms as base term is discouraged.;LOW;LOW
 24;if a hierarchy which does not belong to the exposure is selected as base term;BR24> The hierarchy term selected does not belong to the exposure hierarchy.;HIGH;HIGH
 25;it is not allowed to add more than one explicit facet  to a facet category with single cardinality;BR25> Reporting more than one facet is forbidden for this category.;HIGH;HIGH
