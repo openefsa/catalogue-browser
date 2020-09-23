@@ -99,8 +99,7 @@ public class FormTermCoder {
 		// get the enable business rules preference if we have the MTX catalogue
 		// this boolean is false if checks are disabled or we are not using the MTX
 		enableBR = catalogue.isMTXCatalogue()
-				&& prefDao.getPreferenceBoolValue(CataloguePreference.enableBusinessRules, false);
-
+				|| prefDao.getPreferenceBoolValue(CataloguePreference.enableBusinessRules, false);
 	}
 
 	/**
@@ -198,7 +197,7 @@ public class FormTermCoder {
 
 		implicitFacets.setTerm(_tempTerm);
 
-		implicitFacets.addMenu(); // add the contextual menu
+		implicitFacets.addMenu(true); // add the contextual menu
 
 		implicitFacets.addUpdateListener(new Listener() {
 

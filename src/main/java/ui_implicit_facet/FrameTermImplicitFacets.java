@@ -12,6 +12,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
@@ -38,7 +39,8 @@ import utilities.GlobalUtil;
  */
 public class FrameTermImplicitFacets implements Observer {
 
-	private Composite parent;
+	private Shell shell;
+	private Display display;
 	private Term term;
 	private TreeImplicitFacets implicitFacets;
 	private boolean visible;
@@ -55,6 +57,7 @@ public class FrameTermImplicitFacets implements Observer {
 	private Listener updateListener;
 
 	private Attribute facetCategory;
+	private boolean enableImplFcs;
 
 	public void addAddDescriptorListener(Listener listener) {
 		this.addDescriptorListener = listener;
@@ -105,8 +108,9 @@ public class FrameTermImplicitFacets implements Observer {
 	/**
 	 * Add the contextual menu to the tree
 	 */
-	public void addMenu() {
-		addFacetCategoryMenu(parent);
+	public void addMenu(boolean enableImplFcs) {
+		this.enableImplFcs = enableImplFcs;
+		addFacetCategoryMenu();
 	}
 
 	/**
@@ -182,7 +186,8 @@ public class FrameTermImplicitFacets implements Observer {
 	 */
 	public FrameTermImplicitFacets(Composite parent, FacetType newFacetType, Catalogue catalogue) {
 
-		this.parent = parent;
+		this.shell = parent.getShell();
+		this.display = parent.getDisplay();
 		this.newFacetType = newFacetType;
 		// add the implicit facets list in the tab
 		implicitFacets = new TreeImplicitFacets(parent, catalogue);
@@ -197,17 +202,17 @@ public class FrameTermImplicitFacets implements Observer {
 	 * @param implicitFacets
 	 * @return
 	 */
-	private Menu addFacetCategoryMenu(final Composite parent) {
+	private Menu addFacetCategoryMenu() {
 
 		// create the category menu
-		Menu categoryMenu = new Menu(parent.getShell(), SWT.POP_UP);
+		Menu categoryMenu = new Menu(shell, SWT.POP_UP);
 		// initialize the add inner item
 		final MenuItem addItem = new MenuItem(categoryMenu, SWT.PUSH);
-		addItem.setImage(new Image(parent.getDisplay(), ClassLoader.getSystemResourceAsStream("add-icon.png")));
+		addItem.setImage(new Image(display, ClassLoader.getSystemResourceAsStream("add-icon.png")));
 		addItem.setText(CBMessages.getString("TreeImplicitFacets.AddCommand"));
 		// initialize the remove inner item
 		final MenuItem removeItem = new MenuItem(categoryMenu, SWT.PUSH);
-		removeItem.setImage(new Image(parent.getDisplay(), ClassLoader.getSystemResourceAsStream("remove-icon.png")));
+		removeItem.setImage(new Image(display, ClassLoader.getSystemResourceAsStream("remove-icon.png")));
 		removeItem.setText(CBMessages.getString("TreeImplicitFacets.RemoveCommand"));
 
 		// get the tree viewer
@@ -230,8 +235,7 @@ public class FrameTermImplicitFacets implements Observer {
 		addItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				// set selected term to the new window
-				addToSelectedCategory(parent.getShell(), tree.getSelection());
+				addToSelectedCategory(tree.getSelection());
 			}
 		});
 
@@ -239,9 +243,9 @@ public class FrameTermImplicitFacets implements Observer {
 		implicitFacets.addDoubleClickListener(new Listener() {
 			@Override
 			public void handleEvent(Event e) {
-				// if in edit mode enable double click
-				if (categoryMenu != null)
-					addToSelectedCategory(parent.getShell(), tree.getSelection());
+				if (categoryMenu != null) {
+					addToSelectedCategory(tree.getSelection());
+				}
 			}
 		});
 
@@ -249,11 +253,20 @@ public class FrameTermImplicitFacets implements Observer {
 		removeItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				removeFromSelectedCategory(parent.getShell(), tree.getSelection());
+				removeFromSelectedCategory(tree.getSelection());
 			}
 		});
 
 		return categoryMenu;
+	}
+
+	/**
+	 * method used to show the warning message regarding the impossibility to modify
+	 * the implicit facets of the selected catalogue.
+	 */
+	protected void showWarningMessage() {
+		GlobalUtil.showDialog(shell, CBMessages.getString("TableFacetApplicability.AddFacetWarningTitle"),
+				CBMessages.getString("TableFacetApplicability.AddFacetWarningMessage"), SWT.ICON_WARNING);
 	}
 
 	/**
@@ -335,34 +348,35 @@ public class FrameTermImplicitFacets implements Observer {
 	 * @param parent
 	 * @param sel
 	 */
-	public void addToSelectedCategory(Shell parent, final ISelection sel) {
+	public void addToSelectedCategory(final ISelection sel) {
 
 		// return if empty selection
-		if (sel.isEmpty())
+		if (sel.isEmpty()) {
 			return;
-
+		}
+		
+		// return if implicit facets cannot be modified in the selected catalogue
+		if(!enableImplFcs) {
+			showWarningMessage();
+			return;
+		}
+		
 		// get the selected element ( facet category or descriptor )
 		Object selectedElem = ((IStructuredSelection) (sel)).getFirstElement();
 
-		if (selectedElem instanceof Attribute)
+		if (selectedElem instanceof Attribute) {
 			// if we have selected the facet category simply cast it
 			facetCategory = (Attribute) selectedElem;
-		else // if we have selected a descriptor get the category from it
+		} else {
+			// if we have selected a descriptor get the category from it
 			facetCategory = ((DescriptorTreeItem) selectedElem).getDescriptor().getFacetCategory();
-
-		// return if non MTX catalogue or non editable cat
-		Catalogue cat = facetCategory.getCatalogue();
-		if (!cat.isMTXCatalogue()) {
-			GlobalUtil.showDialog(parent, CBMessages.getString("TableFacetApplicability.AddFacetWarningTitle"),
-					CBMessages.getString("TableFacetApplicability.AddFacetWarningMessage"), SWT.ICON_WARNING);
-			return;
 		}
 
 		/**
 		 * open a form to select descriptors. In particular we enable the multiple
 		 * selection only if the facet category is repeatable (cardinality 0 or + )
 		 */
-		FormSelectTerm sf = new FormSelectTerm(parent, CBMessages.getString("Browser.SelectTermWindowTitle"),
+		FormSelectTerm sf = new FormSelectTerm(shell, CBMessages.getString("Browser.SelectTermWindowTitle"),
 				term.getCatalogue(), facetCategory.isRepeatable());
 
 		// set the root term for the form in order to show only
@@ -387,21 +401,24 @@ public class FrameTermImplicitFacets implements Observer {
 		// display the form
 		sf.display();
 
-		// here we have closed the form and the descriptors have been selected
-
-		// get an instance of the global manager
-		GlobalManager manager = GlobalManager.getInstance();
-
-		// get the current catalogue
-		Catalogue currentCat = manager.getCurrentCatalogue();
-
 		// TODO remove parents of more specific explicit facets
 		// checkExplicitAncestors(sf.getSelectedTerms());
 
 		// for each selected descriptor we add it
 		for (Term descriptor : sf.getSelectedTerms()) {
 
+			// get an instance of the global manager
+			GlobalManager manager = GlobalManager.getInstance();
+			// get the current catalogue
+			Catalogue currentCat = manager.getCurrentCatalogue();
+
 			Attribute facetAttr = currentCat.findImplicitFacetsAttribute();
+			/*
+			 * if (facetAttr == null) { GlobalUtil.showDialog(parent,
+			 * CBMessages.getString("TableFacetApplicability.AddFacetWarningTitle"),
+			 * CBMessages.getString("TableFacetApplicability.AddFacetWarningMessage"),
+			 * SWT.ICON_WARNING); return; }
+			 */
 
 			// check if the selected term has ancestors into the facets group folder
 			checkAncestors(descriptor);
@@ -441,11 +458,19 @@ public class FrameTermImplicitFacets implements Observer {
 	 * @param parent
 	 * @param sel
 	 */
-	protected void removeFromSelectedCategory(Shell parent2, ISelection selectedElem) {
+	protected void removeFromSelectedCategory(ISelection selectedElem) {
 
 		// return if empty selection
-		if (selectedElem.isEmpty())
+		if (selectedElem.isEmpty()) {
 			return;
+		}
+
+		// return if implicit facets cannot be modified in the selected catalogue
+		if(!enableImplFcs) {
+			showWarningMessage();
+			return;
+		}
+		
 		// get the selected tree item from the implicit facet tree
 		// (we can have only remove a descriptor tree item not a facet categories )
 		DescriptorTreeItem treeItem = (DescriptorTreeItem) ((IStructuredSelection) selectedElem).getFirstElement();

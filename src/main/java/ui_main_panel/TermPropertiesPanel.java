@@ -198,8 +198,6 @@ public class TermPropertiesPanel implements Observer {
 				// add the term attribute descriptor in the db
 				TermAttributeDAO taDao = new TermAttributeDAO(catalogue);
 
-				// TODO: shahaal to check if term is missing information used to update the
-				// catalogue, check the called function
 				// update the term attributes of the term
 				taDao.updateByA1(descriptor.getTerm());
 
@@ -376,12 +374,14 @@ public class TermPropertiesPanel implements Observer {
 		// update the input of the applicability table
 		applTab.setTerm(term);
 		applTab.refresh();
-
+		
 		// allow facet editing only in editing mode
-		if (editMode)
-			facetTab.addMenu();
-		else
+		if (editMode) {
+			boolean canAddImplFcs = catalogue.findImplicitFacetsAttribute()!=null;
+			facetTab.addMenu(canAddImplFcs);
+		} else {
 			facetTab.removeMenu();
+		}
 
 		// update implicit facets only if necessary since
 		// the operation is quite expensive

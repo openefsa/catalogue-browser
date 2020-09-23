@@ -383,7 +383,7 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 		try (Connection con = catalogue.getConnection(); PreparedStatement stmt = con.prepareStatement(query);) {
 
 			stmt.clearParameters();
-
+			
 			stmt.setInt(1, picklist.getId());
 
 			try (ResultSet rs = stmt.executeQuery();) {
@@ -401,6 +401,7 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 				}
 
 				rs.close();
+				
 			}
 
 			stmt.close();

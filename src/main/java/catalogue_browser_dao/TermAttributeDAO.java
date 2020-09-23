@@ -348,13 +348,13 @@ public class TermAttributeDAO implements CatalogueRelationDAO<TermAttribute, Ter
 
 			// remove all the term attributes to refresh them
 			removeByA1(term);
-
+			
 			// for each attribute create a batch update
 			for (TermAttribute ta : attrs) {
 
 				// set the parameters
 				stmt.setInt(1, term.getId());
-
+				
 				stmt.setInt(2, ta.getAttribute().getId());
 
 				// set the value

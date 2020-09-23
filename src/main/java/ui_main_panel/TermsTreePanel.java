@@ -423,7 +423,6 @@ public class TermsTreePanel extends Observable implements Observer {
 
 			if (forcedLevel == null) {
 				ReservedCatalogue reservedCat = resDao.getById(catalogue.getId());
-
 				if (reservedCat != null)
 					level = reservedCat.getLevel();
 			} else {
@@ -1351,22 +1350,18 @@ public class TermsTreePanel extends Observable implements Observer {
 	 */
 	protected void openDescribeWindow() {
 
-		// return if non mtx catalogue
-		if (!catalogue.isMTXCatalogue()) {
-			showCatalogueError();
-			return;
-		}
-
 		// initialize the describe window if null
-		if (tcf == null)
+		if (tcf == null) {
 			tcf = new FormTermCoder(shell, CBMessages.getString("FormTermCoder.Title"), catalogue);
-
+		}
+		
 		// set the base term
 		tcf.setBaseTerm(getFirstSelectedTerm());
 
 		// open the window if not opened or null
-		if (tcf.canOpen())
+		if (tcf.canOpen()) {
 			tcf.display(catalogue);
+		}
 	}
 
 	/**
@@ -1383,12 +1378,6 @@ public class TermsTreePanel extends Observable implements Observer {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-
-				// return if non mtx catalogue
-				if (!catalogue.isMTXCatalogue()) {
-					showCatalogueError();
-					return;
-				}
 
 				RecentTermDAO recentDao = new RecentTermDAO(catalogue);
 
@@ -1446,14 +1435,6 @@ public class TermsTreePanel extends Observable implements Observer {
 		});
 
 		return recentlyDescribeTerm;
-	}
-
-	/**
-	 * method used to show warning regarding the catalogue currently in use
-	 */
-	protected void showCatalogueError() {
-		GlobalUtil.showDialog(shell, CBMessages.getString("TableFacetApplicability.AddFacetWarningTitle"),
-				CBMessages.getString("TableFacetApplicability.AddFacetWarningMessage"), SWT.ICON_WARNING);
 	}
 
 	/**

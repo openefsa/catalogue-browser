@@ -547,9 +547,9 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	public Hierarchy getMasterHierarchy() {
 
 		// return if hierarchies is null
-		if(hierarchies==null || hierarchies.isEmpty())
+		if (hierarchies == null || hierarchies.isEmpty())
 			return null;
-		
+
 		// get the master hierarchy from the hierarchies list
 		for (Hierarchy hierarchy : hierarchies) {
 
@@ -663,16 +663,13 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 */
 	public Attribute findImplicitFacetsAttribute() {
 
-		// find the implicit facet attribute
-		Attribute facetAttr = null;
 		for (Attribute attr : getAttributes()) {
 			if (attr.isImplicitFacet()) {
-				facetAttr = attr;
-				break;
+				return attr;
 			}
 		}
 
-		return facetAttr;
+		return null;
 	}
 
 	/**
@@ -1834,7 +1831,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 			if (!notUsed.contains(temp))
 				notUsed.add(temp);
 		}
-		
+
 		return notUsed;
 	}
 
@@ -2001,9 +1998,9 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 */
 	public boolean isMTXCatalogue() {
 		Hierarchy h = getDefaultHierarchy();
-		boolean hasReporting = h!=null && h.toString().contains("Reporting hierarchy");
+		boolean hasReporting = h != null && h.toString().contains("Reporting hierarchy");
 		boolean containsMTX = getCode().equals("MTX") || (isLocal() && getCode().contains("MTX_"));
-		return  containsMTX || hasReporting;
+		return containsMTX || hasReporting;
 	}
 
 	/**

@@ -49,10 +49,10 @@ public class CataloguePreferenceDAO extends PreferenceDAO {
 
 		// create the copy implicit facets preference
 		insert(new CataloguePreference(CataloguePreference.copyImplicitFacets, PreferenceType.BOOLEAN, false, true));
-		
+
 		// create the remember last selected term preference
 		insert(new CataloguePreference(CataloguePreference.rememberLastSelected, PreferenceType.BOOLEAN, true, true));
-				
+
 		// create the business check rules enabled if the catalogue is the MTX
 		if (catalogue != null && catalogue.isMTXCatalogue())
 			insert(new CataloguePreference(CataloguePreference.enableBusinessRules, PreferenceType.BOOLEAN, true,
@@ -186,8 +186,10 @@ public class CataloguePreferenceDAO extends PreferenceDAO {
 		Picklist picklist = pickDao.getPicklistFromCode(code);
 
 		// set the picklist terms
-		picklist.setTerms(pickDao.getPicklistTerms(picklist));
-
+		if (picklist != null) {
+			picklist.setTerms(pickDao.getPicklistTerms(picklist));
+		}
+		
 		return picklist;
 	}
 
