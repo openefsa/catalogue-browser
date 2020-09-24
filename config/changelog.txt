@@ -10,10 +10,10 @@
 + Optimisations to the Term properties tab
 + Optimisations to the Options panel
 + Fixed bug causing the check of the code twice
-+ pick-list null after update
++ Pick-list null after update
 + Param not opening describe 
-+ br-engine not turned on in some cases 
-+ term's attribute null from param impl facets
++ Br-engine not turned on in some cases 
++ Term's attribute null from param impl facets
 
 -------------- Changes in the previous versions:
 + Check the official <a href="Latest-Changes">wiki page</a> for further information

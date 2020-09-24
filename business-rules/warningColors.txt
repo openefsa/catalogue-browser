@@ -7,4 +7,4 @@ TxtLowWarn = 255;255;0
 TxtHighWarn = 255;165;0
 TxtErrorWarn = 255;0;0
 ConsoleBG = 0;90;150
-WarnFontSize = 14
+WarnFontSize = 12

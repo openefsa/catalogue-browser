@@ -368,16 +368,16 @@ public class PicklistDAO implements CatalogueEntityDAO<Picklist> {
 	}
 
 	/**
-	 * Get all the terms of a picklist. Return empty list if no terms found
+	 * Get all the terms of a pick-list. Return empty list if no terms found
 	 * 
 	 * @param picklist
 	 * @return
 	 */
 	public ArrayList<PicklistTerm> getPicklistTerms(Picklist picklist) {
-
+		
 		// output array
 		ArrayList<PicklistTerm> terms = new ArrayList<>();
-
+		
 		String query = "select * from APP.PICKLIST_TERM where PICKLIST_ID = ?";
 
 		try (Connection con = catalogue.getConnection(); PreparedStatement stmt = con.prepareStatement(query);) {
