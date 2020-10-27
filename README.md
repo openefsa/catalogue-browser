@@ -35,6 +35,9 @@ In order to correctly import the project into the IDE it is firstly required to 
 	
 Next, extract all the zip packages inside your workspace. At this stage you can simply open the IDE and import all projects available in the workspace.
 
+_Please note that Maven is required in order to download the libraries required by the TSE tool._
+
+_Please note that the "SWT (swt_3.7.1.v3738a.jar)" and the "Jface (org.eclipse.jface_3.7.0.I20110522-1430.jar)" libraries must be downloaded and installed manually in the Maven local repository since are custom versions used in the tool ((install 3rd party jars)[https://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html])._
 
 ### Notes for developers
 Please note that the "business_rules" and the "config" folders are used by the tool and hence errors occur if missing.
