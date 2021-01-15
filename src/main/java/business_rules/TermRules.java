@@ -353,9 +353,14 @@ public abstract class TermRules {
 	 * @param bt
 	 * @param stdOut
 	 */
-	protected void nonSpecificTermCheck(Term bt, boolean stdOut) {
-		if (isNonSpecificTerm(bt))
-			printWarning(WarningEvent.BR10, bt.getCode(), false, stdOut);
+	protected void nonSpecificTermCheck(Term bt, String facetIndex, boolean stdOut) {
+		if (isNonSpecificTerm(bt)) {
+			if(isSourceFacet(facetIndex)||isSourceCommodityFacet(facetIndex)) {
+				return;
+			} else {
+				printWarning(WarningEvent.BR10, bt.getCode(), false, stdOut);
+			}
+		}
 	}
 
 	/**
@@ -1460,7 +1465,8 @@ public abstract class TermRules {
 		
 		// split the full code in order to get the base term code and the facets
 		String[] splits = fullCode.split("#");
-
+		boolean onlybt = splits.length < 2;
+		
 		// get the base term code (the first part of the full code)
 		String baseTermCode = splits[0];
 
@@ -1480,8 +1486,10 @@ public abstract class TermRules {
 		isNotReportable(baseTerm, stdOut);
 		
 		// check if an non specific base term is selected
-		nonSpecificTermCheck(baseTerm, stdOut);
-
+		if(onlybt) {
+			nonSpecificTermCheck(baseTerm, "", stdOut);
+		}
+		
 		// check if base term type is f
 		isFacet(baseTerm, stdOut);
 		
@@ -1500,9 +1508,10 @@ public abstract class TermRules {
 		}
 		
 		// return if there is nothing else to parse (i.e. no facets)
-		if (splits.length < 2)
+		if (onlybt) {
 			return;
-
+		}
+		
 		// get the warnGroup related to the chosen base term
 		// that is, the father which is subjected to restrictions
 		// in term of applicability of processes (they are defined in the BR_Data.csv)
@@ -1569,6 +1578,9 @@ public abstract class TermRules {
 
 			// VALID ONLY FOR BT: check if term is not re-portable in default hierarchy
 			// isNotReportable(facet, stdOut);
+			
+			// check if an non specific base term is selected
+			nonSpecificTermCheck(baseTerm, facetIndex, stdOut);
 			
 			// check if the generic process facet is selected
 			genericProcessedFacetCheck(facet, stdOut);
