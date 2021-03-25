@@ -13,6 +13,12 @@ import catalogue_object.Nameable;
 import i18n_messages.CBMessages;
 import term.LabelProviderTerm;
 
+/**
+ * Class which provide the term's label shown in the various ui tabs
+ * 
+ * @author Alban.Shahaj
+ *
+ */
 public class LabelProviderImplicitFacets implements ILabelProvider {
 
 	private static final Logger LOGGER = LogManager.getLogger(LabelProviderImplicitFacets.class);
@@ -90,8 +96,9 @@ public class LabelProviderImplicitFacets implements ILabelProvider {
 
 				// get the term from the tree item
 				Nameable term = item.getTerm();
-
 				if (term != null) {
+					// set first the hierarchy which the terms belongs to
+					termLabelProvider.setCurrentHierarchy(item.getDescriptor().getFacetCategory().getHierarchy());
 					// return the term label
 					return termLabelProvider.getText(term);
 				} else

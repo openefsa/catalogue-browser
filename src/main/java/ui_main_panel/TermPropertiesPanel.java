@@ -153,7 +153,6 @@ public class TermPropertiesPanel implements Observer {
 
 			@Override
 			public void hierarchyChanged(HierarchyEvent arg0) {
-
 				if (usageListener != null)
 					usageListener.hierarchyChanged(arg0);
 			}
@@ -194,13 +193,13 @@ public class TermPropertiesPanel implements Observer {
 
 				// get the facet descriptor term attribute
 				FacetDescriptor descriptor = (FacetDescriptor) event.data;
-
+				
 				// add the term attribute descriptor in the db
 				TermAttributeDAO taDao = new TermAttributeDAO(catalogue);
 
 				// update the term attributes of the term
 				taDao.updateByA1(descriptor.getTerm());
-
+				
 				// refresh the content of the tab
 				facetTab.setTerm(descriptor.getTerm());
 			}
@@ -404,13 +403,13 @@ public class TermPropertiesPanel implements Observer {
 
 		// get updates on the selected term
 		if (arg0 instanceof TermsTreePanel) {
-
 			Term term = ((TermsTreePanel) arg0).getFirstSelectedTerm();
 			setTerm(term);
 		}
 
 		// pass the update to the facet tab
 		facetTab.update(arg0, arg1);
+
 	}
 
 }

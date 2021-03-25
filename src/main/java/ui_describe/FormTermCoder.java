@@ -192,8 +192,8 @@ public class FormTermCoder {
 
 		// implicit facets tree viewer, the new facets will be considered as explicit
 		implicitFacets = new FrameTermImplicitFacets(leftSide, FacetType.EXPLICIT, catalogue);
-
-		implicitFacets.setHierarchy(catalogue.getMasterHierarchy());
+		
+		implicitFacets.setHierarchy(catalogue.getDefaultHierarchy());
 
 		implicitFacets.setTerm(_tempTerm);
 

@@ -106,7 +106,6 @@ public class TreeImplicitFacets implements Observer {
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-
 		if (arg0 instanceof HierarchySelector) {
 			Hierarchy selectedHierarchy = ((HierarchySelector) arg0).getSelectedHierarchy();
 			labelProvider.setCurrentHierarchy(selectedHierarchy);

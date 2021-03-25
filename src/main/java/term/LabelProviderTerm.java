@@ -199,12 +199,11 @@ public class LabelProviderTerm extends LabelProvider implements IFontProvider {
 				flag = flag + "[" + t.getCode() + "]";
 
 			// if deprecated add the deprecated flag
-			if (t.isDeprecated())
+			if (t.isDeprecated()) {
 				flag = flag + CBMessages.getString("LabelProviderTerm.DeprecatedFlag");
-
-			else if (t.isDismissed(currentHierarchy))
+			} else if (t.isDismissed(currentHierarchy)) {
 				flag = flag + CBMessages.getString("LabelProviderTerm.DismissedFlag");
-
+			}
 			// if non reportable add the non reportable flag
 			else if (!t.isReportable(currentHierarchy))
 				flag = flag + CBMessages.getString("LabelProviderTerm.NotReportableFlag");

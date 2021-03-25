@@ -1349,7 +1349,6 @@ public class TermsTreePanel extends Observable implements Observer {
 	 * 
 	 */
 	protected void openDescribeWindow() {
-
 		// initialize the describe window if null
 		if (tcf == null) {
 			tcf = new FormTermCoder(shell, CBMessages.getString("FormTermCoder.Title"), catalogue);

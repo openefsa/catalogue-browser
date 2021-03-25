@@ -258,8 +258,9 @@ public class TableApplicability {
 			Nameable t = p.getParentTerm();
 
 			// it there is no parent we have to report the hierarchy name
-			if (t instanceof Hierarchy)
+			if (t instanceof Hierarchy) {
 				return p.getHierarchy().getLabel();
+			}
 
 			termLabelProvider.setCurrentHierarchy(p.getHierarchy());
 

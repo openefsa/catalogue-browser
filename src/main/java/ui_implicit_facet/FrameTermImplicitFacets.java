@@ -191,7 +191,6 @@ public class FrameTermImplicitFacets implements Observer {
 		this.newFacetType = newFacetType;
 		// add the implicit facets list in the tab
 		implicitFacets = new TreeImplicitFacets(parent, catalogue);
-
 	}
 
 	/**

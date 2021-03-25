@@ -7,7 +7,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -485,13 +484,13 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * @return
 	 */
 	public Hierarchy getHierarchyById(int id) {
-
-		for (Hierarchy h : hierarchies) {
-
-			if (h.getId() == id)
-				return h;
+		if(hasHierarchies()) {
+			for (Hierarchy h : hierarchies) {
+	
+				if (h.getId() == id)
+					return h;
+			}
 		}
-
 		return null;
 	}
 
@@ -502,11 +501,12 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * @return
 	 */
 	public Hierarchy getHierarchyByCode(String code) {
-		System.out.println("shahaal "+code+", "+Arrays.asList(hierarchies));
-		for (Hierarchy h : hierarchies) {
-
-			if (h.getCode().equals(code))
-				return h;
+		if(hasHierarchies()) {
+			for (Hierarchy h : hierarchies) {
+	
+				if (h.getCode().equals(code))
+					return h;
+			}
 		}
 
 		return null;
@@ -569,7 +569,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * @return
 	 */
 	public boolean hasHierarchies() {
-		return !hierarchies.isEmpty();
+		return hierarchies != null && !hierarchies.isEmpty();
 	}
 
 	/**
