@@ -3,6 +3,7 @@ package utilities;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.Timestamp;
@@ -581,8 +582,11 @@ public final class GlobalUtil {
 				deleteFileCascade(file);
 			}
 		}
-
-		Files.delete(Paths.get(directory.getAbsolutePath()));
+		
+		// remove the directory if it exists
+		Path path = Paths.get(directory.getAbsolutePath());
+		if(Files.exists(path))
+			Files.delete(path);
 	}
 
 	/**

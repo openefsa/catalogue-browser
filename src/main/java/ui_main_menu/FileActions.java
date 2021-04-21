@@ -210,7 +210,7 @@ public class FileActions {
 				lastReleaseImported.open();
 
 				// update also the interpreting tool db (ONLY MTX)
-				if (lastRelease.isMTXCatalogue())
+				if (lastRelease.isMTXCatalogue() && GlobalUtil.isIctInstalled())
 					updatedICTDatabase(shell, lastReleaseImported);
 
 				GlobalUtil.setShellCursor(shell, SWT.CURSOR_ARROW);
