@@ -306,7 +306,7 @@ public class FileMenu implements MainMenuItem {
 			public void widgetSelected(SelectionEvent event) {
 
 				// warn the user if logged with openapi
-				if (User.getInstance().isAuthWithOpeanAPI()) {
+				if (User.getInstance().isLoggedInOpenAPI()) {
 
 					// if user doesn't want to continue return
 					MessageBox mb = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);

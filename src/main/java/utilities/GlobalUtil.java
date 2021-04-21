@@ -294,7 +294,7 @@ public final class GlobalUtil {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * remove ICT folder
 	 * 
@@ -582,10 +582,10 @@ public final class GlobalUtil {
 				deleteFileCascade(file);
 			}
 		}
-		
+
 		// remove the directory if it exists
 		Path path = Paths.get(directory.getAbsolutePath());
-		if(Files.exists(path))
+		if (Files.exists(path))
 			Files.delete(path);
 	}
 
@@ -774,8 +774,7 @@ public final class GlobalUtil {
 
 			@Override
 			public void userLevelChanged(UserAccessLevel newLevel) {
-
-				final String connectedAs = newLevel == UserAccessLevel.CATALOGUE_MANAGER
+				final String connectedAs = (newLevel == UserAccessLevel.CATALOGUE_MANAGER)
 						? CBMessages.getString("App.ConnectedCM")
 						: CBMessages.getString("App.ConnectedDP");
 

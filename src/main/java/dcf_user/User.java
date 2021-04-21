@@ -381,8 +381,9 @@ public class User extends DcfUser {
 	public void setUserLevel(UserAccessLevel userLevel) {
 		this.userLevel = userLevel;
 
-		for (UserListener l : userLevelListeners)
+		for (UserListener l : userLevelListeners) {
 			l.userLevelChanged(userLevel);
+		}
 	}
 
 	/**
@@ -426,7 +427,7 @@ public class User extends DcfUser {
 	 */
 	public void setLoggedOpenApi(boolean logged) {
 		this.loggedOpenapi = logged;
-		
+
 		for (UserListener l : userLevelListeners)
 			l.connectionChanged(logged);
 	}
@@ -501,22 +502,6 @@ public class User extends DcfUser {
 	}
 
 	/**
-	 * the method check if the user is logged with token (openapi portal)
-	 * 
-	 * @author shahaal
-	 * @return
-	 */
-	public boolean isAuthWithOpeanAPI() {
-		// get the credentials
-		this.credentials = this.getSavedCredentials();
-		if (this.credentials == null)
-			return false;
-
-		// if the username is equal to Opena api Guest
-		return this.credentials[0].equals(FormOpenapiLogin.getOapiusr());
-	}
-
-	/**
 	 * Use stored credentials to perform a login without reasking the user for
 	 * username and password
 	 * 
@@ -555,9 +540,9 @@ public class User extends DcfUser {
 	/**
 	 * Use stored credentials to perform a login without re-asking the user token
 	 * 
-	 * TODO the method is not used since the starter program has a limitation
-	 * of 5 calls/minutes instead when making a call if receiving error then 
-	 * notify the user
+	 * TODO the method is not used since the starter program has a limitation of 5
+	 * calls/minutes instead when making a call if receiving error then notify the
+	 * user
 	 * 
 	 * @author shahaal
 	 * @return
@@ -575,7 +560,8 @@ public class User extends DcfUser {
 
 		try {
 			String catUsers = Catalogue.getCatUsersCatalogue().getCode();
-			setLoggedOpenApi(super.verifiedLoginOpenapi(Config.getEnvironment(), credentials[0], credentials[1], catUsers));
+			setLoggedOpenApi(
+					super.verifiedLoginOpenapi(Config.getEnvironment(), credentials[0], credentials[1], catUsers));
 		} catch (SOAPException e) {
 			this.isReauth = false;
 			super.logout(); // connection error only!
@@ -625,12 +611,12 @@ public class User extends DcfUser {
 	 * downloading the dump catalogue CATUSERS
 	 * 
 	 * @return true if logged in successfully, otherwise false
-	 * @throws DetailedSOAPException 
+	 * @throws DetailedSOAPException
 	 * @throws AttachmentNotFoundException
 	 * @throws SOAPException
 	 * @throws Exception
 	 */
-	public boolean loginWithOpenapi(String username, String token, boolean save) throws DetailedSOAPException  {
+	public boolean loginWithOpenapi(String username, String token, boolean save) throws DetailedSOAPException {
 
 		// code of the catusers catalogue
 		String catUsers = Catalogue.getCatUsersCatalogue().getCode();
@@ -651,7 +637,30 @@ public class User extends DcfUser {
 
 		return this.loggedOpenapi;
 	}
+	
+	/**
+	 * get openapi token
+	 * 
+	 * @author shahaal
+	 * @return
+	 */
+	public boolean getOpeanAPICredentials() {
+		System.out.println("shahaal "+this.credentials);
+		// get the credentials
+		this.credentials = this.getSavedCredentials();
+		System.out.println("shahaal "+this.credentials);
+		if (this.credentials == null)
+			return false;
 
+		// if the username is equal to Opena api Guest
+		return this.credentials[0].equals(FormOpenapiLogin.getOapiusr());
+	}
+
+	/**
+	 * get DCF saved credentials
+	 * 
+	 * @return
+	 */
 	private String[] getSavedCredentials() {
 
 		String[] out = null;
@@ -666,13 +675,13 @@ public class User extends DcfUser {
 
 				if (rs.next())
 					out = new String[] { rs.getString("USERNAME"), rs.getString("PASSWORD") };
-				
+
 				rs.close();
 			}
-			
+
 			stmt.close();
 			con.close();
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			LOGGER.error("Cannot retrieve saved credentials", e);
@@ -693,7 +702,7 @@ public class User extends DcfUser {
 
 			stmt.close();
 			con.close();
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			LOGGER.error("Cannot delete user credentials", e);
@@ -715,7 +724,7 @@ public class User extends DcfUser {
 
 			stmt.close();
 			con.close();
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			LOGGER.error("Cannot save user credentials", e);

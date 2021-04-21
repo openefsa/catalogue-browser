@@ -101,7 +101,8 @@ public class CatalogueBrowserMain {
 		final Shell shell = new Shell(display);
 
 		// set the application image into the shell
-		shell.setImage(new Image(display, CatalogueBrowserMain.class.getClassLoader().getResourceAsStream("Foodex2.ico")));
+		shell.setImage(
+				new Image(display, CatalogueBrowserMain.class.getClassLoader().getResourceAsStream("Foodex2.ico")));
 		shell.setFullScreen(true);
 
 		// update the title of the shell
@@ -138,7 +139,7 @@ public class CatalogueBrowserMain {
 
 						@Override
 						public void run() {
-							
+
 							switch (code) {
 							case OK:
 								// start login process if everything is ok
@@ -167,7 +168,7 @@ public class CatalogueBrowserMain {
 
 								break;
 							}
-							
+
 							// enable shell processes are completed
 							shell.setEnabled(true);
 						}
@@ -176,7 +177,7 @@ public class CatalogueBrowserMain {
 			});
 
 			reauth.start();
-		}else
+		} else
 			shell.setEnabled(true);
 
 		// open last catalogue

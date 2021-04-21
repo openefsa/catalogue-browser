@@ -44,7 +44,6 @@ public class LoginActions {
 
 		// start checking updates for the catalogues
 		dcf.checkUpdates(new Listener() {
-
 			@Override
 			public void handleEvent(Event arg0) {
 			}
@@ -57,10 +56,11 @@ public class LoginActions {
 				CBMessages.getString("Login.UserLevelProgressBarTitle"), false, SWT.TITLE | SWT.APPLICATION_MODAL);
 
 		dcf.setProgressBar(progressBar);
-		
+
 		ShellLocker.setLock(shell, CBMessages.getString("MainPanel.CannotCloseTitle"),
 				CBMessages.getString("MainPanel.CannotCloseMessage"));
-
+		
+		
 		dcf.setUserLevel(new ThreadFinishedListener() {
 
 			@Override
@@ -75,35 +75,35 @@ public class LoginActions {
 					public void run() {
 
 						ShellLocker.removeLock(shell);
-						
+
 						progressBar.close();
 
 						String title = null, msg = null;
 
 						// if correct
 						if (code == ThreadFinishedListener.OK || code == ThreadFinishedListener.ERROR) {
-							
+
 							if (userLevelListener != null)
 								userLevelListener.handleEvent(null);
-							
+
 							try {
-								User.getInstance().startPendingRequests();
+								user.startPendingRequests();
 							} catch (SQLException | IOException e) {
 								title = CBMessages.getString("FormDCFLogin.ErrorTitle");
 								msg = CBMessages.getString("FormDCFLogin.WrongCredentialMessage");
 								GlobalUtil.showDialog(shell, title, msg, SWT.ICON_ERROR);
 								e.printStackTrace();
 							}
-							
-							title = CBMessages.getString( "Login.PermissionTitle" );
-							
-							if ( User.getInstance().isCatManager() )
+
+							title = CBMessages.getString("Login.PermissionTitle");
+
+							if (user.isCatManager())
 								msg = CBMessages.getString("Login.CatalogueManagerMessage");
 							else
 								msg = CBMessages.getString("Login.DataProviderMessage");
 
-							GlobalUtil.showDialog(shell, title, msg, SWT.ICON_INFORMATION );
-							
+							GlobalUtil.showDialog(shell, title, msg, SWT.ICON_INFORMATION);
+
 						} else {
 							if (userLevelListener != null)
 								userLevelListener.handleEvent(null);
