@@ -1237,7 +1237,7 @@ public class ToolsMenu implements MainMenuItem {
 		// update catalogue manager buttons
 		// if the current user is enabled to
 		// reserve the current catalogue
-		if (user.isCatManagerOf(mainMenu.getCatalogue())) {
+		if (!user.isCatManagerOf(mainMenu.getCatalogue())) {
 
 			boolean isReservedByCurrentUser = user.hasReserved(mainMenu.getCatalogue().getCode());
 
