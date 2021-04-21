@@ -892,7 +892,6 @@ public class Term extends CatalogueObject implements Mappable {
 		interpCode.append(this.getName());
 
 		ArrayList<FacetDescriptor> facets = getFacets(true);
-
 		// order the facets
 		Collections.sort(facets, new ComparatorFacetDescriptor());
 

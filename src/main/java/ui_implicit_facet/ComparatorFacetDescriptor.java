@@ -16,7 +16,7 @@ public class ComparatorFacetDescriptor implements Comparator<FacetDescriptor> {
 		
 		// check order of attributes
 		int orderComp = o1.getFacetCategory().compareTo( o2.getFacetCategory() );
-		
+
 		// if same order, order by code
 		if ( orderComp == 0 )
 			comp = o1.getTerm().getCode().compareTo( o2.getTerm().getCode() );

@@ -570,22 +570,27 @@ public class FrameTermFields {
 			public void focusLost(FocusEvent arg0) {
 				if (term == null || !User.getInstance().canEdit(term.getCatalogue()))
 					return;
-
-				if ((textTermName.getText() == null) || (textTermName.getText().isEmpty())) {
-
-					// if the text is null then I have to raise an error,
-					// the old text has to be resumed
+				// new name provided
+				String tName = textTermName.getText();
+				// original name found
+				String oName = term.getName();
+				
+				// resume original name if the provided one is not valid
+				if (tName == null || tName.isEmpty()) {
+					// prompt error
 					GlobalUtil.showErrorDialog(parent.getShell(),
 							CBMessages.getString("TermProperties.InputErrorTitle"),
 							CBMessages.getString("TermProperties.InputErrorMessage"));
-
 					// restore previous value
-					textTermName.setText(term.getName());
+					textTermName.setText(oName);
 					return;
 				}
+
+				// replace new lines with spaces
+				tName = tName.replaceAll("\\s+"," ").replaceAll("\\\\n+", " ");
 				
 				// return if the name does not change at all
-				if (textTermName.getText().equals(term.getName()))
+				if (tName.equals(oName))
 					return;
 
 				// get the current catalogue
@@ -594,20 +599,19 @@ public class FrameTermFields {
 				TermDAO termDao = new TermDAO(currentCat);
 
 				// if new name already exists in db it cannot be used
-				if (!termDao.isTermNameUnique(term.getCode(), textTermName.getText(), true)) {
+				if (!termDao.isTermNameUnique(term.getCode(), tName, true)) {
 					// show error dialog
 					GlobalUtil.showErrorDialog(parent.getShell(),
 							CBMessages.getString("TermProperties.InputErrorTitle"),
 							CBMessages.getString("TermProperties.InputErrorMessage2"));
 					// set the original term name
-					textTermName.setText(term.getName());
+					textTermName.setText(oName);
 					return;
-
 				}
 
 				// set the new name
-				term.setName(textTermName.getText());
-				term.setLabel(textTermName.getText());
+				term.setName(tName);
+				term.setLabel(tName);
 				
 				// update the term in the DB
 				termDao.update(term);

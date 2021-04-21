@@ -71,7 +71,7 @@ public class CatalogueImporterThread extends Thread {
 			importer.makeImport();
 
 			// if the ICT installed and importing mtx foodex2
-			if (GlobalUtil.isIctInstalled() && isFoodExCatalogue()) {
+			if (GlobalUtil.isIctInstalled()) {
 				// update ICT db
 				ICTInstaller ict = new ICTInstaller();
 				ict.createDatabase();
@@ -150,15 +150,5 @@ public class CatalogueImporterThread extends Thread {
 	 */
 	public void setOpenedCatalogue(Catalogue openedCat) {
 		this.openedCat = openedCat;
-	}
-
-	/**
-	 * the method check if the catalogue to import is foodex2
-	 * 
-	 * @return
-	 */
-	private boolean isFoodExCatalogue() {
-		String catName = filename.toLowerCase();
-		return (catName.contains("mtx") || catName.contains("foodex"));
 	}
 }
