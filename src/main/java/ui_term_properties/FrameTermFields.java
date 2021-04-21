@@ -436,10 +436,8 @@ public class FrameTermFields {
 					term.setTermTypeValue(tt.getCode());
 				}
 
-				// initialise term attribute dao
-				TermAttributeDAO taDao = new TermAttributeDAO(term.getCatalogue());
-
 				// update the term attributes
+				TermAttributeDAO taDao = new TermAttributeDAO(term.getCatalogue());
 				taDao.updateByA1(term);
 
 				// call the update listener to update the term in the tree
@@ -505,10 +503,8 @@ public class FrameTermFields {
 					term.setDetailLevelValue(dlg.getCode());
 				}
 
-				// initialise term attribute dao
-				TermAttributeDAO taDao = new TermAttributeDAO(term.getCatalogue());
-
 				// update the value of the detail level
+				TermAttributeDAO taDao = new TermAttributeDAO(term.getCatalogue());
 				taDao.updateByA1(term);
 
 				// call the update listener to update the term in the tree
@@ -616,10 +612,8 @@ public class FrameTermFields {
 				// update the term in the DB
 				termDao.update(term);
 
-				// initialize term attribute dao
-				TermAttributeDAO taDao = new TermAttributeDAO(currentCat);
-
 				// update the term attributes
+				TermAttributeDAO taDao = new TermAttributeDAO(currentCat);
 				taDao.updateByA1(term);
 
 				// call the listener
@@ -699,19 +693,18 @@ public class FrameTermFields {
 				if (term == null || !User.getInstance().canEdit(term.getCatalogue()))
 					return;
 
+				// get the term label
+				String tDisplayAs = termDisplayAsText.getText();
+				
 				// return if the name does not change at all
-				if (termDisplayAsText.getText().equals(term.getShortName(false)))
+				if (tDisplayAs.equals(term.getShortName(false)))
 					return;
 
-				// if the text already exists in the database it cannot
-				// be used
-				// get the current catalogue
-				TermDAO termDao = new TermDAO(term.getCatalogue());
-
 				// set the new name
-				term.setDisplayAs(termDisplayAsText.getText());
-
+				term.setDisplayAs(tDisplayAs);
+				
 				// update the term in the DB
+				TermDAO termDao = new TermDAO(term.getCatalogue());
 				termDao.update(term);
 
 				// call the listener
@@ -749,25 +742,25 @@ public class FrameTermFields {
 				// Remove the selection from the textScopenotes if focus is lost
 				textScopenotes.setSelection(0, 0);
 
-				User user = User.getInstance();
-
 				// return if no term or read only mode
-				if (term == null || !user.canEdit(term.getCatalogue()))
+				if (term == null || !User.getInstance().canEdit(term.getCatalogue()))
 					return;
 
+				// get the term scope notes
+				String tScopeNotes = textScopenotes.getText();
+				
 				// return if no changes were made
-				if (term.getScopenotes().equals(textScopenotes.getText()))
+				if (term.getScopenotes().equals(tScopeNotes))
 					return;
 
 				// set the notes of the term
-				term.setScopenotes(textScopenotes.getText());
+				term.setScopenotes(tScopeNotes);
 
 				// update scopenotes
 				scopenotesLink.setTerm(term);
 
-				TermDAO termDao = new TermDAO(term.getCatalogue());
-
 				// update the term in the DB
+				TermDAO termDao = new TermDAO(term.getCatalogue());
 				termDao.update(term);
 
 				// call the listener
