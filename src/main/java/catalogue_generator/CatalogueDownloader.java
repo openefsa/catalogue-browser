@@ -10,7 +10,6 @@ import org.eclipse.swt.widgets.Shell;
 
 import catalogue.AttachmentNotFoundException;
 import catalogue.Catalogue;
-import dcf_user.User;
 import i18n_messages.CBMessages;
 import progress_bar.FormProgressBar;
 import progress_bar.IProgressBar;
