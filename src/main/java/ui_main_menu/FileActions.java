@@ -386,8 +386,8 @@ public class FileActions {
 	}
 
 	/**
-	 * Ask to the user to select a catalogue from the {@code input} list.
-	 * if the catalogue is already opened warn the user and avoid to re-open
+	 * Ask to the user to select a catalogue from the {@code input} list. if the
+	 * catalogue is already opened warn the user and avoid to re-open
 	 * 
 	 * @author shahaal
 	 * @param shell
@@ -409,12 +409,12 @@ public class FileActions {
 		Catalogue selectedCat = objs.iterator().next();
 		// warn user if current catalogue is equal to selected one
 		Catalogue currentCat = GlobalManager.getInstance().getCurrentCatalogue();
-		if (currentCat!=null && selectedCat.sameAs(currentCat)) {
+		if (currentCat != null && selectedCat.sameAs(currentCat)) {
 			String msg = CBMessages.getString("BrowserMenu.OpenCatalogueWarningMsg");
 			GlobalUtil.showDialog(shell, title, msg, SWT.ICON_WARNING);
 			return null;
 		}
-		
+
 		return selectedCat;
 	}
 
@@ -703,7 +703,7 @@ public class FileActions {
 	 * 
 	 * @param shell
 	 */
-	public static void deleteCatalogue(final Shell shell, final Catalogue cat) {
+	public void deleteCatalogue(final Shell shell, final Catalogue cat) {
 
 		// create a list of the catalogue in order to call the cat destroyer
 		ArrayList<Catalogue> catList = new ArrayList<Catalogue>(Arrays.asList(cat));

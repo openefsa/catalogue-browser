@@ -1,5 +1,7 @@
 package ui_main_menu;
 
+import java.io.IOException;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -11,7 +13,9 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
+import catalogue.Catalogue;
 import catalogue_browser_dao.CatalogueDAO;
+import catalogue_browser_dao.DatabaseManager;
 import catalogue_generator.ThreadFinishedListener;
 import data_collection.DCDAO;
 import data_collection.DCTableConfig;
@@ -51,6 +55,7 @@ public class FileMenu implements MainMenuItem {
 	private MenuItem downloadMI;
 	private MenuItem closeMI;
 	private MenuItem deleteMI;
+	private MenuItem forceRemoveMI;
 	private FileActions action;
 
 	/**
@@ -111,6 +116,12 @@ public class FileMenu implements MainMenuItem {
 		closeMI = addCloseCatalogueMI(fileMenu);
 		// delete cat
 		deleteMI = addDeleteCatalogueMI(fileMenu);
+		Catalogue cat =  mainMenu.getCatalogue();
+		// force remove cat
+		if (cat != null && User.getInstance().isCatManagerOf(cat)
+				&& !cat.hasUpdate()) {
+			forceRemoveMI = addForceRemoveMI(fileMenu);
+		}
 
 		// add separator
 		new MenuItem(fileMenu, SWT.SEPARATOR);
@@ -422,10 +433,6 @@ public class FileMenu implements MainMenuItem {
 	 */
 	protected void closeCatalogue() {
 
-		// update the main UI
-		if (listener != null)
-			listener.buttonPressed(null, CLOSE_CAT_MI, null);
-
 		// return if current cat is null
 		if (mainMenu.getCatalogue() == null)
 			return;
@@ -435,6 +442,10 @@ public class FileMenu implements MainMenuItem {
 
 		// refresh UI
 		mainMenu.refresh();
+
+		// update the main UI
+		if (listener != null)
+			listener.buttonPressed(null, CLOSE_CAT_MI, null);
 
 	}
 
@@ -463,6 +474,57 @@ public class FileMenu implements MainMenuItem {
 		});
 
 		return deleteCatMI;
+	}
+
+	/**
+	 * Add the force remove mi, which allows to remove a catalogue from the
+	 * database. Note that this button is enabled only for internal version of
+	 * catalogues which were reserved!
+	 * 
+	 * @param menu
+	 * @return
+	 */
+	private MenuItem addForceRemoveMI(Menu menu) {
+
+		final MenuItem frMI = new MenuItem(menu, SWT.PUSH);
+
+		frMI.setText(CBMessages.getString("BrowserMenu.ForceRemove"));
+		frMI.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+
+				// ask for confirmation
+				int val = GlobalUtil.showDialog(shell, CBMessages.getString("ForceRemove.ConfirmTitle"),
+						CBMessages.getString("ForceRemove.ConfirmMessage"), SWT.YES | SWT.NO);
+
+				if (val == SWT.NO)
+					return;
+
+				// reset the catalogue data to the previous version
+				try {
+					// delete on disk
+					Catalogue cat = mainMenu.getCatalogue();
+					// close catalogue
+					closeCatalogue();
+					// delete on disk
+					DatabaseManager.deleteDb(cat);
+					// delete record on main db
+					final CatalogueDAO catDao = new CatalogueDAO();
+					catDao.delete(cat);
+				} catch (IOException e) {
+					GlobalUtil.showErrorDialog(shell, CBMessages.getString("ForceRemove.ErrorTitle"),
+							CBMessages.getString("ForceRemove.ErrorMessage"));
+				}
+
+				if (listener != null)
+					listener.buttonPressed(forceRemoveMI, DELETE_CAT_MI, null);
+			}
+		});
+
+		frMI.setEnabled(false);
+
+		return frMI;
 	}
 
 	/**
@@ -504,6 +566,9 @@ public class FileMenu implements MainMenuItem {
 		if (openMI.isDisposed())
 			return;
 
+		// get current catalogue
+		Catalogue cat = mainMenu.getCatalogue();
+		
 		// check if there is at least one catalogue available from the
 		// catalogue master table. If not => open disabled
 		// can open only if we are not getting updates and we have at least one
@@ -511,7 +576,7 @@ public class FileMenu implements MainMenuItem {
 		openMI.setEnabled(hasCatalogues && !Dcf.isGettingUpdates() && catDao.getMyCatalogues(Dcf.dcfType).size() > 0);
 
 		// allow import only if no catalogue is opened
-		importCatMI.setEnabled(mainMenu.getCatalogue() == null);
+		importCatMI.setEnabled(cat == null);
 
 		User user = User.getInstance();
 
@@ -529,14 +594,31 @@ public class FileMenu implements MainMenuItem {
 		downloadDcMI.setEnabled(canDownload); // && !user.isLoggedInOpenAPI() );
 
 		// enable close only if there is an open catalogue
-		closeMI.setEnabled(mainMenu.getCatalogue() != null);
+		closeMI.setEnabled(cat != null);
 
 		DCDAO dcDao = new DCDAO();
 		openDcMI.setEnabled(!dcDao.getAll().isEmpty());
 
 		// enable delete only if we have at least one catalogue downloaded and we
 		// have not an open catalogue (to avoid deleting the open catalogue)
-		deleteMI.setEnabled(hasCatalogues && mainMenu.getCatalogue() == null);
+		deleteMI.setEnabled(hasCatalogues && cat == null);
+
+		// if user is cat manager of the catalogue and it is reserved allow force remove
+		if (cat != null && user.isCatManagerOf(cat)) {
+			// web service request
+			if (user.hasPendingRequestsFor(cat)) {
+				// editing, we leave these buttons enabled
+				if (cat != null && user.hasForcedReserveOf(cat) == null) {
+					if (forceRemoveMI != null)
+						forceRemoveMI.setEnabled(false);
+				}
+			} else if (user.canEdit(cat)) {
+				// enable forceRemoveMI
+				if (forceRemoveMI != null) {
+					forceRemoveMI.setEnabled(user.hasReserved(cat.getCode()));
+				}
+			}
+		}
 
 		// if we are retrieving the catalogues
 		if (Dcf.isGettingUpdates()) {

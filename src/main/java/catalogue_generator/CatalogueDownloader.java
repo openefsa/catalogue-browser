@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import catalogue.AttachmentNotFoundException;
 import catalogue.Catalogue;
+import dcf_user.User;
 import i18n_messages.CBMessages;
 import progress_bar.FormProgressBar;
 import progress_bar.IProgressBar;
@@ -89,13 +90,21 @@ public class CatalogueDownloader extends Thread {
 		}
 
 		// download and import the catalogue
-		boolean ok = catalogue.downloadAndImport(progressBar, 90, new ThreadFinishedListener() {
-			@Override
-			public void finished(Thread thread, int code, Exception e) {
-				callListener(code);
-				finished = true;
-			}
-		});
+		boolean ok;
+		// no need to downalod and import catalogue when using openapi (always viewer)
+		if(User.getInstance().isLoggedInOpenAPI()) {
+			ok = true;
+			callListener(ThreadFinishedListener.OK);
+			finished = true;
+		} else {
+			ok = catalogue.downloadAndImport(progressBar, 90, new ThreadFinishedListener() {
+				@Override
+				public void finished(Thread thread, int code, Exception e) {
+					callListener(code);
+					finished = true;
+				}
+			});
+		}
 
 		// if file not found
 		if (!ok) {

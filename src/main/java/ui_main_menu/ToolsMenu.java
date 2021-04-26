@@ -146,9 +146,9 @@ public class ToolsMenu implements MainMenuItem {
 		User user = User.getInstance();
 
 		// add reserve/unreserve for cm users
-		if (mainMenu.getCatalogue() != null && user.isCatManagerOf(mainMenu.getCatalogue())
+		if (mainMenu.getCatalogue() != null 
+				&& user.isCatManagerOf(mainMenu.getCatalogue())
 				&& !mainMenu.getCatalogue().hasUpdate()) {
-
 			reserveMI = addReserveMI(toolsMenu);
 			unreserveMI = addUnreserveMI(toolsMenu);
 			createXmlMI = addCreateXmlMI(toolsMenu);
@@ -690,7 +690,7 @@ public class ToolsMenu implements MainMenuItem {
 
 		return launchItem;
 	}
-	
+
 	/**
 	 * Add a menu item which allows to reinstall the ICT tool
 	 * 
@@ -716,7 +716,7 @@ public class ToolsMenu implements MainMenuItem {
 
 		return reinstallItem;
 	}
-	
+
 	/**
 	 * this method allows to download latest version of ict
 	 * 
@@ -728,11 +728,11 @@ public class ToolsMenu implements MainMenuItem {
 
 		if (!confirmation)
 			return;
-		
+
 		// remove first all content of the folder if reinstall is needed
-		if(reinstall)
+		if (reinstall)
 			GlobalUtil.removeICTFolder();
-		
+
 		// create first the required folders
 		GlobalUtil.createIctFolders();
 
@@ -762,8 +762,7 @@ public class ToolsMenu implements MainMenuItem {
 								new ICTInstaller().install();
 
 								// extract the foodex2 catalogue
-								extractCatalogue(menuItem, GlobalUtil.ICT_FOODEX2_FILE_PATH, INSTALL_ICT,
-										false);
+								extractCatalogue(menuItem, GlobalUtil.ICT_FOODEX2_FILE_PATH, INSTALL_ICT, false);
 
 								if (listener != null)
 									listener.buttonPressed(menuItem, INSTALL_ICT, null);
@@ -1225,7 +1224,7 @@ public class ToolsMenu implements MainMenuItem {
 		fixScreensIssue.setEnabled(true);
 
 		// if editing modify also editing buttons
-		if (user.canEdit(mainMenu.getCatalogue())) {
+		if (canEdit) {
 
 			if (hierarchyEditMI != null)
 				hierarchyEditMI.setEnabled(true);
@@ -1320,12 +1319,17 @@ public class ToolsMenu implements MainMenuItem {
 					publishMI.setEnabled(!isReservedByCurrentUser);
 				}
 
-				if (resetMI != null && user.canEdit(mainMenu.getCatalogue())) {
+				// if the catalogue can be modified
+				if (canEdit) {
 
-					// enable resetMI only if the catalogue is an internal version
-					// and if the catalogue is reserved by the current user
-					resetMI.setEnabled(mainMenu.getCatalogue().isReservedBy(user)
-							&& mainMenu.getCatalogue().getCatalogueVersion().isInternalVersion());
+					// check if catalogue is reserved by the user and if it is an internal version
+					boolean isReserved = mainMenu.getCatalogue().isReservedBy(user)
+							&& mainMenu.getCatalogue().getCatalogueVersion().isInternalVersion();
+
+					// enable resetMI
+					if (resetMI != null) {
+						resetMI.setEnabled(isReserved);
+					}
 				}
 
 				if (importMI != null)

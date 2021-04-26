@@ -645,10 +645,8 @@ public class User extends DcfUser {
 	 * @return
 	 */
 	public boolean getOpeanAPICredentials() {
-		System.out.println("shahaal "+this.credentials);
 		// get the credentials
 		this.credentials = this.getSavedCredentials();
-		System.out.println("shahaal "+this.credentials);
 		if (this.credentials == null)
 			return false;
 
