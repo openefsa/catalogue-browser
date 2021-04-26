@@ -1,19 +1,8 @@
 
 -------------- What's new in this version:
-+ Updated BRs data file
-+ Different changes to the Business rules
-+ Added option for not restoring last selected term
-+ Added fix multiple screens issue
-+ Added Reinstall ICT option
-
--------------- Bugs fixed and other improvements:
-+ Optimisations to the Term properties tab
-+ Optimisations to the Options panel
-+ Fixed bug causing the check of the code twice
-+ Pick-list null after update
-+ Param not opening describe 
-+ Br-engine not turned on in some cases 
-+ Term's attribute null from param impl facets
++ Updated BRs
++ Added new function for catalogue managers
++ Other bugs fixed and optimisations
 
 -------------- Changes in the previous versions:
 + Check the official <a href="Latest-Changes">wiki page</a> for further information
