@@ -276,15 +276,6 @@ public class CatalogueImporter {
 		// xlsx file into the specified path (db path)
 		importer.importWorkbook(progressBar, filename, maxProgress - preprocProgress);
 
-		// end the import process
-		endProcess();
-	}
-
-	/**
-	 * End the import process
-	 */
-	private void endProcess() {
-
 		// delete all the temporary files
 		deleteGarbage();
 	}

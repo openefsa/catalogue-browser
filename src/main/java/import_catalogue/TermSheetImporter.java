@@ -69,7 +69,7 @@ public class TermSheetImporter extends SheetImporter<Term> {
 		// save the code in order to be able to use it later
 		// for retrieving terms ids
 		String code = rs.getString(Headers.TERM_CODE);
-
+		
 		// skip if no term code
 		if (code.isEmpty()) {
 			LOGGER.error("Empty code found, skipping this term");

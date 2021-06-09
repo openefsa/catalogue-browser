@@ -141,7 +141,6 @@ public class ParentImporter extends SheetImporter<Applicability> {
 
 			// if not root and parent id not found => error
 			if (parentId == null && !isRoot) {
-
 				LOGGER.error("The parent term " + parentCode + " is not present in the DB, please check!");
 				continue;
 			}

@@ -67,7 +67,6 @@ public class CatalogueImporterThread extends Thread {
 
 		importer.setOpenedCat(openedCat);
 		try {
-
 			importer.makeImport();
 
 			// if the ICT installed and importing mtx foodex2

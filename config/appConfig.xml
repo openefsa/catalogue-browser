@@ -3,7 +3,7 @@
 <properties>
 <comment>Default Properties</comment>
 <entry key="Application.Name">EFSA Catalogue Browser</entry>
-<entry key="Application.Version">1.2.8</entry>
+<entry key="Application.Version">1.2.9</entry>
 <entry key="DcfXmlUpdatesCreator.RemotePath">\\damaprodweufilestorage.file.core.windows.net\share-sas-operational\DataShare\Data\DATA\SSD\METADATA\CAT_BROWSER</entry>
 <entry key="DcfXmlUpdatesCreator.InputFolder">IN</entry>
 <entry key="DcfXmlUpdatesCreator.UpdateFolder">UPDATE</entry>

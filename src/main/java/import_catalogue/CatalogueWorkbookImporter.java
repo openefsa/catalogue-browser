@@ -59,8 +59,6 @@ public class CatalogueWorkbookImporter {
 
 	// set this to import a local catalogue
 	private Catalogue openedCat;
-	private CatalogueSheetImporter catImp;
-	private TermSheetImporter termImp;
 	private IProgressBar progressBar;
 	private double maxProgress;
 
@@ -143,7 +141,7 @@ public class CatalogueWorkbookImporter {
 			if (progressBar != null)
 				progressBar.setLabel(CBMessages.getString("Import.Catalogue"));
 
-			catImp = importCatalogueSheet(workbookReader);
+			CatalogueSheetImporter catImp = importCatalogueSheet(workbookReader);
 
 			Catalogue importedCat = catImp.getImportedCatalogue();
 			String catExcelCode = catImp.getExcelCode();
@@ -169,7 +167,7 @@ public class CatalogueWorkbookImporter {
 			LOGGER.info("Import term sheet");
 			if (progressBar != null)
 				progressBar.setLabel(CBMessages.getString("Import.Term"));
-			termImp = importTermSheet(workbookReader, importedCat);
+			TermSheetImporter termImp = importTermSheet(workbookReader, importedCat);
 
 			// import term attributes and parent
 			LOGGER.info("Import term attributes and parents sheet");
@@ -426,9 +424,7 @@ public class CatalogueWorkbookImporter {
 				workbookReader, Headers.TERM_SHEET_NAME, batchSize);
 
 		if (progressBar != null) {
-
 			double progTa = ProgressSettings.getProgress(ProgressSettings.TERM_ATTR_SHEET, maxProgress);
-
 			double progParent = ProgressSettings.getProgress(ProgressSettings.PARENT_SHEET, maxProgress);
 
 			tapImporter.setAttributeProgressBar(progressBar, progTa);
@@ -436,7 +432,6 @@ public class CatalogueWorkbookImporter {
 		}
 
 		tapImporter.manageNewTerms(newCodes);
-
 		tapImporter.importSheet();
 	}
 
