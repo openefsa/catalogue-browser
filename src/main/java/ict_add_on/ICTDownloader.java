@@ -19,7 +19,7 @@ public class ICTDownloader extends Thread {
 
 	private ThreadFinishedListener doneListener;
 
-	private final String txtURL = "https://github.com/openefsa/Interpreting-and-Checking-Tool/releases/download/1.2.9/utils.zip";
+	private final String txtURL = "https://github.com/openefsa/Interpreting-and-Checking-Tool/releases/latest/download/utils.zip"; // Get the latest version of the file, always.
 	private FormProgressBar progressBar;
 
 	/**
