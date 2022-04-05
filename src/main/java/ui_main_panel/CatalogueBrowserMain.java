@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -13,6 +14,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import catalogue_browser_dao.DatabaseManager;
 import catalogue_generator.ThreadFinishedListener;
+import config.AppConfig;
 import converter.ExceptionConverter;
 import dcf_user.ReauthThread;
 import dcf_user.User;
@@ -113,7 +115,10 @@ public class CatalogueBrowserMain {
 
 		// creates the main panel user interface
 		browser.initGraphics();
-
+		
+		// update the title of the shell
+		Program.launch(AppConfig.getHelpRepositoryURL());
+				
 		// show ui
 		shell.open();
 
