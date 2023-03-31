@@ -70,8 +70,8 @@ public class SearchOptionDAO implements CatalogueEntityDAO<SearchOption> {
 			con.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return opt.getId();
@@ -108,8 +108,8 @@ public class SearchOptionDAO implements CatalogueEntityDAO<SearchOption> {
 			return true;
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return false;
@@ -157,8 +157,8 @@ public class SearchOptionDAO implements CatalogueEntityDAO<SearchOption> {
 			con.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return opts;
@@ -214,8 +214,8 @@ public class SearchOptionDAO implements CatalogueEntityDAO<SearchOption> {
 			con.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return opts;

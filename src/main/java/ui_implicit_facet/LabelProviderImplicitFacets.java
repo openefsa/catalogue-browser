@@ -43,8 +43,8 @@ public class LabelProviderImplicitFacets implements ILabelProvider {
 			facetCategoryImage = new Image(Display.getCurrent(),
 					LabelProviderImplicitFacets.class.getClassLoader().getResourceAsStream("FacetFolder.ico"));
 		} catch (Exception e) {
-			e.printStackTrace();
 			LOGGER.error("Cannot get image", e);
+			e.printStackTrace();
 		}
 
 	}

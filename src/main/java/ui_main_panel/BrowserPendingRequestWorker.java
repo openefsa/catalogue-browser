@@ -39,6 +39,7 @@ import ui_main_panel.IBrowserPendingRequestWorker.PendingRequestWorkerListener.W
 public class BrowserPendingRequestWorker extends PendingRequestWorker implements IBrowserPendingRequestWorker {
 
 	private static final Logger LOGGER = LogManager.getLogger(BrowserPendingRequestWorker.class);
+	
 	private static BrowserPendingRequestWorker updater;
 	
 	private WorkerStatus status;
@@ -153,6 +154,7 @@ public class BrowserPendingRequestWorker extends PendingRequestWorker implements
 						
 					} catch (SOAPException | TransformerException | IOException | XMLStreamException
 							| OpenXML4JException | SAXException | SQLException | ImportException e) {
+						LOGGER.error("Error during removal preferences folder ", e);
 						e.printStackTrace();
 					}
 				}

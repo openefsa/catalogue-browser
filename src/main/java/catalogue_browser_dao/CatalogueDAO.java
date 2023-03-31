@@ -110,8 +110,8 @@ public class CatalogueDAO implements ICatalogueDAO {
 			con.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return id;
@@ -185,8 +185,8 @@ public class CatalogueDAO implements ICatalogueDAO {
 
 			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return false;
@@ -223,8 +223,8 @@ public class CatalogueDAO implements ICatalogueDAO {
 			return true;
 
 		} catch (Exception e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return false;
@@ -360,8 +360,8 @@ public class CatalogueDAO implements ICatalogueDAO {
 			con.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 	}
 
@@ -401,6 +401,7 @@ public class CatalogueDAO implements ICatalogueDAO {
 			con.close();
 
 		} catch (SQLException exception) {
+			LOGGER.error("DB error ", exception);
 			exception.printStackTrace();
 		}
 
@@ -487,8 +488,8 @@ public class CatalogueDAO implements ICatalogueDAO {
 			con.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return lastVersion;
@@ -540,8 +541,8 @@ public class CatalogueDAO implements ICatalogueDAO {
 			con.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return catalogues;
@@ -591,8 +592,8 @@ public class CatalogueDAO implements ICatalogueDAO {
 			con.close();
 
 		} catch (Exception e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 			return null;
 		}
 
@@ -636,8 +637,8 @@ public class CatalogueDAO implements ICatalogueDAO {
 			con.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 			return null;
 		}
 
@@ -678,8 +679,8 @@ public class CatalogueDAO implements ICatalogueDAO {
 			con.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 			return null;
 		}
 		return cat;

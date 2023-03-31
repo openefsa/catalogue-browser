@@ -168,8 +168,8 @@ public class User extends DcfUser {
 		try {
 			ucf.getUserPendingRequests(this, output);
 		} catch (SQLException | IOException e) {
-			e.printStackTrace();
 			LOGGER.error("Cannot retrieve information related to pending requests", e);
+			e.printStackTrace();
 			return false;
 		}
 
@@ -521,6 +521,9 @@ public class User extends DcfUser {
 		try {
 			setLogged(super.verifiedLogin(Config.getEnvironment(), credentials[0], credentials[1]));
 		} catch (SOAPException e) {
+			LOGGER.error("Error during authentication with dcf ", e);
+			e.printStackTrace();
+			
 			this.isReauth = false;
 			super.logout(); // connection error only!
 			throw e;
@@ -563,6 +566,9 @@ public class User extends DcfUser {
 			setLoggedOpenApi(
 					super.verifiedLoginOpenapi(Config.getEnvironment(), credentials[0], credentials[1], catUsers));
 		} catch (SOAPException e) {
+			LOGGER.error("Error during authentication with open api ", e);
+			e.printStackTrace();
+			
 			this.isReauth = false;
 			super.logout(); // connection error only!
 			throw e;
@@ -681,14 +687,16 @@ public class User extends DcfUser {
 			con.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("Cannot retrieve saved credentials", e);
+			e.printStackTrace();
 		}
 
 		return out;
 	}
 
 	public void deleteCredentials() {
+		
+		LOGGER.info("Delete Credentials");
 
 		String query = "delete from APP.USERS where DCF_TYPE = ?";
 
@@ -702,12 +710,14 @@ public class User extends DcfUser {
 			con.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("Cannot delete user credentials", e);
+			e.printStackTrace();
 		}
 	}
 
 	private void saveCredentials(String username, String password) {
+		
+		LOGGER.info("Save Credentials");
 
 		String query = "insert into APP.USERS (DCF_TYPE, USERNAME, PASSWORD) values (?, ?, ?)";
 
@@ -724,8 +734,8 @@ public class User extends DcfUser {
 			con.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("Cannot save user credentials", e);
+			e.printStackTrace();
 		}
 	}
 

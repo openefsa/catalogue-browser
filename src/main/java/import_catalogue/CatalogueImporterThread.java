@@ -18,6 +18,9 @@ import import_catalogue.CatalogueImporter.ImportFileFormat;
 import progress_bar.IProgressBar;
 import utilities.GlobalUtil;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Thread used to import a catalogue from three different formats: .ecf, .xml
  * and .xlsx. Note that the real import process involves only the .xlsx file. If
@@ -28,6 +31,8 @@ import utilities.GlobalUtil;
  *
  */
 public class CatalogueImporterThread extends Thread {
+	
+	private static final Logger LOGGER = LogManager.getLogger(CatalogueImporterThread.class);
 
 	private Catalogue openedCat;
 	private String filename; // path of the file
@@ -78,7 +83,9 @@ public class CatalogueImporterThread extends Thread {
 
 		} catch (TransformerException | IOException | XMLStreamException | OpenXML4JException | SAXException
 				| SQLException | ImportException e) {
-
+			LOGGER.error("Error ", e);
+			e.printStackTrace();
+			
 			doneListener.finished(this, ThreadFinishedListener.EXCEPTION, e);
 
 			if (progressBar != null) {

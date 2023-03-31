@@ -155,7 +155,7 @@ public class FormOpenapiLogin {
 				try {
 					valid = checkCredentials(token);
 				} catch (DetailedSOAPException e1) {
-
+					LOGGER.error("Error while checking credentials", e1);
 					e1.printStackTrace();
 
 					// reset the original cursor

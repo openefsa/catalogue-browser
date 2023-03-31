@@ -100,12 +100,12 @@ public class DCDownloader extends Thread {
 				GlobalUtil.showErrorDialog(new Shell(display, SWT.ON_TOP), warning[0], warning[1]);
 			}
 
-			e.printStackTrace();
 			LOGGER.error("Cannot download data collection=" + dc);
+			e.printStackTrace();
 			
 		} catch (IOException | XMLStreamException e) {
-			e.printStackTrace();
 			LOGGER.error("IO exception or error during the XML parsing for data collection=" + dc);
+			e.printStackTrace();
 		}
 	}
 

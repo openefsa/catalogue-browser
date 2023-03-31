@@ -50,8 +50,8 @@ public class XmlUpdateFileDAO implements CatalogueEntityDAO<XmlUpdateFile> {
 			con.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return id;
@@ -85,8 +85,8 @@ public class XmlUpdateFileDAO implements CatalogueEntityDAO<XmlUpdateFile> {
 			return true;
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return false;
@@ -159,8 +159,8 @@ public class XmlUpdateFileDAO implements CatalogueEntityDAO<XmlUpdateFile> {
 			con.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return objs;

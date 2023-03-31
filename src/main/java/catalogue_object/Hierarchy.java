@@ -10,12 +10,17 @@ import data_transformation.DateTrimmer;
 import global_manager.GlobalManager;
 import term.WrongKeyException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Model a record of the Hierarchy DB table
  * @author avonva
  *
  */
 public class Hierarchy extends SortableCatalogueObject implements Mappable {
+	
+	private static final Logger LOGGER = LogManager.getLogger(Hierarchy.class);
 
 	// the code of the master hierarchy code when we read/write a term sheet
 	// used for import/export excel
@@ -143,6 +148,8 @@ public class Hierarchy extends SortableCatalogueObject implements Mappable {
 		try {
 			super.setVariableByKey(key, value);
 		} catch ( WrongKeyException e ) {
+			LOGGER.error("Error ", e);
+			e.printStackTrace();
 			
 			switch ( key ) {
 			case "applicability":
@@ -175,6 +182,8 @@ public class Hierarchy extends SortableCatalogueObject implements Mappable {
 			value = super.getVariableByKey(key);
 			
 		} catch ( WrongKeyException e ) {
+			LOGGER.error("Error ", e);
+			e.printStackTrace();
 			
 			switch ( key ) {
 			case "applicability":

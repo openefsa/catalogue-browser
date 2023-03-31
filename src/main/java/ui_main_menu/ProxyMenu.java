@@ -12,7 +12,12 @@ import org.eclipse.swt.widgets.Shell;
 import i18n_messages.CBMessages;
 import user_interface.ProxySettingsDialog;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class ProxyMenu implements MainMenuItem {
+	
+	private static final Logger LOGGER = LogManager.getLogger(ProxyMenu.class);
 
 	private Shell shell;
 	
@@ -35,6 +40,7 @@ public class ProxyMenu implements MainMenuItem {
 				try {
 					dialog.open();
 				} catch (IOException e) {
+					LOGGER.error("Error during opening dialog", e);
 					e.printStackTrace();
 					// TODO warning
 				}

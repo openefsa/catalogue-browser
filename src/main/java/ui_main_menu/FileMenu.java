@@ -24,6 +24,9 @@ import dcf_user.User;
 import i18n_messages.CBMessages;
 import utilities.GlobalUtil;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * File menu for the main menu.
  * 
@@ -31,6 +34,8 @@ import utilities.GlobalUtil;
  *
  */
 public class FileMenu implements MainMenuItem {
+	
+	private static final Logger LOGGER = LogManager.getLogger(FileMenu.class);
 
 	// codes to identify the menu items (used for listeners)
 	public static final int NEW_CAT_MI = 0;
@@ -513,6 +518,8 @@ public class FileMenu implements MainMenuItem {
 					final CatalogueDAO catDao = new CatalogueDAO();
 					catDao.delete(cat);
 				} catch (IOException e) {
+					LOGGER.error("Error during reset process of catalogue ", e);
+					
 					GlobalUtil.showErrorDialog(shell, CBMessages.getString("ForceRemove.ErrorTitle"),
 							CBMessages.getString("ForceRemove.ErrorMessage"));
 				}

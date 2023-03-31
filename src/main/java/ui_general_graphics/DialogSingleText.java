@@ -18,7 +18,12 @@ import i18n_messages.CBMessages;
 import session_manager.BrowserWindowPreferenceDao;
 import window_restorer.RestoreableWindow;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class DialogSingleText extends Dialog {
+	
+	private static final Logger LOGGER = LogManager.getLogger(DialogSingleText.class);
 
 	private RestoreableWindow window;
 	private String windowCode;
@@ -105,6 +110,7 @@ public class DialogSingleText extends Dialog {
 	 * @return
 	 */
 	public String open() {
+		LOGGER.debug("Open dialog");
 
 		shell = new Shell(getParent(), getStyle());
 		window = new RestoreableWindow(shell, windowCode);
@@ -138,6 +144,8 @@ public class DialogSingleText extends Dialog {
 	 * @param shell
 	 */
 	private void createContents(final Shell shell) {
+		LOGGER.debug("Creating the contents of the dialog");
+		
 		shell.setLayout(new GridLayout(2, true));
 
 		Label label = new Label(shell, SWT.NONE);

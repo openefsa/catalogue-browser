@@ -45,8 +45,8 @@ public class SheetReaderThread extends Thread {
 		try {
 			rs = reader.next();
 		} catch (XMLStreamException e) {
-			e.printStackTrace();
 			LOGGER.error("Cannot read workbook", e);
+			e.printStackTrace();
 		}
 
 		finished = true;

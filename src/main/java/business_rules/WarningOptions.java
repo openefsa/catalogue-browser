@@ -143,6 +143,7 @@ public class WarningOptions {
 			out.close();
 		} catch (Exception e) {
 			LOGGER.error("Cannot create the file " + filename, e);
+			e.printStackTrace();
 		}
 	}
 }

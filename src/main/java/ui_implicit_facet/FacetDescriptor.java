@@ -93,8 +93,8 @@ public class FacetDescriptor {
 		try {
 			return splitValue()[0];
 		} catch (Exception e) {
-			e.printStackTrace();
 			LOGGER.error("Cannot get facet header for facet=" + facetCode, e);
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -108,6 +108,7 @@ public class FacetDescriptor {
 		try {
 			return splitValue()[1];
 		} catch (Exception e) {
+			LOGGER.error("Cannot get facet header for facet=" + facetCode, e);
 			e.printStackTrace();
 			return null;
 		}

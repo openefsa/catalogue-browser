@@ -67,8 +67,8 @@ public class RecentTermDAO implements CatalogueEntityDAO<DescribedTerm> {
 			con.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return recentTerms;
@@ -111,8 +111,8 @@ public class RecentTermDAO implements CatalogueEntityDAO<DescribedTerm> {
 			con.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return id;
@@ -165,8 +165,8 @@ public class RecentTermDAO implements CatalogueEntityDAO<DescribedTerm> {
 			con.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 	}

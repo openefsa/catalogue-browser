@@ -135,8 +135,8 @@ public class FormDescribedTerms {
 			parent.setImage(
 					new Image(parent.getDisplay(), FormDescribedTerms.class.getClassLoader().getResourceAsStream("Choose.gif")));
 		} catch (Exception e) {
-			e.printStackTrace();
 			LOGGER.error("Cannot get image", e);
+			e.printStackTrace();
 		}
 
 		parent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));

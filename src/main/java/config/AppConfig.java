@@ -49,6 +49,7 @@ public class AppConfig {
 			in.close();
 		} catch (IOException e) {
 			LOGGER.error("The default properties file was not found. Please check!", e);
+			e.printStackTrace();
 		}
 
 		return properties;
