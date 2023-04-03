@@ -136,8 +136,8 @@ public class HierarchyDAO implements CatalogueEntityDAO<Hierarchy> {
 			con.close();
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return ids;
@@ -174,8 +174,8 @@ public class HierarchyDAO implements CatalogueEntityDAO<Hierarchy> {
 			return true;
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 		return false;
 	}
@@ -237,8 +237,8 @@ public class HierarchyDAO implements CatalogueEntityDAO<Hierarchy> {
 			return true;
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return false;
@@ -274,8 +274,8 @@ public class HierarchyDAO implements CatalogueEntityDAO<Hierarchy> {
 			con.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return hierarchy;
@@ -309,8 +309,8 @@ public class HierarchyDAO implements CatalogueEntityDAO<Hierarchy> {
 			con.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return hierarchy;
@@ -376,8 +376,8 @@ public class HierarchyDAO implements CatalogueEntityDAO<Hierarchy> {
 			con.close();
 			
 		} catch (SQLException e) {
+			LOGGER.error("DB error", e);	
 			e.printStackTrace();
-			LOGGER.error("DB error", e);
 		}
 
 		return hierarchies;

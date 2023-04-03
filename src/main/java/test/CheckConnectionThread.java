@@ -62,8 +62,10 @@ public class CheckConnectionThread extends Thread {
 			
 			
 		} catch (SQLException e) {
+			LOGGER.error("DB error", e);
 			e.printStackTrace();
 		} catch (InterruptedException e) {
+			LOGGER.error("Thread error ", e);
 			e.printStackTrace();
 		}
 	}

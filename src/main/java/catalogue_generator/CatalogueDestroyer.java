@@ -69,8 +69,8 @@ public class CatalogueDestroyer extends Thread {
 				catDao.delete( catalogue );
 				
 			} catch (IOException e) {
-				e.printStackTrace();
 				LOGGER.error("Cannot delete catalogue=" + catalogue, e);
+				e.printStackTrace();
 			}
 		}
 

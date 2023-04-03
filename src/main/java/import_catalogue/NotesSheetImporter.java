@@ -46,8 +46,8 @@ public class NotesSheetImporter extends SheetImporter<ReleaseNotesOperation> {
 		try {
 			op = getByExcelResultSet( rs );
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("Cannot get release notes from excel", e);
+			e.printStackTrace();
 		}
 		
 		return op;

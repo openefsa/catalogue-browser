@@ -141,8 +141,8 @@ public class VersionChecker {
 		try {
 			backup.backupCatalogue(catalogue, newVersionCat.getDbPath());
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("Cannot backup the catalogue=" + catalogue, e);
+			e.printStackTrace();
 		}
 	
 		// return the new catalogue

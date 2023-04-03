@@ -16,6 +16,9 @@ import config.AppConfig;
 import i18n_messages.CBMessages;
 import utilities.GlobalUtil;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * the class is used for showing the new changes, new features and bugs fixed on
  * each official version
@@ -24,6 +27,8 @@ import utilities.GlobalUtil;
  *
  */
 public class BrowserReleaseNotes {
+	
+	private static final Logger LOGGER = LogManager.getLogger(BrowserReleaseNotes.class);
 
 	private Shell dialog;
 
@@ -61,6 +66,7 @@ public class BrowserReleaseNotes {
 			});
 
 		} catch (IOException e) {
+			LOGGER.error("Error while handling file ", e);
 			e.printStackTrace();
 		}
 

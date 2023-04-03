@@ -85,8 +85,8 @@ public class LabelProviderTerm extends LabelProvider implements IFontProvider {
 				cache = new Image(Display.getCurrent(),
 						LabelProviderTerm.class.getClassLoader().getResourceAsStream(imageName));
 			} catch (Exception e) {
-				e.printStackTrace();
 				LOGGER.error("Cannot get image", e);
+				e.printStackTrace();
 			}
 		}
 
@@ -149,6 +149,7 @@ public class LabelProviderTerm extends LabelProvider implements IFontProvider {
 
 			} catch (Exception e) {
 				LOGGER.error("Cannot find icons", e);
+				e.printStackTrace();
 			}
 
 			return image;
@@ -218,7 +219,7 @@ public class LabelProviderTerm extends LabelProvider implements IFontProvider {
 		} else {
 			text = CBMessages.getString("LabelProviderTerm.NameNotAvailable");
 		}
-
+		LOGGER.info("The text of a term which needs to be displayed : " + text);
 		return text;
 	}
 

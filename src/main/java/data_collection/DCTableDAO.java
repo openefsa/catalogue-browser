@@ -58,8 +58,8 @@ public class DCTableDAO implements CatalogueEntityDAO<DCTable> {
 			con.close();
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return id;
@@ -82,8 +82,8 @@ public class DCTableDAO implements CatalogueEntityDAO<DCTable> {
 
 			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return false;
@@ -119,8 +119,8 @@ public class DCTableDAO implements CatalogueEntityDAO<DCTable> {
 			con.close();
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return out;
@@ -155,8 +155,8 @@ public class DCTableDAO implements CatalogueEntityDAO<DCTable> {
 			con.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return out;
@@ -202,8 +202,8 @@ public class DCTableDAO implements CatalogueEntityDAO<DCTable> {
 			con.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return contains;
@@ -228,8 +228,8 @@ public class DCTableDAO implements CatalogueEntityDAO<DCTable> {
 			con.close();
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return out;

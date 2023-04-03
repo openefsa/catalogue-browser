@@ -99,8 +99,8 @@ public class ReleaseNotesOperationDAO implements CatalogueEntityDAO<ReleaseNotes
 			con.close();
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return ids;
@@ -156,8 +156,8 @@ public class ReleaseNotesOperationDAO implements CatalogueEntityDAO<ReleaseNotes
 			con.close();
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return ops;

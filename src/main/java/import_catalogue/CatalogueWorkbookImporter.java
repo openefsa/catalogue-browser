@@ -225,6 +225,8 @@ public class CatalogueWorkbookImporter {
 	 */
 	private CatalogueSheetImporter importCatalogueSheet(WorkbookReader workbookReader)
 			throws InvalidFormatException, IOException, XMLStreamException, ImportException {
+		
+		LOGGER.info("Importing catalogue sheet");
 
 		// get the catalogue sheet and check if the catalogues are compatible
 		// (the open catalogue and the one we want to import)
@@ -267,6 +269,8 @@ public class CatalogueWorkbookImporter {
 	 */
 	private void importAttributeSheet(WorkbookReader workbookReader, Catalogue catalogue)
 			throws XMLStreamException, InvalidFormatException, IOException, ImportException {
+		
+		LOGGER.info("Importing attribute sheet");
 
 		// get the attribute sheet
 		workbookReader.processSheetName(Headers.ATTR_SHEET_NAME);
@@ -309,6 +313,8 @@ public class CatalogueWorkbookImporter {
 	 */
 	private void importHierarchySheet(WorkbookReader workbookReader, Catalogue catalogue, String catExcelCode)
 			throws InvalidFormatException, IOException, XMLStreamException, ImportException {
+		
+		LOGGER.info("Importing hierarchy sheet");
 
 		// get the hierarchy sheet
 		workbookReader.processSheetName(Headers.HIER_SHEET_NAME);
@@ -379,6 +385,8 @@ public class CatalogueWorkbookImporter {
 	 */
 	private TermSheetImporter importTermSheet(WorkbookReader workbookReader, Catalogue catalogue)
 			throws InvalidFormatException, IOException, XMLStreamException, SQLException, ImportException {
+		
+		LOGGER.info("Importing term sheet");
 
 		final int batchSize = 100;
 
@@ -413,7 +421,9 @@ public class CatalogueWorkbookImporter {
 	private void importTermRelations(WorkbookReader workbookReader, Catalogue catalogue,
 			HashMap<String, String> newCodes)
 			throws SQLException, InvalidFormatException, XMLStreamException, IOException, ImportException {
-
+		
+		LOGGER.info("Importing term relations");
+		
 		final int batchSize = 100;
 
 		// note that we need to have imported the terms to import
@@ -443,6 +453,8 @@ public class CatalogueWorkbookImporter {
 	 */
 	private void importReleaseNotes(WorkbookReader workbookReader, Catalogue catalogue) {
 
+		LOGGER.info("Importing release notes");
+		
 		// import the release notes operations
 		try {
 
@@ -465,6 +477,7 @@ public class CatalogueWorkbookImporter {
 
 		} catch (Exception e) {
 			LOGGER.error("Release notes not found for " + catalogue, e);
+			e.printStackTrace();
 		}
 	}
 }

@@ -49,6 +49,7 @@ public class LabelProviderDetailLevel implements ILabelProvider {
 					LabelProviderDetailLevel.class.getClassLoader().getResourceAsStream(detailLevel.getImageName()));
 		} catch (Exception e) {
 			LOGGER.error("Cannot find icons", e);
+			e.printStackTrace();
 		}
 
 		return image;

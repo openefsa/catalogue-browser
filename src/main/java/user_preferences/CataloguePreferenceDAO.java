@@ -107,8 +107,8 @@ public class CataloguePreferenceDAO extends PreferenceDAO {
 			int id = Integer.valueOf(pref.getValue());
 			hierarchy = catalogue.getHierarchyById(id);
 		} catch (NumberFormatException e) {
-			e.printStackTrace();
 			LOGGER.info("Cannot get last hierarchy", e);
+			e.printStackTrace();
 			throw new PreferenceNotFoundException();
 		}
 
@@ -131,8 +131,8 @@ public class CataloguePreferenceDAO extends PreferenceDAO {
 			int id = Integer.valueOf(pref.getValue());
 			term = catalogue.getTermById(id);
 		} catch (NumberFormatException e) {
-			e.printStackTrace();
 			LOGGER.info("Cannot get last term", e);
+			e.printStackTrace();
 			throw new PreferenceNotFoundException();
 		}
 
@@ -189,7 +189,7 @@ public class CataloguePreferenceDAO extends PreferenceDAO {
 		if (picklist != null) {
 			picklist.setTerms(pickDao.getPicklistTerms(picklist));
 		}
-		
+		LOGGER.info("Favorite picklist : " + picklist);
 		return picklist;
 	}
 

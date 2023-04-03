@@ -35,6 +35,10 @@ import i18n_messages.CBMessages;
 import soap.DetailedSOAPException;
 import soap.SOAPError;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+
 /**
  * This class contains static functions and static variables that can be used
  * everywhere in the application
@@ -44,6 +48,8 @@ import soap.SOAPError;
  */
 
 public final class GlobalUtil {
+	
+	private static final Logger LOGGER = LogManager.getLogger(GlobalUtil.class);
 
 	public static final String TEMP_DIR_NAME = "temp";
 
@@ -291,6 +297,7 @@ public final class GlobalUtil {
 		try {
 			FileUtils.deleteDirectory(new File(getPrefDir()));
 		} catch (IOException e) {
+			LOGGER.error("Error during removal preferences folder ", e);
 			e.printStackTrace();
 		}
 	}
@@ -304,6 +311,7 @@ public final class GlobalUtil {
 		try {
 			FileUtils.deleteDirectory(new File(ICT_DIR_PATH));
 		} catch (IOException e) {
+			LOGGER.error("Error during removal ICT folder ", e);
 			e.printStackTrace();
 		}
 	}
@@ -736,7 +744,7 @@ public final class GlobalUtil {
 			Files.move(Paths.get(sourcePath), Paths.get(targetPath), StandardCopyOption.REPLACE_EXISTING);
 
 		} catch (Exception e) {
-
+			LOGGER.error("Error during move of a file into another folder ", e);
 			fileMoved = false;
 			e.printStackTrace();
 		}

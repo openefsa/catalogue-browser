@@ -46,10 +46,8 @@ public class CatalogueBrowserMain {
 			CatalogueBrowserMain main = new CatalogueBrowserMain();
 			main.launch();
 		} catch (Exception e) {
-
-			e.printStackTrace();
-
 			LOGGER.error("Generic error occurred", e);
+			e.printStackTrace();
 
 			String trace = ExceptionConverter.getStackTrace(e);
 
@@ -83,6 +81,7 @@ public class CatalogueBrowserMain {
 			DatabaseManager.startMainDB();
 			started = true;
 		} catch (SQLException e1) {
+            LOGGER.error("Error during launch ", e1);
 			e1.printStackTrace();
 			GlobalUtil.showErrorDialog(new Shell(), CBMessages.getString("DBOpened.ErrorTitle"),
 					CBMessages.getString("DBOpened.ErrorMessage"));
@@ -93,8 +92,8 @@ public class CatalogueBrowserMain {
 			try {
 				DatabaseManager.addNotExistingTables();
 			} catch (SQLException | IOException e) {
-				e.printStackTrace();
 				LOGGER.error("Cannot add not existing tables", e);
+				e.printStackTrace();
 			}
 		}
 

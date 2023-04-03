@@ -133,8 +133,8 @@ public class DataCollection implements IDcfDataCollection {
 					value, DATE_FORMAT );
 		}
 		catch ( ParseException e ) {
-			e.printStackTrace();
 			LOGGER.error("Cannot parse timestamp=" + value + " using format=" + DATE_FORMAT, e);
+			e.printStackTrace();
 		}
 
 		return ts;
@@ -228,6 +228,8 @@ public class DataCollection implements IDcfDataCollection {
 	 */
 	public void downloadCatalogues ( ProgressStepListener listener ) {
 
+		LOGGER.info("Downloading catalogues");
+		
 		// second progress block for threads
 		ProgressList list = new ProgressList ( 100 );
 		list.addProgressListener( listener );

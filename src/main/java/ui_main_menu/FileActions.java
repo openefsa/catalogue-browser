@@ -89,7 +89,7 @@ public class FileActions {
 		try {
 			CatalogueCreator.newLocalCatalogue(catalogueCode);
 		} catch (DuplicatedCatalogueException exception) {
-
+			LOGGER.error("The catalogue already exists ", exception);
 			GlobalUtil.showErrorDialog(shell, CBMessages.getString("BrowserMenu.NewLocalCatErrorTitle"),
 					CBMessages.getString("BrowserMenu.NewLocalCatErrorMessage"));
 
@@ -97,8 +97,8 @@ public class FileActions {
 
 			return;
 		} catch (IOException e) {
-			e.printStackTrace();
 			LOGGER.error("Cannot create new local catalogue with code=" + catalogueCode, e);
+			e.printStackTrace();
 			GlobalUtil.setShellCursor(shell, SWT.CURSOR_ARROW);
 			return;
 		} finally {
@@ -595,6 +595,7 @@ public class FileActions {
 				try {
 					GlobalUtil.deleteFileCascade(file);
 				} catch (IOException e1) {
+                    LOGGER.error("Error during delete of folders ", e1);
 					e1.printStackTrace();
 				}
 

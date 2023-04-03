@@ -52,8 +52,8 @@ public class DCTableConfigDAO implements CatalogueEntityDAO<DCTableConfig> {
 			con.close();
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return id;
@@ -78,8 +78,8 @@ public class DCTableConfigDAO implements CatalogueEntityDAO<DCTableConfig> {
 
 			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return false;
@@ -124,8 +124,8 @@ public class DCTableConfigDAO implements CatalogueEntityDAO<DCTableConfig> {
 			con.close();
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return out;

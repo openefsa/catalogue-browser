@@ -60,12 +60,14 @@ public class CatalogueDownloader extends Thread {
 				GlobalUtil.showErrorDialog(new Shell(new Display()), warning[0], warning[1]);
 			}
 
-			e.printStackTrace();
 			LOGGER.error("Cannot download/import catalogue=" + catalogue, e);
+			e.printStackTrace();
 
 			stop(ThreadFinishedListener.EXCEPTION, e);
 
 		} catch (AttachmentNotFoundException e) {
+			LOGGER.error("AttachmentNotFoundException", e);
+			e.printStackTrace();
 			stop(ThreadFinishedListener.ERROR, e);
 		}
 	}

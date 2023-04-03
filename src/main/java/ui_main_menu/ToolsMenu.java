@@ -51,6 +51,9 @@ import user_preferences.FormSearchOptions;
 import user_preferences.FormUserPreferences;
 import utilities.GlobalUtil;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * create the main menu for tools
  * 
@@ -59,6 +62,8 @@ import utilities.GlobalUtil;
  *
  */
 public class ToolsMenu implements MainMenuItem {
+	
+	private static final Logger LOGGER = LogManager.getLogger(ToolsMenu.class);
 
 	public static final int RESERVE_CAT_MI = 0;
 	public static final int UNRESERVE_CAT_MI = 1;
@@ -477,6 +482,7 @@ public class ToolsMenu implements MainMenuItem {
 				try {
 					DatabaseManager.restoreBackup(mainMenu.getCatalogue());
 				} catch (IOException e) {
+					LOGGER.error("Error during reset catalogue data to previous version", e);
 
 					GlobalUtil.showErrorDialog(shell, CBMessages.getString("ResetChanges.ErrorTitle"),
 							CBMessages.getString("ResetChanges.ErrorMessage"));
@@ -680,6 +686,7 @@ public class ToolsMenu implements MainMenuItem {
 				try {
 					Desktop.getDesktop().open(new File(GlobalUtil.ICT_FILE_PATH));
 				} catch (Exception e) {
+					LOGGER.error("Error ", e);
 					e.printStackTrace();
 				}
 			}
@@ -768,6 +775,7 @@ public class ToolsMenu implements MainMenuItem {
 									listener.buttonPressed(menuItem, INSTALL_ICT, null);
 
 							} catch (IOException e) {
+								LOGGER.error("Error during ICT installation ", e);
 								e.printStackTrace();
 							}
 
@@ -1454,10 +1462,12 @@ public class ToolsMenu implements MainMenuItem {
 		try {
 			tools.reserve(level, catCode, note);
 		} catch (DetailedSOAPException e) {
+			LOGGER.error("Error upon tools reserve ", e);
 			String[] warn = GlobalUtil.getSOAPWarning(e);
 			message = warn[1];
 			colour = SWT.COLOR_DARK_RED;
 		} catch (SQLException | IOException e) {
+			LOGGER.error("Error upon tools reserve ", e);
 			e.printStackTrace();
 			message = CBMessages.getString("reserve.error", catCode, levelLabel);
 			colour = SWT.COLOR_DARK_RED;
@@ -1493,10 +1503,12 @@ public class ToolsMenu implements MainMenuItem {
 		try {
 			tools.unreserve(catCode, mainMenu.getCatalogue().getReserveNote());
 		} catch (DetailedSOAPException e) {
+			LOGGER.error("Error upon tools unreserve ", e);
 			String[] warn = GlobalUtil.getSOAPWarning(e);
 			message = warn[1];
 			colour = SWT.COLOR_DARK_RED;
 		} catch (SQLException | IOException e) {
+			LOGGER.error("Error upon tools unreserve ", e);
 			e.printStackTrace();
 			message = CBMessages.getString("unreserve.error", catCode);
 			colour = SWT.COLOR_DARK_RED;
@@ -1544,10 +1556,12 @@ public class ToolsMenu implements MainMenuItem {
 		try {
 			tools.publish(level, catCode);
 		} catch (DetailedSOAPException e) {
+			LOGGER.error("Error upon tools publish ", e);
 			String[] warn = GlobalUtil.getSOAPWarning(e);
 			message = warn[1];
 			colour = SWT.COLOR_DARK_RED;
 		} catch (SQLException | IOException e) {
+			LOGGER.error("Error upon tools publish ", e);
 			e.printStackTrace();
 			message = CBMessages.getString("publish.error", catCode, levelLabel);
 			colour = SWT.COLOR_DARK_RED;
@@ -1580,15 +1594,18 @@ public class ToolsMenu implements MainMenuItem {
 		Tools tools = new Tools();
 		try {
 			tools.uploadXmlData(catId, catCode);
-		} catch (DetailedSOAPException e) {
+		} catch (DetailedSOAPException e) {	
+			LOGGER.error("Error upon tools xml uploading ", e);
 			String[] warn = GlobalUtil.getSOAPWarning(e);
 			message = warn[1];
 			colour = SWT.COLOR_DARK_RED;
 		} catch (FileNotFoundException e) {
+			LOGGER.error("Error upon tools xml uploading ", e);
 			e.printStackTrace();
 			message = CBMessages.getString("upload.xml_not_found.error", catCode);
 			colour = SWT.COLOR_DARK_RED;
 		} catch (IOException e) {
+			LOGGER.error("Error upon tools xml uploading ", e);
 			e.printStackTrace();
 			message = CBMessages.getString("upload.xml.error", catCode);
 			colour = SWT.COLOR_DARK_RED;

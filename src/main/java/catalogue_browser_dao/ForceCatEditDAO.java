@@ -54,8 +54,8 @@ public class ForceCatEditDAO implements IForcedCatalogueDAO {
 			return true;
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return false;
@@ -95,8 +95,8 @@ public class ForceCatEditDAO implements IForcedCatalogueDAO {
 			con.close();
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return reserveLevel;
@@ -124,8 +124,8 @@ public class ForceCatEditDAO implements IForcedCatalogueDAO {
 			con.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 			return false;
 		}
 
@@ -154,8 +154,8 @@ public class ForceCatEditDAO implements IForcedCatalogueDAO {
 			con.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 			return false;
 		}
 

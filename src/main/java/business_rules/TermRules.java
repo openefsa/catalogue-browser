@@ -1141,6 +1141,7 @@ public abstract class TermRules {
 		} catch (Exception e) {
 			// print error and return null if error occurred
 			LOGGER.error(filename + " not found or parsing errors.", e);
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -1256,6 +1257,7 @@ public abstract class TermRules {
 
 		} catch (Exception e) {
 			LOGGER.error(filename + " not found.", e);
+			e.printStackTrace();
 			return null;
 		}
 	}

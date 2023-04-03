@@ -150,8 +150,8 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 			con.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return ids;
@@ -190,8 +190,8 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 			return true;
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return false;
@@ -264,8 +264,8 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 			return true;
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return false;
@@ -304,8 +304,8 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 			con.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return attr;
@@ -344,8 +344,8 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 			con.close();
 			
 		} catch (SQLException e) {
+			LOGGER.error("DB error", e);	
 			e.printStackTrace();
-			LOGGER.error("DB error", e);
 		}
 
 		return attr;
@@ -384,8 +384,8 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 			con.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return attr;
@@ -536,8 +536,8 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 			con.close();
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return attrs;
@@ -630,8 +630,8 @@ public class AttributeDAO implements CatalogueEntityDAO<Attribute> {
 			con.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return attrs;

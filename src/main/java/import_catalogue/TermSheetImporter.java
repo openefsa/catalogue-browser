@@ -152,9 +152,9 @@ public class TermSheetImporter extends SheetImporter<Term> {
 			try {
 				newCode = generator.getTermCode(catalogue.getTermCodeMask());
 			} catch (TermCodeException e) {
-				e.printStackTrace();
 				LOGGER.error("Cannot generate additional codes for catalogue=" + catalogue
 						+ ". Maximum term code reached for mask=" + catalogue.getTermCodeMask(), e);
+				e.printStackTrace();
 				throw new ImportException(e.getMessage(), "X100");
 			}
 

@@ -108,8 +108,8 @@ public class TermAttributeDAO implements CatalogueRelationDAO<TermAttribute, Ter
 			con.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return ids;
@@ -148,8 +148,8 @@ public class TermAttributeDAO implements CatalogueRelationDAO<TermAttribute, Ter
 			return true;
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return false;
@@ -193,8 +193,8 @@ public class TermAttributeDAO implements CatalogueRelationDAO<TermAttribute, Ter
 			con.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return tas;
@@ -251,8 +251,8 @@ public class TermAttributeDAO implements CatalogueRelationDAO<TermAttribute, Ter
 			con.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return attributes;
@@ -290,8 +290,8 @@ public class TermAttributeDAO implements CatalogueRelationDAO<TermAttribute, Ter
 
 			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return false;
@@ -324,8 +324,8 @@ public class TermAttributeDAO implements CatalogueRelationDAO<TermAttribute, Ter
 
 			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return false;
@@ -374,8 +374,8 @@ public class TermAttributeDAO implements CatalogueRelationDAO<TermAttribute, Ter
 
 			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 
 		return false;

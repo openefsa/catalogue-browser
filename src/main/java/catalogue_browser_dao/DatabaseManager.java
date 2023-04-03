@@ -158,8 +158,8 @@ public class DatabaseManager {
 			con.close();
 
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 			LOGGER.error("Cannot start embedded database: embedded driver missing", e);
+			e.printStackTrace();
 
 		} catch (SQLException e1) {
 
@@ -246,9 +246,9 @@ public class DatabaseManager {
 			cs.close();
 			con.close();
 
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {		
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 	}
 
@@ -261,6 +261,7 @@ public class DatabaseManager {
 			DriverManager.getConnection(stopMainDBURL());
 		} catch (SQLException e) {
 			LOGGER.info("Database disconnected");
+			e.printStackTrace();
 		}
 	}
 
@@ -556,11 +557,13 @@ public class DatabaseManager {
 				try (Connection con2 = DriverManager.getConnection(dbURL + ";shutdown=true");) {
 				}
 			} catch (Exception e) {
+				LOGGER.error("error", e);
+				e.printStackTrace();
 			}
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("DB error", e);
+			e.printStackTrace();
 		}
 	}
 }

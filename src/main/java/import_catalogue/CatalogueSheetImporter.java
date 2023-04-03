@@ -59,8 +59,8 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 		try {
 			catalogue = getCatalogueFromExcel(rs);
 		} catch (SQLException e) {
-			e.printStackTrace();
 			LOGGER.error("Cannot extract catalogue from the catalogue sheet", e);
+			e.printStackTrace();
 		}
 
 		// save the excel code in global variable
@@ -194,8 +194,8 @@ public class CatalogueSheetImporter extends SheetImporter<Catalogue> {
 		try {
 			createDatabase(catalogue);
 		} catch (IOException e) {
-			e.printStackTrace();
 			LOGGER.error("Cannot create database for catalogue=" + catalogue, e);
+			e.printStackTrace();
 			throw new ImportException(e);
 		}
 	}

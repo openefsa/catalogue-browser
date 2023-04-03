@@ -800,8 +800,9 @@ public class MultiTermsTreeViewer extends Observable implements Observer {
 				cmpi = (i1 < i2) ? -1 : (i1 > i2) ? 1 : 0;
 				return cmpi;
 			} catch (NullPointerException e) {
-				e.printStackTrace();
 				LOGGER.error("Null pointer", e);
+				e.printStackTrace();
+			
 				cmps = s1.compareTo(s2);
 				cmpi = 0;
 				cmps = 0;
