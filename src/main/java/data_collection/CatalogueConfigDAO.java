@@ -60,8 +60,8 @@ public class CatalogueConfigDAO implements CatalogueEntityDAO<CatalogueConfigura
 			con.close();
 
 		} catch (SQLException e) {
-			LOGGER.error("DB error", e);
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return id;
@@ -84,8 +84,8 @@ public class CatalogueConfigDAO implements CatalogueEntityDAO<CatalogueConfigura
 
 			return true;
 		} catch (SQLException e) {
-			LOGGER.error("DB error", e);
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return false;
@@ -120,8 +120,8 @@ public class CatalogueConfigDAO implements CatalogueEntityDAO<CatalogueConfigura
 			con.close();
 
 		} catch (SQLException e) {
-			LOGGER.error("DB error", e);
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return out;
@@ -160,8 +160,8 @@ public class CatalogueConfigDAO implements CatalogueEntityDAO<CatalogueConfigura
 			con.close();
 
 		} catch (SQLException e) {
-			LOGGER.error("DB error", e);
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return out;
@@ -195,8 +195,8 @@ public class CatalogueConfigDAO implements CatalogueEntityDAO<CatalogueConfigura
 			con.close();
 
 		} catch (SQLException e) {
-			LOGGER.error("DB error", e);
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return contains;

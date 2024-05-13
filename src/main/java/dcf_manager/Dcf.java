@@ -362,8 +362,8 @@ public class Dcf {
 			GetCataloguesList<Catalogue> req = new GetCataloguesList<>(user.isOpeanapi());
 			req.getList(Config.getEnvironment(), user, list);
 		} catch (Exception e) {
-			LOGGER.error("Cannot get catalogues list", e);
 			e.printStackTrace();
+			LOGGER.error("Cannot get catalogues list", e);
 		}
 
 		return list;
@@ -394,8 +394,8 @@ public class Dcf {
 				GlobalUtil.showErrorDialog(new Shell(display), warning[0], warning[1]);
 			}
 
-			LOGGER.error("Cannot get data collections", e);
 			e.printStackTrace();
+			LOGGER.error("Cannot get data collections", e);
 		}
 
 		return list;

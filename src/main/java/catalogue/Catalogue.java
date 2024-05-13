@@ -178,9 +178,6 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		try {
 			this.termCodeLength = Integer.parseInt(termCodeLength);
 		} catch (NumberFormatException e) {
-			LOGGER.error("Error, not integer ", e);
-			e.printStackTrace();
-			
 			this.termCodeLength = 0;
 		}
 
@@ -2103,8 +2100,6 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	public void makeXmlImport(final File file, IProgressBar progressBar, double maxProgress,
 			final ThreadFinishedListener doneListener) {
 
-		LOGGER.info("make Xml Import");
-		
 		CatalogueImporterThread importCat = new CatalogueImporterThread(file, ImportFileFormat.XML);
 
 		if (progressBar != null)
@@ -2120,8 +2115,6 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 				try {
 					GlobalUtil.deleteFileCascade(file);
 				} catch (IOException e) {
-					LOGGER.error("Error during delete ", e);
-					e.printStackTrace();
 				}
 
 				if (doneListener != null)

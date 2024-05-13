@@ -56,8 +56,8 @@ public class ReservedCatDAO implements CatalogueEntityDAO<ReservedCatalogue> {
 			con.close();
 
 		} catch (SQLException e) {
-			LOGGER.error("DB error", e);
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return id;
@@ -86,8 +86,8 @@ public class ReservedCatDAO implements CatalogueEntityDAO<ReservedCatalogue> {
 			con.close();
 
 		} catch (SQLException e) {
-			LOGGER.error("DB error", e);
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return removedRows > 0;
@@ -123,8 +123,8 @@ public class ReservedCatDAO implements CatalogueEntityDAO<ReservedCatalogue> {
 			con.close();
 
 		} catch (SQLException e) {
-			LOGGER.error("DB error", e);
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return rc;

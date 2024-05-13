@@ -63,8 +63,8 @@ public class ReleaseNotesDAO {
 			return true;
 
 		} catch (SQLException e) {
-			LOGGER.error("DB error", e);
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return false;
@@ -101,8 +101,8 @@ public class ReleaseNotesDAO {
 			con.close();
 			
 		} catch (SQLException e) {
-			LOGGER.error("DB error", e);
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return rn;

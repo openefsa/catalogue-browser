@@ -47,8 +47,8 @@ public class PicklistParser {
 			reader.readLine();
 			
 		} catch (IOException e) {
-			LOGGER.error("Cannot open file=" + filename, e);
 			e.printStackTrace();
+			LOGGER.error("Cannot open file=" + filename, e);
 		}
 		
 		this.delim = delim;
@@ -75,8 +75,8 @@ public class PicklistParser {
 				return null;
 			}
 		} catch (IOException e) {
-			LOGGER.error("Cannot get next term", e);
 			e.printStackTrace();
+			LOGGER.error("Cannot get next term", e);
 		}
 		
 		// parse the current line

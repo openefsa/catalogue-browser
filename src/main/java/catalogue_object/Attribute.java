@@ -278,9 +278,7 @@ public class Attribute extends SortableCatalogueObject implements Mappable {
 		try {
 			super.setVariableByKey(key, value);
 		} catch (WrongKeyException e) {
-			LOGGER.error("Error ", e);
-			e.printStackTrace();
-			
+
 			switch (key) {
 			case "type":
 				setType(value);
@@ -345,9 +343,7 @@ public class Attribute extends SortableCatalogueObject implements Mappable {
 			value = super.getVariableByKey(key);
 
 		} catch (WrongKeyException e) {
-			LOGGER.error("Error ", e);
-			e.printStackTrace();
-			
+
 			switch (key) {
 			case "type":
 				value = getType();

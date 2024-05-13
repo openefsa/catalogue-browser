@@ -52,8 +52,8 @@ public class TxtTermsParser {
 			reader.readLine();
 
 		} catch (IOException e) {
-			LOGGER.error("Cannot open file=" + filename, e);
 			e.printStackTrace();
+			LOGGER.error("Cannot open file=" + filename, e);
 		}
 
 		/*

@@ -67,7 +67,6 @@ public class SortableCatalogueObject extends CatalogueObject implements Sortable
 				setOrder( Integer.parseInt( value ) ); 
 			} catch ( NumberFormatException e ) {
 				LOGGER.error ( "Wrong type, integer required", e );
-				e.printStackTrace();
 			}
 			break;
 			

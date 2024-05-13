@@ -2,9 +2,6 @@ package catalogue_object;
 
 import catalogue.Catalogue;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 /**
  * Model and manage catalogues objects versions. It allows comparing
  * versions among them and incrementing their major, minor or internal values.
@@ -12,8 +9,6 @@ import org.apache.logging.log4j.Logger;
  *
  */
 public class Version {
-	
-	private static final Logger LOGGER = LogManager.getLogger(Version.class);
 	
 	private int major;            // major part of the version
 	private int minor;            // minor part of the version
@@ -58,8 +53,6 @@ public class Version {
 				addInternal = true;
 
 			} catch ( NumberFormatException e ) {
-				LOGGER.error("Error, not integer ", e);
-				e.printStackTrace();
 			}
 		}
 	}
@@ -82,7 +75,6 @@ public class Version {
 		if ( addInternal )
 			newVersion = newVersion + "." + internal;
 		
-		LOGGER.info("newVersion : " + newVersion);
 		return newVersion;
 	}
 	

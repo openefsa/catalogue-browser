@@ -4,9 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import business_rules.TermRules.WarningLevel;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 /**
  * Class which store the information related to a single warning message.
  * 
@@ -15,8 +12,6 @@ import org.apache.logging.log4j.Logger;
  *
  */
 public class WarningMessage {
-	
-	private static final Logger LOGGER = LogManager.getLogger(WarningMessage.class);
 
 	int id;
 	String message;
@@ -103,7 +98,6 @@ public class WarningMessage {
 			return 0;
 
 		} catch (FileNotFoundException e1) {
-			LOGGER.error("Error", e1);
 			e1.printStackTrace();
 			return -1;
 		}

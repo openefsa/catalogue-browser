@@ -117,8 +117,8 @@ public class QuickParentAttributesImporter extends QuickImporter {
 				try {
 					clonedRs = (ResultDataSet) rs.clone();
 				} catch (CloneNotSupportedException e) {
-					LOGGER.error("Cannot import result data set batch", e);
 					e.printStackTrace();
+					LOGGER.error("Cannot import result data set batch", e);
 					return;
 				}
 
@@ -126,8 +126,8 @@ public class QuickParentAttributesImporter extends QuickImporter {
 				try {
 					taImp.importData(clonedRs);
 				} catch (ImportException e) {
-					LOGGER.error("Cannot import result dataset batch", e);
 					e.printStackTrace();
+					LOGGER.error("Cannot import result dataset batch", e);
 					occurredEx = e;
 				}
 
@@ -149,7 +149,6 @@ public class QuickParentAttributesImporter extends QuickImporter {
 		try {
 			thread.join();
 		} catch (InterruptedException e) {
-			LOGGER.error("Thread error ", e);
 			e.printStackTrace();
 		}
 

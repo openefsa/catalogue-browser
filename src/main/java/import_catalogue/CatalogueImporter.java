@@ -170,7 +170,6 @@ public class CatalogueImporter {
 			return outputFile;
 
 		} catch (IOException e1) {
-			LOGGER.error("Error while processing Ecf files", e1);
 			e1.printStackTrace();
 		}
 
@@ -194,7 +193,6 @@ public class CatalogueImporter {
 		// do the conversion
 		converter.convertXmlToExcel();
 
-		LOGGER.info("Processed xml filename: " + outputFilename);
 		return outputFilename;
 	}
 
@@ -292,8 +290,6 @@ public class CatalogueImporter {
 			try {
 				GlobalUtil.deleteFileCascade(new File(filename));
 			} catch (IOException e) {
-				LOGGER.error("Error while deleting files", e);
-				e.printStackTrace();
 			}
 		}
 	}

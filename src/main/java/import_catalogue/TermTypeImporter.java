@@ -126,8 +126,8 @@ public class TermTypeImporter {
 			con.close();
 
 		} catch (SQLException e) {
-			LOGGER.error("DB error", e);
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return termTypes;

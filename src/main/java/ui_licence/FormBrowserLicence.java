@@ -68,10 +68,8 @@ public class FormBrowserLicence {
 			t1.setText(readLicenceFile());
 		} catch (IOException e) {
 			t1.setText(licenseNotFound);
-			
-			LOGGER.error(licenseNotFound, e);
 			e.printStackTrace();
-
+			LOGGER.error(licenseNotFound, e);
 		}
 
 		// startupWindow.pack();
