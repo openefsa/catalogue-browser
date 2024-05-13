@@ -52,8 +52,9 @@ public class ExportCatalogueThread extends Thread {
 		try {
 			exportCat.exportCatalogue(catalogue, filename, flag);
 		} catch (IOException e) {
-			LOGGER.error("Cannot export catalogue=" + catalogue + " in file=" + filename, e);
 			e.printStackTrace();
+
+			LOGGER.error("Cannot export catalogue=" + catalogue + " in file=" + filename, e);
 
 			// exception
 			if (listener != null)

@@ -129,8 +129,8 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 			con.close();
 
 		} catch (SQLException e) {
-			LOGGER.error("DB error", e);
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return ids;
@@ -192,8 +192,8 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 			return true;
 
 		} catch (SQLException e) {
-			LOGGER.error("DB error", e);
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return false;
@@ -246,8 +246,8 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 			con.close();
 
 		} catch (SQLException e) {
-			LOGGER.error("DB error", e);
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 			return null;
 		}
 
@@ -284,8 +284,8 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 			con.close();
 
 		} catch (SQLException e) {
-			LOGGER.error("DB error", e);
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 			return null;
 		}
 
@@ -323,8 +323,8 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 			con.close();
 
 		} catch (SQLException e) {
-			LOGGER.error("DB error", e);
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 			return null;
 		}
 
@@ -431,8 +431,8 @@ public class TermDAO implements CatalogueEntityDAO<Term> {
 			con.close();
 
 		} catch (SQLException e) {
-			LOGGER.error("DB error", e);
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 			return false;
 		}
 

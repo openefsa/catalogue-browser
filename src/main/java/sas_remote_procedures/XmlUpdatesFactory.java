@@ -109,8 +109,6 @@ public class XmlUpdatesFactory {
 					GlobalUtil.copyFile(startFile, remoteStartFile);
 				} catch (IOException e) {
 					LOGGER.error("Cannot copy " + startFile + " into " + remoteStartFile, e);
-					e.printStackTrace();
-					
 					abort(e.getMessage());
 					// reset flag
 					ExportCatalogueWorkbook.resetExtractXml();
@@ -262,8 +260,6 @@ public class XmlUpdatesFactory {
 			endFile.createNewFile();
 		} catch (IOException e) {
 			LOGGER.error("Cannot create " + endFile, e);
-			e.printStackTrace();
-			
 			abort(e.getMessage());
 			return false;
 		}

@@ -19,9 +19,6 @@ import user_preferences.GlobalPreferenceDAO;
 import user_preferences.Preference;
 import user_preferences.PreferenceNotFoundException;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 /**
  * Class used to create the UI for a visualization filter. In particular, we use
  * this UI to create a filter in the main tree of the browser, to hide
@@ -32,8 +29,6 @@ import org.apache.logging.log4j.Logger;
  *
  */
 public class TermFilter extends Observable {
-	
-	private static final Logger LOGGER = LogManager.getLogger(TermFilter.class);
 
 	private Composite parent;
 	private Button hideDeprecated;
@@ -88,7 +83,6 @@ public class TermFilter extends Observable {
 				try {
 					saveStatus();
 				} catch (PreferenceNotFoundException e1) {
-					LOGGER.error("Error during saving of status ", e);
 					e1.printStackTrace();
 				}
 
@@ -108,7 +102,6 @@ public class TermFilter extends Observable {
 				try {
 					saveStatus();
 				} catch (PreferenceNotFoundException e1) {
-					LOGGER.error("Error during saving of status ", e1);
 					e1.printStackTrace();
 				}
 
@@ -127,7 +120,6 @@ public class TermFilter extends Observable {
 				try {
 					saveStatus();
 				} catch (PreferenceNotFoundException e1) {
-					LOGGER.error("Error during saving of status ", e1);
 					e1.printStackTrace();
 				}
 

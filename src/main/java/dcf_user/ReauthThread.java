@@ -44,9 +44,8 @@ public class ReauthThread extends Thread {
 
 			code = done ? ThreadFinishedListener.OK : ThreadFinishedListener.ERROR;
 		} catch (SOAPException e) {
-			LOGGER.error("Cannot authenticate user", e);
 			e.printStackTrace();
-			
+			LOGGER.error("Cannot authenticate user", e);
 			code = ThreadFinishedListener.EXCEPTION;
 			exception = e;
 		}

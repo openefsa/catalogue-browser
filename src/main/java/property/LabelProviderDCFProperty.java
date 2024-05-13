@@ -34,8 +34,8 @@ public class LabelProviderDCFProperty extends ColumnLabelProvider {
 			value = property.getVariableByKey( key );
 		}
 		catch ( WrongKeyException e ) {
-			LOGGER.error("Wrong key", e);
 			e.printStackTrace();
+			LOGGER.error("Wrong key", e);
 			value = "invalid code for label provider";
 		}
 		

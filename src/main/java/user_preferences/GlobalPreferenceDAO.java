@@ -89,8 +89,8 @@ public class GlobalPreferenceDAO extends PreferenceDAO {
 			CatalogueDAO catDao = new CatalogueDAO();
 			catalogue = catDao.getById( id );
 		} catch ( NumberFormatException e ) {
-			LOGGER.info("Cannot find last catalogue", e);
 			e.printStackTrace();
+			LOGGER.info("Cannot find last catalogue", e);
 			throw new PreferenceNotFoundException();
 		}
 		
