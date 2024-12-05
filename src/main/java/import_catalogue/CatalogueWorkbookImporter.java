@@ -144,6 +144,7 @@ public class CatalogueWorkbookImporter {
 			CatalogueSheetImporter catImp = importCatalogueSheet(workbookReader);
 
 			Catalogue importedCat = catImp.getImportedCatalogue();
+			LOGGER.info("Imported catalogue from getImportedCatalogue: {}", importedCat);
 			String catExcelCode = catImp.getExcelCode();
 
 			// prepare daos to import data
@@ -225,12 +226,15 @@ public class CatalogueWorkbookImporter {
 	 */
 	private CatalogueSheetImporter importCatalogueSheet(WorkbookReader workbookReader)
 			throws InvalidFormatException, IOException, XMLStreamException, ImportException {
+		// Log the sheet name being processed
+		LOGGER.info("Processing sheet with name: {}", Headers.CAT_SHEET_NAME);
 
-		// get the catalogue sheet and check if the catalogues are compatible
-		// (the open catalogue and the one we want to import)
+		// Process the catalogue sheet
 		workbookReader.processSheetName(Headers.CAT_SHEET_NAME);
 
+		// Get the next dataset
 		ResultDataSet sheetData = workbookReader.next();
+		LOGGER.info("ResultDataSet row count: {}", sheetData.getRowsCount());
 
 		CatalogueSheetImporter catImp = new CatalogueSheetImporter(catDao);
 
@@ -242,12 +246,13 @@ public class CatalogueWorkbookImporter {
 		if (openedCat != null)
 			catImp.setOpenedCatalogue(openedCat);
 
+		// Import data
 		catImp.importData(sheetData);
 
-		// refresh catalogue in ram
+		// Refresh catalogue in memory
 		openedCat = catImp.getImportedCatalogue();
 
-		// solve memory leak
+		// Solve memory leak
 		sheetData.close();
 
 		return catImp;
@@ -284,6 +289,7 @@ public class CatalogueWorkbookImporter {
 		attrImp.importData(sheetData);
 
 		// import the term types related to the attributes
+		LOGGER.info("Importing term types. Catalogue: {}", catalogue);
 		TermTypeImporter ttImp = new TermTypeImporter(catalogue);
 		ttImp.importSheet();
 

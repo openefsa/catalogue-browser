@@ -30,7 +30,7 @@ public class AccountMenu implements MainMenuItem {
 	private MenuListener listener;
 
 	private MenuItem dcfLoginItem; // login dcf
-	private MenuItem openapiLoginItem; // login with openapi portal
+	// private MenuItem openapiLoginItem; // login with openapi portal
 	private MenuItem logoutItem;// logout
 
 	private Shell shell;
@@ -65,7 +65,7 @@ public class AccountMenu implements MainMenuItem {
 		accountItem.setMenu(accountMenu);
 
 		dcfLoginItem = addDCFLoginMI(accountMenu);
-		openapiLoginItem = addOpenLoginMI(accountMenu);
+		// openapiLoginItem = addOpenLoginMI(accountMenu);
 		logoutItem = addLogoutMI(accountMenu);
 
 		accountMenu.addListener(SWT.Show, new Listener() {
@@ -122,39 +122,39 @@ public class AccountMenu implements MainMenuItem {
 	 * 
 	 * @param menu
 	 */
-	private MenuItem addOpenLoginMI(Menu menu) {
+	// private MenuItem addOpenLoginMI(Menu menu) {
 
-		final MenuItem loginItem = new MenuItem(menu, SWT.NONE);
-		loginItem.setText(CBMessages.getString("BrowserMenu.OpenAPILoginMenuName"));
+	// 	final MenuItem loginItem = new MenuItem(menu, SWT.NONE);
+	// 	loginItem.setText(CBMessages.getString("BrowserMenu.OpenAPILoginMenuName"));
 
-		loginItem.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
+	// 	loginItem.addSelectionListener(new SelectionAdapter() {
+	// 		@Override
+	// 		public void widgetSelected(SelectionEvent e) {
 
-				FormOpenapiLogin login = new FormOpenapiLogin(shell,
-						CBMessages.getString("BrowserMenu.OpenAPILoginWindowTitle"));
+	// 			FormOpenapiLogin login = new FormOpenapiLogin(shell,
+	// 					CBMessages.getString("BrowserMenu.OpenAPILoginWindowTitle"));
 
-				login.display();
+	// 			login.display();
 
-				// if wrong credentials return
-				if (!login.isValid())
-					return;
+	// 			// if wrong credentials return
+	// 			if (!login.isValid())
+	// 				return;
 				
-				LoginActions.startLoginThreads(shell, null);
+	// 			LoginActions.startLoginThreads(shell, null);
 
-				// disable tools menu until we have
-				// obtained the user access level
-				// (avoid concurrence editing in db)
-				mainMenu.tools.setEnabled(false);
+	// 			// disable tools menu until we have
+	// 			// obtained the user access level
+	// 			// (avoid concurrence editing in db)
+	// 			mainMenu.tools.setEnabled(false);
 
-				if (listener != null)
-					listener.buttonPressed(loginItem, OPENAPI_LOGIN_MI, null);
-			}
+	// 			if (listener != null)
+	// 				listener.buttonPressed(loginItem, OPENAPI_LOGIN_MI, null);
+	// 		}
 
-		});
+	// 	});
 
-		return loginItem;
-	}
+	// 	return loginItem;
+	// }
 
 	/**
 	 * Add a menu item which allows to logout from dcf or OpenAPI portal
@@ -218,7 +218,7 @@ public class AccountMenu implements MainMenuItem {
 		boolean isLoggedIn = user.isLoggedIn() || user.isLoggedInOpenAPI();
 
 		dcfLoginItem.setEnabled(!isLoggedIn);
-		openapiLoginItem.setEnabled(!isLoggedIn);
+		// openapiLoginItem.setEnabled(!isLoggedIn);
 		logoutItem.setEnabled(isLoggedIn);
 
 	}
