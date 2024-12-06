@@ -30,8 +30,7 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference> {
 		try {
 			result = getPreference(key).getValue();
 		} catch (PreferenceNotFoundException e) {
-			LOGGER.error("Error during getting prefernce value as string ", e);
-			e.printStackTrace();
+
 		}
 
 		return result;
@@ -50,8 +49,7 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference> {
 		try {
 			result = Integer.valueOf(getPreference(key).getValue());
 		} catch (NumberFormatException | PreferenceNotFoundException e) {
-			LOGGER.error("Error during getting prefernce value as integer ", e);
-			e.printStackTrace();
+
 		}
 
 		return result;
@@ -70,8 +68,6 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference> {
 		try {
 			result = Boolean.valueOf(getPreference(key).getValue());
 		} catch (PreferenceNotFoundException e) {
-			LOGGER.error("Error during getting prefernce value as boolean ", e);
-			e.printStackTrace();
 		}
 
 		return result;
@@ -107,7 +103,6 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference> {
 			con.close();
 
 		} catch (SQLException e) {
-			LOGGER.error("Error during getting the preference identified by key ", e);
 			e.printStackTrace();
 		}
 
@@ -148,8 +143,8 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference> {
 			con.close();
 
 		} catch (SQLException e) {
-			LOGGER.error("DB error", e);
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return preferences;
@@ -192,8 +187,8 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference> {
 			con.close();
 
 		} catch (SQLException e) {
-			LOGGER.error("DB error", e);
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return id;
@@ -232,8 +227,8 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference> {
 			return true;
 
 		} catch (SQLException e) {
-			LOGGER.error("DB error", e);
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return false;
@@ -254,8 +249,8 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference> {
 			con.close();
 
 		} catch (SQLException e) {
-			LOGGER.error("DB error", e);
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 	}
 
@@ -324,8 +319,8 @@ public abstract class PreferenceDAO implements CatalogueEntityDAO<Preference> {
 			con.close();
 
 		} catch (SQLException e) {
-			LOGGER.error("DB error", e);
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return contained;

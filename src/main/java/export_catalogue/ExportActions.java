@@ -4,9 +4,6 @@ import catalogue.Catalogue;
 import catalogue_generator.ThreadFinishedListener;
 import progress_bar.IProgressBar;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 /**
  * Class used to export a catalogue to an excel file
  * 
@@ -16,8 +13,6 @@ import org.apache.logging.log4j.Logger;
  */
 public class ExportActions {
 
-	private static final Logger LOGGER = LogManager.getLogger(ExportActions.class);
-	
 	private IProgressBar progressBar;
 
 	/**
@@ -51,7 +46,6 @@ public class ExportActions {
 		try {
 			exportThread.join();
 		} catch (InterruptedException e1) {
-			LOGGER.error("Thread error", e1);
 			e1.printStackTrace();
 			return false;
 		}

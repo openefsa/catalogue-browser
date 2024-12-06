@@ -417,7 +417,5 @@ public class PendingRequestActions {
 		
 		XmlChangesService service = new XmlChangesService();
 		service.delete(xmlDao, xmlFile);
-		
-		LOGGER.info("upload Xml Changes Completed");
 	}
 }

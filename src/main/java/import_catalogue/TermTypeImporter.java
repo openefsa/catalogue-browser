@@ -40,8 +40,14 @@ public class TermTypeImporter {
 	private Catalogue catalogue;
 
 	public TermTypeImporter(CatalogueEntityDAO<TermType> dao, Catalogue catalogue) {
-		this.dao = dao;
-		this.catalogue = catalogue;
+	    this.dao = dao;
+	    this.catalogue = catalogue;
+	    if (catalogue == null) {
+	        LOGGER.error("Catalogue is null in TermTypeImporter constructor.");
+	    }
+	    if (dao == null) {
+	        LOGGER.error("DAO is null in TermTypeImporter constructor.");
+	    }
 	}
 
 	public TermTypeImporter(Catalogue catalogue) {
@@ -126,8 +132,8 @@ public class TermTypeImporter {
 			con.close();
 
 		} catch (SQLException e) {
-			LOGGER.error("DB error", e);
 			e.printStackTrace();
+			LOGGER.error("DB error", e);
 		}
 
 		return termTypes;

@@ -146,8 +146,7 @@ public class Term extends CatalogueObject implements Mappable {
 		// facets)
 		if (descriptorCodes.length() > 0)
 			result = result + descriptorCodes.substring(0, descriptorCodes.length() - 1);
-		
-		LOGGER.info("full code of term : " + result);
+
 		return result;
 	}
 
@@ -341,7 +340,6 @@ public class Term extends CatalogueObject implements Mappable {
 		if (replace && getLabel().equals(""))
 			return getName();
 
-		LOGGER.info("short name of the term : " + getLabel());
 		return getLabel();
 	}
 
@@ -496,7 +494,6 @@ public class Term extends CatalogueObject implements Mappable {
 			hierarchyCode = "0" + hierarchyCode;
 		}
 
-		LOGGER.info("single hierarchy code : " + hierarchyCode);
 		return hierarchyCode;
 	}
 
@@ -539,7 +536,6 @@ public class Term extends CatalogueObject implements Mappable {
 		// add the Z at the beginning (to avoid excel issues)
 		hierarchyCode = "Z" + hierarchyCode;
 
-		LOGGER.info("hierarchy code : " + hierarchyCode);
 		return hierarchyCode;
 	}
 

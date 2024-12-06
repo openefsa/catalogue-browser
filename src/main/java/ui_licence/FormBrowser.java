@@ -67,8 +67,8 @@ public class FormBrowser {
 				try {
 					n = r.read(buf);
 				} catch (IOException e) {
-					LOGGER.error("Cannot read", e);
 					e.printStackTrace();
+					LOGGER.error("Cannot read", e);
 				}
 				if (n < 0)
 					break;

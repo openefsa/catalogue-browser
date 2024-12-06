@@ -102,8 +102,8 @@ public class CatalogueDownloaderManager extends Thread {
 		try {
 			Thread.sleep( time );
 		} catch (InterruptedException e) {
-			LOGGER.error("Cannot sleep thread=" + this, e);
 			e.printStackTrace();
+			LOGGER.error("Cannot sleep thread=" + this, e);
 		}
 	}
 }

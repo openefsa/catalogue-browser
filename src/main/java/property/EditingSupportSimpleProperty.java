@@ -10,12 +10,7 @@ import catalogue_object.Attribute;
 import catalogue_object.SortableCatalogueObject;
 import term.WrongKeyException;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 public class EditingSupportSimpleProperty extends EditingSupport {
-	
-	private static final Logger LOGGER = LogManager.getLogger(EditingSupportSimpleProperty.class);
 
 	private final TableViewer			_viewer;
 
@@ -138,7 +133,6 @@ public class EditingSupportSimpleProperty extends EditingSupport {
 				result = index;
 			}
 		} catch ( WrongKeyException exception ) {
-			LOGGER.error("Error during access of key ", exception);
 			exception.printStackTrace();
 		}
 
@@ -176,7 +170,7 @@ public class EditingSupportSimpleProperty extends EditingSupport {
 		try {
 			sp.setVariableByKey( _property, value.toString() );
 		} catch (WrongKeyException e1) {
-			LOGGER.error("Error during access of key ", e1);
+			
 			e1.printStackTrace();
 		}
 		

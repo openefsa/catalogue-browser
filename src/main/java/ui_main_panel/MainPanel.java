@@ -392,7 +392,6 @@ public class MainPanel implements Observer {
 			}
 
 		} catch (PreferenceNotFoundException e) {
-			LOGGER.error("Error during open of last catalogue", e);
 			e.printStackTrace();
 		}
 	}
@@ -471,8 +470,7 @@ public class MainPanel implements Observer {
 	 * hierarchy and selected term!)
 	 */
 	private void saveState() {
-		LOGGER.debug("Saving state of the main panel");
-		
+
 		Catalogue current = GlobalManager.getInstance().getCurrentCatalogue();
 
 		// no catalogue opened, return
@@ -496,8 +494,7 @@ public class MainPanel implements Observer {
 
 		// first try to load the last hierarchy
 		lastHierarchy = prefDao.getLastHierarchy();
-		
-		LOGGER.info("Last Hierarchy : " + lastHierarchy);
+
 		return lastHierarchy;
 	}
 
@@ -515,7 +512,6 @@ public class MainPanel implements Observer {
 		// first try to load the last hierarchy
 		lastTerm = prefDao.getLastTerm();
 
-		LOGGER.info("Last term : " + lastTerm);
 		return lastTerm;
 	}
 
@@ -639,7 +635,7 @@ public class MainPanel implements Observer {
 			// try to load the hierarchy selector state
 			hierarchy = getLastHierarchy(catalogue);
 		} catch (PreferenceNotFoundException e) {
-			LOGGER.debug("Last hierarchy was not found, default will be selected");
+
 			// set the first selection of the hierarchy selector
 			// with the default hierarchy if no preference was found
 			hierarchy = catalogue.getDefaultHierarchy();
@@ -660,7 +656,6 @@ public class MainPanel implements Observer {
 				Term lastTerm = getLastTerm(catalogue);
 				tree.selectTerm(lastTerm);
 			} catch (PreferenceNotFoundException e) {
-				LOGGER.error("Error trying to get term ", e);
 				e.printStackTrace();
 			}
 		}

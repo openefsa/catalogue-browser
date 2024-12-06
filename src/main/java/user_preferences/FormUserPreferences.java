@@ -27,9 +27,6 @@ import i18n_messages.CBMessages;
 import session_manager.BrowserWindowPreferenceDao;
 import window_restorer.RestoreableWindow;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 /**
  * Form which allows modifying the user preferences
  * 
@@ -38,8 +35,6 @@ import org.apache.logging.log4j.Logger;
  *
  */
 public class FormUserPreferences {
-	
-	private static final Logger LOGGER = LogManager.getLogger(FormUserPreferences.class);
 
 	private RestoreableWindow window;
 	private static final String WINDOW_CODE = "FormUserPreferences";
@@ -320,7 +315,6 @@ public class FormUserPreferences {
 			Integer.parseInt(newValue);
 			return true;
 		} catch (NumberFormatException e) {
-			LOGGER.error("Error while parsing value ", e);
 			return false;
 		}
 	}

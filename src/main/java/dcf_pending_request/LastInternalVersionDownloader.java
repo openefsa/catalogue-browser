@@ -19,12 +19,7 @@ import import_catalogue.CatalogueImporter.ImportFileFormat;
 import import_catalogue.ImportException;
 import soap.ExportCatalogueFile;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 public class LastInternalVersionDownloader implements ILastInternalVersionDownloader {
-	
-	private static final Logger LOGGER = LogManager.getLogger(LastInternalVersionDownloader.class);
 	
 	@Override
 	public void downloadAndImport(String catalogueCode, Environment env)
@@ -43,7 +38,6 @@ public class LastInternalVersionDownloader implements ILastInternalVersionDownlo
 		try {
 			importer.makeImport();
 		} catch (TransformerException | XMLStreamException | OpenXML4JException | SAXException e) {
-			LOGGER.error("Error during import ", e);
 			e.printStackTrace();
 			throw new IOException(e);
 		}

@@ -297,7 +297,6 @@ public class WarningUtil extends TermRules {
 						options.setFontSize(Integer.parseInt(st.nextToken()));
 					} catch (Exception e) {
 						LOGGER.error("Error parsing font size in warningColors options.", e);
-						e.printStackTrace();
 					}
 				}
 			}
@@ -309,7 +308,6 @@ public class WarningUtil extends TermRules {
 
 		} catch (Exception e) {
 			LOGGER.error(filename + " not found.", e);
-			e.printStackTrace();
 			return null;
 		}
 	}
@@ -344,7 +342,6 @@ public class WarningUtil extends TermRules {
 			return (new int[] { red, green, blue });
 		} catch (Exception e) {
 			LOGGER.error("ERROR IN PARSING RGB VALUES", e);
-			e.printStackTrace();
 			return null;
 		}
 	}

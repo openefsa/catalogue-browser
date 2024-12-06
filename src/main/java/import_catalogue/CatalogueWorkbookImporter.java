@@ -144,6 +144,7 @@ public class CatalogueWorkbookImporter {
 			CatalogueSheetImporter catImp = importCatalogueSheet(workbookReader);
 
 			Catalogue importedCat = catImp.getImportedCatalogue();
+			LOGGER.info("Imported catalogue from getImportedCatalogue: {}", importedCat);
 			String catExcelCode = catImp.getExcelCode();
 
 			// prepare daos to import data
@@ -225,14 +226,15 @@ public class CatalogueWorkbookImporter {
 	 */
 	private CatalogueSheetImporter importCatalogueSheet(WorkbookReader workbookReader)
 			throws InvalidFormatException, IOException, XMLStreamException, ImportException {
-		
-		LOGGER.info("Importing catalogue sheet");
+		// Log the sheet name being processed
+		LOGGER.info("Processing sheet with name: {}", Headers.CAT_SHEET_NAME);
 
-		// get the catalogue sheet and check if the catalogues are compatible
-		// (the open catalogue and the one we want to import)
+		// Process the catalogue sheet
 		workbookReader.processSheetName(Headers.CAT_SHEET_NAME);
 
+		// Get the next dataset
 		ResultDataSet sheetData = workbookReader.next();
+		LOGGER.info("ResultDataSet row count: {}", sheetData.getRowsCount());
 
 		CatalogueSheetImporter catImp = new CatalogueSheetImporter(catDao);
 
@@ -244,12 +246,13 @@ public class CatalogueWorkbookImporter {
 		if (openedCat != null)
 			catImp.setOpenedCatalogue(openedCat);
 
+		// Import data
 		catImp.importData(sheetData);
 
-		// refresh catalogue in ram
+		// Refresh catalogue in memory
 		openedCat = catImp.getImportedCatalogue();
 
-		// solve memory leak
+		// Solve memory leak
 		sheetData.close();
 
 		return catImp;
@@ -269,8 +272,6 @@ public class CatalogueWorkbookImporter {
 	 */
 	private void importAttributeSheet(WorkbookReader workbookReader, Catalogue catalogue)
 			throws XMLStreamException, InvalidFormatException, IOException, ImportException {
-		
-		LOGGER.info("Importing attribute sheet");
 
 		// get the attribute sheet
 		workbookReader.processSheetName(Headers.ATTR_SHEET_NAME);
@@ -288,6 +289,7 @@ public class CatalogueWorkbookImporter {
 		attrImp.importData(sheetData);
 
 		// import the term types related to the attributes
+		LOGGER.info("Importing term types. Catalogue: {}", catalogue);
 		TermTypeImporter ttImp = new TermTypeImporter(catalogue);
 		ttImp.importSheet();
 
@@ -313,8 +315,6 @@ public class CatalogueWorkbookImporter {
 	 */
 	private void importHierarchySheet(WorkbookReader workbookReader, Catalogue catalogue, String catExcelCode)
 			throws InvalidFormatException, IOException, XMLStreamException, ImportException {
-		
-		LOGGER.info("Importing hierarchy sheet");
 
 		// get the hierarchy sheet
 		workbookReader.processSheetName(Headers.HIER_SHEET_NAME);
@@ -385,8 +385,6 @@ public class CatalogueWorkbookImporter {
 	 */
 	private TermSheetImporter importTermSheet(WorkbookReader workbookReader, Catalogue catalogue)
 			throws InvalidFormatException, IOException, XMLStreamException, SQLException, ImportException {
-		
-		LOGGER.info("Importing term sheet");
 
 		final int batchSize = 100;
 
@@ -421,9 +419,7 @@ public class CatalogueWorkbookImporter {
 	private void importTermRelations(WorkbookReader workbookReader, Catalogue catalogue,
 			HashMap<String, String> newCodes)
 			throws SQLException, InvalidFormatException, XMLStreamException, IOException, ImportException {
-		
-		LOGGER.info("Importing term relations");
-		
+
 		final int batchSize = 100;
 
 		// note that we need to have imported the terms to import
@@ -453,8 +449,6 @@ public class CatalogueWorkbookImporter {
 	 */
 	private void importReleaseNotes(WorkbookReader workbookReader, Catalogue catalogue) {
 
-		LOGGER.info("Importing release notes");
-		
 		// import the release notes operations
 		try {
 
@@ -477,7 +471,6 @@ public class CatalogueWorkbookImporter {
 
 		} catch (Exception e) {
 			LOGGER.error("Release notes not found for " + catalogue, e);
-			e.printStackTrace();
 		}
 	}
 }

@@ -11,6 +11,8 @@ import java.util.HashMap;
 import catalogue.Catalogue;
 import catalogue_object.Term;
 import open_xml_reader.ResultDataSet;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import progress_bar.IProgressBar;
 
 /**
@@ -24,7 +26,7 @@ import progress_bar.IProgressBar;
  *        are importing the "term" sheet, the object would be {@link Term}.
  */
 public abstract class SheetImporter<T> {
-
+	private static final Logger LOGGER = LogManager.getLogger(SheetImporter.class);
 	private IProgressBar progressBar;
 	private int rowCount;
 	private double maxProgress;
@@ -43,7 +45,7 @@ public abstract class SheetImporter<T> {
 		int processedSheetRows = 0;
 
 		while (data.next()) {
-
+			//LOGGER.info("Processing row in ResultDataSet: {}", data.getCurrentRow());
 			// read the current line and get the
 			// related object
 			T obj = getByResultSet(data);
