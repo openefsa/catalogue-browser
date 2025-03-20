@@ -18,11 +18,15 @@ import config.AppConfig;
 import converter.ExceptionConverter;
 import dcf_user.ReauthThread;
 import dcf_user.User;
+import dll_preloader.ProjectsNames;
+import dll_preloader.StartInstallationChecker;
 import i18n_messages.CBMessages;
 import instance_checker.InstanceChecker;
 import soap.DetailedSOAPException;
 import ui_main_menu.LoginActions;
 import utilities.GlobalUtil;
+
+
 
 /**
  * Entry point for the Catalogue Browser application. The user interface and the
@@ -43,18 +47,29 @@ public class CatalogueBrowserMain {
 	public static void main(String[] args) {
 
 		try {
-			CatalogueBrowserMain main = new CatalogueBrowserMain();
-			main.launch();
+			
+			StartInstallationChecker.StartChecker(() -> {
+				CatalogueBrowserMain main = new CatalogueBrowserMain();
+				try {
+					main.launch();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					LOGGER.error("Exception on Tool Start: \nMessage:" + e.getLocalizedMessage() + "\nStackTrace: " + e.getStackTrace());
+					String trace = ExceptionConverter.getStackTrace(e);
+
+					GlobalUtil.showErrorDialog(new Shell(), CBMessages.getString("Generic.ErrorTitle"),
+							CBMessages.getString("Generic.ErrorMessage") + trace);
+				}
+			}, ProjectsNames.CatalogueBrowser);
+			
+			
 		} catch (Exception e) {
 
-			e.printStackTrace();
+			//e.printStackTrace();
 
-			LOGGER.error("Generic error occurred", e);
+			//LOGGER.error("Generic error occurred", e);
 
-			String trace = ExceptionConverter.getStackTrace(e);
-
-			GlobalUtil.showErrorDialog(new Shell(), CBMessages.getString("Generic.ErrorTitle"),
-					CBMessages.getString("Generic.ErrorMessage") + trace);
+			
 		}
 	}
 

@@ -47,7 +47,8 @@ public class ContentProviderImplicitFacets implements ITreeContentProvider {
 	public Object[] getChildren ( Object arg0 ) {
 
 		ArrayList< DescriptorTreeItem > ret = new ArrayList<>();
-
+		ArrayList< DescriptorTreeItem > ret_new = new ArrayList<>();
+		
 		// if no root term we return (we cannot fetch facets from nothing)
 		if ( _rootTerm == null )
 			return null;
@@ -58,6 +59,8 @@ public class ContentProviderImplicitFacets implements ITreeContentProvider {
 			if ( arg0 instanceof Attribute ) {
 				Attribute facetCategory = (Attribute) arg0;
 				ret = _rootTerm.getInheritedImplicitFacets( facetCategory );
+				
+				
 			}
 		}
 
