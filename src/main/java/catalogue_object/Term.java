@@ -186,11 +186,8 @@ public class Term extends CatalogueObject implements Mappable {
 				Attribute facetCategory = iter.next();
 
 				for (DescriptorTreeItem item : this.getInheritedImplicitFacets(facetCategory)) {
+					descriptors.add(item.getDescriptor());
 					
-					if (!item.isInherited())
-					{
-						descriptors.add(item.getDescriptor());
-					}
 				}
 			}
 
@@ -1189,10 +1186,7 @@ public class Term extends CatalogueObject implements Mappable {
 				// get the parent and
 				Term parent = (Term) appl.getParentTerm();
 				
-				if (!parent.isReportable(hierarchy))
-				{
-					return null;
-				}
+				
 
 				// return it
 				return parent;
