@@ -13,6 +13,8 @@ import java.util.ListIterator;
 import java.util.Queue;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -196,7 +198,9 @@ public class Term extends CatalogueObject implements Mappable {
 		}
 
 		Collections.sort(descriptors, sorter);
-
+		
+		
+		
 		return descriptors;
 	}
 
@@ -212,7 +216,11 @@ public class Term extends CatalogueObject implements Mappable {
 		ArrayList<DescriptorTreeItem> inTree = new ArrayList<>();
 
 		// start the recursive method
-		return getImplicitFacetsTree(facetCategory, inTree, false);
+		
+		inTree = getImplicitFacetsTree(facetCategory, inTree, false);
+		
+		
+		return inTree;
 	}
 
 	/**
@@ -226,11 +234,12 @@ public class Term extends CatalogueObject implements Mappable {
 	private ArrayList<DescriptorTreeItem> getImplicitFacetsTree(Attribute facetCategory,
 			ArrayList<DescriptorTreeItem> inTree, boolean processingParents) {
 
+		
+		
 		// For each facet descriptor
 		for (FacetDescriptor descriptor : this.getDescriptorsByCategory(facetCategory, true)) {
-			if (processingParents && descriptor.getAttribute().getInheritance().equals("D")) {
-	            continue;
-	        }
+			 
+			
 			// get the term related to the descriptor code
 			Term descriptorTerm = catalogue.getTermByCode(descriptor.getFacetCode());
 
@@ -244,10 +253,10 @@ public class Term extends CatalogueObject implements Mappable {
 			// relationship
 			Iterator<DescriptorTreeItem> iterator = inTree.iterator();
 			while (iterator.hasNext()) {
-
+				
 				// get the current node of the tree
 				DescriptorTreeItem child = iterator.next();
-
+				
 				// has the descriptor contained in the tree as ancestor our new node?
 				if (child.getTerm().hasAncestor(parent.getTerm(), catalogue.getMasterHierarchy())) {
 
@@ -261,10 +270,14 @@ public class Term extends CatalogueObject implements Mappable {
 				}
 			}
 
+			
+			
 			// add the new node to the tree
 			inTree.add(parent);
 		}
 
+		
+		
 		// then get the parent of the term in order to add also its implicit facets
 		// to the child term
 		Term parentTerm = this.getParent(catalogue.getMasterHierarchy());
@@ -327,7 +340,9 @@ public class Term extends CatalogueObject implements Mappable {
 	 *         facets using their children)
 	 */
 	public ArrayList<DescriptorTreeItem> getInheritedImplicitFacets(Attribute facetCategory) {
-		return this.getImplicitFacetsLeaves(getImplicitFacetsTree(facetCategory));
+		ArrayList<DescriptorTreeItem> itemsRetrieved = this.getImplicitFacetsLeaves(getImplicitFacetsTree(facetCategory)); // In describe vengono tutti segnati come inherited
+		
+		return itemsRetrieved.stream().filter(x -> !((x.isInherited()) && (facetCategory.getInheritance().equals("D")))).collect(Collectors.toCollection(ArrayList::new));
 	}
 
 	/**

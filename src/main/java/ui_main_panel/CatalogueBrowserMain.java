@@ -75,7 +75,9 @@ public class CatalogueBrowserMain {
 
 	private void launch() throws IOException {
 
-		InstanceChecker.closeIfAlreadyRunning();
+		System.out.printf("User folder: ".concat(System.getProperty("user.dir")));
+		
+		//InstanceChecker.closeIfAlreadyRunning();
 
 		// application start-up message. Usage of System.err used for red chars
 		LOGGER.info("Application Started " + System.currentTimeMillis());

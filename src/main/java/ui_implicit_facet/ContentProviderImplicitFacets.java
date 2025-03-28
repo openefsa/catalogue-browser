@@ -25,7 +25,8 @@ public class ContentProviderImplicitFacets implements ITreeContentProvider {
 	public void inputChanged ( Viewer arg0 , Object oldTerm , Object newTerm ) {
 
 		if ( newTerm instanceof Term ) {
-			_rootTerm = (Term) newTerm;
+			
+			_rootTerm = ((Term) newTerm).getCatalogue().getTermByCode(((Term) newTerm).getCode());
 		}
 
 	}
