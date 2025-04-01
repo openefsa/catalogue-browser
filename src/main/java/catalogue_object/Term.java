@@ -58,13 +58,13 @@ public class Term extends CatalogueObject implements Mappable {
 	private TermAttribute termType;
 
 	// the implicit facets of the term
-	private ArrayList<FacetDescriptor> implicitFacets;
+	private ArrayList<FacetDescriptor> implicitFacets; public void setImplicitFacets(ArrayList<FacetDescriptor> implicit) {this.implicitFacets = implicit;}
 
 	// list of attributes and their values related to the term
-	private ArrayList<TermAttribute> termAttributes;
+	private ArrayList<TermAttribute> termAttributes; public void setTermAttributes(ArrayList<TermAttribute> attributes) {this.termAttributes = attributes;}
 
 	// the applicabilities of the term in its hierarchies
-	private ArrayList<Applicability> applicabilities;
+	private ArrayList<Applicability> applicabilities; public void setApplicabilities(ArrayList<Applicability> applicability) {this.applicabilities = applicability;}
 
 	/**
 	 * Constructor, initialize array lists
@@ -342,7 +342,7 @@ public class Term extends CatalogueObject implements Mappable {
 	public ArrayList<DescriptorTreeItem> getInheritedImplicitFacets(Attribute facetCategory) {
 		ArrayList<DescriptorTreeItem> itemsRetrieved = this.getImplicitFacetsLeaves(getImplicitFacetsTree(facetCategory)); // In describe vengono tutti segnati come inherited
 		
-		return itemsRetrieved.stream().filter(x -> !((x.isInherited()) && (facetCategory.getInheritance().equals("D")))).collect(Collectors.toCollection(ArrayList::new));
+		return itemsRetrieved.stream().filter(x ->  !((x.isInherited()) && (facetCategory.getInheritance().equals("D")))).collect(Collectors.toCollection(ArrayList::new));
 	}
 
 	/**

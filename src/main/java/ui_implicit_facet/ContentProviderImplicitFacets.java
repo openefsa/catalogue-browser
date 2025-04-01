@@ -7,6 +7,7 @@ import org.eclipse.jface.viewers.Viewer;
 import catalogue.Catalogue;
 import catalogue_object.Attribute;
 import catalogue_object.Term;
+import catalogue_object.TermAttribute;
 
 /**
  * This class is a using name properties to display the facets.
@@ -25,8 +26,38 @@ public class ContentProviderImplicitFacets implements ITreeContentProvider {
 	public void inputChanged ( Viewer arg0 , Object oldTerm , Object newTerm ) {
 
 		if ( newTerm instanceof Term ) {
+
+			Term term = (Term) newTerm;
+			Term temp = term.getCatalogue().getTermByCode(term.getCode());
+			Term tempRoot = new Term(term.getCatalogue(), term.getId(), term.getCode(), term.getName(), term.getLabel(), term.getScopenotes(), term.getStatus(), term.getVersion(), term.getLastUpdate(), term.getValidFrom(), term.getValidTo(), term.isDeprecated());
+
+			ArrayList<FacetDescriptor> tempImplicit = (ArrayList<FacetDescriptor>) temp.getImplicitFacets().clone();
+			ArrayList<TermAttribute> tempAttribute = (ArrayList<TermAttribute>) temp.getAttributes().clone();
+
+			for (FacetDescriptor x : term.getImplicitFacets()) {
+				if (!tempImplicit.contains(x)) {
+					tempImplicit.add(x);
+				}
+			}
+
+			for (TermAttribute x : term.getAttributes()) {
+				if (!tempAttribute.contains(x)) {
+					tempAttribute.add(x);
+				}
+			}
 			
-			_rootTerm = ((Term) newTerm).getCatalogue().getTermByCode(((Term) newTerm).getCode());
+			//tempImplicit.addAll(term.getImplicitFacets());
+			//tempAttribute.addAll(tempRoot.getAttributes());
+			tempRoot.setImplicitFacets(tempImplicit);
+			tempRoot.setTermAttributes(tempAttribute);
+			tempRoot.setApplicabilities(temp.getApplicabilities());
+
+			/*
+			 * for (FacetDescriptor x : tempRoot.getImplicitFacets()) {
+			 * tempRoot.addImplicitFacet(x); }
+			 */
+
+			_rootTerm = tempRoot;
 		}
 
 	}
