@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.Menu;
 import catalogue.Catalogue;
 import catalogue_object.Hierarchy;
 import catalogue_object.Term;
+import shared_data.SharedDataContainer;
 import term.AlphabeticalSorter;
 import term.ContentProviderTerm;
 import term.LabelProviderTerm;
@@ -315,7 +316,7 @@ public class TermTable implements Observer {
 			Hierarchy current = ((HierarchySelector) arg0).getSelectedHierarchy();
 			labelProvider.setCurrentHierarchy(current);
 			contentProvider.setCurrentHierarchy(current);
-
+			SharedDataContainer.currentHierarchy = current;
 			// remove all the terms from table
 			removeAll();
 		}

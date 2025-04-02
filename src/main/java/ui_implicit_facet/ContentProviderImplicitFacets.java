@@ -1,5 +1,7 @@
 package ui_implicit_facet;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
@@ -8,6 +10,7 @@ import catalogue.Catalogue;
 import catalogue_object.Attribute;
 import catalogue_object.Term;
 import catalogue_object.TermAttribute;
+import shared_data.SharedDataContainer;
 
 /**
  * This class is a using name properties to display the facets.
@@ -34,8 +37,21 @@ public class ContentProviderImplicitFacets implements ITreeContentProvider {
 			ArrayList<FacetDescriptor> tempImplicit = (ArrayList<FacetDescriptor>) temp.getImplicitFacets().clone();
 			ArrayList<TermAttribute> tempAttribute = (ArrayList<TermAttribute>) temp.getAttributes().clone();
 
+			//ArrayList<FacetDescriptor> tempImplicitAdjusted = (ArrayList<FacetDescriptor>) tempImplicit.clone();
+			//ArrayList<TermAttribute> tempAttributeAdjusted = (ArrayList<TermAttribute>) tempAttribute.clone();
+			
 			for (FacetDescriptor x : term.getImplicitFacets()) {
-				if (!tempImplicit.contains(x)) {
+				//(!tempImplicit.stream().anyMatch(z -> temp.getCatalogue().getTermByCode(x.getFacetCode()).hasAncestor(tempRoot, null) (temp.getCatalogue().getTermByCode(z.getFacetCode()), SharedDataContainer.currentHierarchy)))
+				Term termToAnalyze = temp.getCatalogue().getTermByCode(x.getFacetCode());
+				List<String> termParentsCodes = termToAnalyze.getAncestors(termToAnalyze, SharedDataContainer.currentHierarchy).stream().map(z -> z.getCode()).collect(Collectors.toList());
+				
+				if (!tempImplicit.contains(x))
+				{
+					if (tempImplicit.stream().anyMatch(z -> termParentsCodes.contains(z.getFacetCode())))
+					{
+						tempImplicit = tempImplicit.stream().filter(z -> !(termParentsCodes.contains(z.getFacetCode()) && z.getFacetHeader().equals(x.getFacetHeader()))).collect(Collectors.toCollection(ArrayList::new));
+						tempAttribute = tempAttribute.stream().filter(z -> !(z.getValue().contains(x.getFacetCode()))).collect(Collectors.toCollection(ArrayList::new));
+					}
 					tempImplicit.add(x);
 				}
 			}

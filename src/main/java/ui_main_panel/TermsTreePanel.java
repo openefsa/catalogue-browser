@@ -41,6 +41,7 @@ import catalogue_object.Term;
 import dcf_user.User;
 import global_manager.GlobalManager;
 import i18n_messages.CBMessages;
+import shared_data.SharedDataContainer;
 import soap.UploadCatalogueFileImpl.ReserveLevel;
 import term_clipboard.TermClipboard;
 import term_clipboard.TermOrderChanger;
@@ -1536,7 +1537,7 @@ public class TermsTreePanel extends Observable implements Observer {
 		if (o instanceof HierarchySelector) {
 
 			selectedHierarchy = ((HierarchySelector) o).getSelectedHierarchy();
-
+			SharedDataContainer.currentHierarchy = selectedHierarchy;
 			tree.setHierarchy(selectedHierarchy);
 		}
 

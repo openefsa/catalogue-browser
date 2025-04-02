@@ -31,6 +31,7 @@ import i18n_messages.CBMessages;
 import property.ContentProviderProperty;
 import property.LabelProviderProperty;
 import property.SorterCatalogueObject;
+import shared_data.SharedDataContainer;
 
 /**
  * Graphics which allows selecting which hierarchy/facet lists to display
@@ -351,6 +352,7 @@ public class HierarchySelector extends Observable implements Observer {
 			// call the listener
 			Event event = new Event();
 			event.data = hierarchy;
+			SharedDataContainer.currentHierarchy = hierarchy; // Set the current hierarchy for the whole program to see.
 			selectionChangedListener.handleEvent(event);
 		}
 	}

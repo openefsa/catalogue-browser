@@ -37,6 +37,7 @@ import pending_request.PendingRequestStatus;
 import pending_request.PendingRequestStatusChangedEvent;
 import sas_remote_procedures.XmlChangesService;
 import session_manager.BrowserWindowPreferenceDao;
+import shared_data.SharedDataContainer;
 import soap.UploadCatalogueFileImpl;
 import soap.UploadCatalogueFileImpl.PublishLevel;
 import soap.UploadCatalogueFileImpl.ReserveLevel;
@@ -479,6 +480,7 @@ public class MainPanel implements Observer {
 
 		// save main panel state
 		prefDao.saveMainPanelState(hierarchySelector.getSelectedHierarchy(), tree.getFirstSelectedTerm());
+		SharedDataContainer.currentHierarchy = hierarchySelector.getSelectedHierarchy();
 	}
 
 	/**
@@ -1052,6 +1054,7 @@ public class MainPanel implements Observer {
 				else // else show the menu with the other hierarchies
 					searchPanel.showMenu();
 
+				SharedDataContainer.currentHierarchy = hierarchySelector.getSelectedHierarchy();
 			}
 		});
 

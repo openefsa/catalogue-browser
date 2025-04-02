@@ -1230,6 +1230,29 @@ public class Term extends CatalogueObject implements Mappable {
 	}
 
 	/**
+	 * Get all ancestors of a Term
+	 * @param term
+	 * @param hierarchy
+	 * @return
+	 */
+	public List<Term> getAncestors(Term term, Hierarchy hierarchy)
+	{
+		List<Term> toReturn = new ArrayList<Term>();
+		Term termToAnalyze = term;
+		while (term.hasParent(hierarchy))
+		{
+			Term parent = termToAnalyze.getParent(hierarchy);
+			if (parent == null)
+			{
+				return toReturn;
+			}
+			toReturn.add(parent);
+			termToAnalyze = parent;
+		}
+		return toReturn;
+	}
+	
+	/**
 	 * Check if this term has as ancestor the 'ancestor' term on the selected
 	 * hierarchy
 	 * 
