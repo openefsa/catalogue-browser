@@ -32,7 +32,7 @@ public class ContentProviderImplicitFacets implements ITreeContentProvider {
 
 			Term term = (Term) newTerm;
 			Term temp = term.getCatalogue().getTermByCode(term.getCode());
-			Term tempRoot = new Term(term.getCatalogue(), term.getId(), term.getCode(), term.getName(), term.getLabel(), term.getScopenotes(), term.getStatus(), term.getVersion(), term.getLastUpdate(), term.getValidFrom(), term.getValidTo(), term.isDeprecated());
+			Term tempRoot = term;//new Term(term.getCatalogue(), term.getId(), term.getCode(), term.getName(), term.getLabel(), term.getScopenotes(), term.getStatus(), term.getVersion(), term.getLastUpdate(), term.getValidFrom(), term.getValidTo(), term.isDeprecated());
 
 			ArrayList<FacetDescriptor> tempImplicit = (ArrayList<FacetDescriptor>) temp.getImplicitFacets().clone();
 			ArrayList<TermAttribute> tempAttribute = (ArrayList<TermAttribute>) temp.getAttributes().clone();
@@ -57,17 +57,20 @@ public class ContentProviderImplicitFacets implements ITreeContentProvider {
 			}
 
 			for (TermAttribute x : term.getAttributes()) {
-				if (!tempAttribute.contains(x)) {
+				//if (!tempAttribute.contains(x)) {
 					tempAttribute.add(x);
-				}
+				//}
 			}
 			
 			//tempImplicit.addAll(term.getImplicitFacets());
 			//tempAttribute.addAll(tempRoot.getAttributes());
+			
+			//tempImplicit = tempImplicit.stream().map(x -> x.).collect(Collectors.toCollection(ArrayList::new)); //tempImplicit.stream().flatMap(x -> temp.getCatalogue().getTermByCode(x.getFacetCode()).getDescriptorsByCategory(x.getAttribute(), false).stream()).collect(Collectors.toCollection(ArrayList::new));
+			
 			tempRoot.setImplicitFacets(tempImplicit);
 			tempRoot.setTermAttributes(tempAttribute);
 			tempRoot.setApplicabilities(temp.getApplicabilities());
-
+			tempRoot.setTermType(temp.getTermType());
 			/*
 			 * for (FacetDescriptor x : tempRoot.getImplicitFacets()) {
 			 * tempRoot.addImplicitFacet(x); }
