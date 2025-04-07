@@ -239,8 +239,9 @@ public class Term extends CatalogueObject implements Mappable {
 		Term termToAnalyze = this.getCatalogue().getTermByCode(this.getCode());
 		ArrayList<FacetDescriptor> descriptorsToAnalyze = termToAnalyze.getDescriptorsByCategory(facetCategory, true);
 		descriptorsToAnalyze.addAll(this.getDescriptorsByCategory(facetCategory, true));
+		descriptorsToAnalyze = descriptorsToAnalyze.stream().distinct().collect(Collectors.toCollection(ArrayList::new));
 		
-		List<String> parents = descriptorsToAnalyze.stream().flatMap(x -> catalogue.getTermByCode(x.getFacetCode()).getAncestors(catalogue.getTermByCode(x.getFacetCode()), SharedDataContainer.currentHierarchy).stream().map(z -> z.getCode())).collect(Collectors.toList());
+		List<String> parents = descriptorsToAnalyze.stream().flatMap(x -> catalogue.getTermByCode(x.getFacetCode()).getAncestors(catalogue.getTermByCode(x.getFacetCode()), catalogue.getMasterHierarchy()).stream().map(z -> z.getCode())).collect(Collectors.toList());
 		descriptorsToAnalyze = descriptorsToAnalyze.stream().filter(x -> !parents.contains(x.getFacetCode())).collect(Collectors.toCollection(ArrayList::new));
 				
 		
