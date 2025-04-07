@@ -7,6 +7,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 import catalogue.Catalogue;
+import catalogue_object.Applicability;
 import catalogue_object.Attribute;
 import catalogue_object.Term;
 import catalogue_object.TermAttribute;
@@ -32,8 +33,16 @@ public class ContentProviderImplicitFacets implements ITreeContentProvider {
 
 			Term term = (Term) newTerm;
 			Term temp = term.getCatalogue().getTermByCode(term.getCode());
-			Term tempRoot = term;//new Term(term.getCatalogue(), term.getId(), term.getCode(), term.getName(), term.getLabel(), term.getScopenotes(), term.getStatus(), term.getVersion(), term.getLastUpdate(), term.getValidFrom(), term.getValidTo(), term.isDeprecated());
+			Term tempRoot = new Term(term.getCatalogue(), term.getId(), term.getCode(), term.getName(), term.getLabel(), term.getScopenotes(), term.getStatus(), term.getVersion(), term.getLastUpdate(), term.getValidFrom(), term.getValidTo(), term.isDeprecated());
 
+			// Copy differences between term and tempRoot
+			for (Applicability x : term.getApplicabilities()) {
+				tempRoot.addApplicability(x);
+			}
+			
+			tempRoot.setRawVersion(term.getRawVersion());
+			tempRoot.setStatusObject(term.getRawStatus());
+			
 			ArrayList<FacetDescriptor> tempImplicit = (ArrayList<FacetDescriptor>) temp.getImplicitFacets().clone();
 			ArrayList<TermAttribute> tempAttribute = (ArrayList<TermAttribute>) temp.getAttributes().clone();
 
@@ -70,6 +79,9 @@ public class ContentProviderImplicitFacets implements ITreeContentProvider {
 			tempRoot.setImplicitFacets(tempImplicit);
 			tempRoot.setTermAttributes(tempAttribute);
 			tempRoot.setApplicabilities(temp.getApplicabilities());
+			
+			
+			
 			tempRoot.setTermType(temp.getTermType());
 			/*
 			 * for (FacetDescriptor x : tempRoot.getImplicitFacets()) {

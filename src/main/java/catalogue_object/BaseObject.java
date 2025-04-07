@@ -97,6 +97,10 @@ public class BaseObject implements Nameable {
 	public void setStatus(String status) {
 		this.status = new Status(status);
 	}
+	
+	public void setStatusObject(Status status) {
+		this.status = status;
+	}
 
 	public void setDeprecated(boolean deprecated) {
 		this.deprecated = deprecated;
