@@ -32,6 +32,7 @@ import data_transformation.ValuesGrouper;
 import global_manager.GlobalManager;
 import i18n_messages.CBMessages;
 import naming_convention.SpecialValues;
+import shared_data.SharedDataContainer;
 import term.TermSubtreeIterator;
 import ui_implicit_facet.ComparatorAlphaFacetDescriptor;
 import ui_implicit_facet.ComparatorFacetDescriptor;
@@ -235,11 +236,17 @@ public class Term extends CatalogueObject implements Mappable {
 			ArrayList<DescriptorTreeItem> inTree, boolean processingParents) {
 
 		
+		Term termToAnalyze = this.getCatalogue().getTermByCode(this.getCode());
+		ArrayList<FacetDescriptor> descriptorsToAnalyze = termToAnalyze.getDescriptorsByCategory(facetCategory, true);
+		descriptorsToAnalyze.addAll(this.getDescriptorsByCategory(facetCategory, true));
+		
+		List<String> parents = descriptorsToAnalyze.stream().flatMap(x -> catalogue.getTermByCode(x.getFacetCode()).getAncestors(catalogue.getTermByCode(x.getFacetCode()), SharedDataContainer.currentHierarchy).stream().map(z -> z.getCode())).collect(Collectors.toList());
+		descriptorsToAnalyze = descriptorsToAnalyze.stream().filter(x -> !parents.contains(x.getFacetCode())).collect(Collectors.toCollection(ArrayList::new));
+				
 		
 		// For each facet descriptor
-		for (FacetDescriptor descriptor : this.getDescriptorsByCategory(facetCategory, true)) {
-			 
-			
+		for (FacetDescriptor descriptor : descriptorsToAnalyze) {
+
 			// get the term related to the descriptor code
 			Term descriptorTerm = catalogue.getTermByCode(descriptor.getFacetCode());
 
@@ -253,10 +260,10 @@ public class Term extends CatalogueObject implements Mappable {
 			// relationship
 			Iterator<DescriptorTreeItem> iterator = inTree.iterator();
 			while (iterator.hasNext()) {
-				
+
 				// get the current node of the tree
 				DescriptorTreeItem child = iterator.next();
-				
+
 				// has the descriptor contained in the tree as ancestor our new node?
 				if (child.getTerm().hasAncestor(parent.getTerm(), catalogue.getMasterHierarchy())) {
 
@@ -270,14 +277,10 @@ public class Term extends CatalogueObject implements Mappable {
 				}
 			}
 
-			
-			
 			// add the new node to the tree
 			inTree.add(parent);
 		}
 
-		
-		
 		// then get the parent of the term in order to add also its implicit facets
 		// to the child term
 		Term parentTerm = this.getParent(catalogue.getMasterHierarchy());

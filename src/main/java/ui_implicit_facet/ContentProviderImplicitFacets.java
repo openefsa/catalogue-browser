@@ -32,63 +32,8 @@ public class ContentProviderImplicitFacets implements ITreeContentProvider {
 		if ( newTerm instanceof Term ) {
 
 			Term term = (Term) newTerm;
-			Term temp = term.getCatalogue().getTermByCode(term.getCode());
-			Term tempRoot = new Term(term.getCatalogue(), term.getId(), term.getCode(), term.getName(), term.getLabel(), term.getScopenotes(), term.getStatus(), term.getVersion(), term.getLastUpdate(), term.getValidFrom(), term.getValidTo(), term.isDeprecated());
 
-			// Copy differences between term and tempRoot
-			for (Applicability x : term.getApplicabilities()) {
-				tempRoot.addApplicability(x);
-			}
-			
-			tempRoot.setRawVersion(term.getRawVersion());
-			tempRoot.setStatusObject(term.getRawStatus());
-			
-			ArrayList<FacetDescriptor> tempImplicit = (ArrayList<FacetDescriptor>) temp.getImplicitFacets().clone();
-			ArrayList<TermAttribute> tempAttribute = (ArrayList<TermAttribute>) temp.getAttributes().clone();
-
-			//ArrayList<FacetDescriptor> tempImplicitAdjusted = (ArrayList<FacetDescriptor>) tempImplicit.clone();
-			//ArrayList<TermAttribute> tempAttributeAdjusted = (ArrayList<TermAttribute>) tempAttribute.clone();
-			
-			for (FacetDescriptor x : term.getImplicitFacets()) {
-				//(!tempImplicit.stream().anyMatch(z -> temp.getCatalogue().getTermByCode(x.getFacetCode()).hasAncestor(tempRoot, null) (temp.getCatalogue().getTermByCode(z.getFacetCode()), SharedDataContainer.currentHierarchy)))
-				Term termToAnalyze = temp.getCatalogue().getTermByCode(x.getFacetCode());
-				List<String> termParentsCodes = termToAnalyze.getAncestors(termToAnalyze, SharedDataContainer.currentHierarchy).stream().map(z -> z.getCode()).collect(Collectors.toList());
-				
-				if (!tempImplicit.contains(x))
-				{
-					if (tempImplicit.stream().anyMatch(z -> termParentsCodes.contains(z.getFacetCode())))
-					{
-						tempImplicit = tempImplicit.stream().filter(z -> !(termParentsCodes.contains(z.getFacetCode()) && z.getFacetHeader().equals(x.getFacetHeader()))).collect(Collectors.toCollection(ArrayList::new));
-						tempAttribute = tempAttribute.stream().filter(z -> !(z.getValue().contains(x.getFacetCode()))).collect(Collectors.toCollection(ArrayList::new));
-					}
-					tempImplicit.add(x);
-				}
-			}
-
-			for (TermAttribute x : term.getAttributes()) {
-				//if (!tempAttribute.contains(x)) {
-					tempAttribute.add(x);
-				//}
-			}
-			
-			//tempImplicit.addAll(term.getImplicitFacets());
-			//tempAttribute.addAll(tempRoot.getAttributes());
-			
-			//tempImplicit = tempImplicit.stream().map(x -> x.).collect(Collectors.toCollection(ArrayList::new)); //tempImplicit.stream().flatMap(x -> temp.getCatalogue().getTermByCode(x.getFacetCode()).getDescriptorsByCategory(x.getAttribute(), false).stream()).collect(Collectors.toCollection(ArrayList::new));
-			
-			tempRoot.setImplicitFacets(tempImplicit);
-			tempRoot.setTermAttributes(tempAttribute);
-			tempRoot.setApplicabilities(temp.getApplicabilities());
-			
-			
-			
-			tempRoot.setTermType(temp.getTermType());
-			/*
-			 * for (FacetDescriptor x : tempRoot.getImplicitFacets()) {
-			 * tempRoot.addImplicitFacet(x); }
-			 */
-
-			_rootTerm = tempRoot;
+			_rootTerm = term;
 		}
 
 	}
