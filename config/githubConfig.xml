@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="Github.RepositoryName">TSE-reporting-tool</entry>
+    <entry key="Github.RepositoryOwner">openefsa</entry>
+    <entry key="Application.JavaPath">.\jre\bin\java.exe</entry>
+    <entry key="Application.Keyword">onlyapp-win-64bit</entry>
+    <entry key="Application.Folder">app</entry>
+    <entry key="Application.ConfigFile">config\appConfig.xml</entry>
+    <entry key="Application.JarPath">tse-tool.jar</entry>
+    <entry key="Application.IconFolder">icons</entry>
+    <entry key="Application.NameEntry">Application.Name</entry>
+    <entry key="Application.VersionEntry">Application.Version</entry>
+    <entry key="Application.IconEntry">Application.Icon</entry>
+    <entry key="Application.DatabaseFolder">database</entry>
+</properties>

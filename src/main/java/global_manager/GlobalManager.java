@@ -13,6 +13,7 @@ import config.Config;
 import config.Environment;
 import dcf_manager.Dcf.DcfType;
 import dcf_user.User;
+import shared_data.SharedDataContainer;
 import user_preferences.GlobalPreferenceDAO;
 
 /**
@@ -62,7 +63,10 @@ public class GlobalManager extends Observable {
 	public void setCurrentCatalogue(Catalogue currentCatalogue) {
 
 		this.currentCatalogue = currentCatalogue;
-
+		
+		// Set values in SharedDataContainer
+		SharedDataContainer.updateFacetsHierarchies(this.currentCatalogue);
+		
 		refresh();
 
 		// do not save the cat users catalogue, otherwise
