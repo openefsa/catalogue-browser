@@ -240,8 +240,7 @@ public class Term extends CatalogueObject implements Mappable {
 		descriptorsToAnalyze.addAll(this.getDescriptorsByCategory(facetCategory, true));
 		descriptorsToAnalyze = descriptorsToAnalyze.stream().distinct().collect(Collectors.toCollection(ArrayList::new));
 		
-	
-		// descriptorsToAnalyze.stream().flatMap(x -> catalogue.getTermByCode(x.getFacetCode()).getAncestors(catalogue.getTermByCode(x.getFacetCode()), catalogue.getMasterHierarchy()).stream().map(z -> z.getCode())).collect(Collectors.toList());		
+			
 		ArrayList<FacetDescriptor> descriptorsToAnalyzeParents = descriptorsToAnalyze; 
 		List<String> parents = SharedDataContainer.facetsHierarchies.stream()
 				.flatMap(hierarchy -> descriptorsToAnalyzeParents.stream()
@@ -249,6 +248,8 @@ public class Term extends CatalogueObject implements Mappable {
 								.getAncestors(catalogue.getTermByCode(x.getFacetCode()), hierarchy).stream()
 								.map(z -> z.getCode())))
 				.distinct().collect(Collectors.toList());
+		
+		implicitFacets = implicitFacets.stream().filter(x -> !(parents.contains(x.getFacetCode()) && facetCategory.getInheritance().equals("D"))).collect(Collectors.toCollection(ArrayList::new));
 		
 		/*
 		 * parents.addAll(descriptorsToAnalyze.stream().flatMap(x ->
