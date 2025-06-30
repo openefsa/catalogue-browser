@@ -1,5 +1,6 @@
 package shared_data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import catalogue.Catalogue;
@@ -12,6 +13,14 @@ public class SharedDataContainer {
 	
 	public static void updateFacetsHierarchies(Catalogue catalogue)
 	{
-		facetsHierarchies = catalogue.getFacetHierarchies();
+		if (catalogue == null)
+		{
+			facetsHierarchies = new ArrayList<Hierarchy>();
+		}
+		else
+		{
+			facetsHierarchies = catalogue.getFacetHierarchies();	
+		}
+		
 	}
 }

@@ -242,15 +242,18 @@ public class Term extends CatalogueObject implements Mappable {
 		
 			
 		ArrayList<FacetDescriptor> descriptorsToAnalyzeParents = descriptorsToAnalyze; 
+		
 		List<String> parents = SharedDataContainer.facetsHierarchies.stream()
 				.flatMap(hierarchy -> descriptorsToAnalyzeParents.stream()
 						.flatMap(x -> catalogue.getTermByCode(x.getFacetCode())
 								.getAncestors(catalogue.getTermByCode(x.getFacetCode()), hierarchy).stream()
 								.map(z -> z.getCode())))
 				.distinct().collect(Collectors.toList());
-		
-		implicitFacets = implicitFacets.stream().filter(x -> !(parents.contains(x.getFacetCode()) && facetCategory.getInheritance().equals("D"))).collect(Collectors.toCollection(ArrayList::new));
-		
+
+		implicitFacets = implicitFacets.stream()
+				.filter(x -> !(parents.contains(x.getFacetCode()) && facetCategory.getInheritance().equals("D")))
+				.collect(Collectors.toCollection(ArrayList::new));
+
 		/*
 		 * parents.addAll(descriptorsToAnalyze.stream().flatMap(x ->
 		 * catalogue.getTermByCode(x.getFacetCode()).getAncestors(catalogue.
@@ -260,8 +263,8 @@ public class Term extends CatalogueObject implements Mappable {
 		 * parents.stream().distinct().collect(Collectors.toList()); List<String>
 		 * parentsNew = parents;
 		 */
-		descriptorsToAnalyze = descriptorsToAnalyze.stream().filter(x -> !parents.contains(x.getFacetCode())).collect(Collectors.toCollection(ArrayList::new));
-				
+		descriptorsToAnalyze = descriptorsToAnalyze.stream().filter(x -> !parents.contains(x.getFacetCode()))
+				.collect(Collectors.toCollection(ArrayList::new));
 		
 		// For each facet descriptor
 		for (FacetDescriptor descriptor : descriptorsToAnalyze) {

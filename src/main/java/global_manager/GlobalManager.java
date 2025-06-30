@@ -65,6 +65,7 @@ public class GlobalManager extends Observable {
 		this.currentCatalogue = currentCatalogue;
 		
 		// Set values in SharedDataContainer
+		
 		SharedDataContainer.updateFacetsHierarchies(this.currentCatalogue);
 		
 		refresh();
