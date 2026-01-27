@@ -1,5 +1,9 @@
 package ui_main_panel;
 
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -39,6 +43,7 @@ public class CatalogueLabel implements Observer {
 
 	private Composite leftGroup;
 	private Button btnUpdate;
+	private Button btnReleaseNotes;
 	private Label label;
 	private Catalogue catalogue;
 	private ToolTip toolTip;
@@ -54,7 +59,7 @@ public class CatalogueLabel implements Observer {
 		// composite which contains cat name + update panel
 		leftGroup = new Group(parent, SWT.NONE);
 		leftGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		leftGroup.setLayout(new GridLayout(3, false));
+		leftGroup.setLayout(new GridLayout(4, false));
 
 		// label which shows the current opened catalogue
 		label = new Label(leftGroup, SWT.NONE);
@@ -81,7 +86,7 @@ public class CatalogueLabel implements Observer {
 		// tool tip to show when an update of the catalogue is available
 		toolTip = new ToolTip(leftGroup.getShell(), SWT.ICON_INFORMATION | SWT.BALLOON);
 		toolTip.setData(new GridData(SWT.FILL, SWT.FILL, false, false));
-
+		
 		// make it invisible
 		makeUpdateVisible(false);
 
@@ -111,6 +116,23 @@ public class CatalogueLabel implements Observer {
 			public void widgetSelected(SelectionEvent arg0) {
 				// download the last catalogue release and open it
 				new FileActions().downloadLastVersion(leftGroup.getShell(), catalogue, null);
+			}
+		});
+		
+		btnReleaseNotes = new Button(leftGroup, SWT.PUSH);
+		btnReleaseNotes.setText(CBMessages.getString("CatalogueLabel.ReleaseNotes"));
+		btnReleaseNotes.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
+
+		btnReleaseNotes.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				// show the diff files of release notes
+				try {
+					Desktop.getDesktop().browse(new URI("https://github.com/openefsa/efsa-catalogues/tree/master/release_notes"));
+				} catch (IOException | URISyntaxException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
