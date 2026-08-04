@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -235,6 +236,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 	 * attributes, term attributes, applicabilities, detail levels and term types
 	 */
 	public void loadData() {
+		
 
 		// thread to load small data
 		Thread baseThread = new Thread(new Runnable() {
@@ -246,15 +248,16 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 				refreshDetailLevels();
 				refreshReleaseNotes();
 			}
-		});
+		},"baseThread");
 
 		// Thread to load terms
 		Thread termThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
+				updateStatistics();
 				refreshTerms();
 			}
-		});
+		},"termThread");
 
 		// load terms and base information
 		baseThread.start();
@@ -276,14 +279,14 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 			public void run() {
 				refreshApplicabities();
 			}
-		});
+		},"applThread");
 
 		Thread taThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				refreshTermAttributes();
 			}
-		});
+		},"taThread");
 
 		applThread.start();
 		taThread.start();
@@ -311,8 +314,9 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		if (terms != null) {
 			for (Term term : terms.values()) {
 				term.clear();
+				term.clearDismissedCache();
 			}
-
+			
 			terms.clear();
 		}
 
@@ -370,9 +374,8 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 		if (manager.getCurrentCatalogue() != null)
 			manager.getCurrentCatalogue().closeQuitely();
 
-		// load the catalogue data into RAM
+//		 load the catalogue data into RAM
 		loadData();
-
 		manager.setCurrentCatalogue(this);
 
 	}
@@ -475,6 +478,17 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 
 		// initialize the hierarchies
 		hierarchies = hierDao.getAll();
+	}
+	public void updateStatistics()  {
+		try (Connection con = this.getConnection();
+			     Statement stmt = con.createStatement()) {
+
+			    stmt.execute("CALL SYSCS_UTIL.SYSCS_UPDATE_STATISTICS('APP','TERM',NULL)");
+			    stmt.execute("CALL SYSCS_UTIL.SYSCS_UPDATE_STATISTICS('APP','PARENT_TERM',NULL)");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			LOGGER.error("DB error", e);
+		}
 	}
 
 	/**
@@ -706,6 +720,7 @@ public class Catalogue extends BaseObject implements Comparable<Catalogue>, Mapp
 
 		// update cache of ids
 		for (Term term : terms.values()) {
+			term.clearDismissedCache();
 			termsIds.put(term.getCode(), term.getId());
 		}
 	}

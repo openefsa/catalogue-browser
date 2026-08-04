@@ -440,6 +440,59 @@ public class ParentTermDAO implements CatalogueRelationDAO<Applicability, Term, 
 
 		return children;
 	}
+	public boolean hasChildren(Nameable t, Hierarchy hierarchy, boolean hideDeprecated, boolean hideDismissed) {
+
+		String query = "select T.TERM_ID " + "from APP.PARENT_TERM as P "
+				+ "inner join APP.TERM as T on (P.TERM_ID = T.TERM_ID) " + "where P.HIERARCHY_ID = ? ";
+
+		if (t != null && t instanceof Term) {
+			query += " and P.PARENT_TERM_ID = ? ";
+		} else {
+			query += " and P.PARENT_TERM_ID is null ";
+		}
+
+		if (hideDeprecated) {
+			query += " and T.TERM_DEPRECATED = false ";
+		}
+
+		query += " fetch first row only";
+
+		try (Connection con = catalogue.getConnection(); PreparedStatement stmt = con.prepareStatement(query)) {
+
+			int index = 1;
+
+			stmt.setInt(index++, hierarchy.getId());
+
+			if (t != null && t instanceof Term) {
+				stmt.setInt(index++, ((Term) t).getId());
+			}
+
+			try (ResultSet rs = stmt.executeQuery()) {
+
+				while (rs.next()) {
+
+					Term child = catalogue.getTermById(rs.getInt("TERM_ID"));
+
+					// stesso comportamento di getChildren()
+					if (hideDismissed) {
+
+						if (!child.isDismissed(hierarchy)) {
+							return true;
+						}
+
+					} else {
+						return true;
+					}
+				}
+			}
+
+		} catch (SQLException e) {
+			LOGGER.error("DB error checking children", e);
+		}
+
+		return false;
+	}
+
 
 	/**
 	 * Get the max order for the parent children in the hierarchy selected

@@ -53,6 +53,10 @@ public class CatalogueDownloader extends Thread {
 			downloadAndImport();
 		} catch (SOAPException e) {
 
+			e.printStackTrace();
+			LOGGER.error("Cannot download/import catalogue=" + catalogue, e);
+
+			stop(ThreadFinishedListener.EXCEPTION, e);
 			// TODO show an error and force the user to wait 1 minute, then try again to
 			// download the catalogue failed
 			if (e instanceof DetailedSOAPException) {
@@ -60,10 +64,6 @@ public class CatalogueDownloader extends Thread {
 				GlobalUtil.showErrorDialog(new Shell(new Display()), warning[0], warning[1]);
 			}
 
-			e.printStackTrace();
-			LOGGER.error("Cannot download/import catalogue=" + catalogue, e);
-
-			stop(ThreadFinishedListener.EXCEPTION, e);
 
 		} catch (AttachmentNotFoundException e) {
 			stop(ThreadFinishedListener.ERROR, e);

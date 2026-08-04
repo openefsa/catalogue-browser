@@ -5,15 +5,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
@@ -66,6 +67,8 @@ public class Term extends CatalogueObject implements Mappable {
 
 	// the applicabilities of the term in its hierarchies
 	private ArrayList<Applicability> applicabilities; public void setApplicabilities(ArrayList<Applicability> applicability) {this.applicabilities = applicability;}
+	
+	private Map<Integer, Boolean> hasChildrenCache = new HashMap<>();
 
 	/**
 	 * Constructor, initialize array lists
@@ -1346,7 +1349,25 @@ public class Term extends CatalogueObject implements Mappable {
 	 * @return
 	 */
 	public boolean hasChildren(Hierarchy hierarchy, boolean hideDeprecated, boolean hideNotReportable) {
-		return !getChildren(hierarchy, hideDeprecated, hideNotReportable).isEmpty();
+
+	    if (hierarchy == null) {
+	        return false;
+	    }
+
+	    Boolean cached = hasChildrenCache.get(hierarchy.getId());
+
+	    if (cached != null) {
+	        return cached;
+	    }
+
+		ParentTermDAO parentDao = new ParentTermDAO(catalogue);
+
+	    boolean result = parentDao
+	            .hasChildren(this, hierarchy,hideDeprecated, hideNotReportable);
+
+	    hasChildrenCache.put(hierarchy.getId(), result);
+
+	    return result;
 	}
 
 	/**
@@ -1464,15 +1485,26 @@ public class Term extends CatalogueObject implements Mappable {
 	 * @param hierarchy
 	 * @return
 	 */
+	private Map<Integer, Boolean> dismissedCache = new HashMap<>();
+
 	public boolean isDismissed(Hierarchy hierarchy) {
 
-		boolean repChilden = hasOnlyDeprecatedOrNotReportableChildren(hierarchy);
+	    Boolean cached = dismissedCache.get(hierarchy.getId());
 
-		// if all the children are deprecated or not reportable
-		// and the term is not reportable and not deprecated,
-		// then it is dismissed (if it is deprecated then it is
-		// only deprecated, not dismissed)
-		return (repChilden) && !isReportable(hierarchy) && !isDeprecated();
+	    if (cached != null) {
+	        return cached;
+	    }
+
+
+	    boolean result =
+	        hasOnlyDeprecatedOrNotReportableChildren(hierarchy)
+	        && !isReportable(hierarchy)
+	        && !isDeprecated();
+
+
+	    dismissedCache.put(hierarchy.getId(), result);
+
+	    return result;
 	}
 
 	/**
@@ -2270,5 +2302,10 @@ public class Term extends CatalogueObject implements Mappable {
 
 		return super.equals(term);
 	}
+
+	public void clearDismissedCache() {
+		 dismissedCache.clear();;
+	}
+
 
 }

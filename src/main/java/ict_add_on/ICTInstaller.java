@@ -103,20 +103,33 @@ public class ICTInstaller {
 		if (folders == null)
 			return null;
 
-		double latestVersion = 0.0;
+		String latestVersion = "0.0.0";
 		File lastMtxFolder = null;
 
 		for (File f : folders) {
 
-			// extract the version number
-			double tempVersion = Double.parseDouble(f.getName().replaceAll("[^0-9\\.]+", ""));
-			// take the highest value and save the folder file
-			if (tempVersion > latestVersion) {
-				latestVersion = tempVersion;
+			if(this.compareVersions(f.getName(),latestVersion) >= 0) {
 				lastMtxFolder = f;
 			}
 		}
 
 		return lastMtxFolder;
+	}
+	public int compareVersions(String v1, String v2) {
+	    String[] a = v1.replaceAll("[^0-9.]", "").split("\\.");
+	    String[] b = v2.replaceAll("[^0-9.]", "").split("\\.");
+
+	    int max = Math.max(a.length, b.length);
+
+	    for (int i = 0; i < max; i++) {
+	        int n1 = i < a.length ? Integer.parseInt(a[i]) : 0;
+	        int n2 = i < b.length ? Integer.parseInt(b[i]) : 0;
+
+	        if (n1 != n2) {
+	            return Integer.compare(n1, n2);
+	        }
+	    }
+
+	    return 0;
 	}
 }

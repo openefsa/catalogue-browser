@@ -700,6 +700,9 @@ public final class GlobalUtil {
 			title = CBMessages.getString("error.title");
 			message = CBMessages.getString("no.connection");
 			break;
+		case SERVER_ERROR:
+			title = CBMessages.getString("error.title");
+			message = CBMessages.getString("internal.server.err", e.getMessage());
 		default:
 			break;
 		}
