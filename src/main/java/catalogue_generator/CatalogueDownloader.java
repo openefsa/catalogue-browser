@@ -14,6 +14,7 @@ import i18n_messages.CBMessages;
 import progress_bar.FormProgressBar;
 import progress_bar.IProgressBar;
 import soap.DetailedSOAPException;
+import soap.SOAPError;
 import utilities.GlobalUtil;
 
 /**
@@ -60,8 +61,11 @@ public class CatalogueDownloader extends Thread {
 			// TODO show an error and force the user to wait 1 minute, then try again to
 			// download the catalogue failed
 			if (e instanceof DetailedSOAPException) {
+				SOAPError error = ((DetailedSOAPException) e).getError();
+				if(!error.equals(SOAPError.SERVER_ERROR)) {
 				String[] warning = GlobalUtil.getSOAPWarning((DetailedSOAPException) e);
 				GlobalUtil.showErrorDialog(new Shell(new Display()), warning[0], warning[1]);
+				}
 			}
 
 
