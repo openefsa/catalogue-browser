@@ -15,7 +15,7 @@
 	<repositories>
 		<repository>
 			<id>maven-eclipse-repo</id>
-			<url>http://maven-eclipse.github.io/maven</url>
+			<url>https://maven-eclipse.github.io/maven</url>
 		</repository>
 		<repository>
 			<id>545ch4</id>
@@ -161,3 +161,4 @@
 		</plugins>
 	</build>
 </project>
+
