@@ -186,11 +186,19 @@ public class MainPanel implements Observer {
 							text = CBMessages.getString("new.internal.version", catCode, oldVersion, version);
 							colour = SWT.COLOR_DARK_GREEN;
 							break;
+						case NEW_INTERNAL_VERSION_FAILED:
+							text = CBMessages.getString("new.internal.version.failed", catCode, version);
+							colour = SWT.COLOR_RED;
+							break;
 						default:
 							break;
 						}
 
 						addMessageToConsole(new ConsoleMessage(text, colour));
+
+						if (action == ActionPerformed.NEW_INTERNAL_VERSION_FAILED)
+							GlobalUtil.showErrorDialog(shell, CBMessages.getString("Reserve.NewVersionErrorTitle"),
+									CBMessages.getString("Reserve.NewVersionErrorMessage", catCode, version));
 					}
 				});
 			}

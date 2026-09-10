@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -148,6 +149,42 @@ public class PendingRequestActionsTest {
 		
 		// not present => unreserved
 		assertNull(rs);
+	}
+	
+	@Test
+	public void reserveIsNotAppliedLocallyIfNewVersionDatabaseCannotBeCreated() throws SOAPException, 
+		TransformerException, IOException, XMLStreamException, OpenXML4JException, SAXException, ImportException {
+		
+		Catalogue startingPoint = new Catalogue();
+		startingPoint.setCode(catalogueCode);
+		startingPoint.setVersion("1.0");
+		catDao.insert(startingPoint);
+		
+		ICatalogueBackup failingBackup = new ICatalogueBackup() {
+			
+			@Override
+			public void backupCatalogue(Catalogue catalogue, String path) throws SQLException {
+				throw new SQLException("Cannot create a readable copy of " + catalogue + " in " + path);
+			}
+		};
+		
+		PendingRequestActions failingActions = new PendingRequestActions(failingBackup, catDao, resDao, 
+				xmlDao, forcedDao, downloader, Environment.TEST);
+		
+		assertEquals(1, catDao.getAll().size());
+		
+		try {
+			failingActions.reserveCompletedBeforeForcing(catalogueCode, "1.0.1", 
+					ReserveLevel.MINOR, "reservation note", username);
+			
+			fail("The reserve must fail if the database of the new version cannot be created");
+			
+		} catch (SQLException e) {
+		}
+		
+		assertEquals(1, catDao.getAll().size());
+		
+		assertNull(resDao.get(catalogueCode));
 	}
 	
 	@Test

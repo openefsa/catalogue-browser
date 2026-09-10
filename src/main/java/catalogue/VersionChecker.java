@@ -56,8 +56,9 @@ public class VersionChecker {
 	 * Publish the major version, the minor will be
 	 * set to 0 and the internal will be removed.
 	 * @return the new catalogue with the new version
+	 * @throws SQLException if the database of the new version cannot be created
 	 */
-	public Catalogue publishMajor() {
+	public Catalogue publishMajor() throws SQLException {
 		version.incrementMajor();
 		version.confirm();
 		return apply();
@@ -67,8 +68,9 @@ public class VersionChecker {
 	 * Publish the minor version, 
 	 * the internal version will be removed.
 	 * @return the new catalogue with the new version
+	 * @throws SQLException if the database of the new version cannot be created
 	 */
-	public Catalogue publishMinor() {
+	public Catalogue publishMinor() throws SQLException {
 		version.incrementMinor();
 		version.confirm();
 		return apply();
@@ -77,8 +79,9 @@ public class VersionChecker {
 	/**
 	 * Increment the internal version
 	 * @return the new catalogue with the new version
+	 * @throws SQLException if the database of the new version cannot be created
 	 */
-	public Catalogue newInternalVersion() {
+	public Catalogue newInternalVersion() throws SQLException {
 
 		version.incrementInternal();
 		
@@ -90,8 +93,9 @@ public class VersionChecker {
 	/**
 	 * Set the current version as dummy
 	 * @return
+	 * @throws SQLException if the database of the new version cannot be created
 	 */
-	public Catalogue force() {
+	public Catalogue force() throws SQLException {
 		
 		version.force( catalogue.getForcedCount() );
 		
@@ -105,8 +109,9 @@ public class VersionChecker {
 	 * catalogue is created with the new version and
 	 * the related database is also created.
 	 * @return the new catalogue with the new version
+	 * @throws SQLException if the database of the new version cannot be created
 	 */
-	private Catalogue apply() {
+	private Catalogue apply() throws SQLException {
 		
 		String newVersion = version.getVersion();
 
@@ -141,8 +146,13 @@ public class VersionChecker {
 		try {
 			backup.backupCatalogue(catalogue, newVersionCat.getDbPath());
 		} catch (SQLException e) {
-			e.printStackTrace();
-			LOGGER.error("Cannot backup the catalogue=" + catalogue, e);
+			
+			LOGGER.error("Cannot backup the catalogue=" + catalogue 
+					+ ", discarding the new version=" + newVersionCat, e);
+			
+			dao.remove(newVersionCat);
+			
+			throw e;
 		}
 	
 		// return the new catalogue

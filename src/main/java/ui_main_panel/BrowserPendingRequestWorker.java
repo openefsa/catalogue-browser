@@ -153,7 +153,8 @@ public class BrowserPendingRequestWorker extends PendingRequestWorker implements
 						
 					} catch (SOAPException | TransformerException | IOException | XMLStreamException
 							| OpenXML4JException | SAXException | SQLException | ImportException e) {
-						e.printStackTrace();
+						LOGGER.error("Cannot complete the reserve of catalogue=" + catalogueCode
+								+ ". The catalogue was reserved in DCF but not locally", e);
 					}
 				}
 				else {

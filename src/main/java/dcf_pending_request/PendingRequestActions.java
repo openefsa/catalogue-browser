@@ -313,14 +313,26 @@ public class PendingRequestActions {
 	 * @param reservationNote
 	 * @param level
 	 * @return
+	 * @throws SQLException if the database of the new internal version cannot be
+	 *                      created. In that case the catalogue is not reserved
+	 *                      locally.
 	 */
 	private Catalogue markAsReservedVersion(Catalogue catalogue, String username, 
-			String reservationNote, ReserveLevel level) {
+			String reservationNote, ReserveLevel level) throws SQLException {
 		
 		// version checker, increase version
 		// and create backup
 		VersionChecker versionChecker = new VersionChecker(backup, catDao, catalogue);
-		catalogue = versionChecker.newInternalVersion();
+		
+		try {
+			catalogue = versionChecker.newInternalVersion();
+		} catch (SQLException e) {
+			
+			notify(new PendingRequestActionsEvent(ActionPerformed.NEW_INTERNAL_VERSION_FAILED, 
+					catalogue.getCode(), catalogue.getVersion()));
+			
+			throw e;
+		}
 
 		LOGGER.info("The new reserved local internal version of the catalogue is=" + catalogue);
 		
@@ -358,7 +370,24 @@ public class PendingRequestActions {
 		// version checker to modify the catalogue version
 		// and to create backup
 		VersionChecker versionChecker = new VersionChecker(backup, catDao, catalogue);
-		Catalogue forcedCatalogue = versionChecker.force();
+		
+		Catalogue forcedCatalogue;
+		
+		try {
+			forcedCatalogue = versionChecker.force();
+		} catch (SQLException e) {
+			
+			LOGGER.error("Cannot create the forced version of catalogue=" + catalogueCode 
+					+ ", restoring its forced count", e);
+			
+			catalogue.setForcedCount(catalogue.getForcedCount() - 1);
+			catDao.update(catalogue);
+			
+			notify(new PendingRequestActionsEvent(ActionPerformed.NEW_INTERNAL_VERSION_FAILED, 
+					catalogueCode, oldVersion));
+			
+			return false;
+		}
 		
 		// set the new status
 		forcedCatalogue.setStatus(StatusValues.TEMPORARY);

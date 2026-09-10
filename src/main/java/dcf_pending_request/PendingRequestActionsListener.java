@@ -44,6 +44,12 @@ public interface PendingRequestActionsListener {
 		 */
 		NEW_INTERNAL_VERSION_CREATED,
 		
+		/**
+		 * A new internal version of the catalogue could not be created,
+		 * since the copy of its database failed
+		 */
+		NEW_INTERNAL_VERSION_FAILED,
+		
 	}
 	
 	public class PendingRequestActionsEvent {

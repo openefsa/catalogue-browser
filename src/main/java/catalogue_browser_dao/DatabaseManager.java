@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
+import java.nio.file.Files;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -309,11 +310,27 @@ public class DatabaseManager {
 	}
 
 	/**
+	 * Number of attempts performed to move a file of the backup into its final
+	 * position. On windows a move can transiently fail if another process (as an
+	 * antivirus or an indexer) still holds a handle on the file.
+	 */
+	private static final int MOVE_ATTEMPTS = 10;
+
+	/**
+	 * Time waited between two move attempts. Together with MOVE_ATTEMPTS it gives
+	 * a tolerance of about 3.6 seconds on a locked file.
+	 */
+	private static final long MOVE_RETRY_WAIT_MS = 400;
+
+	/**
 	 * Backup a catalogue database into the backup dir
 	 * 
 	 * @param catalogue the catalogue we want to backup
 	 * @param backupDir the directory in which the backup will be created
-	 * @throws SQLException
+	 * @throws SQLException if the backup cannot be created or if the created copy
+	 *                      is not a database which can be read. In that case the
+	 *                      backup directory is deleted, in order to avoid leaving
+	 *                      an unusable database on the disk.
 	 */
 	public static void backupCatalogue(Catalogue catalogue, String backupDir) throws SQLException {
 
@@ -325,33 +342,177 @@ public class DatabaseManager {
 			con.close();
 		}
 
-		LOGGER.info("Database of " + catalogue + " copied in " + backupDir);
-
 		// here we have created a backup of the database in the backupDir folder
 		// since the backup copies also the database folder we have to extract
 		// all the files contained in that folder to the parent folder in order
 		// to have the right structure of files which is required to read
 		// the catalogues databases
 
-		File dir = new File(backupDir);
+		try {
 
-		File[] list = dir.listFiles();
+			flattenBackup(new File(catalogue.getDbPath()).getName(), new File(backupDir));
 
-		if (list.length == 0) {
-			LOGGER.error("No file was copied");
-			return;
+			assertReadableDatabase(backupDir);
+
+		} catch (IOException | SQLException e) {
+
+			LOGGER.error("Incomplete backup of " + catalogue + " in " + backupDir + ", deleting it", e);
+
+			deleteQuietly(new File(backupDir));
+
+			throw new SQLException("Cannot create a readable copy of " + catalogue + " in " + backupDir, e);
 		}
 
-		File subDir = list[0];
+		LOGGER.info("Database of " + catalogue + " copied in " + backupDir);
+	}
 
-		// move all the files of the sub directory
-		// in the parent directory
-		for (File file : subDir.listFiles()) {
-			file.renameTo(new File(dir, file.getName()));
+	/**
+	 * Move the content of the derby backup sub directory into the backup directory
+	 * itself, since the catalogues databases are read from that level.
+	 * 
+	 * @param dbFolderName the name of the source database folder, which is also
+	 *                     the name used by derby for the backup sub directory
+	 * @param dir          the directory which contains the backup
+	 * @throws IOException if the sub directory cannot be found, or if its content
+	 *                     cannot be moved
+	 */
+	private static void flattenBackup(String dbFolderName, File dir) throws IOException {
+
+		File subDir = new File(dir, dbFolderName);
+
+		if (!subDir.isDirectory())
+			subDir = getOnlySubDirectory(dir);
+
+		File[] content = subDir.listFiles();
+
+		if (content == null || content.length == 0)
+			throw new IOException("The backup folder " + subDir + " is empty");
+
+		for (File file : content)
+			move(file, new File(dir, file.getName()));
+
+		if (!subDir.delete())
+			throw new IOException("Cannot delete the backup folder " + subDir);
+	}
+
+	/**
+	 * Get the only sub directory contained in a directory
+	 * 
+	 * @param dir
+	 * @return
+	 * @throws IOException if there is not exactly one sub directory
+	 */
+	private static File getOnlySubDirectory(File dir) throws IOException {
+
+		File[] content = dir.listFiles();
+
+		if (content == null)
+			throw new IOException("Cannot read the backup directory " + dir);
+
+		File subDir = null;
+
+		for (File file : content) {
+
+			if (!file.isDirectory())
+				continue;
+
+			if (subDir != null)
+				throw new IOException("Several backup folders found in " + dir + ", cannot choose one");
+
+			subDir = file;
 		}
 
-		// delete the empty folder
-		subDir.delete();
+		if (subDir == null)
+			throw new IOException("No backup folder found in " + dir);
+
+		return subDir;
+	}
+
+	/**
+	 * Move a file of the backup into its final position, retrying if the move
+	 * transiently fails.
+	 * 
+	 * @param source
+	 * @param target
+	 * @throws IOException if the file cannot be moved
+	 */
+	private static void move(File source, File target) throws IOException {
+
+		IOException lastError = null;
+
+		for (int attempt = 1; attempt <= MOVE_ATTEMPTS; attempt++) {
+
+			try {
+
+				Files.move(source.toPath(), target.toPath());
+				return;
+
+			} catch (IOException e) {
+
+				lastError = e;
+
+				LOGGER.warn("Cannot move " + source + " into " + target + ", attempt " + attempt + "/" + MOVE_ATTEMPTS);
+			}
+
+			try {
+				Thread.sleep(MOVE_RETRY_WAIT_MS);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+				throw new IOException("Interrupted while moving " + source + " into " + target, e);
+			}
+		}
+
+		throw new IOException("Cannot move " + source + " into " + target, lastError);
+	}
+
+	/**
+	 * Check that a folder contains a database which can be booted and read. An
+	 * incomplete copy fails the boot with errors as "The conglomerate (x)
+	 * requested does not exist", which would otherwise be discovered only later,
+	 * when the catalogue is opened and it looks empty.
+	 * 
+	 * @param dbPath the path of the database
+	 * @throws SQLException if the database cannot be read
+	 */
+	private static void assertReadableDatabase(String dbPath) throws SQLException {
+
+		if (!new File(dbPath, "service.properties").isFile())
+			throw new SQLException("Missing service.properties in " + dbPath);
+
+		if (!new File(dbPath, "seg0").isDirectory())
+			throw new SQLException("Missing seg0 folder in " + dbPath);
+
+		String dbUrl = "jdbc:derby:" + dbPath + ";user=dbuser;password=dbuserpwd";
+
+		try (Connection con = DriverManager.getConnection(dbUrl);
+				Statement stmt = con.createStatement();
+				ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM SYS.SYSTABLES");) {
+
+			if (!rs.next() || rs.getInt(1) == 0)
+				throw new SQLException("No table found in the database " + dbPath);
+
+		} finally {
+
+			try (Connection con = DriverManager.getConnection(dbUrl + ";shutdown=true");) {
+			} catch (SQLException e) {
+				LOGGER.info("Checked database " + dbPath + " shutted down with code : " + e.getErrorCode()
+						+ " and state " + e.getSQLState());
+			}
+		}
+	}
+
+	/**
+	 * Delete a directory without failing, used to clean up an invalid database
+	 * 
+	 * @param dir
+	 */
+	private static void deleteQuietly(File dir) {
+
+		try {
+			GlobalUtil.deleteFileCascade(dir);
+		} catch (IOException e) {
+			LOGGER.error("Cannot delete " + dir, e);
+		}
 	}
 
 	/**
